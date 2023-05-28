@@ -1,5 +1,5 @@
 {
-  "name": "@rockcarver/frodo-cli",
+  "name": "@trivir/frodo-cli",
   "version": "0.24.3",
   "type": "module",
   "description": "A command line interface to manage ForgeRock Identity Cloud tenants, ForgeOps deployments, and classic deployments.",
@@ -34,18 +34,16 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:local": "npm run build && node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:debug": "node --no-warnings --experimental-vm-modules --experimental-specifier-resolution=node node_modules/jest/bin/jest.js --verbose=true --silent=false",
-    "lint": "npx eslint --ext .ts --ignore-path .gitignore .",
-    "lint:fix": "npx eslint --fix --ext .ts --ignore-path .gitignore .",
+    "lint": "eslint --ext .ts --ignore-path .gitignore .",
+    "lint:fix": "eslint --fix --ext .ts --ignore-path .gitignore .",
     "build": "tsc && npm run build:local && npm run build:binary",
     "clean-esm": "rimraf esm",
     "transpile-esm": "babel --out-dir esm --extensions \".ts\" --source-maps --config-file ./babel.config.esm.json src",
-    "build:local": "tsc && npm run clean-esm && npm run transpile-esm",
-    "dist-clean": "rimraf dist/src",
-    "dist-package": "json -f package.json -e \"delete this.type; this.main = 'src/app.js'; this.bin.frodo = './src/app.js';\" > dist/package.json",
-    "dist-install": "cd dist && npm install",
-    "dist-transpile": "babel --out-dir dist/src --extensions \".ts\" --source-maps --config-file ./babel.config.cjs.json src",
-    "dist-pkg": "pkg -C Gzip -t node18 -o dist/bin/frodo dist",
-    "build:binary": "tsc && npm run dist-clean && npm run dist-package && npm run dist-install && npm run dist-transpile && npm run dist-pkg",
+    "build:local": "tsc && npm run clean-esm && npm run transpile-esm && npm run clean-cjs && npm run transpile-cjs",
+    "clean-cjs": "rimraf cjs",
+    "transpile-cjs": "babel --out-dir cjs --extensions \".ts\" --source-maps --config-file ./babel.config.cjs.json src && echo {\\\"type\\\": \\\"commonjs\\\"} > cjs/package.json",
+    "dist-pkg": "pkg -C Gzip -t node18 --no-signature --config package.json -o frodo cjs/app.js",
+    "build:binary": "tsc && npm run clean-cjs && npm run transpile-cjs && npm run dist-pkg",
     "link-frodo-lib": "npm link ../frodo-lib",
     "watch": "npm run link-frodo-lib && babel --watch --out-dir esm --extensions \".ts\" --source-maps --config-file ./babel.config.esm.json src"
   },
@@ -97,15 +95,16 @@
   },
   "pkg": {
     "assets": [
+      "package.json",
       "node_modules/@rockcarver/frodo-lib/cjs/ops/templates/*.json",
       "node_modules/@rockcarver/frodo-lib/cjs/ops/templates/**/*.json",
       "node_modules/@rockcarver/frodo-lib/mocks/**/*.har"
     ],
     "scripts": [
-      "src/cli/**/*.js",
-      "src/ops/**/*.js",
-      "src/storage/**/*.js",
-      "src/utils/**/*.js"
+      "cjs/cli/**/*.js",
+      "cjs/ops/**/*.js",
+      "cjs/storage/**/*.js",
+      "cjs/utils/**/*.js"
     ]
   },
   "dependencies": {
