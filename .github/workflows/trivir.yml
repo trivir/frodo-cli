@@ -7,8 +7,52 @@ on:
   workflow_dispatch:
 
 jobs:
+  build:
+    name: 'Build'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: TriVir changes
+        run: |
+          npm run trivir-frodo-lib
+          npm ci
+
+      - name: Build frodo-cli
+        run: |
+          npm run build:local
+
+      - name: Lint
+        run: |
+          npm run lint
+
+      - name: Type Check
+        run: |
+          npx tsc
+
+      - name: Security Audit
+        run: |
+          npm audit --omit=dev
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: |
+            package.json
+            package-lock.json
+            esm/
+
   smoke-tests:
     name: 'Smoke Tests'
+    needs: build
     # You must use a Linux environment when using service containers or container jobs
     runs-on: ubuntu-latest
     strategy:
@@ -41,29 +85,20 @@ jobs:
           cache: 'npm'
 
       - name: Update npm
-        run: |
-          npm install -g npm
+        run: npm install -g npm
 
-      - name: TriVir changes
-        run: |
-          npm run trivir-frodo-lib
-          npm ci
+      - uses: actions/download-artifact@v3
+        with:
+          name: build
 
-      - name: Build frodo-cli, and install frodo-cli globally
-        run: |
-          npm run build:local
-          npm i -g
+      - name: Display structure of downloaded files
+        run: ls -R
 
-      #
-      # Run tests.
-      #
-      - name: Lint
-        run: |
-          npm run lint
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Type Check
-        run: |
-          npx tsc
+      - name: Install frodo-cli globally
+        run: npm i -g
 
       - name: CLI Help Tests
         run: |
@@ -92,9 +127,59 @@ jobs:
           frodo conn add "$FIDC_TENANT_URL" "$FIDC_TENANT_ADMIN_USERNAME" "$FIDC_TENANT_ADMIN_PASSWORD"
           frodo info "$FIDC_TENANT_URL"
 
-      - name: Security Audit
+  linux-binary-release:
+    if: false
+    needs: [bump-version, release]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ needs.release.outputs.newTag }}
+
+      - name: 'cat package.json'
+        run: cat ./package.json
+
+      - name: Install pkg
+        run: npm install -g pkg
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install root dependencies
         run: |
-          npm audit --omit=dev
+          npm uninstall @rockcarver/frodolib
+          npm ci
+          npm install @trivir/frodolib
+
+      - name: Build
+        run: npm run build
+
+      #
+      # Fail early on failing tests.
+      #
+      - name: 'Test'
+        run: |
+          dist/bin/linux/frodo -v
+          dist/bin/linux/frodo journey -h
+          dist/bin/linux/frodo journey export -h
+
+      - name: Archive distribution binary
+        run: zip -r -Z bzip2 dist/frodo-linux-${{ needs.release.outputs.newVersion }}.zip . -i dist/bin/linux/frodo
+
+      - name: Release distribution binaries
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ needs.release.outputs.newVersion }}
+          tag_name: ${{ needs.release.outputs.newTag }}
+          files: dist/frodo-linux-${{ needs.release.outputs.newVersion }}.zip
 
   update-changelog:
     if: false
@@ -420,60 +505,6 @@ jobs:
           name: ${{ needs.release.outputs.newVersion }}
           tag_name: ${{ needs.release.outputs.newTag }}
           files: dist/frodo-macos-${{ needs.release.outputs.newVersion }}.zip
-
-  linux-binary-release:
-    if: false
-    needs: [bump-version, release]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ needs.release.outputs.newTag }}
-
-      - name: 'cat package.json'
-        run: cat ./package.json
-
-      - name: Install pkg
-        run: npm install -g pkg
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-
-      - name: Install root dependencies
-        run: |
-          npm uninstall @rockcarver/frodolib
-          npm ci
-          npm install @trivir/frodolib
-
-      - name: Build
-        run: npm run build
-
-      #
-      # Fail early on failing tests.
-      #
-      - name: 'Test'
-        run: |
-          dist/bin/linux/frodo -v
-          dist/bin/linux/frodo journey -h
-          dist/bin/linux/frodo journey export -h
-
-      - name: Archive distribution binary
-        run: zip -r -Z bzip2 dist/frodo-linux-${{ needs.release.outputs.newVersion }}.zip . -i dist/bin/linux/frodo
-
-      - name: Release distribution binaries
-        uses: softprops/action-gh-release@v1
-        with:
-          name: ${{ needs.release.outputs.newVersion }}
-          tag_name: ${{ needs.release.outputs.newTag }}
-          files: dist/frodo-linux-${{ needs.release.outputs.newVersion }}.zip
 
   linux-arm64-binary-release:
     if: false
