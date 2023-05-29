@@ -506,6 +506,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: dist-src
+          path: dist
 
       - name: Install root dependencies
         run: npm ci
