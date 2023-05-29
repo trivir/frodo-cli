@@ -361,6 +361,8 @@ jobs:
       - name: Commit updated changelog and version
         id: commit-changelog
         run: |
+          git config user.name "Automated Version Bump"
+          git config user.email "gh-action-bump-version@users.noreply.github.com"
           git add CHANGELOG.md package.json
           git commit --message "Updated changelog and version for release ${{ needs.build.outputs.newTag }}"
           git push
