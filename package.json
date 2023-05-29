@@ -1,6 +1,6 @@
 {
   "name": "@trivir/frodo-cli",
-  "version": "0.24.3",
+  "version": "0.24.4-trivir.0",
   "type": "module",
   "description": "A command line interface to manage ForgeRock Identity Cloud tenants, ForgeOps deployments, and classic deployments.",
   "keywords": [
@@ -97,9 +97,9 @@
   },
   "pkg": {
     "assets": [
-      "node_modules/@rockcarver/frodo-lib/cjs/ops/templates/*.json",
-      "node_modules/@rockcarver/frodo-lib/cjs/ops/templates/**/*.json",
-      "node_modules/@rockcarver/frodo-lib/mocks/**/*.har"
+      "node_modules/@trivir/frodo-lib/cjs/ops/templates/*.json",
+      "node_modules/@trivir/frodo-lib/cjs/ops/templates/**/*.json",
+      "node_modules/@trivir/frodo-lib/mocks/**/*.har"
     ],
     "scripts": [
       "src/cli/**/*.js",
@@ -109,7 +109,7 @@
     ]
   },
   "dependencies": {
-    "@rockcarver/frodo-lib": "0.19.2",
+    "@trivir/frodo-lib": "^0.19.3-trivir.0",
     "chokidar": "^3.5.3",
     "cli-progress": "^3.11.2",
     "cli-table3": "^0.6.3",
