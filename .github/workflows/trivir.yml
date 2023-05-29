@@ -79,12 +79,12 @@ jobs:
           path: |
             package.json
             package-lock.json
-            esm/
+            esm
 
       - uses: actions/upload-artifact@v3
         with:
           name: dist-src
-          path: dist/
+          path: dist
 
     outputs:
       newTag: ${{ steps.version-bump.outputs.newTag }}
@@ -394,7 +394,6 @@ jobs:
           npm dist-tag add @trivir/frodo-cli@${{ needs.bump-version.outputs.newVersion }} next
 
   macos-binary-release:
-    if: false
     needs: [build, smoke-tests]
     runs-on: macos-latest
     timeout-minutes: 15
