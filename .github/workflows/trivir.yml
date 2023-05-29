@@ -501,6 +501,10 @@ jobs:
 
       - uses: actions/download-artifact@v3
         with:
+          name: build
+
+      - uses: actions/download-artifact@v3
+        with:
           name: dist-src
 
       - name: Install root dependencies
