@@ -6,6 +6,9 @@ on:
       - 'trivir'
   workflow_dispatch:
 
+env:
+  NODE_VERSION: 18
+
 jobs:
   build:
     name: 'Build'
@@ -18,7 +21,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: TriVir changes
@@ -27,7 +30,7 @@ jobs:
           npm ci
 
       - name: 'Prepare Version Bump'
-        id: prepare-version-bump
+        id: version-bump
         uses: 'phips28/gh-action-bump-version@master'
         with:
           version-type:  'prerelease'
@@ -44,6 +47,10 @@ jobs:
           skip-push: 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 'Version From Tag'
+        id: version-from-tag
+        run: echo "::set-output name=version::$(echo '${{ steps.version-bump.outputs.newTag }}' | sed 's/v//')"
 
       - name: Build frodo-cli
         run: |
@@ -68,6 +75,11 @@ jobs:
             package.json
             package-lock.json
             esm/
+
+    outputs:
+      newTag: ${{ steps.version-bump.outputs.newTag }}
+      newVersion: ${{ steps.version-from-tag.outputs.version }}
+      preRelease: ${{ contains(steps.version-bump.outputs.newTag, '-') }}
 
   smoke-tests:
     name: 'Smoke Tests'
@@ -466,36 +478,26 @@ jobs:
           files: dist/frodo-macos-${{ needs.release.outputs.newVersion }}.zip
 
   linux-binary-release:
-    if: false
-    needs: [bump-version, release, npm-release]
+    needs: [build, smoke-tests]
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
         with:
-          ref: ${{ needs.release.outputs.newTag }}
-
-      - name: 'cat package.json'
-        run: cat ./package.json
-
-      - name: Install pkg
-        run: npm install -g pkg
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: build
 
       - name: Install root dependencies
         run: npm ci
 
       - name: Build
-        run: npm run build
+        run: npm run build:binary
 
       #
       # Fail early on failing tests.
@@ -507,14 +509,12 @@ jobs:
           dist/bin/linux/frodo journey export -h
 
       - name: Archive distribution binary
-        run: zip -r -Z bzip2 dist/frodo-linux-${{ needs.release.outputs.newVersion }}.zip . -i dist/bin/linux/frodo
+        run: zip -r -Z bzip2 dist/frodo-linux-${{ needs.build.outputs.newVersion }}.zip . -i dist/bin/linux/frodo
 
-      - name: Release distribution binaries
-        uses: softprops/action-gh-release@v1
+      - uses: actions/upload-artifact@v3
         with:
-          name: ${{ needs.release.outputs.newVersion }}
-          tag_name: ${{ needs.release.outputs.newTag }}
-          files: dist/frodo-linux-${{ needs.release.outputs.newVersion }}.zip
+          name: dist
+          path: dist/frodo-linux-${{ needs.release.outputs.newVersion }}.zip
 
   linux-arm64-binary-release:
     if: false
