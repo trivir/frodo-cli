@@ -56,6 +56,11 @@ jobs:
         run: |
           npm run build:local
 
+      - name: Build frodo-cli cjs
+        run: |
+          npm run dist-package
+          npm run dist-transpile
+
       - name: Lint
         run: |
           npm run lint
@@ -75,6 +80,11 @@ jobs:
             package.json
             package-lock.json
             esm/
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: dist-src
+          path: dist/
 
     outputs:
       newTag: ${{ steps.version-bump.outputs.newTag }}
@@ -491,13 +501,16 @@ jobs:
 
       - uses: actions/download-artifact@v3
         with:
-          name: build
+          name: dist-src
 
       - name: Install root dependencies
         run: npm ci
 
+      - name: Install dist dependencies
+        run: npm run dist-install
+
       - name: Build
-        run: npm run build:binary
+        run: npm run dist-pkg
 
       #
       # Fail early on failing tests.
