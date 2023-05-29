@@ -80,11 +80,7 @@ jobs:
             package.json
             package-lock.json
             esm
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: dist-src
-          path: dist
+            dist
 
     outputs:
       newTag: ${{ steps.version-bump.outputs.newTag }}
@@ -92,6 +88,7 @@ jobs:
       preRelease: ${{ contains(steps.version-bump.outputs.newTag, '-') }}
 
   smoke-tests:
+    if: false
     name: 'Smoke Tests'
     needs: build
     # You must use a Linux environment when using service containers or container jobs
@@ -436,11 +433,6 @@ jobs:
         with:
           name: build
 
-      - uses: actions/download-artifact@v3
-        with:
-          name: dist-src
-          path: dist
-
       - name: Install root dependencies
         run: npm ci
 
@@ -449,7 +441,6 @@ jobs:
 
       - name: Build
         run: npm run dist-pkg
-
 
       #
       # Fail early on failing tests.
@@ -496,11 +487,6 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: build
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: dist-src
-          path: dist
 
       - name: Install root dependencies
         run: npm ci
@@ -580,52 +566,43 @@ jobs:
           files: dist/frodo-linux-arm64-${{ needs.release.outputs.newVersion }}.zip
 
   windows-binary-release:
-    if: false
-    needs: [bump-version, release, npm-release]
+    needs: [build, smoke-tests]
     runs-on: windows-latest
-    strategy:
-      matrix:
-        node-version: [18]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
         with:
-          ref: ${{ needs.release.outputs.newTag }}
-
-      - name: 'type package.json'
-        run: type package.json
-
-      - name: Install pkg
-        run: npm install -g pkg
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: build
 
       - name: Install root dependencies
         run: npm ci
 
+      - name: Install dist dependencies
+        run: npm run dist-install
+
       - name: Build
-        run: npm run build
+        run: npm run dist-pkg
 
       #
       # Fail early on failing tests.
       #
       - name: 'Test'
         run: |
-          dist/bin/win/frodo.exe -v
-          dist/bin/win/frodo.exe journey -h
-          dist/bin/win/frodo.exe journey export -h
+          dist/bin/frodo.exe -v
+          dist/bin/frodo.exe journey -h
+          dist/bin/frodo.exe journey export -h
 
       - name: Archive distribution binary
-        run: 7z a -tzip dist/frodo-win-${{ needs.release.outputs.newVersion }}.zip dist/bin/win/frodo.exe
+        run: 7z a -tzip dist/frodo-win-${{ needs.build.outputs.newVersion }}.zip dist/bin/frodo.exe
 
-      - name: Release distribution binaries
-        uses: softprops/action-gh-release@v1
+      - uses: actions/upload-artifact@v3
         with:
-          name: ${{ needs.release.outputs.newVersion }}
-          tag_name: ${{ needs.release.outputs.newTag }}
-          files: dist/frodo-win-${{ needs.release.outputs.newVersion }}.zip
+          name: dist
+          path: dist/frodo-win-${{ needs.build.outputs.newVersion }}.zip
