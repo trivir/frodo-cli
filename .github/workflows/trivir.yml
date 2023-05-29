@@ -395,22 +395,10 @@ jobs:
 
   macos-binary-release:
     if: false
-    needs: [bump-version, release, npm-release]
+    needs: [build, smoke-tests]
     runs-on: macos-latest
-    strategy:
-      matrix:
-        node-version: [18]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     timeout-minutes: 15
     steps:
-      - name: 'Checkout Project'
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ needs.release.outputs.newTag }}
-
-      - name: 'cat package.json'
-        run: cat ./package.json
-
       - name: Install the Apple certificate
         env:
           DEVELOPMENT_CERTIFICATE_DATA: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
@@ -437,38 +425,47 @@ jobs:
           #security import $INTERMEDIATE_CERTIFICATE_PATH -P "$DEVELOPMENT_CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
-      - name: Install pkg
-        run: npm install -g pkg
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Install gulp
-        run: npm install -g gulp
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: dist-src
+          path: dist
 
       - name: Install root dependencies
         run: npm ci
 
+      - name: Install dist dependencies
+        run: npm run dist-install
+
       - name: Build
-        run: npm run build
+        run: npm run dist-pkg
+
 
       #
       # Fail early on failing tests.
       #
       - name: 'Test'
         run: |
-          dist/bin/macos/frodo -v
-          dist/bin/macos/frodo journey -h
-          dist/bin/macos/frodo journey export -h
+          dist/bin/frodo -v
+          dist/bin/frodo journey -h
+          dist/bin/frodo journey export -h
 
       #
       # Re-sign the application with the "Developer ID" certificate.
       #
       - name: Sign distribution binary
-        working-directory: ./dist/bin/macos
+        working-directory: ./dist/bin
         run: "codesign -f -s 'Developer ID Application' --timestamp --deep frodo"
         # run: "codesign -f -s 'Developer ID Application: Volker Scheuber (AV6L99G8W9)' --timestamp --deep frodo"
 
@@ -478,14 +475,12 @@ jobs:
       #
 
       - name: Package for Distribution
-        run: ditto -V -c -k --keepParent "dist/bin/macos/frodo" "dist/frodo-macos-${{ needs.release.outputs.newVersion }}.zip"
+        run: ditto -V -c -k --keepParent "dist/bin/frodo" "dist/frodo-macos-${{ needs.build.outputs.newVersion }}.zip"
 
-      - name: Release
-        uses: softprops/action-gh-release@v1
+      - uses: actions/upload-artifact@v3
         with:
-          name: ${{ needs.release.outputs.newVersion }}
-          tag_name: ${{ needs.release.outputs.newTag }}
-          files: dist/frodo-macos-${{ needs.release.outputs.newVersion }}.zip
+          name: dist
+          path: dist/frodo-macos-${{ needs.build.outputs.newVersion }}.zip
 
   linux-binary-release:
     needs: [build, smoke-tests]
@@ -517,25 +512,22 @@ jobs:
       - name: Build
         run: npm run dist-pkg
 
-      - name: List contents of dist
-        run: ls -R
-
       #
       # Fail early on failing tests.
       #
       - name: 'Test'
         run: |
-          dist/bin/linux/frodo -v
-          dist/bin/linux/frodo journey -h
-          dist/bin/linux/frodo journey export -h
+          dist/bin/frodo -v
+          dist/bin/frodo journey -h
+          dist/bin/frodo journey export -h
 
       - name: Archive distribution binary
-        run: zip -r -Z bzip2 dist/frodo-linux-${{ needs.build.outputs.newVersion }}.zip . -i dist/bin/linux/frodo
+        run: zip -r -Z bzip2 dist/frodo-linux-${{ needs.build.outputs.newVersion }}.zip . -i dist/bin/frodo
 
       - uses: actions/upload-artifact@v3
         with:
           name: dist
-          path: dist/frodo-linux-${{ needs.release.outputs.newVersion }}.zip
+          path: dist/frodo-linux-${{ needs.build.outputs.newVersion }}.zip
 
   linux-arm64-binary-release:
     if: false
