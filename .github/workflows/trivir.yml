@@ -315,7 +315,8 @@ jobs:
       notes: ${{ steps.extract-release-notes.outputs.output-text }}
 
   release:
-    needs: [build, linux-binary-release, linux-arm64-binary-release, macos-binary-release, windows-binary-release]
+#    needs: [build, linux-binary-release, linux-arm64-binary-release, macos-binary-release, windows-binary-release]
+    needs: [build, linux-binary-release, macos-binary-release, windows-binary-release]
     name: 'Release'
     runs-on: ubuntu-latest
 
@@ -379,6 +380,7 @@ jobs:
             frodo-linux-${{ needs.build.outputs.newVersion }}.zip
             frodo-macos-${{ needs.build.outputs.newVersion }}.zip
             frodo-win-${{ needs.build.outputs.newVersion }}.zip
+#            frodo-linux-arm64-${{ needs.build.outputs.newVersion }}.zip
           token: ${{ secrets.GITHUB_TOKEN }}
 
   npm-release:
