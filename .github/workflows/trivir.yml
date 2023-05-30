@@ -232,6 +232,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   npm-release:
+    if: false
     # npm-release only needs the build job but since it is inconvenient to unpublish an npm we want this job to run last
     #    needs: [build, linux-binary-release, linux-arm64-binary-release, macos-binary-release, windows-binary-release]
     needs: [build, linux-binary-release, macos-binary-release, windows-binary-release]
@@ -305,17 +306,14 @@ jobs:
           #security import $INTERMEDIATE_CERTIFICATE_PATH -P "$DEVELOPMENT_CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: build
 
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: build
 
       - name: Install root dependencies
         run: npm ci
@@ -360,17 +358,14 @@ jobs:
     needs: [build, smoke-tests]
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: build
 
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: build
 
       - name: Install root dependencies
         run: npm ci
@@ -403,17 +398,14 @@ jobs:
     needs: [build, smoke-tests]
     runs-on: self-hosted
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: build
 
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: build
 
       - name: Install root dependencies
         run: npm ci
@@ -445,17 +437,14 @@ jobs:
     needs: [build, smoke-tests]
     runs-on: windows-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: build
 
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: build
 
       - name: Install root dependencies
         run: npm ci
