@@ -271,7 +271,6 @@ jobs:
           npm dist-tag add @trivir/frodo-cli@${{ needs.build.outputs.newVersion }} next
 
   macos-binary-release:
-    if: false
     needs: [build, smoke-tests]
     runs-on: macos-latest
     timeout-minutes: 15
@@ -311,11 +310,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Install root dependencies
+      - name: Install dependencies
         run: npm ci
-
-      - name: Install dist dependencies
-        run: npm run dist-install
 
       - name: Build
         run: npm run dist-pkg
@@ -325,15 +321,15 @@ jobs:
       #
       - name: 'Test'
         run: |
-          dist/bin/frodo -v
-          dist/bin/frodo journey -h
-          dist/bin/frodo journey export -h
+          ./frodo -v
+          ./frodo journey -h
+          ./frodo journey export -h
 
       #
       # Re-sign the application with the "Developer ID" certificate.
       #
       - name: Sign distribution binary
-        working-directory: ./dist/bin
+        #        working-directory: ./dist/bin
         run: "codesign -f -s 'Developer ID Application' --timestamp --deep frodo"
         # run: "codesign -f -s 'Developer ID Application: Volker Scheuber (AV6L99G8W9)' --timestamp --deep frodo"
 
@@ -343,12 +339,12 @@ jobs:
       #
 
       - name: Package for Distribution
-        run: ditto -V -c -k --keepParent "dist/bin/frodo" "dist/frodo-macos-${{ needs.build.outputs.newVersion }}.zip"
+        run: ditto -V -c -k "frodo" "frodo-macos-${{ needs.build.outputs.newVersion }}.zip"
 
       - uses: actions/upload-artifact@v3
         with:
           name: dist
-          path: dist/frodo-macos-${{ needs.build.outputs.newVersion }}.zip
+          path: frodo-macos-${{ needs.build.outputs.newVersion }}.zip
 
   linux-binary-release:
     needs: [build, smoke-tests]
@@ -400,11 +396,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Install root dependencies
+      - name: Install dependencies
         run: npm ci
-
-      - name: Install dist dependencies
-        run: npm run dist-install
 
       - name: Build
         run: npm run dist-pkg
@@ -414,20 +407,19 @@ jobs:
       #
       - name: 'Test'
         run: |
-          dist/bin/frodo -v
-          dist/bin/frodo journey -h
-          dist/bin/frodo journey export -h
+          ./frodo -v
+          ./frodo journey -h
+          ./frodo journey export -h
 
       - name: Archive distribution binary
-        run: zip -r -Z bzip2 dist/frodo-linux-arm64-${{ needs.build.outputs.newVersion }}.zip . -i dist/bin/frodo
+        run: zip -Z bzip2 frodo-linux-arm64-${{ needs.build.outputs.newVersion }}.zip . -i frodo
 
       - uses: actions/upload-artifact@v3
         with:
           name: dist
-          path: dist/frodo-linux-arm64-${{ needs.build.outputs.newVersion }}.zip
+          path: frodo-linux-arm64-${{ needs.build.outputs.newVersion }}.zip
 
   windows-binary-release:
-    if: false
     needs: [build, smoke-tests]
     runs-on: windows-latest
     steps:
@@ -440,11 +432,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Install root dependencies
+      - name: Install dependencies
         run: npm ci
-
-      - name: Install dist dependencies
-        run: npm run dist-install
 
       - name: Build
         run: npm run dist-pkg
@@ -454,14 +443,14 @@ jobs:
       #
       - name: 'Test'
         run: |
-          dist/bin/frodo.exe -v
-          dist/bin/frodo.exe journey -h
-          dist/bin/frodo.exe journey export -h
+          frodo.exe -v
+          frodo.exe journey -h
+          frodo.exe journey export -h
 
       - name: Archive distribution binary
-        run: 7z a -tzip dist/frodo-win-${{ needs.build.outputs.newVersion }}.zip dist/bin/frodo.exe
+        run: 7z a -tzip frodo-win-${{ needs.build.outputs.newVersion }}.zip frodo.exe
 
       - uses: actions/upload-artifact@v3
         with:
           name: dist
-          path: dist/frodo-win-${{ needs.build.outputs.newVersion }}.zip
+          path: frodo-win-${{ needs.build.outputs.newVersion }}.zip
