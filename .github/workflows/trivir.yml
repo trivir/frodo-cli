@@ -443,9 +443,9 @@ jobs:
       #
       - name: 'Test'
         run: |
-          frodo.exe -v
-          frodo.exe journey -h
-          frodo.exe journey export -h
+          ./frodo.exe -v
+          ./frodo.exe journey -h
+          ./frodo.exe journey export -h
 
       - name: Archive distribution binary
         run: 7z a -tzip frodo-win-${{ needs.build.outputs.newVersion }}.zip frodo.exe
