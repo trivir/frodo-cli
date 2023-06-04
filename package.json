@@ -40,12 +40,10 @@
     "clean-esm": "rimraf esm",
     "transpile-esm": "babel --out-dir esm --extensions \".ts\" --source-maps --config-file ./babel.config.esm.json src",
     "build:local": "tsc && npm run clean-esm && npm run transpile-esm",
-    "dist-clean": "rimraf dist/src",
-    "dist-package": "json -f package.json -e \"delete this.type; this.main = 'src/app.js'; this.bin.frodo = './src/app.js';\" > dist/package.json",
-    "dist-install": "cd dist && npm install",
-    "dist-transpile": "babel --out-dir dist/src --extensions \".ts\" --source-maps --config-file ./babel.config.cjs.json src",
-    "dist-pkg": "pkg -C Gzip -t node18 -o dist/bin/frodo dist",
-    "build:binary": "tsc && npm run dist-clean && npm run dist-package && npm run dist-install && npm run dist-transpile && npm run dist-pkg",
+    "dist-clean": "rimraf cjs",
+    "dist-transpile": "babel --out-dir cjs --extensions \".ts\" --source-maps --config-file ./babel.config.cjs.json src && echo {\\\"type\\\": \\\"commonjs\\\"} > cjs/package.json",
+    "dist-pkg": "pkg -C Gzip -t node18 --config package.json -o frodo cjs/app.js",
+    "build:binary": "tsc && npm run dist-clean && npm run dist-transpile && npm run dist-pkg",
     "link-frodo-lib": "npm link ../frodo-lib",
     "watch": "npm run link-frodo-lib && babel --watch --out-dir esm --extensions \".ts\" --source-maps --config-file ./babel.config.esm.json src"
   },
@@ -97,15 +95,16 @@
   },
   "pkg": {
     "assets": [
-      "node_modules/@trivir/frodo-lib/cjs/ops/templates/*.json",
-      "node_modules/@trivir/frodo-lib/cjs/ops/templates/**/*.json",
-      "node_modules/@trivir/frodo-lib/mocks/**/*.har"
+      "package.json",
+      "node_modules/@rockcarver/frodo-lib/cjs/ops/templates/*.json",
+      "node_modules/@rockcarver/frodo-lib/cjs/ops/templates/**/*.json",
+      "node_modules/@rockcarver/frodo-lib/mocks/**/*.har"
     ],
     "scripts": [
-      "src/cli/**/*.js",
-      "src/ops/**/*.js",
-      "src/storage/**/*.js",
-      "src/utils/**/*.js"
+      "cjs/cli/**/*.js",
+      "cjs/ops/**/*.js",
+      "cjs/storage/**/*.js",
+      "cjs/utils/**/*.js"
     ]
   },
   "dependencies": {
