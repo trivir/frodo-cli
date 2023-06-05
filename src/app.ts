@@ -33,6 +33,8 @@ const { initConnectionProfiles } = ConnectionProfile;
       '-v, --version'
     );
 
+    console.log('test branch');
+
     printMessage(await getVersions(true), 'text', false);
 
     await initConnectionProfiles();
