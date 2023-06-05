@@ -3,7 +3,10 @@ name: 'Frodo CLI Release Pipeline'
 on:
   push:
     branches:
-      - 'trivir'
+      - trivir
+  pull_request:
+    branches:
+      - trivir
   workflow_dispatch:
 
 env:
@@ -152,6 +155,7 @@ jobs:
 #          frodo info "$FIDC_TENANT_URL"
 
   release:
+    if: github.event_name != 'pull_request'
 #    needs: [build, linux-binary-release, linux-arm64-binary-release, macos-binary-release, npm-release, windows-binary-release]
     needs: [build, linux-binary-release, macos-binary-release, npm-release, windows-binary-release]
     name: 'Release'
@@ -225,6 +229,7 @@ jobs:
 
   npm-release:
     if: false
+      #    if: github.event_name != 'pull_request'
     # npm-release only needs the build job but since it is inconvenient to unpublish an npm we want this job to run last
     #    needs: [build, linux-binary-release, linux-arm64-binary-release, macos-binary-release, windows-binary-release]
     needs: [build, linux-binary-release, macos-binary-release, windows-binary-release]
