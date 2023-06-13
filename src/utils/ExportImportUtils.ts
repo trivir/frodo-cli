@@ -60,7 +60,9 @@ export function getTypedFilename(
   type: string,
   suffix = 'json'
 ): string {
-  const slug = slugify(name.replace(/^http(s?):\/\//, ''));
+  const slug = slugify(name.replace(/^http(s?):\/\//, ''), {
+    remove: /[^\w\s$*_+~.()'"!\-@]+/g,
+  });
   return `${slug}.${type}.${suffix}`;
 }
 
