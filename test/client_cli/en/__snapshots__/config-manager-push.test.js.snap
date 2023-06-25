@@ -35,6 +35,7 @@ Commands:
   remote-servers         [Experimental] Import RCS config.
   schedules              [Experimental] Import schedules.
   service-objects        [Experimental] Import service objects.
+  secrets                Import secrets.
   terms-and-conditions   [Experimental] Import terms and conditions.
   themes                 [Experimental] Import themes.
   ui-config              [Experimental] Import UI configuration.
