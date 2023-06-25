@@ -3,14 +3,14 @@ name: 'Frodo CLI Release Pipeline'
 on:
   pull_request:
     branches:
-      - 'main'
+      - trivir
     paths-ignore:
       - '**/CODE_OF_CONDUCT.md'
       - '**/README.md'
       - 'docs/**'
   push:
     branches:
-      - 'main'
+      - trivir
     paths-ignore:
       - '**/CODE_OF_CONDUCT.md'
       - '**/README.md'
@@ -46,6 +46,9 @@ jobs:
 
       - name: Update package-lock.json before version bump
         run: npm i --package-lock-only
+
+      - name: TriVir changes
+        run: npm run trivir-frodo-lib
 
       - name: Install dependencies
         run: npm ci
@@ -100,7 +103,7 @@ jobs:
 
           case "$bump_type" in
             prerelease)
-              new_version="$(node -p "require('semver').inc('$current_version','prerelease')")"
+              new_version="$(node -p "require('semver').inc('$current_version','prerelease','trivir')")"
               ;;
             patch|minor|major)
               new_version="$(node -p "require('semver').inc('$current_version','$bump_type')")"
@@ -388,10 +391,10 @@ jobs:
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_ACCESS_TOKEN }}" >> ~/.npmrc
           npm whoami
-          npm dist-tag add @rockcarver/frodo-cli@${{ needs.build.outputs.newVersion }} next
+          npm dist-tag add @trivir/frodo-cli@${{ needs.build.outputs.newVersion }} next
 
   homebrew-formula-update:
-    if: github.event_name != 'pull_request'
+    if: false
     name: Bump Homebrew formula
     needs: [release, build, npm-release]
     runs-on: ubuntu-latest
