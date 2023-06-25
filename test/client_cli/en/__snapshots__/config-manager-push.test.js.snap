@@ -15,6 +15,7 @@ Options:
 Commands:
   access-config         [Experimental] Import access configuration.
   audit                 [Experimental] Import audit configuration.
+  connector-mappings    [Experimental] Import connector mappings.
   email-provider        [Experimental] Import email provider configuration.
   email-templates       [Experimental] Import email template objects.
   endpoints             [Experimental] Import custom endpoints objects.
