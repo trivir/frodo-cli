@@ -1,5 +1,7 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { VariableSkeleton } from '@rockcarver/frodo-lib/types/api/cloud/VariablesApi';
+import { VariablesExportInterface } from '@rockcarver/frodo-lib/types/ops/cloud/VariablesOps';
+import fs from 'fs';
 
 import {
   createProgressIndicator,
@@ -10,7 +12,7 @@ import {
 import { escapePlaceholders, esvToEnv } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
-const { readVariables } = frodo.cloud.variable;
+const { readVariables, importVariable } = frodo.cloud.variable;
 
 /**
  * Export all variables to seperate files
@@ -67,6 +69,39 @@ export async function configManagerExportVariables(): Promise<boolean> {
     return true;
   } catch (error) {
     stopProgressIndicator(indicatorId, `Error exporting variables`);
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Import variables to tenant
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
+export async function configManagerImportVariables(): Promise<boolean> {
+  try {
+    const variablesDir = getFilePath('esvs/variables');
+    const variablesFiles = fs.readdirSync(variablesDir);
+
+    for (const variablesFile of variablesFiles) {
+      const filePath = `${variablesDir}/${variablesFile}`;
+      const readFile = fs.readFileSync(filePath, 'utf-8');
+      const importData = JSON.parse(readFile);
+
+      if (importData.valueBase64) {
+        importData.valueBase64 = Buffer.from(importData.valueBase64).toString(
+          'base64'
+        );
+      }
+
+      const singleVariableImport: VariablesExportInterface = {
+        variable: { [importData._id]: importData },
+      };
+      await importVariable(importData._id, singleVariableImport);
+    }
+
+    return true;
+  } catch (error) {
     printError(error);
   }
   return false;

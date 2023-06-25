@@ -6,6 +6,7 @@ import Locales from './config-manager-push-locales';
 import PasswordPolicy from './config-manager-push-password-policy';
 import TermsAndConditions from './config-manager-push-terms-and-conditions';
 import Themes from './config-manager-push-themes';
+import Variables from './config-manager-push-variables';
 
 export default function setup() {
   const program = new FrodoStubCommand('push').description(
@@ -19,6 +20,6 @@ export default function setup() {
   program.addCommand(EmailProvider().name('email-provider'));
   program.addCommand(Endpoints().name('endpoints'));
   program.addCommand(Kba().name('kba'));
-
+  program.addCommand(Variables().name('variables'));
   return program;
 }
