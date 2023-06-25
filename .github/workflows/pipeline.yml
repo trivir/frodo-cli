@@ -3,10 +3,10 @@ name: 'Frodo CLI Release Pipeline'
 on:
   pull_request:
     branches:
-      - 'main'
-  push:
-    branches:
-      - 'main'
+      - trivir
+#  push:
+#    branches:
+#      - trivir
   workflow_dispatch:
 
 env:
@@ -29,6 +29,9 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
+      - name: TriVir changes
+        run: npm run trivir-frodo-lib
+
       - name: Install dependencies
         run: npm ci
 
@@ -36,13 +39,14 @@ jobs:
         id: version-bump
         uses: 'phips28/gh-action-bump-version@master'
         with:
+          version-type:  'prerelease'
           major-wording: 'MAJOR RELEASE'
           minor-wording: 'MINOR RELEASE'
           patch-wording: 'PATCH RELEASE'
           rc-wording: ''
           tag-prefix: 'v'
           default: prerelease
-          preid: ''
+          preid: 'trivir'
           bump-policy: 'ignore'
           skip-commit: 'true'
           skip-tag: 'true'
@@ -159,7 +163,7 @@ jobs:
 
   release:
     if: github.event_name != 'pull_request'
-    needs: [build, linux-binary-release, linux-arm64-binary-release, macos-binary-release, npm-release, windows-binary-release]
+    needs: [build, linux-binary-release, macos-binary-release, npm-release, windows-binary-release]
     name: 'Release'
     runs-on: ubuntu-latest
 
@@ -226,13 +230,12 @@ jobs:
             frodo-macos-${{ needs.build.outputs.newVersion }}.zip
             frodo-macos-${{ needs.build.outputs.newVersion }}.dmg
             frodo-win-${{ needs.build.outputs.newVersion }}.zip
-            frodo-linux-arm64-${{ needs.build.outputs.newVersion }}.zip
           token: ${{ secrets.GITHUB_TOKEN }}
 
   npm-release:
     if: github.event_name != 'pull_request'
     # npm-release only needs the build job but since it is inconvenient to unpublish an npm we want this job to run last
-    needs: [build, linux-binary-release, linux-arm64-binary-release, macos-binary-release, windows-binary-release]
+    needs: [build, linux-binary-release, macos-binary-release, windows-binary-release]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -270,9 +273,10 @@ jobs:
         run: |
           export INPUT_TOKEN=${{ secrets.NPM_ACCESS_TOKEN }}
           npm whoami
-          npm dist-tag add @rockcarver/frodo-cli@${{ needs.build.outputs.newVersion }} next
+          npm dist-tag add @trivir/frodo-cli@${{ needs.build.outputs.newVersion }} next
 
   homebrew-formula-update:
+    if: false
     name: Bump Homebrew formula
     needs: [npm-release]
     runs-on: ubuntu-latest
@@ -335,6 +339,17 @@ jobs:
       - name: Build
         run: npm run dist-pkg
 
+#      - name: Sign distribution binary
+#        run: |
+#          cat > entitlements.plist <<DELIM
+#          <dict>
+#            <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+#            <true/>
+#          </dict>
+#          DELIM
+#          codesign -f -s 'Developer ID Application' --options runtime --entitlements entitlements.plist --timestamp --deep frodo
+        # run: "codesign -f -s 'Developer ID Application: Volker Scheuber (AV6L99G8W9)' --timestamp --deep frodo"
+
       #
       # Fail early on failing tests.
       #
@@ -362,7 +377,7 @@ jobs:
           cat > ./gon.json <<DELIM
           {
             "source" : ["./frodo"],
-            "bundle_id" : "com.forgerock.frodo.frodo",
+            "bundle_id" : "com.trivir.frodo.frodo",
             "apple_id": {
               "username" : "${{ secrets.AC_USERNAME }}",
               "password":  "@env:AC_PASSWORD"
@@ -429,6 +444,7 @@ jobs:
           path: frodo-linux-${{ needs.build.outputs.newVersion }}.zip
 
   linux-arm64-binary-release:
+    if: false
     needs: [build, smoke-tests]
     runs-on: self-hosted
     steps:
