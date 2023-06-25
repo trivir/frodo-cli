@@ -38,8 +38,10 @@ Commands:
   themes                 [Experimental] Import themes.
   ui-config              [Experimental] Import UI configuration.
 
+
   (Cloud-only):
   csp                    [Experimental] Import content security policy.
   secret-mappings        [Experimental] Import secret mappings.
+  variables              Import variables objects.
 "
 `;
