@@ -1,5 +1,5 @@
 {
-  "name": "@rockcarver/frodo-cli",
+  "name": "@trivir/frodo-cli",
   "version": "2.0.0-15",
   "type": "module",
   "description": "A command line interface to manage ForgeRock Identity Cloud tenants, ForgeOps deployments, and classic deployments.",
@@ -29,6 +29,8 @@
   },
   "main": "esm/launch.js",
   "scripts": {
+    "rockcarver-frodo-lib": "find src -type f -name \"*.ts\" -exec sed -i \"s#@trivir/frodo-lib#@rockcarver/frodo-lib#g\" {} +",
+    "trivir-frodo-lib": "npm uninstall @rockcarver/frodo-lib && npm install @trivir/frodo-lib@next && find src -type f -name \"*.ts\" -exec sed -i \"s#@rockcarver/frodo-lib#@trivir/frodo-lib#g\" {} +",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:local": "npm run build && node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:debug": "node --no-warnings --experimental-vm-modules --experimental-specifier-resolution=node node_modules/jest/bin/jest.js --verbose=true --silent=false",
@@ -92,9 +94,9 @@
   "pkg": {
     "assets": [
       "package.json",
-      "node_modules/@rockcarver/frodo-lib/cjs/ops/templates/*.json",
-      "node_modules/@rockcarver/frodo-lib/cjs/ops/templates/**/*.json",
-      "node_modules/@rockcarver/frodo-lib/mocks/**/*.har"
+      "node_modules/@trivir/frodo-lib/cjs/ops/templates/*.json",
+      "node_modules/@trivir/frodo-lib/cjs/ops/templates/**/*.json",
+      "node_modules/@trivir/frodo-lib/mocks/**/*.har"
     ],
     "scripts": [
       "cjs/cli/**/*.js",
