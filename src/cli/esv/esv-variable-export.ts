@@ -1,6 +1,8 @@
 import { FrodoCommand } from '../FrodoCommand';
 import { Option } from 'commander';
 import { frodo } from '@rockcarver/frodo-lib';
+import { printMessage, verboseMessage } from '../../utils/Console';
+import { exportVariablesToFiles } from '../../ops/VariablesOps';
 
 const { getTokens } = frodo.login;
 
@@ -8,6 +10,7 @@ const program = new FrodoCommand('frodo esv variable export');
 
 program
   .description('Export variables.')
+  /*
   .addOption(
     new Option(
       '-i, --variable-id <variable-id>',
@@ -21,6 +24,7 @@ program
       'Export all variables to a single file. Ignored with -i.'
     )
   )
+  */
   .addOption(
     new Option(
       '-A, --all-separate',
@@ -38,9 +42,12 @@ program
         options,
         command
       );
-      if (await getTokens()) {
-        // code goes here
+      if (options.allSeparate && (await getTokens())) {
+        verboseMessage('Exporting all themes to separate files...');
+        exportVariablesToFiles();
       } else {
+        printMessage('Unrecognized combination of options or no options...');
+        program.help();
         process.exitCode = 1;
       }
     }
