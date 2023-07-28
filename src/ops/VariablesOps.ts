@@ -4,15 +4,19 @@ import { VariableExpressionType } from '@rockcarver/frodo-lib/types/api/cloud/Va
 import {
   createKeyValueTable,
   createProgressBar,
+  createProgressIndicator,
   createTable,
   failSpinner,
   printMessage,
   showSpinner,
   stopProgressBar,
+  stopProgressIndicator,
   succeedSpinner,
   updateProgressBar,
+  updateProgressIndicator,
 } from '../utils/Console';
 import wordwrap from './utils/Wordwrap';
+import { getTypedFilename, saveToFile } from '../utils/ExportImportUtils';
 
 const { decodeBase64 } = frodo.utils;
 const { resolveUserName } = frodo.idm.managed;
@@ -194,4 +198,24 @@ export async function describeVariable(variableId) {
   ]);
   table.push(['Modifier UUID'['brightCyan'], variable.lastChangedBy]);
   printMessage(table.toString());
+}
+
+/**
+ * Export all variables to seperate files
+ */
+export async function exportVariablesToFiles() {
+  const variableList = (await getVariables()).result;
+  createProgressIndicator(
+    'determinate',
+    variableList.length,
+    'Exporting variables'
+  );
+  for (const variable of variableList) {
+    variable.value = decode(variable.valueBase64);
+    delete variable.valueBase64;
+    updateProgressIndicator(`Writing variable ${variable._id}`);
+    const fileName = getTypedFilename(variable._id, 'variable');
+    saveToFile('variable', variable, '_id', fileName);
+  }
+  stopProgressIndicator(`${variableList.length} variables exported`);
 }

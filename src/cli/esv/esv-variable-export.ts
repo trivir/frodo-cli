@@ -1,7 +1,8 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
-
 import { FrodoCommand } from '../FrodoCommand';
+import { printMessage, verboseMessage } from '../../utils/Console';
+import { exportVariablesToFiles } from '../../ops/VariablesOps';
 
 const { getTokens } = frodo.login;
 
@@ -39,9 +40,12 @@ program
         options,
         command
       );
-      if (await getTokens()) {
-        // code goes here
+      if (options.allSeparate && (await getTokens())) {
+        verboseMessage('Exporting all themes to separate files...');
+        exportVariablesToFiles();
       } else {
+        printMessage('Unrecognized combination of options or no options...');
+        program.help();
         process.exitCode = 1;
       }
     }
