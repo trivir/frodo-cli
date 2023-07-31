@@ -1,8 +1,8 @@
-import { frodo } from '@rockcarver/frodo-lib';
+import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 import { FrodoCommand } from '../FrodoCommand';
 import { printMessage, verboseMessage } from '../../utils/Console';
-import { exportVariablesToFiles } from '../../ops/VariablesOps';
+import { exportVariableToFile, exportVariablesToFile, exportVariablesToFiles } from '../../ops/VariablesOps';
 
 const { getTokens } = frodo.login;
 
@@ -40,11 +40,25 @@ program
         options,
         command
       );
-      if (options.allSeparate && (await getTokens())) {
-        verboseMessage('Exporting all themes to separate files...');
-        exportVariablesToFiles();
+
+      if (options.variableId && (await getTokens())) {
+        verboseMessage(
+          `Exporting variable "${
+            options.variableId
+          }" from realm "${state.getRealm()}"...`
+        );
+        await exportVariableToFile(options.variableId, options.file);
+      } else if (options.all && (await getTokens())) {
+        verboseMessage('Exporting all variables to a single file...');
+        await exportVariablesToFile(options.file);
+      } else if (options.allSeparate && (await getTokens())) {
+        verboseMessage('Exporting all variables to separate files...');
+        await exportVariablesToFiles();
       } else {
-        printMessage('Unrecognized combination of options or no options...');
+        printMessage(
+          'Unrecognized combination of options or no options...',
+          'error'
+        );
         program.help();
         process.exitCode = 1;
       }
