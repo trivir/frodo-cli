@@ -1,9 +1,10 @@
-import { frodo } from '@rockcarver/frodo-lib';
+import { frodo, state } from '@rockcarver/frodo-lib';
 import {
   createKeyValueTable,
   createProgressBar,
   createProgressIndicator,
   createTable,
+  debugMessage,
   failSpinner,
   printMessage,
   showSpinner,
@@ -14,11 +15,11 @@ import {
   updateProgressIndicator,
 } from '../utils/Console';
 import wordwrap from './utils/Wordwrap';
-import { getTypedFilename, saveToFile } from '../utils/ExportImportUtils';
+import { getTypedFilename, saveToFile, saveJsonToFile, titleCase } from '../utils/ExportImportUtils';
 
 const { decode } = frodo.helper.base64;
 const { resolveUserName } = frodo.idm.managed;
-const { getVariables, getVariable, putVariable } = frodo.cloud.variable;
+const { getVariables, getVariable, putVariable, exportVariable, exportVariables } = frodo.cloud.variable;
 
 /**
  * List variables
@@ -55,8 +56,8 @@ export async function listVariables(long) {
     }
     printMessage(table.toString(), 'data');
   } else {
-    variables.forEach((secret) => {
-      printMessage(secret._id, 'data');
+    variables.forEach((variable) => {
+      printMessage(variable._id, 'data');
     });
   }
 }
@@ -191,10 +192,66 @@ export async function describeVariable(variableId) {
 }
 
 /**
+ * Export a single variable to file
+ * @param {String} variableId Variable id
+ * @param {String} file Optional filename
+ */
+export async function exportVariableToFile(variableId, file = null) {
+  debugMessage(
+    `Cli.VariablesOps.exportVariableToFile: start [entityId=${variableId}, file=${file}]`
+  );
+  let fileName = file;
+  if (!fileName) {
+    fileName = getTypedFilename(variableId, 'variable');
+  }
+  try {
+    createProgressBar(1, `Exporting variable ${variableId}`);
+    const fileData = await exportVariable(variableId);
+    saveJsonToFile(fileData, fileName);
+    updateProgressBar(`Exported variable ${variableId}`);
+    stopProgressBar(
+      `Exported ${variableId.brightCyan} to ${fileName.brightCyan}.`
+    );
+  } catch (err) {
+    stopProgressBar(`${err}`);
+    printMessage(err, 'error');
+  }
+  debugMessage(
+    `Cli.VariablesOps.exportVariableToFile: end [variableId=${variableId}, file=${fileName}]`
+  );
+}
+
+/**
+ * Export all variables to single file
+ * @param {string} file Optional filename
+ */
+export async function exportVariablesToFile(file: string) {
+  debugMessage(`Cli.VariablesOps.exportVariablesToFile: start`);
+  let fileName = file;
+  if (!fileName) {
+    fileName = getTypedFilename(`all${titleCase(state.getRealm())}Variables`, 'variable');
+  }
+  try {
+    const variablesExport = await exportVariables();
+    saveJsonToFile(variablesExport, fileName);
+  } catch (error) {
+    printMessage(error.message, 'error');
+    printMessage(
+      `exportVariablesToFile: ${error.response?.status}`,
+      'error'
+    );
+  }
+  debugMessage(`Cli.VariablesOps.exportVariablesToFile: end [file=${file}]`);
+}
+
+/**
  * Export all variables to seperate files
  */
 export async function exportVariablesToFiles() {
   const variableList = (await getVariables()).result;
+  if (variableList.length === 0) {
+    printMessage('No variables found.', 'info');
+  }
   createProgressIndicator(
     'determinate',
     variableList.length,
