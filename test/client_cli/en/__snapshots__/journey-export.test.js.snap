@@ -55,6 +55,8 @@ Options:
                                templates or how to walk through the tenant
                                admin login flow of Identity Cloud and handle
                                MFA (choices: "classic", "cloud", "forgeops")
+  --no-coords                  Do not include the x and y coordinate positions
+                               of the journey/tree nodes.
   --no-deps                    Do not include any dependencies (scripts, email
                                templates, SAML entity providers and circles of
                                trust, social identity providers, themes).
