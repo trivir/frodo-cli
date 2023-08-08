@@ -9,8 +9,8 @@ import {
   printMessage,
   stopProgressIndicator,
 } from '../utils/Console';
-import { getTypedFilename } from '../utils/ExportImportUtils';
 
+const { getTypedFilename } = frodo.utils.impex;
 const { validateScriptHooks } = frodo.helper.script;
 const { readFiles, unSubstituteEnvParams } = frodo.helper.utils;
 const {

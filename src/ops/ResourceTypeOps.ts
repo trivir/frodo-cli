@@ -13,13 +13,9 @@ import {
   succeedSpinner,
   updateProgressBar,
 } from '../utils/Console';
-import {
-  getTypedFilename,
-  saveJsonToFile,
-  titleCase,
-} from '../utils/ExportImportUtils';
 import { ResourceTypeExportInterface } from '@rockcarver/frodo-lib/types/ops/ResourceTypeOps';
 
+const { getTypedFilename, saveJsonToFile, titleCase } = frodo.utils.impex;
 const { getRealmName } = frodo.helper.utils;
 const {
   getResourceTypes,

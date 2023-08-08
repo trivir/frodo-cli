@@ -9,12 +9,8 @@ import {
   failSpinner,
 } from '../utils/Console';
 import type { AgentExportInterface } from '@rockcarver/frodo-lib/types/ops/OpsTypes';
-import {
-  getTypedFilename,
-  saveJsonToFile,
-  titleCase,
-} from '../utils/ExportImportUtils';
 
+const { getTypedFilename, saveJsonToFile, titleCase } = frodo.utils.impex;
 const { getRealmName } = frodo.helper.utils;
 const {
   createAgentExportTemplate,

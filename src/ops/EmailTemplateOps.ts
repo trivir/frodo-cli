@@ -1,7 +1,6 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 import type { EmailTemplateSkeleton } from '@rockcarver/frodo-lib/types/api/ApiTypes';
-import { getTypedFilename, saveJsonToFile } from '../utils/ExportImportUtils';
 import {
   createProgressIndicator,
   updateProgressIndicator,
@@ -17,7 +16,7 @@ import wordwrap from './utils/Wordwrap';
 import path from 'path';
 import { cloneDeep } from './utils/OpsUtils';
 
-const { validateImport } = frodo.utils.impex;
+const { validateImport, getTypedFilename, saveJsonToFile } = frodo.utils.impex;
 const {
   EMAIL_TEMPLATE_TYPE,
   getEmailTemplates,

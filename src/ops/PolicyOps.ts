@@ -12,17 +12,13 @@ import {
   succeedSpinner,
   updateProgressBar,
 } from '../utils/Console';
-import {
-  getTypedFilename,
-  saveJsonToFile,
-  titleCase,
-} from '../utils/ExportImportUtils';
 import type {
   PolicyExportOptions,
   PolicyImportOptions,
   PolicyExportInterface,
 } from '@rockcarver/frodo-lib/types/ops/PolicyOps';
 
+const { getTypedFilename, saveJsonToFile, titleCase } = frodo.utils.impex;
 const { getRealmName } = frodo.helper.utils;
 const {
   getPolicies,

@@ -11,7 +11,6 @@ import {
   succeedSpinner,
   updateProgressBar,
 } from '../utils/Console';
-import { saveJsonToFile } from '../utils/ExportImportUtils';
 import type {
   OAuth2ClientExportInterface,
   OAuth2ClientExportOptions,
@@ -19,7 +18,7 @@ import type {
 } from '@rockcarver/frodo-lib/types/ops/OAuth2ClientOps';
 import { ReadableStrings } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 
-const { getTypedFilename, titleCase } = frodo.utils.impex;
+const { getTypedFilename, titleCase, saveJsonToFile } = frodo.utils.impex;
 const {
   getOAuth2Clients,
   exportOAuth2Client,

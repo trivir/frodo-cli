@@ -8,9 +8,8 @@ import {
   updateProgressIndicator,
   stopProgressIndicator,
 } from '../utils/Console';
-import { saveToFile, getTypedFilename } from '../utils/ExportImportUtils';
 
-const { getRealmString, validateImport } = frodo.utils.impex;
+const { getRealmString, validateImport, saveToFile, getTypedFilename } = frodo.utils.impex;
 const {
   getThemes,
   getThemeByName,

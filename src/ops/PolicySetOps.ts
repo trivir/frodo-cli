@@ -16,16 +16,12 @@ import {
   updateProgressBar,
 } from '../utils/Console';
 import {
-  getTypedFilename,
-  saveJsonToFile,
-  titleCase,
-} from '../utils/ExportImportUtils';
-import {
   PolicySetExportInterface,
   PolicySetExportOptions,
   PolicySetImportOptions,
 } from '@rockcarver/frodo-lib/types/ops/PolicySetOps';
 
+const { getTypedFilename, saveJsonToFile, titleCase } = frodo.utils.impex;
 const { getRealmName } = frodo.helper.utils;
 const { getPoliciesByPolicySet, deletePolicy } = frodo.authz.policy;
 const {

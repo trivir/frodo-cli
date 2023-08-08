@@ -12,7 +12,6 @@ import {
   succeedSpinner,
   updateProgressBar,
 } from '../utils/Console';
-import { saveTextToFile } from '../utils/ExportImportUtils';
 import type {
   MultiOpStatusInterface,
   Saml2ExportInterface,
@@ -20,7 +19,7 @@ import type {
 import type { Saml2ProviderSkeleton } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 
 const { decode } = frodo.helper.base64;
-const { getTypedFilename, saveJsonToFile, getRealmString, validateImport } =
+const { getTypedFilename, saveJsonToFile, getRealmString, validateImport, saveTextToFile } =
   frodo.utils.impex;
 const {
   getSaml2ProviderStubs,

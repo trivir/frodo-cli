@@ -10,7 +10,8 @@ import {
   succeedSpinner,
   updateProgressBar,
 } from '../utils/Console';
-import { getTypedFilename, saveJsonToFile } from '../utils/ExportImportUtils';
+
+const { getTypedFilename, saveJsonToFile } = frodo.utils.impex;
 
 const {
   getAdminFederationProviders,

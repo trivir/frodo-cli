@@ -4,8 +4,8 @@ import { Option } from 'commander';
 import { frodo, state } from '@rockcarver/frodo-lib';
 import { describeJourney, describeJourneyMd } from '../../ops/JourneyOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
-import { saveTextToFile } from '../../utils/ExportImportUtils';
 
+const { saveTextToFile } = frodo.utils.impex;
 const { getTokens } = frodo.login;
 const { createFileParamTreeExportResolver, getJourneys, exportJourney } =
   frodo.authn.journey;

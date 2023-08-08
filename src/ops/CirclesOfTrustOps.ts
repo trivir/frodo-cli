@@ -12,13 +12,9 @@ import {
   updateProgressBar,
 } from '../utils/Console';
 import type { CircleOfTrustSkeleton } from '@rockcarver/frodo-lib/types/api/ApiTypes';
-import {
-  getTypedFilename,
-  saveJsonToFile,
-  titleCase,
-} from '../utils/ExportImportUtils';
 import type { CirclesOfTrustExportInterface } from '@rockcarver/frodo-lib/types/ops/OpsTypes';
 
+const { getTypedFilename, saveJsonToFile, titleCase } = frodo.utils.impex;
 const { getRealmName } = frodo.helper.utils;
 const {
   getCirclesOfTrust,

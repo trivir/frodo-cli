@@ -11,12 +11,8 @@ import {
   succeedSpinner,
   updateProgressBar,
 } from '../utils/Console';
-import {
-  getRealmString,
-  getTypedFilename,
-  saveJsonToFile,
-} from '../utils/ExportImportUtils';
 
+const { getTypedFilename, saveJsonToFile, getRealmString } = frodo.utils.impex;
 const {
   getSocialIdentityProviders,
   exportSocialProvider,
