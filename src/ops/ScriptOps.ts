@@ -245,7 +245,6 @@ export async function exportScriptsToFiles(includeMeta: boolean, metadataFile: s
     }
   }
   if (metadataFile) {
-    updateProgressBar(`Writing metadata to ${metadataFile}`);
     saveMetadataToFile(metadataFile);
   }
   stopProgressBar(`Exported ${scriptList.length} scripts to individual files.`);
@@ -300,7 +299,6 @@ export async function exportScriptsToFilesExtract(includeMeta: boolean, metadata
     }
   }
   if (metadataFile) {
-    updateProgressBar(`Writing metadata to ${metadataFile}`);
     saveMetadataToFile(metadataFile);
   }
   stopProgressBar(`Exported ${scriptList.length} scripts to individual files.`);

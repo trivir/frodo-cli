@@ -12,7 +12,7 @@ import {
   updateProgressBar,
 } from '../utils/Console';
 
-const { getTypedFilename, saveJsonToFile, getRealmString } = frodo.utils.impex;
+const { getTypedFilename, saveJsonToFile, getRealmString, saveMetadataToFile } = frodo.utils.impex;
 const {
   getSocialIdentityProviders,
   exportSocialProvider,
@@ -77,10 +77,14 @@ export async function listSocialProviders() {
  * Export provider by id
  * @param {string} providerId provider id/name
  * @param {string} file optional export file name
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
 export async function exportSocialProviderToFile(
   providerId: string,
-  file = ''
+  file = '',
+  includeMeta,
+  metadataFile
 ) {
   debugMessage(`cli.IdpOps.exportSocialProviderToFile: start`);
   let fileName = file;
@@ -91,7 +95,10 @@ export async function exportSocialProviderToFile(
   try {
     updateProgressBar(`Writing file ${fileName}`);
     const fileData = await exportSocialProvider(providerId);
-    saveJsonToFile(fileData, fileName);
+    saveJsonToFile(fileData, fileName, includeMeta);
+    if (metadataFile) {
+      saveMetadataToFile(metadataFile);
+    }
     stopProgressBar(
       `Exported ${providerId['brightCyan']} to ${fileName['brightCyan']}.`
     );
@@ -105,20 +112,27 @@ export async function exportSocialProviderToFile(
 /**
  * Export all providers
  * @param {string} file optional export file name
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportSocialProvidersToFile(file = '') {
+export async function exportSocialProvidersToFile(file = '', includeMeta, metadataFile) {
   let fileName = file;
   if (!fileName) {
     fileName = getTypedFilename(`all${getRealmString()}Providers`, 'idp');
   }
   const fileData = await exportSocialProviders();
-  saveJsonToFile(fileData, fileName);
+  saveJsonToFile(fileData, fileName, includeMeta);
+  if (metadataFile) {
+    saveMetadataToFile(metadataFile);
+  }
 }
 
 /**
  * Export all providers to individual files
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportSocialProvidersToFiles() {
+export async function exportSocialProvidersToFiles(includeMeta, metadataFile) {
   debugMessage(`cli.IdpOps.exportSocialProvidersToFiles: start`);
   try {
     const allIdpsData = await getSocialIdentityProviders();
@@ -127,11 +141,14 @@ export async function exportSocialProvidersToFiles() {
       try {
         const fileName = getTypedFilename(idpData._id, 'idp');
         const fileData = await exportSocialProvider(idpData._id);
-        saveJsonToFile(fileData, fileName);
+        saveJsonToFile(fileData, fileName, includeMeta);
         updateProgressBar(`Exported provider ${idpData._id}`);
       } catch (error) {
         printMessage(`Error exporting ${idpData._id}: ${error}`, 'error');
       }
+    }
+    if (metadataFile) {
+      saveMetadataToFile(metadataFile);
     }
     stopProgressBar(`${allIdpsData.length} providers exported.`);
   } catch (error) {

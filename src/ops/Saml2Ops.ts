@@ -187,7 +187,6 @@ export async function exportSaml2ProviderToFile(entityId, file = null, includeMe
     saveJsonToFile(fileData, fileName, includeMeta);
     updateProgressBar(`Exported provider ${entityId}`);
     if (metadataFile) {
-      updateProgressBar(`Writing metadata to ${metadataFile}`);
       saveMetadataToFile(metadataFile);
     }
     stopProgressBar(
@@ -246,7 +245,6 @@ export async function exportSaml2ProvidersToFiles(includeMeta, metadataFile) {
       updateProgressBar(`Exported provider ${stub.entityId}`);
     }
     if (metadataFile) {
-      updateProgressBar(`Writing metadata to ${metadataFile}`);
       saveMetadataToFile(metadataFile);
     }
     stopProgressBar(`${stubs.length} providers exported.`);

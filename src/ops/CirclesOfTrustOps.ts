@@ -199,7 +199,6 @@ export async function exportCirclesOfTrustToFiles(includeMeta, metadataFile): Pr
       }
     }
     if (metadataFile) {
-      updateProgressBar(`Writing metadata to ${metadataFile}`);
       saveMetadataToFile(metadataFile);
     }
     stopProgressBar(`Export complete.`);

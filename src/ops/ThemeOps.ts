@@ -108,7 +108,6 @@ export async function exportThemeByName(name, file, includeMeta, metadataFile) {
     updateProgressIndicator(`Writing file ${fileName}`);
     saveToFile('theme', [themeData], '_id', includeMeta, fileName);
     if (metadataFile) {
-      updateProgressIndicator(`Writing metadata to ${metadataFile}`);
       saveMetadataToFile(metadataFile);
     }
     stopProgressIndicator(`Successfully exported theme ${name}.`);
@@ -136,7 +135,6 @@ export async function exportThemeById(id, file, includeMeta, metadataFile) {
     updateProgressIndicator(`Writing file ${fileName}`);
     saveToFile('theme', [themeData], '_id', includeMeta, fileName);
     if (metadataFile) {
-      updateProgressIndicator(`Writing metadata to ${metadataFile}`);
       saveMetadataToFile(metadataFile);
     }
     stopProgressIndicator(`Successfully exported theme ${id}.`);
@@ -168,7 +166,6 @@ export async function exportThemesToFile(file, includeMeta, metadataFile) {
   }
   saveToFile('theme', allThemesData, '_id', includeMeta, fileName);
   if (metadataFile) {
-    updateProgressIndicator(`Writing metadata to ${metadataFile}`);
     saveMetadataToFile(metadataFile);
   }
   stopProgressIndicator(
@@ -194,7 +191,6 @@ export async function exportThemesToFiles(includeMeta, metadataFile) {
     saveToFile('theme', themeData, '_id', includeMeta, fileName);
   }
   if (metadataFile) {
-    updateProgressIndicator(`Writing metadata to ${metadataFile}`);
     saveMetadataToFile(metadataFile);
   }
   stopProgressIndicator(`${allThemesData.length} themes exported.`);
