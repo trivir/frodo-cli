@@ -226,7 +226,7 @@ export async function exportScriptsToFiles(includeMeta: boolean, metadataFile: s
   debugMessage(`Cli.ScriptOps.exportScriptsToFiles: start`);
   const scriptList = await getScripts();
   createProgressBar(
-    scriptList.length + (metadataFile ? 1 : 0),
+    scriptList.length,
     'Exporting scripts to individual files...'
   );
   for (const script of scriptList) {
@@ -264,7 +264,7 @@ export async function exportScriptsToFilesExtract(includeMeta: boolean, metadata
   debugMessage(`Cli.ScriptOps.exportScriptsToFilesExtract: start`);
   const scriptList = await getScripts();
   createProgressBar(
-    scriptList.length + (metadataFile ? 1 : 0),
+    scriptList.length,
     'Exporting scripts to individual files...'
   );
   for (const script of scriptList) {

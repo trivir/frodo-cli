@@ -40,6 +40,18 @@ program
       'Export all scripts to separate files (*.script.json) in the current directory. Ignored with -n or -a.'
     )
   )
+  .addOption(
+    new Option(
+      '--no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--metadata-file [metadataFile]',
+      'Name of the file to write the metadata to.'
+    )
+  )
   // deprecated option
   .addOption(
     new Option(
@@ -51,18 +63,6 @@ program
     new Option(
       '-x, --extract',
       'Extract the script from the exported file, and save it to a separate file. Ignored with -n or -a.'
-    )
-  )
-  .addOption(
-    new Option(
-      '--no-metadata',
-      'Does not include metadata in the export file.'
-    )
-  )
-  .addOption(
-    new Option(
-      '--metadata-file [metadataFile]',
-      'Name of the file to write the metadata to.'
     )
   )
   .action(

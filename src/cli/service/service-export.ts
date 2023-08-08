@@ -43,7 +43,6 @@ program
       'Export all services to separate files (*.service.json) in the current directory. Ignored with -a.'
     )
   )
-  .addOption(new Option('-g, --global', 'Export global services.'))
   .addOption(
     new Option(
       '--no-metadata',
@@ -56,6 +55,7 @@ program
       'Name of the file to write the metadata to.'
     )
   )
+  .addOption(new Option('-g, --global', 'Export global services.'))
   .action(
     async (
       host: string,

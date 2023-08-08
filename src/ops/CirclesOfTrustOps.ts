@@ -185,7 +185,7 @@ export async function exportCirclesOfTrustToFiles(includeMeta, metadataFile): Pr
   const errors = [];
   try {
     const cots: CircleOfTrustSkeleton[] = await getCirclesOfTrust();
-    createProgressBar(cots.length + (metadataFile ? 1 : 0), 'Exporting circles of trust...');
+    createProgressBar(cots.length, 'Exporting circles of trust...');
     for (const cot of cots) {
       const file = getTypedFilename(cot._id, 'cot.saml');
       try {

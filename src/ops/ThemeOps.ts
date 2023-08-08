@@ -102,7 +102,7 @@ export async function exportThemeByName(name, file, includeMeta, metadataFile) {
   if (file) {
     fileName = file;
   }
-  createProgressIndicator('determinate', metadataFile ? 2 : 1, `Exporting ${name}`);
+  createProgressIndicator('determinate', 1, `Exporting ${name}`);
   try {
     const themeData = await getThemeByName(name);
     updateProgressIndicator(`Writing file ${fileName}`);
@@ -130,7 +130,7 @@ export async function exportThemeById(id, file, includeMeta, metadataFile) {
   if (file) {
     fileName = file;
   }
-  createProgressIndicator('determinate', metadataFile ? 2 : 1, `Exporting ${id}`);
+  createProgressIndicator('determinate', 1, `Exporting ${id}`);
   try {
     const themeData = await getTheme(id);
     updateProgressIndicator(`Writing file ${fileName}`);
@@ -160,7 +160,7 @@ export async function exportThemesToFile(file, includeMeta, metadataFile) {
   const allThemesData = await getThemes();
   createProgressIndicator(
     'determinate',
-    allThemesData.length + (metadataFile ? 1 : 0),
+    allThemesData.length,
     'Exporting themes'
   );
   for (const themeData of allThemesData) {
@@ -185,7 +185,7 @@ export async function exportThemesToFiles(includeMeta, metadataFile) {
   const allThemesData = await getThemes();
   createProgressIndicator(
     'determinate',
-    allThemesData.length + (metadataFile ? 1 : 0),
+    allThemesData.length,
     'Exporting themes'
   );
   for (const themeData of allThemesData) {

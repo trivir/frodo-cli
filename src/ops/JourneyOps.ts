@@ -34,7 +34,7 @@ import * as Theme from './ThemeOps';
 import wordwrap from './utils/Wordwrap';
 import { cloneDeep } from './utils/OpsUtils';
 
-const { getTypedFilename, saveJsonToFile, getRealmString } = frodo.utils.impex;
+const { getTypedFilename, saveJsonToFile, getRealmString, saveMetadataToFile } = frodo.utils.impex;
 const {
   getJourneys,
   exportJourney,
@@ -91,6 +91,8 @@ export async function listJourneys(
               exportJourney(journeyStub['_id'], {
                 useStringArrays: false,
                 deps: false,
+                includeMeta: true,
+                metadataFile: undefined
               })
             );
           }
@@ -165,7 +167,10 @@ export async function exportJourneyToFile(
       options
     );
     if (verbose) showSpinner(`${journeyId}`);
-    saveJsonToFile(fileData, file);
+    saveJsonToFile(fileData, file, options.includeMeta);
+    if (options.metadataFile) {
+      saveMetadataToFile(options.metadataFile);
+    }
     succeedSpinner(
       `Exported ${journeyId['brightCyan']} to ${file['brightCyan']}.`
     );
@@ -185,6 +190,8 @@ export async function exportJourneysToFile(
   options: TreeExportOptions = {
     deps: false,
     useStringArrays: false,
+    includeMeta: true,
+    metadataFile: undefined
   }
 ): Promise<void> {
   let fileName = file;
@@ -204,7 +211,10 @@ export async function exportJourneysToFile(
       printMessage(`Error exporting journey ${tree._id}: ${error}`, 'error');
     }
   }
-  saveJsonToFile(fileData, fileName);
+  saveJsonToFile(fileData, fileName, options.includeMeta);
+  if (options.metadataFile) {
+    saveMetadataToFile(options.metadataFile);
+  }
   stopProgressBar(`Exported to ${fileName}`);
 }
 
@@ -225,10 +235,13 @@ export async function exportJourneysToFiles(
         tree._id,
         options
       );
-      saveJsonToFile(exportData, fileName);
+      saveJsonToFile(exportData, fileName, options.includeMeta);
     } catch (error) {
       // do we need to report status here?
     }
+  }
+  if (options.metadataFile) {
+    saveMetadataToFile(options.metadataFile);
   }
   stopProgressBar('Done');
 }

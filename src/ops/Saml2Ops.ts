@@ -182,7 +182,7 @@ export async function exportSaml2ProviderToFile(entityId, file = null, includeMe
     fileName = getTypedFilename(entityId, 'saml');
   }
   try {
-    createProgressBar(metadataFile ? 2 : 1, `Exporting provider ${entityId}`);
+    createProgressBar(1, `Exporting provider ${entityId}`);
     const fileData = await exportSaml2Provider(entityId);
     saveJsonToFile(fileData, fileName, includeMeta);
     updateProgressBar(`Exported provider ${entityId}`);
@@ -238,7 +238,7 @@ export async function exportSaml2ProvidersToFile(file = null, includeMeta, metad
 export async function exportSaml2ProvidersToFiles(includeMeta, metadataFile) {
   const stubs = await getSaml2ProviderStubs();
   if (stubs.length > 0) {
-    createProgressBar(stubs.length + (metadataFile ? 1 : 0), 'Exporting providers');
+    createProgressBar(stubs.length, 'Exporting providers');
     for (const stub of stubs) {
       const fileName = getTypedFilename(stub.entityId, 'saml');
       const fileData = await exportSaml2Provider(stub.entityId);

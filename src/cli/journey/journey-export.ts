@@ -40,6 +40,18 @@ program
   )
   .addOption(
     new Option(
+      '--no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--metadata-file [metadataFile]',
+      'Name of the file to write the metadata to.'
+    )
+  )
+  .addOption(
+    new Option(
       '--use-string-arrays',
       'Where applicable, use string arrays to store multi-line text (e.g. scripts).'
     ).default(false, 'off')
@@ -80,6 +92,8 @@ program
         await exportJourneyToFile(options.journeyId, options.file, {
           useStringArrays: options.useStringArrays,
           deps: options.deps,
+          includeMeta: options.metadata,
+          metadataFile: options.metadataFile
         });
       }
       // --all -a
@@ -88,6 +102,8 @@ program
         await exportJourneysToFile(options.file, {
           useStringArrays: options.useStringArrays,
           deps: options.deps,
+          includeMeta: options.metadata,
+          metadataFile: options.metadataFile
         });
       }
       // --all-separate -A
@@ -96,6 +112,8 @@ program
         await exportJourneysToFiles({
           useStringArrays: options.useStringArrays,
           deps: options.deps,
+          includeMeta: options.metadata,
+          metadataFile: options.metadataFile
         });
       }
       // unrecognized combination of options or no options
