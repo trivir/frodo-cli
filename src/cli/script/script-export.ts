@@ -53,6 +53,18 @@ program
       'Extract the script from the exported file, and save it to a separate file. Ignored with -n or -a.'
     )
   )
+  .addOption(
+    new Option(
+      '--no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--metadata-file [metadataFile]',
+      'Name of the file to write the metadata to.'
+    )
+  )
   .action(
     // implement command logic inside action handler
     async (host, realm, user, password, options, command) => {
@@ -76,22 +88,24 @@ program
         verboseMessage('Exporting script...');
         await exportScriptByNameToFile(
           options.scriptName || options.script,
-          options.file
+          options.file,
+          options.metadata,
+          options.metadataFile
         );
       }
       // -a / --all
       else if (options.all) {
         verboseMessage('Exporting all scripts to a single file...');
-        await exportScriptsToFile(options.file);
+        await exportScriptsToFile(options.file, options.metadata, options.metadataFile);
       }
       // -A / --all-separate
       else if (options.allSeparate) {
         verboseMessage('Exporting all scripts to separate files...');
         // -x / --extract
         if (options.extract) {
-          await exportScriptsToFilesExtract();
+          await exportScriptsToFilesExtract(options.metadata, options.metadataFile);
         } else {
-          await exportScriptsToFiles();
+          await exportScriptsToFiles(options.metadata, options.metadataFile);
         }
       }
 

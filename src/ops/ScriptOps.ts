@@ -17,7 +17,7 @@ import wordwrap from './utils/Wordwrap';
 import type { ScriptSkeleton } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 import type { ScriptExportInterface } from '@rockcarver/frodo-lib/types/ops/OpsTypes';
 
-const { getTypedFilename, saveJsonToFile, saveTextToFile, titleCase } = frodo.utils.impex;
+const { getTypedFilename, saveJsonToFile, saveTextToFile, titleCase, saveMetadataToFile } = frodo.utils.impex;
 
 const {
   getScripts,
@@ -111,11 +111,15 @@ export async function listScripts(long = false): Promise<boolean> {
  * Export script by id to file
  * @param {string} scriptId script uuid
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  * @returns {Promise<boolean>} true if no errors occurred during export, false otherwise
  */
 export async function exportScriptToFile(
   scriptId: string,
-  file: string
+  file: string,
+  includeMeta: boolean,
+  metadataFile: string
 ): Promise<boolean> {
   debugMessage(`Cli.ScriptOps.exportScriptToFile: start`);
   try {
@@ -126,7 +130,10 @@ export async function exportScriptToFile(
     }
     spinSpinner(`Exporting script '${scriptId}' to '${fileName}'...`);
     const scriptExport = await exportScript(scriptId);
-    saveJsonToFile(scriptExport, fileName);
+    saveJsonToFile(scriptExport, fileName, includeMeta);
+    if (metadataFile) {
+      saveMetadataToFile(metadataFile);
+    }
     succeedSpinner(`Exported script '${scriptId}' to '${fileName}'.`);
     debugMessage(`Cli.ScriptOps.exportScriptToFile: end [true]`);
     return true;
@@ -142,11 +149,15 @@ export async function exportScriptToFile(
  * Export script by name to file
  * @param {string} name script name
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  * @returns {Promise<boolean>} true if no errors occurred during export, false otherwise
  */
 export async function exportScriptByNameToFile(
   name: string,
-  file: string
+  file: string,
+  includeMeta: boolean,
+  metadataFile: string
 ): Promise<boolean> {
   debugMessage(`Cli.ScriptOps.exportScriptByNameToFile: start`);
   try {
@@ -157,7 +168,10 @@ export async function exportScriptByNameToFile(
     }
     spinSpinner(`Exporting script '${name}' to '${fileName}'...`);
     const scriptExport = await exportScriptByName(name);
-    saveJsonToFile(scriptExport, fileName);
+    saveJsonToFile(scriptExport, fileName, includeMeta);
+    if (metadataFile) {
+      saveMetadataToFile(metadataFile);
+    }
     succeedSpinner(`Exported script '${name}' to '${fileName}'.`);
     debugMessage(`Cli.ScriptOps.exportScriptByNameToFile: end [true]`);
     return true;
@@ -172,9 +186,11 @@ export async function exportScriptByNameToFile(
 /**
  * Export all scripts to single file
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  * @returns {Promise<boolean>} true if no errors occurred during export, false otherwise
  */
-export async function exportScriptsToFile(file: string): Promise<boolean> {
+export async function exportScriptsToFile(file: string, includeMeta: boolean, metadataFile: string): Promise<boolean> {
   debugMessage(`Cli.ScriptOps.exportScriptsToFile: start`);
   try {
     let fileName = getTypedFilename(
@@ -185,7 +201,10 @@ export async function exportScriptsToFile(file: string): Promise<boolean> {
       fileName = file;
     }
     const scriptExport = await exportScripts();
-    saveJsonToFile(scriptExport, fileName);
+    saveJsonToFile(scriptExport, fileName, includeMeta);
+    if (metadataFile) {
+      saveMetadataToFile(metadataFile);
+    }
     debugMessage(`Cli.ScriptOps.exportScriptsToFile: end [true]`);
     return true;
   } catch (error) {
@@ -198,14 +217,16 @@ export async function exportScriptsToFile(file: string): Promise<boolean> {
 
 /**
  * Export all scripts to individual files
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  * @returns {Promise<boolean>} true if no errors occurred during export, false otherwise
  */
-export async function exportScriptsToFiles(): Promise<boolean> {
+export async function exportScriptsToFiles(includeMeta: boolean, metadataFile: string): Promise<boolean> {
   let outcome = true;
   debugMessage(`Cli.ScriptOps.exportScriptsToFiles: start`);
   const scriptList = await getScripts();
   createProgressBar(
-    scriptList.length,
+    scriptList.length + (metadataFile ? 1 : 0),
     'Exporting scripts to individual files...'
   );
   for (const script of scriptList) {
@@ -213,7 +234,7 @@ export async function exportScriptsToFiles(): Promise<boolean> {
       updateProgressBar(`Reading script ${script.name}`);
       const fileName = getTypedFilename(script.name, 'script');
       const scriptExport = await exportScriptByName(script.name);
-      saveJsonToFile(scriptExport, fileName);
+      saveJsonToFile(scriptExport, fileName, includeMeta);
     } catch (error) {
       outcome = false;
       printMessage(
@@ -223,17 +244,27 @@ export async function exportScriptsToFiles(): Promise<boolean> {
       debugMessage(error);
     }
   }
+  if (metadataFile) {
+    updateProgressBar(`Writing metadata to ${metadataFile}`);
+    saveMetadataToFile(metadataFile);
+  }
   stopProgressBar(`Exported ${scriptList.length} scripts to individual files.`);
   debugMessage(`Cli.ScriptOps.exportScriptsToFiles: end [${outcome}]`);
   return outcome;
 }
 
-export async function exportScriptsToFilesExtract(): Promise<boolean> {
+/**
+ * Export all scripts to individual files and extract scripts into their own script files
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
+ * @returns {Promise<boolean>} true if no errors occurred during export, false otherwise
+ */
+export async function exportScriptsToFilesExtract(includeMeta: boolean, metadataFile: string): Promise<boolean> {
   let outcome = true;
   debugMessage(`Cli.ScriptOps.exportScriptsToFilesExtract: start`);
   const scriptList = await getScripts();
   createProgressBar(
-    scriptList.length,
+    scriptList.length + (metadataFile ? 1 : 0),
     'Exporting scripts to individual files...'
   );
   for (const script of scriptList) {
@@ -258,7 +289,7 @@ export async function exportScriptsToFilesExtract(): Promise<boolean> {
       scriptSkeleton.script = `file://${scriptFileName}`;
 
       saveTextToFile(scriptText, scriptFileName);
-      saveJsonToFile(scriptExport, fileName);
+      saveJsonToFile(scriptExport, fileName, includeMeta);
     } catch (error) {
       outcome = false;
       printMessage(
@@ -267,6 +298,10 @@ export async function exportScriptsToFilesExtract(): Promise<boolean> {
       );
       debugMessage(error);
     }
+  }
+  if (metadataFile) {
+    updateProgressBar(`Writing metadata to ${metadataFile}`);
+    saveMetadataToFile(metadataFile);
   }
   stopProgressBar(`Exported ${scriptList.length} scripts to individual files.`);
   debugMessage(`Cli.ScriptOps.exportScriptsToFilesExtract: end [${outcome}]`);
