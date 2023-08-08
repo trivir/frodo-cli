@@ -14,7 +14,7 @@ import {
 import type { CircleOfTrustSkeleton } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 import type { CirclesOfTrustExportInterface } from '@rockcarver/frodo-lib/types/ops/OpsTypes';
 
-const { getTypedFilename, saveJsonToFile, titleCase } = frodo.utils.impex;
+const { getTypedFilename, saveJsonToFile, titleCase, saveMetadataToFile } = frodo.utils.impex;
 const { getRealmName } = frodo.helper.utils;
 const {
   getCirclesOfTrust,
@@ -108,10 +108,14 @@ export async function listCirclesOfTrust(long = false): Promise<boolean> {
  * Export a single circle of trust to file
  * @param {String} cotId circle of trust id/name
  * @param {String} file Optional filename
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
 export async function exportCircleOfTrustToFile(
   cotId: string,
-  file: string = null
+  file: string = null,
+  includeMeta,
+  metadataFile
 ): Promise<boolean> {
   let outcome = false;
   debugMessage(`cli.CirclesOfTrustOps.exportCircleOfTrustToFile: begin`);
@@ -122,7 +126,10 @@ export async function exportCircleOfTrustToFile(
       fileName = file;
     }
     const exportData = await exportCircleOfTrust(cotId);
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta);
+    if (metadataFile) {
+      saveMetadataToFile(metadataFile);
+    }
     succeedSpinner(`Exported ${cotId} to ${fileName}.`);
     outcome = true;
   } catch (error) {
@@ -135,9 +142,13 @@ export async function exportCircleOfTrustToFile(
 /**
  * Export all circles of trust to one file
  * @param {String} file Optional filename
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
 export async function exportCirclesOfTrustToFile(
-  file: string = null
+  file: string = null,
+  includeMeta,
+  metadataFile
 ): Promise<boolean> {
   let outcome = false;
   debugMessage(`cli.CirclesOfTrustOps.exportCirclesOfTrustToFile: begin`);
@@ -151,7 +162,10 @@ export async function exportCirclesOfTrustToFile(
       fileName = file;
     }
     const exportData = await exportCirclesOfTrust();
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta);
+    if (metadataFile) {
+      saveMetadataToFile(metadataFile);
+    }
     succeedSpinner(`Exported all circles of trust to ${fileName}.`);
     outcome = true;
   } catch (error) {
@@ -163,24 +177,30 @@ export async function exportCirclesOfTrustToFile(
 
 /**
  * Export all circles of trust to individual files
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportCirclesOfTrustToFiles(): Promise<boolean> {
+export async function exportCirclesOfTrustToFiles(includeMeta, metadataFile): Promise<boolean> {
   debugMessage(`cli.CirclesOfTrustOps.exportCirclesOfTrustToFiles: begin`);
   const errors = [];
   try {
     const cots: CircleOfTrustSkeleton[] = await getCirclesOfTrust();
-    createProgressBar(cots.length, 'Exporting circles of trust...');
+    createProgressBar(cots.length + (metadataFile ? 1 : 0), 'Exporting circles of trust...');
     for (const cot of cots) {
       const file = getTypedFilename(cot._id, 'cot.saml');
       try {
         const exportData: CirclesOfTrustExportInterface =
           await exportCircleOfTrust(cot._id);
-        saveJsonToFile(exportData, file);
+        saveJsonToFile(exportData, file, includeMeta);
         updateProgressBar(`Exported ${cot.name}.`);
       } catch (error) {
         errors.push(error);
         updateProgressBar(`Error exporting ${cot.name}.`);
       }
+    }
+    if (metadataFile) {
+      updateProgressBar(`Writing metadata to ${metadataFile}`);
+      saveMetadataToFile(metadataFile);
     }
     stopProgressBar(`Export complete.`);
   } catch (error) {

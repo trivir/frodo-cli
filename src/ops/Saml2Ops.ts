@@ -19,7 +19,7 @@ import type {
 import type { Saml2ProviderSkeleton } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 
 const { decode } = frodo.helper.base64;
-const { getTypedFilename, saveJsonToFile, getRealmString, validateImport, saveTextToFile } =
+const { getTypedFilename, saveJsonToFile, getRealmString, validateImport, saveTextToFile, saveMetadataToFile } =
   frodo.utils.impex;
 const {
   getSaml2ProviderStubs,
@@ -170,8 +170,10 @@ export async function exportSaml2MetadataToFile(entityId, file = null) {
  * Export a single entity provider to file
  * @param {String} entityId Provider entity id
  * @param {String} file Optional filename
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportSaml2ProviderToFile(entityId, file = null) {
+export async function exportSaml2ProviderToFile(entityId, file = null, includeMeta, metadataFile) {
   debugMessage(
     `cli.Saml2Ops.exportSaml2ProviderToFile: start [entityId=${entityId}, file=${file}]`
   );
@@ -180,10 +182,14 @@ export async function exportSaml2ProviderToFile(entityId, file = null) {
     fileName = getTypedFilename(entityId, 'saml');
   }
   try {
-    createProgressBar(1, `Exporting provider ${entityId}`);
+    createProgressBar(metadataFile ? 2 : 1, `Exporting provider ${entityId}`);
     const fileData = await exportSaml2Provider(entityId);
-    saveJsonToFile(fileData, fileName);
+    saveJsonToFile(fileData, fileName, includeMeta);
     updateProgressBar(`Exported provider ${entityId}`);
+    if (metadataFile) {
+      updateProgressBar(`Writing metadata to ${metadataFile}`);
+      saveMetadataToFile(metadataFile);
+    }
     stopProgressBar(
       `Exported ${entityId.brightCyan} to ${fileName.brightCyan}.`
     );
@@ -199,8 +205,10 @@ export async function exportSaml2ProviderToFile(entityId, file = null) {
 /**
  * Export all entity providers to one file
  * @param {String} file Optional filename
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportSaml2ProvidersToFile(file = null) {
+export async function exportSaml2ProvidersToFile(file = null, includeMeta, metadataFile) {
   debugMessage(`cli.Saml2Ops.exportSaml2ProviderToFile: start [file=${file}]`);
   let fileName = file;
   if (!fileName) {
@@ -208,7 +216,10 @@ export async function exportSaml2ProvidersToFile(file = null) {
   }
   try {
     const exportData = await exportSaml2Providers();
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta);
+    if (metadataFile) {
+      saveMetadataToFile(metadataFile);
+    }
   } catch (error) {
     printMessage(error.message, 'error');
     printMessage(
@@ -221,16 +232,22 @@ export async function exportSaml2ProvidersToFile(file = null) {
 
 /**
  * Export all entity providers to individual files
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportSaml2ProvidersToFiles() {
+export async function exportSaml2ProvidersToFiles(includeMeta, metadataFile) {
   const stubs = await getSaml2ProviderStubs();
   if (stubs.length > 0) {
-    createProgressBar(stubs.length, 'Exporting providers');
+    createProgressBar(stubs.length + (metadataFile ? 1 : 0), 'Exporting providers');
     for (const stub of stubs) {
       const fileName = getTypedFilename(stub.entityId, 'saml');
       const fileData = await exportSaml2Provider(stub.entityId);
-      saveJsonToFile(fileData, fileName);
+      saveJsonToFile(fileData, fileName, includeMeta);
       updateProgressBar(`Exported provider ${stub.entityId}`);
+    }
+    if (metadataFile) {
+      updateProgressBar(`Writing metadata to ${metadataFile}`);
+      saveMetadataToFile(metadataFile);
     }
     stopProgressBar(`${stubs.length} providers exported.`);
   } else {

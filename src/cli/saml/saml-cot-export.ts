@@ -38,6 +38,18 @@ program
       'Export all the circles of trust in a realm as separate files <cot-id>.cot.saml.json. Ignored with -i, and -a.'
     )
   )
+  .addOption(
+    new Option(
+      '--no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--metadata-file [metadataFile]',
+      'Name of the file to write the metadata to.'
+    )
+  )
   .action(
     // implement command logic inside action handler
     async (host, realm, user, password, options, command) => {
@@ -56,19 +68,19 @@ program
             options.cotId
           }" from realm "${state.getRealm()}"...`
         );
-        const outcome = exportCircleOfTrustToFile(options.cotId, options.file);
+        const outcome = exportCircleOfTrustToFile(options.cotId, options.file, options.metadata, options.metadataFile);
         if (!outcome) process.exitCode = 1;
       }
       // --all -a
       else if (options.all && (await getTokens())) {
         verboseMessage('Exporting all circles of trust to a single file...');
-        const outcome = exportCirclesOfTrustToFile(options.file);
+        const outcome = exportCirclesOfTrustToFile(options.file, options.metadata, options.metadataFile);
         if (!outcome) process.exitCode = 1;
       }
       // --all-separate -A
       else if (options.allSeparate && (await getTokens())) {
         verboseMessage('Exporting all circles of trust to separate files...');
-        const outcome = exportCirclesOfTrustToFiles();
+        const outcome = exportCirclesOfTrustToFiles(options.metadata, options.metadataFile);
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options
