@@ -16,7 +16,7 @@ import wordwrap from './utils/Wordwrap';
 import path from 'path';
 import { cloneDeep } from './utils/OpsUtils';
 
-const { validateImport, getTypedFilename, saveJsonToFile } = frodo.utils.impex;
+const { validateImport, getTypedFilename, saveJsonToFile, saveMetadataToFile } = frodo.utils.impex;
 const {
   EMAIL_TEMPLATE_TYPE,
   getEmailTemplates,
@@ -149,10 +149,14 @@ export async function listEmailTemplates(long = false): Promise<unknown[]> {
  * Export single email template to a file
  * @param {string} templateId email template id to export
  * @param {string} file filename where to export the template data
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
 export async function exportEmailTemplateToFile(
   templateId: string,
-  file: string
+  file: string,
+  includeMeta: boolean,
+  metadataFile: string,
 ) {
   let fileName = file;
   if (!fileName) {
@@ -164,7 +168,10 @@ export async function exportEmailTemplateToFile(
     updateProgressIndicator(`Writing file ${fileName}`);
     const fileData = getFileDataTemplate();
     fileData.emailTemplate[templateId] = templateData;
-    saveJsonToFile(fileData, fileName);
+    saveJsonToFile(fileData, fileName, includeMeta);
+    if (metadataFile) {
+      saveMetadataToFile(metadataFile);
+    }
     stopProgressIndicator(
       `Exported ${templateId['brightCyan']} to ${fileName['brightCyan']}.`
     );
@@ -177,8 +184,10 @@ export async function exportEmailTemplateToFile(
 /**
  * Export all email templates to file
  * @param {String} file optional filename
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportEmailTemplatesToFile(file) {
+export async function exportEmailTemplatesToFile(file, includeMeta, metadataFile) {
   let fileName = file;
   if (!fileName) {
     fileName = getTypedFilename(`allEmailTemplates`, EMAIL_TEMPLATE_FILE_TYPE);
@@ -197,7 +206,10 @@ export async function exportEmailTemplatesToFile(file) {
       updateProgressIndicator(`Exporting ${templateId}`);
       fileData.emailTemplate[templateId] = template;
     }
-    saveJsonToFile(fileData, fileName);
+    saveJsonToFile(fileData, fileName, includeMeta);
+    if (metadataFile) {
+      saveMetadataToFile(metadataFile);
+    }
     stopProgressIndicator(
       `${response.resultCount} templates exported to ${fileName}.`
     );
@@ -209,8 +221,10 @@ export async function exportEmailTemplatesToFile(file) {
 
 /**
  * Export all email templates to separate files
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportEmailTemplatesToFiles() {
+export async function exportEmailTemplatesToFiles(includeMeta, metadataFile) {
   try {
     const response = await getEmailTemplates();
     const templates = response.result;
@@ -225,7 +239,10 @@ export async function exportEmailTemplatesToFiles() {
       const fileData = getFileDataTemplate();
       updateProgressIndicator(`Exporting ${templateId}`);
       fileData.emailTemplate[templateId] = template;
-      saveJsonToFile(fileData, fileName);
+      saveJsonToFile(fileData, fileName, includeMeta);
+    }
+    if (metadataFile) {
+      saveMetadataToFile(metadataFile);
     }
     stopProgressIndicator(`${response.resultCount} templates exported.`);
   } catch (err) {
