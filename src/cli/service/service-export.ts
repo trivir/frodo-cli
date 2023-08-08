@@ -23,6 +23,8 @@ interface ServiceExportOptions {
   debug?: boolean;
   curlirize?: boolean;
   global?: boolean;
+  metadata?: boolean;
+  metadataFile?: string;
 }
 
 program
@@ -42,6 +44,18 @@ program
     )
   )
   .addOption(new Option('-g, --global', 'Export global services.'))
+  .addOption(
+    new Option(
+      '--no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--metadata-file [metadataFile]',
+      'Name of the file to write the metadata to.'
+    )
+  )
   .action(
     async (
       host: string,
@@ -68,18 +82,20 @@ program
         await exportServiceToFile(
           options.serviceId,
           options.file,
-          globalConfig
+          globalConfig,
+          options.metadata,
+          options.metadataFile
         );
       }
       // -a / --all
       else if (options.all && (await getTokens())) {
         verboseMessage('Exporting all services to a single file...');
-        await exportServicesToFile(options.file, globalConfig);
+        await exportServicesToFile(options.file, globalConfig, options.metadata, options.metadataFile);
       }
       // -A / --all-separate
       else if (options.allSeparate && (await getTokens())) {
         verboseMessage('Exporting all services to separate files...');
-        await exportServicesToFiles(globalConfig);
+        await exportServicesToFiles(globalConfig, options.metadata, options.metadataFile);
       }
       // unrecognized combination of options or no options
       else {

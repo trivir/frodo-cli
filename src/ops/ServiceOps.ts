@@ -11,7 +11,7 @@ import {
 import type { ServiceExportInterface } from '@rockcarver/frodo-lib/types/ops/OpsTypes';
 
 const { getRealmName } = frodo.helper.utils;
-const { getTypedFilename, titleCase, saveJsonToFile, getWorkingDirectory } =
+const { getTypedFilename, titleCase, saveJsonToFile, getWorkingDirectory, saveMetadataToFile } =
   frodo.utils.impex;
 const {
   getListOfServices,
@@ -52,8 +52,10 @@ export async function listServices(long = false, globalConfig = false) {
 /**
  * Export all services to file
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportServicesToFile(file, globalConfig = false) {
+export async function exportServicesToFile(file, globalConfig = false, includeMeta, metadataFile) {
   const exportData = await exportServices(globalConfig);
   let fileName = getTypedFilename(
     `all${titleCase(getRealmName(state.getRealm()))}Services`,
@@ -62,31 +64,43 @@ export async function exportServicesToFile(file, globalConfig = false) {
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta);
+  if (metadataFile) {
+    saveMetadataToFile(metadataFile);
+  }
 }
 
 /**
  * Export service to file
  * @param {string} serviceId service id
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
 export async function exportServiceToFile(
   serviceId: string,
   file: string,
-  globalConfig = false
+  globalConfig = false,
+  includeMeta,
+  metadataFile
 ) {
   const exportData = await exportService(serviceId, globalConfig);
   let fileName = getTypedFilename(serviceId, `service`);
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta);
+  if (metadataFile) {
+    saveMetadataToFile(metadataFile);
+  }
 }
 
 /**
  * Export all services to separate files
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportServicesToFiles(globalConfig = false) {
+export async function exportServicesToFiles(globalConfig = false, includeMeta, metadataFile) {
   debugMessage(`cli.ServiceOps.exportServicesToFiles: start`);
   const services = await getFullServices(globalConfig);
   for (const service of services) {
@@ -96,7 +110,10 @@ export async function exportServicesToFiles(globalConfig = false) {
     debugMessage(
       `cli.ServiceOps.exportServicesToFiles: exporting ${service._type._id} to ${fileName}`
     );
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta);
+  }
+  if (metadataFile) {
+    saveMetadataToFile(metadataFile);
   }
   debugMessage(`cli.ServiceOps.exportServicesToFiles: end.`);
 }
