@@ -18,7 +18,7 @@ import type {
   PolicyExportInterface,
 } from '@rockcarver/frodo-lib/types/ops/PolicyOps';
 
-const { getTypedFilename, saveJsonToFile, titleCase } = frodo.utils.impex;
+const { getTypedFilename, saveJsonToFile, titleCase, saveMetadataToFile } = frodo.utils.impex;
 const { getRealmName } = frodo.helper.utils;
 const {
   getPolicies,
@@ -262,6 +262,8 @@ export async function exportPolicyToFile(
     deps: true,
     prereqs: false,
     useStringArrays: true,
+    includeMeta: true,
+    metadataFile: undefined
   }
 ): Promise<boolean> {
   let outcome = false;
@@ -273,7 +275,10 @@ export async function exportPolicyToFile(
       fileName = file;
     }
     const exportData = await exportPolicy(policyId, options);
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, options.includeMeta);
+    if (options.metadataFile) {
+      saveMetadataToFile(options.metadataFile);
+    }
     succeedSpinner(`Exported ${policyId} to ${fileName}.`);
     outcome = true;
   } catch (error) {
@@ -295,6 +300,8 @@ export async function exportPoliciesToFile(
     deps: true,
     prereqs: false,
     useStringArrays: true,
+    includeMeta: true,
+    metadataFile: undefined
   }
 ): Promise<boolean> {
   let outcome = false;
@@ -309,7 +316,10 @@ export async function exportPoliciesToFile(
       fileName = file;
     }
     const exportData = await exportPolicies(options);
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, options.includeMeta);
+    if (options.metadataFile) {
+      saveMetadataToFile(options.metadataFile);
+    }
     succeedSpinner(`Exported all policy sets to ${fileName}.`);
     outcome = true;
   } catch (error) {
@@ -333,6 +343,8 @@ export async function exportPoliciesByPolicySetToFile(
     deps: true,
     prereqs: false,
     useStringArrays: true,
+    includeMeta: true,
+    metadataFile: undefined
   }
 ): Promise<boolean> {
   let outcome = false;
@@ -349,7 +361,10 @@ export async function exportPoliciesByPolicySetToFile(
       fileName = file;
     }
     const exportData = await exportPoliciesByPolicySet(policySetId, options);
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, options.includeMeta);
+    if (options.metadataFile) {
+      saveMetadataToFile(options.metadataFile);
+    }
     succeedSpinner(`Exported all policy sets to ${fileName}.`);
     outcome = true;
   } catch (error) {
@@ -369,6 +384,8 @@ export async function exportPoliciesToFiles(
     deps: true,
     prereqs: false,
     useStringArrays: true,
+    includeMeta: true,
+    metadataFile: undefined
   }
 ): Promise<boolean> {
   debugMessage(`cli.PolicyOps.exportPoliciesToFiles: begin`);
@@ -383,12 +400,15 @@ export async function exportPoliciesToFiles(
           policy._id,
           options
         );
-        saveJsonToFile(exportData, file);
+        saveJsonToFile(exportData, file, options.includeMeta);
         updateProgressBar(`Exported ${policy._id}.`);
       } catch (error) {
         errors.push(error);
         updateProgressBar(`Error exporting ${policy._id}.`);
       }
+    }
+    if (options.metadataFile) {
+      saveMetadataToFile(options.metadataFile);
     }
     stopProgressBar(`Export complete.`);
   } catch (error) {
@@ -410,6 +430,8 @@ export async function exportPoliciesByPolicySetToFiles(
     deps: true,
     prereqs: false,
     useStringArrays: true,
+    includeMeta: true,
+    metadataFile: undefined
   }
 ): Promise<boolean> {
   debugMessage(`cli.PolicyOps.exportPoliciesToFiles: begin`);
@@ -429,12 +451,15 @@ export async function exportPoliciesByPolicySetToFiles(
           policy._id,
           options
         );
-        saveJsonToFile(exportData, file);
+        saveJsonToFile(exportData, file, options.includeMeta);
         updateProgressBar(`Exported ${policy._id}.`);
       } catch (error) {
         errors.push(error);
         updateProgressBar(`Error exporting ${policy._id}.`);
       }
+    }
+    if (options.metadataFile) {
+      saveMetadataToFile(options.metadataFile);
     }
     stopProgressBar(`Export complete.`);
   } catch (error) {

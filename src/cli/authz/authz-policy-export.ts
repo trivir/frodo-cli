@@ -41,6 +41,18 @@ program
       'Export policies to separate files (*.policy.authz.json) in the current directory. Ignored with -i or -a.'
     )
   )
+  .addOption(
+    new Option(
+      '--no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--metadata-file [metadataFile]',
+      'Name of the file to write the metadata to.'
+    )
+  )
   .addOption(new Option('--no-deps', 'Do not include dependencies (scripts).'))
   .addOption(
     new Option(
@@ -66,6 +78,8 @@ program
           deps: options.deps,
           prereqs: options.prereqs,
           useStringArrays: true,
+          includeMeta: options.metadata,
+          metadataFile: options.metadataFile
         });
         if (!outcome) process.exitCode = 1;
       }
@@ -81,6 +95,8 @@ program
             deps: options.deps,
             prereqs: options.prereqs,
             useStringArrays: true,
+            includeMeta: options.metadata,
+            metadataFile: options.metadataFile
           }
         );
         if (!outcome) process.exitCode = 1;
@@ -92,6 +108,8 @@ program
           deps: options.deps,
           prereqs: options.prereqs,
           useStringArrays: true,
+          includeMeta: options.metadata,
+          metadataFile: options.metadataFile
         });
         if (!outcome) process.exitCode = 1;
       }
@@ -104,6 +122,8 @@ program
           deps: options.deps,
           prereqs: options.prereqs,
           useStringArrays: true,
+          includeMeta: options.metadata,
+          metadataFile: options.metadataFile
         });
         if (!outcome) process.exitCode = 1;
       }
@@ -116,6 +136,8 @@ program
           deps: options.deps,
           prereqs: options.prereqs,
           useStringArrays: true,
+          includeMeta: options.metadata,
+          metadataFile: options.metadataFile
         });
         if (!outcome) process.exitCode = 1;
       }

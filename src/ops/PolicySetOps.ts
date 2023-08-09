@@ -21,7 +21,7 @@ import {
   PolicySetImportOptions,
 } from '@rockcarver/frodo-lib/types/ops/PolicySetOps';
 
-const { getTypedFilename, saveJsonToFile, titleCase } = frodo.utils.impex;
+const { getTypedFilename, saveJsonToFile, titleCase, saveMetadataToFile } = frodo.utils.impex;
 const { getRealmName } = frodo.helper.utils;
 const { getPoliciesByPolicySet, deletePolicy } = frodo.authz.policy;
 const {
@@ -199,6 +199,8 @@ export async function exportPolicySetToFile(
     deps: true,
     prereqs: false,
     useStringArrays: true,
+    includeMeta: true,
+    metadataFile: undefined
   }
 ): Promise<boolean> {
   let outcome = false;
@@ -210,7 +212,10 @@ export async function exportPolicySetToFile(
       fileName = file;
     }
     const exportData = await exportPolicySet(policySetId, options);
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, options.includeMeta);
+    if (options.metadataFile) {
+      saveMetadataToFile(options.metadataFile);
+    }
     succeedSpinner(`Exported ${policySetId} to ${fileName}.`);
     outcome = true;
   } catch (error) {
@@ -232,6 +237,8 @@ export async function exportPolicySetsToFile(
     deps: true,
     prereqs: false,
     useStringArrays: true,
+    includeMeta: true,
+    metadataFile: undefined
   }
 ): Promise<boolean> {
   let outcome = false;
@@ -246,7 +253,10 @@ export async function exportPolicySetsToFile(
       fileName = file;
     }
     const exportData = await exportPolicySets(options);
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, options.includeMeta);
+    if (options.metadataFile) {
+      saveMetadataToFile(options.metadataFile);
+    }
     succeedSpinner(`Exported all policy sets to ${fileName}.`);
     outcome = true;
   } catch (error) {
@@ -266,6 +276,8 @@ export async function exportPolicySetsToFiles(
     deps: true,
     prereqs: false,
     useStringArrays: true,
+    includeMeta: true,
+    metadataFile: undefined
   }
 ): Promise<boolean> {
   debugMessage(`cli.PolicySetOps.exportPolicySetsToFiles: begin`);
@@ -280,12 +292,15 @@ export async function exportPolicySetsToFiles(
           policySet.name,
           options
         );
-        saveJsonToFile(exportData, file);
+        saveJsonToFile(exportData, file, options.includeMeta);
         updateProgressBar(`Exported ${policySet.name}.`);
       } catch (error) {
         errors.push(error);
         updateProgressBar(`Error exporting ${policySet.name}.`);
       }
+    }
+    if (options.metadataFile) {
+      saveMetadataToFile(options.metadataFile);
     }
     stopProgressBar(`Export complete.`);
   } catch (error) {

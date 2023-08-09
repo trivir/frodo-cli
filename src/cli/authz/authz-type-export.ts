@@ -40,6 +40,18 @@ program
       'Export all resource types to separate files (*.resourcetype.authz.json) in the current directory. Ignored with -i, -n, or -a.'
     )
   )
+  .addOption(
+    new Option(
+      '--no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--metadata-file [metadataFile]',
+      'Name of the file to write the metadata to.'
+    )
+  )
   .action(
     // implement command logic inside action handler
     async (host, realm, user, password, options, command) => {
@@ -54,7 +66,7 @@ program
       // export by uuid
       if (options.typeId && (await getTokens())) {
         verboseMessage('Exporting authorization resource type to file...');
-        const outcome = exportResourceTypeToFile(options.typeId, options.file);
+        const outcome = exportResourceTypeToFile(options.typeId, options.file, options.metadata, options.metadataFile);
         if (!outcome) process.exitCode = 1;
       }
       // export by name
@@ -62,14 +74,16 @@ program
         verboseMessage('Exporting authorization resource type to file...');
         const outcome = exportResourceTypeByNameToFile(
           options.typeName,
-          options.file
+          options.file,
+          options.metadata,
+          options.metadataFile
         );
         if (!outcome) process.exitCode = 1;
       }
       // -a/--all
       else if (options.all && (await getTokens())) {
         verboseMessage('Exporting all authorization resource types to file...');
-        const outcome = await exportResourceTypesToFile(options.file);
+        const outcome = await exportResourceTypesToFile(options.file, options.metadata, options.metadataFile);
         if (!outcome) process.exitCode = 1;
       }
       // -A/--all-separate
@@ -77,7 +91,7 @@ program
         verboseMessage(
           'Exporting all authorization resource types to separate files...'
         );
-        const outcome = await exportResourceTypesToFiles();
+        const outcome = await exportResourceTypesToFiles(options.metadata, options.metadataFile);
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options

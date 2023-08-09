@@ -35,6 +35,18 @@ program
   )
   .addOption(
     new Option(
+      '--no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--metadata-file [metadataFile]',
+      'Name of the file to write the metadata to.'
+    )
+  )
+  .addOption(
+    new Option(
       '--no-deps',
       'Do not include any dependencies (policies, scripts).'
     )
@@ -58,6 +70,8 @@ program
           useStringArrays: true,
           deps: options.deps,
           prereqs: options.prereqs,
+          includeMeta: options.metadata,
+          metadataFile: options.metadataFile
         });
         if (!outcome) process.exitCode = 1;
       }
@@ -68,6 +82,8 @@ program
           useStringArrays: true,
           deps: options.deps,
           prereqs: options.prereqs,
+          includeMeta: options.metadata,
+          metadataFile: options.metadataFile
         });
         if (!outcome) process.exitCode = 1;
       }
@@ -80,6 +96,8 @@ program
           useStringArrays: true,
           deps: options.deps,
           prereqs: options.prereqs,
+          includeMeta: options.metadata,
+          metadataFile: options.metadataFile
         });
         if (!outcome) process.exitCode = 1;
       }
