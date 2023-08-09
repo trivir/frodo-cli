@@ -18,7 +18,7 @@ import type {
 } from '@rockcarver/frodo-lib/types/ops/OAuth2ClientOps';
 import { ReadableStrings } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 
-const { getTypedFilename, titleCase, saveJsonToFile } = frodo.utils.impex;
+const { getTypedFilename, titleCase, saveJsonToFile, saveMetadataToFile } = frodo.utils.impex;
 const {
   getOAuth2Clients,
   exportOAuth2Client,
@@ -96,7 +96,12 @@ export async function listOAuth2Clients(long = false) {
 export async function exportOAuth2ClientToFile(
   clientId: string,
   file: string,
-  options: OAuth2ClientExportOptions = { useStringArrays: true, deps: true }
+  options: OAuth2ClientExportOptions = {
+    useStringArrays: true,
+    deps: true,
+    includeMeta: true,
+    metadataFile: undefined
+  }
 ) {
   let outcome = false;
   debugMessage(`cli.OAuth2ClientOps.exportOAuth2ClientToFile: begin`);
@@ -107,7 +112,10 @@ export async function exportOAuth2ClientToFile(
       fileName = file;
     }
     const exportData = await exportOAuth2Client(clientId, options);
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, options.includeMeta);
+    if (options.metadataFile) {
+      saveMetadataToFile(options.metadataFile);
+    }
     succeedSpinner(`Exported ${clientId} to ${fileName}.`);
     outcome = true;
   } catch (error) {
@@ -125,7 +133,12 @@ export async function exportOAuth2ClientToFile(
  */
 export async function exportOAuth2ClientsToFile(
   file: string,
-  options: OAuth2ClientExportOptions = { useStringArrays: true, deps: true }
+  options: OAuth2ClientExportOptions = {
+    useStringArrays: true,
+    deps: true,
+    includeMeta: true,
+    metadataFile: undefined
+  }
 ): Promise<boolean> {
   let outcome = false;
   debugMessage(`cli.OAuth2ClientOps.exportOAuth2ClientsToFile: begin`);
@@ -141,7 +154,10 @@ export async function exportOAuth2ClientsToFile(
       fileName = file;
     }
     const exportData = await exportOAuth2Clients(options);
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, options.includeMeta);
+    if (options.metadataFile) {
+      saveMetadataToFile(options.metadataFile);
+    }
     succeedSpinner(`Exported all clients to ${fileName}.`);
     outcome = true;
   } catch (error) {
@@ -160,7 +176,12 @@ export async function exportOAuth2ClientsToFile(
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportOAuth2ClientsToFiles(
-  options: OAuth2ClientExportOptions = { useStringArrays: true, deps: true }
+  options: OAuth2ClientExportOptions = {
+    useStringArrays: true,
+    deps: true,
+    includeMeta: true,
+    metadataFile: undefined
+  }
 ) {
   debugMessage(`cli.OAuth2ClientOps.exportOAuth2ClientsToFiles: begin`);
   const errors = [];
@@ -172,12 +193,15 @@ export async function exportOAuth2ClientsToFiles(
       try {
         const exportData: OAuth2ClientExportInterface =
           await exportOAuth2Client(client._id, options);
-        saveJsonToFile(exportData, file);
+        saveJsonToFile(exportData, file, options.includeMeta);
         updateProgressBar(`Exported ${client._id}.`);
       } catch (error) {
         errors.push(error);
         updateProgressBar(`Error exporting ${client._id}.`);
       }
+    }
+    if (options.metadataFile) {
+      saveMetadataToFile(options.metadataFile);
     }
     stopProgressBar(`Export complete.`);
   } catch (error) {

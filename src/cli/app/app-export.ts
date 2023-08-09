@@ -34,6 +34,18 @@ program
     )
   )
   .addOption(
+    new Option(
+      '--no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--metadata-file [metadataFile]',
+      'Name of the file to write the metadata to.'
+    )
+  )
+  .addOption(
     new Option('--no-deps', 'Do not include any dependencies (scripts).')
   )
   .action(
@@ -56,6 +68,8 @@ program
           {
             useStringArrays: true,
             deps: options.deps,
+            includeMeta: options.metadata,
+            metadataFile: options.metadataFile
           }
         );
         if (!status) process.exitCode = 1;
@@ -66,6 +80,8 @@ program
         const status = await exportOAuth2ClientsToFile(options.file, {
           useStringArrays: true,
           deps: options.deps,
+          includeMeta: options.metadata,
+          metadataFile: options.metadataFile
         });
         if (!status) process.exitCode = 1;
       }
@@ -75,6 +91,8 @@ program
         const status = await exportOAuth2ClientsToFiles({
           useStringArrays: true,
           deps: options.deps,
+          includeMeta: options.metadata,
+          metadataFile: options.metadataFile
         });
         if (!status) process.exitCode = 1;
       }

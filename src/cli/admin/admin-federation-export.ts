@@ -38,6 +38,18 @@ program
       'Export all the providers as separate files <provider name>.admin.federation.json. Ignored with -t, -i, and -a.'
     )
   )
+  .addOption(
+    new Option(
+      '--no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--metadata-file [metadataFile]',
+      'Name of the file to write the metadata to.'
+    )
+  )
   .action(
     // implement command logic inside action handler
     async (host, user, password, options, command) => {
@@ -48,7 +60,9 @@ program
           verboseMessage(`Exporting provider "${options.idpId}...`);
           const outcome = await exportAdminFederationProviderToFile(
             options.idpId,
-            options.file
+            options.file,
+            options.metadata,
+            options.metadataFile
           );
           if (!outcome) process.exitCode = 1;
         }
@@ -56,14 +70,19 @@ program
         else if (options.all) {
           verboseMessage('Exporting all providers to a single file...');
           const outcome = await exportAdminFederationProvidersToFile(
-            options.file
+            options.file,
+            options.metadata,
+            options.metadataFile
           );
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
         else if (options.allSeparate) {
           verboseMessage('Exporting all providers to separate files...');
-          const outcome = await exportAdminFederationProvidersToFiles();
+          const outcome = await exportAdminFederationProvidersToFiles(
+            options.metadata,
+            options.metadataFile
+          );
           if (!outcome) process.exitCode = 1;
         }
         // unrecognized combination of options or no options
