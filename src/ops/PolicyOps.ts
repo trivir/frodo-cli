@@ -252,7 +252,7 @@ export async function deletePoliciesByPolicySet(
  * Export policy to file
  * @param {string} policyId policy id/name
  * @param {string} file file name
- * @param {ApplicationExportOptions} options export options
+ * @param {PolicyExportOptions} options export options
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportPolicyToFile(

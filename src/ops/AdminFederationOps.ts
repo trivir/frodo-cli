@@ -46,6 +46,8 @@ export async function listAdminFederationProviders(): Promise<boolean> {
  * Export provider by id
  * @param {string} providerId provider id/name
  * @param {string} file optional export file name
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportAdminFederationProviderToFile(
@@ -81,6 +83,8 @@ export async function exportAdminFederationProviderToFile(
 /**
  * Export all providers
  * @param {string} file optional export file name
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportAdminFederationProvidersToFile(
@@ -111,6 +115,8 @@ export async function exportAdminFederationProvidersToFile(
 
 /**
  * Export all providers to individual files
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportAdminFederationProvidersToFiles(

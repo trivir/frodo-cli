@@ -33,6 +33,18 @@ program
       'Export all agents to separate files (*.<type>.agent.json) in the current directory. Ignored with -i or -a.'
     )
   )
+  .addOption(
+    new Option(
+      '--no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--metadata-file [metadataFile]',
+      'Name of the file to write the metadata to.'
+    )
+  )
   .action(
     // implement command logic inside action handler
     async (host, realm, user, password, options, command) => {
@@ -48,17 +60,17 @@ program
         // export
         if (options.agentId) {
           verboseMessage('Exporting agent...');
-          await exportAgentToFile(options.agentId, options.file);
+          await exportAgentToFile(options.agentId, options.file, options.metadata, options.metadataFile);
         }
         // --all -a
         else if (options.all) {
           verboseMessage('Exporting all agents to a single file...');
-          await exportAgentsToFile(options.file);
+          await exportAgentsToFile(options.file, options.metadata, options.metadataFile);
         }
         // --all-separate -A
         else if (options.allSeparate) {
           verboseMessage('Exporting all agents to separate files...');
-          await exportAgentsToFiles();
+          await exportAgentsToFiles(options.metadata, options.metadataFile);
         }
         // unrecognized combination of options or no options
         else {

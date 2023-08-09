@@ -10,7 +10,7 @@ import {
 } from '../utils/Console';
 import type { AgentExportInterface } from '@rockcarver/frodo-lib/types/ops/OpsTypes';
 
-const { getTypedFilename, saveJsonToFile, titleCase } = frodo.utils.impex;
+const { getTypedFilename, saveJsonToFile, titleCase, saveMetadataToFile } = frodo.utils.impex;
 const { getRealmName } = frodo.helper.utils;
 const {
   createAgentExportTemplate,
@@ -168,8 +168,10 @@ export async function listWebAgents(long = false) {
 /**
  * Export all agents to file
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportAgentsToFile(file) {
+export async function exportAgentsToFile(file, includeMeta, metadataFile) {
   const exportData = await exportAgents();
   let fileName = getTypedFilename(
     `all${titleCase(getRealmName(state.getRealm()))}Agents`,
@@ -178,14 +180,19 @@ export async function exportAgentsToFile(file) {
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta);
+  if (metadataFile) {
+    saveMetadataToFile(metadataFile);
+  }
 }
 
 /**
  * Export all identity gateway agents to file
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportIdentityGatewayAgentsToFile(file) {
+export async function exportIdentityGatewayAgentsToFile(file, includeMeta, metadataFile) {
   const exportData = await exportIdentityGatewayAgents();
   let fileName = getTypedFilename(
     `all${titleCase(getRealmName(state.getRealm()))}Agents`,
@@ -194,14 +201,19 @@ export async function exportIdentityGatewayAgentsToFile(file) {
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta);
+  if (metadataFile) {
+    saveMetadataToFile(metadataFile);
+  }
 }
 
 /**
  * Export all java agents to file
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportJavaAgentsToFile(file) {
+export async function exportJavaAgentsToFile(file, includeMeta, metadataFile) {
   const exportData = await exportJavaAgents();
   let fileName = getTypedFilename(
     `all${titleCase(getRealmName(state.getRealm()))}Agents`,
@@ -210,14 +222,19 @@ export async function exportJavaAgentsToFile(file) {
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta);
+  if (metadataFile) {
+    saveMetadataToFile(metadataFile);
+  }
 }
 
 /**
  * Export all web agents to file
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportWebAgentsToFile(file) {
+export async function exportWebAgentsToFile(file, includeMeta, metadataFile) {
   const exportData = await exportWebAgents();
   let fileName = getTypedFilename(
     `all${titleCase(getRealmName(state.getRealm()))}Agents`,
@@ -226,15 +243,20 @@ export async function exportWebAgentsToFile(file) {
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta);
+  if (metadataFile) {
+    saveMetadataToFile(metadataFile);
+  }
 }
 
 /**
  * Export agent to file
  * @param {string} agentId agent id
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportAgentToFile(agentId, file) {
+export async function exportAgentToFile(agentId, file, includeMeta, metadataFile) {
   const exportData = await exportAgent(agentId);
   let fileName = getTypedFilename(
     agentId,
@@ -243,15 +265,20 @@ export async function exportAgentToFile(agentId, file) {
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta);
+  if (metadataFile) {
+    saveMetadataToFile(metadataFile);
+  }
 }
 
 /**
  * Export identity gateway agent to file
  * @param {string} agentId agent id
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportIdentityGatewayAgentToFile(agentId, file) {
+export async function exportIdentityGatewayAgentToFile(agentId, file, includeMeta, metadataFile) {
   const exportData = await exportIdentityGatewayAgent(agentId);
   let fileName = getTypedFilename(
     agentId,
@@ -260,15 +287,20 @@ export async function exportIdentityGatewayAgentToFile(agentId, file) {
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta);
+  if (metadataFile) {
+    saveMetadataToFile(metadataFile);
+  }
 }
 
 /**
  * Export java agent to file
  * @param {string} agentId agent id
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportJavaAgentToFile(agentId, file) {
+export async function exportJavaAgentToFile(agentId, file, includeMeta, metadataFile) {
   const exportData = await exportJavaAgent(agentId);
   let fileName = getTypedFilename(
     agentId,
@@ -277,15 +309,20 @@ export async function exportJavaAgentToFile(agentId, file) {
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta);
+  if (metadataFile) {
+    saveMetadataToFile(metadataFile);
+  }
 }
 
 /**
  * Export web agent to file
  * @param {string} agentId agent id
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportWebAgentToFile(agentId, file) {
+export async function exportWebAgentToFile(agentId, file, includeMeta, metadataFile) {
   const exportData = await exportWebAgent(agentId);
   let fileName = getTypedFilename(
     agentId,
@@ -294,13 +331,18 @@ export async function exportWebAgentToFile(agentId, file) {
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta);
+  if (metadataFile) {
+    saveMetadataToFile(metadataFile);
+  }
 }
 
 /**
  * Export all agents to separate files
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportAgentsToFiles() {
+export async function exportAgentsToFiles(includeMeta, metadataFile) {
   const agents = await getAgents();
   debugMessage(`exportAgentsToFiles: ${agents.length} agents`);
   for (const agent of agents) {
@@ -311,15 +353,20 @@ export async function exportAgentsToFiles() {
     const exportData = createAgentExportTemplate();
     exportData.agents[agent._id] = agent;
     debugMessage(`exportAgentsToFiles: exporting ${agent._id} to ${fileName}`);
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta);
+  }
+  if (metadataFile) {
+    saveMetadataToFile(metadataFile);
   }
   debugMessage(`exportAgentsToFiles: done.`);
 }
 
 /**
  * Export all identity gateway agents to separate files
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportIdentityGatewayAgentsToFiles() {
+export async function exportIdentityGatewayAgentsToFiles(includeMeta, metadataFile) {
   const agents = await getIdentityGatewayAgents();
   for (const agent of agents) {
     const fileName = getTypedFilename(
@@ -328,14 +375,19 @@ export async function exportIdentityGatewayAgentsToFiles() {
     );
     const exportData = createAgentExportTemplate();
     exportData.agents[agent._id] = agent;
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta);
+  }
+  if (metadataFile) {
+    saveMetadataToFile(metadataFile);
   }
 }
 
 /**
  * Export all java agents to separate files
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportJavaAgentsToFiles() {
+export async function exportJavaAgentsToFiles(includeMeta, metadataFile) {
   const agents = await getJavaAgents();
   for (const agent of agents) {
     const fileName = getTypedFilename(
@@ -344,14 +396,19 @@ export async function exportJavaAgentsToFiles() {
     );
     const exportData = createAgentExportTemplate();
     exportData.agents[agent._id] = agent;
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta);
+  }
+  if (metadataFile) {
+    saveMetadataToFile(metadataFile);
   }
 }
 
 /**
  * Export all web agents to separate files
+ * @param {boolean} includeMeta true to include metadata in export, false otherwise
+ * @param {String} metadataFile file to put metadata into
  */
-export async function exportWebAgentsToFiles() {
+export async function exportWebAgentsToFiles(includeMeta, metadataFile) {
   const agents = await getWebAgents();
   for (const agent of agents) {
     const fileName = getTypedFilename(
@@ -360,7 +417,10 @@ export async function exportWebAgentsToFiles() {
     );
     const exportData = createAgentExportTemplate();
     exportData.agents[agent._id] = agent;
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta);
+  }
+  if (metadataFile) {
+    saveMetadataToFile(metadataFile);
   }
 }
 
