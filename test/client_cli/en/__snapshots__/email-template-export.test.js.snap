@@ -57,6 +57,9 @@ Options:
                                    admin login flow of Identity Cloud and
                                    handle MFA (choices: "classic", "cloud",
                                    "forgeops")
+  --metadata-file [metadataFile]   Name of the file to write the metadata to.
+  --no-metadata                    Does not include metadata in the export
+                                   file.
   --sa-id <sa-id>                  Service account id.
   --sa-jwk-file <file>             File containing the JSON Web Key (JWK)
                                    associated with the the service account.
