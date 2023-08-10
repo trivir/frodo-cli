@@ -31,6 +31,11 @@ const {
   importScripts,
 } = frodo.script;
 
+const {
+  getJourneys,
+  exportJourney
+} = frodo.authn.journey;
+
 /**
  * Get a one-line description of the script object
  * @param {ScriptSkeleton} scriptObj script object to describe
@@ -79,12 +84,18 @@ export async function listScripts(long = false): Promise<boolean> {
     const scripts = await getScripts();
     scripts.sort((a, b) => a.name.localeCompare(b.name));
     if (long) {
+      //Get the ids of all the scripts that are currently being used in journeys
+      const scriptIds = new Set((await Promise.all((await getJourneys()).map(j => exportJourney(j._id, {
+        deps: true,
+        useStringArrays: false
+      })))).map(j => Object.keys(j.scripts)).flat());
       const table = createTable([
         'Name',
         'UUID',
         'Language',
         'Context',
         'Description',
+        'Used'
       ]);
       const langMap = { JAVASCRIPT: 'JS', GROOVY: 'Groovy' };
       scripts.forEach((script) => {
@@ -94,6 +105,7 @@ export async function listScripts(long = false): Promise<boolean> {
           langMap[script.language],
           wordwrap(titleCase(script.context.split('_').join(' ')), 25),
           wordwrap(script.description, 30),
+          scriptIds.has(script._id) ? 'Yes'['brightGreen'] : 'No'['brightRed']
         ]);
       });
       printMessage(table.toString(), 'data');
