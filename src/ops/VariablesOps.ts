@@ -42,7 +42,7 @@ export async function listVariables(long) {
       'Used'['brightCyan'],
     ]);
     for (const variable of variables) {
-      const isEsvUsed = isESVUsed(fullExport, new RegExp(`[^a-z0-9._]${variable._id.replaceAll("-", "\.")}[^a-z0-9._]`));
+      const isEsvUsed = isESVUsed(fullExport, variable._id);
       table.push([
         variable._id,
         wordwrap(decode(variable.valueBase64), 40),
@@ -191,14 +191,21 @@ export async function describeVariable(variableId) {
   printMessage(table.toString());
 }
 
-function isESVUsed(fullConfiguration: any, esvRegex: RegExp): {
+export function isESVUsed(fullConfiguration: any, esvName: string): {
+  used: boolean,
+  location: string,
+} {
+  return isESVUsedRecurse(fullConfiguration, new RegExp(`[^a-z0-9._]${esvName.replaceAll("-", "\.")}[^a-z0-9._]`));
+}
+
+function isESVUsedRecurse(fullConfiguration: any, esvRegex: RegExp): {
   used: boolean,
   location: string,
 } {
   const type = typeof fullConfiguration;
   if (type === 'object' && fullConfiguration !== null) {
     for (const [id, value] of Object.entries(fullConfiguration)) {
-      const isEsvUsed = isESVUsed(value, esvRegex);
+      const isEsvUsed = isESVUsedRecurse(value, esvRegex);
       if (isEsvUsed.used) {
         isEsvUsed.location = id + (isEsvUsed.location === '' ? '' : '.') + isEsvUsed.location;
         return isEsvUsed;
