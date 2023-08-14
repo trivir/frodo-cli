@@ -21,6 +21,7 @@ const {
   readVariable,
   updateVariable: _updateVariable,
 } = frodo.cloud.variable;
+const { exportFullConfiguration } = frodo.admin;
 
 /**
  * List variables
@@ -36,6 +37,7 @@ export async function listVariables(long) {
     printMessage(error.response.data, 'error');
   }
   if (long) {
+    const fullExport = await exportFullConfiguration(true, true);
     const table = createTable([
       'Id'['brightCyan'],
       'Value'['brightCyan'],
@@ -43,8 +45,10 @@ export async function listVariables(long) {
       'Description'['brightCyan'],
       'Modifier'['brightCyan'],
       'Modified'['brightCyan'],
+      'Used'['brightCyan'],
     ]);
     for (const variable of variables) {
+      const isEsvUsed = isESVUsed(fullExport, new RegExp(`[^a-z0-9._]${variable._id.replaceAll("-", "\.")}[^a-z0-9._]`));
       table.push([
         variable._id,
         wordwrap(decodeBase64(variable.valueBase64), 40),
@@ -52,6 +56,7 @@ export async function listVariables(long) {
         wordwrap(variable.description, 40),
         await resolveUserName('teammember', variable.lastChangedBy),
         new Date(variable.lastChangeDate).toLocaleString(),
+        isEsvUsed.used ? `${'yes'['brightGreen']} (at ${isEsvUsed.location})` : 'no'['brightRed'],
       ]);
     }
     printMessage(table.toString(), 'data');
@@ -194,4 +199,24 @@ export async function describeVariable(variableId) {
   ]);
   table.push(['Modifier UUID'['brightCyan'], variable.lastChangedBy]);
   printMessage(table.toString());
+}
+
+function isESVUsed(fullConfiguration: any, esvRegex: RegExp): {
+  used: boolean,
+  location: string,
+} {
+  const type = typeof fullConfiguration;
+  if (type === 'object' && fullConfiguration !== null) {
+    for (const [id, value] of Object.entries(fullConfiguration)) {
+      const isEsvUsed = isESVUsed(value, esvRegex);
+      if (isEsvUsed.used) {
+        isEsvUsed.location = id + (isEsvUsed.location === '' ? '' : '.') + isEsvUsed.location;
+        return isEsvUsed;
+      }
+    }
+  }
+  return {
+    used: type === 'string' && esvRegex.test(fullConfiguration!),
+    location: ''
+  };
 }
