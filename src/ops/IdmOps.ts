@@ -16,6 +16,7 @@ const { readFiles, unSubstituteEnvParams } = frodo.helper.utils;
 const {
   testConnectorServers,
   getAllConfigEntities,
+  exportConfigEntities,
   getConfigEntity,
   putConfigEntity,
   queryAllManagedObjectsByType,
@@ -89,88 +90,25 @@ export async function exportConfigEntity(id, file) {
  * @param {String} directory export directory
  */
 export async function exportAllRawConfigEntities(directory) {
-  try {
-    const { configurations } = await getAllConfigEntities();
-    if (!fs.existsSync(directory)) {
-      fs.mkdirSync(directory);
-    }
-    createProgressIndicator(
-      'indeterminate',
-      undefined,
-      'Exporting config objects...'
-    );
-    const entityPromises = [];
-    for (const configEntity of configurations) {
-      entityPromises.push(
-        getConfigEntity(configEntity._id).catch((getConfigEntityError) => {
-          if (
-            !(
-              getConfigEntityError.response?.status === 403 &&
-              getConfigEntityError.response?.data?.message ===
-                'This operation is not available in ForgeRock Identity Cloud.'
-            ) &&
-            !(
-              // list of config entities, which do not exist by default or ever.
-              (
-                [
-                  'script',
-                  'notificationFactory',
-                  'apiVersion',
-                  'metrics',
-                  'repo.init',
-                  'endpoint/validateQueryFilter',
-                  'endpoint/oauthproxy',
-                  'external.rest',
-                  'scheduler',
-                  'org.apache.felix.fileinstall/openidm',
-                  'cluster',
-                  'endpoint/mappingDetails',
-                  'fieldPolicy/teammember',
-                ].includes(configEntity._id) &&
-                getConfigEntityError.response?.status === 404 &&
-                getConfigEntityError.response?.data?.reason === 'Not Found'
-              )
-            ) &&
-            // https://bugster.forgerock.org/jira/browse/OPENIDM-18270
-            !(
-              getConfigEntityError.response?.status === 404 &&
-              getConfigEntityError.response?.data?.message ===
-                'No configuration exists for id org.apache.felix.fileinstall/openidm'
-            )
-          ) {
-            printMessage(getConfigEntityError.response?.data, 'error');
-            printMessage(
-              `Error getting config entity ${configEntity._id}: ${getConfigEntityError}`,
+  const exportedConfigurations = await exportConfigEntities();
+  if (!fs.existsSync(directory)) {
+    fs.mkdirSync(directory);
+  }
+  for (const [id, value] of Object.entries(exportedConfigurations)) {
+    if (value != null) {
+      fse.outputFile(
+        `${directory}/${id}.json`,
+        JSON.stringify(value, null, 2),
+        (err) => {
+          if (err) {
+            return printMessage(
+              `ERROR - can't save config ${id} to file - ${err}`,
               'error'
             );
           }
-        })
+        }
       );
     }
-    const results = await Promise.all(entityPromises);
-    for (const item of results) {
-      if (item != null) {
-        fse.outputFile(
-          `${directory}/${item._id}.json`,
-          JSON.stringify(item, null, 2),
-          (err) => {
-            if (err) {
-              return printMessage(
-                `ERROR - can't save config ${item._id} to file - ${err}`,
-                'error'
-              );
-            }
-          }
-        );
-      }
-    }
-    stopProgressIndicator('Exported config objects.', 'success');
-  } catch (getAllConfigEntitiesError) {
-    printMessage(getAllConfigEntitiesError, 'error');
-    printMessage(
-      `Error getting config entities: ${getAllConfigEntitiesError}`,
-      'error'
-    );
   }
 }
 
