@@ -21,6 +21,7 @@ const { validateImport } = frodo.utils.impex;
 const {
   EMAIL_TEMPLATE_TYPE,
   getEmailTemplates,
+  exportEmailTemplates,
   getEmailTemplate,
   putEmailTemplate,
 } = frodo.email.template;
@@ -185,25 +186,9 @@ export async function exportEmailTemplatesToFile(file) {
     fileName = getTypedFilename(`allEmailTemplates`, EMAIL_TEMPLATE_FILE_TYPE);
   }
   try {
-    const fileData = getFileDataTemplate();
-    const response = await getEmailTemplates();
-    const templates = response.result;
-    createProgressIndicator(
-      'determinate',
-      response.resultCount,
-      'Exporting email templates'
-    );
-    for (const template of templates) {
-      const templateId = template._id.replace(`${EMAIL_TEMPLATE_TYPE}/`, '');
-      updateProgressIndicator(`Exporting ${templateId}`);
-      fileData.emailTemplate[templateId] = template;
-    }
-    saveJsonToFile(fileData, fileName);
-    stopProgressIndicator(
-      `${response.resultCount} templates exported to ${fileName}.`
-    );
+    const exportData = exportEmailTemplates()
+    saveJsonToFile(exportData, fileName);
   } catch (err) {
-    stopProgressIndicator(`${err}`);
     printMessage(err, 'error');
   }
 }
@@ -213,22 +198,20 @@ export async function exportEmailTemplatesToFile(file) {
  */
 export async function exportEmailTemplatesToFiles() {
   try {
-    const response = await getEmailTemplates();
-    const templates = response.result;
+    const exportData = Object.entries(exportEmailTemplates());
     createProgressIndicator(
       'determinate',
-      response.resultCount,
-      'Exporting email templates'
+      exportData.length,
+      'Writing email templates'
     );
-    for (const template of templates) {
-      const templateId = template._id.replace(`${EMAIL_TEMPLATE_TYPE}/`, '');
-      const fileName = getTypedFilename(templateId, EMAIL_TEMPLATE_FILE_TYPE);
+    for (const [id, template] of exportData) {
+      const fileName = getTypedFilename(id, EMAIL_TEMPLATE_FILE_TYPE);
       const fileData = getFileDataTemplate();
-      updateProgressIndicator(`Exporting ${templateId}`);
-      fileData.emailTemplate[templateId] = template;
+      updateProgressIndicator(`Writing ${id}`);
+      fileData.emailTemplate[id] = template;
       saveJsonToFile(fileData, fileName);
     }
-    stopProgressIndicator(`${response.resultCount} templates exported.`);
+    stopProgressIndicator(`${exportData.length} templates written.`);
   } catch (err) {
     stopProgressIndicator(`${err}`);
     printMessage(err, 'error');
