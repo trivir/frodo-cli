@@ -19,9 +19,10 @@ const { exportFullConfiguration } = frodo.admin;
 
 /**
  * List variables
- * @param {boolean} long Long version, all the fields
+ * @param {boolean} long Long version, all the fields besides usage
+ * @param {boolean} usage Display usage field
  */
-export async function listVariables(long) {
+export async function listVariables(long, usage) {
   let variables = [];
   try {
     variables = (await getVariables()).result;
@@ -31,33 +32,54 @@ export async function listVariables(long) {
     printMessage(error.response.data, 'error');
   }
   if (long) {
-    const fullExport = await exportFullConfiguration(true, true);
-    const table = createTable([
+    let fullExport = null;
+    const headers = [
       'Id'['brightCyan'],
       'Value'['brightCyan'],
       'Status'['brightCyan'],
       'Description'['brightCyan'],
       'Modifier'['brightCyan'],
-      'Modified'['brightCyan'],
-      'Used'['brightCyan'],
-    ]);
+      'Modified'['brightCyan']
+    ];
+    if (usage) {
+      headers.push('Used'['brightCyan'])
+      fullExport = await exportFullConfiguration(true, true);
+    }
+    const table = createTable(headers);
     for (const variable of variables) {
-      const isEsvUsed = isESVUsed(fullExport, variable._id);
-      table.push([
+      const values = [
         variable._id,
         wordwrap(decode(variable.valueBase64), 40),
         variable.loaded ? 'loaded'['brightGreen'] : 'unloaded'['brightRed'],
         wordwrap(variable.description, 40),
         // eslint-disable-next-line no-await-in-loop
         await resolveUserName('teammember', variable.lastChangedBy),
-        new Date(variable.lastChangeDate).toLocaleString(),
-        isEsvUsed.used ? `${'yes'['brightGreen']} (at ${isEsvUsed.location})` : 'no'['brightRed'],
-      ]);
+        new Date(variable.lastChangeDate).toLocaleString()
+      ];
+      if (usage) {
+        const isEsvUsed = isESVUsed(fullExport, variable._id);
+        values.push(isEsvUsed.used ? `${'yes'['brightGreen']} (at ${isEsvUsed.location})` : 'no'['brightRed']);
+      }
+      table.push(values);
     }
     printMessage(table.toString(), 'data');
+  } else if (usage) {
+    const fullExport = await exportFullConfiguration(true, true);
+    const table = createTable([
+      'Id'['brightCyan'],
+      'Used'['brightCyan'],
+    ]);
+    variables.forEach((variable) => {
+      const isEsvUsed = isESVUsed(fullExport, variable._id);
+      table.push([
+        variable._id,
+        isEsvUsed.used ? `${'yes'['brightGreen']} (at ${isEsvUsed.location})` : 'no'['brightRed'],
+      ]);
+    });
+    printMessage(table.toString(), 'data');
   } else {
-    variables.forEach((secret) => {
-      printMessage(secret._id, 'data');
+    variables.forEach((variable) => {
+      printMessage(variable._id, 'data');
     });
   }
 }
