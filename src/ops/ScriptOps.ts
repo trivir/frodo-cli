@@ -72,36 +72,60 @@ export function getTableRowMd(scriptObj: ScriptSkeleton): string {
 /**
  * List scripts
  * @param {boolean} long detail list
+ * @param {boolean} usage display usage field
  * @returns {Promise<boolean>} true if no errors occurred during export, false otherwise
  */
-export async function listScripts(long = false): Promise<boolean> {
+export async function listScripts(long = false, usage = false): Promise<boolean> {
   let outcome = true;
   debugMessage(`Cli.ScriptOps.listScripts: start`);
   try {
     const scripts = await getScripts();
     scripts.sort((a, b) => a.name.localeCompare(b.name));
     if (long) {
-      const fullExport = await exportFullConfiguration(true, true);
-      //Delete scripts from full export so they aren't mistakenly used for determining usage
-      delete fullExport.script;
-      const table = createTable([
+      let fullExport = null;
+      const headers = [
         'Name',
         'UUID',
         'Language',
         'Context',
         'Description',
-        'Used'
-      ]);
+      ];
+      if (usage) {
+        headers.push('Used');
+        fullExport = await exportFullConfiguration(true, true);
+        //Delete scripts from full export so they aren't mistakenly used for determining usage
+        delete fullExport.script;
+      }
+      const table = createTable(headers);
       const langMap = { JAVASCRIPT: 'JS', GROOVY: 'Groovy' };
       scripts.forEach((script) => {
-        const isScriptUsed = isIdUsed(fullExport, script._id, false);
-        table.push([
+        const values = [
           wordwrap(script.name, 25, '  '),
           script._id,
           langMap[script.language],
           wordwrap(titleCase(script.context.split('_').join(' ')), 25),
-          wordwrap(script.description, 30),
-          isScriptUsed.used ? `${'yes'['brightGreen']} (at ${isScriptUsed.location})` : 'no'['brightRed']
+          wordwrap(script.description, 30)
+        ];
+        if (usage) {
+          const isScriptUsed = isIdUsed(fullExport, script._id, false);
+          values.push(isScriptUsed.used ? `${'yes'['brightGreen']} (at ${isScriptUsed.location})` : 'no'['brightRed']);
+        }
+        table.push(values);
+      });
+      printMessage(table.toString(), 'data');
+    } else if (usage) {
+      const fullExport = await exportFullConfiguration(true, true);
+      //Delete scripts from full export so they aren't mistakenly used for determining usage
+      delete fullExport.script;
+      const table = createTable([
+        'Name',
+        'Used',
+      ]);
+      scripts.forEach((script) => {
+        const isScriptUsed = isIdUsed(fullExport, script._id, false);
+        table.push([
+          script.name,
+          isScriptUsed.used ? `${'yes'['brightGreen']} (at ${isScriptUsed.location})` : 'no'['brightRed'],
         ]);
       });
       printMessage(table.toString(), 'data');

@@ -11,7 +11,10 @@ const program = new FrodoCommand('frodo script list');
 program
   .description('List scripts.')
   .addOption(
-    new Option('-l, --long', 'Long with all fields.').default(false, 'false')
+    new Option('-l, --long', 'Long with all fields besides usage.').default(false, 'false')
+  )
+  .addOption(
+    new Option('-u, --usage', 'Display usage field.').default(false, 'false')
   )
   .action(
     // implement command logic inside action handler
@@ -26,7 +29,7 @@ program
       );
       if (await getTokens()) {
         verboseMessage(`Listing scripts in realm "${state.getRealm()}"...`);
-        const outcome = await listScripts(options.long);
+        const outcome = await listScripts(options.long, options.usage);
         if (!outcome) process.exitCode = 1;
       } else {
         process.exitCode = 1;
