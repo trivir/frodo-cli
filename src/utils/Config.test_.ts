@@ -1,8 +1,8 @@
-import * as VariablesOps from './VariablesOps';
+import * as Config from './Config';
 import {FullExportInterface} from "../../../frodo-lib/types/ops/OpsTypes";
-import {isESVUsed} from "./VariablesOps";
+import {isIdUsed} from "./Config";
 
-describe('VariablesOps - isESVUsed()', () => {
+describe('Config - isIdUsed()', () => {
   const exportObject: FullExportInterface = {
     agents: {},
     application: {},
@@ -33,8 +33,8 @@ describe('VariablesOps - isESVUsed()', () => {
       cot: {},
     },
     script: {
-      script1: {
-        _id: "12",
+      "a271c7e6-5d49-4866-a1ab-5e0ee770a8c5": {
+        _id: "a271c7e6-5d49-4866-a1ab-5e0ee770a8c5",
         name: "script1",
         default: true,
         language: "JAVASCRIPT",
@@ -52,8 +52,8 @@ describe('VariablesOps - isESVUsed()', () => {
         lastModifiedBy: "user",
         lastModifiedDate: 1433147666269
       },
-      script2: {
-        _id: "34",
+      "8a1b71c6-51d4-42d7-85dd-dcc2a9553b1c": {
+        _id: "8a1b71c6-51d4-42d7-85dd-dcc2a9553b1c",
         name: "script2",
         default: true,
         language: "JAVASCRIPT",
@@ -65,8 +65,8 @@ describe('VariablesOps - isESVUsed()', () => {
         lastModifiedBy: "user",
         lastModifiedDate: 1433147666269
       },
-      script3: {
-        _id: "56",
+      "b8005c1c-e5a6-4718-878f-3c667142aa67": {
+        _id: "b8005c1c-e5a6-4718-878f-3c667142aa67",
         name: "script3",
         default: true,
         language: "JAVASCRIPT",
@@ -78,8 +78,8 @@ describe('VariablesOps - isESVUsed()', () => {
         lastModifiedBy: null,
         lastModifiedDate: 1433147666269
       },
-      script4: {
-        _id: "78",
+      "SomeId": {
+        _id: "SomeId",
         name: "script4",
         default: true,
         language: "JAVASCRIPT",
@@ -97,50 +97,70 @@ describe('VariablesOps - isESVUsed()', () => {
     trees: {},
   }
 
-  test('isESVUsed() 0: Method is implemented', async () => {
-    expect(VariablesOps.isESVUsed).toBeDefined();
+  test('isIdUsed() 0: Method is implemented', async () => {
+    expect(Config.isIdUsed).toBeDefined();
   });
 
-  test('isESVUsed() 1: Correctly determines that esvs are or are not being used', async () => {
-    expect(isESVUsed(exportObject, 'esv-test-var')).toStrictEqual({
+  test('isIdUsed() 1: Correctly determines that ids are or are not being used', async () => {
+    expect(isIdUsed(exportObject, 'esv-test-var', true)).toStrictEqual({
       used: true,
-      location: 'script.script4.script'
+      location: "script.SomeId(name: 'script4').script"
     });
-    expect(isESVUsed(exportObject, 'esv-test-variable')).toStrictEqual({
+    expect(isIdUsed(exportObject, 'esv-test-variable', true)).toStrictEqual({
       used: true,
-      location: 'script.script1.script.3'
+      location: "script.a271c7e6-5d49-4866-a1ab-5e0ee770a8c5(name: 'script1').script.3"
     });
-    expect(isESVUsed(exportObject, 'esv-test-va')).toStrictEqual({
+    expect(isIdUsed(exportObject, 'esv-test-va', true)).toStrictEqual({
       used: false,
       location: ''
     });
-    expect(isESVUsed(exportObject, 'esv-test-var2')).toStrictEqual({
+    expect(isIdUsed(exportObject, 'esv-test-var2', true)).toStrictEqual({
       used: true,
       location: 'config.obj1.obj2.0.obj4'
     });
-    expect(isESVUsed(exportObject, 'esv-test-var3')).toStrictEqual({
+    expect(isIdUsed(exportObject, 'esv-test-var3', true)).toStrictEqual({
       used: false,
       location: ''
     });
-    expect(isESVUsed(exportObject, 'esv-test-var4')).toStrictEqual({
+    expect(isIdUsed(exportObject, 'esv-test-var4', true)).toStrictEqual({
       used: false,
       location: ''
     });
-    expect(isESVUsed(exportObject, 'esv-test-var5')).toStrictEqual({
+    expect(isIdUsed(exportObject, 'esv-test-var5', true)).toStrictEqual({
       used: false,
       location: ''
     });
-    expect(isESVUsed(exportObject, 'esv-test-var6')).toStrictEqual({
+    expect(isIdUsed(exportObject, 'esv-test-var6', true)).toStrictEqual({
       used: false,
       location: ''
     });
-    expect(isESVUsed(exportObject, 'esv-test-var7')).toStrictEqual({
+    expect(isIdUsed(exportObject, 'esv-test-var7', true)).toStrictEqual({
       used: true,
       location: 'config.obj1.obj2.1.obj7'
     });
-    expect(isESVUsed(exportObject, 'esv-test-var8')).toStrictEqual({
+    expect(isIdUsed(exportObject, 'esv-test-var8', true)).toStrictEqual({
       used: false,
       location: ''
+    });
+    expect(isIdUsed(exportObject, 'SomeId', false)).toStrictEqual({
+      used: true,
+      location: ''
+    });
+    expect(isIdUsed(exportObject, 'NotAnId', false)).toStrictEqual({
+      used: false,
+      location: ''
+    });
+    expect(isIdUsed(exportObject, 'a271c7e6-5d49-4866-a1ab-5e0ee770a8c5', false)).toStrictEqual({
+      used: true,
+      location: "script.a271c7e6-5d49-4866-a1ab-5e0ee770a8c5(name: 'script1')._id"
+    });
+    expect(isIdUsed(exportObject, '8a1b71c6-51d4-42d7-85dd-dcc2a9553b1c', false)).toStrictEqual({
+      used: true,
+      location: "script.8a1b71c6-51d4-42d7-85dd-dcc2a9553b1c(name: 'script2')._id"
+    });
+    expect(isIdUsed(exportObject, 'b8005c1c-e5a6-4718-878f-3c667142aa67', false)).toStrictEqual({
+      used: true,
+      location: "script.b8005c1c-e5a6-4718-878f-3c667142aa67(name: 'script3')._id"
     });
   });
 });

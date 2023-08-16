@@ -11,6 +11,7 @@ import {
   updateProgressBar,
 } from '../utils/Console';
 import wordwrap from './utils/Wordwrap';
+import {isIdUsed} from "../utils/Config";
 
 const { decode } = frodo.helper.base64;
 const { resolveUserName } = frodo.idm.managed;
@@ -57,7 +58,7 @@ export async function listVariables(long, usage) {
         new Date(variable.lastChangeDate).toLocaleString()
       ];
       if (usage) {
-        const isEsvUsed = isESVUsed(fullExport, variable._id);
+        const isEsvUsed = isIdUsed(fullExport, variable._id, true);
         values.push(isEsvUsed.used ? `${'yes'['brightGreen']} (at ${isEsvUsed.location})` : 'no'['brightRed']);
       }
       table.push(values);
@@ -70,7 +71,7 @@ export async function listVariables(long, usage) {
       'Used'['brightCyan'],
     ]);
     variables.forEach((variable) => {
-      const isEsvUsed = isESVUsed(fullExport, variable._id);
+      const isEsvUsed = isIdUsed(fullExport, variable._id, true);
       table.push([
         variable._id,
         isEsvUsed.used ? `${'yes'['brightGreen']} (at ${isEsvUsed.location})` : 'no'['brightRed'],
@@ -211,31 +212,4 @@ export async function describeVariable(variableId) {
   ]);
   table.push(['Modifier UUID'['brightCyan'], variable.lastChangedBy]);
   printMessage(table.toString());
-}
-
-export function isESVUsed(fullConfiguration: any, esvName: string): {
-  used: boolean,
-  location: string,
-} {
-  return isESVUsedRecurse(fullConfiguration, new RegExp(`[^a-z0-9._]${esvName.replaceAll("-", "\.")}[^a-z0-9._]`));
-}
-
-function isESVUsedRecurse(fullConfiguration: any, esvRegex: RegExp): {
-  used: boolean,
-  location: string,
-} {
-  const type = typeof fullConfiguration;
-  if (type === 'object' && fullConfiguration !== null) {
-    for (const [id, value] of Object.entries(fullConfiguration)) {
-      const isEsvUsed = isESVUsedRecurse(value, esvRegex);
-      if (isEsvUsed.used) {
-        isEsvUsed.location = id + (isEsvUsed.location === '' ? '' : '.') + isEsvUsed.location;
-        return isEsvUsed;
-      }
-    }
-  }
-  return {
-    used: type === 'string' && esvRegex.test(fullConfiguration!),
-    location: ''
-  };
 }
