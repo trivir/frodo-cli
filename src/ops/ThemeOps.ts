@@ -8,13 +8,14 @@ import {
   updateProgressIndicator,
   stopProgressIndicator,
 } from '../utils/Console';
-import { saveToFile, getTypedFilename } from '../utils/ExportImportUtils';
+import {saveToFile, getTypedFilename, saveJsonToFile} from '../utils/ExportImportUtils';
 
 const { getRealmString, validateImport } = frodo.utils.impex;
 const {
   getThemes,
   getThemeByName,
   getTheme,
+  exportThemes,
   putThemeByName,
   putTheme,
   putThemes,
@@ -144,19 +145,8 @@ export async function exportThemesToFile(file) {
   if (file) {
     fileName = file;
   }
-  const allThemesData = await getThemes();
-  createProgressIndicator(
-    'determinate',
-    allThemesData.length,
-    'Exporting themes'
-  );
-  for (const themeData of allThemesData) {
-    updateProgressIndicator(`Exporting theme ${themeData.name}`);
-  }
-  saveToFile('theme', allThemesData, '_id', fileName);
-  stopProgressIndicator(
-    `${allThemesData.length} themes exported to ${fileName}.`
-  );
+  const exportData = await exportThemes();
+  saveJsonToFile(exportData, fileName);
 }
 
 /**
