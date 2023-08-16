@@ -30,6 +30,12 @@ program
       'Where applicable, use string arrays to store multi-line text (e.g. scripts).'
     ).default(false, 'off')
   )
+  .addOption(
+  new Option(
+    '-D, --directory <directory>',
+    'Export directory. Required with and ignored without -A.'
+  )
+)
   .action(
     // implement command logic inside action handler
     async (host, realm, user, password, options, command) => {
@@ -47,9 +53,9 @@ program
         verboseMessage('Exporting everything to a single file...');
         await exportEverythingToFile(options.file, globalConfig, options.useStringArrays);
       // --all-separate -A
-      } else if (options.allSeparate && (await getTokens())) {
+      } else if (options.allSeparate && options.directory && (await getTokens())) {
         verboseMessage('Exporting everything to separate files...');
-        await exportEverythingToFiles(globalConfig, options.useStringArrays);
+        await exportEverythingToFiles(options.directory, globalConfig, options.useStringArrays);
         // unrecognized combination of options or no options
       } else {
         verboseMessage('Unrecognized combination of options or no options...');

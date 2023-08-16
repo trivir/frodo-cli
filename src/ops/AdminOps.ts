@@ -1,4 +1,6 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
+import {FullExportInterface} from "../../../frodo-lib/types/ops/OpsTypes";
+import fs from "fs";
 
 const { getRealmName } = frodo.helper.utils;
 const { getTypedFilename, titleCase, saveJsonToFile } = frodo.utils.impex;
@@ -7,6 +9,8 @@ const { exportFullConfiguration } = frodo.admin;
 /**
  * Export everything to separate files
  * @param file file name
+ * @param globalConfig true if the global service is the target of the operation, false otherwise. Default: false.
+ * @param useStringArrays Where applicable, use string arrays to store multi-line text (e.g. scripts).
  */
 export async function exportEverythingToFile(file, globalConfig = false, useStringArrays = false): Promise<void> {
   const exportData = await exportFullConfiguration(globalConfig, useStringArrays);
@@ -22,9 +26,32 @@ export async function exportEverythingToFile(file, globalConfig = false, useStri
 
 /**
  * Export everything to separate files
- * @param file file name
+ * @param directory export directory
+ * @param globalConfig true if the global service is the target of the operation, false otherwise. Default: false.
+ * @param useStringArrays Where applicable, use string arrays to store multi-line text (e.g. scripts).
  */
-export async function exportEverythingToFiles(globalConfig = false, useStringArrays = false): Promise<void> {
-  const exportData = await exportFullConfiguration(globalConfig, useStringArrays);
-  //TODO
+export async function exportEverythingToFiles(directory, globalConfig = false, useStringArrays = false): Promise<void> {
+  const exportData: FullExportInterface = await exportFullConfiguration(globalConfig, useStringArrays);
+  delete exportData.meta;
+  if (!fs.existsSync(directory)) {
+    fs.mkdirSync(directory);
+  }
+  Object.entries(exportData).forEach(([type, obj]) => {
+    if (!fs.existsSync(`${directory}/${type}`)) {
+      fs.mkdirSync(`${directory}/${type}`);
+    }
+    Object.entries(obj).forEach(([id, value]: [string, any]) => {
+      if (type === 'saml') {
+        if (!fs.existsSync(`${directory}/${type}/${id}`)) {
+          fs.mkdirSync(`${directory}/${type}/${id}`);
+        }
+        Object.entries(value).forEach(([subId, subValue]: [string, any]) => {
+          const filename = getTypedFilename(subValue.name ? subValue.name : subId, `${id}.${type}`);
+          saveJsonToFile(subValue, `${directory}/${type}/${id}/${filename}`);
+        });
+      }
+      const filename = getTypedFilename(value.name ? value.name : id, type);
+      saveJsonToFile(value, `${directory}/${type}/${filename}`);
+    });
+  });
 }
