@@ -23,6 +23,7 @@ import {
   titleCase,
 } from '../utils/ExportImportUtils';
 import wordwrap from './utils/Wordwrap';
+import { isIdUsed } from "../utils/Config";
 
 const {
   readScripts,
@@ -32,6 +33,7 @@ const {
   importScripts,
 } = frodo.script;
 
+const { exportFullConfiguration } = frodo.admin;
 /**
  * Get a one-line description of the script object
  * @param {ScriptSkeleton} scriptObj script object to describe
@@ -80,21 +82,27 @@ export async function listScripts(long = false): Promise<boolean> {
     const scripts = await readScripts();
     scripts.sort((a, b) => a.name.localeCompare(b.name));
     if (long) {
+      const fullExport = await exportFullConfiguration(true, true);
+      //Delete scripts from full export so they aren't mistakenly used for determining usage
+      delete fullExport.script;
       const table = createTable([
         'Name',
         'UUID',
         'Language',
         'Context',
         'Description',
+        'Used'
       ]);
       const langMap = { JAVASCRIPT: 'JS', GROOVY: 'Groovy' };
       scripts.forEach((script) => {
+        const isScriptUsed = isIdUsed(fullExport, script._id, false);
         table.push([
           wordwrap(script.name, 25, '  '),
           script._id,
           langMap[script.language],
           wordwrap(titleCase(script.context.split('_').join(' ')), 25),
           wordwrap(script.description, 30),
+          isScriptUsed.used ? `${'yes'['brightGreen']} (at ${isScriptUsed.location})` : 'no'['brightRed']
         ]);
       });
       printMessage(table.toString(), 'data');
