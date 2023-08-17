@@ -292,7 +292,7 @@ export async function exportSecretsToFiles() {
     const fileName = getTypedFilename(secret._id, 'secret');
     saveToFile('secret', secret, '_id', fileName);
   }
-  stopProgressBar(`${allSecretsData.length} themes exported.`);
+  stopProgressBar(`${allSecretsData.length} secrets exported.`);
 }
 
 /**
