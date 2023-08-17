@@ -23,7 +23,7 @@ program
     )
   )
   .addOption(
-    new Option('-a, --all', 'Delete all non-default and unused scripts in a realm. Ignored with -i.')
+    new Option('-a, --all', 'Delete all non-default scripts in a realm. Ignored with -i.')
   )
   .action(
     // implement command logic inside action handler

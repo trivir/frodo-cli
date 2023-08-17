@@ -512,13 +512,13 @@ export async function deleteScriptName(name) {
 }
 
 /**
- * Delete all non-default and unused scripts
+ * Delete all non-default scripts
  */
 export async function deleteAllScripts() {
-  createProgressIndicator('indeterminate', undefined, `Deleting all non-default and unused scripts...`);
+  createProgressIndicator('indeterminate', undefined, `Deleting all non-default scripts...`);
   try {
     await deleteScripts();
-    stopProgressIndicator(`Deleted all non-default and unused scripts.`, 'success');
+    stopProgressIndicator(`Deleted all non-default scripts.`, 'success');
   } catch (error) {
     stopProgressIndicator(`Error: ${error.message}`, 'fail');
   }

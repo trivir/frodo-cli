@@ -20,7 +20,7 @@ Arguments:
   password                    Password.
 
 Options:
-  -a, --all                   Delete all non-default and unused scripts in a realm.
+  -a, --all                   Delete all non-default scripts in a realm.
                               Ignored with -i.
   --curlirize                 Output all network calls in curl format.
   --debug                     Debug output during command execution. If
