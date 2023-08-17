@@ -260,7 +260,7 @@ export async function exportVariablesToFile(file: string) {
  * Export all variables to seperate files
  */
 export async function exportVariablesToFiles() {
-  const variableList = (await readVariables()).result;
+  const variableList = await readVariables();
   createProgressIndicator(
     'determinate',
     variableList.length,
