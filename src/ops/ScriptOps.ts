@@ -16,14 +16,14 @@ import {
   succeedSpinner,
   updateProgressBar,
 } from '../utils/Console';
-import {
+import wordwrap from './utils/Wordwrap';
+
+const {
   getTypedFilename,
   saveJsonToFile,
   saveTextToFile,
   titleCase,
-} from '../utils/ExportImportUtils';
-import wordwrap from './utils/Wordwrap';
-
+} = frodo.utils;
 const {
   readScripts,
   exportScript,

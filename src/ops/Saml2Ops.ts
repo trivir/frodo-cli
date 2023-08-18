@@ -15,9 +15,8 @@ import {
   succeedSpinner,
   updateProgressBar,
 } from '../utils/Console';
-import { saveTextToFile } from '../utils/ExportImportUtils';
 
-const { decodeBase64 } = frodo.utils;
+const { decodeBase64, saveTextToFile } = frodo.utils;
 const { getTypedFilename, saveJsonToFile, getRealmString, validateImport } =
   frodo.utils;
 const {

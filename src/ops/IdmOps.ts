@@ -10,9 +10,13 @@ import {
   printMessage,
   stopProgressIndicator,
 } from '../utils/Console';
-import { getTypedFilename, readFiles } from '../utils/ExportImportUtils';
 
-const { unSubstituteEnvParams, validateScriptHooks } = frodo.utils;
+const {
+  unSubstituteEnvParams,
+  validateScriptHooks,
+  getTypedFilename,
+  readFiles,
+} = frodo.utils;
 const {
   testConnectorServers,
   readConfigEntities,

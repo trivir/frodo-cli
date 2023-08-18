@@ -11,7 +11,6 @@ import {
   succeedSpinner,
   updateProgressBar,
 } from '../utils/Console';
-import { getTypedFilename, saveJsonToFile } from '../utils/ExportImportUtils';
 
 const {
   readAdminFederationProviders,
@@ -21,6 +20,7 @@ const {
   importAdminFederationProviders,
   importFirstAdminFederationProvider,
 } = frodo.cloud.adminFed;
+const { getTypedFilename, saveJsonToFile } = frodo.utils;
 
 /**
  * List providers

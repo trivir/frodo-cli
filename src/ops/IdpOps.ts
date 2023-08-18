@@ -12,12 +12,12 @@ import {
   succeedSpinner,
   updateProgressBar,
 } from '../utils/Console';
-import {
+
+const {
   getRealmString,
   getTypedFilename,
   saveJsonToFile,
-} from '../utils/ExportImportUtils';
-
+} = frodo.utils;
 const {
   readSocialIdentityProviders,
   exportSocialIdentityProvider,
