@@ -1,9 +1,8 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
-import {FullExportInterface} from "../../../frodo-lib/types/ops/OpsTypes";
 import fs from "fs";
+import {FullExportInterface} from "../../../frodo-lib/types/api/AdminApi";
 
-const { getRealmName } = frodo.helper.utils;
-const { getTypedFilename, titleCase, saveJsonToFile } = frodo.utils.impex;
+const { getRealmName, getTypedFilename, titleCase, saveJsonToFile } = frodo.utils;
 const { exportFullConfiguration } = frodo.admin;
 
 /**
