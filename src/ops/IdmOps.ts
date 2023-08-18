@@ -94,7 +94,7 @@ export async function exportAllRawConfigEntities(directory) {
   if (!fs.existsSync(directory)) {
     fs.mkdirSync(directory);
   }
-  for (const [id, value] of Object.entries(exportedConfigurations)) {
+  for (const [id, value] of Object.entries(exportedConfigurations.config)) {
     if (value != null) {
       fse.outputFile(
         `${directory}/${id}.json`,
