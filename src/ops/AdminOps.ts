@@ -1,6 +1,7 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import fs from "fs";
 import {FullExportInterface} from "../../../frodo-lib/types/api/AdminApi";
+import {getFileInfo} from "prettier";
 
 const { getRealmName, getTypedFilename, titleCase, saveJsonToFile } = frodo.utils;
 const { exportFullConfiguration } = frodo.admin;
@@ -46,11 +47,18 @@ export async function exportEverythingToFiles(directory, globalConfig = false, u
         }
         Object.entries(value).forEach(([subId, subValue]: [string, any]) => {
           const filename = getTypedFilename(subValue.name ? subValue.name : subId, `${id}.${type}`);
+          const fileData = {};
+          fileData[type] = {};
+          fileData[type][id] = {};
+          fileData[type][id][subId] = subValue;
           saveJsonToFile(subValue, `${directory}/${type}/${id}/${filename}`);
         });
       }
       const filename = getTypedFilename(value.name ? value.name : id, type);
-      saveJsonToFile(value, `${directory}/${type}/${filename}`);
+      const fileData = {};
+      fileData[type] = {};
+      fileData[type][id] = value;
+      saveJsonToFile(fileData, `${directory}/${type}/${filename}`);
     });
   });
 }
