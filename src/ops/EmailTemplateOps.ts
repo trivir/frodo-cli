@@ -14,11 +14,10 @@ import {
   succeedSpinner,
   updateProgressIndicator,
 } from '../utils/Console';
-import { getTypedFilename, saveJsonToFile } from '../utils/ExportImportUtils';
 import { cloneDeep } from './utils/OpsUtils';
 import wordwrap from './utils/Wordwrap';
 
-const { validateImport } = frodo.utils;
+const { validateImport, getTypedFilename, saveJsonToFile } = frodo.utils;
 const {
   EMAIL_TEMPLATE_TYPE,
   readEmailTemplates,

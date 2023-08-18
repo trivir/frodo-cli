@@ -18,9 +18,8 @@ import {
   succeedSpinner,
   updateProgressBar,
 } from '../utils/Console';
-import { saveJsonToFile } from '../utils/ExportImportUtils';
 
-const { getTypedFilename, titleCase } = frodo.utils;
+const { getTypedFilename, titleCase, saveJsonToFile } = frodo.utils;
 const {
   readOAuth2Clients,
   exportOAuth2Client,

@@ -18,13 +18,13 @@ import {
   succeedSpinner,
   updateProgressBar,
 } from '../utils/Console';
-import {
+
+const {
+  getRealmName,
   getTypedFilename,
   saveJsonToFile,
   titleCase,
-} from '../utils/ExportImportUtils';
-
-const { getRealmName } = frodo.utils;
+} = frodo.utils;
 const {
   readPolicies,
   readPoliciesByPolicySet,
