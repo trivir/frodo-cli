@@ -73,7 +73,7 @@ program
           options.cotId,
           options.file,
           options.metadata,
-          options.sort,
+          options.sort
         );
         if (!outcome) process.exitCode = 1;
       }
@@ -83,7 +83,7 @@ program
         const outcome = exportCirclesOfTrustToFile(
           options.file,
           options.metadata,
-          options.sort,
+          options.sort
         );
         if (!outcome) process.exitCode = 1;
       }
@@ -92,7 +92,7 @@ program
         verboseMessage('Exporting all circles of trust to separate files...');
         const outcome = exportCirclesOfTrustToFiles(
           options.metadata,
-          options.sort,
+          options.sort
         );
         if (!outcome) process.exitCode = 1;
       }

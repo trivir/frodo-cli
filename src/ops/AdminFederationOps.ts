@@ -54,7 +54,7 @@ export async function exportAdminFederationProviderToFile(
   providerId: string,
   file = '',
   includeMeta = true,
-  sort = false,
+  sort = false
 ): Promise<boolean> {
   let outcome = false;
   let fileName = file;
@@ -87,7 +87,7 @@ export async function exportAdminFederationProviderToFile(
 export async function exportAdminFederationProvidersToFile(
   file = '',
   includeMeta = true,
-  sort = false,
+  sort = false
 ): Promise<boolean> {
   let outcome = false;
   showSpinner(`Exporting all providers...`);
@@ -115,7 +115,7 @@ export async function exportAdminFederationProvidersToFile(
  */
 export async function exportAdminFederationProvidersToFiles(
   includeMeta = true,
-  sort = false,
+  sort = false
 ): Promise<boolean> {
   let outcome = false;
   try {

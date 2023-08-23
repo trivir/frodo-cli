@@ -85,7 +85,7 @@ program
           options.file,
           globalConfig,
           options.metadata,
-          options.sort,
+          options.sort
         );
       }
       // -a / --all
@@ -95,7 +95,7 @@ program
           options.file,
           globalConfig,
           options.metadata,
-          options.sort,
+          options.sort
         );
       }
       // -A / --all-separate
@@ -104,7 +104,7 @@ program
         await exportServicesToFiles(
           globalConfig,
           options.metadata,
-          options.sort,
+          options.sort
         );
       }
       // unrecognized combination of options or no options

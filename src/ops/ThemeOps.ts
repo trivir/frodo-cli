@@ -10,7 +10,8 @@ import {
   updateProgressIndicator,
 } from '../utils/Console';
 
-const { getRealmString, validateImport, getTypedFilename, saveToFile } = frodo.utils;
+const { getRealmString, validateImport, getTypedFilename, saveToFile } =
+  frodo.utils;
 const {
   readThemes,
   readThemeByName,
@@ -102,7 +103,7 @@ export async function exportThemeByName(
   name,
   file,
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   let fileName = getTypedFilename(name, 'theme');
   if (file) {
@@ -131,7 +132,7 @@ export async function exportThemeById(
   id,
   file,
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   let fileName = getTypedFilename(id, 'theme');
   if (file) {
@@ -158,7 +159,7 @@ export async function exportThemeById(
 export async function exportThemesToFile(
   file,
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   let fileName = getTypedFilename(`all${getRealmString()}Themes`, 'theme');
   if (file) {
@@ -184,10 +185,7 @@ export async function exportThemesToFile(
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
  * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportThemesToFiles(
-  includeMeta = true,
-  sort = false,
-) {
+export async function exportThemesToFiles(includeMeta = true, sort = false) {
   const allThemesData = await readThemes();
   createProgressIndicator(
     'determinate',

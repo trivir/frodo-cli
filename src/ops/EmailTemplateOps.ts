@@ -157,7 +157,7 @@ export async function exportEmailTemplateToFile(
   templateId: string,
   file: string,
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   let fileName = file;
   if (!fileName) {
@@ -188,7 +188,7 @@ export async function exportEmailTemplateToFile(
 export async function exportEmailTemplatesToFile(
   file,
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   let fileName = file;
   if (!fileName) {
@@ -224,7 +224,7 @@ export async function exportEmailTemplatesToFile(
  */
 export async function exportEmailTemplatesToFiles(
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   try {
     const templates = await readEmailTemplates();

@@ -11,12 +11,8 @@ import {
   succeedSpinner,
 } from '../utils/Console';
 
-const {
-  getRealmName,
-  getTypedFilename,
-  saveJsonToFile,
-  titleCase,
-} = frodo.utils;
+const { getRealmName, getTypedFilename, saveJsonToFile, titleCase } =
+  frodo.utils;
 const {
   createAgentExportTemplate,
   readAgents,
@@ -179,7 +175,7 @@ export async function listWebAgents(long = false) {
 export async function exportAgentsToFile(
   file,
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   const exportData = await exportAgents();
   let fileName = getTypedFilename(
@@ -201,7 +197,7 @@ export async function exportAgentsToFile(
 export async function exportIdentityGatewayAgentsToFile(
   file,
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   const exportData = await exportIdentityGatewayAgents();
   let fileName = getTypedFilename(
@@ -223,7 +219,7 @@ export async function exportIdentityGatewayAgentsToFile(
 export async function exportJavaAgentsToFile(
   file,
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   const exportData = await exportJavaAgents();
   let fileName = getTypedFilename(
@@ -245,7 +241,7 @@ export async function exportJavaAgentsToFile(
 export async function exportWebAgentsToFile(
   file,
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   const exportData = await exportWebAgents();
   let fileName = getTypedFilename(
@@ -269,7 +265,7 @@ export async function exportAgentToFile(
   agentId,
   file,
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   const exportData = await exportAgent(agentId);
   let fileName = getTypedFilename(
@@ -293,7 +289,7 @@ export async function exportIdentityGatewayAgentToFile(
   agentId,
   file,
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   const exportData = await exportIdentityGatewayAgent(agentId);
   let fileName = getTypedFilename(
@@ -317,7 +313,7 @@ export async function exportJavaAgentToFile(
   agentId,
   file,
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   const exportData = await exportJavaAgent(agentId);
   let fileName = getTypedFilename(
@@ -341,7 +337,7 @@ export async function exportWebAgentToFile(
   agentId,
   file,
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   const exportData = await exportWebAgent(agentId);
   let fileName = getTypedFilename(
@@ -359,10 +355,7 @@ export async function exportWebAgentToFile(
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
  * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportAgentsToFiles(
-  includeMeta = true,
-  sort = false,
-) {
+export async function exportAgentsToFiles(includeMeta = true, sort = false) {
   const agents = await readAgents();
   debugMessage(`exportAgentsToFiles: ${agents.length} agents`);
   for (const agent of agents) {
@@ -385,7 +378,7 @@ export async function exportAgentsToFiles(
  */
 export async function exportIdentityGatewayAgentsToFiles(
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   const agents = await readIdentityGatewayAgents();
   for (const agent of agents) {
@@ -406,7 +399,7 @@ export async function exportIdentityGatewayAgentsToFiles(
  */
 export async function exportJavaAgentsToFiles(
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   const agents = await readJavaAgents();
   for (const agent of agents) {
@@ -425,10 +418,7 @@ export async function exportJavaAgentsToFiles(
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
  * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportWebAgentsToFiles(
-  includeMeta = true,
-  sort = false,
-) {
+export async function exportWebAgentsToFiles(includeMeta = true, sort = false) {
   const agents = await readWebAgents();
   for (const agent of agents) {
     const fileName = getTypedFilename(

@@ -96,9 +96,10 @@ program
           options.metadata,
           options.sort,
           {
-          useStringArrays: options.useStringArrays,
-          deps: options.deps,
-        });
+            useStringArrays: options.useStringArrays,
+            deps: options.deps,
+          }
+        );
       }
       // --all -a
       else if (options.all && (await getTokens())) {
@@ -108,17 +109,15 @@ program
           options.metadata,
           options.sort,
           {
-          useStringArrays: options.useStringArrays,
-          deps: options.deps,
-        });
+            useStringArrays: options.useStringArrays,
+            deps: options.deps,
+          }
+        );
       }
       // --all-separate -A
       else if (options.allSeparate && (await getTokens())) {
         verboseMessage('Exporting all journeys to separate files...');
-        await exportJourneysToFiles(
-          options.metadata,
-          options.sort,
-          {
+        await exportJourneysToFiles(options.metadata, options.sort, {
           useStringArrays: options.useStringArrays,
           deps: options.deps,
         });

@@ -71,7 +71,7 @@ program
           options.typeId,
           options.file,
           options.metadata,
-          options.sort,
+          options.sort
         );
         if (!outcome) process.exitCode = 1;
       }
@@ -82,7 +82,7 @@ program
           options.typeName,
           options.file,
           options.metadata,
-          options.sort,
+          options.sort
         );
         if (!outcome) process.exitCode = 1;
       }
@@ -92,7 +92,7 @@ program
         const outcome = await exportResourceTypesToFile(
           options.file,
           options.metadata,
-          options.sort,
+          options.sort
         );
         if (!outcome) process.exitCode = 1;
       }
@@ -103,7 +103,7 @@ program
         );
         const outcome = await exportResourceTypesToFiles(
           options.metadata,
-          options.sort,
+          options.sort
         );
         if (!outcome) process.exitCode = 1;
       }

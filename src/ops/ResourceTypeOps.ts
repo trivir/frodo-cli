@@ -16,12 +16,8 @@ import {
   updateProgressBar,
 } from '../utils/Console';
 
-const {
-  getRealmName,
-  getTypedFilename,
-  saveJsonToFile,
-  titleCase,
-} = frodo.utils;
+const { getRealmName, getTypedFilename, saveJsonToFile, titleCase } =
+  frodo.utils;
 const {
   readResourceTypes,
   readResourceType,
@@ -270,7 +266,7 @@ export async function exportResourceTypeToFile(
   resourceTypeUuid: string,
   file: string,
   includeMeta = true,
-  sort = false,
+  sort = false
 ): Promise<boolean> {
   let outcome = false;
   debugMessage(`cli.ResourceTypeOps.exportResourceTypeToFile: begin`);
@@ -303,7 +299,7 @@ export async function exportResourceTypeByNameToFile(
   resourceTypeName: string,
   file: string,
   includeMeta = true,
-  sort = false,
+  sort = false
 ): Promise<boolean> {
   let outcome = false;
   debugMessage(`cli.ResourceTypeOps.exportResourceTypeByNameToFile: begin`);
@@ -334,7 +330,7 @@ export async function exportResourceTypeByNameToFile(
 export async function exportResourceTypesToFile(
   file: string,
   includeMeta = true,
-  sort = false,
+  sort = false
 ): Promise<boolean> {
   let outcome = false;
   debugMessage(`cli.ResourceTypeOps.exportResourceTypesToFile: begin`);
@@ -366,7 +362,7 @@ export async function exportResourceTypesToFile(
  */
 export async function exportResourceTypesToFiles(
   includeMeta = true,
-  sort = false,
+  sort = false
 ): Promise<boolean> {
   debugMessage(`cli.ResourceTypeOps.exportResourceTypesToFiles: begin`);
   const errors = [];

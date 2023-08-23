@@ -20,12 +20,8 @@ import {
   updateProgressBar,
 } from '../utils/Console';
 
-const {
-  getRealmName,
-  getTypedFilename,
-  saveJsonToFile,
-  titleCase,
-} = frodo.utils;
+const { getRealmName, getTypedFilename, saveJsonToFile, titleCase } =
+  frodo.utils;
 const { readPoliciesByPolicySet, deletePolicy } = frodo.authz.policy;
 const {
   readPolicySets,

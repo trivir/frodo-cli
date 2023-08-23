@@ -63,7 +63,7 @@ program
             options.idpId,
             options.file,
             options.metadata,
-            options.sort,
+            options.sort
           );
           if (!outcome) process.exitCode = 1;
         }
@@ -73,7 +73,7 @@ program
           const outcome = await exportAdminFederationProvidersToFile(
             options.file,
             options.metadata,
-            options.sort,
+            options.sort
           );
           if (!outcome) process.exitCode = 1;
         }
@@ -82,7 +82,7 @@ program
           verboseMessage('Exporting all providers to separate files...');
           const outcome = await exportAdminFederationProvidersToFiles(
             options.metadata,
-            options.sort,
+            options.sort
           );
           if (!outcome) process.exitCode = 1;
         }

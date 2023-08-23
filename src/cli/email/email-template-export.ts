@@ -73,7 +73,7 @@ program
           options.templateId,
           options.file,
           options.metadata,
-          options.sort,
+          options.sort
         );
       }
       // --all -a
@@ -82,16 +82,13 @@ program
         exportEmailTemplatesToFile(
           options.file,
           options.metadata,
-          options.sort,
+          options.sort
         );
       }
       // --all-separate -A
       else if (options.allSeparate && (await getTokens())) {
         verboseMessage('Exporting all email templates to separate files...');
-        exportEmailTemplatesToFiles(
-          options.metadata,
-          options.sort,
-        );
+        exportEmailTemplatesToFiles(options.metadata, options.sort);
       }
       // unrecognized combination of options or no options
       else {

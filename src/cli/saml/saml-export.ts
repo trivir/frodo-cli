@@ -73,7 +73,7 @@ program
           options.entityId,
           options.file,
           options.metadata,
-          options.sort,
+          options.sort
         );
       }
       // --all -a
@@ -82,16 +82,13 @@ program
         await exportSaml2ProvidersToFile(
           options.file,
           options.metadata,
-          options.sort,
+          options.sort
         );
       }
       // --all-separate -A
       else if (options.allSeparate && (await getTokens())) {
         verboseMessage('Exporting all providers to separate files...');
-        await exportSaml2ProvidersToFiles(
-          options.metadata,
-          options.sort,
-        );
+        await exportSaml2ProvidersToFiles(options.metadata, options.sort);
       }
       // unrecognized combination of options or no options
       else {

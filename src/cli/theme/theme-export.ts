@@ -80,7 +80,7 @@ program
           options.themeName,
           options.file,
           options.metadata,
-          options.sort,
+          options.sort
         );
       }
       // export by id
@@ -94,25 +94,18 @@ program
           options.themeId,
           options.file,
           options.metadata,
-          options.sort,
+          options.sort
         );
       }
       // --all -a
       else if (options.all && (await getTokens())) {
         verboseMessage('Exporting all themes to a single file...');
-        exportThemesToFile(
-          options.file,
-          options.metadata,
-          options.sort,
-        );
+        exportThemesToFile(options.file, options.metadata, options.sort);
       }
       // --all-separate -A
       else if (options.allSeparate && (await getTokens())) {
         verboseMessage('Exporting all themes to separate files...');
-        exportThemesToFiles(
-          options.metadata,
-          options.sort,
-        );
+        exportThemesToFiles(options.metadata, options.sort);
       }
       // unrecognized combination of options or no options
       else {

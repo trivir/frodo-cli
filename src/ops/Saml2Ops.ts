@@ -173,7 +173,7 @@ export async function exportSaml2ProviderToFile(
   entityId,
   file = null,
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   debugMessage(
     `cli.Saml2Ops.exportSaml2ProviderToFile: start [entityId=${entityId}, file=${file}]`
@@ -208,7 +208,7 @@ export async function exportSaml2ProviderToFile(
 export async function exportSaml2ProvidersToFile(
   file = null,
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   debugMessage(`cli.Saml2Ops.exportSaml2ProviderToFile: start [file=${file}]`);
   let fileName = file;
@@ -235,7 +235,7 @@ export async function exportSaml2ProvidersToFile(
  */
 export async function exportSaml2ProvidersToFiles(
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   const stubs = await readSaml2ProviderStubs();
   if (stubs.length > 0) {

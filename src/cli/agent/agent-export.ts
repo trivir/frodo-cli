@@ -65,7 +65,7 @@ program
             options.agentId,
             options.file,
             options.metadata,
-            options.sort,
+            options.sort
           );
         }
         // --all -a
@@ -74,16 +74,13 @@ program
           await exportAgentsToFile(
             options.file,
             options.metadata,
-            options.sort,
+            options.sort
           );
         }
         // --all-separate -A
         else if (options.allSeparate) {
           verboseMessage('Exporting all agents to separate files...');
-          await exportAgentsToFiles(
-            options.metadata,
-            options.sort,
-          );
+          await exportAgentsToFiles(options.metadata, options.sort);
         }
         // unrecognized combination of options or no options
         else {

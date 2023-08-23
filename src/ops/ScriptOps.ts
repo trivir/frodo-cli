@@ -18,12 +18,8 @@ import {
 } from '../utils/Console';
 import wordwrap from './utils/Wordwrap';
 
-const {
-  getTypedFilename,
-  saveJsonToFile,
-  saveTextToFile,
-  titleCase,
-} = frodo.utils;
+const { getTypedFilename, saveJsonToFile, saveTextToFile, titleCase } =
+  frodo.utils;
 const {
   readScripts,
   exportScript,
@@ -124,7 +120,7 @@ export async function exportScriptToFile(
   scriptId: string,
   file: string,
   includeMeta = true,
-  sort = false,
+  sort = false
 ): Promise<boolean> {
   debugMessage(`Cli.ScriptOps.exportScriptToFile: start`);
   try {
@@ -159,7 +155,7 @@ export async function exportScriptByNameToFile(
   name: string,
   file: string,
   includeMeta = true,
-  sort = false,
+  sort = false
 ): Promise<boolean> {
   debugMessage(`Cli.ScriptOps.exportScriptByNameToFile: start`);
   try {
@@ -192,7 +188,7 @@ export async function exportScriptByNameToFile(
 export async function exportScriptsToFile(
   file: string,
   includeMeta = true,
-  sort = false,
+  sort = false
 ): Promise<boolean> {
   debugMessage(`Cli.ScriptOps.exportScriptsToFile: start`);
   try {
@@ -223,7 +219,7 @@ export async function exportScriptsToFile(
  */
 export async function exportScriptsToFiles(
   includeMeta = true,
-  sort = false,
+  sort = false
 ): Promise<boolean> {
   let outcome = true;
   debugMessage(`Cli.ScriptOps.exportScriptsToFiles: start`);
@@ -254,7 +250,7 @@ export async function exportScriptsToFiles(
 
 export async function exportScriptsToFilesExtract(
   includeMeta = true,
-  sort = false,
+  sort = false
 ): Promise<boolean> {
   let outcome = true;
   debugMessage(`Cli.ScriptOps.exportScriptsToFilesExtract: start`);

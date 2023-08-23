@@ -65,7 +65,7 @@ program
             options.agentId,
             options.file,
             options.metadata,
-            options.sort,
+            options.sort
           );
         }
         // --all -a
@@ -76,7 +76,7 @@ program
           await exportIdentityGatewayAgentsToFile(
             options.file,
             options.metadata,
-            options.sort,
+            options.sort
           );
         }
         // --all-separate -A
@@ -86,7 +86,7 @@ program
           );
           await exportIdentityGatewayAgentsToFiles(
             options.metadata,
-            options.sort,
+            options.sort
           );
         }
         // unrecognized combination of options or no options

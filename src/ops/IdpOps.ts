@@ -13,11 +13,7 @@ import {
   updateProgressBar,
 } from '../utils/Console';
 
-const {
-  getRealmString,
-  getTypedFilename,
-  saveJsonToFile,
-} = frodo.utils;
+const { getRealmString, getTypedFilename, saveJsonToFile } = frodo.utils;
 const {
   readSocialIdentityProviders,
   exportSocialIdentityProvider,
@@ -89,7 +85,7 @@ export async function exportSocialIdentityProviderToFile(
   providerId: string,
   file = '',
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   debugMessage(`cli.IdpOps.exportSocialIdentityProviderToFile: start`);
   let fileName = file;
@@ -120,7 +116,7 @@ export async function exportSocialIdentityProviderToFile(
 export async function exportSocialIdentityProvidersToFile(
   file = '',
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   let fileName = file;
   if (!fileName) {
@@ -137,7 +133,7 @@ export async function exportSocialIdentityProvidersToFile(
  */
 export async function exportSocialIdentityProvidersToFiles(
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   debugMessage(`cli.IdpOps.exportSocialIdentityProvidersToFiles: start`);
   try {

@@ -60,7 +60,7 @@ export async function exportServicesToFile(
   file,
   globalConfig = false,
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   const exportData = await exportServices(globalConfig);
   let fileName = getTypedFilename(
@@ -85,7 +85,7 @@ export async function exportServiceToFile(
   file: string,
   globalConfig = false,
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   const exportData = await exportService(serviceId, globalConfig);
   let fileName = getTypedFilename(serviceId, `service`);
@@ -103,7 +103,7 @@ export async function exportServiceToFile(
 export async function exportServicesToFiles(
   globalConfig = false,
   includeMeta = true,
-  sort = false,
+  sort = false
 ) {
   debugMessage(`cli.ServiceOps.exportServicesToFiles: start`);
   const services = await getFullServices(globalConfig);

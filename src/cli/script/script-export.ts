@@ -91,32 +91,22 @@ program
           options.scriptName || options.script,
           options.file,
           options.metadata,
-          options.sort,
+          options.sort
         );
       }
       // -a / --all
       else if (options.all) {
         verboseMessage('Exporting all scripts to a single file...');
-        await exportScriptsToFile(
-          options.file,
-          options.metadata,
-          options.sort,
-        );
+        await exportScriptsToFile(options.file, options.metadata, options.sort);
       }
       // -A / --all-separate
       else if (options.allSeparate) {
         verboseMessage('Exporting all scripts to separate files...');
         // -x / --extract
         if (options.extract) {
-          await exportScriptsToFilesExtract(
-            options.metadata,
-            options.sort,
-          );
+          await exportScriptsToFilesExtract(options.metadata, options.sort);
         } else {
-          await exportScriptsToFiles(
-            options.metadata,
-            options.sort,
-          );
+          await exportScriptsToFiles(options.metadata, options.sort);
         }
       }
 

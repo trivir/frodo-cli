@@ -15,12 +15,8 @@ import {
   updateProgressBar,
 } from '../utils/Console';
 
-const {
-  getRealmName,
-  getTypedFilename,
-  saveJsonToFile,
-  titleCase,
-} = frodo.utils;
+const { getRealmName, getTypedFilename, saveJsonToFile, titleCase } =
+  frodo.utils;
 const {
   readCirclesOfTrust,
   exportCircleOfTrust,
@@ -120,7 +116,7 @@ export async function exportCircleOfTrustToFile(
   cotId: string,
   file: string = null,
   includeMeta = true,
-  sort = false,
+  sort = false
 ): Promise<boolean> {
   let outcome = false;
   debugMessage(`cli.CirclesOfTrustOps.exportCircleOfTrustToFile: begin`);
@@ -150,7 +146,7 @@ export async function exportCircleOfTrustToFile(
 export async function exportCirclesOfTrustToFile(
   file: string = null,
   includeMeta = true,
-  sort = false,
+  sort = false
 ): Promise<boolean> {
   let outcome = false;
   debugMessage(`cli.CirclesOfTrustOps.exportCirclesOfTrustToFile: begin`);
@@ -181,7 +177,7 @@ export async function exportCirclesOfTrustToFile(
  */
 export async function exportCirclesOfTrustToFiles(
   includeMeta = true,
-  sort = false,
+  sort = false
 ): Promise<boolean> {
   debugMessage(`cli.CirclesOfTrustOps.exportCirclesOfTrustToFiles: begin`);
   const errors = [];

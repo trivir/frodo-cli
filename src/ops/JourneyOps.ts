@@ -148,7 +148,7 @@ export async function exportJourneyToFile(
   options: TreeExportOptions = {
     deps: false,
     useStringArrays: false,
-  },
+  }
 ): Promise<void> {
   debugMessage(`exportJourneyToFile: start`);
   const verbose = state.getDebug();
@@ -196,7 +196,7 @@ export async function exportJourneysToFile(
   options: TreeExportOptions = {
     deps: false,
     useStringArrays: false,
-  },
+  }
 ): Promise<void> {
   let fileName = file;
   if (!fileName) {

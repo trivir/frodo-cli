@@ -74,7 +74,7 @@ program
             options.idpId,
             options.file,
             options.metadata,
-            options.sort,
+            options.sort
           );
         }
         // --all -a
@@ -83,16 +83,13 @@ program
           exportSocialIdentityProvidersToFile(
             options.file,
             options.metadata,
-            options.sort,
+            options.sort
           );
         }
         // --all-separate -A
         else if (options.allSeparate) {
           verboseMessage('Exporting all providers to separate files...');
-          exportSocialIdentityProvidersToFiles(
-            options.metadata,
-            options.sort,
-          );
+          exportSocialIdentityProvidersToFiles(options.metadata, options.sort);
         }
         // unrecognized combination of options or no options
         else {

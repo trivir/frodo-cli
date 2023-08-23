@@ -83,9 +83,10 @@ program
           options.metadata,
           options.sort,
           {
-          useStringArrays: true,
-          deps: options.deps,
-        });
+            useStringArrays: true,
+            deps: options.deps,
+          }
+        );
         if (!status) process.exitCode = 1;
       }
       // -A/--all-separate
@@ -95,9 +96,10 @@ program
           options.metadata,
           options.sort,
           {
-          useStringArrays: true,
-          deps: options.deps,
-        });
+            useStringArrays: true,
+            deps: options.deps,
+          }
+        );
         if (!status) process.exitCode = 1;
       }
       // unrecognized combination of options or no options
