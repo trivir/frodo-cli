@@ -166,8 +166,15 @@ export async function exportSaml2MetadataToFile(entityId, file = null) {
  * Export a single entity provider to file
  * @param {String} entityId Provider entity id
  * @param {String} file Optional filename
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportSaml2ProviderToFile(entityId, file = null) {
+export async function exportSaml2ProviderToFile(
+  entityId,
+  file = null,
+  includeMeta = true,
+  sort = false,
+) {
   debugMessage(
     `cli.Saml2Ops.exportSaml2ProviderToFile: start [entityId=${entityId}, file=${file}]`
   );
@@ -178,7 +185,7 @@ export async function exportSaml2ProviderToFile(entityId, file = null) {
   try {
     createProgressBar(1, `Exporting provider ${entityId}`);
     const fileData = await exportSaml2Provider(entityId);
-    saveJsonToFile(fileData, fileName);
+    saveJsonToFile(fileData, fileName, includeMeta, sort);
     updateProgressBar(`Exported provider ${entityId}`);
     stopProgressBar(
       `Exported ${entityId.brightCyan} to ${fileName.brightCyan}.`
@@ -195,8 +202,14 @@ export async function exportSaml2ProviderToFile(entityId, file = null) {
 /**
  * Export all entity providers to one file
  * @param {String} file Optional filename
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportSaml2ProvidersToFile(file = null) {
+export async function exportSaml2ProvidersToFile(
+  file = null,
+  includeMeta = true,
+  sort = false,
+) {
   debugMessage(`cli.Saml2Ops.exportSaml2ProviderToFile: start [file=${file}]`);
   let fileName = file;
   if (!fileName) {
@@ -204,7 +217,7 @@ export async function exportSaml2ProvidersToFile(file = null) {
   }
   try {
     const exportData = await exportSaml2Providers();
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta, sort);
   } catch (error) {
     printMessage(error.message, 'error');
     printMessage(
@@ -217,15 +230,20 @@ export async function exportSaml2ProvidersToFile(file = null) {
 
 /**
  * Export all entity providers to individual files
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportSaml2ProvidersToFiles() {
+export async function exportSaml2ProvidersToFiles(
+  includeMeta = true,
+  sort = false,
+) {
   const stubs = await readSaml2ProviderStubs();
   if (stubs.length > 0) {
     createProgressBar(stubs.length, 'Exporting providers');
     for (const stub of stubs) {
       const fileName = getTypedFilename(stub.entityId, 'saml');
       const fileData = await exportSaml2Provider(stub.entityId);
-      saveJsonToFile(fileData, fileName);
+      saveJsonToFile(fileData, fileName, includeMeta, sort);
       updateProgressBar(`Exported provider ${stub.entityId}`);
     }
     stopProgressBar(`${stubs.length} providers exported.`);

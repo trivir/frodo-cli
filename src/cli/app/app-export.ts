@@ -35,6 +35,18 @@ program
     )
   )
   .addOption(
+    new Option(
+      '-j, --no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '-S, --sort',
+      'Sorts exported .json file(s) in abc order by key.'
+    )
+  )
+  .addOption(
     new Option('--no-deps', 'Do not include any dependencies (scripts).')
   )
   .action(
@@ -54,6 +66,8 @@ program
         const status = await exportOAuth2ClientToFile(
           options.appId,
           options.file,
+          options.metadata,
+          options.sort,
           {
             useStringArrays: true,
             deps: options.deps,
@@ -64,7 +78,11 @@ program
       // -a/--all
       else if (options.all && (await getTokens())) {
         verboseMessage('Exporting all OAuth2 applications to file...');
-        const status = await exportOAuth2ClientsToFile(options.file, {
+        const status = await exportOAuth2ClientsToFile(
+          options.file,
+          options.metadata,
+          options.sort,
+          {
           useStringArrays: true,
           deps: options.deps,
         });
@@ -73,7 +91,10 @@ program
       // -A/--all-separate
       else if (options.allSeparate && (await getTokens())) {
         verboseMessage('Exporting all applications to separate files...');
-        const status = await exportOAuth2ClientsToFiles({
+        const status = await exportOAuth2ClientsToFiles(
+          options.metadata,
+          options.sort,
+          {
           useStringArrays: true,
           deps: options.deps,
         });

@@ -173,8 +173,14 @@ export async function listWebAgents(long = false) {
 /**
  * Export all agents to file
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportAgentsToFile(file) {
+export async function exportAgentsToFile(
+  file,
+  includeMeta = true,
+  sort = false,
+) {
   const exportData = await exportAgents();
   let fileName = getTypedFilename(
     `all${titleCase(getRealmName(state.getRealm()))}Agents`,
@@ -183,14 +189,20 @@ export async function exportAgentsToFile(file) {
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta, sort);
 }
 
 /**
  * Export all identity gateway agents to file
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportIdentityGatewayAgentsToFile(file) {
+export async function exportIdentityGatewayAgentsToFile(
+  file,
+  includeMeta = true,
+  sort = false,
+) {
   const exportData = await exportIdentityGatewayAgents();
   let fileName = getTypedFilename(
     `all${titleCase(getRealmName(state.getRealm()))}Agents`,
@@ -199,14 +211,20 @@ export async function exportIdentityGatewayAgentsToFile(file) {
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta, sort);
 }
 
 /**
  * Export all java agents to file
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportJavaAgentsToFile(file) {
+export async function exportJavaAgentsToFile(
+  file,
+  includeMeta = true,
+  sort = false,
+) {
   const exportData = await exportJavaAgents();
   let fileName = getTypedFilename(
     `all${titleCase(getRealmName(state.getRealm()))}Agents`,
@@ -215,14 +233,20 @@ export async function exportJavaAgentsToFile(file) {
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta, sort);
 }
 
 /**
  * Export all web agents to file
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportWebAgentsToFile(file) {
+export async function exportWebAgentsToFile(
+  file,
+  includeMeta = true,
+  sort = false,
+) {
   const exportData = await exportWebAgents();
   let fileName = getTypedFilename(
     `all${titleCase(getRealmName(state.getRealm()))}Agents`,
@@ -231,15 +255,22 @@ export async function exportWebAgentsToFile(file) {
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta, sort);
 }
 
 /**
  * Export agent to file
  * @param {string} agentId agent id
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportAgentToFile(agentId, file) {
+export async function exportAgentToFile(
+  agentId,
+  file,
+  includeMeta = true,
+  sort = false,
+) {
   const exportData = await exportAgent(agentId);
   let fileName = getTypedFilename(
     agentId,
@@ -248,15 +279,22 @@ export async function exportAgentToFile(agentId, file) {
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta, sort);
 }
 
 /**
  * Export identity gateway agent to file
  * @param {string} agentId agent id
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportIdentityGatewayAgentToFile(agentId, file) {
+export async function exportIdentityGatewayAgentToFile(
+  agentId,
+  file,
+  includeMeta = true,
+  sort = false,
+) {
   const exportData = await exportIdentityGatewayAgent(agentId);
   let fileName = getTypedFilename(
     agentId,
@@ -265,15 +303,22 @@ export async function exportIdentityGatewayAgentToFile(agentId, file) {
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta, sort);
 }
 
 /**
  * Export java agent to file
  * @param {string} agentId agent id
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportJavaAgentToFile(agentId, file) {
+export async function exportJavaAgentToFile(
+  agentId,
+  file,
+  includeMeta = true,
+  sort = false,
+) {
   const exportData = await exportJavaAgent(agentId);
   let fileName = getTypedFilename(
     agentId,
@@ -282,15 +327,22 @@ export async function exportJavaAgentToFile(agentId, file) {
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta, sort);
 }
 
 /**
  * Export web agent to file
  * @param {string} agentId agent id
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportWebAgentToFile(agentId, file) {
+export async function exportWebAgentToFile(
+  agentId,
+  file,
+  includeMeta = true,
+  sort = false,
+) {
   const exportData = await exportWebAgent(agentId);
   let fileName = getTypedFilename(
     agentId,
@@ -299,13 +351,18 @@ export async function exportWebAgentToFile(agentId, file) {
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta, sort);
 }
 
 /**
  * Export all agents to separate files
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportAgentsToFiles() {
+export async function exportAgentsToFiles(
+  includeMeta = true,
+  sort = false,
+) {
   const agents = await readAgents();
   debugMessage(`exportAgentsToFiles: ${agents.length} agents`);
   for (const agent of agents) {
@@ -316,15 +373,20 @@ export async function exportAgentsToFiles() {
     const exportData = createAgentExportTemplate();
     exportData.agents[agent._id] = agent;
     debugMessage(`exportAgentsToFiles: exporting ${agent._id} to ${fileName}`);
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta, sort);
   }
   debugMessage(`exportAgentsToFiles: done.`);
 }
 
 /**
  * Export all identity gateway agents to separate files
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportIdentityGatewayAgentsToFiles() {
+export async function exportIdentityGatewayAgentsToFiles(
+  includeMeta = true,
+  sort = false,
+) {
   const agents = await readIdentityGatewayAgents();
   for (const agent of agents) {
     const fileName = getTypedFilename(
@@ -333,14 +395,19 @@ export async function exportIdentityGatewayAgentsToFiles() {
     );
     const exportData = createAgentExportTemplate();
     exportData.agents[agent._id] = agent;
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta, sort);
   }
 }
 
 /**
  * Export all java agents to separate files
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportJavaAgentsToFiles() {
+export async function exportJavaAgentsToFiles(
+  includeMeta = true,
+  sort = false,
+) {
   const agents = await readJavaAgents();
   for (const agent of agents) {
     const fileName = getTypedFilename(
@@ -349,14 +416,19 @@ export async function exportJavaAgentsToFiles() {
     );
     const exportData = createAgentExportTemplate();
     exportData.agents[agent._id] = agent;
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta, sort);
   }
 }
 
 /**
  * Export all web agents to separate files
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportWebAgentsToFiles() {
+export async function exportWebAgentsToFiles(
+  includeMeta = true,
+  sort = false,
+) {
   const agents = await readWebAgents();
   for (const agent of agents) {
     const fileName = getTypedFilename(
@@ -365,7 +437,7 @@ export async function exportWebAgentsToFiles() {
     );
     const exportData = createAgentExportTemplate();
     exportData.agents[agent._id] = agent;
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta, sort);
   }
 }
 

@@ -53,8 +53,15 @@ export async function listServices(long = false, globalConfig = false) {
 /**
  * Export all services to file
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportServicesToFile(file, globalConfig = false) {
+export async function exportServicesToFile(
+  file,
+  globalConfig = false,
+  includeMeta = true,
+  sort = false,
+) {
   const exportData = await exportServices(globalConfig);
   let fileName = getTypedFilename(
     `all${titleCase(getRealmName(state.getRealm()))}Services`,
@@ -63,31 +70,41 @@ export async function exportServicesToFile(file, globalConfig = false) {
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta, sort);
 }
 
 /**
  * Export service to file
  * @param {string} serviceId service id
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
 export async function exportServiceToFile(
   serviceId: string,
   file: string,
-  globalConfig = false
+  globalConfig = false,
+  includeMeta = true,
+  sort = false,
 ) {
   const exportData = await exportService(serviceId, globalConfig);
   let fileName = getTypedFilename(serviceId, `service`);
   if (file) {
     fileName = file;
   }
-  saveJsonToFile(exportData, fileName);
+  saveJsonToFile(exportData, fileName, includeMeta, sort);
 }
 
 /**
  * Export all services to separate files
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportServicesToFiles(globalConfig = false) {
+export async function exportServicesToFiles(
+  globalConfig = false,
+  includeMeta = true,
+  sort = false,
+) {
   debugMessage(`cli.ServiceOps.exportServicesToFiles: start`);
   const services = await getFullServices(globalConfig);
   for (const service of services) {
@@ -97,7 +114,7 @@ export async function exportServicesToFiles(globalConfig = false) {
     debugMessage(
       `cli.ServiceOps.exportServicesToFiles: exporting ${service._type._id} to ${fileName}`
     );
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta, sort);
   }
   debugMessage(`cli.ServiceOps.exportServicesToFiles: end.`);
 }

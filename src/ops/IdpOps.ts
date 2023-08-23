@@ -82,10 +82,14 @@ export async function listSocialProviders() {
  * Export provider by id
  * @param {string} providerId provider id/name
  * @param {string} file optional export file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
 export async function exportSocialIdentityProviderToFile(
   providerId: string,
-  file = ''
+  file = '',
+  includeMeta = true,
+  sort = false,
 ) {
   debugMessage(`cli.IdpOps.exportSocialIdentityProviderToFile: start`);
   let fileName = file;
@@ -96,7 +100,7 @@ export async function exportSocialIdentityProviderToFile(
   try {
     updateProgressBar(`Writing file ${fileName}`);
     const fileData = await exportSocialIdentityProvider(providerId);
-    saveJsonToFile(fileData, fileName);
+    saveJsonToFile(fileData, fileName, includeMeta, sort);
     stopProgressBar(
       `Exported ${providerId['brightCyan']} to ${fileName['brightCyan']}.`
     );
@@ -110,20 +114,31 @@ export async function exportSocialIdentityProviderToFile(
 /**
  * Export all providers
  * @param {string} file optional export file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportSocialIdentityProvidersToFile(file = '') {
+export async function exportSocialIdentityProvidersToFile(
+  file = '',
+  includeMeta = true,
+  sort = false,
+) {
   let fileName = file;
   if (!fileName) {
     fileName = getTypedFilename(`all${getRealmString()}Providers`, 'idp');
   }
   const fileData = await exportSocialIdentityProviders();
-  saveJsonToFile(fileData, fileName);
+  saveJsonToFile(fileData, fileName, includeMeta, sort);
 }
 
 /**
  * Export all providers to individual files
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportSocialIdentityProvidersToFiles() {
+export async function exportSocialIdentityProvidersToFiles(
+  includeMeta = true,
+  sort = false,
+) {
   debugMessage(`cli.IdpOps.exportSocialIdentityProvidersToFiles: start`);
   try {
     const allIdpsData = await readSocialIdentityProviders();
@@ -132,7 +147,7 @@ export async function exportSocialIdentityProvidersToFiles() {
       try {
         const fileName = getTypedFilename(idpData._id, 'idp');
         const fileData = await exportSocialIdentityProvider(idpData._id);
-        saveJsonToFile(fileData, fileName);
+        saveJsonToFile(fileData, fileName, includeMeta, sort);
         updateProgressBar(`Exported provider ${idpData._id}`);
       } catch (error) {
         printMessage(`Error exporting ${idpData._id}: ${error}`, 'error');

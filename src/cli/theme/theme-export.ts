@@ -46,6 +46,18 @@ program
       'Export all the themes in a realm as separate files <theme name>.theme.json. Ignored with -n, -i, and -a.'
     )
   )
+  .addOption(
+    new Option(
+      '-j, --no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '-S, --sort',
+      'Sorts exported .json file(s) in abc order by key.'
+    )
+  )
   .action(
     // implement command logic inside action handler
     async (host, realm, user, password, options, command) => {
@@ -64,7 +76,12 @@ program
             options.themeName
           }" from realm "${state.getRealm()}"...`
         );
-        exportThemeByName(options.themeName, options.file);
+        exportThemeByName(
+          options.themeName,
+          options.file,
+          options.metadata,
+          options.sort,
+        );
       }
       // export by id
       else if (options.themeId && (await getTokens())) {
@@ -73,17 +90,29 @@ program
             options.themeId
           }" from realm "${state.getRealm()}"...`
         );
-        exportThemeById(options.themeId, options.file);
+        exportThemeById(
+          options.themeId,
+          options.file,
+          options.metadata,
+          options.sort,
+        );
       }
       // --all -a
       else if (options.all && (await getTokens())) {
         verboseMessage('Exporting all themes to a single file...');
-        exportThemesToFile(options.file);
+        exportThemesToFile(
+          options.file,
+          options.metadata,
+          options.sort,
+        );
       }
       // --all-separate -A
       else if (options.allSeparate && (await getTokens())) {
         verboseMessage('Exporting all themes to separate files...');
-        exportThemesToFiles();
+        exportThemesToFiles(
+          options.metadata,
+          options.sort,
+        );
       }
       // unrecognized combination of options or no options
       else {
