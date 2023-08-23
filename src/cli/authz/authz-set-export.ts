@@ -36,6 +36,18 @@ program
   )
   .addOption(
     new Option(
+      '-j, --no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '-S, --sort',
+      'Sorts exported .json file(s) in abc order by key.'
+    )
+  )
+  .addOption(
+    new Option(
       '--no-deps',
       'Do not include any dependencies (policies, scripts).'
     )
@@ -55,21 +67,32 @@ program
       // export
       if (options.setId && (await getTokens())) {
         verboseMessage('Exporting authorization policy set to file...');
-        const outcome = exportPolicySetToFile(options.setId, options.file, {
-          useStringArrays: true,
-          deps: options.deps,
-          prereqs: options.prereqs,
-        });
+        const outcome = exportPolicySetToFile(
+          options.setId,
+          options.file,
+          options.metadata,
+          options.sort,
+          {
+            useStringArrays: true,
+            deps: options.deps,
+            prereqs: options.prereqs,
+          }
+        );
         if (!outcome) process.exitCode = 1;
       }
       // -a/--all
       else if (options.all && (await getTokens())) {
         verboseMessage('Exporting all authorization policy sets to file...');
-        const outcome = await exportPolicySetsToFile(options.file, {
-          useStringArrays: true,
-          deps: options.deps,
-          prereqs: options.prereqs,
-        });
+        const outcome = await exportPolicySetsToFile(
+          options.file,
+          options.metadata,
+          options.sort,
+          {
+            useStringArrays: true,
+            deps: options.deps,
+            prereqs: options.prereqs,
+          }
+        );
         if (!outcome) process.exitCode = 1;
       }
       // -A/--all-separate
@@ -77,11 +100,15 @@ program
         verboseMessage(
           'Exporting all authorization policy sets to separate files...'
         );
-        const outcome = await exportPolicySetsToFiles({
-          useStringArrays: true,
-          deps: options.deps,
-          prereqs: options.prereqs,
-        });
+        const outcome = await exportPolicySetsToFiles(
+          options.metadata,
+          options.sort,
+          {
+            useStringArrays: true,
+            deps: options.deps,
+            prereqs: options.prereqs,
+          }
+        );
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options

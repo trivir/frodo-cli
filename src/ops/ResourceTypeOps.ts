@@ -262,11 +262,15 @@ export async function deleteResourceTypes(): Promise<
  * Export resource type to file
  * @param {string} resourceTypeUuid resource type uuid
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportResourceTypeToFile(
   resourceTypeUuid: string,
-  file: string
+  file: string,
+  includeMeta = true,
+  sort = false,
 ): Promise<boolean> {
   let outcome = false;
   debugMessage(`cli.ResourceTypeOps.exportResourceTypeToFile: begin`);
@@ -277,7 +281,7 @@ export async function exportResourceTypeToFile(
       fileName = file;
     }
     const exportData = await exportResourceType(resourceTypeUuid);
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta, sort);
     succeedSpinner(`Exported ${resourceTypeUuid} to ${fileName}.`);
     outcome = true;
   } catch (error) {
@@ -291,11 +295,15 @@ export async function exportResourceTypeToFile(
  * Export resource type by name to file
  * @param {string} resourceTypeName resource type name
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportResourceTypeByNameToFile(
   resourceTypeName: string,
-  file: string
+  file: string,
+  includeMeta = true,
+  sort = false,
 ): Promise<boolean> {
   let outcome = false;
   debugMessage(`cli.ResourceTypeOps.exportResourceTypeByNameToFile: begin`);
@@ -306,7 +314,7 @@ export async function exportResourceTypeByNameToFile(
       fileName = file;
     }
     const exportData = await exportResourceTypeByName(resourceTypeName);
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta, sort);
     succeedSpinner(`Exported ${resourceTypeName} to ${fileName}.`);
     outcome = true;
   } catch (error) {
@@ -319,10 +327,14 @@ export async function exportResourceTypeByNameToFile(
 /**
  * Export resource types to file
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportResourceTypesToFile(
-  file: string
+  file: string,
+  includeMeta = true,
+  sort = false,
 ): Promise<boolean> {
   let outcome = false;
   debugMessage(`cli.ResourceTypeOps.exportResourceTypesToFile: begin`);
@@ -336,7 +348,7 @@ export async function exportResourceTypesToFile(
       fileName = file;
     }
     const exportData = await exportResourceTypes();
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta, sort);
     succeedSpinner(`Exported all resource types to ${fileName}.`);
     outcome = true;
   } catch (error) {
@@ -348,9 +360,14 @@ export async function exportResourceTypesToFile(
 
 /**
  * Export all resource types to separate files
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
-export async function exportResourceTypesToFiles(): Promise<boolean> {
+export async function exportResourceTypesToFiles(
+  includeMeta = true,
+  sort = false,
+): Promise<boolean> {
   debugMessage(`cli.ResourceTypeOps.exportResourceTypesToFiles: begin`);
   const errors = [];
   try {
@@ -361,7 +378,7 @@ export async function exportResourceTypesToFiles(): Promise<boolean> {
       try {
         const exportData: ResourceTypeExportInterface =
           await exportResourceType(resourceType.uuid);
-        saveJsonToFile(exportData, file);
+        saveJsonToFile(exportData, file, includeMeta, sort);
         updateProgressBar(`Exported ${resourceType.name}.`);
       } catch (error) {
         errors.push(error);

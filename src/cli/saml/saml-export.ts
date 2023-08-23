@@ -39,6 +39,18 @@ program
       'Export all the providers in a realm as separate files <provider name>.saml.json. Ignored with -t, -i, and -a.'
     )
   )
+  .addOption(
+    new Option(
+      '-j, --no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '-S, --sort',
+      'Sorts exported .json file(s) in abc order by key.'
+    )
+  )
   .action(
     // implement command logic inside action handler
     async (host, realm, user, password, options, command) => {
@@ -57,17 +69,29 @@ program
             options.entityId
           }" from realm "${state.getRealm()}"...`
         );
-        await exportSaml2ProviderToFile(options.entityId, options.file);
+        await exportSaml2ProviderToFile(
+          options.entityId,
+          options.file,
+          options.metadata,
+          options.sort,
+        );
       }
       // --all -a
       else if (options.all && (await getTokens())) {
         verboseMessage('Exporting all providers to a single file...');
-        await exportSaml2ProvidersToFile(options.file);
+        await exportSaml2ProvidersToFile(
+          options.file,
+          options.metadata,
+          options.sort,
+        );
       }
       // --all-separate -A
       else if (options.allSeparate && (await getTokens())) {
         verboseMessage('Exporting all providers to separate files...');
-        await exportSaml2ProvidersToFiles();
+        await exportSaml2ProvidersToFiles(
+          options.metadata,
+          options.sort,
+        );
       }
       // unrecognized combination of options or no options
       else {

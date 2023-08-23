@@ -41,6 +41,18 @@ program
       'Export all scripts to separate files (*.script.json) in the current directory. Ignored with -n or -a.'
     )
   )
+  .addOption(
+    new Option(
+      '-j, --no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '-S, --sort',
+      'Sorts exported .json file(s) in abc order by key.'
+    )
+  )
   // deprecated option
   .addOption(
     new Option(
@@ -77,22 +89,34 @@ program
         verboseMessage('Exporting script...');
         await exportScriptByNameToFile(
           options.scriptName || options.script,
-          options.file
+          options.file,
+          options.metadata,
+          options.sort,
         );
       }
       // -a / --all
       else if (options.all) {
         verboseMessage('Exporting all scripts to a single file...');
-        await exportScriptsToFile(options.file);
+        await exportScriptsToFile(
+          options.file,
+          options.metadata,
+          options.sort,
+        );
       }
       // -A / --all-separate
       else if (options.allSeparate) {
         verboseMessage('Exporting all scripts to separate files...');
         // -x / --extract
         if (options.extract) {
-          await exportScriptsToFilesExtract();
+          await exportScriptsToFilesExtract(
+            options.metadata,
+            options.sort,
+          );
         } else {
-          await exportScriptsToFiles();
+          await exportScriptsToFiles(
+            options.metadata,
+            options.sort,
+          );
         }
       }
 
