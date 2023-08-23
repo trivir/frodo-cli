@@ -32,6 +32,7 @@ Options:
   -h, --help               Help
   -i, --theme-id <uuid>    Uuid of the theme. If specified, -a and -A are
                            ignored.
+  -j, --no-metadata        Does not include metadata in the export file.
   -k, --insecure           Allow insecure connections when using SSL/TLS. Has
                            no effect when using a network proxy for https
                            (HTTPS_PROXY=http://<host>:<port>), in that case the
@@ -52,6 +53,7 @@ Options:
                            "forgeops")
   -n, --theme-name <name>  Name of the theme. If specified, -a and -A are
                            ignored.
+  -S, --sort               Sorts exported .json file(s) in abc order by key.
   --sa-id <sa-id>          Service account id.
   --sa-jwk-file <file>     File containing the JSON Web Key (JWK) associated
                            with the the service account.
