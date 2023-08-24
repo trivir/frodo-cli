@@ -1,8 +1,12 @@
-import { FrodoCommand } from '../FrodoCommand';
-import { Option } from 'commander';
 import { frodo } from '@rockcarver/frodo-lib';
-import {verboseMessage} from "../../utils/Console";
-import {exportEverythingToFile, exportEverythingToFiles} from "../../ops/AdminOps";
+import { Option } from 'commander';
+
+import {
+  exportEverythingToFile,
+  exportEverythingToFiles,
+} from '../../ops/AdminOps';
+import { verboseMessage } from '../../utils/Console';
+import { FrodoCommand } from '../FrodoCommand';
 
 const { getTokens } = frodo.login;
 
@@ -11,12 +15,7 @@ const program = new FrodoCommand('frodo admin export');
 program
   .description('Export everything.')
   .addOption(new Option('-f, --file <file>', 'Name of the export file.'))
-  .addOption(
-    new Option(
-      '-a, --all',
-      'Export everything to a single file.'
-    )
-  )
+  .addOption(new Option('-a, --all', 'Export everything to a single file.'))
   .addOption(
     new Option(
       '-A, --all-separate',
@@ -31,11 +30,11 @@ program
     ).default(false, 'off')
   )
   .addOption(
-  new Option(
-    '-D, --directory <directory>',
-    'Export directory. Required with and ignored without -A.'
+    new Option(
+      '-D, --directory <directory>',
+      'Export directory. Required with and ignored without -A.'
+    )
   )
-)
   .action(
     // implement command logic inside action handler
     async (host, realm, user, password, options, command) => {
@@ -51,11 +50,23 @@ program
       // --all -a
       if (options.all && (await getTokens())) {
         verboseMessage('Exporting everything to a single file...');
-        await exportEverythingToFile(options.file, globalConfig, options.useStringArrays);
-      // --all-separate -A
-      } else if (options.allSeparate && options.directory && (await getTokens())) {
+        await exportEverythingToFile(
+          options.file,
+          globalConfig,
+          options.useStringArrays
+        );
+        // --all-separate -A
+      } else if (
+        options.allSeparate &&
+        options.directory &&
+        (await getTokens())
+      ) {
         verboseMessage('Exporting everything to separate files...');
-        await exportEverythingToFiles(options.directory, globalConfig, options.useStringArrays);
+        await exportEverythingToFiles(
+          options.directory,
+          globalConfig,
+          options.useStringArrays
+        );
         // unrecognized combination of options or no options
       } else {
         verboseMessage('Unrecognized combination of options or no options...');

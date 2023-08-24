@@ -199,7 +199,9 @@ export async function exportEmailTemplatesToFile(file) {
  */
 export async function exportEmailTemplatesToFiles() {
   try {
-    const exportData = Object.entries((await exportEmailTemplates()).emailTemplate);
+    const exportData = Object.entries(
+      (await exportEmailTemplates()).emailTemplate
+    );
     createProgressIndicator(
       'determinate',
       exportData.length,

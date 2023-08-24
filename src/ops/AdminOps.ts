@@ -1,9 +1,10 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
-import fs from "fs";
-import {FullExportInterface} from "../../../frodo-lib/types/api/AdminApi";
-import {getFileInfo} from "prettier";
+import fs from 'fs';
 
-const { getRealmName, getTypedFilename, titleCase, saveJsonToFile } = frodo.utils;
+import { FullExportInterface } from '../../../frodo-lib/types/api/AdminApi';
+
+const { getRealmName, getTypedFilename, titleCase, saveJsonToFile } =
+  frodo.utils;
 const { exportFullConfiguration } = frodo.admin;
 
 /**
@@ -12,8 +13,15 @@ const { exportFullConfiguration } = frodo.admin;
  * @param globalConfig true if the global service is the target of the operation, false otherwise. Default: false.
  * @param useStringArrays Where applicable, use string arrays to store multi-line text (e.g. scripts).
  */
-export async function exportEverythingToFile(file, globalConfig = false, useStringArrays = false): Promise<void> {
-  const exportData = await exportFullConfiguration(globalConfig, useStringArrays);
+export async function exportEverythingToFile(
+  file,
+  globalConfig = false,
+  useStringArrays = false
+): Promise<void> {
+  const exportData = await exportFullConfiguration(
+    globalConfig,
+    useStringArrays
+  );
   let fileName = getTypedFilename(
     `${titleCase(getRealmName(state.getRealm()))}`,
     `everything`
@@ -30,8 +38,15 @@ export async function exportEverythingToFile(file, globalConfig = false, useStri
  * @param globalConfig true if the global service is the target of the operation, false otherwise. Default: false.
  * @param useStringArrays Where applicable, use string arrays to store multi-line text (e.g. scripts).
  */
-export async function exportEverythingToFiles(directory, globalConfig = false, useStringArrays = false): Promise<void> {
-  const exportData: FullExportInterface = await exportFullConfiguration(globalConfig, useStringArrays);
+export async function exportEverythingToFiles(
+  directory,
+  globalConfig = false,
+  useStringArrays = false
+): Promise<void> {
+  const exportData: FullExportInterface = await exportFullConfiguration(
+    globalConfig,
+    useStringArrays
+  );
   delete exportData.meta;
   if (!fs.existsSync(directory)) {
     fs.mkdirSync(directory);
@@ -46,7 +61,10 @@ export async function exportEverythingToFiles(directory, globalConfig = false, u
           fs.mkdirSync(`${directory}/${type}/${id}`);
         }
         Object.entries(value).forEach(([subId, subValue]: [string, any]) => {
-          const filename = getTypedFilename(subValue.name ? subValue.name : subId, `${id}.${type}`);
+          const filename = getTypedFilename(
+            subValue.name ? subValue.name : subId,
+            `${id}.${type}`
+          );
           const fileData = {};
           fileData[type] = {};
           fileData[type][id] = {};

@@ -202,7 +202,7 @@ export async function exportJourneysToFile(
 export async function exportJourneysToFiles(
   options: TreeExportOptions
 ): Promise<void> {
-  const journeysExport = (await exportJourneys(options));
+  const journeysExport = await exportJourneys(options);
   const trees = Object.entries(journeysExport.trees);
   createProgressBar(trees.length, 'Exporting journeys...');
   for (const [treeId, treeValue] of trees) {

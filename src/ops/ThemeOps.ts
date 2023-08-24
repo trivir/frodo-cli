@@ -9,7 +9,11 @@ import {
   stopProgressIndicator,
   updateProgressIndicator,
 } from '../utils/Console';
-import { getTypedFilename, saveToFile, saveJsonToFile } from '../utils/ExportImportUtils';
+import {
+  getTypedFilename,
+  saveJsonToFile,
+  saveToFile,
+} from '../utils/ExportImportUtils';
 
 const { getRealmString, validateImport } = frodo.utils;
 const {
