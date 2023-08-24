@@ -2,18 +2,23 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 
 import {
   createKeyValueTable,
-  createProgressBar, createProgressIndicator,
+  createProgressBar,
   createTable,
   debugMessage,
   failSpinner,
   printMessage,
   showSpinner,
-  stopProgressBar, stopProgressIndicator,
+  stopProgressBar,
   succeedSpinner,
-  updateProgressBar, updateProgressIndicator,
+  updateProgressBar,
 } from '../utils/Console';
+import {
+  getTypedFilename,
+  saveJsonToFile,
+  saveToFile,
+  titleCase,
+} from '../utils/ExportImportUtils';
 import wordwrap from './utils/Wordwrap';
-import { getTypedFilename, saveJsonToFile, saveToFile, titleCase } from "../utils/ExportImportUtils";
 
 const { resolveUserName } = frodo.idm.managed;
 const {
@@ -263,17 +268,17 @@ export async function exportSecretsToFile(file: string) {
   debugMessage(`Cli.SecretsOps.exportSecretsToFile: start`);
   let fileName = file;
   if (!fileName) {
-    fileName = getTypedFilename(`all${titleCase(state.getRealm())}Secrets`, 'secret');
+    fileName = getTypedFilename(
+      `all${titleCase(state.getRealm())}Secrets`,
+      'secret'
+    );
   }
   try {
     const secretsExport = await exportSecrets();
     saveJsonToFile(secretsExport, fileName);
   } catch (error) {
     printMessage(error.message, 'error');
-    printMessage(
-      `exportSecretsToFile: ${error.response?.status}`,
-      'error'
-    );
+    printMessage(`exportSecretsToFile: ${error.response?.status}`, 'error');
   }
   debugMessage(`Cli.SecretsOps.exportSecretsToFile: end [file=${file}]`);
 }
@@ -283,10 +288,7 @@ export async function exportSecretsToFile(file: string) {
  */
 export async function exportSecretsToFiles() {
   const allSecretsData = await readSecrets();
-  createProgressBar(
-    allSecretsData.length,
-    'Exporting secrets'
-  );
+  createProgressBar(allSecretsData.length, 'Exporting secrets');
   for (const secret of allSecretsData) {
     updateProgressBar(`Writing secret ${secret._id}`);
     const fileName = getTypedFilename(secret._id, 'secret');

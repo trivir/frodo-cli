@@ -16,8 +16,13 @@ import {
   updateProgressBar,
   updateProgressIndicator,
 } from '../utils/Console';
+import {
+  getTypedFilename,
+  saveJsonToFile,
+  saveToFile,
+  titleCase,
+} from '../utils/ExportImportUtils';
 import wordwrap from './utils/Wordwrap';
-import { getTypedFilename, saveToFile, saveJsonToFile, titleCase } from '../utils/ExportImportUtils';
 
 const { decodeBase64 } = frodo.utils;
 const { resolveUserName } = frodo.idm.managed;
@@ -241,17 +246,17 @@ export async function exportVariablesToFile(file: string) {
   debugMessage(`Cli.VariablesOps.exportVariablesToFile: start`);
   let fileName = file;
   if (!fileName) {
-    fileName = getTypedFilename(`all${titleCase(state.getRealm())}Variables`, 'variable');
+    fileName = getTypedFilename(
+      `all${titleCase(state.getRealm())}Variables`,
+      'variable'
+    );
   }
   try {
     const variablesExport = await exportVariables();
     saveJsonToFile(variablesExport, fileName);
   } catch (error) {
     printMessage(error.message, 'error');
-    printMessage(
-      `exportVariablesToFile: ${error.response?.status}`,
-      'error'
-    );
+    printMessage(`exportVariablesToFile: ${error.response?.status}`, 'error');
   }
   debugMessage(`Cli.VariablesOps.exportVariablesToFile: end [file=${file}]`);
 }

@@ -1,12 +1,13 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
-import { FrodoCommand } from '../FrodoCommand';
-import {printMessage, verboseMessage} from "../../utils/Console";
+
 import {
-  exportSecretToFile,
   exportSecretsToFile,
   exportSecretsToFiles,
-} from "../../ops/SecretsOps";
+  exportSecretToFile,
+} from '../../ops/SecretsOps';
+import { printMessage, verboseMessage } from '../../utils/Console';
+import { FrodoCommand } from '../FrodoCommand';
 
 const { getTokens } = frodo.login;
 
