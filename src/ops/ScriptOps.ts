@@ -34,7 +34,7 @@ const {
   importScripts,
   deleteScript,
   deleteScriptByName,
-  deleteScripts
+  deleteScripts,
 } = frodo.script;
 
 /**
@@ -515,7 +515,11 @@ export async function deleteScriptName(name) {
  * Delete all non-default scripts
  */
 export async function deleteAllScripts() {
-  createProgressIndicator('indeterminate', undefined, `Deleting all non-default scripts...`);
+  createProgressIndicator(
+    'indeterminate',
+    undefined,
+    `Deleting all non-default scripts...`
+  );
   try {
     await deleteScripts();
     stopProgressIndicator(`Deleted all non-default scripts.`, 'success');

@@ -1,7 +1,12 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
-import { printMessage, verboseMessage } from "../../utils/Console";
-import { deleteScriptId, deleteScriptName, deleteAllScripts} from "../../ops/ScriptOps";
+
+import {
+  deleteAllScripts,
+  deleteScriptId,
+  deleteScriptName,
+} from '../../ops/ScriptOps';
+import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
 const { getTokens } = frodo.login;
@@ -23,7 +28,10 @@ program
     )
   )
   .addOption(
-    new Option('-a, --all', 'Delete all non-default scripts in a realm. Ignored with -i.')
+    new Option(
+      '-a, --all',
+      'Delete all non-default scripts in a realm. Ignored with -i.'
+    )
   )
   .action(
     // implement command logic inside action handler
