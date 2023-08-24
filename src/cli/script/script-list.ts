@@ -12,7 +12,10 @@ const program = new FrodoCommand('frodo script list');
 program
   .description('List scripts.')
   .addOption(
-    new Option('-l, --long', 'Long with all fields besides usage.').default(false, 'false')
+    new Option('-l, --long', 'Long with all fields besides usage.').default(
+      false,
+      'false'
+    )
   )
   .addOption(
     new Option('-u, --usage', 'Display usage field.').default(false, 'false')

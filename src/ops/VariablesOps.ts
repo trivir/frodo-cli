@@ -1,6 +1,7 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { VariableExpressionType } from '@rockcarver/frodo-lib/types/api/cloud/VariablesApi';
 
+import { isIdUsed } from '../utils/Config';
 import {
   createKeyValueTable,
   createProgressBar,
@@ -13,7 +14,6 @@ import {
   updateProgressBar,
 } from '../utils/Console';
 import wordwrap from './utils/Wordwrap';
-import {isIdUsed} from "../utils/Config";
 
 const { decodeBase64 } = frodo.utils;
 const { resolveUserName } = frodo.idm.managed;
@@ -46,10 +46,10 @@ export async function listVariables(long, usage) {
       'Status'['brightCyan'],
       'Description'['brightCyan'],
       'Modifier'['brightCyan'],
-      'Modified'['brightCyan']
+      'Modified'['brightCyan'],
     ];
     if (usage) {
-      headers.push('Used'['brightCyan'])
+      headers.push('Used'['brightCyan']);
       fullExport = await exportFullConfiguration(true, true);
     }
     const table = createTable(headers);
@@ -60,26 +60,29 @@ export async function listVariables(long, usage) {
         variable.loaded ? 'loaded'['brightGreen'] : 'unloaded'['brightRed'],
         wordwrap(variable.description, 40),
         await resolveUserName('teammember', variable.lastChangedBy),
-        new Date(variable.lastChangeDate).toLocaleString()
+        new Date(variable.lastChangeDate).toLocaleString(),
       ];
       if (usage) {
         const isEsvUsed = isIdUsed(fullExport, variable._id, true);
-        values.push(isEsvUsed.used ? `${'yes'['brightGreen']} (at ${isEsvUsed.location})` : 'no'['brightRed']);
+        values.push(
+          isEsvUsed.used
+            ? `${'yes'['brightGreen']} (at ${isEsvUsed.location})`
+            : 'no'['brightRed']
+        );
       }
       table.push(values);
     }
     printMessage(table.toString(), 'data');
   } else if (usage) {
     const fullExport = await exportFullConfiguration(true, true);
-    const table = createTable([
-      'Id'['brightCyan'],
-      'Used'['brightCyan'],
-    ]);
+    const table = createTable(['Id'['brightCyan'], 'Used'['brightCyan']]);
     variables.forEach((variable) => {
       const isEsvUsed = isIdUsed(fullExport, variable._id, true);
       table.push([
         variable._id,
-        isEsvUsed.used ? `${'yes'['brightGreen']} (at ${isEsvUsed.location})` : 'no'['brightRed'],
+        isEsvUsed.used
+          ? `${'yes'['brightGreen']} (at ${isEsvUsed.location})`
+          : 'no'['brightRed'],
       ]);
     });
     printMessage(table.toString(), 'data');

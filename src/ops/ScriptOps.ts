@@ -4,6 +4,7 @@ import { type ScriptExportInterface } from '@rockcarver/frodo-lib/types/ops/Scri
 import chokidar from 'chokidar';
 import fs from 'fs';
 
+import { isIdUsed } from '../utils/Config';
 import {
   createProgressBar,
   createTable,
@@ -23,7 +24,6 @@ import {
   titleCase,
 } from '../utils/ExportImportUtils';
 import wordwrap from './utils/Wordwrap';
-import { isIdUsed } from "../utils/Config";
 
 const {
   readScripts,
@@ -76,7 +76,10 @@ export function getTableRowMd(scriptObj: ScriptSkeleton): string {
  * @param {boolean} usage display usage field
  * @returns {Promise<boolean>} true if no errors occurred during export, false otherwise
  */
-export async function listScripts(long = false, usage = false): Promise<boolean> {
+export async function listScripts(
+  long = false,
+  usage = false
+): Promise<boolean> {
   let outcome = true;
   debugMessage(`Cli.ScriptOps.listScripts: start`);
   try {
@@ -84,13 +87,7 @@ export async function listScripts(long = false, usage = false): Promise<boolean>
     scripts.sort((a, b) => a.name.localeCompare(b.name));
     if (long) {
       let fullExport = null;
-      const headers = [
-        'Name',
-        'UUID',
-        'Language',
-        'Context',
-        'Description',
-      ];
+      const headers = ['Name', 'UUID', 'Language', 'Context', 'Description'];
       if (usage) {
         headers.push('Used');
         fullExport = await exportFullConfiguration(true, true);
@@ -105,11 +102,15 @@ export async function listScripts(long = false, usage = false): Promise<boolean>
           script._id,
           langMap[script.language],
           wordwrap(titleCase(script.context.split('_').join(' ')), 25),
-          wordwrap(script.description, 30)
+          wordwrap(script.description, 30),
         ];
         if (usage) {
           const isScriptUsed = isIdUsed(fullExport, script._id, false);
-          values.push(isScriptUsed.used ? `${'yes'['brightGreen']} (at ${isScriptUsed.location})` : 'no'['brightRed']);
+          values.push(
+            isScriptUsed.used
+              ? `${'yes'['brightGreen']} (at ${isScriptUsed.location})`
+              : 'no'['brightRed']
+          );
         }
         table.push(values);
       });
@@ -118,15 +119,14 @@ export async function listScripts(long = false, usage = false): Promise<boolean>
       const fullExport = await exportFullConfiguration(true, true);
       //Delete scripts from full export so they aren't mistakenly used for determining usage
       delete fullExport.script;
-      const table = createTable([
-        'Name',
-        'Used',
-      ]);
+      const table = createTable(['Name', 'Used']);
       scripts.forEach((script) => {
         const isScriptUsed = isIdUsed(fullExport, script._id, false);
         table.push([
           script.name,
-          isScriptUsed.used ? `${'yes'['brightGreen']} (at ${isScriptUsed.location})` : 'no'['brightRed'],
+          isScriptUsed.used
+            ? `${'yes'['brightGreen']} (at ${isScriptUsed.location})`
+            : 'no'['brightRed'],
         ]);
       });
       printMessage(table.toString(), 'data');

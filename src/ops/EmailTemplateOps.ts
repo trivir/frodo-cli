@@ -187,7 +187,7 @@ export async function exportEmailTemplatesToFile(file) {
     fileName = getTypedFilename(`allEmailTemplates`, EMAIL_TEMPLATE_FILE_TYPE);
   }
   try {
-    const exportData = exportEmailTemplates()
+    const exportData = exportEmailTemplates();
     saveJsonToFile(exportData, fileName);
   } catch (err) {
     printMessage(err, 'error');
@@ -199,7 +199,9 @@ export async function exportEmailTemplatesToFile(file) {
  */
 export async function exportEmailTemplatesToFiles() {
   try {
-    const exportData = Object.entries((await exportEmailTemplates()).emailTemplate);
+    const exportData = Object.entries(
+      (await exportEmailTemplates()).emailTemplate
+    );
     createProgressIndicator(
       'determinate',
       exportData.length,

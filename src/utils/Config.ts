@@ -51,31 +51,47 @@ export function getNoiseFilters(defaults: boolean): Array<string> {
   return noiseFilter;
 }
 
-export function isIdUsed(configuration: any, id: string, isEsv: boolean): {
-  used: boolean,
-  location: string,
+export function isIdUsed(
+  configuration: any,
+  id: string,
+  isEsv: boolean
+): {
+  used: boolean;
+  location: string;
 } {
-  return isIdUsedRecurse(configuration, isEsv ?
-    new RegExp(`[^a-z0-9._]?${id.replaceAll("-", "\.")}[^a-z0-9._]?`) :
-    new RegExp(`[^a-z0-9-]?${id.replaceAll("-", "\-")}[^a-z0-9-]?`));
+  return isIdUsedRecurse(
+    configuration,
+    isEsv
+      ? new RegExp(`[^a-z0-9._]?${id.replaceAll('-', '.')}[^a-z0-9._]?`)
+      : new RegExp(`[^a-z0-9-]?${id.replaceAll('-', '-')}[^a-z0-9-]?`)
+  );
 }
 
-function isIdUsedRecurse(configuration: any, regex: RegExp): {
-  used: boolean,
-  location: string,
+function isIdUsedRecurse(
+  configuration: any,
+  regex: RegExp
+): {
+  used: boolean;
+  location: string;
 } {
   const type = typeof configuration;
   if (type === 'object' && configuration !== null) {
-    for (const [id, value] of Object.entries(configuration as Record<string, any>)) {
+    for (const [id, value] of Object.entries(
+      configuration as Record<string, any>
+    )) {
       const isIdUsed = isIdUsedRecurse(value, regex);
       if (isIdUsed.used) {
-        isIdUsed.location = id + (value.name ? `(name: '${value.name}')` : '') + (isIdUsed.location === '' ? '' : '.') + isIdUsed.location;
+        isIdUsed.location =
+          id +
+          (value.name ? `(name: '${value.name}')` : '') +
+          (isIdUsed.location === '' ? '' : '.') +
+          isIdUsed.location;
         return isIdUsed;
       }
     }
   }
   return {
-    used: type === 'string' && regex.test(configuration!),
-    location: ''
+    used: type === 'string' && regex.test(configuration),
+    location: '',
   };
 }
