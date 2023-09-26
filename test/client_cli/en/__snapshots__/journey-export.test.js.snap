@@ -46,7 +46,7 @@ Options:
                                values for type:
                                classic:  A classic Access Management-only
                                deployment with custom layout and configuration.
-  
+
                                cloud:    A ForgeRock Identity Cloud
                                environment.
                                forgeops: A ForgeOps CDK or CDM deployment.
@@ -58,6 +58,8 @@ Options:
                                admin login flow of Identity Cloud and handle
                                MFA (choices: "classic", "cloud", "forgeops")
   --no-cache                   Disable token cache for this operation.
+  --no-coords                  Do not include the x and y coordinate positions
+                               of the journey/tree nodes.
   --no-deps                    Do not include any dependencies (scripts, email
                                templates, SAML entity providers and circles of
                                trust, social identity providers, themes).
