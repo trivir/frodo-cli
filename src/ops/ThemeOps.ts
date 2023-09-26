@@ -9,9 +9,9 @@ import {
   stopProgressIndicator,
   updateProgressIndicator,
 } from '../utils/Console';
-import { getTypedFilename, saveToFile } from '../utils/ExportImportUtils';
 
-const { getRealmString, validateImport } = frodo.utils;
+const { getRealmString, validateImport, getTypedFilename, saveToFile } =
+  frodo.utils;
 const {
   readThemes,
   readThemeByName,
@@ -96,8 +96,15 @@ export async function listThemes(long = false) {
  * Export theme by name to file
  * @param {String} name theme name
  * @param {String} file optional export file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportThemeByName(name, file) {
+export async function exportThemeByName(
+  name,
+  file,
+  includeMeta = true,
+  sort = false
+) {
   let fileName = getTypedFilename(name, 'theme');
   if (file) {
     fileName = file;
@@ -106,7 +113,7 @@ export async function exportThemeByName(name, file) {
   try {
     const themeData = await readThemeByName(name);
     updateProgressIndicator(`Writing file ${fileName}`);
-    saveToFile('theme', [themeData], '_id', fileName);
+    saveToFile('theme', [themeData], '_id', fileName, includeMeta, sort);
     stopProgressIndicator(`Successfully exported theme ${name}.`);
   } catch (error) {
     stopProgressIndicator(`${error.message}`);
@@ -118,8 +125,15 @@ export async function exportThemeByName(name, file) {
  * Export theme by uuid to file
  * @param {String} id theme uuid
  * @param {String} file optional export file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportThemeById(id, file) {
+export async function exportThemeById(
+  id,
+  file,
+  includeMeta = true,
+  sort = false
+) {
   let fileName = getTypedFilename(id, 'theme');
   if (file) {
     fileName = file;
@@ -128,7 +142,7 @@ export async function exportThemeById(id, file) {
   try {
     const themeData = await readTheme(id);
     updateProgressIndicator(`Writing file ${fileName}`);
-    saveToFile('theme', [themeData], '_id', fileName);
+    saveToFile('theme', [themeData], '_id', fileName, includeMeta, sort);
     stopProgressIndicator(`Successfully exported theme ${id}.`);
   } catch (error) {
     stopProgressIndicator(`${error.message}`);
@@ -139,8 +153,14 @@ export async function exportThemeById(id, file) {
 /**
  * Export all themes to file
  * @param {String} file optional export file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportThemesToFile(file) {
+export async function exportThemesToFile(
+  file,
+  includeMeta = true,
+  sort = false
+) {
   let fileName = getTypedFilename(`all${getRealmString()}Themes`, 'theme');
   if (file) {
     fileName = file;
@@ -154,7 +174,7 @@ export async function exportThemesToFile(file) {
   for (const themeData of allThemesData) {
     updateProgressIndicator(`Exporting theme ${themeData.name}`);
   }
-  saveToFile('theme', allThemesData, '_id', fileName);
+  saveToFile('theme', allThemesData, '_id', fileName, includeMeta, sort);
   stopProgressIndicator(
     `${allThemesData.length} themes exported to ${fileName}.`
   );
@@ -162,8 +182,10 @@ export async function exportThemesToFile(file) {
 
 /**
  * Export all themes to separate files
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportThemesToFiles() {
+export async function exportThemesToFiles(includeMeta = true, sort = false) {
   const allThemesData = await readThemes();
   createProgressIndicator(
     'determinate',
@@ -173,7 +195,7 @@ export async function exportThemesToFiles() {
   for (const themeData of allThemesData) {
     updateProgressIndicator(`Writing theme ${themeData.name}`);
     const fileName = getTypedFilename(themeData.name, 'theme');
-    saveToFile('theme', themeData, '_id', fileName);
+    saveToFile('theme', themeData, '_id', fileName, includeMeta, sort);
   }
   stopProgressIndicator(`${allThemesData.length} themes exported.`);
 }

@@ -11,7 +11,6 @@ import {
   succeedSpinner,
   updateProgressBar,
 } from '../utils/Console';
-import { getTypedFilename, saveJsonToFile } from '../utils/ExportImportUtils';
 
 const {
   readAdminFederationProviders,
@@ -21,6 +20,7 @@ const {
   importAdminFederationProviders,
   importFirstAdminFederationProvider,
 } = frodo.cloud.adminFed;
+const { getTypedFilename, saveJsonToFile } = frodo.utils;
 
 /**
  * List providers
@@ -46,11 +46,15 @@ export async function listAdminFederationProviders(): Promise<boolean> {
  * Export provider by id
  * @param {string} providerId provider id/name
  * @param {string} file optional export file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportAdminFederationProviderToFile(
   providerId: string,
-  file = ''
+  file = '',
+  includeMeta = true,
+  sort = false
 ): Promise<boolean> {
   let outcome = false;
   let fileName = file;
@@ -61,7 +65,7 @@ export async function exportAdminFederationProviderToFile(
   try {
     updateProgressBar(`Writing file ${fileName}`);
     const fileData = await exportAdminFederationProvider(providerId);
-    saveJsonToFile(fileData, fileName);
+    saveJsonToFile(fileData, fileName, includeMeta, sort);
     stopProgressBar(
       `Exported ${providerId['brightCyan']} to ${fileName['brightCyan']}.`
     );
@@ -76,10 +80,14 @@ export async function exportAdminFederationProviderToFile(
 /**
  * Export all providers
  * @param {string} file optional export file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportAdminFederationProvidersToFile(
-  file = ''
+  file = '',
+  includeMeta = true,
+  sort = false
 ): Promise<boolean> {
   let outcome = false;
   showSpinner(`Exporting all providers...`);
@@ -89,7 +97,7 @@ export async function exportAdminFederationProvidersToFile(
       fileName = getTypedFilename(`allProviders`, 'admin.federation');
     }
     const fileData = await exportAdminFederationProviders();
-    saveJsonToFile(fileData, fileName);
+    saveJsonToFile(fileData, fileName, includeMeta, sort);
     succeedSpinner(`Exported all providers to ${fileName}`);
     outcome = true;
   } catch (error) {
@@ -101,9 +109,14 @@ export async function exportAdminFederationProvidersToFile(
 
 /**
  * Export all providers to individual files
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
-export async function exportAdminFederationProvidersToFiles(): Promise<boolean> {
+export async function exportAdminFederationProvidersToFiles(
+  includeMeta = true,
+  sort = false
+): Promise<boolean> {
   let outcome = false;
   try {
     const allIdpsData = await readAdminFederationProviders();
@@ -112,7 +125,7 @@ export async function exportAdminFederationProvidersToFiles(): Promise<boolean> 
       updateProgressBar(`Writing provider ${idpData._id}`);
       const fileName = getTypedFilename(idpData._id, 'admin.federation');
       const fileData = await exportAdminFederationProvider(idpData._id);
-      saveJsonToFile(fileData, fileName);
+      saveJsonToFile(fileData, fileName, includeMeta, sort);
     }
     stopProgressBar(`${allIdpsData.length} providers exported.`);
     outcome = true;

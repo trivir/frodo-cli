@@ -18,9 +18,8 @@ import {
   succeedSpinner,
   updateProgressBar,
 } from '../utils/Console';
-import { saveJsonToFile } from '../utils/ExportImportUtils';
 
-const { getTypedFilename, titleCase } = frodo.utils;
+const { getTypedFilename, titleCase, saveJsonToFile } = frodo.utils;
 const {
   readOAuth2Clients,
   exportOAuth2Client,
@@ -92,13 +91,20 @@ export async function listOAuth2Clients(long = false) {
  * Export OAuth2 client to file
  * @param {string} clientId client id
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @param {OAuth2ClientExportOptions} options export options
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportOAuth2ClientToFile(
   clientId: string,
   file: string,
-  options: OAuth2ClientExportOptions = { useStringArrays: true, deps: true }
+  includeMeta = true,
+  sort = false,
+  options: OAuth2ClientExportOptions = {
+    useStringArrays: true,
+    deps: true,
+  }
 ) {
   let outcome = false;
   debugMessage(`cli.OAuth2ClientOps.exportOAuth2ClientToFile: begin`);
@@ -109,7 +115,7 @@ export async function exportOAuth2ClientToFile(
       fileName = file;
     }
     const exportData = await exportOAuth2Client(clientId, options);
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta, sort);
     succeedSpinner(`Exported ${clientId} to ${fileName}.`);
     outcome = true;
   } catch (error) {
@@ -122,12 +128,19 @@ export async function exportOAuth2ClientToFile(
 /**
  * Export all OAuth2 clients to file
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @param {OAuth2ClientExportOptions} options export options
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportOAuth2ClientsToFile(
   file: string,
-  options: OAuth2ClientExportOptions = { useStringArrays: true, deps: true }
+  includeMeta = true,
+  sort = false,
+  options: OAuth2ClientExportOptions = {
+    useStringArrays: true,
+    deps: true,
+  }
 ): Promise<boolean> {
   let outcome = false;
   debugMessage(`cli.OAuth2ClientOps.exportOAuth2ClientsToFile: begin`);
@@ -141,7 +154,7 @@ export async function exportOAuth2ClientsToFile(
       fileName = file;
     }
     const exportData = await exportOAuth2Clients(options);
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta, sort);
     succeedSpinner(`Exported all clients to ${fileName}.`);
     outcome = true;
   } catch (error) {
@@ -156,11 +169,18 @@ export async function exportOAuth2ClientsToFile(
 
 /**
  * Export all OAuth2 clients to separate files
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @param {OAuth2ClientExportOptions} options export options
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportOAuth2ClientsToFiles(
-  options: OAuth2ClientExportOptions = { useStringArrays: true, deps: true }
+  includeMeta = true,
+  sort = false,
+  options: OAuth2ClientExportOptions = {
+    useStringArrays: true,
+    deps: true,
+  }
 ) {
   debugMessage(`cli.OAuth2ClientOps.exportOAuth2ClientsToFiles: begin`);
   const errors = [];
@@ -172,7 +192,7 @@ export async function exportOAuth2ClientsToFiles(
       try {
         const exportData: OAuth2ClientExportInterface =
           await exportOAuth2Client(client._id, options);
-        saveJsonToFile(exportData, file);
+        saveJsonToFile(exportData, file, includeMeta, sort);
         updateProgressBar(`Exported ${client._id}.`);
       } catch (error) {
         errors.push(error);

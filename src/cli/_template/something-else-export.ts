@@ -28,6 +28,18 @@ program
       'Export all [else] to separate files (*.[else].json) in the current directory. Ignored with -i or -a.'
     )
   )
+  .addOption(
+    new Option(
+      '-j, --no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '-S, --sort',
+      'Sorts exported .json file(s) in abc order by key.'
+    )
+  )
   .action(
     // implement command logic inside action handler
     async (host, realm, user, password, options, command) => {

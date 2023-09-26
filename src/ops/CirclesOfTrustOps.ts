@@ -14,13 +14,9 @@ import {
   succeedSpinner,
   updateProgressBar,
 } from '../utils/Console';
-import {
-  getTypedFilename,
-  saveJsonToFile,
-  titleCase,
-} from '../utils/ExportImportUtils';
 
-const { getRealmName } = frodo.utils;
+const { getRealmName, getTypedFilename, saveJsonToFile, titleCase } =
+  frodo.utils;
 const {
   readCirclesOfTrust,
   exportCircleOfTrust,
@@ -113,10 +109,14 @@ export async function listCirclesOfTrust(long = false): Promise<boolean> {
  * Export a single circle of trust to file
  * @param {String} cotId circle of trust id/name
  * @param {String} file Optional filename
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
 export async function exportCircleOfTrustToFile(
   cotId: string,
-  file: string = null
+  file: string = null,
+  includeMeta = true,
+  sort = false
 ): Promise<boolean> {
   let outcome = false;
   debugMessage(`cli.CirclesOfTrustOps.exportCircleOfTrustToFile: begin`);
@@ -127,7 +127,7 @@ export async function exportCircleOfTrustToFile(
       fileName = file;
     }
     const exportData = await exportCircleOfTrust(cotId);
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta, sort);
     succeedSpinner(`Exported ${cotId} to ${fileName}.`);
     outcome = true;
   } catch (error) {
@@ -140,9 +140,13 @@ export async function exportCircleOfTrustToFile(
 /**
  * Export all circles of trust to one file
  * @param {String} file Optional filename
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
 export async function exportCirclesOfTrustToFile(
-  file: string = null
+  file: string = null,
+  includeMeta = true,
+  sort = false
 ): Promise<boolean> {
   let outcome = false;
   debugMessage(`cli.CirclesOfTrustOps.exportCirclesOfTrustToFile: begin`);
@@ -156,7 +160,7 @@ export async function exportCirclesOfTrustToFile(
       fileName = file;
     }
     const exportData = await exportCirclesOfTrust();
-    saveJsonToFile(exportData, fileName);
+    saveJsonToFile(exportData, fileName, includeMeta, sort);
     succeedSpinner(`Exported all circles of trust to ${fileName}.`);
     outcome = true;
   } catch (error) {
@@ -168,8 +172,13 @@ export async function exportCirclesOfTrustToFile(
 
 /**
  * Export all circles of trust to individual files
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportCirclesOfTrustToFiles(): Promise<boolean> {
+export async function exportCirclesOfTrustToFiles(
+  includeMeta = true,
+  sort = false
+): Promise<boolean> {
   debugMessage(`cli.CirclesOfTrustOps.exportCirclesOfTrustToFiles: begin`);
   const errors = [];
   try {
@@ -180,7 +189,7 @@ export async function exportCirclesOfTrustToFiles(): Promise<boolean> {
       try {
         const exportData: CirclesOfTrustExportInterface =
           await exportCircleOfTrust(cot._id);
-        saveJsonToFile(exportData, file);
+        saveJsonToFile(exportData, file, includeMeta, sort);
         updateProgressBar(`Exported ${cot.name}.`);
       } catch (error) {
         errors.push(error);

@@ -16,14 +16,10 @@ import {
   succeedSpinner,
   updateProgressBar,
 } from '../utils/Console';
-import {
-  getTypedFilename,
-  saveJsonToFile,
-  saveTextToFile,
-  titleCase,
-} from '../utils/ExportImportUtils';
 import wordwrap from './utils/Wordwrap';
 
+const { getTypedFilename, saveJsonToFile, saveTextToFile, titleCase } =
+  frodo.utils;
 const {
   readScripts,
   exportScript,
@@ -116,11 +112,15 @@ export async function listScripts(long = false): Promise<boolean> {
  * Export script by id to file
  * @param {string} scriptId script uuid
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @returns {Promise<boolean>} true if no errors occurred during export, false otherwise
  */
 export async function exportScriptToFile(
   scriptId: string,
-  file: string
+  file: string,
+  includeMeta = true,
+  sort = false
 ): Promise<boolean> {
   debugMessage(`Cli.ScriptOps.exportScriptToFile: start`);
   try {
@@ -131,7 +131,7 @@ export async function exportScriptToFile(
     }
     spinSpinner(`Exporting script '${scriptId}' to '${fileName}'...`);
     const scriptExport = await exportScript(scriptId);
-    saveJsonToFile(scriptExport, fileName);
+    saveJsonToFile(scriptExport, fileName, includeMeta, sort);
     succeedSpinner(`Exported script '${scriptId}' to '${fileName}'.`);
     debugMessage(`Cli.ScriptOps.exportScriptToFile: end [true]`);
     return true;
@@ -147,11 +147,15 @@ export async function exportScriptToFile(
  * Export script by name to file
  * @param {string} name script name
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @returns {Promise<boolean>} true if no errors occurred during export, false otherwise
  */
 export async function exportScriptByNameToFile(
   name: string,
-  file: string
+  file: string,
+  includeMeta = true,
+  sort = false
 ): Promise<boolean> {
   debugMessage(`Cli.ScriptOps.exportScriptByNameToFile: start`);
   try {
@@ -162,7 +166,7 @@ export async function exportScriptByNameToFile(
     }
     spinSpinner(`Exporting script '${name}' to '${fileName}'...`);
     const scriptExport = await exportScriptByName(name);
-    saveJsonToFile(scriptExport, fileName);
+    saveJsonToFile(scriptExport, fileName, includeMeta, sort);
     succeedSpinner(`Exported script '${name}' to '${fileName}'.`);
     debugMessage(`Cli.ScriptOps.exportScriptByNameToFile: end [true]`);
     return true;
@@ -177,9 +181,15 @@ export async function exportScriptByNameToFile(
 /**
  * Export all scripts to single file
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @returns {Promise<boolean>} true if no errors occurred during export, false otherwise
  */
-export async function exportScriptsToFile(file: string): Promise<boolean> {
+export async function exportScriptsToFile(
+  file: string,
+  includeMeta = true,
+  sort = false
+): Promise<boolean> {
   debugMessage(`Cli.ScriptOps.exportScriptsToFile: start`);
   try {
     let fileName = getTypedFilename(
@@ -190,7 +200,7 @@ export async function exportScriptsToFile(file: string): Promise<boolean> {
       fileName = file;
     }
     const scriptExport = await exportScripts();
-    saveJsonToFile(scriptExport, fileName);
+    saveJsonToFile(scriptExport, fileName, includeMeta, sort);
     debugMessage(`Cli.ScriptOps.exportScriptsToFile: end [true]`);
     return true;
   } catch (error) {
@@ -203,9 +213,14 @@ export async function exportScriptsToFile(file: string): Promise<boolean> {
 
 /**
  * Export all scripts to individual files
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @returns {Promise<boolean>} true if no errors occurred during export, false otherwise
  */
-export async function exportScriptsToFiles(): Promise<boolean> {
+export async function exportScriptsToFiles(
+  includeMeta = true,
+  sort = false
+): Promise<boolean> {
   let outcome = true;
   debugMessage(`Cli.ScriptOps.exportScriptsToFiles: start`);
   const scriptList = await readScripts();
@@ -218,7 +233,7 @@ export async function exportScriptsToFiles(): Promise<boolean> {
       updateProgressBar(`Reading script ${script.name}`);
       const fileName = getTypedFilename(script.name, 'script');
       const scriptExport = await exportScriptByName(script.name);
-      saveJsonToFile(scriptExport, fileName);
+      saveJsonToFile(scriptExport, fileName, includeMeta, sort);
     } catch (error) {
       outcome = false;
       printMessage(
@@ -233,7 +248,10 @@ export async function exportScriptsToFiles(): Promise<boolean> {
   return outcome;
 }
 
-export async function exportScriptsToFilesExtract(): Promise<boolean> {
+export async function exportScriptsToFilesExtract(
+  includeMeta = true,
+  sort = false
+): Promise<boolean> {
   let outcome = true;
   debugMessage(`Cli.ScriptOps.exportScriptsToFilesExtract: start`);
   const scriptList = await readScripts();
@@ -263,7 +281,7 @@ export async function exportScriptsToFilesExtract(): Promise<boolean> {
       scriptSkeleton.script = `file://${scriptFileName}`;
 
       saveTextToFile(scriptText, scriptFileName);
-      saveJsonToFile(scriptExport, fileName);
+      saveJsonToFile(scriptExport, fileName, includeMeta, sort);
     } catch (error) {
       outcome = false;
       printMessage(

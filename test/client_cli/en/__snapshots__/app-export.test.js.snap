@@ -30,6 +30,7 @@ Options:
   -f, --file <file>      Name of the export file.
   -h, --help             Help
   -i, --app-id <app-id>  App id. If specified, -a and -A are ignored.
+  -j, --no-metadata      Does not include metadata in the export file.
   -k, --insecure         Allow insecure connections when using SSL/TLS. Has no
                          effect when using a network proxy for https
                          (HTTPS_PROXY=http://<host>:<port>), in that case the
@@ -48,6 +49,7 @@ Options:
                          tenant admin login flow of Identity Cloud and handle
                          MFA (choices: "classic", "cloud", "forgeops")
   --no-deps              Do not include any dependencies (scripts).
+  -S, --sort             Sorts exported .json file(s) in abc order by key.
   --sa-id <sa-id>        Service account id.
   --sa-jwk-file <file>   File containing the JSON Web Key (JWK) associated with
                          the the service account.

@@ -49,6 +49,18 @@ program
   )
   .addOption(
     new Option(
+      '-j, --no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '-S, --sort',
+      'Sorts exported .json file(s) in abc order by key.'
+    )
+  )
+  .addOption(
+    new Option(
       '-D, --directory <directory>',
       'Export directory. Required with and ignored without -a/-A.'
     )
