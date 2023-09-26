@@ -12,7 +12,13 @@ const program = new FrodoCommand('frodo esv variable list');
 program
   .description('List variables.')
   .addOption(
-    new Option('-l, --long', 'Long with all fields.').default(false, 'false')
+    new Option('-l, --long', 'Long with all fields besides usage.').default(
+      false,
+      'false'
+    )
+  )
+  .addOption(
+    new Option('-u, --usage', 'Display usage field.').default(false, 'false')
   )
   .action(
     // implement command logic inside action handler
@@ -27,7 +33,7 @@ program
       );
       if (await getTokens()) {
         verboseMessage('Listing variables...');
-        listVariables(options.long);
+        listVariables(options.long, options.usage);
       } else {
         process.exitCode = 1;
       }
