@@ -27,6 +27,8 @@ export default function setup() {
     'List oauth2 clients with admin privileges.'
   );
 
+  program.command('export', 'Export everything.');
+
   program.command(
     'grant-oauth2-client-admin-privileges',
     'Grant an oauth2 client admin privileges.'
