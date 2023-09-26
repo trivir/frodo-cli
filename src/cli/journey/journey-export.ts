@@ -52,6 +52,12 @@ program
     )
   )
   .addOption(
+    new Option(
+      '--no-coords',
+      'Do not include the x and y coordinate positions of the journey/tree nodes.'
+    )
+  )
+  .addOption(
     new Option('-D, --directory <directory>', 'Destination directory.')
   )
   .addOption(
@@ -81,6 +87,7 @@ program
         await exportJourneyToFile(options.journeyId, options.file, {
           useStringArrays: options.useStringArrays,
           deps: options.deps,
+          coords: options.coords,
         });
       }
       // --all -a
@@ -89,6 +96,7 @@ program
         await exportJourneysToFile(options.file, {
           useStringArrays: options.useStringArrays,
           deps: options.deps,
+          coords: options.coords,
         });
       }
       // --all-separate -A
@@ -97,6 +105,7 @@ program
         await exportJourneysToFiles({
           useStringArrays: options.useStringArrays,
           deps: options.deps,
+          coords: options.coords,
         });
       }
       // unrecognized combination of options or no options
