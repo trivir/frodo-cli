@@ -12,7 +12,13 @@ import {
 } from '../utils/Console';
 import { getTypedFilename, readFiles } from '../utils/ExportImportUtils';
 
-const { unSubstituteEnvParams, areScriptHooksValid, getFilePath } = frodo.utils;
+const {
+  unSubstituteEnvParams,
+  areScriptHooksValid,
+  getFilePath,
+  getTypedFilename,
+  readFiles,
+} = frodo.utils;
 const {
   testConnectorServers,
   readConfigEntities,

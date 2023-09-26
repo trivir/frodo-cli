@@ -142,12 +142,19 @@ export async function listJourneys(
  * Export journey by id/name to file
  * @param {string} journeyId journey id/name
  * @param {string} file optional export file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @param {TreeExportOptions} options export options
  */
 export async function exportJourneyToFile(
   journeyId: string,
   file: string,
-  options: TreeExportOptions
+  includeMeta = true,
+  sort = false,
+  options: TreeExportOptions = {
+    deps: false,
+    useStringArrays: false,
+  }
 ): Promise<void> {
   debugMessage(`exportJourneyToFile: start`);
   const verbose = state.getVerbose();
@@ -162,7 +169,7 @@ export async function exportJourneyToFile(
       options
     );
     if (verbose) showSpinner(`${journeyId}`);
-    saveJsonToFile(fileData, filePath);
+    saveJsonToFile(fileData, filePath, includeMeta, sort);
     succeedSpinner(
       `Exported ${journeyId['brightCyan']} to ${filePath['brightCyan']}.`
     );
@@ -175,10 +182,14 @@ export async function exportJourneyToFile(
 /**
  * Export all journeys to file
  * @param {string} file optional export file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @param {TreeExportOptions} options export options
  */
 export async function exportJourneysToFile(
   file: string,
+  includeMeta = true,
+  sort = false,
   options: TreeExportOptions = {
     deps: false,
     useStringArrays: false,
@@ -201,16 +212,23 @@ export async function exportJourneysToFile(
       printMessage(`Error exporting journey ${tree._id}: ${error}`, 'error');
     }
   }
-  saveJsonToFile(fileData, filePath);
+  saveJsonToFile(fileData, filePath, includeMeta, sort);
   stopProgressBar(`Exported to ${filePath}`);
 }
 
 /**
  * Export all journeys to separate files
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @param {TreeExportOptions} options export options
  */
 export async function exportJourneysToFiles(
-  options: TreeExportOptions
+  includeMeta = true,
+  sort = false,
+  options: TreeExportOptions = {
+    deps: false,
+    useStringArrays: false,
+  }
 ): Promise<void> {
   const trees = await readJourneys();
   createProgressBar(trees.length, 'Exporting journeys...');
@@ -222,7 +240,7 @@ export async function exportJourneysToFiles(
         tree._id,
         options
       );
-      saveJsonToFile(exportData, getFilePath(fileName, true));
+      saveJsonToFile(exportData, getFilePath(fileName, true), includeMeta, sort);
     } catch (error) {
       // do we need to report status here?
     }

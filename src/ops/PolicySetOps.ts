@@ -19,13 +19,9 @@ import {
   succeedSpinner,
   updateProgressBar,
 } from '../utils/Console';
-import {
-  getTypedFilename,
-  saveJsonToFile,
-  titleCase,
-} from '../utils/ExportImportUtils';
 
-const { getRealmName, getFilePath, getWorkingDirectory } = frodo.utils;
+const { getRealmName, getTypedFilename, saveJsonToFile, titleCase, getFilePath, getWorkingDirectory } =
+  frodo.utils;
 const { readPoliciesByPolicySet, deletePolicy } = frodo.authz.policy;
 const {
   readPolicySets,
@@ -197,12 +193,16 @@ export async function deletePolicySets(): Promise<boolean> {
  * Export policy set to file
  * @param {string} policySetId policy set id/name
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @param {PolicySetExportOptions} options export options
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportPolicySetToFile(
   policySetId: string,
   file: string,
+  includeMeta = true,
+  sort = false,
   options: PolicySetExportOptions = {
     deps: true,
     prereqs: false,
@@ -219,7 +219,7 @@ export async function exportPolicySetToFile(
     }
     const filePath = getFilePath(fileName, true);
     const exportData = await exportPolicySet(policySetId, options);
-    saveJsonToFile(exportData, filePath);
+    saveJsonToFile(exportData, filePath, includeMeta, sort);
     succeedSpinner(`Exported ${policySetId} to ${filePath}.`);
     outcome = true;
   } catch (error) {
@@ -232,11 +232,15 @@ export async function exportPolicySetToFile(
 /**
  * Export policy sets to file
  * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @param {PolicySetExportOptions} options export options
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportPolicySetsToFile(
   file: string,
+  includeMeta = true,
+  sort = false,
   options: PolicySetExportOptions = {
     deps: true,
     prereqs: false,
@@ -256,7 +260,7 @@ export async function exportPolicySetsToFile(
     }
     const filePath = getFilePath(fileName, true);
     const exportData = await exportPolicySets(options);
-    saveJsonToFile(exportData, filePath);
+    saveJsonToFile(exportData, filePath, includeMeta, sort);
     succeedSpinner(`Exported all policy sets to ${filePath}.`);
     outcome = true;
   } catch (error) {
@@ -268,10 +272,14 @@ export async function exportPolicySetsToFile(
 
 /**
  * Export all policy sets to separate files
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  * @param {PolicySetExportOptions} options export options
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportPolicySetsToFiles(
+  includeMeta = true,
+  sort = false,
   options: PolicySetExportOptions = {
     deps: true,
     prereqs: false,
@@ -290,7 +298,7 @@ export async function exportPolicySetsToFiles(
           policySet.name,
           options
         );
-        saveJsonToFile(exportData, getFilePath(file, true));
+        saveJsonToFile(exportData, getFilePath(file, true), includeMeta, sort);
         updateProgressBar(`Exported ${policySet.name}.`);
       } catch (error) {
         errors.push(error);

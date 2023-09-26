@@ -14,11 +14,10 @@ import {
   succeedSpinner,
   updateProgressIndicator,
 } from '../utils/Console';
-import { getTypedFilename, saveJsonToFile } from '../utils/ExportImportUtils';
 import { cloneDeep } from './utils/OpsUtils';
 import wordwrap from './utils/Wordwrap';
 
-const { validateImport, getFilePath, getWorkingDirectory } = frodo.utils;
+const { validateImport, getTypedFilename, saveJsonToFile, getFilePath, getWorkingDirectory } = frodo.utils;
 const {
   EMAIL_TEMPLATE_TYPE,
   readEmailTemplates,
@@ -151,10 +150,14 @@ export async function listEmailTemplates(long = false): Promise<unknown[]> {
  * Export single email template to a file
  * @param {string} templateId email template id to export
  * @param {string} file filename where to export the template data
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
 export async function exportEmailTemplateToFile(
   templateId: string,
-  file: string
+  file: string,
+  includeMeta = true,
+  sort = false
 ) {
   let fileName = file;
   if (!fileName) {
@@ -167,7 +170,7 @@ export async function exportEmailTemplateToFile(
     updateProgressIndicator(`Writing file ${filePath}`);
     const fileData = getFileDataTemplate();
     fileData.emailTemplate[templateId] = templateData;
-    saveJsonToFile(fileData, filePath);
+    saveJsonToFile(fileData, filePath, includeMeta, sort);
     stopProgressIndicator(
       `Exported ${templateId['brightCyan']} to ${filePath['brightCyan']}.`
     );
@@ -180,8 +183,14 @@ export async function exportEmailTemplateToFile(
 /**
  * Export all email templates to file
  * @param {String} file optional filename
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportEmailTemplatesToFile(file) {
+export async function exportEmailTemplatesToFile(
+  file,
+  includeMeta = true,
+  sort = false
+) {
   let fileName = file;
   if (!fileName) {
     fileName = getTypedFilename(`allEmailTemplates`, EMAIL_TEMPLATE_FILE_TYPE);
@@ -200,7 +209,7 @@ export async function exportEmailTemplatesToFile(file) {
       updateProgressIndicator(`Exporting ${templateId}`);
       fileData.emailTemplate[templateId] = template;
     }
-    saveJsonToFile(fileData, filePath);
+    saveJsonToFile(fileData, filePath, includeMeta, sort);
     stopProgressIndicator(
       `${templates.length} templates exported to ${filePath}.`
     );
@@ -212,8 +221,13 @@ export async function exportEmailTemplatesToFile(file) {
 
 /**
  * Export all email templates to separate files
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportEmailTemplatesToFiles() {
+export async function exportEmailTemplatesToFiles(
+  includeMeta = true,
+  sort = false
+) {
   try {
     const templates = await readEmailTemplates();
     createProgressIndicator(
@@ -227,7 +241,7 @@ export async function exportEmailTemplatesToFiles() {
       const fileData = getFileDataTemplate();
       updateProgressIndicator(`Exporting ${templateId}`);
       fileData.emailTemplate[templateId] = template;
-      saveJsonToFile(fileData, getFilePath(fileName, true));
+      saveJsonToFile(fileData, getFilePath(fileName, true), includeMeta, sort);
     }
     stopProgressIndicator(`${templates.length} templates exported.`);
   } catch (err) {

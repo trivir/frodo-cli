@@ -40,6 +40,18 @@ program
       'Do not include decoded variable value in export'
     ).default(false, 'false')
   )
+  .addOption(
+    new Option(
+      '-j, --no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '-S, --sort',
+      'Sorts exported .json file(s) in abc order by key.'
+    )
+  )
   .action(
     // implement command logic inside action handler
     async (host, realm, user, password, options, command) => {

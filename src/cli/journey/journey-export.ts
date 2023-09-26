@@ -41,6 +41,18 @@ program
   )
   .addOption(
     new Option(
+      '-j, --no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '-S, --sort',
+      'Sorts exported .json file(s) in abc order by key.'
+    )
+  )
+  .addOption(
+    new Option(
       '--use-string-arrays',
       'Where applicable, use string arrays to store multi-line text (e.g. scripts).'
     ).default(false, 'off')
@@ -74,23 +86,34 @@ program
       // export
       if (options.journeyId && (await getTokens())) {
         verboseMessage('Exporting journey...');
-        await exportJourneyToFile(options.journeyId, options.file, {
-          useStringArrays: options.useStringArrays,
-          deps: options.deps,
-        });
+        await exportJourneyToFile(
+          options.journeyId,
+          options.file,
+          options.metadata,
+          options.sort,
+          {
+            useStringArrays: options.useStringArrays,
+            deps: options.deps,
+          }
+        );
       }
       // --all -a
       else if (options.all && (await getTokens())) {
         verboseMessage('Exporting all journeys to a single file...');
-        await exportJourneysToFile(options.file, {
-          useStringArrays: options.useStringArrays,
-          deps: options.deps,
-        });
+        await exportJourneysToFile(
+          options.file,
+          options.metadata,
+          options.sort,
+          {
+            useStringArrays: options.useStringArrays,
+            deps: options.deps,
+          }
+        );
       }
       // --all-separate -A
       else if (options.allSeparate && (await getTokens())) {
         verboseMessage('Exporting all journeys to separate files...');
-        await exportJourneysToFiles({
+        await exportJourneysToFiles(options.metadata, options.sort, {
           useStringArrays: options.useStringArrays,
           deps: options.deps,
         });

@@ -34,6 +34,18 @@ program
       'Export all gateway agents to separate files (*.identitygatewayagent.json) in the current directory. Ignored with -i or -a.'
     )
   )
+  .addOption(
+    new Option(
+      '-j, --no-metadata',
+      'Does not include metadata in the export file.'
+    )
+  )
+  .addOption(
+    new Option(
+      '-S, --sort',
+      'Sorts exported .json file(s) in abc order by key.'
+    )
+  )
   .action(
     // implement command logic inside action handler
     async (host, realm, user, password, options, command) => {
@@ -49,21 +61,33 @@ program
         // export
         if (options.agentId) {
           verboseMessage('Exporting identity gateway agent...');
-          await exportIdentityGatewayAgentToFile(options.agentId, options.file);
+          await exportIdentityGatewayAgentToFile(
+            options.agentId,
+            options.file,
+            options.metadata,
+            options.sort
+          );
         }
         // --all -a
         else if (options.all) {
           verboseMessage(
             'Exporting all identity gateway agents to a single file...'
           );
-          await exportIdentityGatewayAgentsToFile(options.file);
+          await exportIdentityGatewayAgentsToFile(
+            options.file,
+            options.metadata,
+            options.sort
+          );
         }
         // --all-separate -A
         else if (options.allSeparate) {
           verboseMessage(
             'Exporting all identity gateway agents to separate files...'
           );
-          await exportIdentityGatewayAgentsToFiles();
+          await exportIdentityGatewayAgentsToFiles(
+            options.metadata,
+            options.sort
+          );
         }
         // unrecognized combination of options or no options
         else {

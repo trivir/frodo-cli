@@ -4,12 +4,12 @@ import fs from 'fs';
 
 import { describeJourney, describeJourneyMd } from '../../ops/JourneyOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
-import { saveTextToFile } from '../../utils/ExportImportUtils';
 import { FrodoCommand } from '../FrodoCommand';
 
 const { getTokens } = frodo.login;
 const { createFileParamTreeExportResolver, readJourneys, exportJourney } =
   frodo.authn.journey;
+const { saveTextToFile } = frodo.utils;
 
 const program = new FrodoCommand('frodo journey describe');
 
