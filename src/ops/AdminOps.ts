@@ -1,7 +1,7 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
-import { FullExportInterface } from '../../../frodo-lib/types/api/AdminApi';
+import { FullExportInterface } from '@rockcarver/frodo-lib/types/api/AdminApi';
 
 const { getRealmName, getTypedFilename, titleCase, saveJsonToFile } =
   frodo.utils;
