@@ -10,10 +10,12 @@ import { FrodoCommand } from '../FrodoCommand';
 
 const { getTokens } = frodo.login;
 
-const program = new FrodoCommand('frodo admin export');
+const program = new FrodoCommand('frodo admin export-full-cloud-config');
 
 program
-  .description('Export everything.')
+  .description(
+    'Export full cloud configuration for all ops that currently support export.'
+  )
   .addOption(new Option('-f, --file <file>', 'Name of the export file.'))
   .addOption(new Option('-a, --all', 'Export everything to a single file.'))
   .addOption(
