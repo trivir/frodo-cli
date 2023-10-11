@@ -54,6 +54,12 @@ program
       'Extract the script from the exported file, and save it to a separate file. Ignored with -n or -a.'
     )
   )
+  .addOption(
+    new Option(
+      '-d, --default',
+      'Export all scripts including the default scripts. Ignored with -n.'
+    )
+  )
   .action(
     // implement command logic inside action handler
     async (host, realm, user, password, options, command) => {
@@ -83,19 +89,18 @@ program
       // -a / --all
       else if (options.all) {
         verboseMessage('Exporting all scripts to a single file...');
-        await exportScriptsToFile(options.file);
+        await exportScriptsToFile(options.file, options.default);
       }
       // -A / --all-separate
       else if (options.allSeparate) {
         verboseMessage('Exporting all scripts to separate files...');
         // -x / --extract
         if (options.extract) {
-          await exportScriptsToFilesExtract();
+          await exportScriptsToFilesExtract(options.default);
         } else {
-          await exportScriptsToFiles();
+          await exportScriptsToFiles(options.default);
         }
       }
-
       // unrecognized combination of options or no options
       else {
         printMessage(

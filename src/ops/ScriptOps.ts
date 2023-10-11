@@ -181,9 +181,13 @@ export async function exportScriptByNameToFile(
 /**
  * Export all scripts to single file
  * @param {string} file file name
+ * @param {boolean} includeDefault true to include default scripts in export, false otherwise
  * @returns {Promise<boolean>} true if no errors occurred during export, false otherwise
  */
-export async function exportScriptsToFile(file: string): Promise<boolean> {
+export async function exportScriptsToFile(
+  file: string,
+  includeDefault: boolean
+): Promise<boolean> {
   debugMessage(`Cli.ScriptOps.exportScriptsToFile: start`);
   try {
     let fileName = getTypedFilename(
@@ -193,7 +197,7 @@ export async function exportScriptsToFile(file: string): Promise<boolean> {
     if (file) {
       fileName = file;
     }
-    const scriptExport = await exportScripts();
+    const scriptExport = await exportScripts(includeDefault);
     saveJsonToFile(scriptExport, getFilePath(fileName, true));
     debugMessage(`Cli.ScriptOps.exportScriptsToFile: end [true]`);
     return true;
@@ -207,12 +211,17 @@ export async function exportScriptsToFile(file: string): Promise<boolean> {
 
 /**
  * Export all scripts to individual files
+ * @param {boolean} includeDefault true to include default scripts in export, false otherwise
  * @returns {Promise<boolean>} true if no errors occurred during export, false otherwise
  */
-export async function exportScriptsToFiles(): Promise<boolean> {
+export async function exportScriptsToFiles(
+  includeDefault: boolean
+): Promise<boolean> {
   let outcome = true;
   debugMessage(`Cli.ScriptOps.exportScriptsToFiles: start`);
-  const scriptList = await readScripts();
+  const scriptList = (await readScripts()).filter(
+    (s) => !s.default || includeDefault
+  );
   createProgressBar(
     scriptList.length,
     'Exporting scripts to individual files...'
@@ -237,10 +246,19 @@ export async function exportScriptsToFiles(): Promise<boolean> {
   return outcome;
 }
 
-export async function exportScriptsToFilesExtract(): Promise<boolean> {
+/**
+ * Export all scripts with the scripts extracted into separate .js or .groovy files
+ * @param {boolean} includeDefault true to include default scripts in export, false otherwise
+ * @returns {Promise<boolean>} true if no errors occurred during export, false otherwise
+ */
+export async function exportScriptsToFilesExtract(
+  includeDefault: boolean
+): Promise<boolean> {
   let outcome = true;
   debugMessage(`Cli.ScriptOps.exportScriptsToFilesExtract: start`);
-  const scriptList = await readScripts();
+  const scriptList = (await readScripts()).filter(
+    (s) => !s.default || includeDefault
+  );
   createProgressBar(
     scriptList.length,
     'Exporting scripts to individual files...'
@@ -328,12 +346,14 @@ function isScriptExtracted(importData: ScriptExportInterface): boolean {
  * @param {string} name Optional name of script. If supplied, only the script of that name is imported
  * @param {string} file file name
  * @param {boolean} reUuid true to generate a new uuid for each script on import, false otherwise
+ * @param {boolean} includeDefault true to include default scripts in the import, false otherwise
  * @returns {Promise<boolean>} true if no errors occurred during import, false otherwise
  */
 export async function importScriptsFromFile(
   name: string,
   file: string,
-  reUuid = false
+  reUuid = false,
+  includeDefault = false
 ): Promise<boolean> {
   let outcome = false;
   const filePath = getFilePath(file);
@@ -343,7 +363,7 @@ export async function importScriptsFromFile(
       if (err) throw err;
       const importData: ScriptExportInterface = JSON.parse(data);
       if (isScriptExtracted(importData)) {
-        await handleScriptFileImport(filePath, reUuid, false);
+        await handleScriptFileImport(filePath, reUuid, false, includeDefault);
       } else {
         await importScripts(name, importData, reUuid);
       }
@@ -364,11 +384,13 @@ export async function importScriptsFromFile(
  * Import extracted scripts.
  *
  * @param watch whether or not to watch for file changes
+ * @param includeDefault true to include default scripts in the import, false otherwise
  */
 export async function importScriptsFromFiles(
   watch: boolean,
   reUuid: boolean,
-  validateScripts: boolean
+  validateScripts: boolean,
+  includeDefault: boolean
 ) {
   // If watch is true, it doesn't make sense to reUuid.
   reUuid = watch ? false : reUuid;
@@ -379,7 +401,12 @@ export async function importScriptsFromFiles(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function onChange(path: string, _stats?: fs.Stats): Promise<void> {
     try {
-      await handleScriptFileImport(path, reUuid, validateScripts);
+      await handleScriptFileImport(
+        path,
+        reUuid,
+        validateScripts,
+        includeDefault
+      );
     } catch (error) {
       printMessage(`${path}: ${error.message}`, 'error');
     }
@@ -419,17 +446,24 @@ export async function importScriptsFromFiles(
  *
  * @param file Either a script file or an extract file
  * @param reUuid whether or not to generate a new uuid for each script on import
+ * @param includeDefault true to include default scripts in the import, false otherwise
  */
 async function handleScriptFileImport(
   file: string,
   reUuid: boolean,
-  validateScripts: boolean
+  validateScripts: boolean,
+  includeDefault: boolean
 ) {
   debugMessage(`Cli.ScriptOps.handleScriptFileImport: start`);
   const scriptFile = getScriptFile(file);
   const script = getScriptExportByScriptFile(scriptFile);
-
-  const imported = await importScripts('', script, reUuid, validateScripts);
+  const imported = await importScripts(
+    '',
+    script,
+    reUuid,
+    validateScripts,
+    includeDefault
+  );
   if (imported) {
     printMessage(`Imported '${scriptFile}'`);
   }

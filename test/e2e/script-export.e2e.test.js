@@ -52,10 +52,10 @@ FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo s
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo script export -n 'GitHub Profile Normalization' -D scriptExportTestDir1
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo script export --all
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo script export -a --file my-allAlphaScripts.script.json
-FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo script export -aD scriptExportTestDir2
+FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo script export -adD scriptExportTestDir2
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo script export -A
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo script export -AxD scriptExportTestDir3
-FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo script export --all-separate --extract --directory scriptExportTestDir4
+FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo script export --all-separate --default --extract --directory scriptExportTestDir4
 */
 import { testExport } from './utils/TestUtils';
 import { connection as c } from './utils/TestConfig';
@@ -101,9 +101,9 @@ describe('frodo script export', () => {
     await testExport(CMD, env, type, exportFile);
   });
 
-  test('"frodo script export -aD scriptExportTestDir2": should export all scripts to a single file in the directory scriptExportTestDir2', async () => {
+  test('"frodo script export -adD scriptExportTestDir2": should export all scripts, including default scripts, to a single file in the directory scriptExportTestDir2', async () => {
     const exportDirectory = 'scriptExportTestDir2';
-    const CMD = `frodo script export -aD ${exportDirectory}`;
+    const CMD = `frodo script export -adD ${exportDirectory}`;
     await testExport(CMD, env, type, undefined, exportDirectory);
   });
 
@@ -118,9 +118,9 @@ describe('frodo script export', () => {
     await testExport(CMD, env, type, undefined, exportDirectory);
   });
 
-  test('"frodo script export --all-separate --extract --directory scriptExportTestDir4": should export all extracted scripts to separate files in the directory scriptExportTestDir4', async () => {
+  test('"frodo script export --all-separate --default --extract --directory scriptExportTestDir4": should export all extracted scripts, including default scripts, to separate files in the directory scriptExportTestDir4', async () => {
     const exportDirectory = 'scriptExportTestDir4';
-    const CMD = `frodo script export --all-separate --extract --directory ${exportDirectory}`;
+    const CMD = `frodo script export --all-separate --default --extract --directory ${exportDirectory}`;
     await testExport(CMD, env, type, undefined, exportDirectory);
   });
 });
