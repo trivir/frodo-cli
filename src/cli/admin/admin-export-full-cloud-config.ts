@@ -1,11 +1,11 @@
-import { frodo } from '@rockcarver/frodo-lib';
+import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import {
   exportEverythingToFile,
   exportEverythingToFiles,
 } from '../../ops/AdminOps';
-import { verboseMessage } from '../../utils/Console';
+import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
 const { getTokens } = frodo.login;
@@ -24,7 +24,6 @@ program
       'Export everything to separate files in the current directory. Ignored with -a.'
     )
   )
-  .addOption(new Option('-g, --global', 'Export global services.'))
   .addOption(
     new Option(
       '--use-string-arrays',
@@ -33,9 +32,9 @@ program
   )
   .addOption(
     new Option(
-      '-D, --directory <directory>',
-      'Export directory. Required with and ignored without -A.'
-    )
+      '--no-decode',
+      'Do not include decoded variable value in variable export'
+    ).default(false, 'false')
   )
   .action(
     // implement command logic inside action handler
@@ -48,27 +47,28 @@ program
         options,
         command
       );
-      const globalConfig = options.global ?? false;
       // --all -a
       if (options.all && (await getTokens())) {
         verboseMessage('Exporting everything to a single file...');
-        await exportEverythingToFile(
-          options.file,
-          globalConfig,
-          options.useStringArrays
+        await exportEverythingToFile(options.file, {
+          useStringArrays: options.useStringArrays,
+          noDecode: options.decode,
+        });
+        // require --directory -D for all-separate function
+      } else if (options.allSeparate && !state.getDirectory()) {
+        printMessage(
+          '-D or --directory required when using -A or --all-separate',
+          'error'
         );
+        program.help();
+        process.exitCode = 1;
         // --all-separate -A
-      } else if (
-        options.allSeparate &&
-        options.directory &&
-        (await getTokens())
-      ) {
+      } else if (options.allSeparate && (await getTokens())) {
         verboseMessage('Exporting everything to separate files...');
-        await exportEverythingToFiles(
-          options.directory,
-          globalConfig,
-          options.useStringArrays
-        );
+        await exportEverythingToFiles({
+          useStringArrays: options.useStringArrays,
+          noDecode: options.decode,
+        });
         // unrecognized combination of options or no options
       } else {
         verboseMessage('Unrecognized combination of options or no options...');
