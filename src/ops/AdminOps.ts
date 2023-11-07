@@ -4,6 +4,10 @@ import {
   FullExportOptions,
 } from '@rockcarver/frodo-lib/types/ops/AdminOps';
 import fs from 'fs';
+import {
+  extractScriptToFile
+} from './ScriptOps';
+import {ScriptExportInterface} from "../../../frodo-lib/types/ops/ScriptOps";
 
 const {
   getRealmName,
@@ -40,9 +44,11 @@ export async function exportEverythingToFile(
 
 /**
  * Export everything to separate files
+ * @param extract Extracts the scripts from the exports into separate files if true
  * @param {FullExportOptions} options export options
  */
 export async function exportEverythingToFiles(
+  extract = false,
   options: FullExportOptions = {
     useStringArrays: true,
     noDecode: false,
@@ -52,37 +58,84 @@ export async function exportEverythingToFiles(
     await exportFullConfiguration(options);
   delete exportData.meta;
   const baseDirectory = getWorkingDirectory(true);
-  Object.entries(exportData).forEach(([type, obj]) => {
-    if (!fs.existsSync(`${baseDirectory}/${type}`)) {
-      fs.mkdirSync(`${baseDirectory}/${type}`);
-    }
-    Object.entries(obj).forEach(([id, value]: [string, any]) => {
-      if (type === 'saml') {
-        if (!fs.existsSync(`${baseDirectory}/${type}/${id}`)) {
-          fs.mkdirSync(`${baseDirectory}/${type}/${id}`);
-        }
-        Object.entries(value as object).forEach(
-          ([subId, subValue]: [string, any]) => {
-            const filename = getTypedFilename(
-              subValue.name ? subValue.name : subId,
-              `${id}.${type}`
-            );
-            const fileData = {};
-            fileData[type] = {};
-            fileData[type][id] = {};
-            fileData[type][id][subId] = subValue;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Object.entries(exportData).forEach(([type, obj]: [string, any]) => {
+    if (obj) {
+      if (!fs.existsSync(`${baseDirectory}/${type}`)) {
+        fs.mkdirSync(`${baseDirectory}/${type}`);
+      }
+      if (type == 'saml') {
+        const samlData = {
+          saml: {
+            cot: {},
+            hosted: {},
+            metadata: {},
+            remote: {},
+          },
+        };
+        if (obj.cot) {
+          if (!fs.existsSync(`${baseDirectory}/cot`)) {
+            fs.mkdirSync(`${baseDirectory}/cot`);
+          }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          Object.entries(obj.cot).forEach(([id, value]: [string, any]) => {
+            samlData.saml.cot = {
+              [id]: value,
+            };
             saveJsonToFile(
-              subValue,
-              `${baseDirectory}/${type}/${id}/${filename}`
+              samlData,
+              `${baseDirectory}/cot/${getTypedFilename(id, 'cot.saml')}`
+            );
+          });
+          samlData.saml.cot = {};
+        }
+        Object.entries(obj.hosted)
+          .concat(Object.entries(obj.remote))
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .forEach(([id, value]: [string, any]) => {
+            const filename = getTypedFilename(
+              value.entityId ? value.entityId : id,
+              type
+            );
+            const samlType = obj.hosted[id] ? 'hosted' : 'remote';
+            samlData.saml[samlType][id] = value;
+            samlData.saml.metadata = {
+              [id]: obj.metadata[id],
+            };
+            saveJsonToFile(samlData, `${baseDirectory}/${type}/${filename}`);
+            samlData.saml[samlType] = {};
+          });
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        Object.entries(obj).forEach(([id, value]: [string, any]) => {
+          const filename =
+            type == 'config'
+              ? `${id}.json`
+              : getTypedFilename(value.name ? value.name : id, type);
+          if (type == 'config' && filename.includes('/')) {
+            fs.mkdirSync(
+              `${baseDirectory}/${type}/${filename.slice(
+                0,
+                filename.lastIndexOf('/')
+              )}`,
+              {
+                recursive: true,
+              }
             );
           }
-        );
+          if (extract && type == 'script') {
+            extractScriptToFile(exportData as ScriptExportInterface, id, type);
+          }
+          saveJsonToFile(
+            {
+              [type]: {
+                [id]: value,
+              },
+            },
+            `${baseDirectory}/${type}/${filename}`
+          );
+        });
       }
-      const filename = getTypedFilename(value.name ? value.name : id, type);
-      const fileData = {};
-      fileData[type] = {};
-      fileData[type][id] = value;
-      saveJsonToFile(fileData, `${baseDirectory}/${type}/${filename}`);
-    });
+    }
   });
 }

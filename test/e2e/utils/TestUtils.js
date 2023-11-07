@@ -41,10 +41,12 @@ export async function testExport(
       ? fileName
       : type
       ? `.*\\.${type}\\.(json|js|groovy|xml)`
-      : `.*\\.(json|js|groovy)`
+      : `.*\\.(json|js|groovy|xml)`
   );
   const filePaths = fs
-    .readdirSync(directory)
+    .readdirSync(directory, {
+      recursive: directory !== './'
+    })
     .filter((n) => regex.test(n))
     .map((n) => `${directory}${directory.endsWith('/') ? '' : '/'}${n}`);
   if (fileName) {

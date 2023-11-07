@@ -36,6 +36,12 @@ program
       'Do not include decoded variable value in variable export'
     ).default(false, 'false')
   )
+  .addOption(
+    new Option(
+      '-x, --extract',
+      'Extract scripts from the exported file, and save it to a separate file. Ignored with -a.'
+    )
+  )
   .action(
     // implement command logic inside action handler
     async (host, realm, user, password, options, command) => {
@@ -65,7 +71,7 @@ program
         // --all-separate -A
       } else if (options.allSeparate && (await getTokens())) {
         verboseMessage('Exporting everything to separate files...');
-        await exportEverythingToFiles({
+        await exportEverythingToFiles(options.extract, {
           useStringArrays: options.useStringArrays,
           noDecode: options.decode,
         });
