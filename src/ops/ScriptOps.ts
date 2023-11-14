@@ -93,7 +93,10 @@ export async function listScripts(
       const headers = ['Name', 'UUID', 'Language', 'Context', 'Description'];
       if (usage) {
         headers.push('Used');
-        fullExport = await exportFullConfiguration(true, true);
+        fullExport = await exportFullConfiguration({
+          useStringArrays: true,
+          noDecode: false,
+        });
         //Delete scripts from full export so they aren't mistakenly used for determining usage
         delete fullExport.script;
       }
@@ -119,7 +122,10 @@ export async function listScripts(
       });
       printMessage(table.toString(), 'data');
     } else if (usage) {
-      const fullExport = await exportFullConfiguration(true, true);
+      const fullExport = await exportFullConfiguration({
+        useStringArrays: true,
+        noDecode: false,
+      });
       //Delete scripts from full export so they aren't mistakenly used for determining usage
       delete fullExport.script;
       const table = createTable(['Name', 'Used']);

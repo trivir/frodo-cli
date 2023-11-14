@@ -52,6 +52,7 @@ export function getNoiseFilters(defaults: boolean): Array<string> {
 }
 
 export function isIdUsed(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   configuration: any,
   id: string,
   isEsv: boolean
@@ -68,6 +69,7 @@ export function isIdUsed(
 }
 
 function isIdUsedRecurse(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   configuration: any,
   regex: RegExp
 ): {
@@ -77,6 +79,7 @@ function isIdUsedRecurse(
   const type = typeof configuration;
   if (type === 'object' && configuration !== null) {
     for (const [id, value] of Object.entries(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       configuration as Record<string, any>
     )) {
       const isIdUsed = isIdUsedRecurse(value, regex);

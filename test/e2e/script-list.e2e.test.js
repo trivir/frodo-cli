@@ -49,7 +49,8 @@
 /*
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo script list
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo script list -l
-FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo script list --long
+FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo script list -u
+FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo script list --long --usage
  */
 import cp from 'child_process';
 import { promisify } from 'util';
@@ -79,8 +80,14 @@ describe('frodo script list', () => {
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     });
 
-    test('"frodo script list --long": should list the names, uuids, languages, contexts, and descriptions of the scripts', async () => {
-        const CMD = `frodo script list --long`;
+    test('"frodo script list -u": should list the usage of the scripts', async () => {
+        const CMD = `frodo script list -u`;
+        const { stdout } = await exec(CMD, env);
+        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    });
+
+    test('"frodo script list --long --usage": should list the names, uuids, languages, contexts, usage, and descriptions of the scripts', async () => {
+        const CMD = `frodo script list --long --usage`;
         const { stdout } = await exec(CMD, env);
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     });

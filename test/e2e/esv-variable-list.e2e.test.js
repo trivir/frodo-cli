@@ -49,7 +49,8 @@
 /*
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo esv variable list
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo esv variable list -l
-FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo esv variable list --long
+FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo esv variable list -u
+FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo esv variable list --long --usage
  */
 import cp from 'child_process';
 import { promisify } from 'util';
@@ -79,8 +80,14 @@ describe('frodo esv variable list', () => {
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     });
 
-    test('"frodo esv variable list --long": should list the ids, values, statuses, descriptions, modifiers, and modified times of the esv variables', async () => {
-        const CMD = `frodo esv variable list --long`;
+    test('"frodo esv variable list -u": should list the usage of the esv variables', async () => {
+        const CMD = `frodo esv variable list -u`;
+        const { stdout } = await exec(CMD, env);
+        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    });
+
+    test('"frodo esv variable list --long --usage": should list the ids, values, statuses, descriptions, modifiers, usage, and modified times of the esv variables', async () => {
+        const CMD = `frodo esv variable list --long --usage`;
         const { stdout } = await exec(CMD, env);
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     });

@@ -64,7 +64,12 @@ export async function listVariables(long, usage) {
     ];
     if (usage) {
       headers.push('Used'['brightCyan']);
-      fullExport = await exportFullConfiguration(true, true);
+      fullExport = await exportFullConfiguration({
+        useStringArrays: true,
+        noDecode: false,
+      });
+      //Delete variables from full export so they aren't mistakenly used for determining usage
+      delete fullExport.variables;
     }
     const table = createTable(headers);
     for (const variable of variables) {
@@ -90,7 +95,12 @@ export async function listVariables(long, usage) {
     }
     printMessage(table.toString(), 'data');
   } else if (usage) {
-    const fullExport = await exportFullConfiguration(true, true);
+    const fullExport = await exportFullConfiguration({
+      useStringArrays: true,
+      noDecode: false,
+    });
+    //Delete variables from full export so they aren't mistakenly used for determining usage
+    delete fullExport.variables;
     const table = createTable(['Id'['brightCyan'], 'Used'['brightCyan']]);
     variables.forEach((variable) => {
       const isEsvUsed = isIdUsed(fullExport, variable._id, true);

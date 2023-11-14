@@ -33,12 +33,13 @@ Options:
                                that case the proxy must provide this
                                capability. (default: Don't allow insecure
                                connections)
-  -l, --long                   Long with all fields. (default: false)
+  -l, --long                   Long with all fields besides usage. (default:
+                               false)
   -m, --type <type>            Override auto-detected deployment type. Valid
                                values for type:
                                classic:  A classic Access Management-only
                                deployment with custom layout and configuration.
-
+  
                                cloud:    A ForgeRock Identity Cloud
                                environment.
                                forgeops: A ForgeOps CDK or CDM deployment.
