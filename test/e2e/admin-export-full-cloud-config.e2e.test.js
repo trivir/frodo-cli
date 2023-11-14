@@ -70,13 +70,13 @@ describe('frodo admin export-full-cloud-config', () => {
     test('"frodo admin export-full-cloud-config -a": should export everything to a single file', async () => {
         const exportFile = "Alpha.everything.json";
         const CMD = `frodo admin export-full-cloud-config -a`;
-        //await testExport(CMD, env, type, exportFile);
+        await testExport(CMD, env, type, exportFile);
     });
 
     test('"frodo admin export-full-cloud-config --all --file test.json --use-string-arrays --no-decode": should export everything to a single file named test.json with no decoding variables and using string arrays', async () => {
         const exportFile = "test.json";
         const CMD = `frodo admin export-full-cloud-config --all --file ${exportFile} --use-string-arrays --no-decode`;
-        //await testExport(CMD, env, type, exportFile);
+        await testExport(CMD, env, type, exportFile);
     });
 
     test('"frodo admin export-full-cloud-config -AD exportAllTestDir1": should export everything into separate files in the directory exportAllTestDir1', async () => {
@@ -88,12 +88,12 @@ describe('frodo admin export-full-cloud-config', () => {
     test('"frodo admin export-full-cloud-config -AxD exportAllTestDir2": should export everything into separate files in the directory exportAllTestDir2 with scripts extracted', async () => {
         const exportDirectory = "exportAllTestDir2";
         const CMD = `frodo admin export-full-cloud-config -AxD ${exportDirectory}`;
-        //await testExport(CMD, env, undefined, undefined, exportDirectory);
+        await testExport(CMD, env, undefined, undefined, exportDirectory);
     });
 
     test('"frodo admin export-full-cloud-config --all-separate --directory exportAllTestDir3 --use-string-arrays --no-decode --extract": should export everything into separate files in the directory exportAllTestDir3 with scripts extracted, no decoding variables, and using string arrays', async () => {
         const exportDirectory = "exportAllTestDir3";
         const CMD = `frodo admin export-full-cloud-config --all-separate --directory ${exportDirectory} --use-string-arrays --no-decode --extract`;
-        //await testExport(CMD, env, undefined, undefined, exportDirectory);
+        await testExport(CMD, env, undefined, undefined, exportDirectory);
     });
 });

@@ -21,7 +21,7 @@ program
   .addOption(
     new Option(
       '-A, --all-separate',
-      'Export everything to separate files in the current directory. Ignored with -a.'
+      'Export everything to separate files in the -D directory. Ignored with -a.'
     )
   )
   .addOption(
