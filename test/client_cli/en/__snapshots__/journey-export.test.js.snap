@@ -46,7 +46,7 @@ Options:
                                values for type:
                                classic:  A classic Access Management-only
                                deployment with custom layout and configuration.
-
+  
                                cloud:    A ForgeRock Identity Cloud
                                environment.
                                forgeops: A ForgeOps CDK or CDM deployment.

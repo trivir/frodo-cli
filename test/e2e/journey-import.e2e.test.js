@@ -52,7 +52,7 @@ FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo j
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo journey import -i j00 -f test/e2e/exports/all/allAlphaJourneys.journey.json
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo journey import -i j00 -f test/e2e/exports/all/allAlphaJourneys.journey.json --re-uuid
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo journey import --journey-id j00 -f test/e2e/exports/all/allAlphaJourneys.journey.json --no-deps
-FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo journey import -i j00 -f allAlphaJourneys.journey.json -D test/e2e/exports/all
+FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo journey import -i j01 -f allAlphaJourneys.journey.json -D test/e2e/exports/all
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo journey import -f test/e2e/exports/all/allAlphaJourneys.journey.json
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo journey import -f test/e2e/exports/all/allAlphaJourneys.journey.json --re-uuid
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo journey import --file test/e2e/exports/all/allAlphaJourneys.journey.json --no-deps
@@ -111,8 +111,8 @@ describe('frodo journey import', () => {
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     });
 
-    test(`"frodo journey import -i j00 -f ${allAlphaJourneysFileName} -D ${allDirectory}": should import the journey with the id "j00" from the file "${allAlphaJourneysExport}"`, async () => {
-        const CMD = `frodo journey import -i j00 -f ${allAlphaJourneysFileName} -D ${allDirectory}`;
+    test(`"frodo journey import -i j01 -f ${allAlphaJourneysFileName} -D ${allDirectory}": should import the journey with the id "j01" from the file "${allAlphaJourneysExport}"`, async () => {
+        const CMD = `frodo journey import -i j01 -f ${allAlphaJourneysFileName} -D ${allDirectory}`;
         const { stdout } = await exec(CMD, env);
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     });
