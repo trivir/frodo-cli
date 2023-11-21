@@ -146,7 +146,12 @@ export async function exportSocialIdentityProvidersToFiles(
       try {
         const fileName = getTypedFilename(idpData._id, 'idp');
         const fileData = await exportSocialIdentityProvider(idpData._id);
-        saveJsonToFile(fileData, getFilePath(fileName, true), includeMeta, sort);
+        saveJsonToFile(
+          fileData,
+          getFilePath(fileName, true),
+          includeMeta,
+          sort
+        );
         updateProgressBar(`Exported provider ${idpData._id}`);
       } catch (error) {
         printMessage(`Error exporting ${idpData._id}: ${error}`, 'error');

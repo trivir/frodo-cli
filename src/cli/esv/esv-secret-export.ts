@@ -36,7 +36,7 @@ program
   )
   .addOption(
     new Option(
-      '-j, --no-metadata',
+      '-N, --no-metadata',
       'Does not include metadata in the export file.'
     )
   )
@@ -63,13 +63,18 @@ program
             options.secretId
           }" from realm "${state.getRealm()}"...`
         );
-        await exportSecretToFile(options.secretId, options.file);
+        await exportSecretToFile(
+          options.secretId,
+          options.file,
+          options.metadata,
+          options.sort
+        );
       } else if (options.all && (await getTokens())) {
         verboseMessage('Exporting all secrets to a single file...');
-        await exportSecretsToFile(options.file);
+        await exportSecretsToFile(options.file, options.metadata, options.sort);
       } else if (options.allSeparate && (await getTokens())) {
         verboseMessage('Exporting all secrets to separate files...');
-        await exportSecretsToFiles();
+        await exportSecretsToFiles(options.metadata, options.sort);
       } else {
         printMessage(
           'Unrecognized combination of options or no options...',

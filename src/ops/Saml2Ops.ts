@@ -16,7 +16,8 @@ import {
   updateProgressBar,
 } from '../utils/Console';
 
-const { decodeBase64, saveTextToFile, getFilePath, getWorkingDirectory } = frodo.utils;
+const { decodeBase64, saveTextToFile, getFilePath, getWorkingDirectory } =
+  frodo.utils;
 const { getTypedFilename, saveJsonToFile, getRealmString, validateImport } =
   frodo.utils;
 const {

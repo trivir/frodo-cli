@@ -11,8 +11,14 @@ import {
   updateProgressIndicator,
 } from '../utils/Console';
 
-const { getRealmString, validateImport, getTypedFilename, saveToFile, getFilePath, getWorkingDirectory } =
-  frodo.utils;
+const {
+  getRealmString,
+  validateImport,
+  getTypedFilename,
+  saveToFile,
+  getFilePath,
+  getWorkingDirectory,
+} = frodo.utils;
 const {
   readThemes,
   readThemeByName,
@@ -202,7 +208,14 @@ export async function exportThemesToFiles(includeMeta = true, sort = false) {
     if (!themeData._id) themeData._id = uuidv4();
     updateProgressIndicator(`Writing theme ${themeData.name}`);
     const fileName = getTypedFilename(themeData.name, 'theme');
-    saveToFile('theme', themeData, '_id', getFilePath(fileName, true), includeMeta, sort);
+    saveToFile(
+      'theme',
+      themeData,
+      '_id',
+      getFilePath(fileName, true),
+      includeMeta,
+      sort
+    );
   }
   stopProgressIndicator(`${allThemesData.length} themes exported.`);
 }

@@ -19,7 +19,13 @@ import {
   updateProgressBar,
 } from '../utils/Console';
 
-const { getTypedFilename, titleCase, saveJsonToFile, getFilePath, getWorkingDirectory } = frodo.utils;
+const {
+  getTypedFilename,
+  titleCase,
+  saveJsonToFile,
+  getFilePath,
+  getWorkingDirectory,
+} = frodo.utils;
 const {
   readOAuth2Clients,
   exportOAuth2Client,

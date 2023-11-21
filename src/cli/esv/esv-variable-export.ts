@@ -42,7 +42,7 @@ program
   )
   .addOption(
     new Option(
-      '-j, --no-metadata',
+      '-N, --no-metadata',
       'Does not include metadata in the export file.'
     )
   )
@@ -72,14 +72,25 @@ program
         await exportVariableToFile(
           options.variableId,
           options.file,
-          options.decode
+          options.decode,
+          options.metadata,
+          options.sort
         );
       } else if (options.all && (await getTokens())) {
         verboseMessage('Exporting all variables to a single file...');
-        await exportVariablesToFile(options.file, options.decode);
+        await exportVariablesToFile(
+          options.file,
+          options.decode,
+          options.metadata,
+          options.sort
+        );
       } else if (options.allSeparate && (await getTokens())) {
         verboseMessage('Exporting all variables to separate files...');
-        await exportVariablesToFiles(options.decode);
+        await exportVariablesToFiles(
+          options.decode,
+          options.metadata,
+          options.sort
+        );
       } else {
         printMessage(
           'Unrecognized combination of options or no options...',

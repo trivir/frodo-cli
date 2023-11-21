@@ -18,8 +18,15 @@ import {
 } from '../utils/Console';
 import wordwrap from './utils/Wordwrap';
 
-const { getTypedFilename, saveJsonToFile, saveTextToFile, titleCase, isBase64Encoded, getFilePath, getWorkingDirectory } =
-  frodo.utils;
+const {
+  getTypedFilename,
+  saveJsonToFile,
+  saveTextToFile,
+  titleCase,
+  isBase64Encoded,
+  getFilePath,
+  getWorkingDirectory,
+} = frodo.utils;
 const {
   readScripts,
   exportScript,
@@ -202,7 +209,12 @@ export async function exportScriptsToFile(
       fileName = file;
     }
     const scriptExport = await exportScripts();
-    saveJsonToFile(scriptExport, getFilePath(fileName, true), includeMeta, sort);
+    saveJsonToFile(
+      scriptExport,
+      getFilePath(fileName, true),
+      includeMeta,
+      sort
+    );
     debugMessage(`Cli.ScriptOps.exportScriptsToFile: end [true]`);
     return true;
   } catch (error) {
@@ -235,7 +247,12 @@ export async function exportScriptsToFiles(
       updateProgressBar(`Reading script ${script.name}`);
       const fileName = getTypedFilename(script.name, 'script');
       const scriptExport = await exportScriptByName(script.name);
-      saveJsonToFile(scriptExport, getFilePath(fileName, true), includeMeta, sort);
+      saveJsonToFile(
+        scriptExport,
+        getFilePath(fileName, true),
+        includeMeta,
+        sort
+      );
     } catch (error) {
       outcome = false;
       printMessage(

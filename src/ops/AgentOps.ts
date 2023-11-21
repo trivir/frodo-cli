@@ -11,7 +11,14 @@ import {
   succeedSpinner,
 } from '../utils/Console';
 
-const { getRealmName, getTypedFilename, saveJsonToFile, titleCase, getFilePath, getWorkingDirectory } = frodo.utils;
+const {
+  getRealmName,
+  getTypedFilename,
+  saveJsonToFile,
+  titleCase,
+  getFilePath,
+  getWorkingDirectory,
+} = frodo.utils;
 const {
   createAgentExportTemplate,
   readAgents,

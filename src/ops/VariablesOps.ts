@@ -16,15 +16,16 @@ import {
   updateProgressBar,
   updateProgressIndicator,
 } from '../utils/Console';
-import {
+import wordwrap from './utils/Wordwrap';
+
+const {
+  decodeBase64,
+  getFilePath,
   getTypedFilename,
   saveJsonToFile,
   saveToFile,
   titleCase,
-} from '../utils/ExportImportUtils';
-import wordwrap from './utils/Wordwrap';
-
-const { decodeBase64, getFilePath } = frodo.utils;
+} = frodo.utils;
 const { resolveUserName } = frodo.idm.managed;
 const {
   readVariables,
@@ -219,11 +220,15 @@ export async function describeVariable(variableId) {
  * @param {String} variableId Variable id
  * @param {String} file Optional filename
  * @param {boolean} noDecode Do not include decoded variable value in export
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
 export async function exportVariableToFile(
   variableId: string,
   file: string | null,
-  noDecode: boolean
+  noDecode: boolean,
+  includeMeta: boolean,
+  sort: boolean
 ) {
   debugMessage(
     `Cli.VariablesOps.exportVariableToFile: start [variableId=${variableId}, file=${file}]`
@@ -236,7 +241,7 @@ export async function exportVariableToFile(
   try {
     createProgressBar(1, `Exporting variable ${variableId}`);
     const fileData = await exportVariable(variableId, noDecode);
-    saveJsonToFile(fileData, filePath);
+    saveJsonToFile(fileData, filePath, includeMeta, sort);
     updateProgressBar(`Exported variable ${variableId}`);
     stopProgressBar(
       // @ts-expect-error - brightCyan colors the string, even though it is not a property of string
@@ -255,10 +260,14 @@ export async function exportVariableToFile(
  * Export all variables to single file
  * @param {string} file Optional filename
  * @param {boolean} noDecode Do not include decoded variable value in export
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
 export async function exportVariablesToFile(
   file: string | null,
-  noDecode: boolean
+  noDecode: boolean,
+  includeMeta: boolean,
+  sort: boolean
 ) {
   debugMessage(`Cli.VariablesOps.exportVariablesToFile: start [file=${file}]`);
   let fileName = file;
@@ -270,7 +279,12 @@ export async function exportVariablesToFile(
   }
   try {
     const variablesExport = await exportVariables(noDecode);
-    saveJsonToFile(variablesExport, getFilePath(fileName, true));
+    saveJsonToFile(
+      variablesExport,
+      getFilePath(fileName, true),
+      includeMeta,
+      sort
+    );
   } catch (error) {
     printMessage(error.message, 'error');
     printMessage(`exportVariablesToFile: ${error.response?.status}`, 'error');
@@ -281,8 +295,14 @@ export async function exportVariablesToFile(
 /**
  * Export all variables to seperate files
  * @param {boolean} noDecode Do not include decoded variable value in export
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportVariablesToFiles(noDecode: boolean) {
+export async function exportVariablesToFiles(
+  noDecode: boolean,
+  includeMeta: boolean,
+  sort: boolean
+) {
   const variableList = await readVariables();
   createProgressIndicator(
     'determinate',
@@ -295,7 +315,14 @@ export async function exportVariablesToFiles(noDecode: boolean) {
     }
     updateProgressIndicator(`Writing variable ${variable._id}`);
     const fileName = getTypedFilename(variable._id, 'variable');
-    saveToFile('variable', variable, '_id', getFilePath(fileName, true));
+    saveToFile(
+      'variable',
+      variable,
+      '_id',
+      getFilePath(fileName, true),
+      includeMeta,
+      sort
+    );
   }
   stopProgressIndicator(`${variableList.length} variables exported`);
 }

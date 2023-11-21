@@ -240,7 +240,12 @@ export async function exportJourneysToFiles(
         tree._id,
         options
       );
-      saveJsonToFile(exportData, getFilePath(fileName, true), includeMeta, sort);
+      saveJsonToFile(
+        exportData,
+        getFilePath(fileName, true),
+        includeMeta,
+        sort
+      );
     } catch (error) {
       // do we need to report status here?
     }

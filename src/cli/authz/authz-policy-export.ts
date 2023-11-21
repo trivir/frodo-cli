@@ -44,7 +44,7 @@ program
   )
   .addOption(
     new Option(
-      '-j, --no-metadata',
+      '-N, --no-metadata',
       'Does not include metadata in the export file.'
     )
   )

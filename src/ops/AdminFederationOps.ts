@@ -21,7 +21,8 @@ const {
   importFirstAdminFederationProvider,
 } = frodo.cloud.adminFed;
 
-const { getTypedFilename, saveJsonToFile, getFilePath, getWorkingDirectory } = frodo.utils;
+const { getTypedFilename, saveJsonToFile, getFilePath, getWorkingDirectory } =
+  frodo.utils;
 
 /**
  * List providers

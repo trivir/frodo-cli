@@ -17,7 +17,13 @@ import {
 import { cloneDeep } from './utils/OpsUtils';
 import wordwrap from './utils/Wordwrap';
 
-const { validateImport, getTypedFilename, saveJsonToFile, getFilePath, getWorkingDirectory } = frodo.utils;
+const {
+  validateImport,
+  getTypedFilename,
+  saveJsonToFile,
+  getFilePath,
+  getWorkingDirectory,
+} = frodo.utils;
 const {
   EMAIL_TEMPLATE_TYPE,
   readEmailTemplates,

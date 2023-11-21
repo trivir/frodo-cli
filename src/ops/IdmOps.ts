@@ -10,7 +10,8 @@ import {
   printMessage,
   stopProgressIndicator,
 } from '../utils/Console';
-import { getTypedFilename, readFiles } from '../utils/ExportImportUtils';
+
+const { sortJson } = frodo.utils.json;
 
 const {
   unSubstituteEnvParams,
@@ -75,8 +76,9 @@ export async function listAllConfigEntities() {
  * Export an IDM configuration object.
  * @param {String} id the desired configuration object
  * @param {String} file optional export file
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportConfigEntity(id, file) {
+export async function exportConfigEntity(id, file, sort) {
   let fileName = file;
   if (!fileName) {
     fileName = getTypedFilename(`${id}`, 'idm');
@@ -84,7 +86,7 @@ export async function exportConfigEntity(id, file) {
   const configEntity = await readConfigEntity(id);
   fs.writeFile(
     getFilePath(fileName, true),
-    JSON.stringify(configEntity, null, 2),
+    JSON.stringify(sort ? sortJson(configEntity) : configEntity, null, 2),
     (err) => {
       if (err) {
         return printMessage(`ERROR - can't save ${id} export to file`, 'error');
@@ -96,8 +98,9 @@ export async function exportConfigEntity(id, file) {
 
 /**
  * Export all IDM configuration objects into separate JSON files in a directory specified by <directory>
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportAllRawConfigEntities() {
+export async function exportAllRawConfigEntities(sort: boolean) {
   try {
     const configurations = await readConfigEntities();
     createProgressIndicator(
@@ -158,7 +161,7 @@ export async function exportAllRawConfigEntities() {
       if (item != null) {
         fse.outputFile(
           getFilePath(`${item._id}.json`, true),
-          JSON.stringify(item, null, 2),
+          JSON.stringify(sort ? sortJson(item) : item, null, 2),
           (err) => {
             if (err) {
               return printMessage(
@@ -184,8 +187,9 @@ export async function exportAllRawConfigEntities() {
  * Export all IDM configuration objects
  * @param {String} entitiesFile JSON file that specifies the config entities to export/import
  * @param {String} envFile File that defines environment specific variables for replacement during configuration export/import
+ * @param {boolean} sort true to sort the json object alphabetically before writing it to the file, false otherwise. Default: false
  */
-export async function exportAllConfigEntities(entitiesFile, envFile) {
+export async function exportAllConfigEntities(entitiesFile, envFile, sort) {
   let entriesToExport = [];
   // read list of entities to export
   fs.readFile(entitiesFile, 'utf8', async (err, data) => {
@@ -213,7 +217,11 @@ export async function exportAllConfigEntities(entitiesFile, envFile) {
       const results = await Promise.all(entityPromises);
       for (const item of results) {
         if (item != null) {
-          let configEntityString = JSON.stringify(item, null, 2);
+          let configEntityString = JSON.stringify(
+            sort ? sortJson(item) : item,
+            null,
+            2
+          );
           envParams.each((key, value) => {
             configEntityString = replaceall(
               value,

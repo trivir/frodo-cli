@@ -49,12 +49,6 @@ program
   )
   .addOption(
     new Option(
-      '-j, --no-metadata',
-      'Does not include metadata in the export file.'
-    )
-  )
-  .addOption(
-    new Option(
       '-S, --sort',
       'Sorts exported .json file(s) in abc order by key.'
     )
@@ -73,7 +67,7 @@ program
       // export by id/name
       if (options.name && (await getTokens())) {
         verboseMessage(`Exporting object "${options.name}"...`);
-        exportConfigEntity(options.name, options.file);
+        exportConfigEntity(options.name, options.file, options.sort);
       }
       // require --directory -D for all-separate functions
       else if (options.allSeparate && !state.getDirectory()) {
@@ -98,7 +92,11 @@ program
             options.envFile
           } for variable replacement...`
         );
-        exportAllConfigEntities(options.entitiesFile, options.envFile);
+        exportAllConfigEntities(
+          options.entitiesFile,
+          options.envFile,
+          options.sort
+        );
         warnAboutOfflineConnectorServers();
       }
       // --all-separate -A without variable replacement
@@ -106,7 +104,7 @@ program
         verboseMessage(
           `Exporting all IDM configuration objects into separate files in ${state.getDirectory()}...`
         );
-        exportAllRawConfigEntities();
+        exportAllRawConfigEntities(options.sort);
         warnAboutOfflineConnectorServers();
       }
       // unrecognized combination of options or no options
