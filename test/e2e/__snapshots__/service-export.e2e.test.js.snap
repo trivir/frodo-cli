@@ -1067,11 +1067,10 @@ exports[`frodo service export "frodo service export --service-id policyconfigura
 }
 `;
 
-exports[`frodo service export "frodo service export -A --directory serviceExportTestDir4": should export all services to separate files in the directory serviceExportTestDir4 1`] = `""`;
+exports[`frodo service export "frodo service export -A --sort --no-metadata --directory serviceExportTestDir4": should export all services to separate files in the directory serviceExportTestDir4 1`] = `""`;
 
-exports[`frodo service export "frodo service export -A --directory serviceExportTestDir4": should export all services to separate files in the directory serviceExportTestDir4: serviceExportTestDir4/SocialIdentityProviders.service.json 1`] = `
+exports[`frodo service export "frodo service export -A --sort --no-metadata --directory serviceExportTestDir4": should export all services to separate files in the directory serviceExportTestDir4: serviceExportTestDir4/SocialIdentityProviders.service.json 1`] = `
 {
-  "meta": Any<Object>,
   "service": {
     "SocialIdentityProviders": {
       "_id": "",
@@ -1460,9 +1459,8 @@ exports[`frodo service export "frodo service export -A --directory serviceExport
 }
 `;
 
-exports[`frodo service export "frodo service export -A --directory serviceExportTestDir4": should export all services to separate files in the directory serviceExportTestDir4: serviceExportTestDir4/baseurl.service.json 1`] = `
+exports[`frodo service export "frodo service export -A --sort --no-metadata --directory serviceExportTestDir4": should export all services to separate files in the directory serviceExportTestDir4: serviceExportTestDir4/baseurl.service.json 1`] = `
 {
-  "meta": Any<Object>,
   "service": {
     "baseurl": {
       "_id": "",
@@ -1480,9 +1478,8 @@ exports[`frodo service export "frodo service export -A --directory serviceExport
 }
 `;
 
-exports[`frodo service export "frodo service export -A --directory serviceExportTestDir4": should export all services to separate files in the directory serviceExportTestDir4: serviceExportTestDir4/oauth-oidc.service.json 1`] = `
+exports[`frodo service export "frodo service export -A --sort --no-metadata --directory serviceExportTestDir4": should export all services to separate files in the directory serviceExportTestDir4: serviceExportTestDir4/oauth-oidc.service.json 1`] = `
 {
-  "meta": Any<Object>,
   "service": {
     "oauth-oidc": {
       "_id": "",
@@ -1902,9 +1899,8 @@ exports[`frodo service export "frodo service export -A --directory serviceExport
 }
 `;
 
-exports[`frodo service export "frodo service export -A --directory serviceExportTestDir4": should export all services to separate files in the directory serviceExportTestDir4: serviceExportTestDir4/policyconfiguration.service.json 1`] = `
+exports[`frodo service export "frodo service export -A --sort --no-metadata --directory serviceExportTestDir4": should export all services to separate files in the directory serviceExportTestDir4: serviceExportTestDir4/policyconfiguration.service.json 1`] = `
 {
-  "meta": Any<Object>,
   "service": {
     "policyconfiguration": {
       "_id": "",
@@ -1945,9 +1941,8 @@ exports[`frodo service export "frodo service export -A --directory serviceExport
 }
 `;
 
-exports[`frodo service export "frodo service export -A --directory serviceExportTestDir4": should export all services to separate files in the directory serviceExportTestDir4: serviceExportTestDir4/selfServiceTrees.service.json 1`] = `
+exports[`frodo service export "frodo service export -A --sort --no-metadata --directory serviceExportTestDir4": should export all services to separate files in the directory serviceExportTestDir4: serviceExportTestDir4/selfServiceTrees.service.json 1`] = `
 {
-  "meta": Any<Object>,
   "service": {
     "selfServiceTrees": {
       "_id": "",
@@ -1969,9 +1964,8 @@ exports[`frodo service export "frodo service export -A --directory serviceExport
 }
 `;
 
-exports[`frodo service export "frodo service export -A --directory serviceExportTestDir4": should export all services to separate files in the directory serviceExportTestDir4: serviceExportTestDir4/validation.service.json 1`] = `
+exports[`frodo service export "frodo service export -A --sort --no-metadata --directory serviceExportTestDir4": should export all services to separate files in the directory serviceExportTestDir4: serviceExportTestDir4/validation.service.json 1`] = `
 {
-  "meta": Any<Object>,
   "service": {
     "validation": {
       "_id": "",
@@ -2911,11 +2905,10 @@ exports[`frodo service export "frodo service export -A": should export all servi
 }
 `;
 
-exports[`frodo service export "frodo service export -a": should export all services to a single file 1`] = `""`;
+exports[`frodo service export "frodo service export -SNaD serviceExportTestDir3": should export all services to a single file in the directory serviceExportTestDir3 1`] = `""`;
 
-exports[`frodo service export "frodo service export -a": should export all services to a single file: ./allAlphaServices.service.json 1`] = `
+exports[`frodo service export "frodo service export -SNaD serviceExportTestDir3": should export all services to a single file in the directory serviceExportTestDir3: serviceExportTestDir3/allAlphaServices.service.json 1`] = `
 {
-  "meta": Any<Object>,
   "service": {
     "SocialIdentityProviders": {
       "_id": "",
@@ -3793,9 +3786,117 @@ exports[`frodo service export "frodo service export -a": should export all servi
 }
 `;
 
-exports[`frodo service export "frodo service export -aD serviceExportTestDir3": should export all services to a single file in the directory serviceExportTestDir3 1`] = `""`;
+exports[`frodo service export "frodo service export -SNgi dashboard -D serviceExportTestDir2": should export the global service with id "dashboard" to the directory serviceExportTestDir2 1`] = `""`;
 
-exports[`frodo service export "frodo service export -aD serviceExportTestDir3": should export all services to a single file in the directory serviceExportTestDir3: serviceExportTestDir3/allAlphaServices.service.json 1`] = `
+exports[`frodo service export "frodo service export -SNgi dashboard -D serviceExportTestDir2": should export the global service with id "dashboard" to the directory serviceExportTestDir2: serviceExportTestDir2/dashboard.service.json 1`] = `
+{
+  "service": {
+    "dashboard": {
+      "_id": "",
+      "_type": {
+        "_id": "dashboard",
+        "collection": false,
+        "name": "Dashboard",
+      },
+      "defaults": {
+        "assignedDashboard": [],
+      },
+      "nextDescendents": [
+        {
+          "_id": "Google",
+          "_type": {
+            "_id": "instances",
+            "collection": true,
+            "name": "instance",
+          },
+          "className": "SAML2ApplicationClass",
+          "displayName": "Google",
+          "icfIdentifier": "idm magic 34",
+          "icon": "images/logos/googleplus.png",
+          "login": "http://www.google.com",
+          "name": "Google",
+        },
+        {
+          "_id": "SalesForce",
+          "_type": {
+            "_id": "instances",
+            "collection": true,
+            "name": "instance",
+          },
+          "className": "SAML2ApplicationClass",
+          "displayName": "SalesForce",
+          "icfIdentifier": "idm magic 12",
+          "icon": "images/logos/salesforce.png",
+          "login": "http://www.salesforce.com",
+          "name": "SalesForce",
+        },
+        {
+          "_id": "ZenDesk",
+          "_type": {
+            "_id": "instances",
+            "collection": true,
+            "name": "instance",
+          },
+          "className": "SAML2ApplicationClass",
+          "displayName": "ZenDesk",
+          "icfIdentifier": "idm magic 56",
+          "icon": "images/logos/zendesk.png",
+          "login": "http://www.ZenDesk.com",
+          "name": "ZenDesk",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`frodo service export "frodo service export -SNi policyconfiguration -D serviceExportTestDir1": should export the service with id "policyconfiguration" to the directory serviceExportTestDir1 1`] = `""`;
+
+exports[`frodo service export "frodo service export -SNi policyconfiguration -D serviceExportTestDir1": should export the service with id "policyconfiguration" to the directory serviceExportTestDir1: serviceExportTestDir1/policyconfiguration.service.json 1`] = `
+{
+  "service": {
+    "policyconfiguration": {
+      "_id": "",
+      "_type": {
+        "_id": "policyconfiguration",
+        "collection": false,
+        "name": "Policy Configuration",
+      },
+      "bindDn": "&{am.stores.user.username}",
+      "bindPassword": {
+        "$string": "&{am.stores.user.password}",
+      },
+      "checkIfResourceTypeExists": true,
+      "connectionPoolMaximumSize": 10,
+      "connectionPoolMinimumSize": 1,
+      "ldapServer": [
+        "userstore-1.userstore:1389",
+        "userstore-0.userstore:1389",
+        "userstore-2.userstore:1389",
+      ],
+      "maximumSearchResults": 100,
+      "nextDescendents": [],
+      "policyHeartbeatInterval": 10,
+      "policyHeartbeatTimeUnit": "SECONDS",
+      "realmSearchFilter": "(objectclass=sunismanagedorganization)",
+      "searchTimeout": 5,
+      "sslEnabled": {
+        "$bool": "&{am.stores.ssl.enabled}",
+      },
+      "subjectsResultTTL": 10,
+      "userAliasEnabled": false,
+      "usersBaseDn": "ou=identities",
+      "usersSearchAttribute": "uid",
+      "usersSearchFilter": "(objectclass=inetorgperson)",
+      "usersSearchScope": "SCOPE_SUB",
+    },
+  },
+}
+`;
+
+exports[`frodo service export "frodo service export -a": should export all services to a single file 1`] = `""`;
+
+exports[`frodo service export "frodo service export -a": should export all services to a single file: ./allAlphaServices.service.json 1`] = `
 {
   "meta": Any<Object>,
   "service": {
@@ -4833,71 +4934,6 @@ exports[`frodo service export "frodo service export -ga": should export all glob
 }
 `;
 
-exports[`frodo service export "frodo service export -gi dashboard -D serviceExportTestDir2": should export the global service with id "dashboard" to the directory serviceExportTestDir2 1`] = `""`;
-
-exports[`frodo service export "frodo service export -gi dashboard -D serviceExportTestDir2": should export the global service with id "dashboard" to the directory serviceExportTestDir2: serviceExportTestDir2/dashboard.service.json 1`] = `
-{
-  "meta": Any<Object>,
-  "service": {
-    "dashboard": {
-      "_id": "",
-      "_type": {
-        "_id": "dashboard",
-        "collection": false,
-        "name": "Dashboard",
-      },
-      "defaults": {
-        "assignedDashboard": [],
-      },
-      "nextDescendents": [
-        {
-          "_id": "Google",
-          "_type": {
-            "_id": "instances",
-            "collection": true,
-            "name": "instance",
-          },
-          "className": "SAML2ApplicationClass",
-          "displayName": "Google",
-          "icfIdentifier": "idm magic 34",
-          "icon": "images/logos/googleplus.png",
-          "login": "http://www.google.com",
-          "name": "Google",
-        },
-        {
-          "_id": "SalesForce",
-          "_type": {
-            "_id": "instances",
-            "collection": true,
-            "name": "instance",
-          },
-          "className": "SAML2ApplicationClass",
-          "displayName": "SalesForce",
-          "icfIdentifier": "idm magic 12",
-          "icon": "images/logos/salesforce.png",
-          "login": "http://www.salesforce.com",
-          "name": "SalesForce",
-        },
-        {
-          "_id": "ZenDesk",
-          "_type": {
-            "_id": "instances",
-            "collection": true,
-            "name": "instance",
-          },
-          "className": "SAML2ApplicationClass",
-          "displayName": "ZenDesk",
-          "icfIdentifier": "idm magic 56",
-          "icon": "images/logos/zendesk.png",
-          "login": "http://www.ZenDesk.com",
-          "name": "ZenDesk",
-        },
-      ],
-    },
-  },
-}
-`;
-
 exports[`frodo service export "frodo service export -gi dashboard": should export the global service with id "dashboard" 1`] = `""`;
 
 exports[`frodo service export "frodo service export -gi dashboard": should export the global service with id "dashboard": ./dashboard.service.json 1`] = `
@@ -4958,51 +4994,6 @@ exports[`frodo service export "frodo service export -gi dashboard": should expor
           "name": "ZenDesk",
         },
       ],
-    },
-  },
-}
-`;
-
-exports[`frodo service export "frodo service export -i policyconfiguration -D serviceExportTestDir1": should export the service with id "policyconfiguration" to the directory serviceExportTestDir1 1`] = `""`;
-
-exports[`frodo service export "frodo service export -i policyconfiguration -D serviceExportTestDir1": should export the service with id "policyconfiguration" to the directory serviceExportTestDir1: serviceExportTestDir1/policyconfiguration.service.json 1`] = `
-{
-  "meta": Any<Object>,
-  "service": {
-    "policyconfiguration": {
-      "_id": "",
-      "_type": {
-        "_id": "policyconfiguration",
-        "collection": false,
-        "name": "Policy Configuration",
-      },
-      "bindDn": "&{am.stores.user.username}",
-      "bindPassword": {
-        "$string": "&{am.stores.user.password}",
-      },
-      "checkIfResourceTypeExists": true,
-      "connectionPoolMaximumSize": 10,
-      "connectionPoolMinimumSize": 1,
-      "ldapServer": [
-        "userstore-1.userstore:1389",
-        "userstore-0.userstore:1389",
-        "userstore-2.userstore:1389",
-      ],
-      "maximumSearchResults": 100,
-      "nextDescendents": [],
-      "policyHeartbeatInterval": 10,
-      "policyHeartbeatTimeUnit": "SECONDS",
-      "realmSearchFilter": "(objectclass=sunismanagedorganization)",
-      "searchTimeout": 5,
-      "sslEnabled": {
-        "$bool": "&{am.stores.ssl.enabled}",
-      },
-      "subjectsResultTTL": 10,
-      "userAliasEnabled": false,
-      "usersBaseDn": "ou=identities",
-      "usersSearchAttribute": "uid",
-      "usersSearchFilter": "(objectclass=inetorgperson)",
-      "usersSearchScope": "SCOPE_SUB",
     },
   },
 }

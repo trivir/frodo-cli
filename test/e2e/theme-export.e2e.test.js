@@ -49,15 +49,15 @@
 /*
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo theme export --theme-name 'Starter Theme'
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo theme export -n 'Starter Theme' -f my-Starter-Theme.theme.json
-FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo theme export -n 'Starter Theme' -D themeExportTestDir1
+FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo theme export -SNn 'Starter Theme' -D themeExportTestDir1
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo theme export --theme-id 86ce2f64-586d-44fe-8593-b12a85aac68d
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo theme export -i 86ce2f64-586d-44fe-8593-b12a85aac68d -f my-86ce2f64-586d-44fe-8593-b12a85aac68d.theme.json
-FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo theme export -i 86ce2f64-586d-44fe-8593-b12a85aac68d -D themeExportTestDir2
+FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo theme export -SNi 86ce2f64-586d-44fe-8593-b12a85aac68d -D themeExportTestDir2
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo theme export --all
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo theme export -a --file test.json
-FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo theme export -aD themeExportTestDir3
+FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo theme export -SNaD themeExportTestDir3
 FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo theme export -A
-FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo theme export --all-separate --directory themeExportTestDir4
+FRODO_MOCK=record FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo theme export --all-separate --sort --no-metadata --directory themeExportTestDir4
 */
 import { testExport } from './utils/TestUtils';
 import { connection as c } from './utils/TestConfig';
@@ -85,10 +85,10 @@ describe('frodo theme export', () => {
         await testExport(CMD, env, type, exportFile);
     });
 
-    test('"frodo theme export -n \'Starter Theme\' -D themeExportTestDir1": should export the theme named "Starter Theme" into a file in the directory themeExportTestDir1', async () => {
+    test('"frodo theme export -SNn \'Starter Theme\' -D themeExportTestDir1": should export the theme named "Starter Theme" into a file in the directory themeExportTestDir1', async () => {
         const exportDirectory = "themeExportTestDir1";
-        const CMD = `frodo theme export -n \'Starter Theme\' -D ${exportDirectory}`;
-        await testExport(CMD, env, type, undefined, exportDirectory);
+        const CMD = `frodo theme export -SNn \'Starter Theme\' -D ${exportDirectory}`;
+        await testExport(CMD, env, type, undefined, exportDirectory, false);
     });
 
     test('"frodo theme export --theme-id 86ce2f64-586d-44fe-8593-b12a85aac68d": should export the theme with id "86ce2f64-586d-44fe-8593-b12a85aac68d"', async () => {
@@ -103,10 +103,10 @@ describe('frodo theme export', () => {
         await testExport(CMD, env, type, exportFile);
     });
 
-    test('"frodo theme export -i 86ce2f64-586d-44fe-8593-b12a85aac68d -D themeExportTestDir2": should export the theme with id "86ce2f64-586d-44fe-8593-b12a85aac68d" into a file in the directory themeExportTestDir2', async () => {
+    test('"frodo theme export -SNi 86ce2f64-586d-44fe-8593-b12a85aac68d -D themeExportTestDir2": should export the theme with id "86ce2f64-586d-44fe-8593-b12a85aac68d" into a file in the directory themeExportTestDir2', async () => {
         const exportDirectory = "themeExportTestDir2";
-        const CMD = `frodo theme export -i 86ce2f64-586d-44fe-8593-b12a85aac68d -D ${exportDirectory}`;
-        await testExport(CMD, env, type, undefined, exportDirectory);
+        const CMD = `frodo theme export -SNi 86ce2f64-586d-44fe-8593-b12a85aac68d -D ${exportDirectory}`;
+        await testExport(CMD, env, type, undefined, exportDirectory, false);
     });
 
     test('"frodo theme export --all": should export all themes to a single file', async () => {
@@ -121,10 +121,10 @@ describe('frodo theme export', () => {
         await testExport(CMD, env, type, exportFile);
     });
 
-    test('"frodo theme export -aD themeExportTestDir3": should export all themes to a single file in the directory themeExportTestDir3', async () => {
+    test('"frodo theme export -SNaD themeExportTestDir3": should export all themes to a single file in the directory themeExportTestDir3', async () => {
         const exportDirectory = "themeExportTestDir3";
-        const CMD = `frodo theme export -aD ${exportDirectory}`;
-        await testExport(CMD, env, type, undefined, exportDirectory);
+        const CMD = `frodo theme export -SNaD ${exportDirectory}`;
+        await testExport(CMD, env, type, undefined, exportDirectory, false);
     });
 
     test('"frodo theme export -A": should export all themes to separate files', async () => {
@@ -132,9 +132,9 @@ describe('frodo theme export', () => {
         await testExport(CMD, env, type);
     });
 
-    test('"frodo theme export --all-separate --directory themeExportTestDir4": should export all themes to separate files in the directory themeExportTestDir4', async () => {
+    test('"frodo theme export --all-separate --sort --no-metadata --directory themeExportTestDir4": should export all themes to separate files in the directory themeExportTestDir4', async () => {
         const exportDirectory = "themeExportTestDir4";
-        const CMD = `frodo theme export --all-separate --directory ${exportDirectory}`;
-        await testExport(CMD, env, type, undefined, exportDirectory);
+        const CMD = `frodo theme export --all-separate --sort --no-metadata --directory ${exportDirectory}`;
+        await testExport(CMD, env, type, undefined, exportDirectory, false);
     });
 });

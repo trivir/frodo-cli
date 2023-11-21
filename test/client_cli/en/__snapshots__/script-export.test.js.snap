@@ -56,9 +56,12 @@ Options:
                                MFA (choices: "classic", "cloud", "forgeops")
   -n, --script-name <name>     Name of the script. If specified, -a and -A are
                                ignored.
+  -N, --no-metadata            Does not include metadata in the export file.
   --no-cache                   Disable token cache for this operation.
   -s, --script <script>        DEPRECATED! Use -n/--script-name instead. Name
                                of the script.
+  -S, --sort                   Sorts exported .json file(s) in abc order by
+                               key.
   --sa-id <sa-id>              Service account id.
   --sa-jwk-file <file>         File containing the JSON Web Key (JWK)
                                associated with the the service account.

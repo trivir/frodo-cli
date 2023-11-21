@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo idm export "frodo idm export --all-separate --directory testDir3 --entities-file test/e2e/env/testEntityFile.json --env-file test/e2e/env/testEnvFile.env": should export all idm config entities to separate files in the "testDir" directory according to the entity and env files 1`] = `""`;
+exports[`frodo idm export "frodo idm export --all-separate --sort --directory testDir3 --entities-file test/e2e/env/testEntityFile.json --env-file test/e2e/env/testEnvFile.env": should export all idm config entities to separate files in the "testDir" directory according to the entity and env files 1`] = `""`;
 
-exports[`frodo idm export "frodo idm export --all-separate --directory testDir3 --entities-file test/e2e/env/testEntityFile.json --env-file test/e2e/env/testEnvFile.env": should export all idm config entities to separate files in the "testDir" directory according to the entity and env files: testDir3/repo.ds.json 1`] = `
+exports[`frodo idm export "frodo idm export --all-separate --sort --directory testDir3 --entities-file test/e2e/env/testEntityFile.json --env-file test/e2e/env/testEnvFile.env": should export all idm config entities to separate files in the "testDir" directory according to the entity and env files: testDir3/repo.ds.json 1`] = `
 {
   "_id": "repo.ds",
   "commands": {
@@ -2158,7 +2158,7 @@ exports[`frodo idm export "frodo idm export --all-separate --directory testDir3 
 }
 `;
 
-exports[`frodo idm export "frodo idm export --all-separate --directory testDir3 --entities-file test/e2e/env/testEntityFile.json --env-file test/e2e/env/testEnvFile.env": should export all idm config entities to separate files in the "testDir" directory according to the entity and env files: testDir3/script.json 1`] = `
+exports[`frodo idm export "frodo idm export --all-separate --sort --directory testDir3 --entities-file test/e2e/env/testEntityFile.json --env-file test/e2e/env/testEnvFile.env": should export all idm config entities to separate files in the "testDir" directory according to the entity and env files: testDir3/script.json 1`] = `
 {
   "ECMAScript": {
     "#javascript.debug": "&{openidm.script.javascript.debug}",
@@ -16127,9 +16127,9 @@ exports[`frodo idm export "frodo idm export -AD testDir2 -E test/e2e/env/testEnt
 }
 `;
 
-exports[`frodo idm export "frodo idm export -N script -D testDir4": should export the idm config entity with idm id "script" into the directory testDir4 1`] = `""`;
+exports[`frodo idm export "frodo idm export -N script -f my-script.idm.json": should export the idm config entity with idm id "script" into file named my-script.idm.json 1`] = `""`;
 
-exports[`frodo idm export "frodo idm export -N script -D testDir4": should export the idm config entity with idm id "script" into the directory testDir4: testDir4/script.idm.json 1`] = `
+exports[`frodo idm export "frodo idm export -N script -f my-script.idm.json": should export the idm config entity with idm id "script" into file named my-script.idm.json: ./my-script.idm.json 1`] = `
 {
   "ECMAScript": {
     "#javascript.debug": "&{openidm.script.javascript.debug}",
@@ -16171,9 +16171,9 @@ exports[`frodo idm export "frodo idm export -N script -D testDir4": should expor
 }
 `;
 
-exports[`frodo idm export "frodo idm export -N script -f my-script.idm.json": should export the idm config entity with idm id "script" into file named my-script.idm.json 1`] = `""`;
+exports[`frodo idm export "frodo idm export -SN script -D testDir4": should export the idm config entity with idm id "script" into the directory testDir4 1`] = `""`;
 
-exports[`frodo idm export "frodo idm export -N script -f my-script.idm.json": should export the idm config entity with idm id "script" into file named my-script.idm.json: ./my-script.idm.json 1`] = `
+exports[`frodo idm export "frodo idm export -SN script -D testDir4": should export the idm config entity with idm id "script" into the directory testDir4: testDir4/script.idm.json 1`] = `
 {
   "ECMAScript": {
     "#javascript.debug": "&{openidm.script.javascript.debug}",
