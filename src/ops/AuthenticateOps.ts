@@ -1,5 +1,4 @@
-import { frodo, state } from '@rockcarver/frodo-lib';
-import { FrodoError } from '@rockcarver/frodo-lib/types/FrodoError';
+import { frodo, FrodoError, state } from '@rockcarver/frodo-lib';
 import {
   Callback,
   CallbackHandler,
