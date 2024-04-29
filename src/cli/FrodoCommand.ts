@@ -12,7 +12,7 @@ import {
   stopProgressIndicator,
   updateProgressIndicator,
   verboseMessage,
-} from '../utils/Console.js';
+} from '../utils/Console';
 
 const hostArgument = new Argument(
   '[host]',
