@@ -38,6 +38,7 @@
     "clean-esm": "rimraf esm",
     "transpile-esm": "babel --out-dir esm --extensions \".ts\" --source-maps --config-file ./babel.config.esm.json src",
     "resources-esm": "copyfiles -u 1 \"src/**/*.json\" esm",
+    "build:esbuild": "esbuild src/app.ts --bundle --outfile=dist/bundle.cjs --platform=node",
     "build:local": "tsc && npm run clean-esm && npm run transpile-esm && npm run resources-esm && npm run clean-cjs && npm run transpile-cjs && npm run resources-cjs",
     "clean-cjs": "rimraf cjs",
     "transpile-cjs": "babel --out-dir cjs --extensions \".ts\" --source-maps --config-file ./babel.config.cjs.json src && echo {\\\"type\\\": \\\"commonjs\\\"} > cjs/package.json",
