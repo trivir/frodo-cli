@@ -52,11 +52,15 @@ const agentTypeToFileIdMap = {
 /**
  * List agents
  * @param {boolean} [long=false] detailed list
+ * @param {boolean} global true to list global agents, false otherwise
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
-export async function listAgents(long: boolean = false): Promise<boolean> {
+export async function listAgents(
+  long: boolean = false,
+  global: boolean = false
+): Promise<boolean> {
   try {
-    const agents = await readAgents();
+    const agents = await readAgents(global);
     if (long) {
       const table = createTable(['Agent Id', 'Status', 'Agent Type']);
       for (const agent of agents) {
@@ -186,15 +190,17 @@ export async function listWebAgents(long: boolean = false): Promise<boolean> {
 /**
  * Export all agents to file
  * @param {string} file file name
+ * @param {boolean} global true to export global agents, false otherwise
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportAgentsToFile(
   file: string,
+  global: boolean = false,
   includeMeta: boolean = true
 ): Promise<boolean> {
   try {
-    const exportData = await exportAgents();
+    const exportData = await exportAgents(global);
     let fileName = getTypedFilename(
       `all${titleCase(getRealmName(state.getRealm()))}Agents`,
       'agent'
@@ -295,16 +301,18 @@ export async function exportWebAgentsToFile(
  * Export agent to file
  * @param {string} agentId agent id
  * @param {string} file file name
+ * @param {boolean} global true to export global agent, false otherwise
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportAgentToFile(
   agentId: string,
   file: string,
+  global: boolean = false,
   includeMeta: boolean = true
 ): Promise<boolean> {
   try {
-    const exportData = await exportAgent(agentId);
+    const exportData = await exportAgent(agentId, global);
     let fileName = getTypedFilename(
       agentId,
       agentTypeToFileIdMap[exportData.agents[agentId]._type._id]
@@ -412,14 +420,16 @@ export async function exportWebAgentToFile(
 
 /**
  * Export all agents to separate files
+ * @param {boolean} global true to export global agents, false otherwise
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportAgentsToFiles(
+  global: boolean = false,
   includeMeta: boolean = true
 ): Promise<boolean> {
   try {
-    const agents = await readAgents();
+    const agents = await readAgents(global);
     debugMessage(`exportAgentsToFiles: ${agents.length} agents`);
     for (const agent of agents) {
       const fileName = getTypedFilename(

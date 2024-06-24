@@ -1,9 +1,13 @@
+import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import { getTokens } from '../../ops/AuthenticateOps';
 import { exportAuthenticationSettingsToFile } from '../../ops/AuthenticationSettingsOps';
+import { assertDeploymentType } from '../../ops/utils/OpsUtils';
 import { verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
+
+const { CLASSIC_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
 export default function setup() {
   const program = new FrodoCommand('frodo authn export');
@@ -17,6 +21,9 @@ export default function setup() {
         'Does not include metadata in the export file.'
       )
     )
+    .addOption(
+      new Option('-g, --global', 'Export global authentication settings.')
+    )
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {
@@ -28,16 +35,22 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens()) {
-          verboseMessage('Exporting authentication settings to file...');
-          const outcome = exportAuthenticationSettingsToFile(
-            options.file,
-            options.metadata
-          );
-          if (!outcome) process.exitCode = 1;
-        } else {
+        // require classic deployment type when doing a global export
+        if (
+          !(await getTokens()) ||
+          (options.global && !assertDeploymentType(CLASSIC_DEPLOYMENT_TYPE_KEY))
+        ) {
+          program.help();
           process.exitCode = 1;
+          return;
         }
+        verboseMessage('Exporting authentication settings to file...');
+        const outcome = exportAuthenticationSettingsToFile(
+          options.file,
+          options.global,
+          options.metadata
+        );
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

@@ -20,11 +20,13 @@ const {
 /**
  * Export authentication settings to file
  * @param {string} file file name
+ * @param {boolean} global true to export global authentication settings, false otherwise
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportAuthenticationSettingsToFile(
   file: string,
+  global = false,
   includeMeta = true
 ): Promise<boolean> {
   let spinnerId: string;
@@ -45,7 +47,7 @@ export async function exportAuthenticationSettingsToFile(
       fileName = file;
     }
     const filePath = getFilePath(fileName, true);
-    const exportData = await _exportAuthenticationSettings();
+    const exportData = await _exportAuthenticationSettings(global);
     saveJsonToFile(exportData, filePath, includeMeta);
     stopProgressIndicator(
       spinnerId,
@@ -115,13 +117,15 @@ export async function importAuthenticationSettingsFromFile(
 /**
  * Describe authentication settings
  * @param {boolean} json JSON output
+ * @param {boolean} global true to describe global authentication settings, false otherwise
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function describeAuthenticationSettings(
-  json = false
+  json = false,
+  global = false
 ): Promise<boolean> {
   try {
-    const settings = await _readAuthenticationSettings();
+    const settings = await _readAuthenticationSettings(global);
     delete settings._id;
     delete settings._rev;
     delete settings._type;
