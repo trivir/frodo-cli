@@ -3,10 +3,15 @@ import { frodo } from '@rockcarver/frodo-lib';
 import {
   createKeyValueTable,
   createTable,
+  printError,
   printMessage,
 } from '../utils/Console';
 
-const { readRealms, readRealmByName, updateRealm } = frodo.realm;
+const { readRealm, readRealms, readRealmByName, exportRealms, updateRealm } =
+  frodo.realm;
+
+const { getTypedFilename, saveToFile, saveJsonToFile, getFilePath } =
+  frodo.utils;
 
 /**
  * List realms
@@ -43,6 +48,127 @@ export async function listRealms(long = false) {
     printMessage(`Error listing realms: ${error.message}`, 'error');
     printMessage(error.response?.data, 'error');
   }
+}
+
+/**
+ * Export realm to file by id
+ * @param {string} realmId realm id
+ * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
+export async function exportRealmById(
+  realmId: string,
+  file: string,
+  includeMeta: boolean = true
+): Promise<boolean> {
+  try {
+    const realm = await readRealm(realmId);
+    let fileName = getTypedFilename(realmId, `realm`);
+    if (file) {
+      fileName = file;
+    }
+    saveToFile(
+      'realm',
+      [realm],
+      '_id',
+      getFilePath(fileName, true),
+      includeMeta
+    );
+    return true;
+  } catch (error) {
+    printError(error, `Error exporting realm to file`);
+  }
+  return false;
+}
+
+/**
+ * Export realm to file by name
+ * @param {string} realmName realm name
+ * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
+export async function exportRealmByName(
+  realmName: string,
+  file: string,
+  includeMeta: boolean = true
+): Promise<boolean> {
+  try {
+    const realm = await readRealmByName(realmName);
+    let fileName = getTypedFilename(
+      !realmName || realmName === '/' ? 'root' : realmName,
+      `realm`
+    );
+    if (file) {
+      fileName = file;
+    }
+    saveToFile(
+      'realm',
+      [realm],
+      '_id',
+      getFilePath(fileName, true),
+      includeMeta
+    );
+    return true;
+  } catch (error) {
+    printError(error, `Error exporting realm to file`);
+  }
+  return false;
+}
+
+/**
+ * Export all realms to file
+ * @param {string} file file name
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
+export async function exportRealmsToFile(
+  file: string,
+  includeMeta: boolean = true
+): Promise<boolean> {
+  try {
+    const exportData = await exportRealms();
+    let fileName = getTypedFilename(`allRealms`, `realm`);
+    if (file) {
+      fileName = file;
+    }
+    saveJsonToFile(exportData, getFilePath(fileName, true), includeMeta);
+    return true;
+  } catch (error) {
+    printError(error, `Error exporting realms to file`);
+  }
+  return false;
+}
+
+/**
+ * Export all realms to separate files
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
+export async function exportRealmsToFiles(
+  includeMeta: boolean = true
+): Promise<boolean> {
+  try {
+    const realms = await readRealms();
+    for (const realm of realms) {
+      const fileName = getTypedFilename(
+        !realm.name || realm.name === '/' ? 'root' : realm.name,
+        'realm'
+      );
+      saveToFile(
+        'realm',
+        realm,
+        '_id',
+        getFilePath(fileName, true),
+        includeMeta
+      );
+    }
+    return true;
+  } catch (error) {
+    printError(error, `Error exporting realms to files`);
+  }
+  return false;
 }
 
 /**

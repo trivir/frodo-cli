@@ -105,6 +105,7 @@ export async function getFullExportConfigFromDirectory(
     managedApplication: {},
     policy: {},
     policyset: {},
+    realm: {},
     resourcetype: {},
     saml: {
       hosted: {},
