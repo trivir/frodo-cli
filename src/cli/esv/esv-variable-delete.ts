@@ -9,7 +9,7 @@ import { printMessage, verboseMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
 
 export default function setup() {
-  const program = new FrodoCommand('frodo cmd sub2 delete');
+  const program = new FrodoCommand('frodo esv variable delete');
 
   program
     .description('Delete variables.')

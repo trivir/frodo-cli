@@ -50,10 +50,7 @@ export async function exportEverythingToFile(
   try {
     const collectErrors: Error[] = [];
     const exportData = await exportFullConfiguration(options, collectErrors);
-    let fileName = getTypedFilename(
-      `${titleCase(getRealmName(state.getRealm()))}`,
-      `everything`
-    );
+    let fileName = 'everything.json';
     if (file) {
       fileName = file;
     }

@@ -114,7 +114,7 @@ export async function exportConfigEntity(
 export async function exportAllRawConfigEntities() {
   try {
     const exportedConfigurations = await exportConfigEntities();
-    for (const [id, value] of Object.entries(exportedConfigurations.config)) {
+    for (const [id, value] of Object.entries(exportedConfigurations.idm)) {
       if (value != null) {
         fse.outputFile(
           getFilePath(`${id}.json`, true),
@@ -301,7 +301,7 @@ export async function importAllRawConfigEntities(
       .map(({ content }) => JSON.parse(content))
       .map((entity) => [entity._id, entity]);
     const importData = {
-      config: Object.fromEntries(jsonObjects),
+      idm: Object.fromEntries(jsonObjects),
     };
 
     indicatorId = createProgressIndicator(
@@ -360,7 +360,7 @@ export async function importAllConfigEntities(
       .map((entity) => [entity._id, entity]);
 
     const importData = {
-      config: Object.fromEntries(jsonObjects),
+      idm: Object.fromEntries(jsonObjects),
     };
 
     indicatorId = createProgressIndicator(

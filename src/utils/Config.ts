@@ -61,7 +61,7 @@ export function getNoiseFilters(defaults: boolean): Array<string> {
  * Gets the full export config from one of three locations:
  * 1. The file passed into the function if one is provided.
  * 2. The working directory if it exists (provided by the user)
- * 3. The cloud tenant if the exports are not locally provided
+ * 3. From deployment (e.g. cloud) if the exports are not locally provided
  * @param file The optional file path
  * @returns The full export config
  */
