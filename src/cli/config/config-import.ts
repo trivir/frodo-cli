@@ -31,15 +31,6 @@ export default function setup() {
       new Option('-C, --clean', 'Remove existing service(s) before importing.')
     )
     .addOption(
-      new Option('-g, --global', 'Import service(s) as global service(s).')
-    )
-    .addOption(
-      new Option(
-        '-r, --current-realm',
-        'Import service(s) into the current realm.'
-      )
-    )
-    .addOption(
       new Option(
         '--re-uuid-journeys',
         'Generate new UUIDs for all journey nodes during import.'
@@ -81,8 +72,6 @@ export default function setup() {
             reUuidJourneys: options.reUuidJourneys,
             reUuidScripts: options.reUuidScripts,
             cleanServices: options.clean,
-            global: options.global,
-            realm: options.realm,
             includeDefault: options.default,
           });
           if (!outcome) process.exitCode = 1;
@@ -103,8 +92,6 @@ export default function setup() {
             reUuidJourneys: options.reUuidJourneys,
             reUuidScripts: options.reUuidScripts,
             cleanServices: options.clean,
-            global: options.global,
-            realm: options.realm,
             includeDefault: options.default,
           });
           if (!outcome) process.exitCode = 1;

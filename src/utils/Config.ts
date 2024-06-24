@@ -1,5 +1,12 @@
 import { frodo, FrodoError, state } from '@rockcarver/frodo-lib';
-import { FullExportInterface } from '@rockcarver/frodo-lib/types/ops/ConfigOps';
+import { AmConfigEntityInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
+import { ServerPropertiesSkeleton } from '@rockcarver/frodo-lib/types/api/ServerApi';
+import {
+  FullExportInterface,
+  FullGlobalExportInterface,
+  FullRealmExportInterface,
+} from '@rockcarver/frodo-lib/types/ops/ConfigOps';
+import { ServerExportSkeleton } from '@rockcarver/frodo-lib/types/ops/ServerOps';
 import fs from 'fs';
 import os from 'os';
 import slugify from 'slugify';
@@ -94,76 +101,198 @@ export async function getFullExportConfig(
 export async function getFullExportConfigFromDirectory(
   directory: string
 ): Promise<FullExportInterface> {
-  const fullExportConfig = {
+  const realms = fs.readdirSync(directory + '/realm');
+  const fullExportConfig: FullExportInterface = {
     meta: {},
-    agents: {},
-    application: {},
-    authentication: {},
-    config: {},
-    emailTemplate: {},
-    idp: {},
-    managedApplication: {},
-    policy: {},
-    policyset: {},
-    realm: {},
-    resourcetype: {},
-    saml: {
-      hosted: {},
-      remote: {},
-      metadata: {},
-      cot: {},
+    global: {
+      agents: {},
+      authentication: {},
+      other: {},
+      realm: {},
+      scripttype: {},
+      secretstore: {},
+      server: {},
+      service: {},
     },
-    script: {},
-    secrets: {},
-    service: {},
-    theme: {},
-    trees: {},
-    variables: {},
+    realm: Object.fromEntries(
+      realms.map((r) => [
+        r,
+        {
+          agents: {},
+          application: {},
+          authentication: {},
+          emailTemplate: {},
+          idp: {},
+          managedApplication: {},
+          node: {},
+          other: {},
+          policy: {},
+          policyset: {},
+          resourcetype: {},
+          saml: {
+            hosted: {},
+            remote: {},
+            metadata: {},
+            cot: {},
+          },
+          script: {},
+          secrets: {},
+          secretstore: {},
+          service: {},
+          theme: {},
+          trees: {},
+          user: {},
+          variables: {},
+        },
+      ])
+    ),
+    idm: {},
   } as FullExportInterface;
+  // Get global
+  await getConfigFromDirectory(directory + '/global', fullExportConfig.global);
+  // Get realms
+  for (const realm of realms) {
+    await getConfigFromDirectory(
+      directory + '/realm/' + realm,
+      fullExportConfig.realm[realm]
+    );
+  }
+  // Get idm
+  if (fs.existsSync(directory + '/idm')) {
+    const idmConfigFiles = (await readFiles(directory + '/idm'));
+    for (const f of idmConfigFiles) {
+      const content = JSON.parse(f.content);
+      fullExportConfig.idm[content._id] = content;
+    }
+  }
+  return fullExportConfig;
+}
+
+async function getConfigFromDirectory(
+  directory: string,
+  exportConfig: FullGlobalExportInterface | FullRealmExportInterface
+) {
+  const samlPath = `${directory}/saml/`;
+  const cotPath = `${directory}/cot/`;
+  const serverPath = `${directory}/server/`;
+  const otherPath = `${directory}/other/`;
+
   const files = await readFiles(directory);
   const jsonFiles = files.filter((f) => f.path.endsWith('.json'));
-  const idmConfigFiles = jsonFiles.filter((f) => f.path.startsWith('config/'));
   const samlFiles = jsonFiles.filter(
-    (f) => f.path.startsWith('saml/') || f.path.startsWith('cot/')
+    (f) => f.path.startsWith(samlPath) || f.path.startsWith(cotPath)
   );
-  const otherFiles = jsonFiles.filter(
+  const serverFiles = jsonFiles.filter((f) => f.path.startsWith(serverPath));
+  const otherFiles = jsonFiles.filter((f) => f.path.startsWith(otherPath));
+  const allOtherFiles = jsonFiles.filter(
     (f) =>
-      !f.path.startsWith('config/') &&
-      !f.path.startsWith('saml/') &&
-      !f.path.startsWith('cot/')
+      !f.path.startsWith(samlPath) &&
+      !f.path.startsWith(cotPath) &&
+      !f.path.startsWith(serverPath) &&
+      !f.path.startsWith(otherPath)
   );
   const scriptFiles = files.filter(
     (f) => f.path.endsWith('.js') || f.path.endsWith('.groovy')
   );
-  // Handle json files
-  for (const f of otherFiles) {
-    for (const [id, value] of Object.entries(JSON.parse(f.content))) {
-      if (value == null || fullExportConfig[id] == null) {
+  // Handle all other json files
+  for (const f of allOtherFiles) {
+    for (const [id, value] of Object.entries(
+      JSON.parse(f.content) as Record<string, Record<string, object>>
+    )) {
+      if (id === 'meta') {
         continue;
       }
-      Object.assign(fullExportConfig[id], value);
+      if (exportConfig[id] == null) {
+        exportConfig[id] = value;
+      } else {
+        Object.entries(value).forEach(([key, val]) => {
+          exportConfig[id][key] = val;
+        });
+      }
+    }
+  }
+  // Handle other json files
+  for (const f of otherFiles) {
+    for (const [id, value] of Object.entries(
+      JSON.parse(f.content) as Record<
+        string,
+        Record<string, AmConfigEntityInterface>
+      >
+    )) {
+      if (id === 'meta') {
+        continue;
+      }
+      if (exportConfig.other[id] == null) {
+        exportConfig.other[id] = value;
+      } else {
+        Object.entries(value).forEach(
+          ([key, val]) => (exportConfig.other[id][key] = val)
+        );
+      }
     }
   }
   // Handle saml files
   for (const f of samlFiles) {
     let content = JSON.parse(f.content);
     content = content.saml;
-    for (const [id, value] of Object.entries(content)) {
-      Object.assign(fullExportConfig.saml[id], value);
+    for (const [id, value] of Object.entries(
+      content as Record<string, object>
+    )) {
+      if ((exportConfig as FullRealmExportInterface).saml[id] == null) {
+        (exportConfig as FullRealmExportInterface).saml[id] = value;
+      } else {
+        Object.entries(value).forEach(
+          ([key, val]) =>
+            ((exportConfig as FullRealmExportInterface).saml[id][key] = val)
+        );
+      }
     }
   }
-  // Handle idm config files
-  for (const f of idmConfigFiles) {
+  // Handle server files
+  const serverProperties = new Map();
+  for (const f of serverFiles) {
     const content = JSON.parse(f.content);
-    fullExportConfig.config[content._id] = content;
+    if (f.path.endsWith('server.json')) {
+      for (const [id, value] of Object.entries(content.server)) {
+        (exportConfig as FullGlobalExportInterface).server[id] =
+          value as ServerExportSkeleton;
+      }
+    } else {
+      const id = f.path.substring(
+        serverPath.length,
+        f.path.indexOf('/', serverPath.length)
+      );
+      if (serverProperties.has(id)) {
+        serverProperties.get(id).push(content);
+      } else {
+        serverProperties.set(id, [content]);
+      }
+    }
+  }
+  for (const [id, properties] of serverProperties.entries()) {
+    if (!(exportConfig as FullGlobalExportInterface).server[id].properties) {
+      (exportConfig as FullGlobalExportInterface).server[id].properties =
+        {} as ServerPropertiesSkeleton;
+    }
+    for (const property of properties) {
+      const propertiesId = property._id;
+      (exportConfig as FullGlobalExportInterface).server[id].properties[
+        propertiesId.substring(propertiesId.lastIndexOf('/') + 1)
+      ] = property;
+    }
   }
   // Handle extracted scripts, adding them to their corresponding script objects in the export
-  if (scriptFiles.length > 0 && fullExportConfig.script != null) {
-    const scriptExports = Object.values(fullExportConfig.script);
+  if (
+    scriptFiles.length > 0 &&
+    (exportConfig as FullRealmExportInterface).script != null
+  ) {
+    const scriptExports = Object.values(
+      (exportConfig as FullRealmExportInterface).script
+    );
     for (const f of scriptFiles) {
       const name = f.path.substring(
         f.path.lastIndexOf('/') + 1,
-        f.path.indexOf('.', f.path.lastIndexOf('/'))
+        f.path.indexOf('.script.', f.path.lastIndexOf('/'))
       );
       const scriptLines = f.content.split('\n');
       const script = scriptExports.find(
@@ -180,7 +309,6 @@ export async function getFullExportConfigFromDirectory(
       script.script = scriptLines;
     }
   }
-  return fullExportConfig;
 }
 
 /**

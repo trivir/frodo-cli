@@ -19,14 +19,8 @@ import {
 } from '../utils/Console';
 import { extractScriptToFile } from './ScriptOps';
 
-const {
-  getRealmName,
-  getTypedFilename,
-  titleCase,
-  saveJsonToFile,
-  getFilePath,
-  getWorkingDirectory,
-} = frodo.utils;
+const { getTypedFilename, saveJsonToFile, getFilePath, getWorkingDirectory } =
+  frodo.utils;
 const { stringify } = frodo.utils.json;
 const { exportFullConfiguration, importFullConfiguration } = frodo.config;
 
@@ -91,127 +85,36 @@ export async function exportEverythingToFiles(
     delete exportData.meta;
     const baseDirectory = getWorkingDirectory(true);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Object.entries(exportData).forEach(([type, obj]: [string, any]) => {
-      if (obj) {
-        if (!fs.existsSync(`${baseDirectory}/${type}`)) {
-          fs.mkdirSync(`${baseDirectory}/${type}`);
-        }
-        if (type == 'saml') {
-          const samlData = {
-            saml: {
-              cot: {},
-              hosted: {},
-              metadata: {},
-              remote: {},
-            },
-          };
-          if (obj.cot) {
-            if (!fs.existsSync(`${baseDirectory}/cot`)) {
-              fs.mkdirSync(`${baseDirectory}/cot`);
-            }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            Object.entries(obj.cot).forEach(([id, value]: [string, any]) => {
-              samlData.saml.cot = {
-                [id]: value,
-              };
-              saveJsonToFile(
-                samlData,
-                `${baseDirectory}/cot/${getTypedFilename(id, 'cot.saml')}`,
-                includeMeta
-              );
-            });
-            samlData.saml.cot = {};
-          }
-          Object.entries(obj.hosted)
-            .concat(Object.entries(obj.remote))
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .forEach(([id, value]: [string, any]) => {
-              const filename = getTypedFilename(
-                value.entityId ? value.entityId : id,
-                type
-              );
-              const samlType = obj.hosted[id] ? 'hosted' : 'remote';
-              samlData.saml[samlType][id] = value;
-              samlData.saml.metadata = {
-                [id]: obj.metadata[id],
-              };
-              saveJsonToFile(
-                samlData,
-                `${baseDirectory}/${type}/${filename}`,
-                includeMeta
-              );
-              samlData.saml[samlType] = {};
-            });
-        } else if (type == 'authentication') {
-          const fileName = getTypedFilename(
-            `${frodo.utils.getRealmName(state.getRealm())}Realm`,
-            'authentication.settings'
-          );
-          saveJsonToFile(
-            {
-              authentication: obj,
-            },
-            `${baseDirectory}/${type}/${fileName}`,
-            includeMeta
-          );
-        } else {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          Object.entries(obj).forEach(([id, value]: [string, any]) => {
-            if (type == 'config') {
-              if (value != null) {
-                const filename = `${id}.json`;
-                if (filename.includes('/')) {
-                  fs.mkdirSync(
-                    `${baseDirectory}/${type}/${filename.slice(
-                      0,
-                      filename.lastIndexOf('/')
-                    )}`,
-                    {
-                      recursive: true,
-                    }
-                  );
-                }
-                fse.outputFile(
-                  `${baseDirectory}/${type}/${filename}`,
-                  stringify(value),
-                  (err) => {
-                    if (err) {
-                      return printMessage(
-                        `ERROR - can't save config ${id} to file - ${err}`,
-                        'error'
-                      );
-                    }
-                  }
-                );
-              }
-            } else {
-              const filename = getTypedFilename(
-                value && value.name && type !== 'emailTemplate'
-                  ? value.name
-                  : id,
-                type
-              );
-              if (extract && type == 'script') {
-                extractScriptToFile(
-                  exportData as ScriptExportInterface,
-                  id,
-                  type
-                );
-              }
-              saveJsonToFile(
-                {
-                  [type]: {
-                    [id]: value,
-                  },
-                },
-                `${baseDirectory}/${type}/${filename}`,
-                includeMeta
-              );
-            }
-          });
-        }
-      }
-    });
+    Object.entries(exportData.global).forEach(([type, obj]: [string, any]) =>
+      exportItem(
+        exportData.global,
+        type,
+        obj,
+        baseDirectory + '/global',
+        includeMeta,
+        extract
+      )
+    );
+    Object.entries(exportData.realm).forEach(([realm, data]: [string, any]) =>
+      Object.entries(data).forEach(([type, obj]: [string, any]) =>
+        exportItem(
+          data,
+          type,
+          obj,
+          baseDirectory + '/realm/' + realm,
+          includeMeta,
+          extract
+        )
+      )
+    );
+    exportItem(
+      exportData,
+      'idm',
+      exportData.idm,
+      baseDirectory,
+      includeMeta,
+      extract
+    );
     if (collectErrors.length > 0) {
       throw new FrodoError(`Errors occurred during full export`, collectErrors);
     }
@@ -234,8 +137,6 @@ export async function importEverythingFromFile(
     reUuidJourneys: false,
     reUuidScripts: false,
     cleanServices: false,
-    global: false,
-    realm: false,
     includeDefault: false,
   }
 ): Promise<boolean> {
@@ -266,8 +167,6 @@ export async function importEverythingFromFiles(
     reUuidJourneys: false,
     reUuidScripts: false,
     cleanServices: false,
-    global: false,
-    realm: false,
     includeDefault: false,
   }
 ): Promise<boolean> {
@@ -286,4 +185,196 @@ export async function importEverythingFromFiles(
     printError(error);
   }
   return false;
+}
+
+/**
+ * Export item
+ * @param {FullExportInterface} exportData the export data
+ * @param {string} type the type of export data
+ * @param {any} obj the export data for the given item
+ * @param {string} baseDirectory the baseDirectory to export to
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} extract Extracts the scripts from the exports into separate files if true
+ */
+function exportItem(
+  exportData,
+  type,
+  obj,
+  baseDirectory,
+  includeMeta,
+  extract,
+) {
+  if (!obj || !Object.keys(obj).length) {
+    return;
+  }
+  if (type == 'other') {
+    Object.entries(obj).forEach(([type2, obj2]: [string, any]) =>
+      exportItem(
+        obj,
+        type2,
+        obj2,
+        baseDirectory + '/other',
+        includeMeta,
+        extract
+      )
+    );
+    return;
+  }
+  if (!fs.existsSync(`${baseDirectory}/${type}`)) {
+    fs.mkdirSync(`${baseDirectory}/${type}`, {
+      recursive: true,
+    });
+  }
+  if (type == 'saml') {
+    const samlData = {
+      saml: {
+        cot: {},
+        hosted: {},
+        metadata: {},
+        remote: {},
+      },
+    };
+    if (obj.cot && Object.keys(obj.cot).length) {
+      if (!fs.existsSync(`${baseDirectory}/cot`)) {
+        fs.mkdirSync(`${baseDirectory}/cot`);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      Object.entries(obj.cot).forEach(([id, value]: [string, any]) => {
+        samlData.saml.cot = {
+          [id]: value,
+        };
+        saveJsonToFile(
+          samlData,
+          `${baseDirectory}/cot/${getTypedFilename(id, 'cot.saml')}`,
+          includeMeta
+        );
+      });
+      samlData.saml.cot = {};
+    }
+    Object.entries(obj.hosted)
+      .concat(Object.entries(obj.remote))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .forEach(([id, value]: [string, any]) => {
+        const filename = getTypedFilename(
+          value.entityId ? value.entityId : id,
+          type
+        );
+        const samlType = obj.hosted[id] ? 'hosted' : 'remote';
+        samlData.saml[samlType][id] = value;
+        samlData.saml.metadata = {
+          [id]: obj.metadata[id],
+        };
+        saveJsonToFile(
+          samlData,
+          `${baseDirectory}/${type}/${filename}`,
+          includeMeta
+        );
+        samlData.saml[samlType] = {};
+      });
+    if (!fs.readdirSync(`${baseDirectory}/${type}`).length) {
+      fs.rmdirSync(`${baseDirectory}/${type}`);
+    }
+  } else if (type == 'authentication') {
+    const fileName = getTypedFilename(
+      `${baseDirectory.substring(baseDirectory.lastIndexOf('/') + 1)}`,
+      'authentication.settings'
+    );
+    saveJsonToFile(
+      {
+        authentication: obj,
+      },
+      `${baseDirectory}/${type}/${fileName}`,
+      includeMeta
+    );
+  } else {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Object.entries(obj).forEach(([id, value]: [string, any]) => {
+      if (type == 'idm') {
+        if (value != null) {
+          const filename = `${id}.json`;
+          if (filename.includes('/')) {
+            fs.mkdirSync(
+              `${baseDirectory}/${type}/${filename.slice(
+                0,
+                filename.lastIndexOf('/')
+              )}`,
+              {
+                recursive: true,
+              }
+            );
+          }
+          fse.outputFile(
+            `${baseDirectory}/${type}/${filename}`,
+            stringify(value),
+            (err) => {
+              if (err) {
+                return printMessage(
+                  `ERROR - can't save config ${id} to file - ${err}`,
+                  'error'
+                );
+              }
+            }
+          );
+        }
+      } else if (type == 'server') {
+        if (value != null) {
+          const properties = value.properties;
+          delete value.properties;
+          //Save server export data
+          const fileName = getTypedFilename(id, type);
+          saveJsonToFile(
+            {
+              [type]: {
+                [id]: value,
+              },
+            },
+            `${baseDirectory}/${type}/${fileName}`,
+            includeMeta
+          );
+          //Save server properties separately in their own directories
+          if (!fs.existsSync(`${baseDirectory}/${type}/${id}`)) {
+            fs.mkdirSync(`${baseDirectory}/${type}/${id}`);
+          }
+          Object.entries(properties).forEach(([name, value]: [string, any]) => {
+            saveJsonToFile(
+              value,
+              `${baseDirectory}/${type}/${id}/${name}.json`,
+              false
+            );
+          });
+        }
+      } else {
+        let name =
+          value && value.name && type !== 'emailTemplate'
+            ? value.name
+            : undefined;
+        if (type === 'realm') {
+          if (!name || name === '/') {
+            name = 'root';
+          } else {
+            name = (value.parentPath.substring(1) + name).replaceAll('/', '-');
+          }
+        }
+        const filename = getTypedFilename(name ? name : id, type);
+        if (extract && type == 'script') {
+          extractScriptToFile(
+            exportData as ScriptExportInterface,
+            id,
+            baseDirectory.substring(getWorkingDirectory(false).length + 1) +
+              '/' +
+              type
+          );
+        }
+        saveJsonToFile(
+          {
+            [type]: {
+              [id]: value,
+            },
+          },
+          `${baseDirectory}/${type}/${filename}`,
+          includeMeta
+        );
+      }
+    });
+  }
 }
