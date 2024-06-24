@@ -1,3 +1,4 @@
+import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import * as s from '../../help/SampleData';
@@ -8,8 +9,12 @@ import {
   importFirstApplicationFromFile,
 } from '../../ops/ApplicationOps';
 import { getTokens } from '../../ops/AuthenticateOps';
+import { assertDeploymentType } from '../../ops/utils/OpsUtils';
 import { printMessage, verboseMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
+
+const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
+  frodo.utils.constants;
 
 export default function setup() {
   const program = new FrodoCommand('frodo app import');
@@ -74,8 +79,20 @@ export default function setup() {
           options,
           command
         );
+        // require platform deployment type
+        if (
+          !(await getTokens()) ||
+          !assertDeploymentType(
+            CLOUD_DEPLOYMENT_TYPE_KEY,
+            FORGEOPS_DEPLOYMENT_TYPE_KEY
+          )
+        ) {
+          program.help();
+          process.exitCode = 1;
+          return;
+        }
         // import by id
-        if (options.file && options.appId && (await getTokens())) {
+        if (options.file && options.appId) {
           verboseMessage(`Importing application "${options.appId}"...`);
           const outcome = await importApplicationFromFile(
             options.appId,
@@ -87,7 +104,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (options.all && options.file && (await getTokens())) {
+        else if (options.all && options.file) {
           verboseMessage(
             `Importing all applications from a single file (${options.file})...`
           );
@@ -97,7 +114,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (options.allSeparate && !options.file && (await getTokens())) {
+        else if (options.allSeparate && !options.file) {
           verboseMessage(
             'Importing all applications from separate files in current directory...'
           );
@@ -107,7 +124,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // import first provider from file
-        else if (options.file && (await getTokens())) {
+        else if (options.file) {
           verboseMessage(
             `Importing first application from file "${options.file}"...`
           );

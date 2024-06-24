@@ -1,4 +1,4 @@
-import { state } from '@rockcarver/frodo-lib';
+import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import { getTokens } from '../../ops/AuthenticateOps';
@@ -7,8 +7,12 @@ import {
   deleteThemeByName,
   deleteThemes,
 } from '../../ops/ThemeOps';
+import { assertDeploymentType } from '../../ops/utils/OpsUtils';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
+
+const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
+  frodo.utils.constants;
 
 export default function setup() {
   const program = new FrodoCommand('frodo theme delete');
@@ -44,8 +48,20 @@ export default function setup() {
           options,
           command
         );
+        // require platform deployment type
+        if (
+          !(await getTokens()) ||
+          !assertDeploymentType(
+            CLOUD_DEPLOYMENT_TYPE_KEY,
+            FORGEOPS_DEPLOYMENT_TYPE_KEY
+          )
+        ) {
+          program.help();
+          process.exitCode = 1;
+          return;
+        }
         // delete by name
-        if (options.themeName && (await getTokens())) {
+        if (options.themeName) {
           verboseMessage(
             `Deleting theme with name "${
               options.themeName
@@ -55,7 +71,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // delete by id
-        else if (options.themeId && (await getTokens())) {
+        else if (options.themeId) {
           verboseMessage(
             `Deleting theme with id "${
               options.themeId
@@ -65,7 +81,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage(
             `Deleting all themes from realm "${state.getRealm()}"...`
           );

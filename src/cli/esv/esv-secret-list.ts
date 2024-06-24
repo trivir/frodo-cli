@@ -1,9 +1,13 @@
+import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import { getTokens } from '../../ops/AuthenticateOps';
 import { listSecrets } from '../../ops/cloud/SecretsOps';
+import { assertDeploymentType } from '../../ops/utils/OpsUtils';
 import { verboseMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
+
+const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
 export default function setup() {
   const program = new FrodoCommand('frodo esv secret list');
@@ -39,17 +43,22 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens()) {
-          verboseMessage('Listing secrets...');
-          const outcome = await listSecrets(
-            options.long,
-            options.usage,
-            options.file
-          );
-          if (!outcome) process.exitCode = 1;
-        } else {
+        // require cloud deployment type
+        if (
+          !(await getTokens()) ||
+          !assertDeploymentType(CLOUD_DEPLOYMENT_TYPE_KEY)
+        ) {
+          program.help();
           process.exitCode = 1;
+          return;
         }
+        verboseMessage('Listing secrets...');
+        const outcome = await listSecrets(
+          options.long,
+          options.usage,
+          options.file
+        );
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

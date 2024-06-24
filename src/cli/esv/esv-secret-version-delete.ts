@@ -1,9 +1,13 @@
+import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import { getTokens } from '../../ops/AuthenticateOps';
 import { deleteVersionOfSecret } from '../../ops/cloud/SecretsOps';
+import { assertDeploymentType } from '../../ops/utils/OpsUtils';
 import { printMessage, verboseMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
+
+const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
 export default function setup() {
   const program = new FrodoCommand('frodo esv secret version delete');
@@ -31,8 +35,17 @@ export default function setup() {
           options,
           command
         );
+        // require cloud deployment type
+        if (
+          !(await getTokens()) ||
+          !assertDeploymentType(CLOUD_DEPLOYMENT_TYPE_KEY)
+        ) {
+          program.help();
+          process.exitCode = 1;
+          return;
+        }
         // delete by id
-        if (options.secretId && options.version && (await getTokens())) {
+        if (options.secretId && options.version) {
           verboseMessage(`Deleting version of secret...`);
           const outcome = await deleteVersionOfSecret(
             options.secretId,

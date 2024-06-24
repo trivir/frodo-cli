@@ -1,9 +1,13 @@
+import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import { getTokens } from '../../ops/AuthenticateOps';
 import { createSecret, createSecretFromFile } from '../../ops/cloud/SecretsOps';
+import { assertDeploymentType } from '../../ops/utils/OpsUtils';
 import { verboseMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
+
+const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
 export default function setup() {
   const program = new FrodoCommand('frodo esv secret create');
@@ -41,30 +45,35 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens()) {
-          verboseMessage('Creating secret...');
-          let outcome = null;
-          if (options.value) {
-            outcome = await createSecret(
-              options.secretId,
-              options.value,
-              options.description,
-              options.encoding,
-              options.useInPlaceholders
-            );
-          } else {
-            outcome = await createSecretFromFile(
-              options.secretId,
-              options.file,
-              options.description,
-              options.encoding,
-              options.useInPlaceholders
-            );
-          }
-          if (!outcome) process.exitCode = 1;
-        } else {
+        // require cloud deployment type
+        if (
+          !(await getTokens()) ||
+          !assertDeploymentType(CLOUD_DEPLOYMENT_TYPE_KEY)
+        ) {
+          program.help();
           process.exitCode = 1;
+          return;
         }
+        verboseMessage('Creating secret...');
+        let outcome = null;
+        if (options.value) {
+          outcome = await createSecret(
+            options.secretId,
+            options.value,
+            options.description,
+            options.encoding,
+            options.useInPlaceholders
+          );
+        } else {
+          outcome = await createSecretFromFile(
+            options.secretId,
+            options.file,
+            options.description,
+            options.encoding,
+            options.useInPlaceholders
+          );
+        }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

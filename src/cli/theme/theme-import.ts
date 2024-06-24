@@ -1,4 +1,4 @@
-import { state } from '@rockcarver/frodo-lib';
+import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import { getTokens } from '../../ops/AuthenticateOps';
@@ -9,8 +9,12 @@ import {
   importThemesFromFile,
   importThemesFromFiles,
 } from '../../ops/ThemeOps';
+import { assertDeploymentType } from '../../ops/utils/OpsUtils';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
+
+const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
+  frodo.utils.constants;
 
 export default function setup() {
   const program = new FrodoCommand('frodo theme import');
@@ -58,8 +62,20 @@ export default function setup() {
           options,
           command
         );
+        // require platform deployment type
+        if (
+          !(await getTokens()) ||
+          !assertDeploymentType(
+            CLOUD_DEPLOYMENT_TYPE_KEY,
+            FORGEOPS_DEPLOYMENT_TYPE_KEY
+          )
+        ) {
+          program.help();
+          process.exitCode = 1;
+          return;
+        }
         // import by name
-        if (options.file && options.themeName && (await getTokens())) {
+        if (options.file && options.themeName) {
           verboseMessage(
             `Importing theme with name "${
               options.themeName
@@ -72,7 +88,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // import by id
-        else if (options.file && options.themeId && (await getTokens())) {
+        else if (options.file && options.themeId) {
           verboseMessage(
             `Importing theme with id "${
               options.themeId
@@ -82,7 +98,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (options.all && options.file && (await getTokens())) {
+        else if (options.all && options.file) {
           verboseMessage(
             `Importing all themes from a single file (${options.file})...`
           );
@@ -90,7 +106,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (options.allSeparate && !options.file && (await getTokens())) {
+        else if (options.allSeparate && !options.file) {
           verboseMessage(
             'Importing all themes from separate files in current directory...'
           );
@@ -98,7 +114,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // import single theme from file
-        else if (options.file && (await getTokens())) {
+        else if (options.file) {
           verboseMessage(
             `Importing first theme from file "${
               options.file

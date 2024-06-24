@@ -1,3 +1,4 @@
+import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import { getTokens } from '../../ops/AuthenticateOps';
@@ -5,8 +6,11 @@ import {
   deleteVariableById,
   deleteVariables,
 } from '../../ops/cloud/VariablesOps';
+import { assertDeploymentType } from '../../ops/utils/OpsUtils';
 import { printMessage, verboseMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
+
+const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
 export default function setup() {
   const program = new FrodoCommand('frodo esv variable delete');
@@ -42,14 +46,23 @@ export default function setup() {
           options,
           command
         );
+        // require cloud deployment type
+        if (
+          !(await getTokens()) ||
+          !assertDeploymentType(CLOUD_DEPLOYMENT_TYPE_KEY)
+        ) {
+          program.help();
+          process.exitCode = 1;
+          return;
+        }
         // delete by id
-        if (options.variableId && (await getTokens())) {
+        if (options.variableId) {
           verboseMessage('Deleting variable...');
           const outcome = await deleteVariableById(options.variableId);
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Deleting all variables...');
           const outcome = await deleteVariables();
           if (!outcome) process.exitCode = 1;

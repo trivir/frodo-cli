@@ -1,3 +1,4 @@
+import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import * as s from '../../help/SampleData';
@@ -7,8 +8,12 @@ import {
   exportApplicationToFile,
 } from '../../ops/ApplicationOps';
 import { getTokens } from '../../ops/AuthenticateOps';
+import { assertDeploymentType } from '../../ops/utils/OpsUtils';
 import { verboseMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
+
+const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
+  frodo.utils.constants;
 
 export default function setup() {
   const program = new FrodoCommand('frodo app export');
@@ -73,8 +78,20 @@ export default function setup() {
           options,
           command
         );
+        // require platform deployment type
+        if (
+          !(await getTokens()) ||
+          !assertDeploymentType(
+            CLOUD_DEPLOYMENT_TYPE_KEY,
+            FORGEOPS_DEPLOYMENT_TYPE_KEY
+          )
+        ) {
+          program.help();
+          process.exitCode = 1;
+          return;
+        }
         // export
-        if (options.appId && (await getTokens())) {
+        if (options.appId) {
           verboseMessage('Exporting application...');
           const outcome = await exportApplicationToFile(
             options.appId,
@@ -88,7 +105,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // -a/--all
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Exporting all applications to file...');
           const outcome = await exportApplicationsToFile(
             options.file,
@@ -101,7 +118,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // -A/--all-separate
-        else if (options.allSeparate && (await getTokens())) {
+        else if (options.allSeparate) {
           verboseMessage('Exporting all applications to separate files...');
           const outcome = await exportApplicationsToFiles(options.metadata, {
             useStringArrays: true,

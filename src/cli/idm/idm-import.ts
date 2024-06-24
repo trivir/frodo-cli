@@ -1,4 +1,4 @@
-import { state } from '@rockcarver/frodo-lib';
+import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import { getTokens } from '../../ops/AuthenticateOps';
@@ -8,8 +8,12 @@ import {
   importConfigEntityByIdFromFile,
   importConfigEntityFromFile,
 } from '../../ops/IdmOps';
+import { assertDeploymentType } from '../../ops/utils/OpsUtils';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
+
+const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
+  frodo.utils.constants;
 
 export default function setup() {
   const program = new FrodoCommand('frodo idm import');
@@ -74,8 +78,20 @@ export default function setup() {
           options,
           command
         );
+        // require platform deployment type
+        if (
+          !(await getTokens()) ||
+          !assertDeploymentType(
+            CLOUD_DEPLOYMENT_TYPE_KEY,
+            FORGEOPS_DEPLOYMENT_TYPE_KEY
+          )
+        ) {
+          program.help();
+          process.exitCode = 1;
+          return;
+        }
         // import by id/name
-        if (options.name && (await getTokens())) {
+        if (options.name) {
           verboseMessage(`Importing object "${options.name}"...`);
           const outcome = await importConfigEntityByIdFromFile(
             options.name,
@@ -84,7 +100,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // import from file
-        else if (options.file && (await getTokens())) {
+        else if (options.file) {
           verboseMessage(`Importing object from file...`);
           const outcome = await importConfigEntityFromFile(options.file);
           if (!outcome) process.exitCode = 1;
@@ -119,7 +135,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A without variable replacement
-        else if (options.allSeparate && (await getTokens())) {
+        else if (options.allSeparate) {
           verboseMessage(
             `Importing all IDM configuration objects from separate files in ${state.getDirectory()}...`
           );

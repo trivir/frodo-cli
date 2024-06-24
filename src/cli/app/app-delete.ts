@@ -1,3 +1,4 @@
+import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import * as s from '../../help/SampleData';
@@ -6,8 +7,12 @@ import {
   deleteApplications,
 } from '../../ops/ApplicationOps';
 import { getTokens } from '../../ops/AuthenticateOps';
+import { assertDeploymentType } from '../../ops/utils/OpsUtils';
 import { verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
+
+const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
+  frodo.utils.constants;
 
 export default function setup() {
   const program = new FrodoCommand('frodo app delete');
@@ -51,14 +56,26 @@ export default function setup() {
           options,
           command
         );
+        // require platform deployment type
+        if (
+          !(await getTokens()) ||
+          !assertDeploymentType(
+            CLOUD_DEPLOYMENT_TYPE_KEY,
+            FORGEOPS_DEPLOYMENT_TYPE_KEY
+          )
+        ) {
+          program.help();
+          process.exitCode = 1;
+          return;
+        }
         // delete app by name
-        if (options.appId && (await getTokens())) {
+        if (options.appId) {
           verboseMessage('Deleting application...');
           const outcome = await deleteApplication(options.appId, options.deep);
           if (!outcome) process.exitCode = 1;
         }
         // -a/--all
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Deleting all applications...');
           const outcome = await deleteApplications(options.deep);
           if (!outcome) process.exitCode = 1;

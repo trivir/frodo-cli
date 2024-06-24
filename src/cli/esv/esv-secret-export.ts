@@ -1,4 +1,4 @@
-import { state } from '@rockcarver/frodo-lib';
+import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import { getTokens } from '../../ops/AuthenticateOps';
@@ -7,8 +7,11 @@ import {
   exportSecretsToFiles,
   exportSecretToFile,
 } from '../../ops/cloud/SecretsOps';
+import { assertDeploymentType } from '../../ops/utils/OpsUtils';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
+
+const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
 export default function setup() {
   const program = new FrodoCommand('frodo esv secret export');
@@ -51,7 +54,16 @@ export default function setup() {
           options,
           command
         );
-        if (options.secretId && (await getTokens())) {
+        // require cloud deployment type
+        if (
+          !(await getTokens()) ||
+          !assertDeploymentType(CLOUD_DEPLOYMENT_TYPE_KEY)
+        ) {
+          program.help();
+          process.exitCode = 1;
+          return;
+        }
+        if (options.secretId) {
           verboseMessage(
             `Exporting secret "${
               options.secretId
@@ -63,14 +75,14 @@ export default function setup() {
             options.metadata
           );
           if (!outcome) process.exitCode = 1;
-        } else if (options.all && (await getTokens())) {
+        } else if (options.all) {
           verboseMessage('Exporting all secrets to a single file...');
           const outcome = await exportSecretsToFile(
             options.file,
             options.metadata
           );
           if (!outcome) process.exitCode = 1;
-        } else if (options.allSeparate && (await getTokens())) {
+        } else if (options.allSeparate) {
           verboseMessage('Exporting all secrets to separate files...');
           const outcome = await exportSecretsToFiles(options.metadata);
           if (!outcome) process.exitCode = 1;

@@ -1,9 +1,13 @@
+import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import { getTokens } from '../../ops/AuthenticateOps';
 import { deleteSecret, deleteSecrets } from '../../ops/cloud/SecretsOps';
+import { assertDeploymentType } from '../../ops/utils/OpsUtils';
 import { printMessage, verboseMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
+
+const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
 export default function setup() {
   const program = new FrodoCommand('frodo esv secret delete');
@@ -30,14 +34,23 @@ export default function setup() {
           options,
           command
         );
+        // require cloud deployment type
+        if (
+          !(await getTokens()) ||
+          !assertDeploymentType(CLOUD_DEPLOYMENT_TYPE_KEY)
+        ) {
+          program.help();
+          process.exitCode = 1;
+          return;
+        }
         // delete by id
-        if (options.secretId && (await getTokens())) {
+        if (options.secretId) {
           verboseMessage('Deleting secret...');
           const outcome = await deleteSecret(options.secretId);
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Deleting all secrets...');
           const outcome = await deleteSecrets();
           if (!outcome) process.exitCode = 1;

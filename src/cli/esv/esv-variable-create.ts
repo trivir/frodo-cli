@@ -1,8 +1,13 @@
+import { frodo } from '@rockcarver/frodo-lib';
+
 import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { createVariable } from '../../ops/cloud/VariablesOps';
+import { assertDeploymentType } from '../../ops/utils/OpsUtils';
 import { verboseMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
+
+const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
 export default function setup() {
   const program = new FrodoCommand('frodo esv variable create');
@@ -52,18 +57,23 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens()) {
-          verboseMessage('Creating variable...');
-          const outcome = await createVariable(
-            options.variableId,
-            options.value,
-            options.description,
-            options.variableType
-          );
-          if (!outcome) process.exitCode = 1;
-        } else {
+        // require cloud deployment type
+        if (
+          !(await getTokens()) ||
+          !assertDeploymentType(CLOUD_DEPLOYMENT_TYPE_KEY)
+        ) {
+          program.help();
           process.exitCode = 1;
+          return;
         }
+        verboseMessage('Creating variable...');
+        const outcome = await createVariable(
+          options.variableId,
+          options.value,
+          options.description,
+          options.variableType
+        );
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

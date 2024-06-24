@@ -1,4 +1,4 @@
-import { state } from '@rockcarver/frodo-lib';
+import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import { getTokens } from '../../ops/AuthenticateOps';
@@ -8,8 +8,12 @@ import {
   exportThemesToFile,
   exportThemesToFiles,
 } from '../../ops/ThemeOps';
+import { assertDeploymentType } from '../../ops/utils/OpsUtils';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
+
+const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
+  frodo.utils.constants;
 
 export default function setup() {
   const program = new FrodoCommand('frodo theme export');
@@ -63,8 +67,20 @@ export default function setup() {
           options,
           command
         );
+        // require platform deployment type
+        if (
+          !(await getTokens()) ||
+          !assertDeploymentType(
+            CLOUD_DEPLOYMENT_TYPE_KEY,
+            FORGEOPS_DEPLOYMENT_TYPE_KEY
+          )
+        ) {
+          program.help();
+          process.exitCode = 1;
+          return;
+        }
         // export by name
-        if (options.themeName && (await getTokens())) {
+        if (options.themeName) {
           verboseMessage(
             `Exporting theme "${
               options.themeName
@@ -78,7 +94,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // export by id
-        else if (options.themeId && (await getTokens())) {
+        else if (options.themeId) {
           verboseMessage(
             `Exporting theme "${
               options.themeId
@@ -92,7 +108,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Exporting all themes to a single file...');
           const outcome = await exportThemesToFile(
             options.file,
@@ -101,7 +117,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (options.allSeparate && (await getTokens())) {
+        else if (options.allSeparate) {
           verboseMessage('Exporting all themes to separate files...');
           const outcome = await exportThemesToFiles(options.metadata);
           if (!outcome) process.exitCode = 1;

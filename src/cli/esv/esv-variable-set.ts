@@ -1,10 +1,15 @@
+import { frodo } from '@rockcarver/frodo-lib';
+
 import { getTokens } from '../../ops/AuthenticateOps';
 import {
   setVariableDescription,
   updateVariable,
 } from '../../ops/cloud/VariablesOps';
+import { assertDeploymentType } from '../../ops/utils/OpsUtils';
 import { printMessage, verboseMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
+
+const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
 export default function setup() {
   const program = new FrodoCommand('frodo esv variable set');
@@ -25,12 +30,16 @@ export default function setup() {
           options,
           command
         );
+        // require cloud deployment type
         if (
-          options.variableId &&
-          options.value &&
-          options.description &&
-          (await getTokens())
+          !(await getTokens()) ||
+          !assertDeploymentType(CLOUD_DEPLOYMENT_TYPE_KEY)
         ) {
+          program.help();
+          process.exitCode = 1;
+          return;
+        }
+        if (options.variableId && options.value && options.description) {
           verboseMessage('Updating variable...');
           const outcome = await updateVariable(
             options.variableId,
@@ -38,11 +47,7 @@ export default function setup() {
             options.description
           );
           if (!outcome) process.exitCode = 1;
-        } else if (
-          options.variableId &&
-          options.description &&
-          (await getTokens())
-        ) {
+        } else if (options.variableId && options.description) {
           verboseMessage('Updating variable...');
           const outcome = await setVariableDescription(
             options.variableId,

@@ -1,4 +1,4 @@
-import { state } from '@rockcarver/frodo-lib';
+import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import { getTokens } from '../../ops/AuthenticateOps';
@@ -8,8 +8,12 @@ import {
   exportConfigEntity,
   warnAboutOfflineConnectorServers,
 } from '../../ops/IdmOps';
+import { assertDeploymentType } from '../../ops/utils/OpsUtils';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
+
+const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
+  frodo.utils.constants;
 
 export default function setup() {
   const program = new FrodoCommand('frodo idm export');
@@ -58,8 +62,20 @@ export default function setup() {
           options,
           command
         );
+        // require platform deployment type
+        if (
+          !(await getTokens()) ||
+          !assertDeploymentType(
+            CLOUD_DEPLOYMENT_TYPE_KEY,
+            FORGEOPS_DEPLOYMENT_TYPE_KEY
+          )
+        ) {
+          program.help();
+          process.exitCode = 1;
+          return;
+        }
         // export by id/name
-        if (options.name && (await getTokens())) {
+        if (options.name) {
           verboseMessage(`Exporting object "${options.name}"...`);
           const outcome = await exportConfigEntity(options.name, options.file);
           if (!outcome) process.exitCode = 1;
@@ -95,7 +111,7 @@ export default function setup() {
           await warnAboutOfflineConnectorServers();
         }
         // --all-separate -A without variable replacement
-        else if (options.allSeparate && (await getTokens())) {
+        else if (options.allSeparate) {
           verboseMessage(
             `Exporting all IDM configuration objects into separate files in ${state.getDirectory()}...`
           );
