@@ -60,6 +60,12 @@ export default function setup() {
         'Export all scripts including the default scripts.'
       )
     )
+    .addOption(
+      new Option(
+        '-s, --separate-mappings',
+        'Export sync.json mappings separately in their own directory. Ignored with -a.'
+      )
+    )
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {
@@ -100,6 +106,7 @@ export default function setup() {
           verboseMessage('Exporting everything to separate files...');
           const outcome = await exportEverythingToFiles(
             options.extract,
+            options.separateMappings,
             options.metadata,
             {
               useStringArrays: options.useStringArrays,

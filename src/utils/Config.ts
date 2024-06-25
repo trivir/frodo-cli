@@ -159,10 +159,25 @@ export async function getFullExportConfigFromDirectory(
   }
   // Get idm
   if (fs.existsSync(directory + '/idm')) {
-    const idmConfigFiles = (await readFiles(directory + '/idm'));
+    //Sort to ensure that sync files are ordered correctly.
+    const idmConfigFiles = (await readFiles(directory + '/idm')).sort(
+      sortFilesComparator
+    );
+    const sync = {
+      _id: 'sync',
+      mappings: [],
+    };
+    const syncPath = `${directory}/idm/sync/`;
     for (const f of idmConfigFiles) {
       const content = JSON.parse(f.content);
-      fullExportConfig.idm[content._id] = content;
+      if (f.path.startsWith(syncPath)) {
+        sync.mappings.push(content);
+      } else {
+        fullExportConfig.idm[content._id] = content;
+      }
+    }
+    if (sync.mappings.length > 0) {
+      fullExportConfig.idm.sync = sync;
     }
   }
   return fullExportConfig;
@@ -375,4 +390,23 @@ function isIdUsedRecurse(
     used: type === 'string' && regex.test(configuration),
     location: '',
   };
+}
+
+/**
+ * Helper sorting comparator for files by their paths
+ * @param f1 First file
+ * @param f2 Second file
+ * @returns 0 if file paths are the same, otherwise -1 if f1 comes before f2, and 1 if f2 comes before f1.
+ */
+export function sortFilesComparator(
+  f1: { content: string; path: string },
+  f2: { content: string; path: string }
+): number {
+  if (f1.path < f2.path) {
+    return -1;
+  } else if (f1.path > f2.path) {
+    return 1;
+  } else {
+    return 0;
+  }
 }

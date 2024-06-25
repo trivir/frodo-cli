@@ -6,12 +6,14 @@ import path from 'path';
 import propertiesReader from 'properties-reader';
 import replaceall from 'replaceall';
 
+import { sortFilesComparator } from '../utils/Config';
 import {
   createProgressIndicator,
   printError,
   printMessage,
   stopProgressIndicator,
 } from '../utils/Console';
+import { writeSyncJsonToDirectory } from './MappingOps';
 
 const { stringify } = frodo.utils.json;
 
@@ -78,19 +80,28 @@ export async function listAllConfigEntities(): Promise<boolean> {
 /**
  * Export an IDM configuration object.
  * @param {string} id the desired configuration object
- * @param {string} file optional export file
+ * @param {string} file optional export file name (or directory name if exporting mappings separately)
+ * @param {boolean} separateMappings separate sync.json mappings if true (and id is "sync"), otherwise keep them in a single file
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function exportConfigEntity(
   id: string,
-  file: string
+  file: string,
+  separateMappings: boolean = false
 ): Promise<boolean> {
   try {
+    const configEntity = await readConfigEntity(id);
+    if (separateMappings && id === 'sync') {
+      writeSyncJsonToDirectory(
+        configEntity as { mappings: { name: string }[] },
+        file
+      );
+      return true;
+    }
     let fileName = file;
     if (!fileName) {
       fileName = getTypedFilename(`${id}`, 'idm');
     }
-    const configEntity = await readConfigEntity(id);
     fs.writeFile(
       getFilePath(fileName, true),
       stringify(configEntity),
@@ -109,13 +120,20 @@ export async function exportConfigEntity(
 
 /**
  * Export all IDM configuration objects into separate JSON files in a directory specified by <directory>
+ * @param {boolean} separateMappings separate sync.json mappings if true, otherwise keep them in a single file
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
-export async function exportAllRawConfigEntities() {
+export async function exportAllRawConfigEntities(
+  separateMappings: boolean = false
+) {
   try {
     const exportedConfigurations = await exportConfigEntities();
     for (const [id, value] of Object.entries(exportedConfigurations.idm)) {
       if (value != null) {
+        if (separateMappings && id === 'sync') {
+          writeSyncJsonToDirectory(value as { mappings: { name: string }[] });
+          continue;
+        }
         fse.outputFile(
           getFilePath(`${id}.json`, true),
           stringify(value),
@@ -138,11 +156,13 @@ export async function exportAllRawConfigEntities() {
  * Export all IDM configuration objects
  * @param {string} entitiesFile JSON file that specifies the config entities to export/import
  * @param {string} envFile File that defines environment specific variables for replacement during configuration export/import
+ * @param {boolean} separateMappings separate sync.json mappings if true, otherwise keep them in a single file
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function exportAllConfigEntities(
   entitiesFile: string,
-  envFile: string
+  envFile: string,
+  separateMappings: boolean = false
 ): Promise<boolean> {
   const errors: Error[] = [];
   try {
@@ -179,6 +199,10 @@ export async function exportAllConfigEntities(
               configEntityString
             );
           });
+          if (separateMappings && item._id === 'sync') {
+            writeSyncJsonToDirectory(JSON.parse(configEntityString));
+            continue;
+          }
           fse.outputFileSync(
             getFilePath(`${item._id}.json`, true),
             configEntityString
@@ -296,10 +320,32 @@ export async function importAllRawConfigEntities(
   const baseDirectory = getWorkingDirectory();
   try {
     const files = await readFiles(baseDirectory);
+    const syncPath = `${baseDirectory}/sync/`;
     const jsonObjects = files
-      .filter(({ path }) => path.toLowerCase().endsWith('.json'))
+      .filter(
+        ({ path }) =>
+          path.toLowerCase().endsWith('.json') && !path.startsWith(syncPath)
+      )
       .map(({ content }) => JSON.parse(content))
       .map((entity) => [entity._id, entity]);
+    const syncMappings = files
+      .filter(
+        ({ path }) =>
+          path.toLowerCase().endsWith('.json') && path.startsWith(syncPath)
+      )
+      //Sort to ensure that sync files are ordered correctly.
+      .sort(sortFilesComparator)
+      .map(({ content }) => JSON.parse(content));
+    if (syncMappings.length > 0) {
+      const sync = {
+        _id: 'sync',
+        mappings: [],
+      };
+      for (const mapping of syncMappings) {
+        sync.mappings.push(mapping);
+      }
+      jsonObjects.push(['sync', sync]);
+    }
     const importData = {
       idm: Object.fromEntries(jsonObjects),
     };
@@ -351,13 +397,39 @@ export async function importAllConfigEntities(
     const envReader = propertiesReader(envFile);
 
     const files = await readFiles(baseDirectory);
+    const syncPath = `${baseDirectory}/sync/`;
     const jsonObjects = files
-      .filter(({ path }) => path.toLowerCase().endsWith('.json'))
+      .filter(
+        ({ path }) =>
+          path.toLowerCase().endsWith('.json') && !path.startsWith(syncPath)
+      )
       .map(({ content }) =>
         JSON.parse(unSubstituteEnvParams(content, envReader))
       )
       .filter((entity) => entriesToImport.includes(entity._id))
       .map((entity) => [entity._id, entity]);
+    if (entriesToImport.includes('sync')) {
+      const syncMappings = files
+        .filter(
+          ({ path }) =>
+            path.toLowerCase().endsWith('.json') && path.startsWith(syncPath)
+        )
+        //Sort to ensure that sync files are ordered correctly.
+        .sort(sortFilesComparator)
+        .map(({ content }) =>
+          JSON.parse(unSubstituteEnvParams(content, envReader))
+        );
+      if (syncMappings.length > 0) {
+        const sync = {
+          _id: 'sync',
+          mappings: [],
+        };
+        for (const mapping of syncMappings) {
+          sync.mappings.push(mapping);
+        }
+        jsonObjects.push(['sync', sync]);
+      }
+    }
 
     const importData = {
       idm: Object.fromEntries(jsonObjects),

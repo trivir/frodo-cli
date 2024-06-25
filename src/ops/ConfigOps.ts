@@ -17,6 +17,7 @@ import {
   printError,
   printMessage,
 } from '../utils/Console';
+import { writeSyncJsonToDirectory } from './MappingOps';
 import { extractScriptToFile } from './ScriptOps';
 
 const { getTypedFilename, saveJsonToFile, getFilePath, getWorkingDirectory } =
@@ -62,12 +63,14 @@ export async function exportEverythingToFile(
 /**
  * Export everything to separate files
  * @param {boolean} extract Extracts the scripts from the exports into separate files if true
+ * @param {boolean} separateMappings separate sync.json mappings if true, otherwise keep them in a single file
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
  * @param {FullExportOptions} options export options
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function exportEverythingToFiles(
   extract: boolean = false,
+  separateMappings: boolean = false,
   includeMeta: boolean = true,
   options: FullExportOptions = {
     useStringArrays: true,
@@ -92,7 +95,8 @@ export async function exportEverythingToFiles(
         obj,
         baseDirectory + '/global',
         includeMeta,
-        extract
+        extract,
+        separateMappings
       )
     );
     Object.entries(exportData.realm).forEach(([realm, data]: [string, any]) =>
@@ -103,7 +107,8 @@ export async function exportEverythingToFiles(
           obj,
           baseDirectory + '/realm/' + realm,
           includeMeta,
-          extract
+          extract,
+          separateMappings
         )
       )
     );
@@ -113,7 +118,8 @@ export async function exportEverythingToFiles(
       exportData.idm,
       baseDirectory,
       includeMeta,
-      extract
+      extract,
+      separateMappings
     );
     if (collectErrors.length > 0) {
       throw new FrodoError(`Errors occurred during full export`, collectErrors);
@@ -195,6 +201,7 @@ export async function importEverythingFromFiles(
  * @param {string} baseDirectory the baseDirectory to export to
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
  * @param {boolean} extract Extracts the scripts from the exports into separate files if true
+ * @param {boolean} separateMappings separate sync.json mappings if true, otherwise keep them in a single file
  */
 function exportItem(
   exportData,
@@ -203,6 +210,7 @@ function exportItem(
   baseDirectory,
   includeMeta,
   extract,
+  separateMappings
 ) {
   if (!obj || !Object.keys(obj).length) {
     return;
@@ -215,7 +223,8 @@ function exportItem(
         obj2,
         baseDirectory + '/other',
         includeMeta,
-        extract
+        extract,
+        separateMappings
       )
     );
     return;
@@ -291,30 +300,37 @@ function exportItem(
     Object.entries(obj).forEach(([id, value]: [string, any]) => {
       if (type == 'idm') {
         if (value != null) {
-          const filename = `${id}.json`;
-          if (filename.includes('/')) {
-            fs.mkdirSync(
-              `${baseDirectory}/${type}/${filename.slice(
-                0,
-                filename.lastIndexOf('/')
-              )}`,
-              {
-                recursive: true,
+          if (separateMappings && id === 'sync') {
+            const currentDirectory = state.getDirectory();
+            state.setDirectory(`${baseDirectory}/${type}`);
+            writeSyncJsonToDirectory(value as { mappings: { name: string }[] });
+            state.setDirectory(currentDirectory);
+          } else {
+            const filename = `${id}.json`;
+            if (filename.includes('/')) {
+              fs.mkdirSync(
+                `${baseDirectory}/${type}/${filename.slice(
+                  0,
+                  filename.lastIndexOf('/')
+                )}`,
+                {
+                  recursive: true,
+                }
+              );
+            }
+            fse.outputFile(
+              `${baseDirectory}/${type}/${filename}`,
+              stringify(value),
+              (err) => {
+                if (err) {
+                  return printMessage(
+                    `ERROR - can't save config ${id} to file - ${err}`,
+                    'error'
+                  );
+                }
               }
             );
           }
-          fse.outputFile(
-            `${baseDirectory}/${type}/${filename}`,
-            stringify(value),
-            (err) => {
-              if (err) {
-                return printMessage(
-                  `ERROR - can't save config ${id} to file - ${err}`,
-                  'error'
-                );
-              }
-            }
-          );
         }
       } else if (type == 'server') {
         if (value != null) {

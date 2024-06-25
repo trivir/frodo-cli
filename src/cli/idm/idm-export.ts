@@ -26,7 +26,12 @@ export default function setup() {
         'Config entity name. E.g. "managed", "sync", "provisioner-<connector-name>", etc.'
       )
     )
-    .addOption(new Option('-f, --file [file]', 'Export file. Ignored with -A.'))
+    .addOption(
+      new Option(
+        '-f, --file [file]',
+        'Export file (or directory name if exporting mappings separately). Ignored with -A.'
+      )
+    )
     .addOption(
       new Option(
         '-E, --entities-file [entities-file]',
@@ -49,6 +54,12 @@ export default function setup() {
       new Option(
         '-A, --all-separate',
         'Export all IDM configuration objects into separate JSON files in directory -D. Ignored with -N, and -a.'
+      )
+    )
+    .addOption(
+      new Option(
+        '-s, --separate-mappings',
+        'Export sync.json mappings separately in their own directory.'
       )
     )
     .action(
@@ -77,7 +88,11 @@ export default function setup() {
         // export by id/name
         if (options.name) {
           verboseMessage(`Exporting object "${options.name}"...`);
-          const outcome = await exportConfigEntity(options.name, options.file);
+          const outcome = await exportConfigEntity(
+            options.name,
+            options.file,
+            options.separateMappings
+          );
           if (!outcome) process.exitCode = 1;
         }
         // require --directory -D for all-separate functions
@@ -105,7 +120,8 @@ export default function setup() {
           );
           const outcome = await exportAllConfigEntities(
             options.entitiesFile,
-            options.envFile
+            options.envFile,
+            options.separateMappings
           );
           if (!outcome) process.exitCode = 1;
           await warnAboutOfflineConnectorServers();
@@ -115,7 +131,9 @@ export default function setup() {
           verboseMessage(
             `Exporting all IDM configuration objects into separate files in ${state.getDirectory()}...`
           );
-          const outcome = await exportAllRawConfigEntities();
+          const outcome = await exportAllRawConfigEntities(
+            options.separateMappings
+          );
           if (!outcome) process.exitCode = 1;
           await warnAboutOfflineConnectorServers();
         }
