@@ -31,6 +31,7 @@ import {
   printMessage,
   verboseMessage,
 } from './utils/Console';
+import { setupPolly } from './utils/SetupPolly';
 import { getVersions } from './utils/Version';
 
 const { initConnectionProfiles } = frodo.conn;
@@ -38,6 +39,10 @@ const { initTokenCache } = frodo.cache;
 
 (async () => {
   try {
+    // setup polly if running tests
+    if (process.env.FRODO_MOCK) {
+      setupPolly();
+    }
     // override default library output handlers with our own
     state.setPrintHandler(printMessage);
     state.setErrorHandler(printError);
