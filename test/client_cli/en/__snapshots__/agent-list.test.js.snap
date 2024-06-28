@@ -26,6 +26,7 @@ Options:
                                specified, may or may not produce additional
                                output helpful for troubleshooting.
   --flush-cache                Flush token cache.
+  -g, --global                 List global agents.
   -h, --help                   Help
   -k, --insecure               Allow insecure connections when using SSL/TLS.
                                Has no effect when using a network proxy for
@@ -57,7 +58,7 @@ Options:
                                specified, may or may not produce additional
                                output.
 
-Evironment Variables:
+Environment Variables:
   FRODO_HOST: Access Management base URL. Overrides 'host' argument.
   FRODO_REALM: Realm. Overrides 'realm' argument.
   FRODO_USERNAME: Username. Overrides 'username' argument.

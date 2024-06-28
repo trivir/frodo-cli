@@ -32,6 +32,7 @@ Options:
                                output helpful for troubleshooting.
   -f, --file <file>            Name of the export file.
   --flush-cache                Flush token cache.
+  -g, --global                 Export global agents.
   -h, --help                   Help
   -i, --agent-id <agent-id>    Agent id. If specified, -a and -A are ignored.
   -k, --insecure               Allow insecure connections when using SSL/TLS.
@@ -64,7 +65,7 @@ Options:
                                specified, may or may not produce additional
                                output.
 
-Evironment Variables:
+Environment Variables:
   FRODO_HOST: Access Management base URL. Overrides 'host' argument.
   FRODO_REALM: Realm. Overrides 'realm' argument.
   FRODO_USERNAME: Username. Overrides 'username' argument.
