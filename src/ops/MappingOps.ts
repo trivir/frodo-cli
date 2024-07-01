@@ -3,6 +3,7 @@ import {
   MappingExportInterface,
   MappingExportOptions,
   MappingImportOptions,
+  SyncSkeleton,
 } from '@rockcarver/frodo-lib/types/ops/MappingOps';
 import fs from 'fs';
 
@@ -24,9 +25,9 @@ const {
   getRealmName,
   getWorkingDirectory,
   titleCase,
+  unSubstituteEnvParams,
+  readFiles,
 } = frodo.utils;
-
-const { stringify } = frodo.utils.json;
 
 const {
   createMapping,
@@ -37,6 +38,7 @@ const {
   exportMappings,
   importMapping,
   importMappings,
+  isLegacyMapping,
 } = frodo.idm.mapping;
 
 /**
@@ -63,7 +65,9 @@ export async function listMappings(long: boolean = false): Promise<boolean> {
           mapping.source,
           mapping.target,
           mapping.consentRequired ? 'yes'['brightGreen'] : 'no'['brightRed'],
-          isSyncMapping(mapping._id) ? 'yes'['brightGreen'] : 'no'['brightRed'],
+          isLegacyMapping(mapping._id)
+            ? 'yes'['brightGreen']
+            : 'no'['brightRed'],
         ]);
       }
       printMessage(table.toString(), 'data');
@@ -98,7 +102,10 @@ export async function exportMappingToFile(
 ): Promise<boolean> {
   try {
     const exportData = await exportMapping(mappingId, options);
-    let fileName = getTypedFilename(getMappingNameFromId(mappingId), 'mapping');
+    let fileName = getTypedFilename(
+      getMappingNameFromId(mappingId),
+      getMappingTypeFromId(mappingId)
+    );
     if (file) {
       fileName = file;
     }
@@ -158,15 +165,19 @@ export async function exportMappingsToFiles(
   try {
     const exportData = await exportMappings(options);
     for (const mapping of Object.values(exportData.mapping)) {
-      const fileName = getTypedFilename(mapping.name, 'mapping');
+      const fileName = getTypedFilename(
+        mapping.name,
+        getMappingTypeFromId(mapping._id)
+      );
       saveToFile(
-        'mapping',
+        getMappingTypeFromId(mapping._id),
         mapping,
         '_id',
-        getFilePath(fileName, true),
+        getFilePath('mapping/' + fileName, true),
         includeMeta
       );
     }
+    writeSyncJsonToDirectory(exportData.sync);
     return true;
   } catch (error) {
     printError(error, `Error exporting mappings to files`);
@@ -245,33 +256,29 @@ export async function importMappingsFromFile(
 export async function importMappingsFromFiles(
   options: MappingImportOptions = { deps: true }
 ): Promise<boolean> {
-  const errors: Error[] = [];
   try {
-    const names = fs.readdirSync(getWorkingDirectory());
-    const mappingFiles = names.filter(
-      (name) =>
-        name.toLowerCase().endsWith('mapping.json') ||
-        name.toLowerCase().endsWith('sync.json')
+    const workingDirectory = getWorkingDirectory();
+    const allMappingFiles = (await readFiles(workingDirectory)).filter(
+      (f) =>
+        f.path.toLowerCase().endsWith('mapping.json') ||
+        f.path.toLowerCase().endsWith('sync.json')
     );
-    for (const file of mappingFiles) {
-      try {
-        await importMappingsFromFile(file, options);
-      } catch (error) {
-        errors.push(
-          new FrodoError(`Error importing mappings from ${file}`, error)
-        );
-      }
-    }
-    if (errors.length > 0) {
-      throw new FrodoError(`One or more errors importing mappings`, errors);
-    }
+    const mapping = Object.fromEntries(
+      allMappingFiles
+        .filter((f) => f.path.toLowerCase().endsWith('mapping.json'))
+        .map((f) => JSON.parse(f.content))
+        .map((m) => [m._id, m])
+    );
+    await importMappings(
+      {
+        mapping,
+        sync: getLegacyMappingsFromFiles(allMappingFiles),
+      },
+      options
+    );
     return true;
   } catch (error) {
-    if (errors.length > 0) {
-      printError(error);
-    } else {
-      printError(error, `Error importing mappings from files`);
-    }
+    printError(error, `Error importing mappings from files`);
   }
   return false;
 }
@@ -443,47 +450,67 @@ export async function renameMappings(
  * @param directory The directory to save the mappings
  */
 export function writeSyncJsonToDirectory(
-  sync: {
-    mappings: {
-      name: string;
-    }[];
-  },
+  sync: SyncSkeleton,
   directory?: string
 ) {
   let directoryName = 'sync';
   if (directory) {
     directoryName = directory;
   }
-  const currentDirectory = state.getDirectory();
-  state.setDirectory(
-    (state.getDirectory() ? state.getDirectory() : '.') + '/' + directoryName
-  );
-  let position = 0;
+  const mappingPaths = [];
   for (const mapping of sync.mappings) {
-    //Save the mapping with its position since order matters for sync mappings.
-    fs.writeFile(
-      getFilePath(
-        getTypedFilename(`${++position}.${mapping.name}`, 'sync'),
-        true
-      ),
-      stringify(mapping),
-      (err) => {
-        if (err) {
-          printError(err, `Error exporting mapping ${mapping.name}`);
+    const filePath = getFilePath(
+      `${directoryName}/${getTypedFilename(mapping.name, 'sync')}`,
+      true
+    );
+    mappingPaths.push(`file://${filePath}`);
+    saveJsonToFile(mapping, filePath, false);
+  }
+  sync.mappings = mappingPaths;
+  saveJsonToFile(sync, getFilePath(`${directoryName}/sync.json`, true));
+}
+
+export function getLegacyMappingsFromFiles(files, envReader?) {
+  const syncFiles = files.filter((f) => f.path.endsWith('/sync.json'));
+  if (syncFiles.length > 1) {
+    throw new FrodoError('Multiple sync.json files found in idm directory');
+  }
+  const sync = {
+    _id: 'sync',
+    mappings: [],
+  };
+  if (syncFiles.length === 1) {
+    const syncData = JSON.parse(
+      envReader
+        ? unSubstituteEnvParams(syncFiles[0].content, envReader)
+        : syncFiles[0].content
+    );
+    if (syncData.mappings) {
+      for (const mapping of syncData.mappings) {
+        if (typeof mapping === 'string') {
+          const path = mapping.replace('file://', '');
+          const content = fs.readFileSync(path, 'utf8');
+          sync.mappings.push(
+            JSON.parse(
+              envReader ? unSubstituteEnvParams(content, envReader) : content
+            )
+          );
+        } else {
+          sync.mappings.push(mapping);
         }
       }
-    );
+    }
   }
-  state.setDirectory(currentDirectory);
+  return sync;
 }
 
 /**
- * Helper that returns a boolean indicating whether the mapping is a sync mapping or not given the id
+ * Helper that gets a mapping's type (either 'sync' or 'mapping') from it's id
  * @param {string} mappingId the mapping id
- * @returns {boolean} true if the mapping is a sync mapping (i.e. does not start with 'mapping/'), false otherwise
+ * @returns {string} the mapping type
  */
-function isSyncMapping(mappingId: string): boolean {
-  return !mappingId || !mappingId.startsWith('mapping/');
+export function getMappingTypeFromId(mappingId: string): string {
+  return isLegacyMapping(mappingId) ? 'sync' : 'mapping';
 }
 
 /**
@@ -491,7 +518,7 @@ function isSyncMapping(mappingId: string): boolean {
  * @param {string} mappingId the mapping id
  * @returns {string} the mapping name
  */
-function getMappingNameFromId(mappingId: string): string | undefined {
+export function getMappingNameFromId(mappingId: string): string | undefined {
   if (!mappingId) {
     return undefined;
   }

@@ -4,25 +4,20 @@ import {
   FullExportOptions,
   FullImportOptions,
 } from '@rockcarver/frodo-lib/types/ops/ConfigOps';
+import { SyncSkeleton } from '@rockcarver/frodo-lib/types/ops/MappingOps';
 import { ScriptExportInterface } from '@rockcarver/frodo-lib/types/ops/ScriptOps';
 import fs from 'fs';
-import fse from 'fs-extra';
 
 import {
   getFullExportConfig,
   getFullExportConfigFromDirectory,
 } from '../utils/Config';
-import {
-  cleanupProgressIndicators,
-  printError,
-  printMessage,
-} from '../utils/Console';
+import { cleanupProgressIndicators, printError } from '../utils/Console';
 import { writeSyncJsonToDirectory } from './MappingOps';
 import { extractScriptToFile } from './ScriptOps';
 
 const { getTypedFilename, saveJsonToFile, getFilePath, getWorkingDirectory } =
   frodo.utils;
-const { stringify } = frodo.utils.json;
 const { exportFullConfiguration, importFullConfiguration } = frodo.config;
 
 /**
@@ -301,10 +296,7 @@ function exportItem(
       if (type == 'idm') {
         if (value != null) {
           if (separateMappings && id === 'sync') {
-            const currentDirectory = state.getDirectory();
-            state.setDirectory(`${baseDirectory}/${type}`);
-            writeSyncJsonToDirectory(value as { mappings: { name: string }[] });
-            state.setDirectory(currentDirectory);
+            writeSyncJsonToDirectory(value as SyncSkeleton, `${type}/sync`);
           } else {
             const filename = `${id}.json`;
             if (filename.includes('/')) {
@@ -318,17 +310,10 @@ function exportItem(
                 }
               );
             }
-            fse.outputFile(
+            saveJsonToFile(
+              value,
               `${baseDirectory}/${type}/${filename}`,
-              stringify(value),
-              (err) => {
-                if (err) {
-                  return printMessage(
-                    `ERROR - can't save config ${id} to file - ${err}`,
-                    'error'
-                  );
-                }
-              }
+              false
             );
           }
         }
