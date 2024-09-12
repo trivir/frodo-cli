@@ -48,7 +48,7 @@
   "jest": {
     "testTimeout": 30000,
     "testMatch": [
-      "**/?(*.)(test).js"
+      "**/?(*.)(test).ts"
     ],
     "globalSetup": "./global-jest-setup.js"
   },
@@ -114,6 +114,9 @@
     ]
   },
   "devDependencies": {
+    "@pollyjs/adapter-node-http": "^6.0.5",
+    "@pollyjs/core": "^6.0.5",
+    "@pollyjs/persister-fs": "^6.0.5",
     "@rockcarver/frodo-lib": "2.1.2-0",
     "@types/colors": "^1.2.1",
     "@types/fs-extra": "^11.0.1",

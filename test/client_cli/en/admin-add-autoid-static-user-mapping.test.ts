@@ -1,9 +1,9 @@
-import cp from 'child_process';
-import { promisify } from 'util';
+import { execTest } from "../../TestUtils";
+import { autoSetupPolly } from "../../AutoSetupPolly";
 
-const exec = promisify(cp.exec);
+const ctx = autoSetupPolly();
 const CMD = 'frodo admin add-autoid-static-user-mapping --help';
-const { stdout } = await exec(CMD);
+const { stdout } = await execTest(CMD);
 
 test("CLI help interface for 'admin add-autoid-static-user-mapping' should be expected english", async () => {
   expect(stdout).toMatchSnapshot();
