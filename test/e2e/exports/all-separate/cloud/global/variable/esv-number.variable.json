@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.321Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  },
+  "variables": {
+    "esv-number": {
+      "_id": "esv-number",
+      "description": "test number",
+      "expressionType": "number",
+      "lastChangeDate": "2024-07-05T19:42:20.943131Z",
+      "lastChangedBy": "volker.scheuber@forgerock.com",
+      "loaded": true,
+      "value": "1.134"
+    }
+  }
+}

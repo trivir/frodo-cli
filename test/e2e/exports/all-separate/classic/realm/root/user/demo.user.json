@@ -1,0 +1,124 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.100Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  },
+  "user": {
+    "demo": {
+      "_id": "demo",
+      "assignedDashboard": [
+        "string"
+      ],
+      "cn": [
+        "demo"
+      ],
+      "config": {
+        "devices": {
+          "2fa": {
+            "binding": [],
+            "oath": [],
+            "push": [],
+            "webauthn": []
+          },
+          "profile": [],
+          "trusted": []
+        },
+        "groups": [
+          {
+            "_id": "Test User Group",
+            "groupname": "Test User Group"
+          }
+        ],
+        "oauth2": {
+          "applications": []
+        },
+        "policies": [],
+        "services": [
+          {
+            "_id": "session",
+            "iplanet-am-session-max-caching-time": 3,
+            "iplanet-am-session-max-idle-time": 30,
+            "iplanet-am-session-max-session-time": 120,
+            "iplanet-am-session-quota-limit": 5
+          },
+          {
+            "_id": "dashboard",
+            "assignedDashboard": [
+              "string"
+            ]
+          }
+        ]
+      },
+      "createTimestamp": [
+        "20240620152926Z"
+      ],
+      "dn": [
+        "uid=demo,ou=people,dc=openam,dc=forgerock,dc=org"
+      ],
+      "employeeNumber": [
+        "123"
+      ],
+      "givenName": [
+        "demo"
+      ],
+      "inetUserStatus": [
+        "Active"
+      ],
+      "iplanet-am-session-max-caching-time": [
+        "3"
+      ],
+      "iplanet-am-session-max-idle-time": [
+        "30"
+      ],
+      "iplanet-am-session-max-session-time": [
+        "120"
+      ],
+      "iplanet-am-session-quota-limit": [
+        "5"
+      ],
+      "mail": [
+        "demo@example.com"
+      ],
+      "modifyTimestamp": [
+        "20240909171048Z"
+      ],
+      "objectClass": [
+        "iplanet-am-managed-person",
+        "inetuser",
+        "iplanet-am-session-service",
+        "sunFMSAML2NameIdentifier",
+        "inetorgperson",
+        "devicePrintProfilesContainer",
+        "boundDevicesContainer",
+        "iplanet-am-user-service",
+        "iPlanetPreferences",
+        "pushDeviceProfilesContainer",
+        "forgerock-am-dashboard-service",
+        "organizationalperson",
+        "top",
+        "kbaInfoContainer",
+        "oathDeviceProfilesContainer",
+        "webauthnDeviceProfilesContainer",
+        "person",
+        "sunAMAuthAccountLockout",
+        "deviceProfilesContainer",
+        "iplanet-am-auth-configuration-service"
+      ],
+      "realm": "/",
+      "sn": [
+        "demo"
+      ],
+      "uid": [
+        "demo"
+      ],
+      "universalid": [
+        "id=demo,ou=user,dc=openam,dc=forgerock,dc=org"
+      ],
+      "username": "demo"
+    }
+  }
+}

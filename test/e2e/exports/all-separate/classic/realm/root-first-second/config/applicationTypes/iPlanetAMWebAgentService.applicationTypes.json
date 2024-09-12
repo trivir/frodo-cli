@@ -1,0 +1,29 @@
+{
+  "applicationTypes": {
+    "iPlanetAMWebAgentService": {
+      "_id": "iPlanetAMWebAgentService",
+      "actions": {
+        "DELETE": true,
+        "GET": true,
+        "HEAD": true,
+        "OPTIONS": true,
+        "PATCH": true,
+        "POST": true,
+        "PUT": true
+      },
+      "applicationClassName": "com.sun.identity.entitlement.Application",
+      "name": "iPlanetAMWebAgentService",
+      "resourceComparator": "com.sun.identity.entitlement.URLResourceName",
+      "saveIndex": "org.forgerock.openam.entitlement.indextree.TreeSaveIndex",
+      "searchIndex": "org.forgerock.openam.entitlement.indextree.TreeSearchIndex"
+    }
+  },
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.104Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  }
+}

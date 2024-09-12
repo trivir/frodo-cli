@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.331Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  },
+  "script": {
+    "5bbdaeff-ddee-44b9-b608-8d413d7d65a6": {
+      "_id": "5bbdaeff-ddee-44b9-b608-8d413d7d65a6",
+      "context": "AUTHENTICATION_TREE_DECISION_NODE",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "Check if mode has already been set.",
+      "evaluatorVersion": "1.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "mode",
+      "script": "/* mode\n *\n * Author: volker.scheuber@forgerock.com\n * \n * Collect mode if not already set and set outcome to mode.\n * \n * This script does not need to be parametrized. It will work properly as is.\n * \n * The Scripted Decision Node needs the following outcomes defined:\n * - 'shared and level'\n * - 'shared only'\n * - 'level only'\n * - 'none'\n */\n(function () {\n  var mode = nodeState.get('mode');\n  if (mode) {\n    outcome = mode.asString();\n    var level = nodeState.get('level').asInteger() + 1;\n    logger.error('mode: mode=' + mode.asString() + ', level=' + level);\n    sharedState.put('level', level);\n  }\n  else {\n    var choices = ['shared and level', 'shared only', 'level only', 'none'];\n  \n    var fr = JavaImporter(\n      org.forgerock.openam.auth.node.api.Action,\n      javax.security.auth.callback.ChoiceCallback\n    )\n\n    if (callbacks.isEmpty()) {\n      action = fr.Action.send([\n        new fr.ChoiceCallback('Choose test mode', choices, 0, false)\n      ]).build();\n    } else {\n      var choice = parseInt(callbacks.get(0).getSelectedIndexes()[0]);\n      nodeState.putShared('mode', choices[choice]);\n      nodeState.putShared('level', 0);\n      action = fr.Action.goTo(choices[choice]).build();\n    }\n  }\n}());"
+    }
+  }
+}

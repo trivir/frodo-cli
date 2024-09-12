@@ -1,0 +1,126 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.320Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  },
+  "scripttype": {
+    "NODE_DESIGNER": {
+      "_id": "NODE_DESIGNER",
+      "_type": {
+        "_id": "contexts",
+        "collection": true,
+        "name": "scriptContext"
+      },
+      "context": {
+        "_id": "NODE_DESIGNER",
+        "allowLists": {
+          "1.0": [
+            "jdk.proxy*",
+            "org.mozilla.javascript.WrappedException"
+          ],
+          "2.0": [
+            "java.lang.Boolean",
+            "java.lang.Byte",
+            "java.lang.Character",
+            "java.lang.Character$Subset",
+            "java.lang.Character$UnicodeBlock",
+            "java.lang.Double",
+            "java.lang.Float",
+            "java.lang.Integer",
+            "java.lang.Long",
+            "java.lang.Math",
+            "java.lang.Number",
+            "java.lang.Object",
+            "java.lang.Short",
+            "java.lang.StrictMath",
+            "java.lang.String",
+            "java.lang.Void",
+            "java.util.AbstractMap$*",
+            "java.util.ArrayList",
+            "java.util.Collections",
+            "java.util.concurrent.TimeUnit",
+            "java.util.Collections$*",
+            "java.util.HashSet",
+            "java.util.HashMap$KeyIterator",
+            "java.util.LinkedHashSet",
+            "java.util.LinkedList",
+            "java.util.TreeSet",
+            "java.security.KeyPair",
+            "java.security.KeyPairGenerator",
+            "java.security.KeyPairGenerator$*",
+            "java.security.PrivateKey",
+            "java.security.PublicKey",
+            "java.security.spec.X509EncodedKeySpec",
+            "java.security.spec.MGF1ParameterSpec",
+            "javax.crypto.SecretKeyFactory",
+            "javax.crypto.spec.OAEPParameterSpec",
+            "javax.crypto.spec.PBEKeySpec",
+            "javax.crypto.spec.PSource",
+            "javax.crypto.spec.PSource$*",
+            "org.forgerock.json.JsonValue",
+            "org.forgerock.util.promise.NeverThrowsException",
+            "org.forgerock.util.promise.Promise",
+            "java.util.concurrent.ExecutionException",
+            "java.util.concurrent.TimeoutException",
+            "org.forgerock.util.promise.PromiseImpl",
+            "org.forgerock.openam.core.rest.authn.callbackhandlers.*",
+            "com.sun.crypto.provider.PBKDF2KeyImpl",
+            "org.forgerock.openam.core.rest.devices.profile.DeviceProfilesDao",
+            "org.forgerock.openam.scripting.api.PrefixedScriptPropertyResolver",
+            "java.util.List",
+            "org.mozilla.javascript.ConsString",
+            "java.util.Collections$UnmodifiableRandomAccessList",
+            "java.util.Collections$UnmodifiableCollection$1",
+            "org.mozilla.javascript.JavaScriptException",
+            "sun.security.ec.ECPrivateKeyImpl",
+            "ch.qos.logback.classic.Logger",
+            "org.forgerock.util.promise.Promises$*",
+            "com.sun.proxy.$*",
+            "java.util.Date",
+            "java.security.spec.InvalidKeySpecException",
+            "jdk.proxy*",
+            "org.mozilla.javascript.WrappedException"
+          ]
+        },
+        "evaluatorVersions": {
+          "JAVASCRIPT": [
+            "2.0"
+          ]
+        }
+      },
+      "defaultScript": "[Empty]",
+      "engineConfiguration": {
+        "_id": "engineConfiguration",
+        "_type": {
+          "_id": "engineConfiguration",
+          "collection": false,
+          "name": "Scripting engine configuration"
+        },
+        "blackList": [
+          "java.security.AccessController",
+          "java.lang.Class",
+          "java.lang.reflect.*"
+        ],
+        "coreThreads": 10,
+        "idleTimeout": 60,
+        "maxThreads": 50,
+        "propertyNamePrefix": "script",
+        "queueSize": 10,
+        "serverTimeout": 0,
+        "useSecurityManager": true,
+        "whiteList": [
+          "jdk.proxy*",
+          "org.mozilla.javascript.WrappedException"
+        ]
+      },
+      "isHidden": true,
+      "languages": [
+        "JAVASCRIPT"
+      ]
+    }
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.334Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  },
+  "user": {
+    "58612ba5-a53d-4b3e-9715-1740d397e56e": {
+      "_id": "58612ba5-a53d-4b3e-9715-1740d397e56e",
+      "cn": [
+        "James Kirk"
+      ],
+      "config": {
+        "devices": {
+          "2fa": {
+            "binding": [],
+            "oath": [],
+            "push": [],
+            "webauthn": []
+          },
+          "profile": [],
+          "trusted": []
+        },
+        "groups": [],
+        "oauth2": {
+          "applications": []
+        },
+        "services": [
+          {
+            "_id": "dashboard"
+          }
+        ]
+      },
+      "createTimestamp": [
+        "20240108232406Z"
+      ],
+      "dn": [
+        "fr-idm-uuid=58612ba5-a53d-4b3e-9715-1740d397e56e,ou=user,o=alpha,o=root,ou=identities"
+      ],
+      "fr-idm-custom-attrs": [
+        "{}"
+      ],
+      "fr-idm-preferences": [
+        "{\"updates\":false,\"marketing\":false}"
+      ],
+      "fr-idm-uuid": [
+        "58612ba5-a53d-4b3e-9715-1740d397e56e"
+      ],
+      "givenName": [
+        "James"
+      ],
+      "inetUserStatus": [
+        "Active"
+      ],
+      "mail": [
+        "jtkirk@ufp.org"
+      ],
+      "modifyTimestamp": [
+        "20240122164335Z"
+      ],
+      "objectClass": [
+        "iplanet-am-managed-person",
+        "inetuser",
+        "inetOrgPerson",
+        "sunFMSAML2NameIdentifier",
+        "devicePrintProfilesContainer",
+        "fr-ext-attrs",
+        "iplanet-am-user-service",
+        "iPlanetPreferences",
+        "pushDeviceProfilesContainer",
+        "forgerock-am-dashboard-service",
+        "top",
+        "kbaInfoContainer",
+        "person",
+        "organizationalPerson",
+        "oathDeviceProfilesContainer",
+        "sunAMAuthAccountLockout",
+        "webauthnDeviceProfilesContainer",
+        "deviceProfilesContainer",
+        "iplanet-am-auth-configuration-service",
+        "fr-idm-hybrid-obj",
+        "fr-idm-managed-user-explicit"
+      ],
+      "realm": "/alpha",
+      "sn": [
+        "Kirk"
+      ],
+      "uid": [
+        "kirk"
+      ],
+      "universalid": [
+        "id=58612ba5-a53d-4b3e-9715-1740d397e56e,ou=user,o=alpha,ou=services,ou=am-config"
+      ],
+      "username": "kirk"
+    }
+  }
+}

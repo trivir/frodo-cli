@@ -1,0 +1,43 @@
+{
+  "conditionTypes": {
+    "SimpleTime": {
+      "_id": "SimpleTime",
+      "config": {
+        "properties": {
+          "endDate": {
+            "type": "string"
+          },
+          "endDay": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "enforcementTimeZone": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string"
+          },
+          "startDay": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "logical": false,
+      "title": "SimpleTime"
+    }
+  },
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.096Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  }
+}

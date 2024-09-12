@@ -51,8 +51,9 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idm export -N script -f test.json
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idm export -N script -D testDir4
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idm export -sN sync
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idm export -a
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idm export --all --file allIdmTestFile.json -E test/e2e/env/testEntitiesFile.json -e test/e2e/env/testEnvFile.env
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idm export -sAD testDir1
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idm export -AD testDir2 -E test/e2e/env/testEntitiesFile.json -e test/e2e/env/testEnvFile.env
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idm export --all-separate --separate-mappings --directory testDir3 --entities-file test/e2e/env/testEntitiesFile.json --env-file test/e2e/env/testEnvFile.env
 */
 import { getEnv, testExport } from './utils/TestUtils';
@@ -62,6 +63,8 @@ process.env['FRODO_MOCK'] = '1';
 const env = getEnv(c);
 
 const type = 'idm';
+const entitiesFile = 'test/e2e/env/testEntitiesFile.json';
+const envFile = 'test/e2e/env/testEnvFile.env';
 
 describe('frodo idm export', () => {
   test('"frodo idm export --name script": should export the idm config entity with idm id "script"', async () => {
@@ -88,21 +91,28 @@ describe('frodo idm export', () => {
     await testExport(CMD, env, 'sync', undefined, dirName, false);
   });
 
+  test('"frodo idm export -a": should export all idm config entities to a single file', async () => {
+    const exportFile = "all.idm.json";
+    const CMD = `frodo idm export -a`;
+    await testExport(CMD, env, type, exportFile);
+  });
+
+  test(`"frodo idm export --all --file allIdmTestFile.json -E ${entitiesFile} -e ${envFile}": should export all idm config entities to a single file named allIdmTestFile.json`, async () => {
+      const exportFile = "allIdmTestFile.json";
+      const CMD = `frodo idm export --all --file ${exportFile} -E ${entitiesFile} -e ${envFile}`;
+      await testExport(CMD, env, type, exportFile);
+  });
+
+
   test('"frodo idm export -sAD testDir1": should export all idm config entities to separate files in the "testDir" directory', async () => {
     const dirName = 'testDir1';
     const CMD = `frodo idm export -sAD ${dirName}`;
     await testExport(CMD, env, undefined, undefined, dirName, false);
   });
 
-  test('"frodo idm export -AD testDir2 -E test/e2e/env/testEntityFile.json -e test/e2e/env/testEnvFile.env": should export all idm config entities to separate files in the "testDir" directory according to the entity and env files', async () => {
-    const dirName = 'testDir2';
-    const CMD = `frodo idm export -AD ${dirName} -E test/e2e/env/testEntitiesFile.json -e test/e2e/env/testEnvFile.env`;
-    await testExport(CMD, env, undefined, undefined, dirName, false);
-  });
-
-  test('"frodo idm export --all-separate --separate-mappings --directory testDir3 --entities-file test/e2e/env/testEntityFile.json --env-file test/e2e/env/testEnvFile.env": should export all idm config entities to separate files in the "testDir" directory according to the entity and env files', async () => {
+  test(`"frodo idm export --all-separate --separate-mappings --directory testDir3 --entities-file ${entitiesFile} --env-file ${envFile}": should export all idm config entities to separate files in the "testDir" directory according to the entity and env files`, async () => {
     const dirName = 'testDir3';
-    const CMD = `frodo idm export --all-separate --separate-mappings --directory ${dirName} --entities-file test/e2e/env/testEntitiesFile.json --env-file test/e2e/env/testEnvFile.env`;
+    const CMD = `frodo idm export --all-separate --separate-mappings --directory ${dirName} --entities-file ${entitiesFile} --env-file ${envFile}`;
     await testExport(CMD, env, undefined, undefined, dirName, false);
   });
 });

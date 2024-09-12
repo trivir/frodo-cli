@@ -1,0 +1,34 @@
+{
+  "conditionTypes": {
+    "IPv4": {
+      "_id": "IPv4",
+      "config": {
+        "properties": {
+          "dnsName": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "endIp": {
+            "type": "string"
+          },
+          "startIp": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "logical": false,
+      "title": "IPv4"
+    }
+  },
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.336Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  }
+}

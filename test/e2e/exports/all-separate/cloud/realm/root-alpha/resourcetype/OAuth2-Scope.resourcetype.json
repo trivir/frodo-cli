@@ -1,0 +1,29 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.329Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  },
+  "resourcetype": {
+    "d60b7a71-1dc6-44a5-8e48-e4b9d92dee8b": {
+      "actions": {
+        "GRANT": true
+      },
+      "createdBy": "id=dsameuser,ou=user,ou=am-config",
+      "creationDate": 1595479030586,
+      "description": "The built-in OAuth2 Scope Resource Type for OAuth2policy-provided scope.",
+      "lastModifiedBy": "id=b9a81341-3d59-4caf-bd1a-1cab40cacd59,ou=user,ou=am-config",
+      "lastModifiedDate": 1725987453534,
+      "name": "OAuth2 Scope",
+      "patterns": [
+        "*://*:*/*",
+        "*://*:*/*?*",
+        "*"
+      ],
+      "uuid": "d60b7a71-1dc6-44a5-8e48-e4b9d92dee8b"
+    }
+  }
+}

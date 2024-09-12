@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.329Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  },
+  "resourcetype": {
+    "1f445c60-0828-41ac-9a4e-a16c026e9536": {
+      "actions": {
+        "allow": true
+      },
+      "createdBy": "id=1e9280f6-eab6-467e-889c-83d147c8b936,ou=user,ou=am-config",
+      "creationDate": 1725916543746,
+      "description": "",
+      "lastModifiedBy": "id=b9a81341-3d59-4caf-bd1a-1cab40cacd59,ou=user,ou=am-config",
+      "lastModifiedDate": 1725987453654,
+      "name": "test_resource",
+      "patterns": [
+        "type1/node1",
+        "type2/node2"
+      ],
+      "uuid": "1f445c60-0828-41ac-9a4e-a16c026e9536"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.330Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  },
+  "script": {
+    "41c24257-d7fc-4654-8b46-c2666dc5b56d": {
+      "_id": "41c24257-d7fc-4654-8b46-c2666dc5b56d",
+      "context": "AUTHENTICATION_TREE_DECISION_NODE",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "set per level shared state variable",
+      "evaluatorVersion": "1.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "level",
+      "script": "(function () {\n  outcome = 'true';\n  var level = nodeState.get('level').asInteger();\n  sharedState.put('level' + level + 'Value', 'Level ' + level + ': This is a longer string value set at each level of the nested journeys. It contains an indicator in which level it was set.');\n}());"
+    }
+  }
+}

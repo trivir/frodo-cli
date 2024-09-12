@@ -20,6 +20,9 @@ Arguments:
   password                             Password.
 
 Options:
+  -a, --all                            Import all IDM configuration objects
+                                       from a single file in directory -D.
+                                       Ignored with -N.
   -A, --all-separate                   Import all IDM configuration objects
                                        from separate files in directory -D.
                                        Ignored with -N, and -a.
@@ -29,9 +32,9 @@ Options:
                                        If specified, may or may not produce
                                        additional output helpful for
                                        troubleshooting.
-  -e, --env-file [envfile]             Name of the env file. Ignored with -A.
+  -e, --env-file [envfile]             Name of the env file. Ignored with -N.
   -E, --entities-file [entities-file]  Name of the entity file. Ignored with
-                                       -A.
+                                       -N.
   -f, --file [file]                    Import file. Ignored with -A.
   --flush-cache                        Flush token cache.
   -h, --help                           Help

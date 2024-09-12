@@ -1,0 +1,33 @@
+{
+  "authenticationModules": {
+    "authenticatoroath": {
+      "_id": "authenticatoroath",
+      "_type": {
+        "_id": "authenticatoroath",
+        "collection": false,
+        "name": "ForgeRock Authenticator (OATH)"
+      },
+      "defaults": {
+        "addChecksumToOtpEnabled": "False",
+        "authenticationLevel": 0,
+        "frOathOtpMaxRetry": 3,
+        "hotpWindowSize": 100,
+        "minimumSecretKeyLength": 32,
+        "oathAlgorithm": "HOTP",
+        "passwordLength": "6",
+        "totpMaximumClockDrift": 5,
+        "totpTimeStepInterval": 30,
+        "totpTimeStepsInWindow": 2,
+        "truncationOffset": -1
+      }
+    }
+  },
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.083Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  }
+}

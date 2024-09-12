@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.338Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  },
+  "script": {
+    "09d6f27b-3c7c-4bc0-a7ff-e19d93f6b6d9": {
+      "_id": "09d6f27b-3c7c-4bc0-a7ff-e19d93f6b6d9",
+      "context": "AUTHENTICATION_TREE_DECISION_NODE",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "Load reference selfie into shared state",
+      "evaluatorVersion": "2.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "Load Reference Selfie",
+      "script": "/* Load Reference Selfie\n *\n * Author: volker.scheuber@forgerock.com\n * \n * Load reference selfie into transient state\n * \n * This script does not need to be parametrized. It will work properly as is.\n * \n * The Scripted Decision Node needs the following outcomes defined:\n * - true\n */\n(function () {\n  outcome = 'true';\n\n  var selfieAttr = 'fr-attr-str1';\n  var identity = idRepository.getIdentity(nodeState.get('_id'));\n  var selfie = identity.getAttributeValues(selfieAttr)[0];\n  if (selfie) {\n    setTransientObjectAttribute(selfieAttr, selfie);\n  }\n\n  /*\n   * Store attributes in shared state for use with the Create/Patch Object nodes.\n   */\n  function setTransientObjectAttribute(name, value) {\n    var attributes = nodeState.get(\"objectAttributes\");\n    if (attributes && value) {\n      attributes.put(name, value);\n      nodeState.putTransient(\"objectAttributes\", attributes);\n    } else if (value) {\n      nodeState.putTransient(\"objectAttributes\", { name: value } );\n    }\n  }\n}());"
+    }
+  }
+}

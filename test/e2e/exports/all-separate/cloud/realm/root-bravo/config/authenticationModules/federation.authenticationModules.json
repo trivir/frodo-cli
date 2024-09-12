@@ -1,0 +1,21 @@
+{
+  "authenticationModules": {
+    "federation": {
+      "_id": "federation",
+      "_type": {
+        "_id": "federation",
+        "collection": true,
+        "name": "Federation"
+      },
+      "authenticationLevel": 0
+    }
+  },
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.336Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  }
+}

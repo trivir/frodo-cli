@@ -1,0 +1,29 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.100Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  },
+  "trustedJwtIssuer": {
+    "test-jwt-issuer": {
+      "_id": "test-jwt-issuer",
+      "_type": {
+        "_id": "TrustedJwtIssuer",
+        "collection": true,
+        "name": "OAuth2 Trusted JWT Issuer"
+      },
+      "agentgroup": null,
+      "allowedSubjects": [],
+      "consentedScopesClaim": "scope",
+      "issuer": "hello",
+      "jwkSet": null,
+      "jwkStoreCacheMissCacheTime": 60000,
+      "jwksCacheTimeout": 3600000,
+      "jwksUri": null,
+      "resourceOwnerIdentityClaim": "sub"
+    }
+  }
+}

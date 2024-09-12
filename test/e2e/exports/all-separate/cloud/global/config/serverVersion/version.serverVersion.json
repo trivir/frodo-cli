@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.306Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  },
+  "serverVersion": {
+    "version": {
+      "_id": "version",
+      "date": "2024-September-04 13:47",
+      "fullVersion": "ForgeRock Access Management 7.6.0-SNAPSHOT Build 98ab9c81e93dae0afbb3fb3ee4bbc41d745361bd (2024-September-04 13:47)",
+      "revision": "98ab9c81e93dae0afbb3fb3ee4bbc41d745361bd",
+      "version": "7.6.0-SNAPSHOT"
+    }
+  }
+}

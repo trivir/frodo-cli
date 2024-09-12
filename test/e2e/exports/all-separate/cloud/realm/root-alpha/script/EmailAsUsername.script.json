@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.331Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  },
+  "script": {
+    "e5c302c8-f838-4698-87cc-d7225fc82454": {
+      "_id": "e5c302c8-f838-4698-87cc-d7225fc82454",
+      "context": "AUTHENTICATION_TREE_DECISION_NODE",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "null",
+      "evaluatorVersion": "1.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "EmailAsUsername",
+      "script": "objectAttributes = sharedState.get(\"objectAttributes\")\nuserName = objectAttributes.get(\"userName\")\n\nif(userName){\n  //Form Fill\n  objectAttributes.put(\"mail\", userName)\n} else {\n  //Social\n  objectAttributes.put(\"userName\", objectAttributes.get(\"mail\"))\n}\n\n\nsharedState.put(\"objectAttributes\", objectAttributes);\n//sharedState.put(\"username\", mail)\n\noutcome = \"true\";"
+    }
+  }
+}

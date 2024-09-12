@@ -1,0 +1,122 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.107Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  },
+  "user": {
+    "phales": {
+      "_id": "phales",
+      "cn": [
+        "phales"
+      ],
+      "config": {
+        "devices": {
+          "2fa": {
+            "binding": [],
+            "oath": [
+              {
+                "_id": "92d36fd3-1a4b-44e5-9bcb-b9d0188c3112",
+                "deviceManagementStatus": false,
+                "deviceName": "OATH Device",
+                "uuid": "92d36fd3-1a4b-44e5-9bcb-b9d0188c3112"
+              }
+            ],
+            "push": [],
+            "webauthn": []
+          },
+          "profile": [],
+          "trusted": []
+        },
+        "groups": [],
+        "oauth2": {
+          "applications": []
+        },
+        "policies": [],
+        "services": [
+          {
+            "_id": "dashboard"
+          }
+        ]
+      },
+      "createTimestamp": [
+        "20240909173211Z"
+      ],
+      "dn": [
+        "uid=phales,ou=people,dc=openam,dc=forgerock,dc=org"
+      ],
+      "employeeNumber": [
+        "0"
+      ],
+      "givenName": [
+        "first"
+      ],
+      "inetUserStatus": [
+        "Active"
+      ],
+      "iplanet-am-user-auth-config": [
+        "oath_registration"
+      ],
+      "iplanet-am-user-failure-url": [
+        "fail"
+      ],
+      "iplanet-am-user-success-url": [
+        "success"
+      ],
+      "mail": [
+        "phales@tests.com"
+      ],
+      "modifyTimestamp": [
+        "20240909193404Z"
+      ],
+      "oath2faEnabled": [
+        "2"
+      ],
+      "objectClass": [
+        "iplanet-am-managed-person",
+        "inetuser",
+        "fr-iot",
+        "sunFMSAML2NameIdentifier",
+        "inetorgperson",
+        "devicePrintProfilesContainer",
+        "boundDevicesContainer",
+        "iplanet-am-user-service",
+        "iPlanetPreferences",
+        "pushDeviceProfilesContainer",
+        "forgerock-am-dashboard-service",
+        "organizationalperson",
+        "top",
+        "kbaInfoContainer",
+        "person",
+        "sunAMAuthAccountLockout",
+        "oathDeviceProfilesContainer",
+        "webauthnDeviceProfilesContainer",
+        "iplanet-am-auth-configuration-service",
+        "deviceProfilesContainer"
+      ],
+      "postalAddress": [
+        "address"
+      ],
+      "realm": "/first/second",
+      "sn": [
+        "phales"
+      ],
+      "sunIdentityMSISDNNumber": [
+        "1234"
+      ],
+      "telephoneNumber": [
+        "1234556789"
+      ],
+      "uid": [
+        "phales"
+      ],
+      "universalid": [
+        "id=phales,ou=user,o=second,o=first,ou=services,dc=openam,dc=forgerock,dc=org"
+      ],
+      "username": "phales"
+    }
+  }
+}

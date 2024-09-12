@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.104Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  },
+  "user": {
+    "asdf": {
+      "_id": "asdf",
+      "cn": [
+        "asdf"
+      ],
+      "config": {
+        "devices": {
+          "2fa": {
+            "binding": [],
+            "oath": [],
+            "push": [],
+            "webauthn": []
+          },
+          "profile": [],
+          "trusted": []
+        },
+        "groups": [],
+        "oauth2": {
+          "applications": []
+        },
+        "policies": [],
+        "services": [
+          {
+            "_id": "dashboard"
+          }
+        ]
+      },
+      "createTimestamp": [
+        "20240718175323Z"
+      ],
+      "dn": [
+        "uid=asdf,ou=people,dc=openam,dc=forgerock,dc=org"
+      ],
+      "inetUserStatus": [
+        "Active"
+      ],
+      "mail": [
+        "asdf@gmail.com"
+      ],
+      "objectClass": [
+        "iplanet-am-managed-person",
+        "inetuser",
+        "sunFMSAML2NameIdentifier",
+        "inetorgperson",
+        "devicePrintProfilesContainer",
+        "boundDevicesContainer",
+        "iplanet-am-user-service",
+        "iPlanetPreferences",
+        "pushDeviceProfilesContainer",
+        "forgerock-am-dashboard-service",
+        "organizationalperson",
+        "top",
+        "kbaInfoContainer",
+        "person",
+        "sunAMAuthAccountLockout",
+        "oathDeviceProfilesContainer",
+        "webauthnDeviceProfilesContainer",
+        "iplanet-am-auth-configuration-service",
+        "deviceProfilesContainer"
+      ],
+      "realm": "/first",
+      "sn": [
+        "asdf"
+      ],
+      "uid": [
+        "asdf"
+      ],
+      "universalid": [
+        "id=asdf,ou=user,o=first,ou=services,dc=openam,dc=forgerock,dc=org"
+      ],
+      "username": "asdf"
+    }
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.335Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  },
+  "user": {
+    "146c2230-9448-4442-b86d-eb4a81a0121d": {
+      "_id": "146c2230-9448-4442-b86d-eb4a81a0121d",
+      "cn": [
+        "Scheuber Volker"
+      ],
+      "config": {
+        "devices": {
+          "2fa": {
+            "binding": [],
+            "oath": [],
+            "push": [],
+            "webauthn": []
+          },
+          "profile": [],
+          "trusted": []
+        },
+        "groups": [],
+        "oauth2": {
+          "applications": []
+        },
+        "services": [
+          {
+            "_id": "dashboard"
+          }
+        ]
+      },
+      "createTimestamp": [
+        "20231201013952Z"
+      ],
+      "dn": [
+        "fr-idm-uuid=146c2230-9448-4442-b86d-eb4a81a0121d,ou=user,o=alpha,o=root,ou=identities"
+      ],
+      "fr-idm-custom-attrs": [
+        "{}"
+      ],
+      "fr-idm-uuid": [
+        "146c2230-9448-4442-b86d-eb4a81a0121d"
+      ],
+      "givenName": [
+        "Scheuber"
+      ],
+      "inetUserStatus": [
+        "Active"
+      ],
+      "mail": [
+        "vscheuber@gmail.com"
+      ],
+      "modifyTimestamp": [
+        "20231207213130Z"
+      ],
+      "objectClass": [
+        "iplanet-am-managed-person",
+        "inetuser",
+        "inetOrgPerson",
+        "sunFMSAML2NameIdentifier",
+        "devicePrintProfilesContainer",
+        "fr-ext-attrs",
+        "iplanet-am-user-service",
+        "iPlanetPreferences",
+        "pushDeviceProfilesContainer",
+        "forgerock-am-dashboard-service",
+        "top",
+        "kbaInfoContainer",
+        "person",
+        "organizationalPerson",
+        "oathDeviceProfilesContainer",
+        "sunAMAuthAccountLockout",
+        "webauthnDeviceProfilesContainer",
+        "deviceProfilesContainer",
+        "iplanet-am-auth-configuration-service",
+        "fr-idm-hybrid-obj",
+        "fr-idm-managed-user-explicit"
+      ],
+      "realm": "/alpha",
+      "sn": [
+        "Volker"
+      ],
+      "uid": [
+        "vscheuber@gmail.com"
+      ],
+      "universalid": [
+        "id=146c2230-9448-4442-b86d-eb4a81a0121d,ou=user,o=alpha,ou=services,ou=am-config"
+      ],
+      "username": "vscheuber@gmail.com"
+    }
+  }
+}

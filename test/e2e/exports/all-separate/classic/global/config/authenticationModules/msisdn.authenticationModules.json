@@ -1,0 +1,41 @@
+{
+  "authenticationModules": {
+    "msisdn": {
+      "_id": "msisdn",
+      "_type": {
+        "_id": "msisdn",
+        "collection": false,
+        "name": "MSISDN"
+      },
+      "defaults": {
+        "authenticationLevel": 0,
+        "baseSearchDN": [
+          "dc=openam,dc=forgerock,dc=org"
+        ],
+        "ldapProviderUrl": [
+          "localhost:50636"
+        ],
+        "ldapSslEnabled": false,
+        "ldapUserBindDN": "cn=Directory Manager",
+        "msisdnParameterNames": [],
+        "msisdnRequestSearchLocations": [
+          "searchRequest",
+          "searchParam",
+          "searchCookie"
+        ],
+        "msisdnUserNamingAttribute": "uid",
+        "returnUserDN": true,
+        "trustedGatewayIPAddresses": [],
+        "userProfileMsisdnAttribute": "sunIdentityMSISDNNumber"
+      }
+    }
+  },
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.082Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  }
+}

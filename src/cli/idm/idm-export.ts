@@ -3,8 +3,8 @@ import { Option } from 'commander';
 
 import { getTokens } from '../../ops/AuthenticateOps';
 import {
-  exportAllConfigEntities,
-  exportAllRawConfigEntities,
+  exportAllConfigEntitiesToFile,
+  exportAllConfigEntitiesToFiles,
   exportConfigEntity,
   warnAboutOfflineConnectorServers,
 } from '../../ops/IdmOps';
@@ -33,13 +33,13 @@ export default function setup() {
     .addOption(
       new Option(
         '-E, --entities-file [entities-file]',
-        'Name of the entity file. Ignored with -A.'
+        'Name of the entity file. Ignored with -N.'
       )
     )
     .addOption(
       new Option(
         '-e, --env-file [envfile]',
-        'Name of the env file. Ignored with -A.'
+        'Name of the env file. Ignored with -N.'
       )
     )
     .addOption(
@@ -57,7 +57,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-s, --separate-mappings',
-        'Export sync.json mappings separately in their own directory.'
+        'Export sync.json mappings separately in their own directory. Ignored with -a.'
       )
     )
     .action(
@@ -71,6 +71,16 @@ export default function setup() {
           options,
           command
         );
+        const entitiesMessage = options.entitiesFile
+          ? ` specified in ${options.entitiesFile}`
+          : '';
+        const envMessage = options.envFile
+          ? ` using ${options.envFile} for variable replacement`
+          : '';
+        const fileMessage = options.file ? ` into ${options.file}` : '';
+        const directoryMessage = state.getDirectory()
+          ? ` into separate files in ${state.getDirectory()}`
+          : '';
         // export by id/name
         if (options.name && (await getTokens(false, true, deploymentTypes))) {
           verboseMessage(`Exporting object "${options.name}"...`);
@@ -80,6 +90,21 @@ export default function setup() {
             options.separateMappings
           );
           if (!outcome) process.exitCode = 1;
+          // --all -a
+        } else if (
+          options.all &&
+          (await getTokens(false, true, deploymentTypes))
+        ) {
+          verboseMessage(
+            `Exporting IDM configuration objects${entitiesMessage}${envMessage}${fileMessage}...`
+          );
+          const outcome = await exportAllConfigEntitiesToFile(
+            options.file,
+            options.entitiesFile,
+            options.envFile
+          );
+          if (!outcome) process.exitCode = 1;
+          await warnAboutOfflineConnectorServers();
         }
         // require --directory -D for all-separate functions
         else if (options.allSeparate && !state.getDirectory()) {
@@ -98,13 +123,9 @@ export default function setup() {
           (await getTokens(false, true, deploymentTypes))
         ) {
           verboseMessage(
-            `Exporting IDM configuration objects specified in ${
-              options.entitiesFile
-            } into separate files in ${state.getDirectory()} using ${
-              options.envFile
-            } for variable replacement...`
+            `Exporting IDM configuration objects${entitiesMessage}${envMessage}${directoryMessage}...`
           );
-          const outcome = await exportAllConfigEntities(
+          const outcome = await exportAllConfigEntitiesToFiles(
             options.entitiesFile,
             options.envFile,
             options.separateMappings
@@ -118,9 +139,11 @@ export default function setup() {
           (await getTokens(false, true, deploymentTypes))
         ) {
           verboseMessage(
-            `Exporting all IDM configuration objects into separate files in ${state.getDirectory()}...`
+            `Exporting IDM configuration objects${directoryMessage}...`
           );
-          const outcome = await exportAllRawConfigEntities(
+          const outcome = await exportAllConfigEntitiesToFiles(
+            undefined,
+            undefined,
             options.separateMappings
           );
           if (!outcome) process.exitCode = 1;

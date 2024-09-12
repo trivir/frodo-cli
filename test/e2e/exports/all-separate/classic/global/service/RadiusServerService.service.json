@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.090Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  },
+  "service": {
+    "RadiusServerService": {
+      "_id": "",
+      "_type": {
+        "_id": "RadiusServerService",
+        "collection": false,
+        "name": "RADIUS Server"
+      },
+      "location": "global",
+      "nextDescendents": [],
+      "radiusListenerEnabled": "NO",
+      "radiusServerPort": 1812,
+      "radiusThreadPoolCoreSize": 1,
+      "radiusThreadPoolKeepaliveSeconds": 10,
+      "radiusThreadPoolMaxSize": 10,
+      "radiusThreadPoolQueueSize": 20
+    }
+  }
+}

@@ -5,12 +5,17 @@ import { describeAuthenticationSettings } from '../../ops/AuthenticationSettings
 import { verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
+const globalDeploymentTypes = ['classic'];
+
 export default function setup() {
   const program = new FrodoCommand('frodo authn describe');
 
   program
     .description('Describe authentication settings.')
     .addOption(new Option('--json', 'Output in JSON format.'))
+    .addOption(
+      new Option('-g, --global', 'Describe global authentication settings.')
+    )
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {
@@ -22,9 +27,18 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens()) {
+        if (
+          await getTokens(
+            false,
+            true,
+            options.global ? globalDeploymentTypes : undefined
+          )
+        ) {
           verboseMessage(`Describing authentication settings...`);
-          const outcome = await describeAuthenticationSettings(options.json);
+          const outcome = await describeAuthenticationSettings(
+            options.json,
+            options.global
+          );
           if (!outcome) process.exitCode = 1;
         }
         // unrecognized combination of options or no options

@@ -1,0 +1,35 @@
+{
+  "authenticationModules": {
+    "hotp": {
+      "_id": "hotp",
+      "_type": {
+        "_id": "hotp",
+        "collection": true,
+        "name": "HOTP"
+      },
+      "authenticationLevel": 0,
+      "autoSendOTP": false,
+      "otpDeliveryMethod": "SMS and E-mail",
+      "otpLength": "8",
+      "otpMaxRetry": 3,
+      "otpValidityDuration": 5,
+      "smsGatewayClass": "com.sun.identity.authentication.modules.hotp.DefaultSMSGatewayImpl",
+      "smtpFromAddress": "no-reply@openam.org",
+      "smtpHostPort": 465,
+      "smtpHostname": "smtp.gmail.com",
+      "smtpSslEnabled": "SSL",
+      "smtpUserPassword": null,
+      "smtpUsername": "opensso.sun",
+      "userProfileEmailAttribute": "mail",
+      "userProfileTelephoneAttribute": "telephoneNumber"
+    }
+  },
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.104Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.099Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  },
+  "service": {
+    "amSessionPropertyWhitelist": {
+      "_id": "",
+      "_type": {
+        "_id": "amSessionPropertyWhitelist",
+        "collection": false,
+        "name": "Session Property Whitelist Service"
+      },
+      "location": "/",
+      "nextDescendents": [],
+      "sessionPropertyWhitelist": [
+        "AMCtxId"
+      ],
+      "whitelistedQueryProperties": []
+    }
+  }
+}

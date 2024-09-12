@@ -1,0 +1,29 @@
+{
+  "conditionTypes": {
+    "Session": {
+      "_id": "Session",
+      "config": {
+        "properties": {
+          "maxSessionTime": {
+            "type": "integer"
+          },
+          "terminateSession": {
+            "required": true,
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "logical": false,
+      "title": "Session"
+    }
+  },
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.105Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  }
+}

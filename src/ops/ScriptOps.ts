@@ -186,11 +186,6 @@ export async function describeScript(
   usage = false,
   json = false
 ): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
-    'indeterminate',
-    0,
-    `Describing script '${scriptId ? scriptId : scriptName}'...`
-  );
   try {
     let script;
     if (scriptId) {
@@ -211,20 +206,10 @@ export async function describeScript(
         }
         script.locations = getIdLocations(fullExport, script._id, false);
       } catch (error) {
-        stopProgressIndicator(
-          spinnerId,
-          `Error determining usage for script '${scriptId ? scriptId : scriptName}'`,
-          'fail'
-        );
         printError(error);
         return false;
       }
     }
-    stopProgressIndicator(
-      spinnerId,
-      `Successfully retrieved script '${scriptId ? scriptId : scriptName}'`,
-      'success'
-    );
     if (json) {
       printMessage(script, 'data');
     } else {
@@ -262,11 +247,6 @@ export async function describeScript(
     }
     return true;
   } catch (error) {
-    stopProgressIndicator(
-      spinnerId,
-      `Error describing script '${scriptId ? scriptId : scriptName}'`,
-      'fail'
-    );
     printError(error);
   }
   return false;

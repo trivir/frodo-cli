@@ -10,6 +10,8 @@ import { getTokens } from '../../ops/AuthenticateOps';
 import { verboseMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
 
+const globalDeploymentTypes = ['classic'];
+
 export default function setup() {
   const program = new FrodoCommand('frodo agent import');
 
@@ -34,6 +36,7 @@ export default function setup() {
         'Import all agents from separate files (*.agent.json) in the current directory. Ignored with -i or -a.'
       )
     )
+    .addOption(new Option('-g, --global', 'Import global agents.'))
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {
@@ -45,13 +48,20 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens()) {
+        if (
+          await getTokens(
+            false,
+            true,
+            options.global ? globalDeploymentTypes : undefined
+          )
+        ) {
           // import
-          if (options.agentId) {
+          if (options.agentId && options.file) {
             verboseMessage(`Importing agent ${options.agentId}...`);
             const outcome = await importAgentFromFile(
               options.agentId,
-              options.file
+              options.file,
+              options.global
             );
             if (!outcome) process.exitCode = 1;
           }
@@ -60,19 +70,25 @@ export default function setup() {
             verboseMessage(
               `Importing all agents from a single file (${options.file})...`
             );
-            const outcome = await importAgentsFromFile(options.file);
+            const outcome = await importAgentsFromFile(
+              options.file,
+              options.global
+            );
             if (!outcome) process.exitCode = 1;
           }
           // --all-separate -A
           else if (options.allSeparate && !options.file) {
             verboseMessage('Importing all agents from separate files...');
-            const outcome = await importAgentsFromFiles();
+            const outcome = await importAgentsFromFiles(options.global);
             if (!outcome) process.exitCode = 1;
           }
           // import first agent in file
           else if (options.file) {
             verboseMessage('Importing first agent in file...');
-            const outcome = await importFirstAgentFromFile(options.file);
+            const outcome = await importFirstAgentFromFile(
+              options.file,
+              options.global
+            );
             if (!outcome) process.exitCode = 1;
           }
           // unrecognized combination of options or no options

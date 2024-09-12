@@ -1,0 +1,105 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.334Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  },
+  "user": {
+    "346459bf-4159-4c4c-b929-f9ff5acc2f53": {
+      "_id": "346459bf-4159-4c4c-b929-f9ff5acc2f53",
+      "cn": [
+        "Test User"
+      ],
+      "config": {
+        "devices": {
+          "2fa": {
+            "binding": [],
+            "oath": [],
+            "push": [],
+            "webauthn": []
+          },
+          "profile": [],
+          "trusted": []
+        },
+        "groups": [
+          {
+            "_id": "test-group",
+            "groupname": "test-group"
+          }
+        ],
+        "oauth2": {
+          "applications": []
+        },
+        "services": [
+          {
+            "_id": "dashboard"
+          }
+        ]
+      },
+      "createTimestamp": [
+        "20240718171624Z"
+      ],
+      "dn": [
+        "fr-idm-uuid=346459bf-4159-4c4c-b929-f9ff5acc2f53,ou=user,o=alpha,o=root,ou=identities"
+      ],
+      "fr-idm-custom-attrs": [
+        "{\"effectiveApplications\":[]}"
+      ],
+      "fr-idm-uuid": [
+        "346459bf-4159-4c4c-b929-f9ff5acc2f53"
+      ],
+      "givenName": [
+        "Test"
+      ],
+      "inetUserStatus": [
+        "Active"
+      ],
+      "isMemberOf": [
+        "cn=test-group,ou=groups,o=alpha,o=root,ou=identities"
+      ],
+      "mail": [
+        "test@test.com"
+      ],
+      "modifyTimestamp": [
+        "20240718171625Z"
+      ],
+      "objectClass": [
+        "iplanet-am-managed-person",
+        "inetuser",
+        "inetOrgPerson",
+        "sunFMSAML2NameIdentifier",
+        "devicePrintProfilesContainer",
+        "fr-ext-attrs",
+        "iplanet-am-user-service",
+        "iPlanetPreferences",
+        "pushDeviceProfilesContainer",
+        "forgerock-am-dashboard-service",
+        "top",
+        "kbaInfoContainer",
+        "person",
+        "organizationalPerson",
+        "oathDeviceProfilesContainer",
+        "sunAMAuthAccountLockout",
+        "webauthnDeviceProfilesContainer",
+        "deviceProfilesContainer",
+        "iplanet-am-auth-configuration-service",
+        "fr-idm-hybrid-obj",
+        "fr-idm-managed-user-explicit"
+      ],
+      "realm": "/alpha",
+      "sn": [
+        "User"
+      ],
+      "uid": [
+        "test"
+      ],
+      "universalid": [
+        "id=346459bf-4159-4c4c-b929-f9ff5acc2f53,ou=user,o=alpha,ou=services,ou=am-config"
+      ],
+      "username": "test"
+    }
+  }
+}

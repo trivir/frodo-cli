@@ -1,5 +1,8 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
+import { AmConfigEntityInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 import { AuthenticationSettingsSkeleton } from '@rockcarver/frodo-lib/types/api/AuthenticationSettingsApi';
+import { ServerPropertiesSkeleton } from '@rockcarver/frodo-lib/types/api/classic/ServerApi';
+import { ServerExportSkeleton } from '@rockcarver/frodo-lib/types/ops/classic/ServerOps';
 import {
   FullExportInterface,
   FullGlobalExportInterface,
@@ -108,11 +111,22 @@ export async function getFullExportConfigFromDirectory(
   const fullExportConfig: FullExportInterface = {
     meta: {} as ExportMetaData,
     global: {
+      agents: {},
+      authentication: {} as AuthenticationSettingsSkeleton,
       emailTemplate: {},
       idm: {},
       mapping: {},
+      config: {},
+      realm: {},
+      scripttype: {},
       secrets: {},
+      secretstore: {},
+      server: {
+        server: {},
+        defaultProperties: {} as ServerPropertiesSkeleton,
+      },
       service: {},
+      site: {},
       sync: {
         id: 'sync',
         mappings: [],
@@ -123,11 +137,14 @@ export async function getFullExportConfigFromDirectory(
       realms.map((r) => [
         r,
         {
+          agentGroup: {},
           agents: {},
           application: {},
           authentication: {} as AuthenticationSettingsSkeleton,
+          config: {},
           idp: {},
           managedApplication: {},
+          orphanedNode: {},
           policy: {},
           policyset: {},
           resourcetype: {},
@@ -138,9 +155,13 @@ export async function getFullExportConfigFromDirectory(
             cot: {},
           },
           script: {},
+          secretstore: {},
           service: {},
           theme: {},
           trees: {},
+          trustedJwtIssuer: {},
+          user: {},
+          userGroup: {},
         },
       ])
     ),
@@ -169,6 +190,8 @@ async function getConfigFromDirectory(
   const idmPath = `${directory}/idm/`;
   const syncPath = `${directory}/sync/`;
   const scriptPath = `${directory}/script/`;
+  const serverPath = `${directory}/server/`;
+  const configPath = `${directory}/config/`;
 
   const files = await readFiles(directory);
   const jsonFiles = files.filter((f) => f.path.endsWith('.json'));
@@ -177,13 +200,17 @@ async function getConfigFromDirectory(
   );
   const syncFiles = jsonFiles.filter((f) => f.path.startsWith(syncPath));
   const scriptFiles = jsonFiles.filter((f) => f.path.endsWith('.script.json'));
+  const serverFiles = jsonFiles.filter((f) => f.path.startsWith(serverPath));
+  const configFiles = jsonFiles.filter((f) => f.path.startsWith(configPath));
   const allOtherFiles = jsonFiles.filter(
     (f) =>
       !f.path.startsWith(samlPath) &&
       !f.path.startsWith(cotPath) &&
       !f.path.startsWith(idmPath) &&
       !f.path.startsWith(syncPath) &&
-      !f.path.startsWith(scriptPath)
+      !f.path.startsWith(scriptPath) &&
+      !f.path.startsWith(serverPath) &&
+      !f.path.startsWith(configPath)
   );
   // Handle all other json files
   for (const f of allOtherFiles) {
@@ -212,6 +239,26 @@ async function getConfigFromDirectory(
     (exportConfig as FullGlobalExportInterface).sync =
       await getLegacyMappingsFromFiles(syncFiles);
   }
+  // Handle config json files
+  for (const f of configFiles) {
+    for (const [id, value] of Object.entries(
+      JSON.parse(f.content) as Record<
+        string,
+        Record<string, AmConfigEntityInterface>
+      >
+    )) {
+      if (id === 'meta') {
+        continue;
+      }
+      if (exportConfig.config[id] == null) {
+        exportConfig.config[id] = value;
+      } else {
+        Object.entries(value).forEach(
+          ([key, val]) => (exportConfig.config[id][key] = val)
+        );
+      }
+    }
+  }
   // Handle saml files
   for (const f of samlFiles) {
     let content = JSON.parse(f.content);
@@ -227,6 +274,47 @@ async function getConfigFromDirectory(
             ((exportConfig as FullRealmExportInterface).saml[id][key] = val)
         );
       }
+    }
+  }
+  // Handle server files
+  const serverProperties = new Map();
+  const defaultPath = serverPath + 'default/';
+  for (const f of serverFiles) {
+    const content = JSON.parse(f.content);
+    if (f.path.endsWith('server.json')) {
+      for (const [id, value] of Object.entries(content.server)) {
+        (exportConfig as FullGlobalExportInterface).server.server[id] =
+          value as ServerExportSkeleton;
+      }
+    } else if (f.path.startsWith(defaultPath)) {
+      const propertiesId = content._id;
+      (exportConfig as FullGlobalExportInterface).server.defaultProperties[
+        propertiesId.substring(propertiesId.lastIndexOf('/') + 1)
+      ] = content;
+    } else {
+      const id = f.path.substring(
+        serverPath.length,
+        f.path.indexOf('/', serverPath.length)
+      );
+      if (serverProperties.has(id)) {
+        serverProperties.get(id).push(content);
+      } else {
+        serverProperties.set(id, [content]);
+      }
+    }
+  }
+  for (const [id, properties] of serverProperties.entries()) {
+    if (
+      !(exportConfig as FullGlobalExportInterface).server.server[id].properties
+    ) {
+      (exportConfig as FullGlobalExportInterface).server.server[id].properties =
+        {} as ServerPropertiesSkeleton;
+    }
+    for (const property of properties) {
+      const propertiesId = property._id;
+      (exportConfig as FullGlobalExportInterface).server.server[id].properties[
+        propertiesId.substring(propertiesId.lastIndexOf('/') + 1)
+      ] = property;
     }
   }
   // Handle extracted scripts

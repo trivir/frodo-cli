@@ -11,6 +11,9 @@ export default function setup() {
   program
     .description('Import authentication settings.')
     .addOption(new Option('-f, --file <file>', 'Name of the file to import.'))
+    .addOption(
+      new Option('-g, --global', 'Export global authentication settings.')
+    )
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {
@@ -24,7 +27,10 @@ export default function setup() {
         );
         if (await getTokens()) {
           verboseMessage('Importing authentication settings from file...');
-          const outcome = importAuthenticationSettingsFromFile(options.file);
+          const outcome = importAuthenticationSettingsFromFile(
+            options.file,
+            options.global
+          );
           if (!outcome) process.exitCode = 1;
         } else {
           process.exitCode = 1;

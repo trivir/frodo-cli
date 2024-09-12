@@ -1,0 +1,47 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.330Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  },
+  "script": {
+    "2c38c998-aec0-4e56-8d46-bff6e24a704e": {
+      "_id": "2c38c998-aec0-4e56-8d46-bff6e24a704e",
+      "context": "LIBRARY",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "My Example Library",
+      "evaluatorVersion": "2.0",
+      "exports": [
+        {
+          "id": "MSG",
+          "type": "String"
+        },
+        {
+          "arity": 1,
+          "id": "add",
+          "type": "Function"
+        },
+        {
+          "arity": 1,
+          "id": "logTotal",
+          "type": "Function"
+        },
+        {
+          "arity": 2,
+          "id": "logTotalWithMessage",
+          "type": "Function"
+        }
+      ],
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "My Example Library",
+      "script": "var i = 0;\n\nfunction add(j) {i += j};\nfunction logTotal(log) { log.info(\"Total: \" + i) };\n\n// export constant\nexports.MSG = 'Final sum';\n\n// export functions\nexports.add = add;\nexports.logTotal = logTotal;\n\n//direct export using an inline declaration\nexports.logTotalWithMessage = (log, message) => log.info(message + \": \" + i);"
+    }
+  }
+}

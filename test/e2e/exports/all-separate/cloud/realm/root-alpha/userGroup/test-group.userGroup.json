@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.335Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  },
+  "userGroup": {
+    "test-group": {
+      "_id": "test-group",
+      "cn": [
+        "test-group"
+      ],
+      "dn": [
+        "cn=test-group,ou=groups,o=alpha,o=root,ou=identities"
+      ],
+      "members": {
+        "uniqueMember": [
+          "346459bf-4159-4c4c-b929-f9ff5acc2f53"
+        ]
+      },
+      "objectclass": [
+        "top",
+        "groupofuniquenames"
+      ],
+      "privileges": {
+        "AgentAdmin": true,
+        "ApplicationModifyAccess": true,
+        "ApplicationReadAccess": true,
+        "ApplicationTypesReadAccess": true,
+        "CacheAdmin": false,
+        "ConditionTypesReadAccess": true,
+        "DecisionCombinersReadAccess": true,
+        "EntitlementRestAccess": false,
+        "FederationAdmin": false,
+        "LogAdmin": false,
+        "LogRead": true,
+        "LogWrite": true,
+        "PolicyAdmin": false,
+        "PrivilegeRestAccess": true,
+        "PrivilegeRestReadAccess": true,
+        "RealmAdmin": false,
+        "RealmReadAccess": true,
+        "ResourceTypeModifyAccess": false,
+        "ResourceTypeReadAccess": false,
+        "SessionPropertyModifyAccess": false,
+        "SubjectAttributesReadAccess": false,
+        "SubjectTypesReadAccess": false
+      },
+      "realm": "/alpha",
+      "universalid": [
+        "id=test-group,ou=group,o=alpha,ou=services,ou=am-config"
+      ],
+      "username": "test-group"
+    }
+  }
+}

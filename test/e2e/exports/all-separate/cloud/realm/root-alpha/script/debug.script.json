@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.331Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  },
+  "script": {
+    "3cb43516-ae69-433a-8787-501d45db14e9": {
+      "_id": "3cb43516-ae69-433a-8787-501d45db14e9",
+      "context": "AUTHENTICATION_TREE_DECISION_NODE",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "Display sharedState, transientState, and headers.",
+      "evaluatorVersion": "1.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "debug",
+      "script": "/* debug\n *\n * Author: volker.scheuber@forgerock.com\n * \n * Display sharedState, transientState, and headers.\n * \n * This script does not need to be parametrized. It will work properly as is.\n * \n * The Scripted Decision Node needs the following outcomes defined:\n * - true\n */\nvar anchor = \"anchor-\".concat(generateNumericToken('xxx'));\nvar halign = \"left\";\nvar message = \"<p><b>Shared State</b>:<br/>\".concat(\n      sharedState.toString()).concat(\"</p>\").concat(\n    \"<p><b>Transient State</b>:<br/>\").concat(\n      transientState.toString()).concat(\"</p>\").concat(\n    \"<p><b>Request Headers</b>:<br/>\").concat(\n      requestHeaders.toString()).concat(\"</p>\")\nvar script = \"Array.prototype.slice.call(\\n\".concat(\n  \"document.getElementsByClassName('callback-component')).forEach(\\n\").concat(\n  \"function (e) {\\n\").concat(\n  \"  var message = e.firstElementChild;\\n\").concat(\n  \"  if (message.firstChild && message.firstChild.nodeName == '#text' && message.firstChild.nodeValue.trim() == '\").concat(anchor).concat(\"') {\\n\").concat(\n  \"    message.className = \\\"text-left\\\";\\n\").concat(\n  \"    message.align = \\\"\").concat(halign).concat(\"\\\";\\n\").concat(\n  \"    message.innerHTML = '\").concat(message).concat(\"';\\n\").concat(\n  \"  }\\n\").concat(\n  \"})\")\nvar fr = JavaImporter(\n    org.forgerock.openam.auth.node.api.Action,\n    javax.security.auth.callback.TextOutputCallback,\n    com.sun.identity.authentication.callbacks.ScriptTextOutputCallback\n)\nif (message.length && callbacks.isEmpty()) {\n    action = fr.Action.send(\n        new fr.TextOutputCallback(\n            fr.TextOutputCallback.INFORMATION,\n            anchor\n        ),\n        new fr.ScriptTextOutputCallback(script)\n    ).build()\n}\nelse {\n  action = fr.Action.goTo(\"true\").build();\n}\n\n /*\n  * Generate a token in the desired format. All 'x' characters will be replaced with a random number 0-9.\n  * \n  * Example:\n  * 'xxxxx' produces '28535'\n  * 'xxx-xxx' produces '432-521'\n  */\nfunction generateNumericToken(format) {\n    return format.replace(/[x]/g, function(c) {\n        var r = Math.random()*10|0;\n        var v = r;\n        return v.toString(10);\n    });\n}"
+    }
+  }
+}

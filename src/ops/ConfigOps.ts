@@ -143,6 +143,20 @@ function exportItem(
   if (!obj || !Object.keys(obj).length) {
     return;
   }
+  if (type == 'config') {
+    Object.entries(obj).forEach(([type2, obj2]: [string, any]) =>
+      exportItem(
+        obj,
+        type2,
+        obj2,
+        baseDirectory + '/config',
+        includeMeta,
+        extract,
+        separateMappings
+      )
+    );
+    return;
+  }
   let fileType = type;
   if (
     fileType === 'secrets' ||
@@ -152,6 +166,10 @@ function exportItem(
     fileType = fileType.substring(0, fileType.lastIndexOf('s'));
   } else if (fileType === 'trees') {
     fileType = 'journey';
+  } else if (fileType === 'managedApplication') {
+    fileType = 'application';
+  } else if (fileType === 'application') {
+    fileType = 'oauth2.app';
   }
   if (!fs.existsSync(`${baseDirectory}/${fileType}`)) {
     fs.mkdirSync(`${baseDirectory}/${fileType}`, {
@@ -224,6 +242,45 @@ function exportItem(
       obj as SyncSkeleton,
       `${baseDirectory.substring(getWorkingDirectory(false).length + 1)}/${fileType}`
     );
+  } else if (type === 'server') {
+    Object.entries(obj.server).forEach(([serverId, server]: [string, any]) => {
+      const properties = server.properties;
+      delete server.properties;
+      //Save server export data
+      const fileName = getTypedFilename(serverId, fileType);
+      saveJsonToFile(
+        {
+          [type]: {
+            [serverId]: server,
+          },
+        },
+        `${baseDirectory}/${fileType}/${fileName}`,
+        includeMeta
+      );
+      //Save server properties separately in their own directories
+      if (!fs.existsSync(`${baseDirectory}/${fileType}/${serverId}`)) {
+        fs.mkdirSync(`${baseDirectory}/${fileType}/${serverId}`);
+      }
+      Object.entries(properties).forEach(([name, props]: [string, any]) => {
+        saveJsonToFile(
+          props,
+          `${baseDirectory}/${fileType}/${serverId}/${name}.json`,
+          false
+        );
+      });
+    });
+    if (!fs.existsSync(`${baseDirectory}/${fileType}/default`)) {
+      fs.mkdirSync(`${baseDirectory}/${fileType}/default`);
+    }
+    Object.entries(obj.defaultProperties).forEach(
+      ([name, props]: [string, any]) => {
+        saveJsonToFile(
+          props,
+          `${baseDirectory}/${fileType}/default/${name}.json`,
+          false
+        );
+      }
+    );
   } else {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Object.entries(obj).forEach(([id, value]: [string, any]) => {
@@ -254,33 +311,6 @@ function exportItem(
             );
           }
         }
-      } else if (type === 'server') {
-        if (value != null) {
-          const properties = value.properties;
-          delete value.properties;
-          //Save server export data
-          const fileName = getTypedFilename(id, fileType);
-          saveJsonToFile(
-            {
-              [type]: {
-                [id]: value,
-              },
-            },
-            `${baseDirectory}/${fileType}/${fileName}`,
-            includeMeta
-          );
-          //Save server properties separately in their own directories
-          if (!fs.existsSync(`${baseDirectory}/${fileType}/${id}`)) {
-            fs.mkdirSync(`${baseDirectory}/${fileType}/${id}`);
-          }
-          Object.entries(properties).forEach(([name, value]: [string, any]) => {
-            saveJsonToFile(
-              value,
-              `${baseDirectory}/${fileType}/${id}/${name}.json`,
-              false
-            );
-          });
-        }
       } else {
         let name =
           value && value.name && type !== 'emailTemplate'
@@ -293,7 +323,10 @@ function exportItem(
             name = (value.parentPath.substring(1) + name).replaceAll('/', '-');
           }
         }
-        const filename = getTypedFilename(name ? name : id, fileType);
+        const filename = getTypedFilename(
+          name ? name : id,
+          fileType === 'orphanedNode' ? 'node' : fileType
+        );
         if (extract && type === 'script') {
           extractScriptsToFiles(
             exportData as ScriptExportInterface,
@@ -301,13 +334,20 @@ function exportItem(
             `${baseDirectory.substring(getWorkingDirectory(false).length + 1)}/${fileType}`
           );
         }
+        let subDirectory = fileType;
+        if (fileType === 'orphanedNode') {
+          subDirectory = `${fileType}/${value._type._id}`;
+        }
+        if (!fs.existsSync(`${baseDirectory}/${subDirectory}`)) {
+          fs.mkdirSync(`${baseDirectory}/${subDirectory}`);
+        }
         saveJsonToFile(
           {
             [type]: {
               [id]: value,
             },
           },
-          `${baseDirectory}/${fileType}/${filename}`,
+          `${baseDirectory}/${subDirectory}/${filename}`,
           includeMeta
         );
       }

@@ -1,0 +1,59 @@
+{
+  "authenticationModules": {
+    "authSocialWeChatMobile": {
+      "_id": "authSocialWeChatMobile",
+      "_type": {
+        "_id": "authSocialWeChatMobile",
+        "collection": false,
+        "name": "Social Auth WeChat Mobile"
+      },
+      "defaults": {
+        "accountProvisioning": {
+          "accountMapperClass": "org.forgerock.openam.authentication.modules.common.mapping.JsonAttributeMapper|*|wechat-",
+          "accountMapperConfiguration": [
+            "openid=uid"
+          ],
+          "accountProviderClass": "org.forgerock.openam.authentication.modules.common.mapping.DefaultAccountProvider",
+          "anonymousUserName": "anonymous",
+          "attributeMapperConfiguration": [
+            "nickname=givenName",
+            "openid=uid",
+            "nickname=cn",
+            "nickname=sn"
+          ],
+          "attributeMappingClasses": [
+            "org.forgerock.openam.authentication.modules.common.mapping.JsonAttributeMapper|uid|wechat-"
+          ],
+          "createAccount": true,
+          "enableRegistrationService": false,
+          "mapToAnonymousUser": false,
+          "promptPasswordFlag": false,
+          "saveAttributesInSession": true
+        },
+        "core": {
+          "authenticationLevel": 0,
+          "provider": "WeChat",
+          "scope": [
+            "snsapi_userinfo"
+          ],
+          "ssoProxyUrl": "http://localhost:8080/am/oauth2c/OAuthProxy.jsp",
+          "subjectProperty": "openid",
+          "userInfoEndpoint": "https://api.wechat.com/sns/userinfo"
+        },
+        "emailSettings": {
+          "emailGateway": "org.forgerock.openam.authentication.modules.oauth2.DefaultEmailGatewayImpl",
+          "smtpHost": "localhost",
+          "smtpPort": "25"
+        }
+      }
+    }
+  },
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.084Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.338Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  },
+  "script": {
+    "ffcfbd20-38d5-4f74-8766-7df90af4dbe4": {
+      "_id": "ffcfbd20-38d5-4f74-8766-7df90af4dbe4",
+      "context": "AUTHENTICATION_TREE_DECISION_NODE",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "Check if username has already been resolved to _id.",
+      "evaluatorVersion": "2.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "Check Resolved Username",
+      "script": "/* Resolve Username\n *\n * Author: volker.scheuber@forgerock.com\n * \n * Check if username has already been resolved to _id.\n * Return \"true\" if resolved, \"false\" otherwise.\n * \n * This script does not need to be parametrized. It will work properly as is.\n * \n * The Scripted Decision Node needs the following outcomes defined:\n * - true\n * - false\n */\n(function () {\n    if (nodeState.get(\"_id\")) {\n        outcome = \"true\";\n    }\n    else {\n        outcome = \"false\";\n    }\n}());"
+    }
+  }
+}

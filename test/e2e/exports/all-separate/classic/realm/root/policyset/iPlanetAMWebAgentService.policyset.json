@@ -1,0 +1,61 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.097Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  },
+  "policyset": {
+    "iPlanetAMWebAgentService": {
+      "applicationType": "iPlanetAMWebAgentService",
+      "attributeNames": [],
+      "conditions": [
+        "AND",
+        "OR",
+        "NOT",
+        "AMIdentityMembership",
+        "AuthLevel",
+        "LEAuthLevel",
+        "AuthScheme",
+        "AuthenticateToRealm",
+        "AuthenticateToService",
+        "IPv4",
+        "IPv6",
+        "LDAPFilter",
+        "OAuth2Scope",
+        "ResourceEnvIP",
+        "Session",
+        "SessionProperty",
+        "SimpleTime",
+        "Script",
+        "Transaction"
+      ],
+      "createdBy": "id=dsameuser,ou=user,dc=openam,dc=forgerock,dc=org",
+      "creationDate": 1718897366825,
+      "description": "The built-in Application used by OpenAM Policy Agents.",
+      "displayName": "Default Policy Set",
+      "editable": true,
+      "entitlementCombiner": "DenyOverride",
+      "lastModifiedBy": "id=amAdmin,ou=user,dc=openam,dc=forgerock,dc=org",
+      "lastModifiedDate": 1725981172179,
+      "name": "iPlanetAMWebAgentService",
+      "resourceComparator": null,
+      "resourceTypeUuids": [
+        "76656a38-5f8e-401b-83aa-4ccb74ce88d2"
+      ],
+      "saveIndex": null,
+      "searchIndex": null,
+      "subjects": [
+        "AND",
+        "OR",
+        "NOT",
+        "AuthenticatedUsers",
+        "Identity",
+        "JwtClaim",
+        "NONE"
+      ]
+    }
+  }
+}

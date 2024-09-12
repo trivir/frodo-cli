@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.344Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  },
+  "user": {
+    "1f7361b9-df4b-4968-84bf-19e5be0dadd3": {
+      "_id": "1f7361b9-df4b-4968-84bf-19e5be0dadd3",
+      "cn": [
+        "{{givenName}} {{sn}}"
+      ],
+      "config": {
+        "devices": {
+          "2fa": {
+            "binding": [],
+            "oath": [],
+            "push": [],
+            "webauthn": []
+          },
+          "profile": [],
+          "trusted": []
+        },
+        "groups": [],
+        "oauth2": {
+          "applications": []
+        },
+        "services": [
+          {
+            "_id": "dashboard"
+          }
+        ]
+      },
+      "createTimestamp": [
+        "20240703201223Z"
+      ],
+      "dn": [
+        "fr-idm-uuid=1f7361b9-df4b-4968-84bf-19e5be0dadd3,ou=user,o=bravo,o=root,ou=identities"
+      ],
+      "fr-idm-custom-attrs": [
+        "{\"effectiveApplications\":[]}"
+      ],
+      "fr-idm-preferences": [
+        "{\"marketing\":false,\"updates\":false}"
+      ],
+      "fr-idm-uuid": [
+        "1f7361b9-df4b-4968-84bf-19e5be0dadd3"
+      ],
+      "givenName": [
+        "Test"
+      ],
+      "inetUserStatus": [
+        "Active"
+      ],
+      "mail": [
+        "test_user@test.com"
+      ],
+      "modifyTimestamp": [
+        "20240703201224Z"
+      ],
+      "objectClass": [
+        "iplanet-am-managed-person",
+        "inetuser",
+        "inetOrgPerson",
+        "sunFMSAML2NameIdentifier",
+        "devicePrintProfilesContainer",
+        "fr-ext-attrs",
+        "iplanet-am-user-service",
+        "iPlanetPreferences",
+        "pushDeviceProfilesContainer",
+        "forgerock-am-dashboard-service",
+        "top",
+        "kbaInfoContainer",
+        "person",
+        "organizationalPerson",
+        "oathDeviceProfilesContainer",
+        "sunAMAuthAccountLockout",
+        "webauthnDeviceProfilesContainer",
+        "deviceProfilesContainer",
+        "iplanet-am-auth-configuration-service",
+        "fr-idm-hybrid-obj",
+        "fr-idm-managed-user-explicit"
+      ],
+      "realm": "/bravo",
+      "sn": [
+        "User"
+      ],
+      "uid": [
+        "bravo_test_user"
+      ],
+      "universalid": [
+        "id=1f7361b9-df4b-4968-84bf-19e5be0dadd3,ou=user,o=bravo,ou=services,ou=am-config"
+      ],
+      "username": "bravo_test_user"
+    }
+  }
+}

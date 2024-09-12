@@ -1,0 +1,23 @@
+{
+  "authenticationModules": {
+    "windowsnt": {
+      "_id": "windowsnt",
+      "_type": {
+        "_id": "windowsnt",
+        "collection": false,
+        "name": "Windows NT"
+      },
+      "defaults": {
+        "authenticationLevel": 0
+      }
+    }
+  },
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.083Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  }
+}

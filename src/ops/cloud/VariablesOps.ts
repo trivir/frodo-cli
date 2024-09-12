@@ -324,11 +324,6 @@ export async function describeVariable(
   usage = false,
   json = false
 ): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
-    'indeterminate',
-    0,
-    `Describing variable ${variableId}...`
-  );
   try {
     const variable = (await readVariable(variableId)) as VariableSkeleton & {
       locations: string[];
@@ -340,20 +335,10 @@ export async function describeVariable(
         delete fullExport.global.variables;
         variable.locations = getIdLocations(fullExport, variableId, true);
       } catch (error) {
-        stopProgressIndicator(
-          spinnerId,
-          `Error determining usage for variable with id ${variableId}`,
-          'fail'
-        );
         printError(error);
         return false;
       }
     }
-    stopProgressIndicator(
-      spinnerId,
-      `Successfully retrieved variable ${variableId}`,
-      'success'
-    );
     if (json) {
       printMessage(variable, 'data');
     } else {
@@ -404,11 +389,6 @@ export async function describeVariable(
     }
     return true;
   } catch (error) {
-    stopProgressIndicator(
-      spinnerId,
-      `Error describing variable ${variableId}`,
-      'fail'
-    );
     printError(error);
   }
   return false;

@@ -385,13 +385,7 @@ export async function describeSecret(
   usage = false,
   json = false
 ): Promise<boolean> {
-  let spinnerId: string;
   try {
-    spinnerId = createProgressIndicator(
-      'indeterminate',
-      0,
-      `Reading secret ${secretId}...`
-    );
     const secret = (await readSecret(secretId)) as SecretSkeleton & {
       locations: string[];
     };
@@ -402,20 +396,10 @@ export async function describeSecret(
         delete fullExport.global.secrets;
         secret.locations = getIdLocations(fullExport, secretId, true);
       } catch (error) {
-        stopProgressIndicator(
-          spinnerId,
-          `Error determining usage for secret with id ${secretId}`,
-          'fail'
-        );
         printError(error);
         return false;
       }
     }
-    stopProgressIndicator(
-      spinnerId,
-      `Successfully read secret ${secretId}.`,
-      'success'
-    );
     if (json) {
       printMessage(secret, 'data');
     } else {
@@ -465,11 +449,6 @@ export async function describeSecret(
     await listSecretVersions(secretId, json);
     return true;
   } catch (error) {
-    stopProgressIndicator(
-      spinnerId,
-      `Error describing secret ${secretId}`,
-      'fail'
-    );
     printError(error);
   }
   return false;

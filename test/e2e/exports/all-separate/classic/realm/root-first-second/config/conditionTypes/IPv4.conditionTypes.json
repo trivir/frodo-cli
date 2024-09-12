@@ -1,0 +1,34 @@
+{
+  "conditionTypes": {
+    "IPv4": {
+      "_id": "IPv4",
+      "config": {
+        "properties": {
+          "dnsName": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "endIp": {
+            "type": "string"
+          },
+          "startIp": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "logical": false,
+      "title": "IPv4"
+    }
+  },
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.105Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  }
+}

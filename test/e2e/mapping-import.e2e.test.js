@@ -53,8 +53,8 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo mapping import --no-deps --file allAlphaMappings.mapping.json --directory test/e2e/exports/all
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo mapping import -af test/e2e/exports/all/allAlphaMappings.mapping.json
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo mapping import --all --no-deps --file allAlphaMappings.mapping.json --directory test/e2e/exports/all
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo mapping import -AD test/e2e/exports/all-separate/idm
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo mapping import --all-separate --no-deps --directory test/e2e/exports/all-separate/idm
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo mapping import -AD test/e2e/exports/all-separate/cloud/global/idm
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo mapping import --all-separate --no-deps --directory test/e2e/exports/all-separate/cloud/global/idm
 */
 import cp from 'child_process';
 import { promisify } from 'util';
@@ -69,7 +69,7 @@ const env = getEnv(c);
 const allDirectory = "test/e2e/exports/all";
 const allAlphaMappingsFileName = "allAlphaMappings.mapping.json";
 const allAlphaMappingsExport = `${allDirectory}/${allAlphaMappingsFileName}`;
-const allSeparateMappingsDirectory = `test/e2e/exports/all-separate/idm`;
+const allSeparateMappingsDirectory = `test/e2e/exports/all-separate/cloud/global/idm`;
 
 describe('frodo mapping import', () => {
     test(`"frodo mapping import -i sync/managedAlpha_application_managedBravo_application -f ${allAlphaMappingsExport}": should import the mapping with the id "sync/managedAlpha_application_managedBravo_application" from the file "${allAlphaMappingsExport}"`, async () => {

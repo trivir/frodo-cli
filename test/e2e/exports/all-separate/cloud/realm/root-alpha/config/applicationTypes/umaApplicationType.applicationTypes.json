@@ -1,0 +1,21 @@
+{
+  "applicationTypes": {
+    "umaApplicationType": {
+      "_id": "umaApplicationType",
+      "actions": {},
+      "applicationClassName": "com.sun.identity.entitlement.Application",
+      "name": "umaApplicationType",
+      "resourceComparator": "org.forgerock.openam.uma.UmaPolicyResourceMatcher",
+      "saveIndex": "org.forgerock.openam.uma.UmaPolicySaveIndex",
+      "searchIndex": "org.forgerock.openam.uma.UmaPolicySearchIndex"
+    }
+  },
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.326Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  }
+}

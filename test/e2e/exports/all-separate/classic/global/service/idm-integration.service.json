@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.089Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  },
+  "service": {
+    "idm-integration": {
+      "_id": "",
+      "_type": {
+        "_id": "idm-integration",
+        "collection": false,
+        "name": "IDM Provisioning"
+      },
+      "configurationCacheDuration": 0,
+      "enabled": false,
+      "idmProvisioningClient": "idm-provisioning",
+      "jwtSigningCompatibilityMode": false,
+      "location": "global",
+      "nextDescendents": [],
+      "provisioningClientScopes": [
+        "fr:idm:*"
+      ],
+      "useInternalOAuth2Provider": false
+    }
+  }
+}

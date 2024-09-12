@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:54:17.331Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "7.6.0"
+  },
+  "script": {
+    "e232cff3-2460-47cd-80b2-36c86c0d0f06": {
+      "_id": "e232cff3-2460-47cd-80b2-36c86c0d0f06",
+      "context": "OAUTH2_ACCESS_TOKEN_MODIFICATION",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "Used by endUserUIClient",
+      "evaluatorVersion": "1.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "Alpha endUserUIClient OAuth2 Access Token Modification Script",
+      "script": "(function () {\n  if (scopes.contains('fr:autoaccess:*') || scopes.contains('fr:iga:*') || scopes.contains('fr:idc:analytics:*')) {\n    var fr = JavaImporter(\n      com.sun.identity.idm.IdType\n    );\n    var groups = [];\n    identity.getMemberships(fr.IdType.GROUP).toArray().forEach(function (group) {\n      groups.push(group.getAttribute('cn').toArray()[0]);\n    });\n    accessToken.setField('groups', groups);\n  }\n}());\n"
+    }
+  }
+}

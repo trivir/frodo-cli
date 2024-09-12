@@ -1,0 +1,27 @@
+{
+  "agents": {
+    "Test IG": {
+      "_id": "Test IG",
+      "_type": {
+        "_id": "IdentityGatewayAgent",
+        "collection": true,
+        "name": "Identity Gateway Agents"
+      },
+      "agentgroup": null,
+      "igCdssoLoginUrlTemplate": null,
+      "igCdssoRedirectUrls": [],
+      "igTokenIntrospection": "None",
+      "secretLabelIdentifier": null,
+      "status": "Active",
+      "userpassword": null
+    }
+  },
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.094Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.090Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  },
+  "service": {
+    "uma": {
+      "_id": "",
+      "_type": {
+        "_id": "uma",
+        "collection": false,
+        "name": "UMA Provider"
+      },
+      "defaults": {
+        "claimsGathering": {
+          "claimsGatheringService": "[Empty]",
+          "interactiveClaimsGatheringEnabled": false,
+          "pctLifetime": 604800
+        },
+        "generalSettings": {
+          "deletePoliciesOnDeleteRS": true,
+          "deleteResourceSetsOnDeleteRS": true,
+          "emailRequestingPartyOnPendingRequestApproval": true,
+          "emailResourceOwnerOnPendingRequestCreation": true,
+          "grantResourceOwnerImplicitConsent": true,
+          "grantRptConditions": [
+            "REQUEST_PARTIAL",
+            "REQUEST_NONE",
+            "TICKET_PARTIAL"
+          ],
+          "pendingRequestsEnabled": true,
+          "permissionTicketLifetime": 120,
+          "resharingMode": "IMPLICIT",
+          "userProfileLocaleAttribute": "inetOrgPerson"
+        }
+      },
+      "location": "global",
+      "nextDescendents": [],
+      "umaPolicyUpgradeCompatibilityMode": false
+    }
+  }
+}

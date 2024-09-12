@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.090Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  },
+  "service": {
+    "ConfigurationVersionService": {
+      "_id": "",
+      "_type": {
+        "_id": "ConfigurationVersionService",
+        "collection": false,
+        "name": "Configuration Version Service"
+      },
+      "appliedRuleIds": [
+        "AME-23273",
+        "AME-21032",
+        "AME-21768"
+      ],
+      "configurationVersion": "8.0.0.0",
+      "location": "global",
+      "nextDescendents": []
+    }
+  }
+}

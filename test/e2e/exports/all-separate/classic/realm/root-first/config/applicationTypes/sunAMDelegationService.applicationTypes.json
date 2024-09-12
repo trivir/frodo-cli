@@ -1,0 +1,25 @@
+{
+  "applicationTypes": {
+    "sunAMDelegationService": {
+      "_id": "sunAMDelegationService",
+      "actions": {
+        "DELEGATE": true,
+        "MODIFY": true,
+        "READ": true
+      },
+      "applicationClassName": "com.sun.identity.entitlement.Application",
+      "name": "sunAMDelegationService",
+      "resourceComparator": "com.sun.identity.entitlement.RegExResourceName",
+      "saveIndex": "com.sun.identity.entitlement.opensso.DelegationResourceNameIndexGenerator",
+      "searchIndex": "com.sun.identity.entitlement.opensso.DelegationResourceNameSplitter"
+    }
+  },
+  "meta": {
+    "exportDate": "2024-09-11T16:46:20.101Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v2.1.2-0 [v20.11.1]",
+    "exportedBy": "amAdmin",
+    "origin": "http://openam-frodo-dev.classic.com:8080/am",
+    "originAmVersion": "7.5.0"
+  }
+}
