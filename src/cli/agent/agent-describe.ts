@@ -9,6 +9,7 @@ export default function setup() {
   program
     .description('Describe agents.')
     .addOption(new Option('-i, --agent-id <agent-id>', 'Agent id.'))
+    .addOption(new Option('-g, --global', 'Describe global agent.'))
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {

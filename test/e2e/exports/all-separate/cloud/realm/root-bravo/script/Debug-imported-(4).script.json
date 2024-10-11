@@ -1,0 +1,18 @@
+{
+  "script": {
+    "8a92c4f0-039d-4de7-876c-0328c08d6bfa": {
+      "_id": "8a92c4f0-039d-4de7-876c-0328c08d6bfa",
+      "context": "AUTHENTICATION_TREE_DECISION_NODE",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "null",
+      "evaluatorVersion": "1.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "Debug - imported (4)",
+      "script": "file://Debug-imported-(4).script.js"
+    }
+  }
+}

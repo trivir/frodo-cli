@@ -1,0 +1,18 @@
+{
+  "script": {
+    "20b153af-1353-405f-991d-60906087e3c8": {
+      "_id": "20b153af-1353-405f-991d-60906087e3c8",
+      "context": "AUTHENTICATION_TREE_DECISION_NODE",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "Set username from email and copy first and last name to applicant attributes.",
+      "evaluatorVersion": "1.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "Prepare Account Creation - imported (4)",
+      "script": "file://Prepare-Account-Creation-imported-(4).script.js"
+    }
+  }
+}

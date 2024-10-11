@@ -1,0 +1,18 @@
+{
+  "script": {
+    "70ca1fdf-9a17-4b66-9fd4-3f5c9e05e02e": {
+      "_id": "70ca1fdf-9a17-4b66-9fd4-3f5c9e05e02e",
+      "context": "OAUTH2_ACCESS_TOKEN_MODIFICATION",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "Default bravo realm script for OAuth2 Access Token Modification",
+      "evaluatorVersion": "1.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "Bravo OAuth2 Access Token Modification Script - imported (3)",
+      "script": "file://Bravo-OAuth2-Access-Token-Modification-Script-imported-(3).script.js"
+    }
+  }
+}

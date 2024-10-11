@@ -1,0 +1,19 @@
+{
+  "server": {
+    "01": {
+      "_id": "01",
+      "properties": {
+        "advanced": "file://01/advanced.properties.server.json",
+        "cts": "file://01/cts.properties.server.json",
+        "directoryConfiguration": "file://01/directoryConfiguration.properties.server.json",
+        "general": "file://01/general.properties.server.json",
+        "sdk": "file://01/sdk.properties.server.json",
+        "security": "file://01/security.properties.server.json",
+        "session": "file://01/session.properties.server.json",
+        "uma": "file://01/uma.properties.server.json"
+      },
+      "siteName": null,
+      "url": "http://localhost:8080/am"
+    }
+  }
+}

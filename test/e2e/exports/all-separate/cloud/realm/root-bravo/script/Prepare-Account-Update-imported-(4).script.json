@@ -1,0 +1,18 @@
+{
+  "script": {
+    "65c75f85-bf45-477b-a4fc-24af2f738377": {
+      "_id": "65c75f85-bf45-477b-a4fc-24af2f738377",
+      "context": "AUTHENTICATION_TREE_DECISION_NODE",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "Move data from root of node state into objectAttributes for account update.",
+      "evaluatorVersion": "1.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "Prepare Account Update - imported (4)",
+      "script": "file://Prepare-Account-Update-imported-(4).script.js"
+    }
+  }
+}

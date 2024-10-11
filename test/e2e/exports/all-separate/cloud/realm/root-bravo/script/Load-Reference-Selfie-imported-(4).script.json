@@ -1,0 +1,18 @@
+{
+  "script": {
+    "c5f24053-a414-45e3-871a-30dd9ce2b9d5": {
+      "_id": "c5f24053-a414-45e3-871a-30dd9ce2b9d5",
+      "context": "AUTHENTICATION_TREE_DECISION_NODE",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "Load reference selfie into shared state",
+      "evaluatorVersion": "2.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "Load Reference Selfie - imported (4)",
+      "script": "file://Load-Reference-Selfie-imported-(4).script.js"
+    }
+  }
+}

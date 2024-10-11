@@ -1,0 +1,18 @@
+{
+  "script": {
+    "c54819ec-8472-4a01-9a87-8d20f8d282fc": {
+      "_id": "c54819ec-8472-4a01-9a87-8d20f8d282fc",
+      "context": "AUTHENTICATION_TREE_DECISION_NODE",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "Show selfie authentication results",
+      "evaluatorVersion": "2.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "Selfie Authentication Results - imported (1)",
+      "script": "file://Selfie-Authentication-Results-imported-(1).script.js"
+    }
+  }
+}

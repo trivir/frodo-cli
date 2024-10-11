@@ -1,0 +1,18 @@
+{
+  "script": {
+    "b189b1e4-76e5-406e-9235-cb3543efdf88": {
+      "_id": "b189b1e4-76e5-406e-9235-cb3543efdf88",
+      "context": "OIDC_CLAIMS",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "Used by endUserUIClient",
+      "evaluatorVersion": "1.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "Bravo endUserUIClient OIDC Claims Script - imported (1)",
+      "script": "file://Bravo-endUserUIClient-OIDC-Claims-Script-imported-(1).script.js"
+    }
+  }
+}

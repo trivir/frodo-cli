@@ -81,17 +81,17 @@ export default function setup() {
             // multi - by id
             if (
               typeof options.journeyId !== 'undefined' &&
-              fileData.trees &&
-              fileData.trees[options.journeyId]
+              fileData.journey &&
+              fileData.journey[options.journeyId]
             ) {
-              journeyData = fileData.trees[options.journeyId];
+              journeyData = fileData.journey[options.journeyId];
             }
             // multi - first
             else if (
               typeof options.journeyId === 'undefined' &&
-              fileData.trees
+              fileData.journey
             ) {
-              [journeyData] = Object.values(fileData.trees);
+              [journeyData] = Object.values(fileData.journey);
             }
             // single - by id
             else if (

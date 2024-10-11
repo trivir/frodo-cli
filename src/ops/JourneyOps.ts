@@ -256,7 +256,7 @@ export async function exportJourneysToFiles(
 ): Promise<boolean> {
   try {
     const journeysExport = await exportJourneys(options);
-    const trees = Object.entries(journeysExport.trees);
+    const trees = Object.entries(journeysExport.journey);
     for (const [treeId, treeValue] of trees) {
       const indicatorId = createProgressIndicator(
         'determinate',
@@ -297,9 +297,9 @@ export async function importJourneyFromFile(
     const data = fs.readFileSync(getFilePath(file), 'utf8');
     let journeyData = JSON.parse(data);
     // check if this is a file with multiple trees and get journey by id
-    if (journeyData.trees && journeyData.trees[journeyId]) {
-      journeyData = journeyData.trees[journeyId];
-    } else if (journeyData.trees) {
+    if (journeyData.journey && journeyData.journey[journeyId]) {
+      journeyData = journeyData.journey[journeyId];
+    } else if (journeyData.journey) {
       journeyData = null;
     }
 
@@ -401,11 +401,11 @@ export async function importFirstJourneyFromFile(
       journeyId = cloneDeep(journeyData.tree._id);
     }
     // multiple trees, so get the first tree
-    else if (journeyData.trees) {
-      for (const treeId in journeyData.trees) {
-        if (Object.hasOwnProperty.call(journeyData.trees, treeId)) {
+    else if (journeyData.journey) {
+      for (const treeId in journeyData.journey) {
+        if (Object.hasOwnProperty.call(journeyData.journey, treeId)) {
           journeyId = treeId;
-          journeyData = journeyData.trees[treeId];
+          journeyData = journeyData.journey[treeId];
           break;
         }
       }
@@ -528,10 +528,12 @@ export async function importJourneysFromFiles(
     const jsonFiles = names
       .filter((name) => name.toLowerCase().endsWith('.journey.json'))
       .map((name) => getFilePath(name));
-    const allJourneysData = { trees: {} };
+    const allJourneysData = { journey: {} };
     for (const file of jsonFiles) {
-      const journeyData = JSON.parse(fs.readFileSync(file, 'utf8'));
-      allJourneysData.trees[journeyData.tree._id] = journeyData;
+      const fileObj = JSON.parse(fs.readFileSync(file, 'utf8'));
+      for (const [id, obj] of Object.entries(fileObj.journey)) {
+        allJourneysData.journey[id] = obj;
+      }
     }
     await importJourneys(allJourneysData as MultiTreeExportInterface, options);
     return true;

@@ -1,0 +1,18 @@
+{
+  "script": {
+    "1dadd373-3a4a-49b4-846d-04d440d78dc7": {
+      "_id": "1dadd373-3a4a-49b4-846d-04d440d78dc7",
+      "context": "AUTHENTICATION_TREE_DECISION_NODE",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "Display sharedState, transientState, and headers.",
+      "evaluatorVersion": "1.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "debug - imported (6)",
+      "script": "file://debug-imported-(6).script.js"
+    }
+  }
+}

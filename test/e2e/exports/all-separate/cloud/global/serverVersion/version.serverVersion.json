@@ -1,0 +1,11 @@
+{
+  "serverVersion": {
+    "version": {
+      "_id": "version",
+      "date": "2024-September-23 14:30",
+      "fullVersion": "ForgeRock Access Management 7.6.0-SNAPSHOT Build 493165657bbb9390016bd43ca767a46f23d8d24a (2024-September-23 14:30)",
+      "revision": "493165657bbb9390016bd43ca767a46f23d8d24a",
+      "version": "7.6.0-SNAPSHOT"
+    }
+  }
+}

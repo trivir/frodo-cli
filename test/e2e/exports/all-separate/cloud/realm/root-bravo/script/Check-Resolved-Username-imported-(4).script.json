@@ -1,0 +1,18 @@
+{
+  "script": {
+    "e9f80a59-a967-491e-984c-cd8845031f3f": {
+      "_id": "e9f80a59-a967-491e-984c-cd8845031f3f",
+      "context": "AUTHENTICATION_TREE_DECISION_NODE",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "Check if username has already been resolved to _id.",
+      "evaluatorVersion": "2.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "Check Resolved Username - imported (4)",
+      "script": "file://Check-Resolved-Username-imported-(4).script.js"
+    }
+  }
+}

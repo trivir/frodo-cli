@@ -1,0 +1,18 @@
+{
+  "script": {
+    "eb2e4fae-fb8f-4d73-a2ba-38b083ebf2b0": {
+      "_id": "eb2e4fae-fb8f-4d73-a2ba-38b083ebf2b0",
+      "context": "AUTHENTICATION_TREE_DECISION_NODE",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "Remove button from page.",
+      "evaluatorVersion": "1.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "Remove Button - imported (3)",
+      "script": "file://Remove-Button-imported-(3).script.js"
+    }
+  }
+}

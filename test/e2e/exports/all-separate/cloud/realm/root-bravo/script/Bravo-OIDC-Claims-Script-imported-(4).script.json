@@ -1,0 +1,18 @@
+{
+  "script": {
+    "27b80064-602a-417c-b836-db57684e3ca7": {
+      "_id": "27b80064-602a-417c-b836-db57684e3ca7",
+      "context": "OIDC_CLAIMS",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "Default bravo realm script for OIDC claims",
+      "evaluatorVersion": "1.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "Bravo OIDC Claims Script - imported (4)",
+      "script": "file://Bravo-OIDC-Claims-Script-imported-(4).script.js"
+    }
+  }
+}

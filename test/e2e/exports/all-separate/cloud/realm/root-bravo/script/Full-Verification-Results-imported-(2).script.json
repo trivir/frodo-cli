@@ -1,0 +1,18 @@
+{
+  "script": {
+    "63fca72e-b7a5-4d64-930b-8d9da6eb69eb": {
+      "_id": "63fca72e-b7a5-4d64-930b-8d9da6eb69eb",
+      "context": "AUTHENTICATION_TREE_DECISION_NODE",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "Show full identity verification results",
+      "evaluatorVersion": "2.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "Full Verification Results - imported (2)",
+      "script": "file://Full-Verification-Results-imported-(2).script.js"
+    }
+  }
+}

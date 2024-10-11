@@ -1,0 +1,18 @@
+{
+  "script": {
+    "6ccdd091-c760-46a5-8a2b-f64f100c0107": {
+      "_id": "6ccdd091-c760-46a5-8a2b-f64f100c0107",
+      "context": "AUTHENTICATION_TREE_DECISION_NODE",
+      "createdBy": "null",
+      "creationDate": 0,
+      "default": false,
+      "description": "Load reference selfie into shared state",
+      "evaluatorVersion": "2.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "null",
+      "lastModifiedDate": 0,
+      "name": "Load Reference Selfie - imported (1)",
+      "script": "file://Load-Reference-Selfie-imported-(1).script.js"
+    }
+  }
+}
