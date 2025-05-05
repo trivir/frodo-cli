@@ -94,7 +94,7 @@ Options:
                                        walk through the tenant admin login flow
                                        of Identity Cloud and handle MFA
                                        (choices: "classic", "cloud",
-                                       "forgeops")
+                                       "forgeops", "idm")
   --no-cache                           Disable token cache for this operation.
   --passphrase <passphrase>            The passphrase for the Amster private
                                        key if it is encrypted.

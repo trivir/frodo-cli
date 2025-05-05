@@ -28,7 +28,7 @@ Options:
   classic:  A classic Access Management-only deployment with custom layout and configuration. 
   cloud:    A ForgeRock Identity Cloud environment. 
   forgeops: A ForgeOps CDK or CDM deployment. 
-  The detected or provided deployment type controls certain behavior like obtaining an Identity Management admin token or not and whether to export/import referenced email templates or how to walk through the tenant admin login flow of Identity Cloud and handle MFA (choices: "classic", "cloud", "forgeops")
+  The detected or provided deployment type controls certain behavior like obtaining an Identity Management admin token or not and whether to export/import referenced email templates or how to walk through the tenant admin login flow of Identity Cloud and handle MFA (choices: "classic", "cloud", "forgeops", "idm")
   --no-cache                                       Disable token cache for this operation.
   --passphrase <passphrase>                        The passphrase for the Amster private key if it is encrypted.
   --private-key <file>                             File containing the private key for authenticating with Amster. Supported formats include PEM (both PKCS#1 and PKCS#8 variants), OpenSSH, DNSSEC, and JWK.
