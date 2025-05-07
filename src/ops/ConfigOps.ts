@@ -1127,7 +1127,7 @@ export async function deleteFromCloud(
  */
 export async function compareWithMasterFileAndDeleteFromCloud(
   masterFile: string,
-  dryRun: boolean,
+  deleteAndImport: boolean,
   exportOptions: FullExportOptions = {
     useStringArrays: false,
     noDecode: false,
@@ -1173,10 +1173,10 @@ export async function compareWithMasterFileAndDeleteFromCloud(
     toText(sortResult, 'sortTrimResult.txt');
     verboseMessage("sortTrimResult.txt has been saved")
 
-    if (!dryRun) {
-      verboseMessage("dry run is false, so it will prompt to delete from cloud ")
+    if (deleteAndImport) {
+      verboseMessage("--delete-and-import is true, so it will prompt to delete from cloud ")
       await deleteFromCloud(sortResult, importOptions.includeActiveValues, exportData)
-      verboseMessage("Dry run is false so it will promt to import master to cloud ")
+      verboseMessage("--delete-and-import is true so it will promt to import master to cloud ")
       await importMasterToCloud(masterConfig, importOptions);
     }
     return true;
@@ -1190,7 +1190,7 @@ export async function compareWithMasterFileAndDeleteFromCloud(
  * Export from current tenant, compare with master directory, delete the differences and import master back 
  */
 export async function compareWithMasterDirectoryAndDeleteFromCloud(
-  dryRun: boolean,
+  deleteAndImport: boolean,
   exportOptions: FullExportOptions = {
     useStringArrays: false,
     noDecode: false,
@@ -1236,10 +1236,10 @@ export async function compareWithMasterDirectoryAndDeleteFromCloud(
     verboseMessage("sortTrimResult.txt has been saved")
 
 
-    if (!dryRun) {
-      verboseMessage("dry run is false, so it will prompt to delete from cloud ")
+    if (deleteAndImport) {
+      verboseMessage("--delete-and-import is true, so it will prompt to delete from cloud ")
       await deleteFromCloud(sortResult, importOptions.includeActiveValues, exportData)
-      verboseMessage("Dry run is false so it will promt to import master to cloud ")
+      verboseMessage("--delete-and-import is true so it will promt to import master to cloud ")
       await importMasterToCloud(masterConfig, importOptions);
     }
     return true;

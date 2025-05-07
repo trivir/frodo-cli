@@ -84,14 +84,14 @@ export default function setup() {
     )
     .addOption(
       new Option(
-        '--compare-and-delete',
-        'Export current cloud config data into memory as an object and compare that with the master config data from local directory/file and deletes whatever added to the current cloud. Then it imports master config file/directory back to cloud'
+        '--delete-and-import',
+        'Deletes whatever added to the current cloud after comparison from --compare flag. Then it imports master config file/directory back to cloud. Only run when --compare flag is on.'
       )
     )
     .addOption(
       new Option(
-        '--dry-run',
-        'This prevents --compare-and-delete command to delete things, so we can see what will be deleted. Only run when --compare-and-delete flag is on.'
+        '--compare',
+        'This export config data from the current tenant as an object, and it compares whatever changes between this object and the config data from the master file/directory.'
       )
     )
     .addHelpText(
@@ -133,14 +133,14 @@ export default function setup() {
           program.help();
           process.exitCode = 1;
         }
-        if(options.dryRun && !options.compareAndDelete){
-          printMessage('---compare-and-delete flag required to compare with --dry-run flag', 'error');
+        if(options.deleteAndImport && !options.compare){
+          printMessage('--compare flag is needed to run --delete-and-import', 'error');
           program.help();
           process.exitCode = 1;
         }
 
         // --all -a
-        else if (options.all && !options.compareAndDelete && (await getTokens())) {
+        else if (options.all && !options.compare && (await getTokens())) {
           verboseMessage('Exporting everything from a single file...');
           const outcome = await importEverythingFromFile(options.file, {
             reUuidJourneys: options.reUuidJourneys,
@@ -153,11 +153,11 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // What I added   single file, compare and delete 
-        else if (options.all && options.compareAndDelete && (await getTokens())){
+        else if (options.all && options.compare && (await getTokens())){
           verboseMessage('compare and delete option in ')
           const outcome= await compareWithMasterFileAndDeleteFromCloud(
             options.file,  // Master File
-            options.dryRun,  //what if 
+            options.deleteAndImport,  //what if 
             {
               useStringArrays: false,
               noDecode: undefined,
@@ -190,7 +190,7 @@ export default function setup() {
           process.exitCode = 1;
         }
         // --all-separate -A
-        else if (options.allSeparate && !options.compareAndDelete && (await getTokens())) {
+        else if (options.allSeparate && !options.compare && (await getTokens())) {
           verboseMessage('Importing everything from separate files...');
           const outcome = await importEverythingFromFiles({
             reUuidJourneys: options.reUuidJourneys,
@@ -203,10 +203,10 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         //what I added 
-        else if (options.allSeparate && options.compareAndDelete && (await getTokens())){
+        else if (options.allSeparate && options.compare && (await getTokens())){
           verboseMessage('Export-compare-delete-import option in ...');
           const outcome = await compareWithMasterDirectoryAndDeleteFromCloud(
-            options.dryRun,  //what-if 
+            options.deleteAndImport,  //what-if 
             {// export options
               useStringArrays: false,
               noDecode: false,
