@@ -9,55 +9,41 @@ import {
 import { SyncSkeleton } from '@rockcarver/frodo-lib/types/ops/MappingOps';
 import { ScriptExportInterface } from '@rockcarver/frodo-lib/types/ops/ScriptOps';
 import fs from 'fs';
+import * as path from 'path';
 
 import {
   getConfig,
   getFullExportConfig,
   getFullExportConfigFromDirectory,
 } from '../utils/Config';
-import { cleanupProgressIndicators, printError, verboseMessage } from '../utils/Console';
-import { saveServersToFiles } from './classic/ServerOps';
-import { ManagedSkeleton, writeManagedJsonToDirectory } from './IdmOps';
-import { writeSyncJsonToDirectory } from './MappingOps';
-import { extractScriptsToFiles } from './ScriptOps';
-
-
+import {
+  cleanupProgressIndicators,
+  printError,
+  verboseMessage,
+} from '../utils/Console';
 import {
   deleteAgent,
   deleteIdentityGatewayAgent,
   deleteJavaAgent,
-  deleteWebAgent
+  deleteWebAgent,
 } from './AgentOps';
-
+import { deleteApplication } from './ApplicationOps';
+import { saveServersToFiles } from './classic/ServerOps';
+import { deleteVariableById } from './cloud/VariablesOps';
 import {
-  deleteApplication
-} from './ApplicationOps';
-import {
-  deleteVariableById,
-} from './cloud/VariablesOps';
-import {
-  deleteConfigEntityById
-
+  deleteConfigEntityById,
+  ManagedSkeleton,
+  writeManagedJsonToDirectory,
 } from './IdmOps';
 import { deleteJourney } from './JourneyOps';
-import { deleteMapping } from './MappingOps';
-import {
-  deleteOauth2ClientById,
-  importOAuth2ClientFromFile,
-} from './OAuth2ClientOps';
+import { deleteMapping, writeSyncJsonToDirectory } from './MappingOps';
+import { deleteOauth2ClientById } from './OAuth2ClientOps';
 import { deletePolicyById } from './PolicyOps';
-import {
-  deleteResourceTypeUsingName,
-  importResourceTypesFromFile
-} from './ResourceTypeOps';
-import { deleteScriptId, importScriptsFromFile } from './ScriptOps';
-import { deleteService } from './ServiceOps.js';
-
-import * as path from 'path';
-import { deleteTheme } from './ThemeOps';
 import { deletePolicySetById } from './PolicySetOps';
-import { deleteServiceNextDescendents } from './ServiceOps.js';
-
+import { deleteResourceTypeUsingName } from './ResourceTypeOps';
+import { deleteScriptId, extractScriptsToFiles } from './ScriptOps';
+import { deleteService, deleteServiceNextDescendents } from './ServiceOps.js';
+import { deleteTheme } from './ThemeOps';
 
 const {
   getTypedFilename,
@@ -67,7 +53,6 @@ const {
   getWorkingDirectory,
   getRealmsForExport,
   getRealmUsingExportFormat,
-  getMetadata
 } = frodo.utils;
 const { deleteDeepByKey } = frodo.utils.json;
 
@@ -77,50 +62,49 @@ const { findOrphanedNodes, removeOrphanedNodes } = frodo.authn.node;
 const logmessages = new Array<string>();
 
 const ignoreList = [
-  "global.agent",
-  "global.authentication",
-  "global.realm",
-  "global.scripttype",
-  "global.secretstore",
-  "global.site",
-  "realm.root-alpha.secretstore", //later might be promotable once export commmand is editted
-  "realm.root-bravo.secretstore",
-  "metadata",
-  "lastModifiedDate",
-  "lastModifiedBy",
-  "global.server",
-  "meta.exportDate",
-  "meta.exportTool",
-  "meta.exportToolVersion",
-  "meta.exportedBy",
-  "meta.origin",
-  "meta.originAmVersion",
-  "createdBy",
-  "creationDate"
-]
+  'global.agent',
+  'global.authentication',
+  'global.realm',
+  'global.scripttype',
+  'global.secretstore',
+  'global.site',
+  'realm.root-alpha.secretstore', //later might be promotable once export commmand is editted
+  'realm.root-bravo.secretstore',
+  'metadata',
+  'lastModifiedDate',
+  'lastModifiedBy',
+  'global.server',
+  'meta.exportDate',
+  'meta.exportTool',
+  'meta.exportToolVersion',
+  'meta.exportedBy',
+  'meta.origin',
+  'meta.originAmVersion',
+  'createdBy',
+  'creationDate',
+];
 
 const priorityList = [
-  ["realm", "service"],
-  ["realm", "trees"],
-  ["realm", "policy"],
-  ["realm", "policyset"],
-  ["realm", "application"],
-  ["realm", "idp"],
-  ["realm", "saml"],
-  ["realm", "saml/cot"],
-  ["realm", "resourcetype"],
-  ["realm", "agent"],
-  ["realm", "theme"],
-  ["realm", "script"],
-  ["global.service"],
-  ["global.mapping"],
-  ["global.sync"],
-  ["global.emailTemplate"],
-  ["global.idm"],
-  ["global.variable"],
-  ["global.secret"],
-]
-
+  ['realm', 'service'],
+  ['realm', 'trees'],
+  ['realm', 'policy'],
+  ['realm', 'policyset'],
+  ['realm', 'application'],
+  ['realm', 'idp'],
+  ['realm', 'saml'],
+  ['realm', 'saml/cot'],
+  ['realm', 'resourcetype'],
+  ['realm', 'agent'],
+  ['realm', 'theme'],
+  ['realm', 'script'],
+  ['global.service'],
+  ['global.mapping'],
+  ['global.sync'],
+  ['global.emailTemplate'],
+  ['global.idm'],
+  ['global.variable'],
+  ['global.secret'],
+];
 
 /**
  * Export everything to separate files
@@ -188,7 +172,6 @@ export async function exportEverythingToFiles(
     onlyGlobal: false,
   }
 ): Promise<boolean> {
-
   try {
     const collectErrors: Error[] = [];
 
@@ -496,11 +479,6 @@ export async function importEverythingFromFiles(
   return false;
 }
 
-
-
-
-
-
 export async function importEntityfromFile(
   file: string,
   global = false,
@@ -556,13 +534,11 @@ export async function importEntityfromFile(
   return false;
 }
 
-
-
 /**
- * This function changes a keypath to an object. 
- * @param str 
- * @param o 
- * @returns 
+ * This function changes a keypath to an object.
+ * @param str
+ * @param o
+ * @returns
  */
 function makeObject(strArr: string[], o: any): any {
   let obj = o;
@@ -573,9 +549,9 @@ function makeObject(strArr: string[], o: any): any {
 }
 
 /**
- * Save an object to a txt file. 
- * @param obj 
- * @param filePath 
+ * Save an object to a txt file.
+ * @param obj
+ * @param filePath
  * @param encoding text encoding (default: utf8)
  */
 function toText(obj: any, filePath: string): void {
@@ -583,16 +559,18 @@ function toText(obj: any, filePath: string): void {
   fs.writeFileSync(filePath, formattedText, 'utf8');
 }
 
-
 /**
  * Import Master config data to the cloud
- * @param master 
- * @param options 
- * @returns 
+ * @param master
+ * @param options
+ * @returns
  */
-export async function importMasterToCloud(master: any, options: FullImportOptions): Promise<boolean> {
+export async function importMasterToCloud(
+  master: any,
+  options: FullImportOptions
+): Promise<boolean> {
   try {
-    verboseMessage("importMasterToCloud function in ");
+    verboseMessage('importMasterToCloud function in ');
     const collectErrors: Error[] = [];
     await importFullConfiguration(master, options, collectErrors);
     if (collectErrors.length > 0) {
@@ -610,23 +588,23 @@ export async function importMasterToCloud(master: any, options: FullImportOption
 }
 
 /**
- * 
- * @param fullConfig orphan full config object 
- * @param orphan orphan object to run recursively 
- * @param master master object to run recursively 
- * @param currentPath 
- * @param result string[] of the keys that are something has added on orphan(tenant). 
- * @returns 
+ *
+ * @param fullConfig orphan full config object
+ * @param orphan orphan object to run recursively
+ * @param master master object to run recursively
+ * @param currentPath
+ * @param result string[] of the keys that are something has added on orphan(tenant).
+ * @returns
  */
 export async function compareConfigDeep(
   fullConfig: any,
   orphan: any,
   master: any,
   currentPath: string[] = [],
-  result: string[] = [],
+  result: string[] = []
 ): Promise<string[]> {
   const currentPathStr = currentPath.join('.');
-  const isGlobal = currentPath[0] === 'global'
+  const isGlobal = currentPath[0] === 'global';
 
   if (
     typeof orphan === 'object' &&
@@ -638,20 +616,36 @@ export async function compareConfigDeep(
       const length = Math.max(orphan.length, master.length);
       for (let i = 0; i < length; i++) {
         const newPath = [...currentPath, i.toString()];
-       await compareConfigDeep(fullConfig, orphan[i], master[i], newPath, result);
+        await compareConfigDeep(
+          fullConfig,
+          orphan[i],
+          master[i],
+          newPath,
+          result
+        );
       }
     } else {
       for (const key of Object.keys(orphan)) {
         const newPath = [...currentPath, key];
-       await compareConfigDeep(fullConfig, orphan[key], master[key], newPath, result);
+        await compareConfigDeep(
+          fullConfig,
+          orphan[key],
+          master[key],
+          newPath,
+          result
+        );
       }
     }
   } else {
-    const normalizedOrphan = currentPathStr.endsWith('script') ? normalizeScriptValue(orphan) : orphan;
-    const normalizedMaster = currentPathStr.endsWith('script') ? normalizeScriptValue(master) : master;
+    const normalizedOrphan = currentPathStr.endsWith('script')
+      ? normalizeScriptValue(orphan)
+      : orphan;
+    const normalizedMaster = currentPathStr.endsWith('script')
+      ? normalizeScriptValue(master)
+      : master;
 
     if (normalizedOrphan !== normalizedMaster) {
-      if (!ignoreList.some(ignored => currentPathStr.includes(ignored))) {
+      if (!ignoreList.some((ignored) => currentPathStr.includes(ignored))) {
         if (!shouldIgnore(fullConfig, currentPath, isGlobal)) {
           result.push(currentPathStr);
         }
@@ -671,7 +665,6 @@ function normalizeScriptValue(value: any): string {
   return value;
 }
 
-
 function isEmptyObject(value: any): boolean {
   return (
     typeof value === 'object' &&
@@ -680,21 +673,18 @@ function isEmptyObject(value: any): boolean {
     Object.keys(value).length === 0
   );
 }
- function shouldIgnore(config, strArr, isGlobal):boolean {
+function shouldIgnore(config, strArr, isGlobal): boolean {
   if (isGlobal) {
-    if (strArr.length === 2 && (isEmptyObject(makeObject(strArr, config)))) {
-      return true
+    if (strArr.length === 2 && isEmptyObject(makeObject(strArr, config))) {
+      return true;
+    } else {
+      return false;
     }
-    else {
-      return false
-    }
-  }
-  else {
-    if (strArr.length === 3 && (isEmptyObject(makeObject(strArr, config)))) {
-      return true
-    }
-    else {
-      return false
+  } else {
+    if (strArr.length === 3 && isEmptyObject(makeObject(strArr, config))) {
+      return true;
+    } else {
+      return false;
     }
   }
 }
@@ -713,7 +703,10 @@ async function trimCompareResult(items: string[]): Promise<string[]> {
   return result;
 }
 
-async function sortTrimResult(items: string[], keywordCombos: string[][]): Promise<string[]> {
+async function sortTrimResult(
+  items: string[],
+  keywordCombos: string[][]
+): Promise<string[]> {
   return [...items].sort((a, b) => {
     const aIndex = findComboIndex(a, keywordCombos);
     const bIndex = findComboIndex(b, keywordCombos);
@@ -724,86 +717,77 @@ async function sortTrimResult(items: string[], keywordCombos: string[][]): Promi
 function findComboIndex(item: string, combos: string[][]): number {
   for (let i = 0; i < combos.length; i++) {
     const combo = combos[i];
-    const matchedAll = combo.every(keyword =>
+    const matchedAll = combo.every((keyword) =>
       item.toLowerCase().includes(keyword.toLowerCase())
     );
     if (matchedAll) return i;
   }
-  return combos.length; 
+  return combos.length;
 }
-
 
 function getEntityPrefix(path: string): string {
   const parts = path.split('.');
   if (parts[0] === 'global' && parts[1] !== 'sync') {
     return parts.slice(0, 3).join('.'); // global.service.dashboard
-  }
-  else {
+  } else {
     return parts.slice(0, 4).join('.'); // realm.root-alpha.secretstore.config
   }
   return path;
 }
 
-
 /**
  * in the string of keypath, it will return the type
  * @param str keypath
- * @returns Coinfig type 
+ * @returns Coinfig type
  */
 function getType(str: string, isGlobal: boolean): string {
   const parts = str.split('.');
-  let type = ''
+  let type = '';
   if (isGlobal) {
-    type = parts[1]
-  }
-  else {
-    type = parts[2]
+    type = parts[1];
+  } else {
+    type = parts[2];
   }
 
   if (type == 'trees') {
     type = 'journey';
-  }
-  else if (type == 'emailTemplate') {
+  } else if (type == 'emailTemplate') {
     type = 'idm';
   }
-  verboseMessage(`Entity type detected: ${type}`)
-  return type
+  verboseMessage(`Entity type detected: ${type}`);
+  return type;
 }
 
 /**
- * 
+ *
  * @param str String of keypath
- * @returns returns the last key only in string. 
+ * @returns returns the last key only in string.
  */
 function getName(str: string, isGlobal: boolean): string {
   const parts = str.split('.');
   let name = '';
   if (isGlobal) {
-    name = parts[2]
-  }
-  else {
-    name = parts[3]
+    name = parts[2];
+  } else {
+    name = parts[3];
   }
 
-  return name
+  return name;
 }
 function getObjectAtKey(key: string, isGlobal: boolean, o): any {
-  const splited = key.split('.')
+  const splited = key.split('.');
   let obj = o;
   let depth = 4;
   if (isGlobal && !key.includes('sync.mappings')) {
     depth = 3;
-  }
-  else {
+  } else {
     depth = 4;
-
   }
   for (let i = 0; i < depth; i++) {
-    obj = obj[splited[i]]
+    obj = obj[splited[i]];
   }
   return obj;
 }
-
 
 /**
  * Sets the realm for the next command to run on.
@@ -812,47 +796,43 @@ function getObjectAtKey(key: string, isGlobal: boolean, o): any {
  */
 function setRealm(key: string, type: string, inRealm: boolean) {
   if (inRealm) {
-    let parts = key.split('.');
+    const parts = key.split('.');
     let realm = parts[1];
-    verboseMessage(`realm right before setRealm = ${realm}`)
+    verboseMessage(`realm right before setRealm = ${realm}`);
     if (realm === 'root') {
       realm = '/';
     }
     realm = realm.replace('root-', '').replaceAll('-', '/');
     if (type != 'theme') {
-      realm = '/' + realm
+      realm = '/' + realm;
     }
     state.setRealm(realm);
-    verboseMessage(`realm right after setRealm = ${realm}`)
+    verboseMessage(`realm right after setRealm = ${realm}`);
   }
-
 }
 
 /**
  * delete stuff from cloud
- * @param objectMap 
- * @param effectSecrets 
- * @param orphan 
- * @returns 
+ * @param objectMap
+ * @param effectSecrets
+ * @param orphan
+ * @returns
  */
 export async function deleteFromCloud(
   keyString: string[],
   effectSecrets: boolean,
   orphan: any
 ): Promise<boolean> {
-
   try {
-    verboseMessage("deleteFromCloud function in -------- ")
+    verboseMessage('deleteFromCloud function in -------- ');
     for (const key of keyString) {
-
       const isGlobal = key.substring(0, key.indexOf('.')) === 'global';
       const inRealm = key.substring(0, key.indexOf('.')) === 'realm';
       const currentName = getName(key, isGlobal);
       verboseMessage(`inRealm is =  ${inRealm}`);
       const type = getType(key, isGlobal);
-      const keyObject = getObjectAtKey(key, isGlobal, orphan)
+      const keyObject = getObjectAtKey(key, isGlobal, orphan);
       setRealm(key, type, inRealm);
-
 
       switch (type) {
         case 'application': {
@@ -907,8 +887,13 @@ export async function deleteFromCloud(
           verboseMessage(
             `Deleting Managed Application with name ${managedApplication.name}`
           );
-          const outcome = await deleteApplication(managedApplication.name, false);
-          logmessages.push(`delete managedApplication ${managedApplication.name}`);
+          const outcome = await deleteApplication(
+            managedApplication.name,
+            false
+          );
+          logmessages.push(
+            `delete managedApplication ${managedApplication.name}`
+          );
           logmessages.push(`outcome: ${outcome}`);
           logmessages.push(' ');
           verboseMessage(`delete managedApplication ${key}\n`);
@@ -940,16 +925,19 @@ export async function deleteFromCloud(
         }
         case 'service': {
           const serviceId = currentName;
-          if (isGlobal) { //if the service is global.service, it only deletes the descendents
+          if (isGlobal) {
+            //if the service is global.service, it only deletes the descendents
             verboseMessage(`service Id: ${serviceId}`);
-            const outcome = await deleteServiceNextDescendents(serviceId, isGlobal);
+            const outcome = await deleteServiceNextDescendents(
+              serviceId,
+              isGlobal
+            );
             logmessages.push(`delete service ${key}`);
             logmessages.push(`outcome: ${outcome}`);
             logmessages.push(' ');
             verboseMessage(`delete service ${key}\n`);
             break;
-          }
-          else {
+          } else {
             verboseMessage(`service Id: ${serviceId}`);
             const outcome = await deleteService(serviceId, isGlobal);
             logmessages.push(`delete service ${key}`);
@@ -977,7 +965,6 @@ export async function deleteFromCloud(
           break;
         }
         case 'idm': {
-
           const entityId = keyObject._id;
           verboseMessage(`delete Idm config with entity Id: ${entityId}`);
           logmessages.push(`delete Idm config with entity Id: ${entityId}`);
@@ -992,8 +979,9 @@ export async function deleteFromCloud(
         // todo: Currently secrets when exported are hashed so it needs to be thought of more
         case 'secret': {
           if (effectSecrets) {
-            const secret = keyObject;
-            verboseMessage("Currently secrets when exported are hashed so it needs to be thought of more")
+            verboseMessage(
+              'Currently secrets when exported are hashed so it needs to be thought of more'
+            );
           }
           break;
         }
@@ -1009,21 +997,22 @@ export async function deleteFromCloud(
         }
         case 'variable': {
           if (effectSecrets) {
-            const variable = keyObject
+            const variable = keyObject;
             verboseMessage(`Deleting variable with id: ${variable._id}`);
             const outcome = await deleteVariableById(variable._id);
             logmessages.push(`delete variable ${key}`);
             logmessages.push(`outcome: ${outcome}`);
             logmessages.push(' ');
             verboseMessage(`delete variable ${key}\n`);
-          }
-          else {
-            verboseMessage("Include active value flag is set to false, so we are not deleting variables.")
+          } else {
+            verboseMessage(
+              'Include active value flag is set to false, so we are not deleting variables.'
+            );
           }
           break;
         }
         case 'mapping': {
-          const mapping = keyObject
+          const mapping = keyObject;
           verboseMessage(`mapping Id: ${mapping._id}`);
           const outcome = await deleteMapping(mapping._id);
           logmessages.push(`delete mapping ${key}`);
@@ -1091,7 +1080,7 @@ export async function deleteFromCloud(
           break;
         }
         case 'policyset': {
-          const policyset = currentName
+          const policyset = currentName;
           verboseMessage(`policy set Id: ${policyset}`);
           const outcome = await deletePolicySetById(policyset);
           logmessages.push(`delete policy set ${key}`);
@@ -1104,13 +1093,9 @@ export async function deleteFromCloud(
           break;
         }
         default: {
-          logmessages.push(
-            `No delete ${key} not setup for type ${type}`
-          );
+          logmessages.push(`No delete ${key} not setup for type ${type}`);
           logmessages.push(' ');
-          verboseMessage(
-            `No delete ${key} not setup for type ${type}\n`
-          );
+          verboseMessage(`No delete ${key} not setup for type ${type}\n`);
           break;
         }
       }
@@ -1121,9 +1106,8 @@ export async function deleteFromCloud(
   return false;
 }
 
-
 /**
- * Export from current tenant, compare with master file, delete the differences and import master back 
+ * Export from current tenant, compare with master file, delete the differences and import master back
  */
 export async function compareWithMasterFileAndDeleteFromCloud(
   masterFile: string,
@@ -1150,33 +1134,46 @@ export async function compareWithMasterFileAndDeleteFromCloud(
 ): Promise<boolean> {
   try {
     const collectErrors: Error[] = [];
-    const exportData = await exportFullConfiguration(exportOptions, collectErrors);
-    delete exportData.meta
+    const exportData = await exportFullConfiguration(
+      exportOptions,
+      collectErrors
+    );
+    delete exportData.meta;
     deleteDeepByKey(exportData, '_rev');
-
-
 
     const rawData = fs.readFileSync(path.resolve(masterFile), 'utf8');
     const masterConfig = JSON.parse(rawData);
 
     // saveJsonToFile(exportData, './compareResult/orphanFile.json')
     // saveJsonToFile(masterConfig, './compareResult/masterFile.json')
-    
-    const compareResult = await compareConfigDeep(exportData, exportData, masterConfig);
+
+    const compareResult = await compareConfigDeep(
+      exportData,
+      exportData,
+      masterConfig
+    );
     const trimResult = await trimCompareResult(compareResult);
     const sortResult = await sortTrimResult(trimResult, priorityList);
-    verboseMessage(`Result after comparison ${compareResult}`)
-    verboseMessage(`Result after triming and sorting ${sortResult}`)
+    verboseMessage(`Result after comparison ${compareResult}`);
+    verboseMessage(`Result after triming and sorting ${sortResult}`);
 
     toText(compareResult, 'compareResult.txt');
-    verboseMessage("compareResult.txt has been saved")
+    verboseMessage('compareResult.txt has been saved');
     toText(sortResult, 'sortTrimResult.txt');
-    verboseMessage("sortTrimResult.txt has been saved")
+    verboseMessage('sortTrimResult.txt has been saved');
 
     if (deleteAndImport) {
-      verboseMessage("--delete-and-import is true, so it will prompt to delete from cloud ")
-      await deleteFromCloud(sortResult, importOptions.includeActiveValues, exportData)
-      verboseMessage("--delete-and-import is true so it will promt to import master to cloud ")
+      verboseMessage(
+        '--delete-and-import is true, so it will prompt to delete from cloud '
+      );
+      await deleteFromCloud(
+        sortResult,
+        importOptions.includeActiveValues,
+        exportData
+      );
+      verboseMessage(
+        '--delete-and-import is true so it will promt to import master to cloud '
+      );
       await importMasterToCloud(masterConfig, importOptions);
     }
     return true;
@@ -1187,7 +1184,7 @@ export async function compareWithMasterFileAndDeleteFromCloud(
 }
 
 /**
- * Export from current tenant, compare with master directory, delete the differences and import master back 
+ * Export from current tenant, compare with master directory, delete the differences and import master back
  */
 export async function compareWithMasterDirectoryAndDeleteFromCloud(
   deleteAndImport: boolean,
@@ -1201,7 +1198,6 @@ export async function compareWithMasterDirectoryAndDeleteFromCloud(
     includeReadOnly: undefined,
     onlyRealm: undefined,
     onlyGlobal: undefined,
-
   },
   importOptions: FullImportOptions = {
     reUuidJourneys: false,
@@ -1214,32 +1210,48 @@ export async function compareWithMasterDirectoryAndDeleteFromCloud(
 ): Promise<boolean> {
   try {
     const collectErrors: Error[] = [];
-    const exportData = await exportFullConfiguration(exportOptions, collectErrors);
+    const exportData = await exportFullConfiguration(
+      exportOptions,
+      collectErrors
+    );
 
-    delete exportData.meta
+    delete exportData.meta;
     deleteDeepByKey(exportData, '_rev');
 
-    const masterConfig = await getFullExportConfigFromDirectory(getWorkingDirectory());
+    const masterConfig = await getFullExportConfigFromDirectory(
+      getWorkingDirectory()
+    );
 
     // saveJsonToFile(exportData, './compareResult/orphanFile.json')
     // saveJsonToFile(masterConfig, './compareResult/masterFile.json')
 
-    const compareResult = await compareConfigDeep(exportData, exportData, masterConfig);
+    const compareResult = await compareConfigDeep(
+      exportData,
+      exportData,
+      masterConfig
+    );
     const trimResult = await trimCompareResult(compareResult);
-    const sortResult = await sortTrimResult(trimResult, priorityList);    // let detailed: Record<string, object> = {} ;
-    verboseMessage(`Result after comparison ${compareResult}`)
-    verboseMessage(`Result after triming and sorting ${sortResult}`)
+    const sortResult = await sortTrimResult(trimResult, priorityList); // let detailed: Record<string, object> = {} ;
+    verboseMessage(`Result after comparison ${compareResult}`);
+    verboseMessage(`Result after triming and sorting ${sortResult}`);
 
     toText(compareResult, 'compareResult.txt');
-    verboseMessage("compareResult.txt has been saved")
+    verboseMessage('compareResult.txt has been saved');
     toText(sortResult, 'sortTrimResult.txt');
-    verboseMessage("sortTrimResult.txt has been saved")
-
+    verboseMessage('sortTrimResult.txt has been saved');
 
     if (deleteAndImport) {
-      verboseMessage("--delete-and-import is true, so it will prompt to delete from cloud ")
-      await deleteFromCloud(sortResult, importOptions.includeActiveValues, exportData)
-      verboseMessage("--delete-and-import is true so it will promt to import master to cloud ")
+      verboseMessage(
+        '--delete-and-import is true, so it will prompt to delete from cloud '
+      );
+      await deleteFromCloud(
+        sortResult,
+        importOptions.includeActiveValues,
+        exportData
+      );
+      verboseMessage(
+        '--delete-and-import is true so it will promt to import master to cloud '
+      );
       await importMasterToCloud(masterConfig, importOptions);
     }
     return true;
@@ -1248,6 +1260,3 @@ export async function compareWithMasterDirectoryAndDeleteFromCloud(
   }
   return false;
 }
-
-
-

@@ -1,23 +1,19 @@
 //------------------ Modified file by Sean for test import/promote command-------------original file is in config-import-backup.ts
 
-
 import { state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import {
+  compareWithMasterDirectoryAndDeleteFromCloud,
+  compareWithMasterFileAndDeleteFromCloud,
   importEntityfromFile,
   importEverythingFromFile,
   importEverythingFromFiles,
-   compareWithMasterFileAndDeleteFromCloud, 
-   compareWithMasterDirectoryAndDeleteFromCloud
-
 } from '../../ops/ConfigOps';
-
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
-
 
 export default function setup() {
   const program = new FrodoCommand('frodo config import');
@@ -63,7 +59,7 @@ export default function setup() {
         'Import all scripts including the default scripts.'
       )
     )
-  
+
     .addOption(
       new Option(
         '--include-active-values',
@@ -133,8 +129,11 @@ export default function setup() {
           program.help();
           process.exitCode = 1;
         }
-        if(options.deleteAndImport && !options.compare){
-          printMessage('--compare flag is needed to run --delete-and-import', 'error');
+        if (options.deleteAndImport && !options.compare) {
+          printMessage(
+            '--compare flag is needed to run --delete-and-import',
+            'error'
+          );
           program.help();
           process.exitCode = 1;
         }
@@ -152,33 +151,33 @@ export default function setup() {
           });
           if (!outcome) process.exitCode = 1;
         }
-        // What I added   single file, compare and delete 
-        else if (options.all && options.compare && (await getTokens())){
-          verboseMessage('compare and delete option in ')
-          const outcome= await compareWithMasterFileAndDeleteFromCloud(
-            options.file,  // Master File
-            options.deleteAndImport,  //what if 
+        // What I added   single file, compare and delete
+        else if (options.all && options.compare && (await getTokens())) {
+          verboseMessage('compare and delete option in ');
+          const outcome = await compareWithMasterFileAndDeleteFromCloud(
+            options.file, // Master File
+            options.deleteAndImport, //what if
             {
               useStringArrays: false,
               noDecode: undefined,
-              coords: false,                // we are not going to get coords value in case master does not have coord values.
+              coords: false, // we are not going to get coords value in case master does not have coord values.
               includeDefault: undefined,
-              includeActiveValues: false,   //we are not going to get active values from tenant in comparison  to be safe. 
+              includeActiveValues: false, //we are not going to get active values from tenant in comparison  to be safe.
               target: undefined,
               includeReadOnly: undefined,
               onlyRealm: undefined,
               onlyGlobal: undefined,
             },
             {
-              
               reUuidJourneys: options.reUuidJourneys,
               reUuidScripts: options.reUuidScripts,
               cleanServices: options.cleanServices,
               includeDefault: options.default,
               includeActiveValues: options.includeActiveValues,
               source: options.source,
-            });
-            if(!outcome) process.exitCode = 1;
+            }
+          );
+          if (!outcome) process.exitCode = 1;
         }
         // require --directory -D for all-separate function
         else if (options.allSeparate && !state.getDirectory()) {
@@ -190,7 +189,11 @@ export default function setup() {
           process.exitCode = 1;
         }
         // --all-separate -A
-        else if (options.allSeparate && !options.compare && (await getTokens())) {
+        else if (
+          options.allSeparate &&
+          !options.compare &&
+          (await getTokens())
+        ) {
           verboseMessage('Importing everything from separate files...');
           const outcome = await importEverythingFromFiles({
             reUuidJourneys: options.reUuidJourneys,
@@ -202,32 +205,38 @@ export default function setup() {
           });
           if (!outcome) process.exitCode = 1;
         }
-        //what I added 
-        else if (options.allSeparate && options.compare && (await getTokens())){
+        //what I added
+        else if (
+          options.allSeparate &&
+          options.compare &&
+          (await getTokens())
+        ) {
           verboseMessage('Export-compare-delete-import option in ...');
           const outcome = await compareWithMasterDirectoryAndDeleteFromCloud(
-            options.deleteAndImport,  //what-if 
-            {// export options
+            options.deleteAndImport, //what-if
+            {
+              // export options
               useStringArrays: false,
               noDecode: false,
-              coords: false,                // we are not going to get coords value in case master does not have coord values.
+              coords: false, // we are not going to get coords value in case master does not have coord values.
               includeDefault: undefined,
-              includeActiveValues: false,   //we are not going to get active values from tenant in comparison  to be safe. 
+              includeActiveValues: false, //we are not going to get active values from tenant in comparison  to be safe.
               target: undefined,
               includeReadOnly: undefined,
               onlyRealm: undefined,
               onlyGlobal: undefined,
-              
             },
-            {//import options
+            {
+              //import options
               reUuidJourneys: options.reUuidJourneys,
               reUuidScripts: options.reUuidScripts,
               cleanServices: options.cleanServices,
               includeDefault: options.default,
               includeActiveValues: options.includeActiveValues,
               source: options.source,
-            });
-            if(!outcome) process.exitCode = 1;
+            }
+          );
+          if (!outcome) process.exitCode = 1;
         }
         // Import entity from file
         else if (options.file && (await getTokens())) {
