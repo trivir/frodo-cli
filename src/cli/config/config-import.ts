@@ -1,13 +1,11 @@
-//------------------ Modified file by Sean for test import/promote command-------------original file is in config-import-backup.ts
-
 import { state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import {
-  compareWithMasterDirectoryAndDeleteFromCloud,
-  compareWithMasterFileAndDeleteFromCloud,
+  compareDeploymentAndSyncWithMasterDirectory,
+  compareDeploymentAndSyncWithMasterFile,
   importEntityfromFile,
   importEverythingFromFile,
   importEverythingFromFiles,
@@ -19,11 +17,11 @@ export default function setup() {
   const program = new FrodoCommand('frodo config import');
 
   program
-    .description('Import full cloud configuration.')
+    .description('Import full Deployment configuration.')
     .addOption(
       new Option(
         '-f, --file <file>',
-        'Name of the file to import. Ignored with -A. If included without -a, it will import the single entity within the file.'
+        'Name of the file to import. Ignored with -A. If included without -a, it will import the single entity within the file. With -a and --compare flags, this file will act as the master config file.'
       )
     )
     .addOption(
@@ -59,7 +57,6 @@ export default function setup() {
         'Import all scripts including the default scripts.'
       )
     )
-
     .addOption(
       new Option(
         '--include-active-values',
@@ -80,14 +77,14 @@ export default function setup() {
     )
     .addOption(
       new Option(
-        '--delete-and-import',
-        'Deletes whatever added to the current cloud after comparison from --compare flag. Then it imports master config file/directory back to cloud. Only run when --compare flag is on.'
+        '--sync-compare-result',
+        'Syncs changes found by using --compare from the master config file/directory to the current deployment. This includes deleting changes in current deployment and importing master configuration back to the deployment.'
       )
     )
     .addOption(
       new Option(
         '--compare',
-        'This export config data from the current tenant as an object, and it compares whatever changes between this object and the config data from the master file/directory.'
+        'Compares changes between config in the master file/directory(specified with -f or -D flags respectively) with the configuration from the current deployment'
       )
     )
     .addHelpText(
@@ -129,9 +126,9 @@ export default function setup() {
           program.help();
           process.exitCode = 1;
         }
-        if (options.deleteAndImport && !options.compare) {
+        if (options.syncCompareResult && !options.compare) {
           printMessage(
-            '--compare flag is needed to run --delete-and-import',
+            '--compare flag is needed to run --sync-compare-result',
             'error'
           );
           program.help();
@@ -153,10 +150,10 @@ export default function setup() {
         }
         // What I added   single file, compare and delete
         else if (options.all && options.compare && (await getTokens())) {
-          verboseMessage('compare and delete option in ');
-          const outcome = await compareWithMasterFileAndDeleteFromCloud(
+          verboseMessage('compare option in ');
+          const outcome = await compareDeploymentAndSyncWithMasterFile(
             options.file, // Master File
-            options.deleteAndImport, //what if
+            options.syncCompareResult, //what if
             {
               useStringArrays: false,
               noDecode: undefined,
@@ -204,38 +201,39 @@ export default function setup() {
             source: options.source,
           });
           if (!outcome) process.exitCode = 1;
-        }
-        //what I added
-        else if (
+        } else if (
           options.allSeparate &&
           options.compare &&
           (await getTokens())
         ) {
-          verboseMessage('Export-compare-delete-import option in ...');
-          const outcome = await compareWithMasterDirectoryAndDeleteFromCloud(
-            options.deleteAndImport, //what-if
-            {
-              // export options
-              useStringArrays: false,
-              noDecode: false,
-              coords: false, // we are not going to get coords value in case master does not have coord values.
-              includeDefault: undefined,
-              includeActiveValues: false, //we are not going to get active values from tenant in comparison  to be safe.
-              target: undefined,
-              includeReadOnly: undefined,
-              onlyRealm: undefined,
-              onlyGlobal: undefined,
-            },
-            {
-              //import options
-              reUuidJourneys: options.reUuidJourneys,
-              reUuidScripts: options.reUuidScripts,
-              cleanServices: options.cleanServices,
-              includeDefault: options.default,
-              includeActiveValues: options.includeActiveValues,
-              source: options.source,
-            }
+          verboseMessage(
+            `Comparing current deployment with the master directory ${state.getDirectory()}, --sync-compare-result is ${options.syncCompareResult}.`
           );
+          const outcome =
+            await compareDeploymentAndSyncWithMasterDirectory(
+              options.syncCompareResult, //what-if
+              {
+                // export options
+                useStringArrays: false,
+                noDecode: false,
+                coords: false, // we are not going to get coords value in case master does not have coord values.
+                includeDefault: undefined,
+                includeActiveValues: false, //we are not going to get active values from tenant in comparison  to be safe.
+                target: undefined,
+                includeReadOnly: undefined,
+                onlyRealm: undefined,
+                onlyGlobal: undefined,
+              },
+              {
+                //import options
+                reUuidJourneys: options.reUuidJourneys,
+                reUuidScripts: options.reUuidScripts,
+                cleanServices: options.cleanServices,
+                includeDefault: options.default,
+                includeActiveValues: options.includeActiveValues,
+                source: options.source,
+              }
+            );
           if (!outcome) process.exitCode = 1;
         }
         // Import entity from file

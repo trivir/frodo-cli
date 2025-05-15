@@ -361,5 +361,6 @@ export async function deleteServiceNextDescendents(
     return true;
   } catch (error) {
     printError(error);
+    return false;
   }
 }

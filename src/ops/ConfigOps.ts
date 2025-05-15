@@ -1109,9 +1109,9 @@ export async function deleteFromCloud(
 /**
  * Export from current tenant, compare with master file, delete the differences and import master back
  */
-export async function compareWithMasterFileAndDeleteFromCloud(
+export async function compareDeploymentAndSyncWithMasterFile(
   masterFile: string,
-  deleteAndImport: boolean,
+  syncCompareResult: boolean,
   exportOptions: FullExportOptions = {
     useStringArrays: false,
     noDecode: false,
@@ -1144,38 +1144,12 @@ export async function compareWithMasterFileAndDeleteFromCloud(
     const rawData = fs.readFileSync(path.resolve(masterFile), 'utf8');
     const masterConfig = JSON.parse(rawData);
 
-    // saveJsonToFile(exportData, './compareResult/orphanFile.json')
-    // saveJsonToFile(masterConfig, './compareResult/masterFile.json')
-
-    const compareResult = await compareConfigDeep(
+    await runCompareAndSync(
       exportData,
-      exportData,
-      masterConfig
+      masterConfig,
+      importOptions,
+      syncCompareResult
     );
-    const trimResult = await trimCompareResult(compareResult);
-    const sortResult = await sortTrimResult(trimResult, priorityList);
-    verboseMessage(`Result after comparison ${compareResult}`);
-    verboseMessage(`Result after triming and sorting ${sortResult}`);
-
-    toText(compareResult, 'compareResult.txt');
-    verboseMessage('compareResult.txt has been saved');
-    toText(sortResult, 'sortTrimResult.txt');
-    verboseMessage('sortTrimResult.txt has been saved');
-
-    if (deleteAndImport) {
-      verboseMessage(
-        '--delete-and-import is true, so it will prompt to delete from cloud '
-      );
-      await deleteFromCloud(
-        sortResult,
-        importOptions.includeActiveValues,
-        exportData
-      );
-      verboseMessage(
-        '--delete-and-import is true so it will promt to import master to cloud '
-      );
-      await importMasterToCloud(masterConfig, importOptions);
-    }
     return true;
   } catch (error) {
     printError(error);
@@ -1186,8 +1160,8 @@ export async function compareWithMasterFileAndDeleteFromCloud(
 /**
  * Export from current tenant, compare with master directory, delete the differences and import master back
  */
-export async function compareWithMasterDirectoryAndDeleteFromCloud(
-  deleteAndImport: boolean,
+export async function compareDeploymentAndSyncWithMasterDirectory(
+  syncCompareResult: boolean,
   exportOptions: FullExportOptions = {
     useStringArrays: false,
     noDecode: false,
@@ -1222,9 +1196,26 @@ export async function compareWithMasterDirectoryAndDeleteFromCloud(
       getWorkingDirectory()
     );
 
-    // saveJsonToFile(exportData, './compareResult/orphanFile.json')
-    // saveJsonToFile(masterConfig, './compareResult/masterFile.json')
+    await runCompareAndSync(
+      exportData,
+      masterConfig,
+      importOptions,
+      syncCompareResult
+    );
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
+}
 
+async function runCompareAndSync(
+  exportData: any,
+  masterConfig: any,
+  importOptions: FullImportOptions,
+  syncCompareResult: boolean
+): Promise<boolean> {
+  try {
     const compareResult = await compareConfigDeep(
       exportData,
       exportData,
@@ -1240,7 +1231,7 @@ export async function compareWithMasterDirectoryAndDeleteFromCloud(
     toText(sortResult, 'sortTrimResult.txt');
     verboseMessage('sortTrimResult.txt has been saved');
 
-    if (deleteAndImport) {
+    if (syncCompareResult) {
       verboseMessage(
         '--delete-and-import is true, so it will prompt to delete from cloud '
       );
