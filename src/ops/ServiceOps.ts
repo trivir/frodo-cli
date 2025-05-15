@@ -32,7 +32,6 @@ const {
   importServices,
   deleteFullService,
   deleteFullServices,
-  deleteServiceNextDescendentOnly,
 } = frodo.service;
 
 /**
@@ -331,7 +330,7 @@ export async function deleteService(
   globalConfig = false
 ): Promise<boolean> {
   try {
-    await deleteFullService(serviceId, globalConfig);
+    await deleteFullService(false,serviceId, globalConfig);
     return true;
   } catch (error) {
     printError(error);
@@ -357,7 +356,7 @@ export async function deleteServiceNextDescendents(
   globalConfig = false
 ): Promise<boolean> {
   try {
-    await deleteServiceNextDescendentOnly(serviceId, globalConfig);
+    await deleteFullService(true,serviceId, globalConfig);
     return true;
   } catch (error) {
     printError(error);
