@@ -186,18 +186,14 @@ export async function getConfig(
   }
   // Handle sync files
   const sync = await getLegacyMappingsFromFiles(jsonFiles);
-  if (sync.mappings.length > 0) {
-    (exportConfig as FullGlobalExportInterface).sync = sync;
-  }
+  (exportConfig as FullGlobalExportInterface).sync = sync;
+
   const managed = await getManagedObjectsFromFiles(jsonFiles);
   if (managed.objects.length > 0) {
     (exportConfig as FullGlobalExportInterface).idm.managed = managed;
   }
   // Handle saml files
-  if (
-    samlFiles.length > 0 &&
-    !(exportConfig as FullRealmExportInterface).saml
-  ) {
+  if (!(exportConfig as FullRealmExportInterface).saml) {
     (exportConfig as FullRealmExportInterface).saml = {
       hosted: {},
       remote: {},
@@ -233,10 +229,7 @@ export async function getConfig(
   (exportConfig as FullGlobalExportInterface).server =
     readServersFromFiles(serverFiles);
   // Handle extracted scripts
-  if (
-    scriptFiles.length > 0 &&
-    !(exportConfig as FullRealmExportInterface).script
-  ) {
+  if (!(exportConfig as FullRealmExportInterface).script) {
     (exportConfig as FullRealmExportInterface).script = {};
   }
   for (const f of scriptFiles) {

@@ -4,6 +4,8 @@ import { Option } from 'commander';
 import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import {
+  compareDeploymentAndSyncWithMasterDirectory,
+  compareDeploymentAndSyncWithMasterFile,
   importEntityfromFile,
   importEverythingFromFile,
   importEverythingFromFiles,
@@ -15,11 +17,11 @@ export default function setup() {
   const program = new FrodoCommand('frodo config import');
 
   program
-    .description('Import full cloud configuration.')
+    .description('Import full Deployment configuration.')
     .addOption(
       new Option(
         '-f, --file <file>',
-        'Name of the file to import. Ignored with -A. If included without -a, it will import the single entity within the file.'
+        'Name of the file to import. Ignored with -A. If included without -a, it will import the single entity within the file. With -a and --compare flags, this file will act as the master config file.'
       )
     )
     .addOption(
@@ -73,6 +75,18 @@ export default function setup() {
         'Import global entity. Ignored with -a and -A.'
       )
     )
+    .addOption(
+      new Option(
+        '--sync-compare-result',
+        'Syncs changes found by using --compare from the master config file/directory to the current deployment. This includes deleting changes in current deployment and importing master configuration back to the deployment.'
+      )
+    )
+    .addOption(
+      new Option(
+        '--compare',
+        'Compares changes between config in the master file/directory(specified with -f or -D flags respectively) with the configuration from the current deployment'
+      )
+    )
     .addHelpText(
       'after',
       `How Frodo handles secrets:\n`['brightGreen'] +
@@ -112,8 +126,17 @@ export default function setup() {
           program.help();
           process.exitCode = 1;
         }
+        if (options.syncCompareResult && !options.compare) {
+          printMessage(
+            '--compare flag is needed to run --sync-compare-result',
+            'error'
+          );
+          program.help();
+          process.exitCode = 1;
+        }
+
         // --all -a
-        else if (options.all && (await getTokens())) {
+        else if (options.all && !options.compare && (await getTokens())) {
           verboseMessage('Exporting everything from a single file...');
           const outcome = await importEverythingFromFile(options.file, {
             reUuidJourneys: options.reUuidJourneys,
@@ -123,6 +146,34 @@ export default function setup() {
             includeActiveValues: options.includeActiveValues,
             source: options.source,
           });
+          if (!outcome) process.exitCode = 1;
+        }
+        // What I added   single file, compare and delete
+        else if (options.all && options.compare && (await getTokens())) {
+          verboseMessage('compare option in ');
+          const outcome = await compareDeploymentAndSyncWithMasterFile(
+            options.file, // Master File
+            options.syncCompareResult, //what if
+            {
+              useStringArrays: false,
+              noDecode: undefined,
+              coords: false, // we are not going to get coords value in case master does not have coord values.
+              includeDefault: undefined,
+              includeActiveValues: false, //we are not going to get active values from tenant in comparison  to be safe.
+              target: undefined,
+              includeReadOnly: undefined,
+              onlyRealm: undefined,
+              onlyGlobal: undefined,
+            },
+            {
+              reUuidJourneys: options.reUuidJourneys,
+              reUuidScripts: options.reUuidScripts,
+              cleanServices: options.cleanServices,
+              includeDefault: options.default,
+              includeActiveValues: options.includeActiveValues,
+              source: options.source,
+            }
+          );
           if (!outcome) process.exitCode = 1;
         }
         // require --directory -D for all-separate function
@@ -135,7 +186,11 @@ export default function setup() {
           process.exitCode = 1;
         }
         // --all-separate -A
-        else if (options.allSeparate && (await getTokens())) {
+        else if (
+          options.allSeparate &&
+          !options.compare &&
+          (await getTokens())
+        ) {
           verboseMessage('Importing everything from separate files...');
           const outcome = await importEverythingFromFiles({
             reUuidJourneys: options.reUuidJourneys,
@@ -145,6 +200,40 @@ export default function setup() {
             includeActiveValues: options.includeActiveValues,
             source: options.source,
           });
+          if (!outcome) process.exitCode = 1;
+        } else if (
+          options.allSeparate &&
+          options.compare &&
+          (await getTokens())
+        ) {
+          verboseMessage(
+            `Comparing current deployment with the master directory ${state.getDirectory()}, --sync-compare-result is ${options.syncCompareResult}.`
+          );
+          const outcome =
+            await compareDeploymentAndSyncWithMasterDirectory(
+              options.syncCompareResult, //what-if
+              {
+                // export options
+                useStringArrays: false,
+                noDecode: false,
+                coords: false, // we are not going to get coords value in case master does not have coord values.
+                includeDefault: undefined,
+                includeActiveValues: false, //we are not going to get active values from tenant in comparison  to be safe.
+                target: undefined,
+                includeReadOnly: undefined,
+                onlyRealm: undefined,
+                onlyGlobal: undefined,
+              },
+              {
+                //import options
+                reUuidJourneys: options.reUuidJourneys,
+                reUuidScripts: options.reUuidScripts,
+                cleanServices: options.cleanServices,
+                includeDefault: options.default,
+                includeActiveValues: options.includeActiveValues,
+                source: options.source,
+              }
+            );
           if (!outcome) process.exitCode = 1;
         }
         // Import entity from file
