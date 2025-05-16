@@ -245,7 +245,8 @@ export function exportItem(
     writeSyncJsonToDirectory(
       obj as SyncSkeleton,
       `${baseDirectory.substring(getWorkingDirectory(false).length + 1)}/${fileType}`,
-      includeMeta
+      includeMeta,
+      extract
     );
   } else if (type === 'server') {
     saveServersToFiles(
@@ -265,12 +266,14 @@ export function exportItem(
               value as SyncSkeleton,
               `${baseDirectory.substring(getWorkingDirectory(false).length + 1)}/${fileType}/sync`,
               includeMeta
+              ,extract
             );
           } else if (separateObjects && id === 'managed') {
             writeManagedJsonToDirectory(
               value as ManagedSkeleton,
               `${baseDirectory.substring(getWorkingDirectory(false).length + 1)}/${fileType}/managed`,
-              includeMeta
+              includeMeta,
+              extract
             );
           } else {
             const filename = `${id}.idm.json`;
