@@ -17,6 +17,7 @@ import {
   printMessage,
   stopProgressIndicator,
   updateProgressIndicator,
+  verboseMessage,
 } from '../utils/Console';
 
 const {
@@ -41,7 +42,64 @@ const {
   isLegacyMapping,
   createMappingExportTemplate,
 } = frodo.idm.mapping;
+import {
+  getTopString,
+  getObjectByPath,
+  getLastString,
+  findScriptsFromIdm,
+  getObjectByPathExcludeLast,
+  resolveAllFileSourceFields,
+} from './IdmOps';
 
+function extractScriptsFromMapping(
+  id: string,
+  mapping: any,
+  foundResult,
+  directory: string,
+): boolean {
+  for (const behavior of foundResult) {
+    if (getTopString(behavior.path) === 'policies') {
+      const situation = getObjectByPathExcludeLast(mapping, behavior.path).situation
+      const fileName = `policies.${situation}.${getLastString(behavior.path)}`
+      const objectSource = getObjectByPath(mapping, behavior.path)
+      saveIdmScript(id, objectSource, fileName, behavior.source, directory)
+    }
+    else if (getTopString(behavior.path) === 'properties') {
+      let source = getObjectByPathExcludeLast(mapping, behavior.path).source
+      if (!source) source = 'SOURCE';
+      let target = getObjectByPathExcludeLast(mapping, behavior.path).target
+      if (!target) target = 'TARGET';
+      const lastString = getLastString(behavior.path)
+      const fileName = `properties.${source}.${target}.${getLastString(behavior.path)}`
+      const objectSource = getObjectByPath(mapping, behavior.path)
+      saveIdmScript(id, objectSource, fileName, behavior.source, directory)
+    }
+    else {
+      const objectSource = getObjectByPath(mapping, behavior.path)
+      saveIdmScript(id, objectSource, behavior.path, behavior.source, directory)
+    }
+  }
+  return false
+}
+
+function saveIdmScript(
+  id: string,
+  object: any,
+  fileName: string,
+  script?: string,
+  directory?: string,
+
+): boolean {
+  try {
+    const objectFileName = getTypedFilename(fileName, 'script', 'js');
+    object.source = extractDataToFile(script, `${id}/${objectFileName}`, directory);
+    return true
+  }
+  catch (error) {
+    printError(error)
+  }
+  return false;
+}
 /**
  * List mappings
  * @param {boolean} [long=false] detailed list
@@ -155,6 +213,7 @@ export async function exportMappingsToFile(
  */
 export async function exportMappingsToFiles(
   includeMeta: boolean = true,
+  extract: boolean,
   options: MappingExportOptions = {
     deps: true,
     useStringArrays: true,
@@ -163,6 +222,14 @@ export async function exportMappingsToFiles(
   try {
     const exportData = await exportMappings(options);
     for (const mapping of Object.values(exportData.mapping)) {
+      if (extract) {
+        const result = findScriptsFromIdm(mapping)
+        if (result.length !== 0) {
+          const dirName = getTypedFilename(mapping.name, getMappingTypeFromId(mapping._id), 'scripts');
+          //getFilePath(`mapping/${dirName}`, true);      
+          extractScriptsFromMapping(dirName, mapping, result, `mapping/`)
+        }
+      }
       const fileName = getTypedFilename(
         mapping.name,
         getMappingTypeFromId(mapping._id)
@@ -175,7 +242,7 @@ export async function exportMappingsToFiles(
         includeMeta
       );
     }
-    writeSyncJsonToDirectory(exportData.sync, 'sync', includeMeta);
+    writeSyncJsonToDirectory(exportData.sync, 'sync', includeMeta, extract);
     return true;
   } catch (error) {
     printError(error, `Error exporting mappings to files`);
@@ -446,8 +513,7 @@ export async function renameMappings(
   }
   stopProgressIndicator(
     spinnerId,
-    `Successfully renamed ${mappings.length} mappings to ${
-      legacy ? 'legacy' : 'new'
+    `Successfully renamed ${mappings.length} mappings to ${legacy ? 'legacy' : 'new'
     } naming scheme.`,
     'success'
   );
@@ -462,10 +528,19 @@ export async function renameMappings(
 export function writeSyncJsonToDirectory(
   sync: SyncSkeleton,
   directory: string = 'sync',
-  includeMeta: boolean = true
+  includeMeta: boolean = true,
+  extract: boolean
 ) {
   const mappingPaths = [];
   for (const mapping of sync.mappings) {
+    if (extract) {
+      const result = findScriptsFromIdm(mapping)
+      if (result.length !== 0) {
+        const dirName = getTypedFilename(mapping.name, 'sync', 'scripts');
+        //getFilePath(`${directory}/${dirName}`, true);      
+        extractScriptsFromMapping(dirName, mapping, result, `sync/`)
+      }
+    }
     const fileName = getTypedFilename(mapping.name, 'sync');
     mappingPaths.push(extractDataToFile(mapping, fileName, directory));
   }
@@ -498,18 +573,21 @@ export function getLegacyMappingsFromFiles(
   };
   if (syncFiles.length === 1) {
     const jsonData = JSON.parse(syncFiles[0].content);
-    const syncData = jsonData.sync ? jsonData.sync : jsonData.idm.sync;
+    const syncData = jsonData.sync ?? jsonData.idm?.sync;
     const syncJsonDir = syncFiles[0].path.substring(
       0,
       syncFiles[0].path.indexOf('/sync.idm.json')
     );
     if (syncData.mappings) {
       for (const mapping of syncData.mappings) {
+        let resolvedMapping: any;
         if (typeof mapping === 'string') {
-          sync.mappings.push(getExtractedJsonData(mapping, syncJsonDir));
+          resolvedMapping = getExtractedJsonData(mapping, syncJsonDir);
         } else {
-          sync.mappings.push(mapping);
+          resolvedMapping = mapping;
         }
+        resolveAllFileSourceFields(resolvedMapping, syncJsonDir);
+        sync.mappings.push(resolvedMapping);
       }
     }
   }

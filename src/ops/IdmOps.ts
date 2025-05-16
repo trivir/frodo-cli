@@ -3,10 +3,10 @@ import { type IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/
 import { type ConfigEntityExportInterface } from '@rockcarver/frodo-lib/types/ops/IdmConfigOps';
 import { SyncSkeleton } from '@rockcarver/frodo-lib/types/ops/MappingOps';
 import fs from 'fs';
-import path from 'path';
+import path, { dirname } from 'path';
 import propertiesReader from 'properties-reader';
 
-import { extractDataToFile, getExtractedJsonData } from '../utils/Config';
+import { extractDataToFile, getExtractedJsonData ,getExtractedData} from '../utils/Config';
 import {
   createProgressIndicator,
   printError,
@@ -66,7 +66,7 @@ export async function warnAboutOfflineConnectorServers(): Promise<boolean> {
 }
 
 /**
- * List all IDM configuration objects
+ * List all Idm configuration objects
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function listAllConfigEntities(): Promise<boolean> {
@@ -106,7 +106,8 @@ export async function exportConfigEntityToFile(
   envFile?: string,
   separateMappings: boolean = false,
   separateObjects: boolean = false,
-  includeMeta: boolean = true
+  includeMeta: boolean = true,
+  extract: boolean = false
 ): Promise<boolean> {
   try {
     const options = getIdmImportExportOptions(undefined, envFile);
@@ -114,19 +115,21 @@ export async function exportConfigEntityToFile(
       envReplaceParams: options.envReplaceParams,
       entitiesToExport: undefined,
     });
-    if (separateMappings && id === 'sync') {
-      writeSyncJsonToDirectory(
+    if ((separateMappings || extract ) && id === 'sync' ) {
+        writeSyncJsonToDirectory(
         exportData.idm[id] as SyncSkeleton,
         file,
-        includeMeta
+        includeMeta,
+        extract
       );
       return true;
     }
-    if (separateObjects && id === 'managed') {
-      writeManagedJsonToDirectory(
+    if ((separateObjects || extract ) && id === 'managed') {
+        writeManagedJsonToDirectory(
         exportData.idm[id] as ManagedSkeleton,
         file,
-        includeMeta
+        includeMeta,
+        extract
       );
       return true;
     }
@@ -221,7 +224,8 @@ export async function exportAllConfigEntitiesToFiles(
   envFile?: string,
   separateMappings: boolean = false,
   separateObjects: boolean = false,
-  includeMeta: boolean = true
+  includeMeta: boolean = true,
+  extract: boolean = false
 ): Promise<boolean> {
   const errors: Error[] = [];
   try {
@@ -235,17 +239,35 @@ export async function exportAllConfigEntitiesToFiles(
     );
     for (const [id, obj] of Object.entries(exportData.idm)) {
       try {
-        if (separateMappings && id === 'sync') {
-          writeSyncJsonToDirectory(obj as SyncSkeleton, 'sync', includeMeta);
+        if ((separateMappings || extract ) && id === 'sync' ) {
+          writeSyncJsonToDirectory(obj as SyncSkeleton, 'sync', includeMeta, extract);
           continue;
         }
-        if (separateObjects && id === 'managed') {
+        if ((separateObjects || extract ) && id === 'managed') {
           writeManagedJsonToDirectory(
             obj as ManagedSkeleton,
             'managed',
-            includeMeta
+            includeMeta,
+            extract
           );
           continue;
+        }
+        if (extract) {
+          if (id.includes('endpoint/')) {
+            const result = findScriptsFromIdm(obj);
+            if (result.length !== 0) {
+              const endpointId = id.replace('endpoint/', '');
+              extractScriptsFromIdmEndpoint(endpointId, obj, result, `endpoint/`)
+            }
+          }
+          if (id.includes('schedule/')) {
+            const result = findScriptsFromIdm(obj);
+            if (result.length !== 0) {
+              const scheduleId = id.replace('schedule/', '')
+              
+              extractScriptsFromIdmSchedule( scheduleId, obj, result, `schedule/`)
+            }
+          }
         }
         saveToFile(
           'idm',
@@ -528,7 +550,7 @@ export async function importManagedObjectFromFile(
 }
 
 /**
- * Import all IDM configuration objects from working directory
+ * Import all Idm configuration objects from working directory
  * @param {string} entitiesFile JSON file that specifies the config entities to export/import
  * @param {string} envFile File that defines environment specific variables for replacement during configuration export/import
  * @param {boolean} validate True to validate script hooks. Default: false
@@ -543,6 +565,7 @@ export async function importAllConfigEntitiesFromFiles(
   const baseDirectory = getWorkingDirectory();
   try {
     const importData = await getIdmImportDataFromIdmDirectory(baseDirectory);
+    saveJsonToFile(importData, '../exports/idm-a/idmImportedData.json');
     indicatorId = createProgressIndicator(
       'indeterminate',
       0,
@@ -610,15 +633,54 @@ export async function getIdmImportDataFromIdmDirectory(
       !f.path.endsWith('managed.idm.json') &&
       f.path.endsWith('.idm.json')
   )) {
+    const baseDirOfThisJson = path.dirname(f.path);
     const entities = Object.values(
       JSON.parse(f.content).idm
     ) as unknown as IdObjectSkeletonInterface[];
+    //console.log(entities)
+    saveJsonToFile(entities, '../exports/idm-a/entityObject.json')
+  
     for (const entity of entities) {
+      //console.log(entity)
+      resolveAllFileSourceFields(entity, baseDirOfThisJson); 
       importData.idm[entity._id] = entity;
     }
   }
   return importData;
 }
+
+export function resolveAllFileSourceFields(obj: any, baseDir: string, visited = new WeakSet()) {
+  if (obj === null || typeof obj !== 'object') {
+    //console.log('passed') 
+    return;
+  }
+
+  if (visited.has(obj)) return; 
+  visited.add(obj);
+
+  if (Array.isArray(obj)) {
+    for (const item of obj) {
+      resolveAllFileSourceFields(item, baseDir, visited);
+    }
+    return;
+  }
+
+  if (
+    typeof obj.source === 'string' &&
+    obj.source.startsWith('file://')
+  ) {
+    const fileContent = getExtractedData(obj.source, baseDir);
+    if (fileContent !== null) {
+      obj.source = fileContent;
+    }
+  }
+
+  for (const key of Object.keys(obj)) {
+    resolveAllFileSourceFields(obj[key], baseDir, visited);
+  }
+}
+
+
 
 /**
  * Helper that returns options for exporting/importing IDM config entities
@@ -664,10 +726,19 @@ function getIdmImportExportOptions(
 export function writeManagedJsonToDirectory(
   managed: ManagedSkeleton,
   directory: string = 'managed',
-  includeMeta: boolean = true
+  includeMeta: boolean = true,
+  extract: boolean
 ) {
   const objectPaths = [];
   for (const object of managed.objects) {
+    if (extract) {
+      const result = findScriptsFromIdm(object)
+      if (result.length !== 0) {
+        const dirName = getTypedFilename(object.name, 'managed', 'scripts');
+       // getFilePath(`${directory}/${dirName}`, true);
+        extractScriptsFromIdmManaged(dirName, object, result, `managed/`)
+      }
+    }
     const fileName = getTypedFilename(object.name, 'managed');
     objectPaths.push(extractDataToFile(object, fileName, directory));
   }
@@ -679,6 +750,51 @@ export function writeManagedJsonToDirectory(
     getFilePath(`${directory}/managed.idm.json`, true),
     includeMeta
   );
+}
+
+
+
+
+function extractScriptsFromIdmManaged(
+  id:string,
+  object: any,
+  foundResult,
+  directory: string,
+): boolean {
+  for (const behavior of foundResult) {
+    const sourceObj  = getObjectByPath(object,behavior.path);
+    const objectFileName = getTypedFilename(behavior.path, 'script', 'js');
+    sourceObj.source = extractDataToFile(behavior.source, `${id}/${objectFileName}`, directory);
+  }
+  return false
+}
+
+function extractScriptsFromIdmSchedule(
+  id:string,
+  object: any,
+  foundResult,
+  directory: string,
+): boolean {
+  for (const behavior of foundResult) {
+    const sourceObj  = getObjectByPath(object,behavior.path);
+    const objectFileName = getTypedFilename(`${id}.${behavior.path}`, 'script', 'js');
+    sourceObj.source = extractDataToFile(behavior.source, objectFileName,directory);
+  }
+  return false
+}
+
+function extractScriptsFromIdmEndpoint(
+  id: string,
+  object: any,
+  foundResult:any,
+  directory: string,
+): boolean {
+  for (const behavior of foundResult) {
+    const objectFileName = getTypedFilename(id, 'script', 'js');
+    object.source = extractDataToFile(behavior.source, objectFileName, directory);
+  }
+  return false
+  console.log(directory)
 }
 
 /**
@@ -694,32 +810,94 @@ export function getManagedObjectsFromFiles(
     f.path.endsWith('/managed.idm.json')
   );
   if (managedFiles.length > 1) {
-    throw new FrodoError(
-      'Multiple managed.idm.json files found in idm directory'
-    );
+    throw new FrodoError('Multiple managed.idm.json files found in idm directory');
   }
-  const managed = {
+  const managed: ManagedSkeleton = {
     _id: 'managed',
     objects: [],
   };
   if (managedFiles.length === 1) {
     const jsonData = JSON.parse(managedFiles[0].content);
-    const managedData = jsonData.managed
-      ? jsonData.managed
-      : jsonData.idm.managed;
+    const managedData = jsonData.managed ?? jsonData.idm?.managed;
     const managedJsonDir = managedFiles[0].path.substring(
       0,
       managedFiles[0].path.indexOf('/managed.idm.json')
     );
-    if (managedData.objects) {
+    if (managedData?.objects) {
       for (const object of managedData.objects) {
+        let resolvedObject: any;
         if (typeof object === 'string') {
-          managed.objects.push(getExtractedJsonData(object, managedJsonDir));
+          resolvedObject = getExtractedJsonData(object, managedJsonDir);
         } else {
-          managed.objects.push(object);
+          resolvedObject = object;
         }
+        resolveAllFileSourceFields(resolvedObject, managedJsonDir);
+        managed.objects.push(resolvedObject);
       }
     }
   }
   return managed;
+}
+
+type MatchResult = { path: string; source: string };
+
+export function findScriptsFromIdm(
+  obj: any,
+  currentPath = '',
+  result: MatchResult[] = []
+): MatchResult[] {
+  if (
+    typeof obj === 'object' &&
+    obj !== null &&
+    'source' in obj &&
+    'type' in obj &&
+    obj.type === 'text/javascript'
+  ) {
+    const rawSource = obj.source;
+    const normalizedSource = Array.isArray(rawSource)
+      ? rawSource.join('\n')
+      : rawSource;
+
+    result.push({
+      path: currentPath,
+      source: normalizedSource,
+    });
+  }
+
+  if (typeof obj === 'object' && obj !== null) {
+    for (const key of Object.keys(obj)) {
+      const newPath = currentPath ? `${currentPath}.${key}` : key;
+      findScriptsFromIdm(obj[key], newPath, result);
+    }
+  }
+
+  return result;
+}
+export function getTopObject(path, obj) {
+  const parts = path.split('.');
+  return obj[parts[0]]
+}
+export function getTopString(path) {
+  const parts = path.split('.');
+  return parts[0]
+}
+
+export function getLastString(path) {
+  const parts = path.split('.');
+  return parts[parts.length - 1]
+}
+export function getObjectByPath(obj, path) {
+  return path.split('.').reduce((acc, key) => {
+    const realKey = /^\d+$/.test(key) ? Number(key) : key;
+    return acc?.[realKey];
+  }, obj);
+}
+
+export function getObjectByPathExcludeLast(obj: any, path: string): any {
+  const keys = path.split('.');
+  keys.pop();
+  return keys.reduce((acc, key) => {
+    const realKey = /^\d+$/.test(key) ? Number(key) : key;
+    return acc?.[realKey];
+  }, obj);
 }
