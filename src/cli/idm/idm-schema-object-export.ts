@@ -1,4 +1,4 @@
-import { state } from '@rockcarver/frodo-lib';
+import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import { getTokens } from '../../ops/AuthenticateOps';
@@ -10,7 +10,17 @@ import {
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
-const deploymentTypes = ['cloud', 'forgeops'];
+const {
+  CLOUD_DEPLOYMENT_TYPE_KEY,
+  FORGEOPS_DEPLOYMENT_TYPE_KEY,
+  IDM_DEPLOYMENT_TYPE_KEY,
+} = frodo.utils.constants;
+
+const deploymentTypes = [
+  CLOUD_DEPLOYMENT_TYPE_KEY,
+  FORGEOPS_DEPLOYMENT_TYPE_KEY,
+  IDM_DEPLOYMENT_TYPE_KEY,
+];
 
 export default function setup() {
   const program = new FrodoCommand(
@@ -47,6 +57,13 @@ export default function setup() {
         'Does not include metadata in the export file.'
       )
     )
+    .addOption(
+      new Option(
+        '-x, --extract',
+        'Extract scripts from the exported file, and save it to a separate file. Ignored with -a.'
+      )
+    )
+
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {
@@ -93,7 +110,8 @@ export default function setup() {
             options.envFile,
             false,
             false,
-            options.metadata
+            options.metadata,
+            false
           );
           if (!outcome) process.exitCode = 1;
         } // -A, --all-separate
@@ -110,7 +128,8 @@ export default function setup() {
             options.envFile,
             false,
             true,
-            options.metadata
+            options.metadata,
+            options.extract
           );
           if (!outcome) process.exitCode = 1;
           await warnAboutOfflineConnectorServers();
