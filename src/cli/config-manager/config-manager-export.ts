@@ -25,6 +25,7 @@ import Test from './config-manager-export-test';
 import Themes from './config-manager-export-themes';
 import UiConfig from './config-manager-export-uiConfig';
 import Variables from './config-manager-export-variables';
+import AuthzPolicies from './config-manager-export-authz-policies';
 
 export default function setup() {
   const program = new FrodoStubCommand('config-manager export').description(
@@ -42,6 +43,7 @@ export default function setup() {
   program.addCommand(AccessConfig().name('access-config'));
   program.addCommand(Audit().name('audit'));
   program.addCommand(Authentication().name('authentication'));
+  program.addCommand(AuthzPolicies().name('authz-policies'));
   program.addCommand(InternalRoles().name('internal-roles'));
   program.addCommand(Endpoints().name('endpoints'));
   program.addCommand(EmailTemplates().name('email-templates'));
