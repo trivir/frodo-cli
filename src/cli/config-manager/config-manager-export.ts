@@ -15,6 +15,7 @@ import PasswordPolicy from './config-manager-export-password-policy';
 import RemoteServers from './config-manager-export-remote-servers';
 import Saml from './config-manager-export-saml';
 import Schedules from './config-manager-export-schedules';
+import AuthzPolicies from './config-manager-export-authz-policies';
 import Scripts from './config-manager-export-scripts';
 import SecretMappings from './config-manager-export-secret-mappings';
 import Secrets from './config-manager-export-secrets';
@@ -25,8 +26,6 @@ import Test from './config-manager-export-test';
 import Themes from './config-manager-export-themes';
 import UiConfig from './config-manager-export-uiConfig';
 import Variables from './config-manager-export-variables';
-import AuthzPolicies from './config-manager-export-authz-policies';
-import ConfigMetadata from './config-manager-export-config-metadata';
 
 export default function setup() {
   const program = new FrodoStubCommand('config-manager export').description(
@@ -60,7 +59,6 @@ export default function setup() {
   program.addCommand(SecretMappings().name('secret-mappings'));
   program.addCommand(Saml().name('saml'));
   program.addCommand(Test().name('test'));
-  program.addCommand(ConfigMetadata().name('config-metadata'));
 
   return program;
 }
