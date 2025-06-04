@@ -80,8 +80,7 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export services -r alpha -D testDir30
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export services -r alpha -n SocialIdentityProviders -D testDir31
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export test
-
-//adding more Mock tests here 
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export authz-policies -D testDir2
 */
 
 import { getEnv, testExport } from './utils/TestUtils';
@@ -274,6 +273,10 @@ describe('frodo config-manager exports', () => {
     await testExport(CMD, env, undefined, undefined, '', false);
   });
 
-
+  test('"frodo config-manager export authz-policies": should export policies, policy-sets, and resource-types of specified realm into new folder in working directory"', async () => {
+    const dirName = 'testDir2';
+    const CMD = `frodo config-manager export authz-policies -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
 
 });
