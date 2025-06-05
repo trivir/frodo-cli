@@ -32,6 +32,8 @@
   },
   "main": "dist/launch.cjs",
   "scripts": {
+    "rockcarver-frodo-lib": "find src -type f -name \"*.ts\" -exec sed -i \"s#@trivir/frodo-lib#@rockcarver/frodo-lib#g\" {} +",
+    "trivir-frodo-lib": "npm uninstall @rockcarver/frodo-lib && npm install @trivir/frodo-lib@next && find src -type f -name \"*.ts\" -exec sed -i \"s#@rockcarver/frodo-lib#@trivir/frodo-lib#g\" {} +",
     "test": "npm run test:only",
     "test:only": "NODE_OPTIONS='--no-warnings --experimental-vm-modules' npx jest --silent",
     "test:serial": "NODE_OPTIONS='--no-warnings --experimental-vm-modules' npx jest --silent --runInBand",
