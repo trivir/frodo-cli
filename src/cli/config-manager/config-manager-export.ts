@@ -13,6 +13,7 @@ import ManagedObject from './config-manager-export-managed-objects';
 import Mappings from './config-manager-export-mappings';
 import PasswordPolicy from './config-manager-export-password-policy';
 import RemoteServers from './config-manager-export-remote-servers';
+import ConnectorDefinitions from './config-manager-export-connector-definitions';
 import Saml from './config-manager-export-saml';
 import Schedules from './config-manager-export-schedules';
 import AuthzPolicies from './config-manager-export-authz-policies';
@@ -44,6 +45,7 @@ export default function setup() {
   program.addCommand(Audit().name('audit'));
   program.addCommand(Authentication().name('authentication'));
   program.addCommand(AuthzPolicies().name('authz-policies'));
+  program.addCommand(ConnectorDefinitions().name('connector-definitions'));
   program.addCommand(InternalRoles().name('internal-roles'));
   program.addCommand(Endpoints().name('endpoints'));
   program.addCommand(EmailTemplates().name('email-templates'));
