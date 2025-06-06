@@ -18,6 +18,9 @@ import Saml from './config-manager-export-saml';
 import Schedules from './config-manager-export-schedules';
 import AuthzPolicies from './config-manager-export-authz-policies';
 import CORS from './config-manager-export-cors';
+import CSP from './config-manager-export-csp';
+import EmailProvider from './config-manager-export-email-provider';
+import OrgPrivileges from './config-manager-export-org-privileges';
 import Scripts from './config-manager-export-scripts';
 import SecretMappings from './config-manager-export-secret-mappings';
 import Secrets from './config-manager-export-secrets';
@@ -28,8 +31,6 @@ import Test from './config-manager-export-test';
 import Themes from './config-manager-export-themes';
 import UiConfig from './config-manager-export-uiConfig';
 import Variables from './config-manager-export-variables';
-import CSP from './config-manager-export-csp';
-import EmailProvider from './config-manager-export-email-provider';
 
 export default function setup() {
   const program = new FrodoStubCommand('config-manager export').description(
@@ -67,5 +68,6 @@ export default function setup() {
   program.addCommand(CORS().name('cors'));
   program.addCommand(CSP().name('csp'));
   program.addCommand(EmailProvider().name('email-provider'));
+  program.addCommand(OrgPrivileges().name('org-privileges'));
   return program;
 }
