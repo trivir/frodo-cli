@@ -17,6 +17,7 @@ import ConnectorDefinitions from './config-manager-export-connector-definitions'
 import Saml from './config-manager-export-saml';
 import Schedules from './config-manager-export-schedules';
 import AuthzPolicies from './config-manager-export-authz-policies';
+import CORS from './config-manager-export-cors';
 import Scripts from './config-manager-export-scripts';
 import SecretMappings from './config-manager-export-secret-mappings';
 import Secrets from './config-manager-export-secrets';
@@ -61,6 +62,7 @@ export default function setup() {
   program.addCommand(SecretMappings().name('secret-mappings'));
   program.addCommand(Saml().name('saml'));
   program.addCommand(Test().name('test'));
+  program.addCommand(CORS().name('cors'));
 
   return program;
 }
