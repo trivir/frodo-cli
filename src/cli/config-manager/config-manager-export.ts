@@ -57,6 +57,8 @@ export default function setup() {
   program.addCommand(SecretMappings().name('secret-mappings'));
   program.addCommand(Saml().name('saml'));
   program.addCommand(Test().name('test'));
+  program.addCommand(Themes().name('themes'));
+
 
   return program;
 }

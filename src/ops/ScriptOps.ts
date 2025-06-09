@@ -588,7 +588,7 @@ export async function importScriptsFromFiles(
     //       !path?.endsWith('.script.groovy')
     //     : // in regular mode, ignore everything but frodo script exports
     //       stats?.isFile() && !path?.endsWith('.script.json'),
-    ignored: (path, stats) =>
+    ignored: (path, stats?) =>
       stats?.isFile() &&
       !path?.endsWith('.script.json') &&
       !path?.endsWith('.script.js') &&
