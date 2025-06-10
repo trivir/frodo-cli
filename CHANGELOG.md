@@ -7,6 +7,70 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.5] - 2025-04-07
+
+### Fixed
+
+- \#494: Frodo CLI now properly imports script from separate files using `frodo script import -A`.
+
+## [3.0.4] - 2025-04-04
+
+### Changed
+
+- Update to frodo-lib 3.0.4
+
+### Fixed
+
+- \#477: Frodo CLI now properly includes the transformation script for both `Social Provider Handler Node` and `Legacy Social Provider Handler Node`.
+- \#482: Frodo CLI now properly honors the NO_PROXY environment variable in addition to HTTP_PROXY and HTTPS_PROXY.
+- \#489: MacOS binaries are now provided for both Intel and ARM64 architectures.
+- \#490: Linux ARM64 binary now works on Linux running on ARM64 hardware.
+
+## [3.0.4-1] - 2025-04-03
+
+### Fixed
+
+- \#489: MacOS binaries are now provided for both Intel and ARM64 architectures.
+- \#490: Linux ARM64 binary now works on Linux running on ARM64 hardware.
+
+## [3.0.4-0] - 2025-04-03
+
+### Changed
+
+- Update to frodo-lib 3.0.4-2
+
+### Fixed
+
+- \#477: Frodo CLI now properly includes the transformation script for both `Social Provider Handler Node` and `Legacy Social Provider Handler Node`.
+- \#482: Frodo CLI now properly honors the NO_PROXY environment variable in addition to HTTP_PROXY and HTTPS_PROXY.
+
+## [3.0.3] - 2025-03-11
+
+### Changed
+
+- Update to frodo-lib 3.0.3
+
+### Fixed
+
+- \#479: Fixes issues introduced by a recent PingOne Advanced Identity Cloud release (16747.0 on 27 Feb 2025) which prevented Frodo from correctly determining the deployment type of `cloud` and led to failures in the `frodo conn save` and `frodo conn add` commands when Frodo was attempting to create service accounts with scopes that are not available in an environment.
+
+## [3.0.2] - 2025-03-11
+
+### Changed
+
+- Update to frodo-lib 3.0.2
+
+### Fixed
+
+- \#479: Fixes issues introduced by a recent PingOne Advanced Identity Cloud release (16747.0 on 27 Feb 2025) which prevented Frodo from correctly determining the deployment type of `cloud` and led to failures in the `frodo conn save` and `frodo conn add` commands when Frodo was attempting to create service accounts with scopes that are not available in an environment.
+- Updated dependencies with vulnerabilities
+
+## [3.0.1] - 2025-02-06
+
+### Changed
+
+- Update to frodo-lib 3.0.1
+
 ## [3.0.0] - 2024-11-05
 
 ### Changed
@@ -2009,7 +2073,14 @@ Frodo CLI 2.x automatically refreshes session and access tokens before they expi
 - Fixed problem with adding connection profiles
 - Miscellaneous bug fixes
 
-[unreleased]: https://github.com/rockcarver/frodo-cli/compare/v3.0.0...HEAD
+[unreleased]: https://github.com/rockcarver/frodo-cli/compare/v3.0.5...HEAD
+[3.0.5]: https://github.com/rockcarver/frodo-cli/compare/v3.0.4...v3.0.5
+[3.0.4]: https://github.com/rockcarver/frodo-cli/compare/v3.0.4-1...v3.0.4
+[3.0.4-1]: https://github.com/rockcarver/frodo-cli/compare/v3.0.4-0...v3.0.4-1
+[3.0.4-0]: https://github.com/rockcarver/frodo-cli/compare/v3.0.3...v3.0.4-0
+[3.0.3]: https://github.com/rockcarver/frodo-cli/compare/v3.0.2...v3.0.3
+[3.0.2]: https://github.com/rockcarver/frodo-cli/compare/v3.0.1...v3.0.2
+[3.0.1]: https://github.com/rockcarver/frodo-cli/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/rockcarver/frodo-cli/compare/v2.1.0...v3.0.0
 [2.1.0]: https://github.com/rockcarver/frodo-cli/compare/v2.0.6-2...v2.1.0
 [2.0.6-2]: https://github.com/rockcarver/frodo-cli/compare/v2.0.6-1...v2.0.6-2

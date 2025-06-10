@@ -4,8 +4,8 @@ exports[`CLI help interface for 'frodo' root command should be expected english 
 "Usage: frodo [options] [command]
 
 Options:
-  -v, --version                                         output the version number
-  -h, --help                                            display help for command
+  -v, --version                                           output the version number
+  -h, --help                                              display help for command
 
 Commands:
   admin                                                 Platform admin tasks.
@@ -32,7 +32,6 @@ Commands:
   service                                               Manage AM services.
   shell [options] [host] [realm] [username] [password]  Launch the frodo interactive shell.
   theme                                                 Manage themes.
-  config-manager                                        Manage IDM configuration.
   help [command]                                        display help for command
 "
 `;
