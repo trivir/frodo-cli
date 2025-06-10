@@ -160,6 +160,9 @@ export default function setup() {
               includeDefault: options.default,
               includeActiveValues: options.includeActiveValues,
               target: options.target,
+              includeReadOnly: options.readOnly,
+              onlyRealm: options.realmOnly,
+              onlyGlobal: options.globalOnly,
             }
           );
           if (!outcome) process.exitCode = 1;
@@ -188,6 +191,9 @@ export default function setup() {
               includeDefault: options.default,
               includeActiveValues: options.includeActiveValues,
               target: options.target,
+              includeReadOnly: options.readOnly,
+              onlyRealm: options.realmOnly,
+              onlyGlobal: options.globalOnly,
             }
           );
           if (!outcome) process.exitCode = 1;
