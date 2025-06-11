@@ -43,7 +43,7 @@ function processMappings(mappings, targetDir, name) {
       saveJsonToFile(mapping, fileName, false);
     });
   } catch (err) {
-    console.error(err);
+    printError(err);
   }
 }
 

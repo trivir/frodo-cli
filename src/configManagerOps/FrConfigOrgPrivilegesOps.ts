@@ -1,9 +1,7 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
-import { ContentSecurityPolicy } from '@rockcarver/frodo-lib/src/api/cloud/EnvContentSecurityPolicyApi';
 import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
-import { error } from 'console';
 
-import { printError, verboseMessage } from '../utils/Console';
+import { printError } from '../utils/Console';
 
 const { config } = frodo.idm;
 const { getFilePath, saveJsonToFile } = frodo.utils;
