@@ -5,6 +5,7 @@ import CORS from './config-manager-export-cors';
 import CSP from './config-manager-export-csp';
 import EmailProvider from './config-manager-export-email-provider';
 import Mappings from './config-manager-export-mappings';
+import Oauth2Agents from './config-manager-export-oauth2-agents';
 import OrgPrivileges from './config-manager-export-org-privileges';
 import Scripts from './config-manager-export-scripts';
 import Secrets from './config-manager-export-secrets';
@@ -33,5 +34,6 @@ export default function setup() {
   program.addCommand(CSP().name('csp'));
   program.addCommand(EmailProvider().name('email-provider'));
   program.addCommand(OrgPrivileges().name('org-privileges'));
+  program.addCommand(Oauth2Agents().name('oauth2-agents'));
   return program;
 }
