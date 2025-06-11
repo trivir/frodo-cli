@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CLI help interface for 'config export' should be expected english 1`] = `
+"Usage: frodo config-manager export [options] [command]
+
+Export IDM configuration objects.
+
+Options:
+  -h, --help            Help
+
+Commands:
+  access-config         Export access-config objects.
+  audit                 Export audit objects.
+  authentication        Export authentication objects.
+  cookie-domains        Export cookie-domains objects.
+  email-templates       Export email-templates objects.
+  endpoints             Export custom endpoints objects.
+  help                  display help for command
+  internal-roles        Export internal roles in fr-config-manager style.
+  kba                   Export kba-config objects.
+  mappings              Export connector mappings.
+  password-policy       Export password-policy objects.
+  remote-servers        Export remote-servers objects.
+  schedules             Export schedules in fr-config-manager style.
+  scripts               Export scripts.
+  secrets               Export secrets.
+  services              Export authentication services.
+  terms-and-conditions  Export terms and conditions.
+  themes                Export theme objects.
+  ui-config             Export ui-configuration objects.
+  variables             Export variables objects.
+"
+`;
