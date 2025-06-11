@@ -59,7 +59,9 @@ export async function exportRealmAgents(): Promise<boolean> {
         }
       }
     } else {
-      verboseMessage(`There are no agents in the realm "${state.getRealm()}"`);
+      verboseMessage(
+        `  There are no agents in the realm "${state.getRealm()}"`
+      );
     }
     return true;
   } catch (error) {

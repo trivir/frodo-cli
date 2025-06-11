@@ -1,8 +1,12 @@
 import { frodo } from '@rockcarver/frodo-lib';
 
+
 import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError } from '../utils/Console';
+import { printError } from '../utils/Console';
 
+const { getFilePath, saveJsonToFile } = frodo.utils;
+const { readEmailTemplates, readEmailTemplate } = frodo.email.template;
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { readEmailTemplates, readEmailTemplate } = frodo.email.template;
 /**
@@ -11,7 +15,23 @@ const { readEmailTemplates, readEmailTemplate } = frodo.email.template;
  */
 export async function configManagerExportEmailTemplates(
   name?: string
+  name?: string
 ): Promise<boolean> {
+  try {
+    if (name) {
+      const exportData = await readEmailTemplate(name);
+      processEmailTemplate(exportData, `/email-templates`);
+    } else {
+      const exportData = await readEmailTemplates(true);
+      exportData.forEach(async (template) => {
+        processEmailTemplate(template, `/email-templates`);
+      });
+    }
+    return true;
+  } catch (error) {
+    printError(error, `Error exporting email templates to files`);
+  }
+  return false;
   try {
     if (name) {
       const exportData = await readEmailTemplate(name);
@@ -30,6 +50,16 @@ export async function configManagerExportEmailTemplates(
 }
 
 async function splitLangToFile(property, templatePath, templateName, suffix) {
+  if (!property) {
+    return;
+  }
+  Object.entries(property).forEach(([language, text]) => {
+    const fileName = `${templateName}.${language}.${suffix}`;
+    extractFrConfigDataToFile(text, fileName, templatePath);
+    property[language] = {
+      file: fileName,
+    };
+  });
   if (!property) {
     return;
   }
@@ -59,5 +89,22 @@ async function processEmailTemplate(template, fileDir) {
     saveJsonToFile(template, getFilePath(fileName), false, false);
   } catch (err) {
     console.error(err);
+  }
+  try {
+    const templateName = template._id.split('/')[1];
+    const templatePath = `${fileDir}/${templateName}`;
+    await splitLangToFile(template.html, templatePath, templateName, 'html');
+    await splitLangToFile(template.message, templatePath, templateName, 'md');
+    if (template.styles) {
+      const cssFilename = `${templateName}.css`;
+      extractFrConfigDataToFile(template.styles, cssFilename, templatePath);
+      template.styles = {
+        file: cssFilename,
+      };
+    }
+    const fileName = `${templatePath}/${templateName}.json`;
+    saveJsonToFile(template, getFilePath(fileName), false, false);
+  } catch (err) {
+    printError(err);
   }
 }

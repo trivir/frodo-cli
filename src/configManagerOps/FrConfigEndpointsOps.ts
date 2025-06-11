@@ -1,8 +1,12 @@
 import { frodo } from '@rockcarver/frodo-lib';
 
+
 import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError } from '../utils/Console';
+import { printError } from '../utils/Console';
 
+const { readConfigEntitiesByType } = frodo.idm.config;
+const { saveJsonToFile, getFilePath } = frodo.utils;
 const { readConfigEntitiesByType } = frodo.idm.config;
 const { saveJsonToFile, getFilePath } = frodo.utils;
 
@@ -13,7 +17,16 @@ const { saveJsonToFile, getFilePath } = frodo.utils;
  */
 export async function configManagerExportEndpoints(
   endpointName?: string
+  endpointName?: string
 ): Promise<boolean> {
+  try {
+    const exportData = await readConfigEntitiesByType('endpoint');
+    processEndpoints(exportData, 'endpoints', endpointName);
+    return true;
+  } catch (error) {
+    printError(error, `Error exporting config entity endpoints`);
+  }
+  return false;
   try {
     const exportData = await readConfigEntitiesByType('endpoint');
     processEndpoints(exportData, 'endpoints', endpointName);
@@ -25,6 +38,14 @@ export async function configManagerExportEndpoints(
 }
 
 function processEndpoints(endpoints, fileDir, name?) {
+  try {
+    endpoints.forEach((endpoint) => {
+      const endpointName = endpoint._id.split('/')[1];
+      if (name && name !== endpointName) {
+        return;
+      }
+      const endpointDir = `${fileDir}/${endpointName}`;
+      const scriptFilename = `${endpointName}.js`;
   try {
     endpoints.forEach((endpoint) => {
       const endpointName = endpoint._id.split('/')[1];
@@ -46,6 +67,7 @@ function processEndpoints(endpoints, fileDir, name?) {
       );
     });
   } catch (err) {
-    console.error(err);
+    printError(err);
   }
 }
+

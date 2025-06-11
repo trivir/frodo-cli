@@ -184,7 +184,7 @@ async function processJourneys(
       );
     }
   } catch (err) {
-    console.error(err);
+    printError(err);
   }
 }
 

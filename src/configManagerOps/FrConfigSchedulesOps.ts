@@ -64,6 +64,6 @@ function processSchedules(schedules, fileDir, name?) {
       );
     });
   } catch (err) {
-    console.error(err);
+    printError(err);
   }
 }
