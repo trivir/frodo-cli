@@ -1,7 +1,7 @@
+import { configManagerExportRemoteServers } from '../../configManagerOps/FrConfigRemoteServersOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
-import { configManagerExportRemoteServers } from '../../configManagerOps/FrConfigRemoteServersOps';
 
 const deploymentTypes = ['cloud', 'forgeops'];
 

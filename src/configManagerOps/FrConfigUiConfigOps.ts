@@ -15,7 +15,6 @@ export async function configManagerExportUiConfig(
   envFile?: string
 ): Promise<boolean> {
   try {
-    
     const options = getIdmImportExportOptions(undefined, envFile);
     const exportData = (
       await exportConfigEntity('ui/configuration', {
@@ -35,4 +34,3 @@ export async function configManagerExportUiConfig(
   }
   return false;
 }
-

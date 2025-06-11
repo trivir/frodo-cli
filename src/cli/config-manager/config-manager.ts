@@ -5,7 +5,7 @@ export default function setup() {
   const program = new FrodoStubCommand('config-manager').description(
     'Manage IDM configuration.'
   );
-  program.addOption
+  program.addOption;
 
   program.addCommand(ExportCmd().name('export'));
 

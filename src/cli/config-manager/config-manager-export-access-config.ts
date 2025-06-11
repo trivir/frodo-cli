@@ -1,7 +1,7 @@
+import { configManagerExportAccessConfig } from '../../configManagerOps/FrConfigAccessConfigOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
-import { configManagerExportAccessConfig } from '../../configManagerOps/FrConfigAccessConfigOps';
 
 const deploymentTypes = ['cloud', 'forgeops'];
 

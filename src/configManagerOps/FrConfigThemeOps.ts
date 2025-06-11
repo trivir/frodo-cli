@@ -6,17 +6,13 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   createProgressIndicator,
   printError,
+  printMessage,
   stopProgressIndicator,
   updateProgressIndicator,
 } from '../utils/Console';
 
 const { getFilePath, saveJsonToFile, getCurrentRealmName } = frodo.utils;
-const {
-  readThemes,
-  deleteTheme: _deleteTheme,
-  deleteThemeByName: _deleteThemeByName,
-  deleteThemes: _deleteThemes,
-} = frodo.theme;
+const { readThemes } = frodo.theme;
 
 /**
  * Determine HTML fields for config-manager style export
@@ -91,7 +87,7 @@ function processThemes(themes, fileDir, name) {
             break;
 
           default:
-            console.error(
+            printMessage(
               `Error processing theme ${theme.name} - unexpected data type for ${field.name}: ${typeof theme[field.name]}`
             );
             process.exit(1);
@@ -102,7 +98,7 @@ function processThemes(themes, fileDir, name) {
       saveJsonToFile(theme, fileName, false);
     });
   } catch (err) {
-    console.error(err);
+    printError(err);
   }
 }
 

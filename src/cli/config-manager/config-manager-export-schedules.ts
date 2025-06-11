@@ -1,8 +1,9 @@
+import { Option } from 'commander';
+
+import { configManagerExportSchedules } from '../../configManagerOps/FrConfigSchedulesOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
-import { configManagerExportSchedules } from '../../configManagerOps/FrConfigSchedulesOps';
-import { Option } from 'commander';
 
 const deploymentTypes = ['cloud', 'forgeops'];
 

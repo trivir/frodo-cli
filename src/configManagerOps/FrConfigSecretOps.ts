@@ -10,14 +10,7 @@ import {
 } from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
-const {
-  readSecrets,
-  createSecret: _createSecret,
-  exportSecret,
-  createVersionOfSecret: _createVersionOfSecret,
-  deleteSecret: _deleteSecret,
-  deleteVersionOfSecret: _deleteVersionOfSecret,
-} = frodo.cloud.secret;
+const { readSecrets, exportSecret } = frodo.cloud.secret;
 
 /**
  * Export all secrets to individual files in fr-config-manager format

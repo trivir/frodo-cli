@@ -1,8 +1,9 @@
+import { Option } from 'commander';
+
+import { configManagerExportRoles } from '../../configManagerOps/FrConfigInternalRolesOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
-import { configManagerExportRoles } from '../../configManagerOps/FrConfigInternalRolesOps';
-import { Option } from 'commander';
 
 const deploymentTypes = ['cloud', 'forgeops'];
 

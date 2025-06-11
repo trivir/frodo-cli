@@ -1,7 +1,7 @@
+import { configManagerExportCookieDomains } from '../../configManagerOps/FrConfigCookieDomainsOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
-import { configManagerExportCookieDomains } from '../../configManagerOps/FrConfigCookieDomainsOps';
 
 const deploymentTypes = ['cloud', 'forgeops'];
 

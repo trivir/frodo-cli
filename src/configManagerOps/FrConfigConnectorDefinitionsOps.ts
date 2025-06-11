@@ -35,7 +35,7 @@ export async function exportConnectorDefinition(
       'c' in criteria
         ? criteria.c
         : await connector.readConnector(criteria.connectorName);
-    verboseMessage(`Exporting connector: "${c._id}"`);
+    verboseMessage(`  Exporting connector: "${c._id}"`);
     saveJsonToFile(
       c,
       getFilePath(

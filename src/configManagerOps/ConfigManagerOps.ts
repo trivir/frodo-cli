@@ -14,6 +14,7 @@ import {
   createProgressIndicator,
   debugMessage,
   printError,
+  printMessage,
   stopProgressIndicator,
   updateProgressIndicator,
 } from '../utils/Console';
@@ -24,20 +25,8 @@ const { exportScripts } = frodo.script;
 const { getFilePath, getTypedFilename, saveJsonToFile, getCurrentRealmName } =
   frodo.utils;
 const { readVariables } = frodo.cloud.variable;
-const {
-  readSecrets,
-  createSecret: _createSecret,
-  exportSecret,
-  createVersionOfSecret: _createVersionOfSecret,
-  deleteSecret: _deleteSecret,
-  deleteVersionOfSecret: _deleteVersionOfSecret,
-} = frodo.cloud.secret;
-const {
-  readThemes,
-  deleteTheme: _deleteTheme,
-  deleteThemeByName: _deleteThemeByName,
-  deleteThemes: _deleteThemes,
-} = frodo.theme;
+const { readSecrets, exportSecret } = frodo.cloud.secret;
+const { readThemes } = frodo.theme;
 
 const { getFullServices, createServiceExportTemplate } = frodo.service;
 
@@ -76,7 +65,7 @@ function processMappings(mappings, targetDir, name) {
       saveJsonToFile(mapping, fileName, false);
     });
   } catch (err) {
-    console.error(err);
+    printError(err);
   }
 }
 
@@ -160,10 +149,10 @@ function processScripts(
     }
 
     if (name && scriptNotFound) {
-      console.warn('Script not found (check SCRIPT_PREFIXES)');
+      printMessage('Script not found (check SCRIPT_PREFIXES)');
     }
   } catch (err) {
-    console.error(err);
+    printError(err);
   }
 }
 
@@ -408,7 +397,7 @@ function processThemes(themes, fileDir, name) {
             break;
 
           default:
-            console.error(
+            printMessage(
               `Error processing theme ${theme.name} - unexpected data type for ${field.name}: ${typeof theme[field.name]}`
             );
             process.exit(1);
@@ -419,7 +408,7 @@ function processThemes(themes, fileDir, name) {
       saveJsonToFile(theme, fileName, false);
     });
   } catch (err) {
-    console.error(err);
+    printError(err);
   }
 }
 

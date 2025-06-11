@@ -1,7 +1,7 @@
+import { configManagerExportAudit } from '../../configManagerOps/FrConfigAuditOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
-import { configManagerExportAudit } from '../../configManagerOps/FrConfigAuditOps';
 
 const deploymentTypes = ['cloud', 'forgeops'];
 
