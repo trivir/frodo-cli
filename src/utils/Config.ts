@@ -90,7 +90,7 @@ export async function getFullExportConfig(
       includeActiveValues: false,
       target: '',
       includeReadOnly: true,
-      onlyRealm: true,
+      onlyRealm: false,
       onlyGlobal: false,
     });
   }

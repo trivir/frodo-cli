@@ -90,8 +90,8 @@ export async function exportEverythingToFiles(
     includeDefault: false,
     includeActiveValues: false,
     target: '',
-    includeReadOnly: true,
-    onlyRealm: true,
+    includeReadOnly: false,
+    onlyRealm: false,
     onlyGlobal: false,
   }
 ): Promise<boolean> {
