@@ -11,19 +11,13 @@ const { readScripts, readScriptByName } = frodo.script;
 type ByName = { scriptName: string };
 type BySkeleton = { ss: ScriptSkeleton };
 
-/**
- * Export script using its name
- * @param criteria Name of the script not including extension
- */
+// Export script using its name
 export async function exportScript(
   criteria: ByName,
   justContent: boolean,
   justConfig: boolean
 ): Promise<boolean>;
-/**
- * Export script using the provided ScriptSkeleton
- * @param criteria Script object skeleton
- */
+// Export script using the provided ScriptSkeleton
 export async function exportScript(
   criteria: BySkeleton,
   justContent: boolean,
@@ -36,8 +30,8 @@ export async function exportScript(
  */
 export async function exportScript(
   criteria: ByName | BySkeleton,
-  justContent: boolean = false,
-  justConfig: boolean = false
+  justContent: boolean = false, // create only the content folder for the specified script, outranks justConfig
+  justConfig: boolean = false // create only the config folder, ignored if justContent is set
 ): Promise<boolean> {
   try {
     const s: ScriptSkeleton =

@@ -19,6 +19,7 @@ export async function exportConnectorMapping(
     if (m._id.startsWith('sync')) {
       verboseMessage(`  Exporting connector mapping: "${m._id}"`);
       delete m._id;
+      delete m.syncAfter;
       saveJsonToFile(
         m,
         getFilePath(`sync/mappings/${m.name}/${m.name}.json`, true),
