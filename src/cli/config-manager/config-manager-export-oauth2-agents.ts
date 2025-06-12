@@ -4,10 +4,11 @@ import { Option } from 'commander';
 import {
   exportAgent,
   exportAllAgents,
+  exportConfigAgents,
   exportRealmAgents,
 } from '../../configManagerOps/FrConfigOauth2AgentOps';
 import { getTokens } from '../../ops/AuthenticateOps';
-import { printMessage } from '../../utils/Console';
+import { printError, printMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
 const deploymentTypes = ['cloud'];
@@ -16,12 +17,12 @@ const { readRealms } = frodo.realm;
 
 export default function setup() {
   const program = new FrodoCommand(
-    'frodo config-manager export ',
+    'frodo config-manager export oauth2-agents',
     deploymentTypes
   );
 
   program
-    .description('Export authorization scripts.')
+    .description('Export OAuth2 Agents')
     .addOption(
       new Option(
         '-r, --realm <realm>',
@@ -32,6 +33,13 @@ export default function setup() {
       new Option(
         '-n, --agent-name <agent name>',
         'Export specific agent using agentId/agentName.'
+      )
+    )
+    // added because fr-config manager needs a config in order to complete the "fr-config-pull a" command. Bryan said this should still be supported
+    .addOption(
+      new Option(
+        '-f, --file <file>',
+        'The OAUTH2_AGENTS_CONFIG json file. ex: "/home/trivir/Documents/oauth2-agents.json", or "oauth2-agents.json"'
       )
     )
     .action(async (host, realm, user, password, options, command) => {
@@ -51,29 +59,43 @@ export default function setup() {
 
       if (await getTokens(false, true, deploymentTypes)) {
         let outcome: boolean;
+        let overrides;
 
-        // // -n/--script-name
+        if (options.overrides) {
+          try {
+            overrides = JSON.parse(options.overrides);
+            printMessage(overrides);
+          } catch (error) {
+            printError(error);
+          }
+        }
+
+        // -n/--script-name
         if (options.agentName) {
           printMessage(
-            `Exporting agent ${options.agentName} from the ${state.getRealm()} realm.`
+            `Exporting the agent "${options.agentName}" from the ${state.getRealm()} realm.`
           );
-          const originalRealm: string = state.getRealm();
-          outcome = await exportAgent(options.agentName);
+
+          // try and find the agent in current realm
+          outcome = await exportAgent(options.agentName, options.file);
+
           // check other realms for the agent
-          if (!outcome) {
+          if (!outcome && !options.file) {
+            const checkedRealms: string[] = [state.getRealm()];
             for (const realm of await readRealms()) {
               if (outcome) {
                 break;
               }
-              if (realm.name !== originalRealm) {
+              if (!checkedRealms.includes(realm.name)) {
                 printMessage(
-                  `Exporting agent ${options.agentName} from the ${state.getRealm()} realm failed.`
+                  `Exporting the agent "${options.agentName}" from the ${state.getRealm()} realm failed.`
                 );
                 state.setRealm(realm.name);
+                checkedRealms.push(state.getRealm());
                 printMessage(
-                  `Looking for the ${options.agentName} agent in the ${state.getRealm()} realm now.`
+                  `Looking for the agent "${options.agentName}" in the ${state.getRealm()} realm now.`
                 );
-                outcome = await exportAgent(options.agentName);
+                outcome = await exportAgent(options.agentName, null);
               }
             }
             if (!outcome) {
@@ -84,19 +106,32 @@ export default function setup() {
           }
         }
 
+        // -f/--file
+        else if (options.file) {
+          printMessage(
+            `Exporting all the agents defined in the provided config file.`
+          );
+          outcome = await exportConfigAgents(options.file);
+        }
+
         // -r/--realm
         else if (realm !== constants.DEFAULT_REALM_KEY) {
-          printMessage(`Exporting agents from the ${state.getRealm()} realm.`);
+          printMessage(
+            `Exporting all the agents from the ${state.getRealm()} realm.`
+          );
           outcome = await exportRealmAgents();
         }
 
-        // export all, the default
+        // export all oauth2 agents, the default when no options are provided
         else {
-          printMessage(`Exporting agents from entire tenant.`);
+          printMessage(`Exporting all the agents in the host tenant.`);
           outcome = await exportAllAgents();
         }
 
         if (!outcome) {
+          printMessage(
+            `Failed to export one or more oauth2 agents. ${options.verbose ? '' : 'Check --verbose for me details.'}`
+          );
           process.exitCode = 1;
         }
       }
