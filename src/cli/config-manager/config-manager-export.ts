@@ -28,6 +28,7 @@ import Terms from './config-manager-export-terms-and-conditions';
 import Themes from './config-manager-export-themes';
 import UiConfig from './config-manager-export-uiConfig';
 import Variables from './config-manager-export-variables';
+import Raw from './config-manager-export-raw';
 
 export default function setup() {
   const program = new FrodoStubCommand('config-manager export').description(
@@ -63,5 +64,6 @@ export default function setup() {
   program.addCommand(EmailProvider().name('email-provider'));
   program.addCommand(OrgPrivileges().name('org-privileges'));
   program.addCommand(Oauth2Agents().name('oauth2-agents'));
+  program.addCommand(Raw().name('raw'));
   return program;
 }
