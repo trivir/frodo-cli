@@ -82,9 +82,9 @@ export async function exportAuthzPolicySet(
     // make sure ps is in the config file if one is passed
     if (configFile) {
       verboseMessage(`  Reading the config file "${configFile}"`);
-      const configFileData: Record<string, string[]> = JSON.parse(
+      const configFileData = JSON.parse(
         await readFile(configFile, { encoding: 'utf8' })
-      ) as Record<string, string[]>;
+      );
       if (
         !configFileData[state.getRealm()] ||
         !configFileData[state.getRealm()].includes(ps.name)
@@ -142,22 +142,6 @@ export async function exportAuthzPolicySet(
 
 /**
  * Export all policy-sets defined in the config file, current state realm is ignored, all realms in config file are iterated over
- * 
- * -----------------------  Example AUTHZ_POLICY_SETS_CONFIG json file ------------------------
-{
-  "alpha": [
-    "oauth2Scopes",
-    "EdgePolicySet",
-    "FeatureStorePolicySet",
-    "data",
-    "test-policy-set"
-  ],
-  "bravo": [
-    "oauth2Scopes",
-    "murphyTestPolicySet"
-  ]
-}
- * -------------------------------------------------------------------------------------------- 
  * @param configFile json file to read from.
  * @returns True if all policy sets were written successfully
  */

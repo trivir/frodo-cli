@@ -34,6 +34,7 @@ export default function setup() {
         'Export specific script using filename. Omit file extension.'
       )
     )
+    // added because fr-config manager has a SCRIPT_PREFIXES=[] variable in its .env configuration file to specify scripts
     .addOption(
       new Option(
         '-p, --prefix <prefix>',

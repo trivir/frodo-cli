@@ -35,7 +35,25 @@ export default function setup() {
         'Get only a specific policy set.'
       )
     )
-    // added because fr-config manager needs a config in order to complete the "fr-config-pull authz-policies" command. Bryan said this should still be supported
+    /**
+     * added because fr-config manager needs a config in order to complete the "fr-config-pull authz-policies" command. Bryan said this should still be supported  
+     *   
+     * -----------------------  Example AUTHZ_POLICY_SETS_CONFIG json file ------------------------
+     {
+       "alpha": [
+         "oauth2Scopes",
+         "EdgePolicySet",
+         "FeatureStorePolicySet",
+         "data",
+         "test-policy-set"
+       ],
+       "bravo": [
+         "oauth2Scopes",
+         "murphyTestPolicySet"
+       ]
+     }
+     * -------------------------------------------------------------------------------------------- 
+     */
     .addOption(
       new Option(
         '-f, --file <file>',

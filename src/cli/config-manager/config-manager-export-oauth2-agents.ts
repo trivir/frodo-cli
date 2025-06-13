@@ -35,7 +35,39 @@ export default function setup() {
         'Export specific agent using agentId/agentName.'
       )
     )
-    // added because fr-config manager needs a config in order to complete the "fr-config-pull a" command. Bryan said this should still be supported
+    /**
+     * added because fr-config manager needs a config in order to complete the "fr-config-pull oauth2-agents" command. Bryan said this should still be supported     
+     * 
+     * -----------------------  Example OAUTH2_AGENTS_CONFIG json file ----------------------------
+     {
+       "alpha": {
+         "2.2_Agent": [
+           {"id": "my-policy-agent"}
+         ],
+         "RemoteConsentAgent": [
+           {"id": "test", "overrides":{"testestest": "hotdog"}}
+         ],
+         "SoftwarePublisher": [
+           {"id": "test software publisher"}
+         ],
+         "IdentityGatewayAgent": [
+           {"id": "cdsso-ig-agent"},
+           {"id": "frodo-test-ig-agent"},
+           {"id": "frodo-test-ig-agent2"},
+           {"id": "ig-agent", "overrides": {"yes": "no, not yes", "taco":"sandwich"}}
+         ],
+         "J2EEAgent": [
+           {"id": "frodo-test-java-agent"},
+           {"id": "frodo-test-java-agent2"}
+         ],
+         "WebAgent": [
+           {"id": "frodo-test-web-agent"},
+           {"id": "frodo-test-web-agent2"}
+         ]
+       }
+     }
+    * -------------------------------------------------------------------------------------------- 
+    */
     .addOption(
       new Option(
         '-f, --file <file>',
@@ -59,16 +91,6 @@ export default function setup() {
 
       if (await getTokens(false, true, deploymentTypes)) {
         let outcome: boolean;
-        let overrides;
-
-        if (options.overrides) {
-          try {
-            overrides = JSON.parse(options.overrides);
-            printMessage(overrides);
-          } catch (error) {
-            printError(error);
-          }
-        }
 
         // -n/--script-name
         if (options.agentName) {
