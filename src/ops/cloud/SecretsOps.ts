@@ -22,8 +22,6 @@ import {
   updateProgressIndicator,
 } from '../../utils/Console';
 import wordwrap from '../utils/Wordwrap';
-import { off } from 'process';
-import { get } from 'http';
 
 const { resolveUserName } = frodo.idm.managed;
 const {
