@@ -1,4 +1,4 @@
-import { exportVariablesToFiles } from '../../configManagerOps/FrConfigVariableOps';
+import { configManagerExportVariables } from '../../configManagerOps/FrConfigVariableOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
@@ -25,7 +25,7 @@ export default function setup() {
 
       if (await getTokens(false, true, deploymentTypes)) {
         verboseMessage('Exporting variables');
-        const outcome = await exportVariablesToFiles();
+        const outcome = await configManagerExportVariables();
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options

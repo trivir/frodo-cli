@@ -1,6 +1,6 @@
 import { Option } from 'commander';
 
-import { configManagerExportRoles } from '../../configManagerOps/FrConfigInternalRolesOps';
+import { configManagerExportInternalRoles } from '../../configManagerOps/FrConfigInternalRolesOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
@@ -35,7 +35,7 @@ export default function setup() {
 
       if (await getTokens(false, true, deploymentTypes)) {
         verboseMessage('Exporting internal roles');
-        const outcome = await configManagerExportRoles(options.name);
+        const outcome = await configManagerExportInternalRoles(options.name);
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options

@@ -2,9 +2,9 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import {
-  exportAllScripts,
-  exportRealmScripts,
-  exportScript,
+  configManagerExportScriptsAll,
+  configManagerExportScriptsRealms,
+  configManagerExportScript,
 } from '../../configManagerOps/FrConfigScriptOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage } from '../../utils/Console';
@@ -124,7 +124,7 @@ export default function setup() {
             `Exporting script ${options.scriptName} from the ${state.getRealm()} realm.`
           );
           const originalRealm: string = state.getRealm();
-          outcome = await exportScript(
+          outcome = await configManagerExportScript(
             {
               scriptName: options.scriptName,
             },
@@ -146,7 +146,7 @@ export default function setup() {
                 printMessage(
                   `Looking for the ${options.scriptName} script in the ${state.getRealm()} realm now.`
                 );
-                outcome = await exportScript(
+                outcome = await configManagerExportScript(
                   {
                     scriptName: options.scriptName,
                   },
@@ -168,7 +168,7 @@ export default function setup() {
           printMessage(
             `Exporting scripts from the ${state.getRealm()} realm${hasOptions ? ' with custom options.' : '.'}`
           );
-          outcome = await exportRealmScripts(
+          outcome = await configManagerExportScriptsRealms(
             options.prefix,
             options.justContent,
             options.justConfig,
@@ -182,7 +182,7 @@ export default function setup() {
           printMessage(
             `Exporting scripts from entire tenant${hasOptions ? ' with custom options.' : '.'}`
           );
-          outcome = await exportAllScripts(
+          outcome = await configManagerExportScriptsAll(
             options.prefix,
             options.justContent,
             options.justConfig,

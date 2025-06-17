@@ -10,7 +10,7 @@ const { saveJsonToFile, getFilePath } = frodo.utils;
  * Export terms and conditions to file
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
-export async function exportTermsAndConditionsToFiles(): Promise<boolean> {
+export async function configManagerExportTermsAndConditions(): Promise<boolean> {
   try {
     const exportData = await exportTermsAndConditions();
     for (const version of exportData.versions) {

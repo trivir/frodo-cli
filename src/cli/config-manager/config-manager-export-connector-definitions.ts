@@ -1,8 +1,8 @@
 import { Option } from 'commander';
 
 import {
-  exportAllConnectorDefinitions,
-  exportConnectorDefinition,
+  configManagerExportConnectorDefinitionsAll,
+  configManagerExportConnectorDefinition,
 } from '../../configManagerOps/FrConfigConnectorDefinitionsOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage } from '../../utils/Console';
@@ -41,12 +41,12 @@ export default function setup() {
           printMessage(
             `Exporting connector definition for connector: "${options.cName}"`
           );
-          outcome = await exportConnectorDefinition({
+          outcome = await configManagerExportConnectorDefinition({
             connectorName: options.cName,
           });
         } else {
           printMessage('Exporting all connector defitions.');
-          outcome = await exportAllConnectorDefinitions();
+          outcome = await configManagerExportConnectorDefinitionsAll();
         }
         if (!outcome) process.exitCode = 1;
       }

@@ -2,9 +2,9 @@ import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import {
-  exportOrgPrivileges,
-  exportOrgPrivilegesAllRealms,
-  exportOrgPrivilegesRealm,
+  configManagerExportOrgPrivileges,
+  configManagerExportOrgPrivilegesAllRealms,
+  configManagerExportOrgPrivilegesRealm,
 } from '../../configManagerOps/FrConfigOrgPrivilegesOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage } from '../../utils/Console';
@@ -50,13 +50,13 @@ export default function setup() {
             `Exporting organization privileges config from the realm: "${realm}"`
           );
           outcome =
-            (await exportOrgPrivileges()) &&
-            (await exportOrgPrivilegesRealm(realm));
+            (await configManagerExportOrgPrivileges()) &&
+            (await configManagerExportOrgPrivilegesRealm(realm));
         } else {
           printMessage(
             'Exporting oranization privileges config from all realms'
           );
-          outcome = await exportOrgPrivilegesAllRealms();
+          outcome = await configManagerExportOrgPrivilegesAllRealms();
         }
 
         if (!outcome) process.exitCode = 1;

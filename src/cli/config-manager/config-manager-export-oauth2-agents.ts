@@ -2,10 +2,10 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import {
-  exportAgent,
-  exportAllAgents,
-  exportConfigAgents,
-  exportRealmAgents,
+  configManagerExportAgent,
+  configManagerExportAgentsAll,
+  configManagerExportConfigAgents,
+  configManagerExportAgentsRealm,
 } from '../../configManagerOps/FrConfigOauth2AgentOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printError, printMessage } from '../../utils/Console';
@@ -99,7 +99,7 @@ export default function setup() {
           );
 
           // try and find the agent in current realm
-          outcome = await exportAgent(options.agentName, options.file);
+          outcome = await configManagerExportAgent(options.agentName, options.file);
 
           // check other realms for the agent
           if (!outcome && !options.file) {
@@ -117,7 +117,7 @@ export default function setup() {
                 printMessage(
                   `Looking for the agent "${options.agentName}" in the ${state.getRealm()} realm now.`
                 );
-                outcome = await exportAgent(options.agentName, null);
+                outcome = await configManagerExportAgent(options.agentName, null);
               }
             }
             if (!outcome) {
@@ -133,7 +133,7 @@ export default function setup() {
           printMessage(
             `Exporting all the agents defined in the provided config file.`
           );
-          outcome = await exportConfigAgents(options.file);
+          outcome = await configManagerExportConfigAgents(options.file);
         }
 
         // -r/--realm
@@ -141,13 +141,13 @@ export default function setup() {
           printMessage(
             `Exporting all the agents from the ${state.getRealm()} realm.`
           );
-          outcome = await exportRealmAgents();
+          outcome = await configManagerExportAgentsRealm();
         }
 
         // export all oauth2 agents, the default when no options are provided
         else {
           printMessage(`Exporting all the agents in the host tenant.`);
-          outcome = await exportAllAgents();
+          outcome = await configManagerExportAgentsAll();
         }
 
         if (!outcome) {

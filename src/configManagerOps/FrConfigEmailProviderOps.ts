@@ -10,7 +10,7 @@ const { getFilePath, saveJsonToFile } = frodo.utils;
  * Export the email provider configuration json in fr-config manager format
  * @returns True if file was successfully saved
  */
-export async function exportEmailProviderConfiguration(): Promise<boolean> {
+export async function configManagerExportEmailProviderConfiguration(): Promise<boolean> {
   try {
     const emailProvider: IdObjectSkeletonInterface =
       await config.readConfigEntity('external.email');

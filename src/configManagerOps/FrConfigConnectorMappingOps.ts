@@ -11,7 +11,7 @@ const { getFilePath, saveJsonToFile } = frodo.utils;
  * @param m The skeleton that contains all the mapping information
  * @returns True if succesful
  */
-export async function exportConnectorMapping(
+export async function configManagerExportConnectorMapping(
   m: MappingSkeleton
 ): Promise<boolean> {
   try {
@@ -42,11 +42,11 @@ export async function exportConnectorMapping(
  * @param {MappingExportOptions} options export options
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
-export async function exportAllMappings(): Promise<boolean> {
+export async function configManagerExportMappingsAll(): Promise<boolean> {
   try {
     const mappings: MappingSkeleton[] = await readMappings();
     for (const map of mappings) {
-      exportConnectorMapping(map);
+      configManagerExportConnectorMapping(map);
     }
     return true;
   } catch (error) {

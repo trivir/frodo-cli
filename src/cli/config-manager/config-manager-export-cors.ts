@@ -1,4 +1,4 @@
-import { exportCorsConfiguration } from '../../configManagerOps/FrConfigCorsOps';
+import { configManagerExportCors } from '../../configManagerOps/FrConfigCorsOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
@@ -26,7 +26,7 @@ export default function setup() {
 
       if (await getTokens(false, true, deploymentTypes)) {
         verboseMessage('Exporting CORS configuration');
-        const outcome = await exportCorsConfiguration();
+        const outcome = await configManagerExportCors();
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options

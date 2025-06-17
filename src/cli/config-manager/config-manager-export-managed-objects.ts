@@ -1,6 +1,6 @@
 import { Option } from 'commander';
 
-import { configManagerExportObjects } from '../../configManagerOps/FrConfigManagedObjectsOps';
+import { configManagerExportManagedObjects } from '../../configManagerOps/FrConfigManagedObjectsOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
@@ -34,7 +34,7 @@ export default function setup() {
 
       if (await getTokens(false, true, deploymentTypes)) {
         verboseMessage('Exporting config entity managed-objects');
-        const outcome = await configManagerExportObjects(options.name);
+        const outcome = await configManagerExportManagedObjects(options.name);
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options

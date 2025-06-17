@@ -22,7 +22,7 @@ const SCRIPT_HOOKS = ['onStore', 'onRetrieve', 'onValidate'];
  * @param {string} envFile File that defines environment specific variables for replacement during configuration export/import
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
-export async function configManagerExportObjects(
+export async function configManagerExportManagedObjects(
   objectName?: string
 ): Promise<boolean> {
   try {

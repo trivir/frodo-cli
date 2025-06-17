@@ -13,7 +13,7 @@ type CorsObject = { idmCorsConfig; corsServices; corsServiceGlobal };
  * Export the global CORS configuration json in fr-config manager format
  * @returns True if file was successfully saved
  */
-export async function exportCorsConfiguration(): Promise<boolean> {
+export async function configManagerExportCors(): Promise<boolean> {
   try {
     const cors: IdObjectSkeletonInterface =
       await config.readConfigEntity('servletfilter/cors');

@@ -1,4 +1,4 @@
-import { exportEmailProviderConfiguration } from '../../configManagerOps/FrConfigEmailProviderOps';
+import { configManagerExportEmailProviderConfiguration } from '../../configManagerOps/FrConfigEmailProviderOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
@@ -26,7 +26,7 @@ export default function setup() {
 
       if (await getTokens(false, true, deploymentTypes)) {
         verboseMessage('Exporting email provider configuration');
-        const outcome = await exportEmailProviderConfiguration();
+        const outcome = await configManagerExportEmailProviderConfiguration();
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options

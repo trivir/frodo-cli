@@ -11,7 +11,7 @@ const { getFilePath, saveJsonToFile } = frodo.utils;
  * @param {string} envFile File that defines environment specific variables for replacement during configuration export/import
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
-export async function exportConfigEntityToFile(
+export async function configManagerExportConfigEntity(
   envFile?: string
 ): Promise<boolean> {
   try {

@@ -8,7 +8,7 @@ const { readInternalRoles } = frodo.role;
  * Export an internal roles in fr-config-manager format.
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
-export async function configManagerExportRoles(
+export async function configManagerExportInternalRoles(
   name?: string
 ): Promise<boolean> {
   try {

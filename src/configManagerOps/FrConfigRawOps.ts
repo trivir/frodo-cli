@@ -11,7 +11,7 @@ const { exportRawIdm, exportRawAm, exportRawEnv } = frodo.raw;
  * Export every item from the list in the provided json file
  * @returns True if each file was successfully exported
  */
-export async function exportRawFiles(file: string = null): Promise<boolean> {
+export async function configManagerExportRaw(file: string = null): Promise<boolean> {
     try {
         const jsonData = JSON.parse(await readFile(file, { encoding: 'utf8' }));
 

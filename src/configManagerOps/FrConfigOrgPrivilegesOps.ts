@@ -12,7 +12,7 @@ const { readRealms } = frodo.realm;
  * @param realm The name of the realm to retrieve organization privileges from.
  * @returns True if realm exists and organization privileges configuration file was successfully saved
  */
-export async function exportOrgPrivilegesRealm(
+export async function configManagerExportOrgPrivilegesRealm(
   realm: string
 ): Promise<boolean> {
   try {
@@ -35,7 +35,7 @@ export async function exportOrgPrivilegesRealm(
  * Export the privileges assignments configuration in fr-config manager format
  * @returns True if privilegeAssignments was successfully saved
  */
-export async function exportOrgPrivileges(): Promise<boolean> {
+export async function configManagerExportOrgPrivileges(): Promise<boolean> {
   try {
     const orgPrivileges: IdObjectSkeletonInterface =
       await config.readConfigEntity('privilegeAssignments');
@@ -56,12 +56,12 @@ export async function exportOrgPrivileges(): Promise<boolean> {
  * Export all organization privileges configurations from all realms in fr-config manager format
  * @returns True if configuration files were successfully saved
  */
-export async function exportOrgPrivilegesAllRealms(): Promise<boolean> {
+export async function configManagerExportOrgPrivilegesAllRealms(): Promise<boolean> {
   try {
-    exportOrgPrivileges();
+    configManagerExportOrgPrivileges();
     for (const realm of await readRealms()) {
       state.setRealm(realm.name);
-      if (!(await exportOrgPrivilegesRealm(realm.name))) {
+      if (!(await configManagerExportOrgPrivilegesRealm(realm.name))) {
         return false;
       }
     }

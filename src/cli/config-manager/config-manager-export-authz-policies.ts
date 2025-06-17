@@ -2,10 +2,10 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import {
-  exportAllAuthzPolicies,
-  exportAuthzPolicySet,
-  exportConfigAuthzPolicySets,
-  exportRealmAuthzPolicySets,
+  configManagerExportAuthzPoliciesAll,
+  configManagerExportAuthzPolicySet,
+  configManagerExportAuthzPolicySets,
+  configManagerExportAuthzPolicySetsRealm,
 } from '../../configManagerOps/FrConfigAuthzPoliciesOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage } from '../../utils/Console';
@@ -85,7 +85,7 @@ export default function setup() {
           );
 
           // try and find script in current realm
-          outcome = await exportAuthzPolicySet(
+          outcome = await configManagerExportAuthzPolicySet(
             {
               policySetName: options.pSet,
             },
@@ -108,7 +108,7 @@ export default function setup() {
                 printMessage(
                   `Looking for the policy set "${options.pSet}" in the ${state.getRealm()} realm now.`
                 );
-                outcome = await exportAuthzPolicySet(
+                outcome = await configManagerExportAuthzPolicySet(
                   {
                     policySetName: options.pSet,
                   },
@@ -129,7 +129,7 @@ export default function setup() {
           printMessage(
             `Exporting all the policy sets in the provided config file.`
           );
-          outcome = await exportConfigAuthzPolicySets(options.file);
+          outcome = await configManagerExportAuthzPolicySets(options.file);
         }
 
         // -r/--realm
@@ -137,13 +137,13 @@ export default function setup() {
           printMessage(
             `Exporting all the policy sets in the ${state.getRealm()} realm.`
           );
-          outcome = await exportRealmAuthzPolicySets();
+          outcome = await configManagerExportAuthzPolicySetsRealm();
         }
 
         // export all policy sets from all realms, the default when no options are provided
         else {
           printMessage('Exporting all the policy sets in the host tenant.');
-          outcome = await exportAllAuthzPolicies();
+          outcome = await configManagerExportAuthzPoliciesAll();
         }
 
         if (!outcome) {

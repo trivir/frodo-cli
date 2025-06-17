@@ -12,13 +12,13 @@ type ByName = { scriptName: string };
 type BySkeleton = { ss: ScriptSkeleton };
 
 // Export script using its name
-export async function exportScript(
+export async function configManagerExportScript(
   criteria: ByName,
   justContent: boolean,
   justConfig: boolean
 ): Promise<boolean>;
 // Export script using the provided ScriptSkeleton
-export async function exportScript(
+export async function configManagerExportScript(
   criteria: BySkeleton,
   justContent: boolean,
   justConfig: boolean
@@ -28,7 +28,7 @@ export async function exportScript(
  * @param criteria Either ScriptSkeleton or string
  * @returns True if export was successful
  */
-export async function exportScript(
+export async function configManagerExportScript(
   criteria: ByName | BySkeleton,
   justContent: boolean = false, // create only the content folder for the specified script, outranks justConfig
   justConfig: boolean = false // create only the config folder, ignored if justContent is set
@@ -97,7 +97,7 @@ export async function exportScript(
  * @param language If set, will only export scripts that are in a certain programming language, by default, only js files
  * @returns True if export was successful
  */
-export async function exportRealmScripts(
+export async function configManagerExportScriptsRealms(
   prefix: string = null,
   justContent: boolean = false,
   justConfig: boolean = false,
@@ -161,7 +161,7 @@ export async function exportRealmScripts(
     // if there are no scripts, return
     if (allScripts.length !== 0) {
       for (const s of allScripts) {
-        if (!(await exportScript({ ss: s }, justContent, justConfig))) {
+        if (!(await configManagerExportScript({ ss: s }, justContent, justConfig))) {
           return false;
         }
       }
@@ -179,7 +179,7 @@ export async function exportRealmScripts(
  * Export all scripts from all realms
  * @returns True if export was successful
  */
-export async function exportAllScripts(
+export async function configManagerExportScriptsAll(
   prefix: string = null,
   justContent: boolean = false,
   justConfig: boolean = false,
@@ -191,7 +191,7 @@ export async function exportAllScripts(
       state.setRealm(realm.name);
       verboseMessage(`\n${state.getRealm()} realm:`);
       if (
-        !(await exportRealmScripts(
+        !(await configManagerExportScriptsRealms(
           prefix,
           justContent,
           justConfig,

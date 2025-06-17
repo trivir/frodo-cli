@@ -1,4 +1,4 @@
-import { exportAllMappings } from '../../configManagerOps/FrConfigConnectorMappingOps';
+import { configManagerExportMappingsAll } from '../../configManagerOps/FrConfigConnectorMappingOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
@@ -26,7 +26,7 @@ export default function setup() {
 
       if (await getTokens(false, true, deploymentTypes)) {
         verboseMessage('Exporting connector mappings');
-        const outcome = await exportAllMappings();
+        const outcome = await configManagerExportMappingsAll();
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options

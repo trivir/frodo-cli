@@ -1,6 +1,6 @@
 import { Option } from 'commander';
 
-import { exportCsp } from '../../configManagerOps/FrConfigCspOps';
+import { configManagerExportCsp } from '../../configManagerOps/FrConfigCspOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
@@ -52,7 +52,7 @@ export default function setup() {
 
       if (await getTokens(false, true, deploymentTypes)) {
         verboseMessage('Exporting content security policy');
-        const outcome = await exportCsp(options.file);
+        const outcome = await configManagerExportCsp(options.file);
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options

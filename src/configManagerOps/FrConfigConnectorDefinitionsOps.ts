@@ -12,14 +12,14 @@ type BySkeleton = { c: ConnectorSkeleton };
  * Export connector definition using the name of the connector
  * @param criteria
  */
-export async function exportConnectorDefinition(
+export async function configManagerExportConnectorDefinition(
   criteria: ByName
 ): Promise<boolean>;
 /**
  * Export connector definition using the provided connector skeleton object
  * @param criteria
  */
-export async function exportConnectorDefinition(
+export async function configManagerExportConnectorDefinition(
   criteria: BySkeleton
 ): Promise<boolean>;
 /**
@@ -27,7 +27,7 @@ export async function exportConnectorDefinition(
  * @param criteria
  * @returns
  */
-export async function exportConnectorDefinition(
+export async function configManagerExportConnectorDefinition(
   criteria: ByName | BySkeleton
 ): Promise<boolean> {
   try {
@@ -61,12 +61,12 @@ export async function exportConnectorDefinition(
  * Export all the connector definitions in the tenant each in their own file in fr-config manager format
  * @returns
  */
-export async function exportAllConnectorDefinitions(): Promise<boolean> {
+export async function configManagerExportConnectorDefinitionsAll(): Promise<boolean> {
   try {
     const cs: ConnectorSkeleton[] = await connector.readConnectors();
     for (const c of cs) {
       if (c._id.includes('provisioner.openicf/')) {
-        exportConnectorDefinition({ c: c });
+        configManagerExportConnectorDefinition({ c: c });
       }
     }
     return true;

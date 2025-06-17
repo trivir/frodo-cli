@@ -53,12 +53,12 @@ async function exportPolicy(p: PolicySkeleton) {
 }
 
 // Export policy-set using its name {policySetName: ...}
-export async function exportAuthzPolicySet(
+export async function configManagerExportAuthzPolicySet(
   criteria: ByName,
   configFile: string
 ): Promise<boolean>;
 // Export policy-set using the provided PolicySetSkeleton {ps: ...}
-export async function exportAuthzPolicySet(
+export async function configManagerExportAuthzPolicySet(
   criteria: BySkeleton,
   configFile: string
 ): Promise<boolean>;
@@ -68,7 +68,7 @@ export async function exportAuthzPolicySet(
  * @param configFile If this is provided, this function only succeeds if the provided policy set is defined in the config file.
  * @returns True if export was successful
  */
-export async function exportAuthzPolicySet(
+export async function configManagerExportAuthzPolicySet(
   criteria: ByName | BySkeleton,
   configFile: string = null
 ): Promise<boolean> {
@@ -145,7 +145,7 @@ export async function exportAuthzPolicySet(
  * @param configFile json file to read from.
  * @returns True if all policy sets were written successfully
  */
-export async function exportConfigAuthzPolicySets(
+export async function configManagerExportAuthzPolicySets(
   configFile: string
 ): Promise<boolean> {
   try {
@@ -158,7 +158,7 @@ export async function exportConfigAuthzPolicySets(
         state.setRealm(realm);
         verboseMessage(`\n${state.getRealm()} realm:`);
         for (const policy of policies) {
-          if (!(await exportAuthzPolicySet({ policySetName: policy }, null))) {
+          if (!(await configManagerExportAuthzPolicySet({ policySetName: policy }, null))) {
             return false;
           }
         }
@@ -179,13 +179,13 @@ export async function exportConfigAuthzPolicySets(
  * Export all policy-sets from the current realm set in state
  * @returns True if export was successful
  */
-export async function exportRealmAuthzPolicySets(): Promise<boolean> {
+export async function configManagerExportAuthzPolicySetsRealm(): Promise<boolean> {
   try {
     const allPolicySets: PolicySetSkeleton[] = await policySet.readPolicySets();
     if (allPolicySets.length !== 0) {
       verboseMessage(`\n${state.getRealm()} realm:`);
       for (const ps of allPolicySets) {
-        if (!(await exportAuthzPolicySet({ ps: ps }, null))) {
+        if (!(await configManagerExportAuthzPolicySet({ ps: ps }, null))) {
           return false;
         }
       }
@@ -205,12 +205,12 @@ export async function exportRealmAuthzPolicySets(): Promise<boolean> {
  * Export all policy-sets from all realms
  * @returns True if export was successful
  */
-export async function exportAllAuthzPolicies(): Promise<boolean> {
+export async function configManagerExportAuthzPoliciesAll(): Promise<boolean> {
   try {
     for (const realm of await readRealms()) {
       // set realm of state because policySet.readPolicySets() uses state to check realm
       state.setRealm(realm.name);
-      if (!(await exportRealmAuthzPolicySets())) {
+      if (!(await configManagerExportAuthzPolicySetsRealm())) {
         return false;
       }
     }
