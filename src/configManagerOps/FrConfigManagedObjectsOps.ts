@@ -22,7 +22,11 @@ const SCRIPT_HOOKS = ['onStore', 'onRetrieve', 'onValidate'];
  * @param {string} envFile File that defines environment specific variables for replacement during configuration export/import
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
+<<<<<<< HEAD
 export async function configManagerExportManagedObjects(
+=======
+export async function configManagerExportObjects(
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   objectName?: string
 ): Promise<boolean> {
   try {
@@ -84,7 +88,11 @@ function processManagedObjects(managedObjects, targetDir, name) {
         ([key, value]) => {
           SCRIPT_HOOKS.forEach((hook) => {
             if (
+<<<<<<< HEAD
               value.hasOwnProperty(hook) &&
+=======
+              Object.prototype.hasOwnProperty.call(value, hook) &&
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
               value[hook].type === 'text/javascript' &&
               value[hook].source
             ) {
@@ -107,6 +115,10 @@ function processManagedObjects(managedObjects, targetDir, name) {
       saveTextToFile(stringify(managedObject), getFilePath(fileName, true));
     });
   } catch (err) {
+<<<<<<< HEAD
     printError(err);
+=======
+    console.error(err);
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   }
 }

@@ -69,7 +69,11 @@ function getAgents(jsonObject, realmName: string): idAndOverrids[] {
  * @param agentName Name/id of agent to be exported
  * @returns True if export was successful
  */
+<<<<<<< HEAD
 export async function configManagerExportAgent(
+=======
+export async function exportAgent(
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   agentName: string,
   configFile: string = null,
   overrides = null
@@ -119,7 +123,11 @@ export async function configManagerExportAgent(
  * @param configFile The path to the file
  * @returns True if all specified agents were exported successfully
  */
+<<<<<<< HEAD
 export async function configManagerExportConfigAgents(configFile: string): Promise<boolean> {
+=======
+export async function exportConfigAgents(configFile: string): Promise<boolean> {
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   try {
     verboseMessage(`Reading the config file "${configFile}"`);
     const configFileData = JSON.parse(
@@ -130,7 +138,11 @@ export async function configManagerExportConfigAgents(configFile: string): Promi
       const agents: idAndOverrids[] = getAgents(configFileData, realm);
       if (agents.length !== 0) {
         for (const agent of agents) {
+<<<<<<< HEAD
           if (!(await configManagerExportAgent(agent.id, null, agent.overrides))) {
+=======
+          if (!(await exportAgent(agent.id, null, agent.overrides))) {
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
             return false;
           }
         }
@@ -151,7 +163,11 @@ export async function configManagerExportConfigAgents(configFile: string): Promi
  * Export all agents in the current realm in fr-config manager format
  * @returns True if export waws successful
  */
+<<<<<<< HEAD
 export async function configManagerExportAgentsRealm(): Promise<boolean> {
+=======
+export async function exportRealmAgents(): Promise<boolean> {
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   try {
     // global option isn't availble for deployment type cloud so set to false.
     // Can't use any of the agent skeletons from readAgents() to make json.
@@ -161,7 +177,11 @@ export async function configManagerExportAgentsRealm(): Promise<boolean> {
     if (allAgents.length !== 0) {
       verboseMessage(`\n${state.getRealm()} realm:`);
       for (const a of allAgents) {
+<<<<<<< HEAD
         if (!(await configManagerExportAgent(a._id))) {
+=======
+        if (!(await exportAgent(a._id))) {
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
           return false;
         }
       }
@@ -181,12 +201,20 @@ export async function configManagerExportAgentsRealm(): Promise<boolean> {
  * Export all Agents from all realms
  * @returns True if export was successful
  */
+<<<<<<< HEAD
 export async function configManagerExportAgentsAll(): Promise<boolean> {
+=======
+export async function exportAllAgents(): Promise<boolean> {
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   try {
     for (const realm of await readRealms()) {
       // set realm of state because readAgents() uses state to check realm
       state.setRealm(realm.name);
+<<<<<<< HEAD
       if (!(await configManagerExportAgentsRealm())) {
+=======
+      if (!(await exportRealmAgents())) {
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
         return false;
       }
     }

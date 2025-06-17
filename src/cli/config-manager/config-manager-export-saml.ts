@@ -1,10 +1,6 @@
 import { Option } from 'commander';
 
-<<<<<<< HEAD
-import { configManagerExportInternalRoles } from '../../configManagerOps/FrConfigInternalRolesOps';
-=======
-import { configManagerExportRoles } from '../../configManagerOps/FrConfigInternalRolesOps';
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
+import { configManagerExportSaml } from '../../configManagerOps/FrConfigSamlOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
@@ -13,19 +9,15 @@ const deploymentTypes = ['cloud', 'forgeops'];
 
 export default function setup() {
   const program = new FrodoCommand(
-    'frodo config-manager export internal-roles',
+    'frodo config-manager export saml',
     [],
     deploymentTypes
   );
 
   program
-
-    .description('Export internal roles in fr-config-manager style.')
+    .description('Export saml.')
     .addOption(
-      new Option(
-        '-n, --name <name>',
-        'Internal role name, It only export the endpoint with the name'
-      )
+      new Option('-f, --file <file>', 'The file path of the SAML config file. ')
     )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
@@ -36,10 +28,13 @@ export default function setup() {
         options,
         command
       );
+      if (options.realm) {
+        realm = options.realm;
+      }
 
       if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Exporting internal roles');
-        const outcome = await configManagerExportInternalRoles(options.name);
+        verboseMessage('Exporting config entity saml');
+        const outcome = await configManagerExportSaml(options.file);
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options

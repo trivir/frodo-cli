@@ -14,7 +14,10 @@ export async function configManagerExportSchedules(
 ): Promise<boolean> {
   try {
     const exportData = await readConfigEntitiesByType('schedule');
+<<<<<<< HEAD
     saveJsonToFile(exportData, 'readConfigEntitySchedule.json');
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
     processSchedules(exportData, 'schedules', name);
     return true;
   } catch (error) {

@@ -565,7 +565,7 @@ export async function configManagerExportUiConfig(
   return false;
 }
 
-function escapePlaceholders(content: string): string {
+export function escapePlaceholders(content: any): any {
   return JSON.parse(JSON.stringify(content).replace(/\$\{/g, '\\\\${'));
 }
 

@@ -5,7 +5,12 @@ import {
 } from '@rockcarver/frodo-lib/types/ops/JourneyOps';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
+<<<<<<< HEAD
 import { printError, printMessage } from '../utils/Console';
+=======
+import { printError } from '../utils/Console';
+import { realmList } from './FrConfigOps';
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 
 const {
   saveJsonToFile,
@@ -14,8 +19,12 @@ const {
   findFilesByName,
   sanitize,
 } = frodo.utils;
+<<<<<<< HEAD
 const { readJourneys, exportJourneys } = frodo.authn.journey;
 const { readRealms } = frodo.realm;
+=======
+const { exportJourneys } = frodo.authn.journey;
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 
 export async function configManagerExportJourneys(
   name?,
@@ -31,8 +40,11 @@ export async function configManagerExportJourneys(
 
   try {
     if (realm && realm !== '__default__realm__') {
+<<<<<<< HEAD
       const readData = await readJourneys();
       saveJsonToFile(readData, 'readjournyes.json', false, false);
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
       const exportData = (await exportJourneys(
         options
       )) as MultiTreeExportInterface;
@@ -43,12 +55,15 @@ export async function configManagerExportJourneys(
         const exportData = (await exportJourneys(
           options
         )) as MultiTreeExportInterface;
+<<<<<<< HEAD
         saveJsonToFile(
           exportData.trees,
           `exportJourneyFor${realm}.json`,
           false,
           false
         );
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
         await processJourneys(
           exportData.trees,
           realm,
@@ -65,6 +80,7 @@ export async function configManagerExportJourneys(
   return false;
 }
 
+<<<<<<< HEAD
 async function realmList(): Promise<string[]> {
   const realms = await readRealms();
   const realmList = [];
@@ -79,6 +95,8 @@ function matchJourneyName(journey, name) {
   return journey._id === name;
 }
 
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 function fileNameFromNode(displayName, id) {
   return safeFileName(`${displayName} - ${id}`);
 }
@@ -99,8 +117,13 @@ async function processJourneys(
   const fileDir = `${exportDir}/${realm}/journeys`;
 
   try {
+<<<<<<< HEAD
     for (const [, journey] of Object.entries(journeys) as [string, any]) {
       if (name && !matchJourneyName(journey, name)) {
+=======
+    for (const [id, journey] of Object.entries(journeys) as [string, any]) {
+      if (name && name !== id) {
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
         continue;
       }
       const journeyDir = `${fileDir}/${journey.tree._id}`;
@@ -129,7 +152,10 @@ async function processJourneys(
               journeyNodeNeedsScript(subNodeSpec) &&
               !(await existScript(subNodeSpec.script, realm))
             ) {
+<<<<<<< HEAD
               printMessage(subNodeSpec._id);
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
               const script = journey.scripts[subNodeSpec.script];
 
               const scriptText = Array.isArray(script.script)
@@ -157,10 +183,13 @@ async function processJourneys(
           journeyNodeNeedsScript(node) &&
           !(await existScript(node.script, realm))
         ) {
+<<<<<<< HEAD
           printMessage('Trying to save the script on the node');
           printMessage(nodeId);
           printMessage(node.script);
 
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
           const script = journey.scripts[node.script];
           const scriptText = Array.isArray(script.script)
             ? script.script.join('\n')
@@ -217,8 +246,13 @@ async function processJourneys(
 
 function journeyNodeNeedsScript(node) {
   return (
+<<<<<<< HEAD
     node.hasOwnProperty('script') &&
     (!node.hasOwnProperty('useScript') || node.useScript)
+=======
+    Object.prototype.hasOwnProperty.call(node, 'script') &&
+    (!Object.prototype.hasOwnProperty.call(node, 'useScript') || node.useScript)
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   );
 }
 
@@ -231,10 +265,15 @@ async function existScript(fileName, realm): Promise<boolean> {
   );
 
   if (result.length) {
+<<<<<<< HEAD
     printMessage(result.length);
     return true;
   } else {
     printMessage(result.length);
+=======
+    return true;
+  } else {
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
     return false;
   }
 }

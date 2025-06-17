@@ -2,6 +2,7 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import {
+<<<<<<< HEAD
   configManagerExportAgent,
   configManagerExportAgentsAll,
   configManagerExportConfigAgents,
@@ -9,6 +10,15 @@ import {
 } from '../../configManagerOps/FrConfigOauth2AgentOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printError, printMessage } from '../../utils/Console';
+=======
+  exportAgent,
+  exportAllAgents,
+  exportConfigAgents,
+  exportRealmAgents,
+} from '../../configManagerOps/FrConfigOauth2AgentOps';
+import { getTokens } from '../../ops/AuthenticateOps';
+import { printMessage } from '../../utils/Console';
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 import { FrodoCommand } from '../FrodoCommand';
 
 const deploymentTypes = ['cloud'];
@@ -99,7 +109,11 @@ export default function setup() {
           );
 
           // try and find the agent in current realm
+<<<<<<< HEAD
           outcome = await configManagerExportAgent(options.agentName, options.file);
+=======
+          outcome = await exportAgent(options.agentName, options.file);
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 
           // check other realms for the agent
           if (!outcome && !options.file) {
@@ -117,7 +131,11 @@ export default function setup() {
                 printMessage(
                   `Looking for the agent "${options.agentName}" in the ${state.getRealm()} realm now.`
                 );
+<<<<<<< HEAD
                 outcome = await configManagerExportAgent(options.agentName, null);
+=======
+                outcome = await exportAgent(options.agentName, null);
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
               }
             }
             if (!outcome) {
@@ -133,7 +151,11 @@ export default function setup() {
           printMessage(
             `Exporting all the agents defined in the provided config file.`
           );
+<<<<<<< HEAD
           outcome = await configManagerExportConfigAgents(options.file);
+=======
+          outcome = await exportConfigAgents(options.file);
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
         }
 
         // -r/--realm
@@ -141,13 +163,21 @@ export default function setup() {
           printMessage(
             `Exporting all the agents from the ${state.getRealm()} realm.`
           );
+<<<<<<< HEAD
           outcome = await configManagerExportAgentsRealm();
+=======
+          outcome = await exportRealmAgents();
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
         }
 
         // export all oauth2 agents, the default when no options are provided
         else {
           printMessage(`Exporting all the agents in the host tenant.`);
+<<<<<<< HEAD
           outcome = await configManagerExportAgentsAll();
+=======
+          outcome = await exportAllAgents();
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
         }
 
         if (!outcome) {

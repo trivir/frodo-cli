@@ -1,11 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+<<<<<<< HEAD
 exports[`frodo config-manager exports "frodo config-manager export authz-policies --directory configManagerExportAuthzPoliciesDir4 -r bravo": should export policies, policy-sets, and resource-types from the bravo realm in fr-config manager style. 1`] = `""`;
 
 exports[`frodo config-manager exports "frodo config-manager export authz-policies --directory configManagerExportAuthzPoliciesDir4 -r bravo": should export policies, policy-sets, and resource-types from the bravo realm in fr-config manager style.: configManagerExportAuthzPoliciesDir4/realms/bravo/authorization/policy-sets/murphyTestPolicySet/murphyTestPolicySet.json 1`] = `
 {
   "_id": "murphyTestPolicySet",
   "_rev": "1749145614470",
+=======
+exports[`frodo config-manager exports "frodo config-manager export access-config -D testDir0": should export the access-config in fr-config-manager style" 1`] = `""`;
+
+exports[`frodo config-manager exports "frodo config-manager export access-config -D testDir0": should export the access-config in fr-config-manager style": testDir0/access-config/access.json 1`] = `
+{
+  "_id": "murphyTestPolicySet",
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -140,7 +148,10 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies --directory configManagerExportAuthzPoliciesDir4 -r bravo": should export policies, policy-sets, and resource-types from the bravo realm in fr-config manager style.: configManagerExportAuthzPoliciesDir4/realms/bravo/authorization/policy-sets/oauth2Scopes/oauth2Scopes.json 1`] = `
 {
   "_id": "oauth2Scopes",
+<<<<<<< HEAD
   "_rev": "1745622442651",
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -264,7 +275,10 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.: configManagerExportAuthzPoliciesDir2/realms/alpha/authorization/policy-sets/EdgePolicySet/EdgePolicySet.json 1`] = `
 {
   "_id": "EdgePolicySet",
+<<<<<<< HEAD
   "_rev": "1745622426798",
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -357,7 +371,10 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.: configManagerExportAuthzPoliciesDir2/realms/alpha/authorization/policy-sets/FeatureStorePolicySet/FeatureStorePolicySet.json 1`] = `
 {
   "_id": "FeatureStorePolicySet",
+<<<<<<< HEAD
   "_rev": "1745622426909",
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -413,7 +430,10 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.: configManagerExportAuthzPoliciesDir2/realms/alpha/authorization/policy-sets/data/data.json 1`] = `
 {
   "_id": "data",
+<<<<<<< HEAD
   "_rev": "1745622427036",
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -550,7 +570,10 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.: configManagerExportAuthzPoliciesDir2/realms/alpha/authorization/policy-sets/oauth2Scopes/oauth2Scopes.json 1`] = `
 {
   "_id": "oauth2Scopes",
+<<<<<<< HEAD
   "_rev": "1745622427197",
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -681,7 +704,10 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.: configManagerExportAuthzPoliciesDir2/realms/alpha/authorization/policy-sets/test-policy-set/test-policy-set.json 1`] = `
 {
   "_id": "test-policy-set",
+<<<<<<< HEAD
   "_rev": "1745622427328",
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -763,7 +789,10 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.: configManagerExportAuthzPoliciesDir2/realms/bravo/authorization/policy-sets/murphyTestPolicySet/murphyTestPolicySet.json 1`] = `
 {
   "_id": "murphyTestPolicySet",
+<<<<<<< HEAD
   "_rev": "1749145614470",
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -842,6 +871,10 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
   "subject": {
     "type": "NONE",
   },
+<<<<<<< HEAD
+=======
+  "templateId": "idv",
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 }
 `;
 
@@ -869,6 +902,10 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
   "subject": {
     "type": "NONE",
   },
+<<<<<<< HEAD
+=======
+  "templateId": "joiner",
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 }
 `;
 
@@ -892,13 +929,20 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
   "subject": {
     "type": "NONE",
   },
+<<<<<<< HEAD
+=======
+  "templateId": "registerPasswordlessDevice",
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 }
 `;
 
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.: configManagerExportAuthzPoliciesDir2/realms/bravo/authorization/policy-sets/oauth2Scopes/oauth2Scopes.json 1`] = `
 {
   "_id": "oauth2Scopes",
+<<<<<<< HEAD
   "_rev": "1745622442651",
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -1022,7 +1066,10 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir3 -r alpha: should export policies, policy-sets, and resource-types from the alpha realm in fr-config manager style.: configManagerExportAuthzPoliciesDir3/realms/alpha/authorization/policy-sets/EdgePolicySet/EdgePolicySet.json 1`] = `
 {
   "_id": "EdgePolicySet",
+<<<<<<< HEAD
   "_rev": "1745622426798",
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -1115,7 +1162,10 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir3 -r alpha: should export policies, policy-sets, and resource-types from the alpha realm in fr-config manager style.: configManagerExportAuthzPoliciesDir3/realms/alpha/authorization/policy-sets/FeatureStorePolicySet/FeatureStorePolicySet.json 1`] = `
 {
   "_id": "FeatureStorePolicySet",
+<<<<<<< HEAD
   "_rev": "1745622426909",
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -1171,7 +1221,10 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir3 -r alpha: should export policies, policy-sets, and resource-types from the alpha realm in fr-config manager style.: configManagerExportAuthzPoliciesDir3/realms/alpha/authorization/policy-sets/data/data.json 1`] = `
 {
   "_id": "data",
+<<<<<<< HEAD
   "_rev": "1745622427036",
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -1308,7 +1361,10 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir3 -r alpha: should export policies, policy-sets, and resource-types from the alpha realm in fr-config manager style.: configManagerExportAuthzPoliciesDir3/realms/alpha/authorization/policy-sets/oauth2Scopes/oauth2Scopes.json 1`] = `
 {
   "_id": "oauth2Scopes",
+<<<<<<< HEAD
   "_rev": "1745622427197",
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -1439,7 +1495,10 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir3 -r alpha: should export policies, policy-sets, and resource-types from the alpha realm in fr-config manager style.: configManagerExportAuthzPoliciesDir3/realms/alpha/authorization/policy-sets/test-policy-set/test-policy-set.json 1`] = `
 {
   "_id": "test-policy-set",
+<<<<<<< HEAD
   "_rev": "1745622427328",
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -1523,7 +1582,10 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo: should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir5/realms/bravo/authorization/policy-sets/murphyTestPolicySet/murphyTestPolicySet.json 1`] = `
 {
   "_id": "murphyTestPolicySet",
+<<<<<<< HEAD
   "_rev": "1749145614470",
+=======
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -1632,6 +1694,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 }
 `;
 
+<<<<<<< HEAD
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo: should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir5/realms/bravo/authorization/policy-sets/murphyTestPolicySet/policies/Murphy Test Policy 3.json 1`] = `
 {
   "_id": "Murphy Test Policy 3",
@@ -1925,5 +1988,95 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
     "*://*:*/*?*",
   ],
   "uuid": "76656a38-5f8e-401b-83aa-4ccb74ce88d2",
+=======
+exports[`frodo config-manager exports "frodo config-manager export remote-servers -D testDir14": should export the remote-servers in fr-config-manager style" 1`] = `""`;
+
+exports[`frodo config-manager exports "frodo config-manager export remote-servers -D testDir14": should export the remote-servers in fr-config-manager style": testDir14/sync/rcs/provisioner.openicf.connectorinfoprovider.json 1`] = `
+{
+  "_id": "provisioner.openicf.connectorinfoprovider",
+  "connectorsLocation": "connectors",
+  "remoteConnectorClients": [
+    {
+      "enabled": true,
+      "name": "rcs1",
+      "useSSL": true,
+    },
+  ],
+  "remoteConnectorClientsGroups": [],
+  "remoteConnectorServers": [],
+  "remoteConnectorServersGroups": [],
+}
+`;
+
+exports[`frodo config-manager exports "frodo config-manager export schedules -D testDir15": should export the schedules in fr-config-manager style" 1`] = `""`;
+
+exports[`frodo config-manager exports "frodo config-manager export schedules -D testDir15": should export the schedules in fr-config-manager style": testDir15/schedules/TestSchedule/TestSchedule.js 1`] = `
+"logger.info("hello");
+"
+`;
+
+exports[`frodo config-manager exports "frodo config-manager export schedules -D testDir15": should export the schedules in fr-config-manager style": testDir15/schedules/TestSchedule/TestSchedule.json 1`] = `
+{
+  "_id": "schedule/TestSchedule",
+  "concurrentExecution": false,
+  "enabled": {
+    "$bool": "&{esv.red.piller}",
+  },
+  "endTime": null,
+  "invokeContext": {
+    "script": {
+      "file": "TestSchedule.js",
+      "globals": {
+        "test": true,
+      },
+      "type": "text/javascript",
+    },
+  },
+  "invokeLogLevel": "info",
+  "invokeService": "script",
+  "isCron": true,
+  "misfirePolicy": "fireAndProceed",
+  "persisted": true,
+  "schedule": "24 5 2 * * ?",
+  "startTime": null,
+  "timeZone": null,
+  "type": "cron",
+}
+`;
+
+exports[`frodo config-manager exports "frodo config-manager export schedules -n TestSchedule -D testDir16": should export the schedules with name TestSchedule in fr-config-manager style" 1`] = `""`;
+
+exports[`frodo config-manager exports "frodo config-manager export schedules -n TestSchedule -D testDir16": should export the schedules with name TestSchedule in fr-config-manager style": testDir16/schedules/TestSchedule/TestSchedule.js 1`] = `
+"logger.info("hello");
+"
+`;
+
+exports[`frodo config-manager exports "frodo config-manager export schedules -n TestSchedule -D testDir16": should export the schedules with name TestSchedule in fr-config-manager style": testDir16/schedules/TestSchedule/TestSchedule.json 1`] = `
+{
+  "_id": "schedule/TestSchedule",
+  "concurrentExecution": false,
+  "enabled": {
+    "$bool": "&{esv.red.piller}",
+  },
+  "endTime": null,
+  "invokeContext": {
+    "script": {
+      "file": "TestSchedule.js",
+      "globals": {
+        "test": true,
+      },
+      "type": "text/javascript",
+    },
+  },
+  "invokeLogLevel": "info",
+  "invokeService": "script",
+  "isCron": true,
+  "misfirePolicy": "fireAndProceed",
+  "persisted": true,
+  "schedule": "24 5 2 * * ?",
+  "startTime": null,
+  "timeZone": null,
+  "type": "cron",
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 }
 `;

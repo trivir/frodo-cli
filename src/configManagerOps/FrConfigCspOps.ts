@@ -12,7 +12,11 @@ const { getFilePath, saveJsonToFile } = frodo.utils;
  * Export the content security policy in fr-config manager format
  * @returns True if file was successfully saved
  */
+<<<<<<< HEAD
 export async function configManagerExportCsp(file: string = null): Promise<boolean> {
+=======
+export async function exportCsp(file: string = null): Promise<boolean> {
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   try {
     const cspEnforced: ContentSecurityPolicy =
       await env.readEnforcedContentSecurityPolicy();

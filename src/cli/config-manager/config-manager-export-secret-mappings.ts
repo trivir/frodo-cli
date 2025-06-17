@@ -1,10 +1,6 @@
 import { Option } from 'commander';
 
-<<<<<<< HEAD
-import { configManagerExportInternalRoles } from '../../configManagerOps/FrConfigInternalRolesOps';
-=======
-import { configManagerExportRoles } from '../../configManagerOps/FrConfigInternalRolesOps';
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
+import { configManagerExportSecretMappings } from '../../configManagerOps/FrConfigSecretMappingsOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
@@ -13,18 +9,23 @@ const deploymentTypes = ['cloud', 'forgeops'];
 
 export default function setup() {
   const program = new FrodoCommand(
-    'frodo config-manager export internal-roles',
+    'frodo config-manager export secret-mappings',
     [],
     deploymentTypes
   );
 
   program
-
-    .description('Export internal roles in fr-config-manager style.')
+    .description('Export secret mappings.')
     .addOption(
       new Option(
         '-n, --name <name>',
-        'Internal role name, It only export the endpoint with the name'
+        'Name of the secret mapping, It will only export secret mapping with the name. Works both with mapping._id or alias.  '
+      )
+    )
+    .addOption(
+      new Option(
+        '-r, --realm <realm>',
+        'Specific realm to get secret mappings from (overrides environment)'
       )
     )
     .action(async (host, realm, user, password, options, command) => {
@@ -36,10 +37,16 @@ export default function setup() {
         options,
         command
       );
+      if (options.realm) {
+        realm = options.realm;
+      }
 
       if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Exporting internal roles');
-        const outcome = await configManagerExportInternalRoles(options.name);
+        verboseMessage('Exporting config entity secret-mappings');
+        const outcome = await configManagerExportSecretMappings(
+          options.name,
+          realm
+        );
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options

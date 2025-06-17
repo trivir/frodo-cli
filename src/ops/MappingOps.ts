@@ -7,7 +7,6 @@ import {
   SyncSkeleton,
 } from '@rockcarver/frodo-lib/types/ops/MappingOps';
 import fs from 'fs';
-import * as path from 'path';
 
 import { extractDataToFile, getExtractedJsonData } from '../utils/Config';
 import {

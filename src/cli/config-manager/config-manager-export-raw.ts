@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 import { Argument} from 'commander';
 
@@ -5,6 +6,14 @@ import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 import { configManagerExportRaw } from '../../configManagerOps/FrConfigRawOps';
+=======
+import { Argument } from 'commander';
+
+import { exportRawFiles } from '../../configManagerOps/FrConfigRawOps';
+import { getTokens } from '../../ops/AuthenticateOps';
+import { printMessage } from '../../utils/Console';
+import { FrodoCommand } from '../FrodoCommand';
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 
 const deploymentTypes = ['cloud'];
 
@@ -42,6 +51,7 @@ export default function setup() {
         'The RAW_CONFIG json file. ex: "/home/trivir/Documents/raw.json", or "raw.json"'
       )
     )
+<<<<<<< HEAD
     .action(async ( host, configFile, options, command,) => {
 
       command.handleDefaultArgsAndOpts(
@@ -54,6 +64,13 @@ export default function setup() {
 
       if (await getTokens(false, true, deploymentTypes)) {
         const outcome: boolean = await configManagerExportRaw(configFile);
+=======
+    .action(async (host, configFile, options, command) => {
+      command.handleDefaultArgsAndOpts(host, configFile, options, command);
+
+      if (await getTokens(false, true, deploymentTypes)) {
+        const outcome: boolean = await exportRawFiles(configFile);
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 
         if (!outcome) {
           printMessage(
