@@ -23,7 +23,7 @@ function esvToEnv(esv: string): string {
  * Export all variables to seperate files
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
-export async function exportVariablesToFiles(): Promise<boolean> {
+export async function configManagerExportVariables(): Promise<boolean> {
   let spinnerId: string;
   let indicatorId: string;
   let variableList: VariableSkeleton[] = [];

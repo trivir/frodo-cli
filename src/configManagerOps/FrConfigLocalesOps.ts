@@ -35,6 +35,10 @@ function processLocales(locales, fileDir, name?) {
       saveJsonToFile(locale, getFilePath(localeFilename, true), false, false);
     });
   } catch (err) {
+<<<<<<< HEAD
+    printError(err);
+=======
     console.error(err);
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   }
 }

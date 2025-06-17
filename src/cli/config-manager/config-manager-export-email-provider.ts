@@ -1,19 +1,23 @@
-import { configManagerExportMappings } from '../../configManagerOps/FrConfigMappingOps';
+<<<<<<< HEAD
+import { configManagerExportEmailProviderConfiguration } from '../../configManagerOps/FrConfigEmailProviderOps';
+=======
+import { exportEmailProviderConfiguration } from '../../configManagerOps/FrConfigEmailProviderOps';
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
-const deploymentTypes = ['cloud', 'forgeops'];
+const deploymentTypes = ['cloud'];
 
 export default function setup() {
   const program = new FrodoCommand(
-    'frodo config-manager export mappings',
+    'frodo config-manager export email-provider',
     [],
     deploymentTypes
   );
 
   program
-    .description('Export connector mappings.')
+    .description('Export email provider configuration.')
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -25,8 +29,12 @@ export default function setup() {
       );
 
       if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Exporting mappings');
-        const outcome = await configManagerExportMappings();
+        verboseMessage('Exporting email provider configuration');
+<<<<<<< HEAD
+        const outcome = await configManagerExportEmailProviderConfiguration();
+=======
+        const outcome = await exportEmailProviderConfiguration();
+>>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options

@@ -14,6 +14,7 @@ import {
   createProgressIndicator,
   debugMessage,
   printError,
+  printMessage,
   stopProgressIndicator,
   updateProgressIndicator,
 } from '../utils/Console';
@@ -64,7 +65,7 @@ function processMappings(mappings, targetDir, name) {
       saveJsonToFile(mapping, fileName, false);
     });
   } catch (err) {
-    console.error(err);
+    printError(err);
   }
 }
 
@@ -148,10 +149,10 @@ function processScripts(
     }
 
     if (name && scriptNotFound) {
-      console.warn('Script not found (check SCRIPT_PREFIXES)');
+      printMessage('Script not found (check SCRIPT_PREFIXES)');
     }
   } catch (err) {
-    console.error(err);
+    printError(err);
   }
 }
 
@@ -396,7 +397,7 @@ function processThemes(themes, fileDir, name) {
             break;
 
           default:
-            console.error(
+            printMessage(
               `Error processing theme ${theme.name} - unexpected data type for ${field.name}: ${typeof theme[field.name]}`
             );
             process.exit(1);
@@ -407,7 +408,7 @@ function processThemes(themes, fileDir, name) {
       saveJsonToFile(theme, fileName, false);
     });
   } catch (err) {
-    console.error(err);
+    printError(err);
   }
 }
 
