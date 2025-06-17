@@ -115,11 +115,7 @@
     ]
   },
   "devDependencies": {
-<<<<<<< HEAD
     "@rockcarver/frodo-lib": "file:../frodo-lib",
-=======
-    "@rockcarver/frodo-lib": "3.0.1-0",
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
     "@types/colors": "^1.2.1",
     "@types/fs-extra": "^11.0.1",
     "@types/jest": "^29.2.3",
