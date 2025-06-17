@@ -23,15 +23,7 @@ export async function configManagerExportAudit(
       })
     ).idm['audit'];
 
-<<<<<<< HEAD
     saveJsonToFile(exportData, getFilePath('audit/audit.json', true), false);
-=======
-    saveJsonToFile(
-      exportData, 
-      getFilePath('audit/audit.json', true), 
-      false
-    );
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
     return true;
   } catch (error) {
     printError(error, `Error exporting config entity audit`);

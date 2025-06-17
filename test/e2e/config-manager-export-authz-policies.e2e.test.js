@@ -52,6 +52,7 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export authz-policies --directory configManagerExportAuthzPoliciesDir4 -r bravo
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export authz-policies --directory configManagerExportAuthzPoliciesDir6 --p-set murphyTestPolicySet -r alpha
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export authz-policies --directory configManagerExportAuthzPoliciesDir7 -f test/e2e/fr-config-manager-pull-config/policy-sets.json
 */
 
 import { getEnv, testExport } from './utils/TestUtils';
@@ -61,6 +62,8 @@ process.env['FRODO_MOCK'] = '1';
 process.env['FRODO_CONNECTION_PROFILES_PATH'] =
     './test/e2e/env/Connections.json';
 const env = getEnv(c);
+const configFile = 'test/e2e/fr-config-manager-pull-config/policy-sets.json';
+
 
 describe('frodo config-manager exports', () => {
     test('"frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.', async () => {
@@ -94,4 +97,9 @@ describe('frodo config-manager exports', () => {
         const CMD = `frodo config-manager export authz-policies --directory ${dirName} --p-set ${policySetName} -r ${realm}`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
     });
+    test(`"frodo config-manager export authz-policies --directory configManagerExportAuthzPoliciesDir7 -f ${configFile}`, async () => {
+      const dirName = 'configManagerExportAuthzPoliciesDir7';
+      const CMD = `frodo config-manager export authz-policies --directory ${dirName} -f ${configFile}`;
+      await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
 });
