@@ -1,8 +1,9 @@
+import { Option } from 'commander';
+
+import { configManagerExportPasswordPolicy } from '../../configManagerOps/FrConfigPasswordPolicyOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
-import { configManagerExportPasswordPolicy} from '../../configManagerOps/FrConfigPasswordPolicyOps';
-import { Option } from 'commander';
 
 const deploymentTypes = ['cloud', 'forgeops'];
 
@@ -16,11 +17,11 @@ export default function setup() {
   program
     .description('Export password-policy objects.')
     .addOption(
-              new Option(
-                '-r, --realm <realm>',
-                'Specifies the realm to export from. Only the entity object from this realm will be exported.'
-              )
-            )
+      new Option(
+        '-r, --realm <realm>',
+        'Specifies the realm to export from. Only the entity object from this realm will be exported.'
+      )
+    )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -30,8 +31,8 @@ export default function setup() {
         options,
         command
       );
-      if(options.realm){
-        realm =options.realm ;
+      if (options.realm) {
+        realm = options.realm;
       }
       if (await getTokens(false, true, deploymentTypes)) {
         verboseMessage('Exporting config entity password-policy');

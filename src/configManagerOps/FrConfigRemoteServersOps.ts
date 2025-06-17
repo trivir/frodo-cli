@@ -1,4 +1,5 @@
 import { frodo } from '@rockcarver/frodo-lib';
+
 import { getIdmImportExportOptions } from '../ops/IdmOps';
 import { printError } from '../utils/Console';
 
@@ -24,12 +25,18 @@ export async function configManagerExportRemoteServers(
 
     saveJsonToFile(
       exportData,
-      getFilePath('sync/rcs/provisioner.openicf.connectorinfoprovider.json', true),
+      getFilePath(
+        'sync/rcs/provisioner.openicf.connectorinfoprovider.json',
+        true
+      ),
       false
     );
     return true;
   } catch (error) {
-    printError(error, `Error exporting config entity RCS: provisioner.openicf.connectorinfoprovider`);
+    printError(
+      error,
+      `Error exporting config entity RCS: provisioner.openicf.connectorinfoprovider`
+    );
   }
   return false;
 }

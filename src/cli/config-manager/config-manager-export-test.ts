@@ -1,4 +1,3 @@
-import { configManagerExportCookieDomains } from '../../configManagerOps/FrConfigCookieDomainsOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
@@ -7,13 +6,13 @@ const deploymentTypes = ['cloud', 'forgeops'];
 
 export default function setup() {
   const program = new FrodoCommand(
-    'frodo config-manager export cookie-domains',
+    'frodo config-manager export test',
     [],
     deploymentTypes
   );
 
   program
-    .description('Export cookie-domains objects.')
+    .description('Test connection and authentication.')
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -25,14 +24,13 @@ export default function setup() {
       );
 
       if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Exporting config entity cookie-domains');
-        const outcome = await configManagerExportCookieDomains();
-        if (!outcome) process.exitCode = 1;
+        verboseMessage('Test connection and authentication');
+        printMessage('Authenticated successfully');
       }
       // unrecognized combination of options or no options
       else {
         printMessage(
-          'Unrecognized combination of options or no options...',
+          `Error getting tokens from the host: ${host}. Make sure to connect to the host using frodo conn save command.`,
           'error'
         );
         program.help();

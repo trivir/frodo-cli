@@ -1,4 +1,6 @@
-import { configManagerExportCookieDomains } from '../../configManagerOps/FrConfigCookieDomainsOps';
+import { Option } from 'commander';
+
+import { configManagerExportSecretMappings } from '../../configManagerOps/FrConfigSecretMappingsOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
@@ -7,13 +9,25 @@ const deploymentTypes = ['cloud', 'forgeops'];
 
 export default function setup() {
   const program = new FrodoCommand(
-    'frodo config-manager export cookie-domains',
+    'frodo config-manager export secret-mappings',
     [],
     deploymentTypes
   );
 
   program
-    .description('Export cookie-domains objects.')
+    .description('Export secret mappings.')
+    .addOption(
+      new Option(
+        '-n, --name <name>',
+        'Name of the secret mapping, It will only export secret mapping with the name. Works both with mapping._id or alias.  '
+      )
+    )
+    .addOption(
+      new Option(
+        '-r, --realm <realm>',
+        'Specific realm to get secret mappings from (overrides environment)'
+      )
+    )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -23,10 +37,16 @@ export default function setup() {
         options,
         command
       );
+      if (options.realm) {
+        realm = options.realm;
+      }
 
       if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Exporting config entity cookie-domains');
-        const outcome = await configManagerExportCookieDomains();
+        verboseMessage('Exporting config entity secret-mappings');
+        const outcome = await configManagerExportSecretMappings(
+          options.name,
+          realm
+        );
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options

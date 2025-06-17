@@ -1,6 +1,14 @@
 import { frodo, FrodoError } from '@rockcarver/frodo-lib';
+import { SecretSkeleton } from '@rockcarver/frodo-lib/types/api/cloud/SecretsApi';
 import { VariableSkeleton } from '@rockcarver/frodo-lib/types/api/cloud/VariablesApi';
+import { ScriptSkeleton } from '@rockcarver/frodo-lib/types/api/ScriptApi';
+import { SecretsExportInterface } from '@rockcarver/frodo-lib/types/ops/cloud/SecretsOps';
+import { MappingExportOptions } from '@rockcarver/frodo-lib/types/ops/MappingOps';
+import { ScriptExportOptions } from '@rockcarver/frodo-lib/types/ops/ScriptOps';
+import fs from 'fs';
+import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+
 import { getIdmImportExportOptions } from '../ops/IdmOps';
 import {
   createProgressIndicator,
@@ -9,33 +17,15 @@ import {
   stopProgressIndicator,
   updateProgressIndicator,
 } from '../utils/Console';
-import fs from 'fs';
-import * as path from 'path';
-import { MappingExportOptions } from '@rockcarver/frodo-lib/types/ops/MappingOps';
-import { ScriptExportOptions } from '@rockcarver/frodo-lib/types/ops/ScriptOps';
-import { SecretSkeleton } from '@rockcarver/frodo-lib/types/api/cloud/SecretsApi';
-import { SecretsExportInterface } from '@rockcarver/frodo-lib/types/ops/cloud/SecretsOps';
-import { ScriptSkeleton } from '@rockcarver/frodo-lib/types/api/ScriptApi';
 
 const { exportConfigEntity } = frodo.idm.config;
-const { exportMappings} = frodo.idm.mapping;
-const { exportScripts} = frodo.script;
-const { getFilePath, getTypedFilename, saveJsonToFile, getCurrentRealmName } = frodo.utils;
+const { exportMappings } = frodo.idm.mapping;
+const { exportScripts } = frodo.script;
+const { getFilePath, getTypedFilename, saveJsonToFile, getCurrentRealmName } =
+  frodo.utils;
 const { readVariables } = frodo.cloud.variable;
-const {
-  readSecrets,
-  createSecret: _createSecret,
-  exportSecret,
-  createVersionOfSecret: _createVersionOfSecret,
-  deleteSecret: _deleteSecret,
-  deleteVersionOfSecret: _deleteVersionOfSecret,
-} = frodo.cloud.secret;
-const {
-  readThemes,
-  deleteTheme: _deleteTheme,
-  deleteThemeByName: _deleteThemeByName,
-  deleteThemes: _deleteThemes,
-} = frodo.theme;
+const { readSecrets, exportSecret } = frodo.cloud.secret;
+const { readThemes } = frodo.theme;
 
 const { getFullServices, createServiceExportTemplate } = frodo.service;
 
@@ -115,7 +105,7 @@ function saveScriptToFile(script: ScriptSkeleton, exportDir: string) {
   }
 
   const scriptFilename = `${script.name}.js`;
-  let scriptToOutput = script.script
+  let scriptToOutput = script.script;
   if (Array.isArray(scriptToOutput)) {
     scriptToOutput = scriptToOutput.join('\n');
   }
@@ -131,7 +121,11 @@ function saveScriptToFile(script: ScriptSkeleton, exportDir: string) {
   saveJsonToFile(script, scriptFileName);
 }
 
-function processScripts(scripts: ScriptSkeleton[], exportDir: string, name: string) {
+function processScripts(
+  scripts: ScriptSkeleton[],
+  exportDir: string,
+  name: string
+) {
   try {
     if (!fs.existsSync(exportDir)) {
       fs.mkdirSync(exportDir, { recursive: true });
@@ -140,7 +134,7 @@ function processScripts(scripts: ScriptSkeleton[], exportDir: string, name: stri
     let scriptNotFound = true;
 
     for (const script of scripts) {
-      if (script.language !== "JAVASCRIPT") {
+      if (script.language !== 'JAVASCRIPT') {
         continue;
       }
 
@@ -149,12 +143,12 @@ function processScripts(scripts: ScriptSkeleton[], exportDir: string, name: stri
       }
 
       scriptNotFound = false;
-      
+
       saveScriptToFile(script, exportDir);
-    };
+    }
 
     if (name && scriptNotFound) {
-      console.warn("Script not found (check SCRIPT_PREFIXES)");
+      console.warn('Script not found (check SCRIPT_PREFIXES)');
     }
   } catch (err) {
     console.error(err);
@@ -166,7 +160,9 @@ function processScripts(scripts: ScriptSkeleton[], exportDir: string, name: stri
  * @param {ScriptExportOptions} options Export options
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
-export async function configManagerExportScripts(options: ScriptExportOptions): Promise<boolean> {
+export async function configManagerExportScripts(
+  options: ScriptExportOptions
+): Promise<boolean> {
   debugMessage(`Cli.ScriptOps.exportScriptsToFiles: start`);
   const errors: Error[] = [];
   let barId: string;
@@ -190,7 +186,7 @@ export async function configManagerExportScripts(options: ScriptExportOptions): 
       );
       const file = getFilePath(getTypedFilename(script.name, 'script'), true);
       try {
-        const fileDir =  `realms/${getCurrentRealmName()}/scripts`;
+        const fileDir = `realms/${getCurrentRealmName()}/scripts`;
         processScripts([script], fileDir, script.name);
         updateProgressIndicator(fileBarId, `Saving ${script.name} to ${file}.`);
         stopProgressIndicator(fileBarId, `${script.name} saved to ${file}.`);
@@ -228,12 +224,12 @@ export async function configManagerExportScripts(options: ScriptExportOptions): 
  */
 type FrConfigSecret = SecretSkeleton & {
   valueBase64: string;
-}
+};
 async function getFrConfigSecrets(): Promise<FrConfigSecret[]> {
   const originalSecrets = await readSecrets();
-  return originalSecrets.map(secret => ({
+  return originalSecrets.map((secret) => ({
     ...secret,
-    valueBase64: `\${${(secret._id).toUpperCase().replace(/-/g, "_")}}`
+    valueBase64: `\${${secret._id.toUpperCase().replace(/-/g, '_')}}`,
   }));
 }
 export async function configManagerExportSecrets(
@@ -271,15 +267,16 @@ export async function configManagerExportSecrets(
         description: fullSecret.description,
         encoding: fullSecret.encoding,
         useInPlaceholders: fullSecret.useInPlaceholders,
-        valueBase64: `\${${(secret._id).toUpperCase().replace(/-/g, "_")}}`
+        valueBase64: `\${${secret._id.toUpperCase().replace(/-/g, '_')}}`,
       };
-      saveJsonToFile(cleanSecret, getFilePath(`esvs/secrets/${secret._id}.json`, true), false);
+      saveJsonToFile(
+        cleanSecret,
+        getFilePath(`esvs/secrets/${secret._id}.json`, true),
+        false
+      );
       updateProgressIndicator(indicatorId, `Exported secret ${secret._id}`);
-    }    
-    stopProgressIndicator(
-      indicatorId,
-      `${secrets.length} secrets exported.`
-    );
+    }
+    stopProgressIndicator(indicatorId, `${secrets.length} secrets exported.`);
     return true;
   } catch (error) {
     stopProgressIndicator(
@@ -292,22 +289,27 @@ export async function configManagerExportSecrets(
   return false;
 }
 
-
 /**
  * Export all services to separate files in fr-config-manager format
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function configManagerExportServices(
-  globalConfig: boolean = false,
+  globalConfig: boolean = false
 ): Promise<boolean> {
   try {
     debugMessage(`cli.ServiceOps.exportServicesToFiles: start`);
     const services = await getFullServices(globalConfig);
     for (const service of services) {
       const fileDir = `realms/${getCurrentRealmName()}/services`;
-      const filePath = getFilePath(`${fileDir}/${service._type._id}.json`, true);
+      const filePath = getFilePath(
+        `${fileDir}/${service._type._id}.json`,
+        true
+      );
       const exportData = createServiceExportTemplate();
-      exportData.service[service._type._id] = { ...service, nextDescendents: undefined };
+      exportData.service[service._type._id] = {
+        ...service,
+        nextDescendents: undefined,
+      };
       debugMessage(
         `cli.ServiceOps.exportServicesToFiles: exporting ${service._type._id} to ${filePath}`
       );
@@ -562,7 +564,7 @@ export async function configManagerExportUiConfig(
   return false;
 }
 
-function escapePlaceholders(content: string): string {
+export function escapePlaceholders(content: any): any {
   return JSON.parse(JSON.stringify(content).replace(/\$\{/g, '\\\\${'));
 }
 

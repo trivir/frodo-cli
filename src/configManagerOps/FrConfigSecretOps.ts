@@ -1,22 +1,16 @@
 import { frodo } from '@rockcarver/frodo-lib';
+import { SecretSkeleton } from '@rockcarver/frodo-lib/types/api/cloud/SecretsApi';
+import { SecretsExportInterface } from '@rockcarver/frodo-lib/types/ops/cloud/SecretsOps';
+
 import {
   createProgressIndicator,
   printError,
   stopProgressIndicator,
   updateProgressIndicator,
 } from '../utils/Console';
-import { SecretSkeleton } from '@rockcarver/frodo-lib/types/api/cloud/SecretsApi';
-import { SecretsExportInterface } from '@rockcarver/frodo-lib/types/ops/cloud/SecretsOps';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
-const {
-  readSecrets,
-  createSecret: _createSecret,
-  exportSecret,
-  createVersionOfSecret: _createVersionOfSecret,
-  deleteSecret: _deleteSecret,
-  deleteVersionOfSecret: _deleteVersionOfSecret,
-} = frodo.cloud.secret;
+const { readSecrets, exportSecret } = frodo.cloud.secret;
 
 /**
  * Export all secrets to individual files in fr-config-manager format

@@ -58,19 +58,28 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export endpoints -n testEndpoint2 -D testDir8
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export internal-roles -D testDir9
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export internal-roles -n test-internal-role -D testDir10
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export kba -D testDir11
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export locales -D testDir19
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export locales -D testDir20 -n fr
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export journeys  -D testDir11
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export journeys -r alpha -D testDir12
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export journeys -r alpha -n FrodoTest -D testDir13
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export kba -D testDir14
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export locales -D testDir15
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export locales -n fr -D testDir16
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export managed-objects -D testDir17
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export managed-objects -n alpha_user -D testDir18
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export password-policy -D testDir12
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export password-policy -D testDir13 -r alpha
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export remote-servers -D testDir14
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export schedules -D testDir15
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export schedules -n TestSchedule -D testDir16
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export  -n TestSchedule -D testDir16
-
-
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export password-policy -D testDir19
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export password-policy -D testDir20 -r alpha
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export remote-servers -D testDir21
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export saml -f test/fr-config-manager-pull-config/saml-config.json -D testDir22
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export schedules -D testDir23
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export schedules -n TestSchedule -D testDir24
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export secret-mappings -D testDir25
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export secret-mappings -r alpha -D testDir26
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export secret-mappings -r bravo -n es512 -D testDir27
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export service-objects -f test/fr-config-manager-pull-config/service-objects.json -D testDir28
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export services -D testDir29
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export services -r alpha -D testDir30
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export services -r alpha -n SocialIdentityProviders -D testDir31
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export test
 
 //adding more Mock tests here 
 */
@@ -151,40 +160,120 @@ describe('frodo config-manager exports', () => {
     await testExport(CMD, env, undefined, undefined, dirName, false);
   });
 
-  test('"frodo config-manager export kba -D testDir11": should export the kba in fr-config-manager style"', async () => {
+  test('"frodo config-manager export journeys -D testDir11": should export the journeys in fr-config-manager style"', async () => {
     const dirName = 'testDir11';
+    const CMD = `frodo config-manager export journeys -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
+  test('"frodo config-manager export journeys -r alpha -D testDir12": should export the journeys in alpha realm in fr-config-manager style"', async () => {
+    const dirName = 'testDir12';
+    const CMD = `frodo config-manager export journeys -r alpha -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
+  test('"frodo config-manager export journeys -r alpha -n FrodoTest -D testDir13": should export journey with name: FrodoTest in fr-config-manager style"', async () => {
+    const dirName = 'testDir13';
+    const CMD = `frodo config-manager export journeys -r alpha -n FrodoTest -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
+
+  test('"frodo config-manager export kba -D testDir14": should export the kba in fr-config-manager style"', async () => {
+    const dirName = 'testDir14';
     const CMD = `frodo config-manager export kba -D ${dirName}`;
     await testExport(CMD, env, undefined, undefined, dirName, false);
   });
 
-  test('"frodo config-manager export password-policy -D testDir12": should export the password-policy in fr-config-manager style"', async () => {
-    const dirName = 'testDir12';
+  test('"frodo config-manager export locales -D testDir15": should export the locales in fr-config-manager style"', async () => {
+    const dirName = 'testDir15';
+    const CMD = `frodo config-manager export locales -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
+  test('"frodo config-manager export locales -n fr -D testDir16": should export the locale named: fr in fr-config-manager style"', async () => {
+    const dirName = 'testDir16';
+    const CMD = `frodo config-manager export locales -n fr -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
+
+  test('"frodo config-manager export managed-objects -D testDir17": should export the managed-objects in fr-config-manager style"', async () => {
+    const dirName = 'testDir17';
+    const CMD = `frodo config-manager export managed-objects -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
+  test('"frodo config-manager export managed-objects -n alpha_user -D testDir18": should export the managed-object named: alpha_user in fr-config-manager style"', async () => {
+    const dirName = 'testDir18';
+    const CMD = `frodo config-manager export managed-objects -n alpha_user -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
+  test('"frodo config-manager export password-policy -D testDir19": should export the password-policy in fr-config-manager style"', async () => {
+    const dirName = 'testDir19';
     const CMD = `frodo config-manager export password-policy -D ${dirName}`;
     await testExport(CMD, env, undefined, undefined, dirName, false);
   });
-  
-  test('"frodo config-manager export password-policy -D testDir13 -r alpha": should export the password-policy in alpha realm in fr-config-manager style"', async () => {
-    const dirName = 'testDir13';
+  test('"frodo config-manager export password-policy -D testDir20 -r alpha": should export the password-policy in alpha realm in fr-config-manager style"', async () => {
+    const dirName = 'testDir20';
     const CMD = `frodo config-manager export password-policy -D ${dirName} -r alpha`;
     await testExport(CMD, env, undefined, undefined, dirName, false);
   });
-
-  test('"frodo config-manager export remote-servers -D testDir14": should export the remote-servers in fr-config-manager style"', async () => {
-    const dirName = 'testDir14';
+  test('"frodo config-manager export remote-servers -D testDir21": should export the remote-servers in fr-config-manager style"', async () => {
+    const dirName = 'testDir21';
     const CMD = `frodo config-manager export remote-servers -D ${dirName}`;
     await testExport(CMD, env, undefined, undefined, dirName, false);
   });
-
-  test('"frodo config-manager export schedules -D testDir15": should export the schedules in fr-config-manager style"', async () => {
-    const dirName = 'testDir15';
+  test('"frodo config-manager export saml -f test/fr-config-manager-pull-config/saml-config.json -D testDir22": should export the saml based on salm-config.json file in fr-config-manager style"', async () => {
+    const dirName = 'testDir22';
+    const CMD = `frodo config-manager export saml -f test/fr-config-manager-pull-config/saml-config.json -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
+  test('"frodo config-manager export schedules -D testDir23": should export the schedules in fr-config-manager style"', async () => {
+    const dirName = 'testDir23';
     const CMD = `frodo config-manager export schedules -D ${dirName}`;
     await testExport(CMD, env, undefined, undefined, dirName, false);
   });
-
-  test('"frodo config-manager export schedules -n TestSchedule -D testDir16": should export the schedules with name TestSchedule in fr-config-manager style"', async () => {
-    const dirName = 'testDir16';
+  test('"frodo config-manager export schedules -n TestSchedule -D testDir24": should export the schedule named:TestSchedule in fr-config-manager style"', async () => {
+    const dirName = 'testDir24';
     const CMD = `frodo config-manager export schedules -n TestSchedule -D ${dirName}`;
     await testExport(CMD, env, undefined, undefined, dirName, false);
   });
+
+  test('"frodo config-manager export secret-mappings -D testDir25": should export the secret-mappings in fr-config-manager style"', async () => {
+    const dirName = 'testDir25';
+    const CMD = `frodo config-manager export  secret-mappings -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
+  test('"frodo config-manager export secret-mappings -r alpha -D testDir26": should export the secret-mappings in alpha realm in fr-config-manager style"', async () => {
+    const dirName = 'testDir26';
+    const CMD = `frodo config-manager export secret-mappings -r alpha -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
+  test('"frodo config-manager export secret-mappings -r bravo -n es512 -D testDir27": should export the secret-mappings with alias name:es512 in fr-config-manager style"', async () => {
+    const dirName = 'testDir27';
+    const CMD = `frodo config-manager export secret-mappings -r bravo -n es512 -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
+  test('"frodo config-manager export service-objects -f test/fr-config-manager-pull-config/service-objects.json -D testDir28": should export the service-objects based on service-objects.json config file in fr-config-manager style"', async () => {
+    const dirName = 'testDir28';
+    const CMD = `frodo config-manager export service-objects -f test/fr-config-manager-pull-config/service-objects.json -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
+  test('"frodo config-manager export services -D testDir29": should export the services in fr-config-manager style"', async () => {
+    const dirName = 'testDir29';
+    const CMD = `frodo config-manager export services -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
+  test('"frodo config-manager export services -r alpha -D testDir30": should export the services in alpha realm in fr-config-manager style"', async () => {
+    const dirName = 'testDir30';
+    const CMD = `frodo config-manager export services -r alpha -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
+  test('"frodo config-manager export services -r alpha -n SocialIdentityProviders -D testDir31": should export the services with name: SocialIdentityProviders in fr-config-manager style"', async () => {
+    const dirName = 'testDir31';
+    const CMD = `frodo config-manager export services -r alpha -n SocialIdentityProviders -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
+  test('"frodo config-manager export test": should receive access tokens"', async () => {
+    const CMD = `frodo config-manager export test`;
+    await testExport(CMD, env, undefined, undefined, '', false);
+  });
+
+
 
 });

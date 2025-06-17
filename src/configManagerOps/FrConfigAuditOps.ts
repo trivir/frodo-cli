@@ -1,4 +1,5 @@
 import { frodo } from '@rockcarver/frodo-lib';
+
 import { getIdmImportExportOptions } from '../ops/IdmOps';
 import { printError } from '../utils/Console';
 
@@ -23,8 +24,8 @@ export async function configManagerExportAudit(
     ).idm['audit'];
 
     saveJsonToFile(
-      exportData,
-      getFilePath('audit/audit.json', true),
+      exportData, 
+      getFilePath('audit/audit.json', true), 
       false
     );
     return true;

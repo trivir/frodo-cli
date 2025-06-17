@@ -1,16 +1,11 @@
-import { frodo, state } from '@rockcarver/frodo-lib';
+import { frodo } from '@rockcarver/frodo-lib';
+
 import { getIdmImportExportOptions } from '../ops/IdmOps';
 import { printError } from '../utils/Console';
-import { getFullExportConfig } from '../utils/Config';
-import { FullExportOptions } from '@rockcarver/frodo-lib/types/ops/ConfigOps';
-import { exportConfigEntities } from '@rockcarver/frodo-lib/types/ops/IdmConfigOps';
+import { realmList } from './FrConfigOps';
 
-const { exportFullConfiguration } = frodo.config;
-const { readAuthenticationSettings: _readAuthenticationSettings } = frodo.authn.settings;
-const { getFilePath, saveJsonToFile, } = frodo.utils;
-const { readRealms } = frodo.realm;
-const { readConfigEntitiesByType, exportConfigEntity } = frodo.idm.config
-
+const { getFilePath, saveJsonToFile } = frodo.utils;
+const { exportConfigEntity } = frodo.idm.config;
 
 /**
  * Export an IDM configuration object in the fr-config-manager format.
@@ -21,7 +16,7 @@ export async function configManagerExportPasswordPolicy(
   realm?: string,
   envFile?: string
 ): Promise<boolean> {
-  try {      
+  try {
     const options = getIdmImportExportOptions(undefined, envFile);
     if (realm && realm !== '__default__realm__') {
       const realmData = (
@@ -30,15 +25,9 @@ export async function configManagerExportPasswordPolicy(
           entitiesToExport: undefined,
         })
       ).idm[`fieldPolicy/${realm}_user`];
-      const fileName = `realms/${realm}/password-policy/${realm}_user-password-policy.json`
-      saveJsonToFile(
-        realmData,
-        getFilePath(fileName, true),
-        false,
-        false
-      );
-    }
-    else {
+      const fileName = `realms/${realm}/password-policy/${realm}_user-password-policy.json`;
+      saveJsonToFile(realmData, getFilePath(fileName, true), false, false);
+    } else {
       for (const realmName of await realmList()) {
         const realmData = (
           await exportConfigEntity(`fieldPolicy/${realmName}_user`, {
@@ -47,13 +36,8 @@ export async function configManagerExportPasswordPolicy(
           })
         ).idm[`fieldPolicy/${realmName}_user`];
         //const exportData = await readConfigEntitiesByType('fieldPolicy')
-        const fileName = `realms/${realmName}/password-policy/${realmName}_user-password-policy.json`
-        saveJsonToFile(
-          realmData,
-          getFilePath(fileName, true),
-          false,
-          false
-        );
+        const fileName = `realms/${realmName}/password-policy/${realmName}_user-password-policy.json`;
+        saveJsonToFile(realmData, getFilePath(fileName, true), false, false);
       }
     }
     return true;
@@ -61,13 +45,4 @@ export async function configManagerExportPasswordPolicy(
     printError(error, `Error exporting config entity ui-configuration`);
   }
   return false;
-}
-
-async function realmList(): Promise<string[]> {
-  const realms = await readRealms()
-  const realmList = [];
-  realms.forEach((realmConfig) => {
-      realmList.push(`${realmConfig.name}`)
-  });
-  return realmList;
 }

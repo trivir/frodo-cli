@@ -1,7 +1,7 @@
+import { configManagerExportKbaConfig } from '../../configManagerOps/FrConfigKbaOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
-import { configManagerExportKbaConfig } from '../../configManagerOps/FrConfigKbaOps';
 
 const deploymentTypes = ['cloud', 'forgeops'];
 

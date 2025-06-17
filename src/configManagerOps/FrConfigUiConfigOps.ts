@@ -1,4 +1,5 @@
 import { frodo } from '@rockcarver/frodo-lib';
+
 import { getIdmImportExportOptions } from '../ops/IdmOps';
 import { printError } from '../utils/Console';
 
@@ -14,7 +15,6 @@ export async function configManagerExportUiConfig(
   envFile?: string
 ): Promise<boolean> {
   try {
-    
     const options = getIdmImportExportOptions(undefined, envFile);
     const exportData = (
       await exportConfigEntity('ui/configuration', {
@@ -34,4 +34,3 @@ export async function configManagerExportUiConfig(
   }
   return false;
 }
-
