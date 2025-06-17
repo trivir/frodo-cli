@@ -12,21 +12,13 @@ type ByName = { scriptName: string };
 type BySkeleton = { ss: ScriptSkeleton };
 
 // Export script using its name
-<<<<<<< HEAD
 export async function configManagerExportScript(
-=======
-export async function exportScript(
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   criteria: ByName,
   justContent: boolean,
   justConfig: boolean
 ): Promise<boolean>;
 // Export script using the provided ScriptSkeleton
-<<<<<<< HEAD
 export async function configManagerExportScript(
-=======
-export async function exportScript(
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   criteria: BySkeleton,
   justContent: boolean,
   justConfig: boolean
@@ -36,11 +28,7 @@ export async function exportScript(
  * @param criteria Either ScriptSkeleton or string
  * @returns True if export was successful
  */
-<<<<<<< HEAD
 export async function configManagerExportScript(
-=======
-export async function exportScript(
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   criteria: ByName | BySkeleton,
   justContent: boolean = false, // create only the content folder for the specified script, outranks justConfig
   justConfig: boolean = false // create only the config folder, ignored if justContent is set
@@ -109,11 +97,7 @@ export async function exportScript(
  * @param language If set, will only export scripts that are in a certain programming language, by default, only js files
  * @returns True if export was successful
  */
-<<<<<<< HEAD
 export async function configManagerExportScriptsRealms(
-=======
-export async function exportRealmScripts(
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   prefix: string = null,
   justContent: boolean = false,
   justConfig: boolean = false,
@@ -177,11 +161,7 @@ export async function exportRealmScripts(
     // if there are no scripts, return
     if (allScripts.length !== 0) {
       for (const s of allScripts) {
-<<<<<<< HEAD
         if (!(await configManagerExportScript({ ss: s }, justContent, justConfig))) {
-=======
-        if (!(await exportScript({ ss: s }, justContent, justConfig))) {
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
           return false;
         }
       }
@@ -199,11 +179,7 @@ export async function exportRealmScripts(
  * Export all scripts from all realms
  * @returns True if export was successful
  */
-<<<<<<< HEAD
 export async function configManagerExportScriptsAll(
-=======
-export async function exportAllScripts(
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
   prefix: string = null,
   justContent: boolean = false,
   justConfig: boolean = false,
@@ -215,11 +191,7 @@ export async function exportAllScripts(
       state.setRealm(realm.name);
       verboseMessage(`\n${state.getRealm()} realm:`);
       if (
-<<<<<<< HEAD
         !(await configManagerExportScriptsRealms(
-=======
-        !(await exportRealmScripts(
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
           prefix,
           justContent,
           justConfig,
