@@ -9,8 +9,8 @@ import InternalRoles from './config-manager-export-internal-roles';
 import Journeys from './config-manager-export-journeys';
 import Kba from './config-manager-export-kba';
 import Locales from './config-manager-export-locales';
-import ManagedObject from './config-manager-export-managed-objects';
-import Mappings from './config-manager-export-mappings';
+import ManagedObjects from './config-manager-export-managed-objects';
+import ConnectorMappings from './config-manager-export-connector-mappings';
 import ConnectorDefinitions from './config-manager-export-connector-definitions';
 import Saml from './config-manager-export-saml';
 import AuthzPolicies from './config-manager-export-authz-policies';
@@ -38,40 +38,41 @@ export default function setup() {
   const program = new FrodoStubCommand('config-manager export').description(
     'Export IDM configuration objects.'
   );
-
-  program.addCommand(Secrets().name('secrets'));
-  program.addCommand(Scripts().name('scripts'));
-  program.addCommand(Services().name('services'));
-  program.addCommand(Mappings().name('connector-mappings'));
-  program.addCommand(Themes().name('themes'));
-  program.addCommand(Variables().name('variables'));
-  program.addCommand(Terms().name('terms-and-conditions'));
-  program.addCommand(UiConfig().name('ui-config'));
   program.addCommand(AccessConfig().name('access-config'));
   program.addCommand(Audit().name('audit'));
   program.addCommand(Authentication().name('authentication'));
   program.addCommand(AuthzPolicies().name('authz-policies'));
+
   program.addCommand(ConnectorDefinitions().name('connector-definitions'));
-  program.addCommand(InternalRoles().name('internal-roles'));
-  program.addCommand(Endpoints().name('endpoints'));
-  program.addCommand(EmailTemplates().name('email-templates'));
-  program.addCommand(Schedules().name('schedules'));
-  program.addCommand(Kba().name('kba'));
+  program.addCommand(ConnectorMappings().name('connector-mappings'));
   program.addCommand(CookieDomains().name('cookie-domains'));
-  program.addCommand(RemoteServers().name('remote-servers'));
-  program.addCommand(PasswordPolicy().name('password-policy'));
-  program.addCommand(ManagedObject().name('managed-objects'));
-  program.addCommand(Locales().name('locales'));
-  program.addCommand(Journeys().name('journeys'));
-  program.addCommand(ServiceObjects().name('service-objects'));
-  program.addCommand(SecretMappings().name('secret-mappings'));
-  program.addCommand(Saml().name('saml'));
-  program.addCommand(Test().name('test'));
   program.addCommand(CORS().name('cors'));
   program.addCommand(CSP().name('csp'));
   program.addCommand(EmailProvider().name('email-provider'));
-  program.addCommand(OrgPrivileges().name('org-privileges'));
+  program.addCommand(EmailTemplates().name('email-templates'));
+  program.addCommand(Endpoints().name('endpoints'));
+  program.addCommand(InternalRoles().name('internal-roles'));
+  program.addCommand(Journeys().name('journeys'));
+  program.addCommand(Kba().name('kba'));
+  program.addCommand(Locales().name('locales'));
+  program.addCommand(ManagedObjects().name('managed-objects'));
   program.addCommand(Oauth2Agents().name('oauth2-agents'));
+  program.addCommand(OrgPrivileges().name('org-privileges'));
+  program.addCommand(PasswordPolicy().name('password-policy'));
   program.addCommand(Raw().name('raw'));
+  program.addCommand(RemoteServers().name('remote-servers'));
+  program.addCommand(Schedules().name('schedules'));
+  program.addCommand(Saml().name('saml'));
+  program.addCommand(Scripts().name('scripts'));
+  program.addCommand(Secrets().name('secrets'));
+  program.addCommand(SecretMappings().name('secret-mappings'));
+  program.addCommand(ServiceObjects().name('service-objects'));
+  program.addCommand(Services().name('services'));
+  program.addCommand(Themes().name('themes'));
+  program.addCommand(Terms().name('terms-and-conditions'));
+  program.addCommand(Test().name('test'));
+  program.addCommand(UiConfig().name('ui-config'));
+  program.addCommand(Variables().name('variables'));
+
   return program;
 }
