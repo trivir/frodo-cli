@@ -5,6 +5,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies --directory configManagerExportAuthzPoliciesDir4 -r bravo": should export policies, policy-sets, and resource-types from the bravo realm in fr-config manager style.: configManagerExportAuthzPoliciesDir4/realms/bravo/authorization/policy-sets/murphyTestPolicySet/murphyTestPolicySet.json 1`] = `
 {
   "_id": "murphyTestPolicySet",
+  "_rev": "1749145614470",
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -139,6 +140,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies --directory configManagerExportAuthzPoliciesDir4 -r bravo": should export policies, policy-sets, and resource-types from the bravo realm in fr-config manager style.: configManagerExportAuthzPoliciesDir4/realms/bravo/authorization/policy-sets/oauth2Scopes/oauth2Scopes.json 1`] = `
 {
   "_id": "oauth2Scopes",
+  "_rev": "1745622442651",
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -262,6 +264,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.: configManagerExportAuthzPoliciesDir2/realms/alpha/authorization/policy-sets/EdgePolicySet/EdgePolicySet.json 1`] = `
 {
   "_id": "EdgePolicySet",
+  "_rev": "1745622426798",
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -354,6 +357,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.: configManagerExportAuthzPoliciesDir2/realms/alpha/authorization/policy-sets/FeatureStorePolicySet/FeatureStorePolicySet.json 1`] = `
 {
   "_id": "FeatureStorePolicySet",
+  "_rev": "1745622426909",
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -409,6 +413,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.: configManagerExportAuthzPoliciesDir2/realms/alpha/authorization/policy-sets/data/data.json 1`] = `
 {
   "_id": "data",
+  "_rev": "1745622427036",
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -545,6 +550,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.: configManagerExportAuthzPoliciesDir2/realms/alpha/authorization/policy-sets/oauth2Scopes/oauth2Scopes.json 1`] = `
 {
   "_id": "oauth2Scopes",
+  "_rev": "1745622427197",
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -675,6 +681,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.: configManagerExportAuthzPoliciesDir2/realms/alpha/authorization/policy-sets/test-policy-set/test-policy-set.json 1`] = `
 {
   "_id": "test-policy-set",
+  "_rev": "1745622427328",
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -756,6 +763,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.: configManagerExportAuthzPoliciesDir2/realms/bravo/authorization/policy-sets/murphyTestPolicySet/murphyTestPolicySet.json 1`] = `
 {
   "_id": "murphyTestPolicySet",
+  "_rev": "1749145614470",
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -890,6 +898,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.: configManagerExportAuthzPoliciesDir2/realms/bravo/authorization/policy-sets/oauth2Scopes/oauth2Scopes.json 1`] = `
 {
   "_id": "oauth2Scopes",
+  "_rev": "1745622442651",
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -1013,6 +1022,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir3 -r alpha: should export policies, policy-sets, and resource-types from the alpha realm in fr-config manager style.: configManagerExportAuthzPoliciesDir3/realms/alpha/authorization/policy-sets/EdgePolicySet/EdgePolicySet.json 1`] = `
 {
   "_id": "EdgePolicySet",
+  "_rev": "1745622426798",
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -1105,6 +1115,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir3 -r alpha: should export policies, policy-sets, and resource-types from the alpha realm in fr-config manager style.: configManagerExportAuthzPoliciesDir3/realms/alpha/authorization/policy-sets/FeatureStorePolicySet/FeatureStorePolicySet.json 1`] = `
 {
   "_id": "FeatureStorePolicySet",
+  "_rev": "1745622426909",
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -1160,6 +1171,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir3 -r alpha: should export policies, policy-sets, and resource-types from the alpha realm in fr-config manager style.: configManagerExportAuthzPoliciesDir3/realms/alpha/authorization/policy-sets/data/data.json 1`] = `
 {
   "_id": "data",
+  "_rev": "1745622427036",
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -1296,6 +1308,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir3 -r alpha: should export policies, policy-sets, and resource-types from the alpha realm in fr-config manager style.: configManagerExportAuthzPoliciesDir3/realms/alpha/authorization/policy-sets/oauth2Scopes/oauth2Scopes.json 1`] = `
 {
   "_id": "oauth2Scopes",
+  "_rev": "1745622427197",
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -1426,6 +1439,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir3 -r alpha: should export policies, policy-sets, and resource-types from the alpha realm in fr-config manager style.: configManagerExportAuthzPoliciesDir3/realms/alpha/authorization/policy-sets/test-policy-set/test-policy-set.json 1`] = `
 {
   "_id": "test-policy-set",
+  "_rev": "1745622427328",
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -1509,6 +1523,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo: should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir5/realms/bravo/authorization/policy-sets/murphyTestPolicySet/murphyTestPolicySet.json 1`] = `
 {
   "_id": "murphyTestPolicySet",
+  "_rev": "1749145614470",
   "applicationType": "iPlanetAMWebAgentService",
   "attributeNames": [],
   "conditions": [
@@ -1683,6 +1698,211 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 `;
 
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo: should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir5/realms/bravo/authorization/resource-types/URL.json 1`] = `
+{
+  "_id": "76656a38-5f8e-401b-83aa-4ccb74ce88d2",
+  "actions": {
+    "DELETE": true,
+    "GET": true,
+    "HEAD": true,
+    "OPTIONS": true,
+    "PATCH": true,
+    "POST": true,
+    "PUT": true,
+  },
+  "createdBy": "id=dsameuser,ou=user,ou=am-config",
+  "creationDate": 1595479030487,
+  "description": "The built-in URL Resource Type available to OpenAMPolicies.",
+  "lastModifiedBy": "id=d5218d98-2327-45bf-81cc-6e948fbac517,ou=user,ou=am-config",
+  "lastModifiedDate": 1745622442157,
+  "name": "URL",
+  "patterns": [
+    "*://*:*/*",
+    "*://*:*/*?*",
+  ],
+  "uuid": "76656a38-5f8e-401b-83aa-4ccb74ce88d2",
+}
+`;
+
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -p murphyTestPolicySet -r alpha": should fail because murphyTestPolicySet belongs to the bravo realm, not alpha. 1`] = `""`;
+
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -p murphyTestPolicySet -r alpha": should fail because murphyTestPolicySet belongs to the bravo realm, not alpha.: configManagerExportAuthzPoliciesDir6/realms/bravo/authorization/policy-sets/murphyTestPolicySet/murphyTestPolicySet.json 1`] = `
+{
+  "_id": "murphyTestPolicySet",
+  "_rev": "1749145614470",
+  "applicationType": "iPlanetAMWebAgentService",
+  "attributeNames": [],
+  "conditions": [
+    "AMIdentityMembership",
+    "AND",
+    "AuthLevel",
+    "AuthScheme",
+    "AuthenticateToRealm",
+    "AuthenticateToService",
+    "IPv4",
+    "IPv6",
+    "IdmUser",
+    "LDAPFilter",
+    "LEAuthLevel",
+    "NOT",
+    "OAuth2Scope",
+    "OR",
+    "Policy",
+    "ResourceEnvIP",
+    "Script",
+    "Session",
+    "SessionProperty",
+    "SimpleTime",
+    "Transaction",
+  ],
+  "createdBy": "id=1e9280f6-eab6-467e-889c-83d147c8b936,ou=user,ou=am-config",
+  "creationDate": 1749145593932,
+  "description": "Description for Murphy Test Policy Test",
+  "displayName": "Murphy Test Policy Test",
+  "editable": true,
+  "entitlementCombiner": "DenyOverride",
+  "lastModifiedBy": "id=1e9280f6-eab6-467e-889c-83d147c8b936,ou=user,ou=am-config",
+  "lastModifiedDate": 1749145614470,
+  "name": "murphyTestPolicySet",
+  "resourceComparator": null,
+  "resourceTypeUuids": [
+    "45e2b768-a82e-48f1-b4b3-821a9546acc0",
+    "76656a38-5f8e-401b-83aa-4ccb74ce88d2",
+    "d60b7a71-1dc6-44a5-8e48-e4b9d92dee8b",
+  ],
+  "saveIndex": null,
+  "searchIndex": null,
+  "subjects": [
+    "AND",
+    "AuthenticatedUsers",
+    "Identity",
+    "JwtClaim",
+    "NONE",
+    "NOT",
+    "OR",
+    "Policy",
+  ],
+}
+`;
+
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -p murphyTestPolicySet -r alpha": should fail because murphyTestPolicySet belongs to the bravo realm, not alpha.: configManagerExportAuthzPoliciesDir6/realms/bravo/authorization/policy-sets/murphyTestPolicySet/policies/Murphy Test Policy 1.json 1`] = `
+{
+  "_id": "Murphy Test Policy 1",
+  "_rev": "1749145690843",
+  "actionValues": {
+    "EAT": false,
+  },
+  "active": true,
+  "applicationName": "murphyTestPolicySet",
+  "createdBy": "id=1e9280f6-eab6-467e-889c-83d147c8b936,ou=user,ou=am-config",
+  "creationDate": "2025-06-05T17:47:21.865Z",
+  "description": "",
+  "lastModifiedBy": "id=1e9280f6-eab6-467e-889c-83d147c8b936,ou=user,ou=am-config",
+  "lastModifiedDate": "2025-06-05T17:48:10.843Z",
+  "name": "Murphy Test Policy 1",
+  "resourceTypeUuid": "45e2b768-a82e-48f1-b4b3-821a9546acc0",
+  "resources": [
+    "murph",
+    "*",
+  ],
+  "subject": {
+    "type": "NONE",
+  },
+}
+`;
+
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -p murphyTestPolicySet -r alpha": should fail because murphyTestPolicySet belongs to the bravo realm, not alpha.: configManagerExportAuthzPoliciesDir6/realms/bravo/authorization/policy-sets/murphyTestPolicySet/policies/Murphy Test Policy 2.json 1`] = `
+{
+  "_id": "Murphy Test Policy 2",
+  "_rev": "1749145730685",
+  "actionValues": {
+    "GRANT": false,
+  },
+  "active": true,
+  "applicationName": "murphyTestPolicySet",
+  "createdBy": "id=1e9280f6-eab6-467e-889c-83d147c8b936,ou=user,ou=am-config",
+  "creationDate": "2025-06-05T17:48:44.405Z",
+  "description": "",
+  "lastModifiedBy": "id=1e9280f6-eab6-467e-889c-83d147c8b936,ou=user,ou=am-config",
+  "lastModifiedDate": "2025-06-05T17:48:50.685Z",
+  "name": "Murphy Test Policy 2",
+  "resourceTypeUuid": "d60b7a71-1dc6-44a5-8e48-e4b9d92dee8b",
+  "resources": [
+    "*://*:*/*",
+    "*://*:*/*?*",
+    "*",
+  ],
+  "subject": {
+    "type": "NONE",
+  },
+}
+`;
+
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -p murphyTestPolicySet -r alpha": should fail because murphyTestPolicySet belongs to the bravo realm, not alpha.: configManagerExportAuthzPoliciesDir6/realms/bravo/authorization/policy-sets/murphyTestPolicySet/policies/Murphy Test Policy 3.json 1`] = `
+{
+  "_id": "Murphy Test Policy 3",
+  "_rev": "1749145749382",
+  "actionValues": {},
+  "active": true,
+  "applicationName": "murphyTestPolicySet",
+  "createdBy": "id=1e9280f6-eab6-467e-889c-83d147c8b936,ou=user,ou=am-config",
+  "creationDate": "2025-06-05T17:49:09.382Z",
+  "description": "",
+  "lastModifiedBy": "id=1e9280f6-eab6-467e-889c-83d147c8b936,ou=user,ou=am-config",
+  "lastModifiedDate": "2025-06-05T17:49:09.382Z",
+  "name": "Murphy Test Policy 3",
+  "resourceTypeUuid": "76656a38-5f8e-401b-83aa-4ccb74ce88d2",
+  "resources": [
+    "*://*:*/*",
+  ],
+  "subject": {
+    "type": "NONE",
+  },
+}
+`;
+
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -p murphyTestPolicySet -r alpha": should fail because murphyTestPolicySet belongs to the bravo realm, not alpha.: configManagerExportAuthzPoliciesDir6/realms/bravo/authorization/resource-types/Murphy Test Resource.json 1`] = `
+{
+  "_id": "45e2b768-a82e-48f1-b4b3-821a9546acc0",
+  "actions": {
+    "EAT": true,
+    "SLEEP": true,
+  },
+  "createdBy": "id=1e9280f6-eab6-467e-889c-83d147c8b936,ou=user,ou=am-config",
+  "creationDate": 1749145538018,
+  "description": "",
+  "lastModifiedBy": "id=1e9280f6-eab6-467e-889c-83d147c8b936,ou=user,ou=am-config",
+  "lastModifiedDate": 1749145566975,
+  "name": "Murphy Test Resource",
+  "patterns": [
+    "murph",
+    "*",
+  ],
+  "uuid": "45e2b768-a82e-48f1-b4b3-821a9546acc0",
+}
+`;
+
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -p murphyTestPolicySet -r alpha": should fail because murphyTestPolicySet belongs to the bravo realm, not alpha.: configManagerExportAuthzPoliciesDir6/realms/bravo/authorization/resource-types/OAuth2 Scope.json 1`] = `
+{
+  "_id": "d60b7a71-1dc6-44a5-8e48-e4b9d92dee8b",
+  "actions": {
+    "GRANT": true,
+  },
+  "createdBy": "id=dsameuser,ou=user,ou=am-config",
+  "creationDate": 1595479030586,
+  "description": "The built-in OAuth2 Scope Resource Type for OAuth2policy-provided scope.",
+  "lastModifiedBy": "id=d5218d98-2327-45bf-81cc-6e948fbac517,ou=user,ou=am-config",
+  "lastModifiedDate": 1745622442020,
+  "name": "OAuth2 Scope",
+  "patterns": [
+    "*://*:*/*",
+    "*://*:*/*?*",
+    "*",
+  ],
+  "uuid": "d60b7a71-1dc6-44a5-8e48-e4b9d92dee8b",
+}
+`;
+
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -p murphyTestPolicySet -r alpha": should fail because murphyTestPolicySet belongs to the bravo realm, not alpha.: configManagerExportAuthzPoliciesDir6/realms/bravo/authorization/resource-types/URL.json 1`] = `
 {
   "_id": "76656a38-5f8e-401b-83aa-4ccb74ce88d2",
   "actions": {
