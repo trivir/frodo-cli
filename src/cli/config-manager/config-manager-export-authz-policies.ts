@@ -110,7 +110,7 @@ export default function setup() {
                 );
                 outcome = await exportAuthzPolicySet(
                   {
-                    policySetName: options.scriptName,
+                    policySetName: options.pSet,
                   },
                   null
                 );
