@@ -6,8 +6,6 @@ import {
 } from '@rockcarver/frodo-lib/types/api/cloud/SecretsApi';
 import { SecretsExportInterface } from '@rockcarver/frodo-lib/types/ops/cloud/SecretsOps';
 import fs from 'fs';
-import { get } from 'http';
-import { off } from 'process';
 
 import { getFullExportConfig, getIdLocations } from '../../utils/Config';
 import {

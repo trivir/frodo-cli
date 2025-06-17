@@ -20,6 +20,7 @@ import EmailProvider from './config-manager-export-email-provider';
 import Oauth2Agents from './config-manager-export-oauth2-agents';
 import OrgPrivileges from './config-manager-export-org-privileges';
 import PasswordPolicy from './config-manager-export-password-policy';
+import Raw from './config-manager-export-raw';
 import RemoteServers from './config-manager-export-remote-servers';
 import Schedules from './config-manager-export-schedules';
 import Scripts from './config-manager-export-scripts';
@@ -32,7 +33,6 @@ import Test from './config-manager-export-test';
 import Themes from './config-manager-export-themes';
 import UiConfig from './config-manager-export-uiConfig';
 import Variables from './config-manager-export-variables';
-import Raw from './config-manager-export-raw';
 
 export default function setup() {
   const program = new FrodoStubCommand('config-manager export').description(

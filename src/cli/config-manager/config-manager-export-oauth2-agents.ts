@@ -8,7 +8,7 @@ import {
   exportRealmAgents,
 } from '../../configManagerOps/FrConfigOauth2AgentOps';
 import { getTokens } from '../../ops/AuthenticateOps';
-import { printError, printMessage } from '../../utils/Console';
+import { printMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
 const deploymentTypes = ['cloud'];

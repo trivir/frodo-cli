@@ -1,10 +1,9 @@
+import { Argument } from 'commander';
 
-import { Argument} from 'commander';
-
+import { exportRawFiles } from '../../configManagerOps/FrConfigRawOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
-import { exportRawFiles } from '../../configManagerOps/FrConfigRawOps';
 
 const deploymentTypes = ['cloud'];
 
@@ -42,15 +41,8 @@ export default function setup() {
         'The RAW_CONFIG json file. ex: "/home/trivir/Documents/raw.json", or "raw.json"'
       )
     )
-    .action(async ( host, configFile, options, command,) => {
-
-      command.handleDefaultArgsAndOpts(
-        
-        host,
-        configFile,
-        options,
-        command
-      );
+    .action(async (host, configFile, options, command) => {
+      command.handleDefaultArgsAndOpts(host, configFile, options, command);
 
       if (await getTokens(false, true, deploymentTypes)) {
         const outcome: boolean = await exportRawFiles(configFile);
