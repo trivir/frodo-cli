@@ -65,13 +65,13 @@ const env = getEnv(c);
 const configFile = 'test/e2e/fr-config-manager-pull-config/policy-sets.json';
 
 
-describe('frodo config-manager exports', () => {
+describe('frodo config-manager export authz-policies', () => {
     test('"frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.', async () => {
         const dirName = 'configManagerExportAuthzPoliciesDir2';
         const CMD = `frodo config-manager export authz-policies -D ${dirName}`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
     });
-    test('"frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir3 -r alpha: should export policies, policy-sets, and resource-types from the alpha realm in fr-config manager style.', async () => {
+    test('"frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir3 -r alpha": should export policies, policy-sets, and resource-types from the alpha realm in fr-config manager style.', async () => {
         const dirName = 'configManagerExportAuthzPoliciesDir3';
         const realm = 'alpha';
         const CMD = `frodo config-manager export authz-policies -D ${dirName} -r ${realm}`;
@@ -83,21 +83,21 @@ describe('frodo config-manager exports', () => {
         const CMD = `frodo config-manager export authz-policies --directory ${dirName} -r ${realm}`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
     });
-    test('"frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo: should export only the policy set with the id: "murphyTestPolicySet".', async () => {
+    test('"frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet".', async () => {
         const dirName = 'configManagerExportAuthzPoliciesDir5';
         const policySetName = 'murphyTestPolicySet';
         const realm = 'bravo';
         const CMD = `frodo config-manager export authz-policies -D ${dirName} -p ${policySetName} -r ${realm}`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
     });
-    test('"frodo config-manager export authz-policies -p murphyTestPolicySet -r alpha": should fail at first because murphyTestPolicySet belongs to the bravo realm, not alpha. After trying the alpha realm, it should succeed in finding it in the bravo realm', async () => {
+    test('"frodo config-manager export authz-policies --directory configManagerExportAuthzPoliciesDir6 --p-set murphyTestPolicySet -r alpha": should fail at first because murphyTestPolicySet belongs to the bravo realm, not alpha. After trying the alpha realm, it should succeed in finding it in the bravo realm', async () => {
         const dirName = 'configManagerExportAuthzPoliciesDir6';
         const policySetName = 'murphyTestPolicySet';
         const realm = 'alpha';
         const CMD = `frodo config-manager export authz-policies --directory ${dirName} --p-set ${policySetName} -r ${realm}`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
     });
-    test(`"frodo config-manager export authz-policies --directory configManagerExportAuthzPoliciesDir7 -f ${configFile}`, async () => {
+    test(`"frodo config-manager export authz-policies --directory configManagerExportAuthzPoliciesDir7 -f ${configFile}": should export all the policy sets defined in the config file.`, async () => {
         const dirName = 'configManagerExportAuthzPoliciesDir7';
         const CMD = `frodo config-manager export authz-policies --directory ${dirName} -f ${configFile}`;
         await testExport(CMD, env, undefined, undefined, dirName, false);

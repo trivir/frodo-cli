@@ -58,7 +58,7 @@ process.env['FRODO_CONNECTION_PROFILES_PATH'] =
     './test/e2e/env/Connections.json';
 const env = getEnv(c);
 
-describe('frodo config-manager exports', () => {
+describe('frodo config-manager export cors', () => {
     test('"frodo config-manager export cors -D configManagerExportCorsDir0": should export globals CORS configuration in fr-config manager style.', async () => {
         const dirName = 'configManagerExportCorsDir0';
         const CMD = `frodo config-manager export cors -D ${dirName}`;

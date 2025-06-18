@@ -61,13 +61,13 @@ const env = getEnv(c);
 
 const configFile = 'test/e2e/fr-config-manager-pull-config/csp-overrides.json';
 
-describe('frodo config-manager exports', () => {
+describe('frodo config-manager export csp', () => {
     test('"frodo config-manager export csp -D configManagerExportCspDir0": should export the content security policy in fr-config manager style.', async () => {
         const dirName = 'configManagerExportCspDir0';
         const CMD = `frodo config-manager export csp -D ${dirName}`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
     });
-    test(`"frodo config-manager export csp --directory configManagerExportCspDir1 -f ${configFile}`, async () => {
+    test(`"frodo config-manager export csp --directory configManagerExportCspDir1 -f ${configFile}": should export the content security policy with overrides defined in the config file.`, async () => {
         const dirName = 'configManagerExportCspDir1';
         const CMD = `frodo config-manager export csp --directory ${dirName} -f ${configFile}`;
         await testExport(CMD, env, undefined, undefined, dirName, false);

@@ -59,7 +59,7 @@ process.env['FRODO_CONNECTION_PROFILES_PATH'] =
     './test/e2e/env/Connections.json';
 const env = getEnv(c);
 
-describe('frodo config-manager exports', () => {
+describe('frodo config-manager export connector-definitions', () => {
     test('"frodo config-manager export connector-definitions -D configManagerExportConnectorDefinitionsDir0": should export all connector definitions in fr-config manager style.', async () => {
         const dirName = 'configManagerExportConnectorDefinitionsDir0';
         const CMD = `frodo config-manager export connector-definitions -D ${dirName}`;

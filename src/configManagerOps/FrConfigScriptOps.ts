@@ -65,7 +65,7 @@ export async function configManagerExportScript(
       );
     }
 
-    if (justConfig) {
+    if (justConfig && !justContent) {
       // dont create script file
       return true;
     }
