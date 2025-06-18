@@ -1,14 +1,10 @@
-
-import fs from 'fs';
-
-import { debugMessage, printError } from '../utils/Console';
-
-const { getFilePath, saveJsonToFile, getCurrentRealmName } = frodo.utils;
-const { getFullServices, createServiceExportTemplate } = frodo.service;
 import { frodo, state } from '@rockcarver/frodo-lib';
 
+import { printError } from '../utils/Console';
 import { realmList } from './FrConfigOps';
 
+const { getFilePath, saveJsonToFile } = frodo.utils;
+const { getFullServices } = frodo.service;
 
 /**
  * Export all services to separate files in fr-config-manager format
@@ -55,7 +51,6 @@ async function processServices(services, realm, name) {
         );
       }
     }
-
     delete service.nextDescendents;
 
     saveJsonToFile(

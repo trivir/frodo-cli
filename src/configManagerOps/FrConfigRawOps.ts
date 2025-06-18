@@ -1,4 +1,4 @@
-import { frodo, state } from '@rockcarver/frodo-lib';
+import { frodo } from '@rockcarver/frodo-lib';
 import { readFile } from 'fs/promises';
 
 import { printError, verboseMessage } from '../utils/Console';

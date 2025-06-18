@@ -184,7 +184,7 @@ export async function configManagerExportScriptsAll(
   justContent: boolean = false,
   justConfig: boolean = false,
   scriptType: string = null,
-  language: string = null
+  language: string = 'JAVASCRIPT'
 ): Promise<boolean> {
   try {
     for (const realm of await readRealms()) {

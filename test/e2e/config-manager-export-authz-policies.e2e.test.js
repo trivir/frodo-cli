@@ -71,7 +71,7 @@ describe('frodo config-manager exports', () => {
         const CMD = `frodo config-manager export authz-policies -D ${dirName}`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
     });
-    test('"frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir3 -r alpha: should export policies, policy-sets, and resource-types from the alpha realm in fr-config manager style.', async () => {    
+    test('"frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir3 -r alpha: should export policies, policy-sets, and resource-types from the alpha realm in fr-config manager style.', async () => {
         const dirName = 'configManagerExportAuthzPoliciesDir3';
         const realm = 'alpha';
         const CMD = `frodo config-manager export authz-policies -D ${dirName} -r ${realm}`;
@@ -98,8 +98,8 @@ describe('frodo config-manager exports', () => {
         await testExport(CMD, env, undefined, undefined, dirName, false);
     });
     test(`"frodo config-manager export authz-policies --directory configManagerExportAuthzPoliciesDir7 -f ${configFile}`, async () => {
-      const dirName = 'configManagerExportAuthzPoliciesDir7';
-      const CMD = `frodo config-manager export authz-policies --directory ${dirName} -f ${configFile}`;
-      await testExport(CMD, env, undefined, undefined, dirName, false);
-  });
+        const dirName = 'configManagerExportAuthzPoliciesDir7';
+        const CMD = `frodo config-manager export authz-policies --directory ${dirName} -f ${configFile}`;
+        await testExport(CMD, env, undefined, undefined, dirName, false);
+    });
 });
