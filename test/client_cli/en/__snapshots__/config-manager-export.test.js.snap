@@ -6,28 +6,43 @@ exports[`CLI help interface for 'config export' should be expected english 1`] =
 Export IDM configuration objects.
 
 Options:
-  -h, --help            Help
+  -h, --help             Help
 
 Commands:
-  access-config         Export access-config objects.
-  audit                 Export audit objects.
-  authentication        Export authentication objects.
-  cookie-domains        Export cookie-domains objects.
-  email-templates       Export email-templates objects.
-  endpoints             Export custom endpoints objects.
-  help                  display help for command
-  internal-roles        Export internal roles in fr-config-manager style.
-  kba                   Export kba-config objects.
-  mappings              Export connector mappings.
-  password-policy       Export password-policy objects.
-  remote-servers        Export remote-servers objects.
-  schedules             Export schedules in fr-config-manager style.
-  scripts               Export scripts.
-  secrets               Export secrets.
-  services              Export authentication services.
-  terms-and-conditions  Export terms and conditions.
-  themes                Export theme objects.
-  ui-config             Export ui-configuration objects.
-  variables             Export variables objects.
+  access-config          Export access-config objects.
+  audit                  Export audit objects.
+  authentication         Export authentication objects.
+  authz-policies         Export authorization policies from realm.
+  connector-definitions  Export aconnector definitions.
+  connector-mappings     Get connector mappings.
+  cookie-domains         Export cookie-domains objects.
+  cors                   Export CORS configuration.
+  csp                    Export content security policy.
+  email-provider         Export email provider configuration.
+  email-templates        Export email-templates objects.
+  endpoints              Export custom endpoints objects.
+  help                   display help for command
+  internal-roles         Export internal roles in fr-config-manager style.
+  journeys               Export journeys.
+  kba                    Export kba-config objects.
+  locales                Export custom locales objects.
+  managed-objects        Export managed-objects.
+  oauth2-agents          Export OAuth2 Agents
+  org-privileges         Export organization privileges config.
+  password-policy        Export password-policy objects.
+  raw                    Export raw configurations from the tenant.
+  remote-servers         Export remote-servers objects.
+  saml                   Export saml.
+  schedules              Export schedules in fr-config-manager style.
+  scripts                Export authorization scripts.
+  secret-mappings        Export secret mappings.
+  secrets                Export secrets.
+  service-objects        Export service objects.
+  services               Export authentication services.
+  terms-and-conditions   Export terms and conditions.
+  test                   Test connection and authentication.
+  themes                 Export theme objects.
+  ui-config              Export ui-configuration objects.
+  variables              Export variables objects.
 "
 `;

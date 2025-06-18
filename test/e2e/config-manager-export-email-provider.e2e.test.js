@@ -58,7 +58,7 @@ process.env['FRODO_CONNECTION_PROFILES_PATH'] =
     './test/e2e/env/Connections.json';
 const env = getEnv(c);
 
-describe('frodo config-manager exports', () => {
+describe('frodo config-manager export email-provider', () => {
     test('"frodo config-manager export email-provider -D configManagerExportEmailProviderDir0": should export email provider configuration in fr-config manager style.', async () => {
         const dirName = 'configManagerExportEmailProviderDir0';
         const CMD = `frodo config-manager export email-provider -D ${dirName}`;
