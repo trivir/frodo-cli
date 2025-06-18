@@ -2,17 +2,10 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import {
-<<<<<<< HEAD
   configManagerExportAuthzPoliciesAll,
   configManagerExportAuthzPolicySet,
   configManagerExportAuthzPolicySets,
   configManagerExportAuthzPolicySetsRealm,
-=======
-  exportAllAuthzPolicies,
-  exportAuthzPolicySet,
-  exportConfigAuthzPolicySets,
-  exportRealmAuthzPolicySets,
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 } from '../../configManagerOps/FrConfigAuthzPoliciesOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage } from '../../utils/Console';
@@ -92,11 +85,7 @@ export default function setup() {
           );
 
           // try and find script in current realm
-<<<<<<< HEAD
           outcome = await configManagerExportAuthzPolicySet(
-=======
-          outcome = await exportAuthzPolicySet(
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
             {
               policySetName: options.pSet,
             },
@@ -119,11 +108,7 @@ export default function setup() {
                 printMessage(
                   `Looking for the policy set "${options.pSet}" in the ${state.getRealm()} realm now.`
                 );
-<<<<<<< HEAD
                 outcome = await configManagerExportAuthzPolicySet(
-=======
-                outcome = await exportAuthzPolicySet(
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
                   {
                     policySetName: options.pSet,
                   },
@@ -144,11 +129,7 @@ export default function setup() {
           printMessage(
             `Exporting all the policy sets in the provided config file.`
           );
-<<<<<<< HEAD
           outcome = await configManagerExportAuthzPolicySets(options.file);
-=======
-          outcome = await exportConfigAuthzPolicySets(options.file);
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
         }
 
         // -r/--realm
@@ -156,21 +137,13 @@ export default function setup() {
           printMessage(
             `Exporting all the policy sets in the ${state.getRealm()} realm.`
           );
-<<<<<<< HEAD
           outcome = await configManagerExportAuthzPolicySetsRealm();
-=======
-          outcome = await exportRealmAuthzPolicySets();
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
         }
 
         // export all policy sets from all realms, the default when no options are provided
         else {
           printMessage('Exporting all the policy sets in the host tenant.');
-<<<<<<< HEAD
           outcome = await configManagerExportAuthzPoliciesAll();
-=======
-          outcome = await exportAllAuthzPolicies();
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
         }
 
         if (!outcome) {

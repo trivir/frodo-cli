@@ -2,15 +2,9 @@ import { frodo } from '@rockcarver/frodo-lib';
 
 import { getIdmImportExportOptions } from '../ops/IdmOps';
 import { printError } from '../utils/Console';
-<<<<<<< HEAD
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { readRealms } = frodo.realm;
-=======
-import { realmList } from './FrConfigOps';
-
-const { getFilePath, saveJsonToFile } = frodo.utils;
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 const { exportConfigEntity } = frodo.idm.config;
 
 /**
@@ -52,7 +46,6 @@ export async function configManagerExportPasswordPolicy(
   }
   return false;
 }
-<<<<<<< HEAD
 
 async function realmList(): Promise<string[]> {
   const realms = await readRealms();
@@ -62,5 +55,3 @@ async function realmList(): Promise<string[]> {
   });
   return realmList;
 }
-=======
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd

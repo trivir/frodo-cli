@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 import { Option } from 'commander';
 
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 import { configManagerExportServices } from '../../configManagerOps/FrConfigServiceOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';

@@ -1,22 +1,10 @@
 import { frodo } from '@rockcarver/frodo-lib';
 
-<<<<<<< HEAD
 import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError } from '../utils/Console';
 
 const { readConfigEntitiesByType } = frodo.idm.config;
 const { saveJsonToFile, getFilePath } = frodo.utils;
-=======
-
-import { extractFrConfigDataToFile } from '../utils/Config';
-import { printError } from '../utils/Console';
-import { printError } from '../utils/Console';
-
-const { readConfigEntitiesByType } = frodo.idm.config;
-const { saveJsonToFile, getFilePath } = frodo.utils;
-const { readConfigEntitiesByType } = frodo.idm.config;
-const { saveJsonToFile, getFilePath } = frodo.utils;
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 
 /**
  * Export an IDM configuration object in the fr-config-manager format.
@@ -25,10 +13,6 @@ const { saveJsonToFile, getFilePath } = frodo.utils;
  */
 export async function configManagerExportEndpoints(
   endpointName?: string
-<<<<<<< HEAD
-=======
-  endpointName?: string
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 ): Promise<boolean> {
   try {
     const exportData = await readConfigEntitiesByType('endpoint');
@@ -38,17 +22,6 @@ export async function configManagerExportEndpoints(
     printError(error, `Error exporting config entity endpoints`);
   }
   return false;
-<<<<<<< HEAD
-=======
-  try {
-    const exportData = await readConfigEntitiesByType('endpoint');
-    processEndpoints(exportData, 'endpoints', endpointName);
-    return true;
-  } catch (error) {
-    printError(error, `Error exporting config entity endpoints`);
-  }
-  return false;
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 }
 
 function processEndpoints(endpoints, fileDir, name?) {
@@ -60,7 +33,6 @@ function processEndpoints(endpoints, fileDir, name?) {
       }
       const endpointDir = `${fileDir}/${endpointName}`;
       const scriptFilename = `${endpointName}.js`;
-<<<<<<< HEAD
 
       extractFrConfigDataToFile(endpoint.source, scriptFilename, endpointDir);
       delete endpoint.source;
@@ -77,30 +49,3 @@ function processEndpoints(endpoints, fileDir, name?) {
     printError(err);
   }
 }
-=======
-  try {
-    endpoints.forEach((endpoint) => {
-      const endpointName = endpoint._id.split('/')[1];
-      if (name && name !== endpointName) {
-        return;
-      }
-      const endpointDir = `${fileDir}/${endpointName}`;
-      const scriptFilename = `${endpointName}.js`;
-
-      extractFrConfigDataToFile(endpoint.source, scriptFilename, endpointDir);
-      delete endpoint.source;
-      endpoint.file = `${scriptFilename}`;
-      const endpointFilename = `${endpointDir}/${endpointName}.json`;
-      saveJsonToFile(
-        endpoint,
-        getFilePath(endpointFilename, true),
-        false,
-        false
-      );
-    });
-  } catch (err) {
-    printError(err);
-  }
-}
-
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd

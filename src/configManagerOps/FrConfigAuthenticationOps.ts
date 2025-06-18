@@ -1,18 +1,10 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
-
+import {realmList} from './FrConfigOps'
 import { printError } from '../utils/Console';
-<<<<<<< HEAD
-=======
-import { realmList } from './FrConfigOps';
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 
 const { readAuthenticationSettings: _readAuthenticationSettings } =
   frodo.authn.settings;
 const { getFilePath, saveJsonToFile } = frodo.utils;
-<<<<<<< HEAD
-const { readRealms } = frodo.realm;
-=======
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 
 /**
  * Export an IDM configuration object in the fr-config-manager format.
@@ -51,15 +43,4 @@ export async function configManagerExportAuthentication(
     printError(error, `Error exporting config entity ui-configuration`);
   }
   return false;
-<<<<<<< HEAD
-}
-async function realmList(): Promise<string[]> {
-  const realms = await readRealms();
-  const realmList = [];
-  realms.forEach((realmConfig) => {
-    realmList.push(`${realmConfig.name}`);
-  });
-  return realmList;
-=======
->>>>>>> 88ebe6cc737bef3d00f83b2ff8efe56d287dc5dd
 }
