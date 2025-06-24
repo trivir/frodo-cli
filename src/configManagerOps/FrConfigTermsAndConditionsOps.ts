@@ -13,7 +13,6 @@ const { readConfigEntity } = frodo.idm.config;
 export async function configManagerExportTermsAndConditions(): Promise<boolean> {
   try {
     const exportData = (await readConfigEntity('selfservice.terms')) as any;
-    saveJsonToFile(exportData, 'terms.json', false, false);
     for (const version of exportData.versions) {
       for (const [language, text] of Object.entries(
         version.termsTranslations

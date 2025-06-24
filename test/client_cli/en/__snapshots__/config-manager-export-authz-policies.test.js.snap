@@ -77,8 +77,9 @@ Options:
                                        of Identity Cloud and handle MFA
                                        (choices: "classic", "cloud",
                                        "forgeops")
+  -n, --policy-name <policy-set-name>  Get only a specific policy set with the
+                                       name.
   --no-cache                           Disable token cache for this operation.
-  -p, --p-set <policy-set-id>          Get only a specific policy set.
   -r, --realm <realm>                  Specifies the realm to export from. Only
                                        policy sets from this realm will be
                                        exported. Ignored with -f

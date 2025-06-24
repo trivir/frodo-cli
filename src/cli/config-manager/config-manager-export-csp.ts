@@ -16,29 +16,28 @@ export default function setup() {
 
   program
     .description('Export content security policy.')
-    /** 
-     * added because fr-config manager has an option to use a config file for the "fr-config-pull csp" command. Bryan said this should still be supported
-     * 
-     * -----------------------  Example CSP_OVERRIDES json file ----------------------------------
-    {
-      "enforced": {
-        "active": {
-          "$bool": "${CSP_ENFORCED}"
-        }
-      },
-      "report-only": {
-        "active": {
-          "$bool": "${CSP_REPORT_ONLY}"
-        }
-      }
-    }
-     * -------------------------------------------------------------------------------------------- 
-     */
     .addOption(
       new Option(
         '-f, --file <file>',
         'The CSP_OVERRIDES json file. ex: "/home/trivir/Documents/csp-overrides.json", or "csp-overrides.json"'
       )
+    )
+    .addHelpText(
+      'after',
+      'There is an option to overrides the export file.\n' +
+      '-----------------------  Example CSP_OVERRIDES json file ---------------------------------- \n'+
+      '{\n'+
+      ' "enforced": {\n'+
+      '   "active": {\n'+
+      '     "$bool": "${CSP_ENFORCED}"\n'+
+      '   }\n'+
+      ' },\n'+
+      ' "report-only": {\n'+
+          '"active": {\n'+
+            '"$bool": "${CSP_REPORT_ONLY}"\n'+
+          '}\n'+
+      ' }\n'+
+      '}\n'
     )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(

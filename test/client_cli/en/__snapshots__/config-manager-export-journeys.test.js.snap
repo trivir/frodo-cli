@@ -20,8 +20,6 @@ Arguments:
   password                             Password.
 
 Options:
-  -c, --clean                          Clear existing configuration before
-                                       pull.
   --curlirize                          Output all network calls in curl format.
   -d, --pull-dependencies              Pull dependencies.
   -D, --directory <directory>          Set the working directory.

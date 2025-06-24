@@ -13,18 +13,26 @@ export default function setup() {
     [],
     deploymentTypes
   );
-
+  // TO DO: Adding a realm option to export all config for a specific realm 
   program
     .description('Export audit objects.')
     .addOption(
       new Option(
         '-F, --config-folder <config-folder-path>',
-        'Directory path of the folder that contains config files. \n' +
-          'The config file name should be equal to: command-name.json. \n' +
-          'For example, the config file of authz-policies should be authz-policies.json in the folder.' +
-          'IF you need a template for the config file of each command, \n ' +
-          'please refer to the help message by typing frodo config-manager export <entity-name> -h'
+        'Path to the folder containing the config files.\n' 
       )
+    )
+    .addHelpText(
+      'after',
+      'The following entities require config files to be exported:\n' +
+      '- authz-policies\n' +
+      '- oauth2-agents\n' +
+      '- saml\n' +
+      '- service-objects\n\n' +
+      'Each config file must be named after the command it applies to. For example,\n' +
+      'the config file for "authz-policies" should be named "authz-policies.json".\n' +
+      'Please refer to the help message of each command to see an example config file by running:\n' +
+      '"frodo config-manager export <entity-name> -h"'
     )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
@@ -51,7 +59,9 @@ export default function setup() {
       // unrecognized combination of options or no options
       else {
         printMessage(
-          'Unrecognized combination of options or no options...',
+          'You must specify a folder containing the config files.\n' +
+          'Please refer to the help message for more information.'
+          ,
           'error'
         );
         program.help();

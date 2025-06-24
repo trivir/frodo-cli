@@ -1524,11 +1524,11 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 }
 `;
 
-exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet". 1`] = `0`;
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -n murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet". 1`] = `0`;
 
-exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet". 2`] = `""`;
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -n murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet". 2`] = `""`;
 
-exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir5/realms/bravo/authorization/policy-sets/murphyTestPolicySet/murphyTestPolicySet.json 1`] = `
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -n murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir5/realms/bravo/authorization/policy-sets/murphyTestPolicySet/murphyTestPolicySet.json 1`] = `
 {
   "_id": "murphyTestPolicySet",
   "_rev": "1749145614470",
@@ -1587,7 +1587,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 }
 `;
 
-exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir5/realms/bravo/authorization/policy-sets/murphyTestPolicySet/policies/Murphy Test Policy 1.json 1`] = `
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -n murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir5/realms/bravo/authorization/policy-sets/murphyTestPolicySet/policies/Murphy Test Policy 1.json 1`] = `
 {
   "_id": "Murphy Test Policy 1",
   "_rev": "1749145690843",
@@ -1613,7 +1613,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 }
 `;
 
-exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir5/realms/bravo/authorization/policy-sets/murphyTestPolicySet/policies/Murphy Test Policy 2.json 1`] = `
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -n murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir5/realms/bravo/authorization/policy-sets/murphyTestPolicySet/policies/Murphy Test Policy 2.json 1`] = `
 {
   "_id": "Murphy Test Policy 2",
   "_rev": "1749145730685",
@@ -1640,7 +1640,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 }
 `;
 
-exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir5/realms/bravo/authorization/policy-sets/murphyTestPolicySet/policies/Murphy Test Policy 3.json 1`] = `
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -n murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir5/realms/bravo/authorization/policy-sets/murphyTestPolicySet/policies/Murphy Test Policy 3.json 1`] = `
 {
   "_id": "Murphy Test Policy 3",
   "_rev": "1749145749382",
@@ -1663,7 +1663,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 }
 `;
 
-exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir5/realms/bravo/authorization/resource-types/Murphy Test Resource.json 1`] = `
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -n murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir5/realms/bravo/authorization/resource-types/Murphy Test Resource.json 1`] = `
 {
   "_id": "45e2b768-a82e-48f1-b4b3-821a9546acc0",
   "actions": {
@@ -1684,7 +1684,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 }
 `;
 
-exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir5/realms/bravo/authorization/resource-types/OAuth2 Scope.json 1`] = `
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -n murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir5/realms/bravo/authorization/resource-types/OAuth2 Scope.json 1`] = `
 {
   "_id": "d60b7a71-1dc6-44a5-8e48-e4b9d92dee8b",
   "actions": {
@@ -1705,7 +1705,7 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 }
 `;
 
-exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir5/realms/bravo/authorization/resource-types/URL.json 1`] = `
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -n murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir5/realms/bravo/authorization/resource-types/URL.json 1`] = `
 {
   "_id": "76656a38-5f8e-401b-83aa-4ccb74ce88d2",
   "actions": {

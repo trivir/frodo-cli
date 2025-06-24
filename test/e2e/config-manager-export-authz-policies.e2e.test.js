@@ -49,10 +49,9 @@
 /*
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir3 -r alpha
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -n murphyTestPolicySet -r bravo
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export authz-policies --directory configManagerExportAuthzPoliciesDir4 -r bravo
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir6 -f test/e2e/fr-config-manager-pull-config/authz-policies.json
-
 */
 
 
@@ -82,11 +81,11 @@ describe('frodo config-manager exports', () => {
          const CMD = `frodo config-manager export authz-policies --directory ${dirName} -r ${realm}`;
          await testExport(CMD, env, undefined, undefined, dirName, false);
      });
-     test('"frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet".', async () => {
+     test('"frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -n murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet".', async () => {
          const dirName = 'configManagerExportAuthzPoliciesDir5';
          const policySetName = 'murphyTestPolicySet';
          const realm = 'bravo';
-         const CMD = `frodo config-manager export authz-policies -D ${dirName} -p ${policySetName} -r ${realm}`;
+         const CMD = `frodo config-manager export authz-policies -D ${dirName} -n ${policySetName} -r ${realm}`;
          await testExport(CMD, env, undefined, undefined, dirName, false);
      });
      test('"frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir6-f test/e2e/fr-config-manager-pull-config/authz-policies.json" : should export only the policy set with the id: "murphyTestPolicySet".', async () => {

@@ -21,7 +21,7 @@ export default function setup() {
     .description('Export aconnector definitions.')
     .addOption(
       new Option(
-        '-c, --c-name <connector-name>',
+        '-n, --name <connector-name>',
         'Get connector-definition from specified name/id, without the type prefix.'
       )
     )
@@ -37,12 +37,12 @@ export default function setup() {
 
       if (await getTokens(false, true, deploymentTypes)) {
         let outcome: boolean;
-        if (options.cName) {
+        if (options.name) {
           printMessage(
-            `Exporting connector definition for connector: "${options.cName}"`
+            `Exporting connector definition for connector: "${options.name}"`
           );
           outcome = await configManagerExportConnectorDefinition({
-            connectorName: options.cName,
+            connectorName: options.name,
           });
         } else {
           printMessage('Exporting all connector defitions.');

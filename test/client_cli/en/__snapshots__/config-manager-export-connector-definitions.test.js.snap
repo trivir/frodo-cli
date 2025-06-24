@@ -20,8 +20,6 @@ Arguments:
   password                             Password.
 
 Options:
-  -c, --c-name <connector-name>        Get connector-definition from specified
-                                       name/id, without the type prefix.
   --curlirize                          Output all network calls in curl format.
   -D, --directory <directory>          Set the working directory.
   --debug                              Debug output during command execution.
@@ -75,6 +73,8 @@ Options:
                                        of Identity Cloud and handle MFA
                                        (choices: "classic", "cloud",
                                        "forgeops")
+  -n, --name <connector-name>          Get connector-definition from specified
+                                       name/id, without the type prefix.
   --no-cache                           Disable token cache for this operation.
   --sa-id <sa-id>                      Service account id.
   --sa-jwk-file <file>                 File containing the JSON Web Key (JWK)

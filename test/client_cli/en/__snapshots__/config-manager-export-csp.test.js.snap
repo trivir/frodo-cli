@@ -102,5 +102,20 @@ Environment Variables:
   FRODO_MASTER_KEY_PATH: Use this master key file instead of '~/.frodo/masterkey.key' file.
   FRODO_MASTER_KEY: Use this master key instead of what's in '~/.frodo/masterkey.key'. Takes precedence over FRODO_MASTER_KEY_PATH.
 
+There is an option to overrides the export file.
+-----------------------  Example CSP_OVERRIDES json file ---------------------------------- 
+{
+ "enforced": {
+   "active": {
+     "$bool": "\${CSP_ENFORCED}"
+   }
+ },
+ "report-only": {
+"active": {
+"$bool": "\${CSP_REPORT_ONLY}"
+}
+ }
+}
+
 "
 `;

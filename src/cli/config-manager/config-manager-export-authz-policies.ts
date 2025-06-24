@@ -31,29 +31,10 @@ export default function setup() {
     )
     .addOption(
       new Option(
-        '-p, --p-set <policy-set-id>',
-        'Get only a specific policy set.'
+        '-n, --policy-name <policy-set-name>',
+        'Get only a specific policy set with the name.'
       )
     )
-    /**
-     * added because fr-config manager needs a config in order to complete the "fr-config-pull authz-policies" command. Bryan said this should still be supported  
-     *   
-     * -----------------------  Example AUTHZ_POLICY_SETS_CONFIG json file ------------------------
-     {
-       "alpha": [
-         "oauth2Scopes",
-         "EdgePolicySet",
-         "FeatureStorePolicySet",
-         "data",
-         "test-policy-set"
-       ],
-       "bravo": [
-         "oauth2Scopes",
-         "murphyTestPolicySet"
-       ]
-     }
-     * -------------------------------------------------------------------------------------------- 
-     */
     .addOption(
       new Option(
         '-f, --file <file>',
@@ -101,15 +82,15 @@ export default function setup() {
         let outcome: boolean;
 
         // -p/--p-set
-        if (options.pSet) {
+        if (options.policyName) {
           printMessage(
-            `Exporting the policy set "${options.pSet}" in the ${state.getRealm()} realm.`
+            `Exporting the policy set "${options.policyName}" in the ${state.getRealm()} realm.`
           );
 
           // try and find script in current realm
           outcome = await configManagerExportAuthzPolicySet(
             {
-              policySetName: options.pSet,
+              policySetName: options.policyName,
             },
             options.file
           );
@@ -123,16 +104,16 @@ export default function setup() {
               }
               if (!checkedRealms.includes(realm.name)) {
                 printMessage(
-                  `Exporting the policy set "${options.pSet}" from the ${checkedRealms[checkedRealms.length - 1]} realm failed.`
+                  `Exporting the policy set "${options.policyName}" from the ${checkedRealms[checkedRealms.length - 1]} realm failed.`
                 );
                 state.setRealm(realm.name);
                 checkedRealms.push(state.getRealm());
                 printMessage(
-                  `Looking for the policy set "${options.pSet}" in the ${state.getRealm()} realm now.`
+                  `Looking for the policy set "${options.policyName}" in the ${state.getRealm()} realm now.`
                 );
                 outcome = await configManagerExportAuthzPolicySet(
                   {
-                    policySetName: options.pSet,
+                    policySetName: options.policyName,
                   },
                   null
                 );
@@ -140,7 +121,7 @@ export default function setup() {
             }
             if (!outcome) {
               printMessage(
-                `Did not find the policy set "${options.pSet}" anywhere.`
+                `Did not find the policy set "${options.policyName}" anywhere.`
               );
             }
           }

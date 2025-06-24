@@ -49,7 +49,7 @@
 
 /*
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export connector-definitions -D configManagerExportConnectorDefinitionsDir0
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export connector-definitions -D configManagerExportConnectorDefinitionsDir1 -c Azure
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export connector-definitions -D configManagerExportConnectorDefinitionsDir1 -n Azure
 
 */
 import { getEnv, testExport } from './utils/TestUtils';
@@ -66,10 +66,10 @@ describe('frodo config-manager export connector-definitions', () => {
         const CMD = `frodo config-manager export connector-definitions -D ${dirName}`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
     });
-    test('"frodo config-manager export connector-definitions -D configManagerExportConnectorDefinitionsDir1 -c Azure": should export only the Azure connector definition in fr-config manager style.', async () => {    
+    test('"frodo config-manager export connector-definitions -D configManagerExportConnectorDefinitionsDir1 -n Azure": should export only the Azure connector definition in fr-config manager style.', async () => {    
         const dirName = 'configManagerExportConnectorDefinitionsDir1';
         const connectorName = 'Azure';
-        const CMD = `frodo config-manager export connector-definitions -D ${dirName} -c ${connectorName}`;
+        const CMD = `frodo config-manager export connector-definitions -D ${dirName} -n ${connectorName}`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
     });
 });

@@ -1179,11 +1179,11 @@ exports[`frodo config-manager export connector-definitions "frodo config-manager
 }
 `;
 
-exports[`frodo config-manager export connector-definitions "frodo config-manager export connector-definitions -D configManagerExportConnectorDefinitionsDir1 -c Azure": should export only the Azure connector definition in fr-config manager style. 1`] = `0`;
+exports[`frodo config-manager export connector-definitions "frodo config-manager export connector-definitions -D configManagerExportConnectorDefinitionsDir1 -n Azure": should export only the Azure connector definition in fr-config manager style. 1`] = `0`;
 
-exports[`frodo config-manager export connector-definitions "frodo config-manager export connector-definitions -D configManagerExportConnectorDefinitionsDir1 -c Azure": should export only the Azure connector definition in fr-config manager style. 2`] = `""`;
+exports[`frodo config-manager export connector-definitions "frodo config-manager export connector-definitions -D configManagerExportConnectorDefinitionsDir1 -n Azure": should export only the Azure connector definition in fr-config manager style. 2`] = `""`;
 
-exports[`frodo config-manager export connector-definitions "frodo config-manager export connector-definitions -D configManagerExportConnectorDefinitionsDir1 -c Azure": should export only the Azure connector definition in fr-config manager style.: configManagerExportConnectorDefinitionsDir1/sync/connectors/Azure.json 1`] = `
+exports[`frodo config-manager export connector-definitions "frodo config-manager export connector-definitions -D configManagerExportConnectorDefinitionsDir1 -n Azure": should export only the Azure connector definition in fr-config manager style.: configManagerExportConnectorDefinitionsDir1/sync/connectors/Azure.json 1`] = `
 {
   "_id": "provisioner.openicf/Azure",
   "configurationProperties": {

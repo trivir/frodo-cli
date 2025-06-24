@@ -55,31 +55,6 @@ export default function setup() {
     )
     .addOption(
       new Option(
-        /**Availble script types
-         *
-         * AUTHENTICATION_TREE_DECISION_NODE
-         * SAML2_SP_ADAPTER
-         * OAUTH2_ACCESS_TOKEN_MODIFICATION
-         * Scripted Decision Node
-         * AUTHENTICATION_CLIENT_SIDE
-         * DEVICE_MATCH_NODE
-         * OAUTH2_SCRIPTED_JWT_ISSUER
-         * AUTHENTICATION_SERVER_SIDE
-         * SOCIAL_IDP_PROFILE_TRANSFORMATION
-         * CONFIG_PROVIDER_NODE
-         * OAUTH2_VALIDATE_SCOPE
-         * LIBRARY
-         * OAUTH2_AUTHORIZE_ENDPOINT_DATA_PROVIDER
-         * OAUTH2_EVALUATE_SCOPE
-         * POLICY_CONDITION
-         * OIDC_CLAIMS
-         * SAML2_IDP_ADAPTER
-         * PingOne Verify Completion Decision Node
-         * SAML2_NAMEID_MAPPER
-         * SAML2_IDP_ATTRIBUTE_MAPPER
-         * CONFIG_PROVIDER_NODE
-         * OAUTH2_MAY_ACT
-         */
         '--script-type <script type>',
         'Export all scripts of a certain type. Ignored with -n.'
       )
@@ -90,6 +65,33 @@ export default function setup() {
         '--language <programming language>',
         'Export all scripts written a certain programming language. ALL, GROOVY, or JAVASCRIPT. defaults to JAVASCRIPT. Ignored with -n'
       )
+    )
+
+    .addHelpText(
+      'after',
+      'Availble script types: \n' +
+      'AUTHENTICATION_TREE_DECISION_NODE\n' +
+      'SAML2_SP_ADAPTER\n' +
+      'OAUTH2_ACCESS_TOKEN_MODIFICATION\n' +
+      'Scripted Decision Node\n' +
+      'AUTHENTICATION_CLIENT_SIDE\n' +
+      'DEVICE_MATCH_NODE\n' +
+      'OAUTH2_SCRIPTED_JWT_ISSUER\n' +
+      'AUTHENTICATION_SERVER_SIDE\n' +
+      'SOCIAL_IDP_PROFILE_TRANSFORMATION\n' +
+      'CONFIG_PROVIDER_NODE\n' +
+      'OAUTH2_VALIDATE_SCOPE\n' +
+      'LIBRARY\n' +
+      'OAUTH2_AUTHORIZE_ENDPOINT_DATA_PROVIDER\n' +
+      'OAUTH2_EVALUATE_SCOPE\n' +
+      'POLICY_CONDITION\n' +
+      'OIDC_CLAIMS\n' +
+      'SAML2_IDP_ADAPTER\n' +
+      'PingOne Verify Completion Decision Node\n' +
+      'SAML2_NAMEID_MAPPER\n' +
+      'SAML2_IDP_ATTRIBUTE_MAPPER\n' +
+      'CONFIG_PROVIDER_NODE\n' +
+      'OAUTH2_MAY_ACT'
     )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
