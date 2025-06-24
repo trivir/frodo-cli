@@ -1,8 +1,8 @@
 import { Option } from 'commander';
 
 import {
-  configManagerExportConnectorDefinitionsAll,
   configManagerExportConnectorDefinition,
+  configManagerExportConnectorDefinitionsAll,
 } from '../../configManagerOps/FrConfigConnectorDefinitionsOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage } from '../../utils/Console';

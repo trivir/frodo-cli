@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo config-manager exports "frodo config-manager export services -D serviceTestDir": should export the services in fr-config-manager style" 1`] = `""`;
+exports[`frodo config-manager exports "frodo config-manager export services -D serviceTestDir": should export the services in fr-config-manager style" 1`] = `0`;
+
+exports[`frodo config-manager exports "frodo config-manager export services -D serviceTestDir": should export the services in fr-config-manager style" 2`] = `""`;
 
 exports[`frodo config-manager exports "frodo config-manager export services -D serviceTestDir": should export the services in fr-config-manager style": serviceTestDir/realms/alpha/services/SocialIdentityProviders.json 1`] = `
 {
@@ -1580,7 +1582,9 @@ exports[`frodo config-manager exports "frodo config-manager export services -D s
 }
 `;
 
-exports[`frodo config-manager exports "frodo config-manager export services -r alpha -D serviceTestDir": should export the services in alpha realm in fr-config-manager style" 1`] = `""`;
+exports[`frodo config-manager exports "frodo config-manager export services -r alpha -D serviceTestDir": should export the services in alpha realm in fr-config-manager style" 1`] = `0`;
+
+exports[`frodo config-manager exports "frodo config-manager export services -r alpha -D serviceTestDir": should export the services in alpha realm in fr-config-manager style" 2`] = `""`;
 
 exports[`frodo config-manager exports "frodo config-manager export services -r alpha -D serviceTestDir": should export the services in alpha realm in fr-config-manager style": serviceTestDir/realms/alpha/services/SocialIdentityProviders.json 1`] = `
 {
@@ -2567,7 +2571,9 @@ exports[`frodo config-manager exports "frodo config-manager export services -r a
 }
 `;
 
-exports[`frodo config-manager exports "frodo config-manager export services -r alpha -n SocialIdentityProviders -D serviceTestDir": should export the services with name: SocialIdentityProviders in fr-config-manager style" 1`] = `""`;
+exports[`frodo config-manager exports "frodo config-manager export services -r alpha -n SocialIdentityProviders -D serviceTestDir": should export the services with name: SocialIdentityProviders in fr-config-manager style" 1`] = `0`;
+
+exports[`frodo config-manager exports "frodo config-manager export services -r alpha -n SocialIdentityProviders -D serviceTestDir": should export the services with name: SocialIdentityProviders in fr-config-manager style" 2`] = `""`;
 
 exports[`frodo config-manager exports "frodo config-manager export services -r alpha -n SocialIdentityProviders -D serviceTestDir": should export the services with name: SocialIdentityProviders in fr-config-manager style": serviceTestDir/realms/alpha/services/SocialIdentityProviders.json 1`] = `
 {

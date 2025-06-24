@@ -1,7 +1,7 @@
 import { FrodoStubCommand } from '../FrodoCommand';
-import All from './config-manager-export-all'
-import AllStatic from './config-manager-export-all-static'
 import AccessConfig from './config-manager-export-access-config';
+import All from './config-manager-export-all';
+import AllStatic from './config-manager-export-all-static';
 import Audit from './config-manager-export-audit';
 import Authentication from './config-manager-export-authentication';
 import AuthzPolicies from './config-manager-export-authz-policies';
@@ -18,12 +18,12 @@ import Journeys from './config-manager-export-journeys';
 import Kba from './config-manager-export-kba';
 import Locales from './config-manager-export-locales';
 import ManagedObjects from './config-manager-export-managed-objects';
-import Saml from './config-manager-export-saml';
 import Oauth2Agents from './config-manager-export-oauth2-agents';
 import OrgPrivileges from './config-manager-export-org-privileges';
 import PasswordPolicy from './config-manager-export-password-policy';
 import Raw from './config-manager-export-raw';
 import RemoteServers from './config-manager-export-remote-servers';
+import Saml from './config-manager-export-saml';
 import Schedules from './config-manager-export-schedules';
 import Scripts from './config-manager-export-scripts';
 import SecretMappings from './config-manager-export-secret-mappings';

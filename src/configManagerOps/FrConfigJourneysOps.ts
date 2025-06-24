@@ -5,16 +5,12 @@ import {
 } from '@rockcarver/frodo-lib/types/ops/JourneyOps';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
-import { printError, printMessage } from '../utils/Console';
-import { realmList ,safeFileName} from './FrConfigOps';
-const {
-  saveJsonToFile,
-  getWorkingDirectory,
-  getFilePath,
-  findFilesByName,
-} = frodo.utils;
-const { readJourneys, exportJourneys } = frodo.authn.journey;
-const { readRealms, } = frodo.realm;
+import { printError, verboseMessage } from '../utils/Console';
+import { realmList, safeFileName } from './FrConfigOps';
+
+const { saveJsonToFile, getWorkingDirectory, getFilePath, findFilesByName } =
+  frodo.utils;
+const { exportJourneys } = frodo.authn.journey;
 
 export async function configManagerExportJourneys(
   name?,
@@ -57,7 +53,7 @@ export async function configManagerExportJourneys(
 }
 
 function matchJourneyName(journey, name) {
-  return journey._id === name;
+  return journey.tree._id === name;
 }
 
 function fileNameFromNode(displayName, id) {
@@ -72,7 +68,6 @@ async function processJourneys(
   exportDir
 ) {
   const fileDir = `${exportDir}/${realm}/journeys`;
-
   try {
     for (const [, journey] of Object.entries(journeys) as [string, any]) {
       if (name && !matchJourneyName(journey, name)) {
@@ -97,14 +92,13 @@ async function processJourneys(
               subNodeSpec,
               getFilePath(subNodeFilename, true),
               false,
-              false
+              true
             );
             if (
               pullDependencies &&
               journeyNodeNeedsScript(subNodeSpec) &&
               !(await existScript(subNodeSpec.script, realm))
             ) {
-              printMessage(subNodeSpec._id);
               const script = journey.scripts[subNodeSpec.script];
 
               const scriptText = Array.isArray(script.script)
@@ -123,7 +117,7 @@ async function processJourneys(
                 script,
                 getFilePath(`${scriptJsonDir}/${script._id}.json`, true),
                 false,
-                false
+                true
               );
             }
           }
@@ -132,9 +126,9 @@ async function processJourneys(
           journeyNodeNeedsScript(node) &&
           !(await existScript(node.script, realm))
         ) {
-          printMessage('Trying to save the script on the node');
-          printMessage(nodeId);
-          printMessage(node.script);
+          verboseMessage('Trying to save the script on the node');
+          verboseMessage(nodeId);
+          verboseMessage(node.script);
 
           const script = journey.scripts[node.script];
           const scriptText = Array.isArray(script.script)
@@ -153,7 +147,7 @@ async function processJourneys(
             script,
             getFilePath(`${scriptJsonDir}/${script._id}.json`, true),
             false,
-            false
+            true
           );
         } else if (
           !!name &&
@@ -173,7 +167,7 @@ async function processJourneys(
           node,
           getFilePath(`${nodeFileNameRoot}.json`, true),
           false,
-          false
+          true
         );
       }
 
@@ -182,7 +176,7 @@ async function processJourneys(
         journey.tree,
         getFilePath(`${fileName}`, true),
         false,
-        false
+        true
       );
     }
   } catch (err) {
@@ -206,10 +200,8 @@ async function existScript(fileName, realm): Promise<boolean> {
   );
 
   if (result.length) {
-    printMessage(result.length);
     return true;
   } else {
-    printMessage(result.length);
     return false;
   }
 }

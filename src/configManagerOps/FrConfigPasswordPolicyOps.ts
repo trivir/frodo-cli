@@ -26,7 +26,7 @@ export async function configManagerExportPasswordPolicy(
         })
       ).idm[`fieldPolicy/${realm}_user`];
       const fileName = `realms/${realm}/password-policy/${realm}_user-password-policy.json`;
-      saveJsonToFile(realmData, getFilePath(fileName, true), false, false);
+      saveJsonToFile(realmData, getFilePath(fileName, true), false, true);
     } else {
       for (const realmName of await realmList()) {
         const realmData = (
@@ -37,7 +37,7 @@ export async function configManagerExportPasswordPolicy(
         ).idm[`fieldPolicy/${realmName}_user`];
         //const exportData = await readConfigEntitiesByType('fieldPolicy')
         const fileName = `realms/${realmName}/password-policy/${realmName}_user-password-policy.json`;
-        saveJsonToFile(realmData, getFilePath(fileName, true), false, false);
+        saveJsonToFile(realmData, getFilePath(fileName, true), false, true);
       }
     }
     return true;
@@ -46,4 +46,3 @@ export async function configManagerExportPasswordPolicy(
   }
   return false;
 }
-

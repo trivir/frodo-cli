@@ -28,7 +28,7 @@ async function exportPolicy(p: PolicySkeleton) {
       true
     ),
     false,
-    false
+    true
   );
 
   // also save any resource types associated with the policy
@@ -48,7 +48,7 @@ async function exportPolicy(p: PolicySkeleton) {
       true
     ),
     false,
-    false
+    true
   );
 }
 
@@ -111,7 +111,7 @@ export async function configManagerExportAuthzPolicySet(
         true
       ),
       false,
-      false
+      true
     );
 
     // create policies directory if it doesnt exist even if there are no policies, thats what fr-config-manager does
@@ -158,7 +158,12 @@ export async function configManagerExportAuthzPolicySets(
         state.setRealm(realm);
         verboseMessage(`\n${state.getRealm()} realm:`);
         for (const policy of policies) {
-          if (!(await configManagerExportAuthzPolicySet({ policySetName: policy }, null))) {
+          if (
+            !(await configManagerExportAuthzPolicySet(
+              { policySetName: policy },
+              null
+            ))
+          ) {
             return false;
           }
         }

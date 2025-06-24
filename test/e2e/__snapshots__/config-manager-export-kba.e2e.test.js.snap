@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo config-manager exports "frodo config-manager export kba -D testDir14": should export the kba in fr-config-manager style" 1`] = `""`;
+exports[`frodo config-manager exports "frodo config-manager export kba -D testDir14": should export the kba in fr-config-manager style" 1`] = `0`;
+
+exports[`frodo config-manager exports "frodo config-manager export kba -D testDir14": should export the kba in fr-config-manager style" 2`] = `""`;
 
 exports[`frodo config-manager exports "frodo config-manager export kba -D testDir14": should export the kba in fr-config-manager style": testDir14/kba/selfservice.kba.json 1`] = `
 {

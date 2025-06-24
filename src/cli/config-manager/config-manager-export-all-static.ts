@@ -1,8 +1,7 @@
+import { configManagerExportAllStatic } from '../../configManagerOps/FrConfigAllOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
-import { configManagerExportAllStatic } from '../../configManagerOps/FrConfigAllOps'
-import { Option } from 'commander';
 
 const deploymentTypes = ['cloud', 'forgeops'];
 
@@ -25,8 +24,10 @@ export default function setup() {
         command
       );
 
-      if ( await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Exporting config files that fr-config-manager supports.');
+      if (await getTokens(false, true, deploymentTypes)) {
+        verboseMessage(
+          'Exporting config files that fr-config-manager supports.'
+        );
         const outcome = await configManagerExportAllStatic();
         if (!outcome) process.exitCode = 1;
       }

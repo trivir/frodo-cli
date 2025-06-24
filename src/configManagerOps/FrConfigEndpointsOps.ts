@@ -42,7 +42,7 @@ function processEndpoints(endpoints, fileDir, name?) {
         endpoint,
         getFilePath(endpointFilename, true),
         false,
-        false
+        true
       );
     });
   } catch (err) {

@@ -26,53 +26,52 @@ export default function setup() {
 
     .addHelpText(
       'after',
-      'HELP MESSAGE:\n'+
-      'Make sure to create the export config file: service-objects.json to run this command.\n'+ 
-      'Example command: frodo config-manager export service-objects -f service-objects.json -D ../testDir frodo-dev\n\n'+
-      `Config file example:\n` +
-      '------------  Example service object export config for service-objects.json file -----------\n' +
-      '{\n' +
-      ' "alpha_user": [\n' +
-      '   {\n' +
-      '     "searchField": "userName",\n' +
-      '     "searchValue": "kirk",\n' +
-      '     "fields": ["userName", "givenName", "sn", "mail", "authzRoles"],\n' +
-      '     "overrides": {\n' +
-      '       "password": "${SERVICE_ACCOUNT_JOURNEY_PASSWORD}"\n' +
-      '     }\n' +
-      '   },\n' +
-      '   {\n' +
-      '     "searchField": "sn",\n' +
-      '     "searchValue": "SeanTest",\n' +
-      '     "fields": ["userName", "givenName", "sn", "mail", "authzRoles"],\n' +
-      '     "overrides": {\n' +
-      '       "userName": "seantest",\n' +
-      '       "givenName": "sean",\n' +
-      '         "password": "${SERVICE_ACCOUNT_JOURNEY_PASSWORD}"\n' +
-      '     }\n' +
-      '   }\n' +
-      ' ],\n' +
-      ' "alpha_role": [\n' +
-      '  {\n' +
-      '    "searchField": "name",\n' +
-      '    "searchValue": "TestRole",\n' +
-      '    "fields": ["name", "description"],\n' +
-      '    "overrides": {}\n' +
-      '  }\n' +
-      ' ],\n' +
-      ' "bravo_user": [\n' +
-      '  {\n' +
-      '    "searchField": "userName",\n' +
-      '    "searchValue": "bravo_test_user",\n' +
-      '    "fields": ["userName", "givenName", "sn", "mail", "authzRoles"],\n' +
-      '    "overrides": {\n' +
-      '    }\n' +
-      '  }\n' +
-      ' ]\n' +
-      '}\n' +
-      '* -------------------------------------------------------------------------------------------- \n'
+      'HELP MESSAGE:\n' +
+        'Make sure to create the export config file: service-objects.json to run this command.\n' +
+        'Example command: frodo config-manager export service-objects -f service-objects.json -D ../testDir frodo-dev\n\n' +
+        `Config file example:\n` +
+        '------------  Example service object export config for service-objects.json file -----------\n' +
+        '{\n' +
+        ' "alpha_user": [\n' +
+        '   {\n' +
+        '     "searchField": "userName",\n' +
+        '     "searchValue": "kirk",\n' +
+        '     "fields": ["userName", "givenName", "sn", "mail", "authzRoles"],\n' +
+        '     "overrides": {\n' +
+        '       "password": "${SERVICE_ACCOUNT_JOURNEY_PASSWORD}"\n' +
+        '     }\n' +
+        '   },\n' +
+        '   {\n' +
+        '     "searchField": "sn",\n' +
+        '     "searchValue": "SeanTest",\n' +
+        '     "fields": ["userName", "givenName", "sn", "mail", "authzRoles"],\n' +
+        '     "overrides": {\n' +
+        '       "userName": "seantest",\n' +
+        '       "givenName": "sean",\n' +
+        '         "password": "${SERVICE_ACCOUNT_JOURNEY_PASSWORD}"\n' +
+        '     }\n' +
+        '   }\n' +
+        ' ],\n' +
+        ' "alpha_role": [\n' +
+        '  {\n' +
+        '    "searchField": "name",\n' +
+        '    "searchValue": "TestRole",\n' +
+        '    "fields": ["name", "description"],\n' +
+        '    "overrides": {}\n' +
+        '  }\n' +
+        ' ],\n' +
+        ' "bravo_user": [\n' +
+        '  {\n' +
+        '    "searchField": "userName",\n' +
+        '    "searchValue": "bravo_test_user",\n' +
+        '    "fields": ["userName", "givenName", "sn", "mail", "authzRoles"],\n' +
+        '    "overrides": {\n' +
+        '    }\n' +
+        '  }\n' +
+        ' ]\n' +
+        '}\n' +
+        '* -------------------------------------------------------------------------------------------- \n'
     )
-
 
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
@@ -90,9 +89,7 @@ export default function setup() {
           options.file
         );
         if (!outcome) process.exitCode = 1;
-      }
-
-      else {
+      } else {
         printMessage(
           'Unrecognized combination of options or no options...',
           'error'

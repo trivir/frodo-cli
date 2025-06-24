@@ -62,26 +62,25 @@ export default function setup() {
     )
     .addHelpText(
       'after',
-      'HELP MESSAGE:\n'+
-
-      'Make sure to create the export config file: authz-policies.json to run this command.\n'+ 
-      'Example command: frodo config-manager export authz-policies -f authz-policies.json -D ../testDir frodo-dev\n\n'+
-      `Config file example:\n` +
-      '-----------------------  Example authz policies export config for authz-policies.json file ------------------------\n' +
-      '{\n' +
-      ' "alpha": [ \n' +
-      '   "oauth2Scopes", \n' +
-      '   "EdgePolicySet",\n' +
-      '   "FeatureStorePolicySet",\n' +
-      '   "data",\n' +
-      '   "test-policy-set"\n' +
-      ' ],\n' +
-      ' "bravo": [\n' +
-      '   "oauth2Scopes",\n' +
-      '   "murphyTestPolicySet"\n' +
-      '   ]\n' +
-      '}\n' +
-      '* -------------------------------------------------------------------------------------------- \n'
+      'HELP MESSAGE:\n' +
+        'Make sure to create the export config file: authz-policies.json to run this command.\n' +
+        'Example command: frodo config-manager export authz-policies -f authz-policies.json -D ../testDir frodo-dev\n\n' +
+        `Config file example:\n` +
+        '-----------------------  Example authz policies export config for authz-policies.json file ------------------------\n' +
+        '{\n' +
+        ' "alpha": [ \n' +
+        '   "oauth2Scopes", \n' +
+        '   "EdgePolicySet",\n' +
+        '   "FeatureStorePolicySet",\n' +
+        '   "data",\n' +
+        '   "test-policy-set"\n' +
+        ' ],\n' +
+        ' "bravo": [\n' +
+        '   "oauth2Scopes",\n' +
+        '   "murphyTestPolicySet"\n' +
+        '   ]\n' +
+        '}\n' +
+        '* -------------------------------------------------------------------------------------------- \n'
     )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(

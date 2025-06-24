@@ -4,11 +4,11 @@ import { Option } from 'commander';
 import {
   configManagerExportAgent,
   configManagerExportAgentsAll,
-  configManagerExportConfigAgents,
   configManagerExportAgentsRealm,
+  configManagerExportConfigAgents,
 } from '../../configManagerOps/FrConfigOauth2AgentOps';
 import { getTokens } from '../../ops/AuthenticateOps';
-import { printError, printMessage } from '../../utils/Console';
+import {  printMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
 const deploymentTypes = ['cloud'];
@@ -76,40 +76,39 @@ export default function setup() {
     )
     .addHelpText(
       'after',
-      'HELP MESSAGE:\n'+
-      'Make sure to create the export config file: oauth2-agents.json to run this command.\n'+ 
-      'Example command: frodo config-manager export oauth2-agents -f oauth2-agents.json -D ../testDir frodo-dev\n\n'+
-      
-      `Config file example:\n` +
-      '------------  Example Oauth2 agents export config for oauth2-agents.json file -----------\n' +
-      '{\n' +
-      ' "alpha": {\n' +
-      '   "2.2_Agent": [\n' +
-      '     {"id": "my-policy-agent"}\n' +
-      '    ],\n' +
-      '   "RemoteConsentAgent": [\n' +
-      '     {"id": "test", "overrides":{"testestest": "hotdog"}}\n' +
-      '   ],\n' +
-      '   "SoftwarePublisher": [\n' +
-      '     {"id": "test software publisher"}\n' +
-      '   ],\n' +
-      '    "IdentityGatewayAgent": [\n' +
-      '     {"id": "cdsso-ig-agent"},\n' +
-      '     {"id": "frodo-test-ig-agent"},\n' +
-      '     {"id": "frodo-test-ig-agent2"},\n' +
-      '     {"id": "ig-agent", "overrides": {"yes": "no, not yes", "taco":"sandwich"}}\n' +
-      '   ],\n' +
-      '   "J2EEAgent": [\n' +
-      '     {"id": "frodo-test-java-agent"},\n' +
-      '     {"id": "frodo-test-java-agent2"}\n' +
-      '   ],\n' +
-      '   "WebAgent": [\n' +
-      '     {"id": "frodo-test-web-agent"},\n' +
-      '      {"id": "frodo-test-web-agent2"}\n' +
-      '   ]\n' +
-      ' }\n' +
-      '}\n' +
-      '* -------------------------------------------------------------------------------------------- \n'
+      'HELP MESSAGE:\n' +
+        'Make sure to create the export config file: oauth2-agents.json to run this command.\n' +
+        'Example command: frodo config-manager export oauth2-agents -f oauth2-agents.json -D ../testDir frodo-dev\n\n' +
+        `Config file example:\n` +
+        '------------  Example Oauth2 agents export config for oauth2-agents.json file -----------\n' +
+        '{\n' +
+        ' "alpha": {\n' +
+        '   "2.2_Agent": [\n' +
+        '     {"id": "my-policy-agent"}\n' +
+        '    ],\n' +
+        '   "RemoteConsentAgent": [\n' +
+        '     {"id": "test", "overrides":{"testestest": "hotdog"}}\n' +
+        '   ],\n' +
+        '   "SoftwarePublisher": [\n' +
+        '     {"id": "test software publisher"}\n' +
+        '   ],\n' +
+        '    "IdentityGatewayAgent": [\n' +
+        '     {"id": "cdsso-ig-agent"},\n' +
+        '     {"id": "frodo-test-ig-agent"},\n' +
+        '     {"id": "frodo-test-ig-agent2"},\n' +
+        '     {"id": "ig-agent", "overrides": {"yes": "no, not yes", "taco":"sandwich"}}\n' +
+        '   ],\n' +
+        '   "J2EEAgent": [\n' +
+        '     {"id": "frodo-test-java-agent"},\n' +
+        '     {"id": "frodo-test-java-agent2"}\n' +
+        '   ],\n' +
+        '   "WebAgent": [\n' +
+        '     {"id": "frodo-test-web-agent"},\n' +
+        '      {"id": "frodo-test-web-agent2"}\n' +
+        '   ]\n' +
+        ' }\n' +
+        '}\n' +
+        '* -------------------------------------------------------------------------------------------- \n'
     )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
@@ -136,7 +135,10 @@ export default function setup() {
           );
 
           // try and find the agent in current realm
-          outcome = await configManagerExportAgent(options.agentName, options.file);
+          outcome = await configManagerExportAgent(
+            options.agentName,
+            options.file
+          );
 
           // check other realms for the agent
           if (!outcome && !options.file) {
@@ -154,7 +156,10 @@ export default function setup() {
                 printMessage(
                   `Looking for the agent "${options.agentName}" in the ${state.getRealm()} realm now.`
                 );
-                outcome = await configManagerExportAgent(options.agentName, null);
+                outcome = await configManagerExportAgent(
+                  options.agentName,
+                  null
+                );
               }
             }
             if (!outcome) {

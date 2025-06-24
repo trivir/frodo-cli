@@ -3,13 +3,13 @@ import { SecretSkeleton } from '@rockcarver/frodo-lib/types/api/cloud/SecretsApi
 import { VariableSkeleton } from '@rockcarver/frodo-lib/types/api/cloud/VariablesApi';
 import { ScriptSkeleton } from '@rockcarver/frodo-lib/types/api/ScriptApi';
 import { SecretsExportInterface } from '@rockcarver/frodo-lib/types/ops/cloud/SecretsOps';
-import { MappingExportOptions,  } from '@rockcarver/frodo-lib/types/ops/MappingOps';
 import { ScriptExportOptions } from '@rockcarver/frodo-lib/types/ops/ScriptOps';
 import fs from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
 import { getIdmImportExportOptions } from '../ops/IdmOps';
+import { extractFrConfigDataToFile } from '../utils/Config';
 import {
   createProgressIndicator,
   debugMessage,
@@ -18,50 +18,45 @@ import {
   stopProgressIndicator,
   updateProgressIndicator,
 } from '../utils/Console';
-import { extractScriptsToFiles } from '../ops/ScriptOps';
-import { extractFrConfigDataToFile } from '../utils/Config';
 
-const { exportConfigEntity,readConfigEntity } = frodo.idm.config;
-const { exportMappings } = frodo.idm.mapping;
+const { exportConfigEntity, readConfigEntity } = frodo.idm.config;
 const { exportScripts } = frodo.script;
 const { getFilePath, getTypedFilename, saveJsonToFile, getCurrentRealmName } =
   frodo.utils;
 const { readVariables } = frodo.cloud.variable;
 const { readSecrets, exportSecret } = frodo.cloud.secret;
 const { readThemes } = frodo.theme;
-const {readSyncMappings} = frodo.idm.mapping
 const { getFullServices, createServiceExportTemplate } = frodo.service;
 
 function processMappings(mapping, targetDir, name) {
   try {
-      if (name && name !== mapping.name) {
-        return;
+    if (name && name !== mapping.name) {
+      return;
+    }
+    const mappingPath = `${targetDir}`;
+
+    Object.entries(mapping).forEach(([key, value]: [string, any]) => {
+      if (
+        typeof value === 'object' &&
+        value !== null &&
+        'type' in value &&
+        'source' in value &&
+        value.type === 'text/javascript'
+      ) {
+        const scriptText = Array.isArray(value.source)
+          ? value.source.join('\n')
+          : value.source;
+
+        const scriptFilename = `${mapping.name}.${key}.js`;
+        (value as any).file = scriptFilename; // Replace source code with file reference
+        extractFrConfigDataToFile(scriptText, scriptFilename, targetDir);
+
+        delete value.source;
       }
-      const mappingPath = `${targetDir}`;
-      
-      Object.entries(mapping).forEach(([key, value] : [string,any]) => {
-        if (
-          typeof value === 'object' &&
-          value !== null &&
-          'type' in value &&
-          'source' in value &&
-          value.type === 'text/javascript'
-        ) {
-          const scriptText = Array.isArray(value.source)
-                ? value.source.join('\n')
-                : value.source;
+    });
 
-          const scriptFilename = `${mapping.name}.${key}.js`;
-          (value as any).file = scriptFilename; // Replace source code with file reference
-          extractFrConfigDataToFile(scriptText,scriptFilename,targetDir )
-          
-          delete value.source;
-        }
-      });
-
-      const fileName = `${mappingPath}/${mapping.name}.json`;
-      saveJsonToFile(mapping, getFilePath(fileName, true), false, false );
-    
+    const fileName = `${mappingPath}/${mapping.name}.json`;
+    saveJsonToFile(mapping, getFilePath(fileName, true), false, false);
   } catch (err) {
     printError(err);
   }
@@ -72,18 +67,14 @@ function processMappings(mapping, targetDir, name) {
  * @param {MappingExportOptions} options export options
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
-export async function configManagerExportMappings(
-  
-): Promise<boolean> {
+export async function configManagerExportMappings(): Promise<boolean> {
   try {
     const exportData = await readConfigEntity('sync');
     const fileDir = `sync/mappings`;
-          saveJsonToFile(exportData, 'syncMappings.json',false, false)
+    saveJsonToFile(exportData, 'syncMappings.json', false, false);
 
     for (const mapping of Object.values(exportData.mappings)) {
-      console.log(mapping.name)
       processMappings(mapping, `${fileDir}/${mapping.name}`, mapping.name);
-
     }
     return true;
   } catch (error) {
@@ -91,18 +82,6 @@ export async function configManagerExportMappings(
   }
   return false;
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 function saveScriptToFile(script: ScriptSkeleton, exportDir: string) {
   const scriptContentRelativePath = `scripts-content/${script.context}`;

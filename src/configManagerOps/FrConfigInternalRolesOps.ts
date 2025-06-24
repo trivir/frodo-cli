@@ -1,6 +1,6 @@
 import { frodo } from '@rockcarver/frodo-lib';
 
-import { printError, printMessage } from '../utils/Console';
+import { printError } from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { readInternalRoles } = frodo.role;
@@ -19,7 +19,7 @@ export async function configManagerExportInternalRoles(
       }
       if (role.privileges && role.privileges.length > 0) {
         const fileName = `internal-roles/${role.name}.json`;
-        saveJsonToFile(role, getFilePath(fileName, true), false, false);
+        saveJsonToFile(role, getFilePath(fileName, true), false, true);
       }
     }
     return true;

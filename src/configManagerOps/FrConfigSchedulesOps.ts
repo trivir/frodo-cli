@@ -60,7 +60,7 @@ function processSchedules(schedules, fileDir, name?) {
         schedule,
         getFilePath(scheduleFilename, true),
         false,
-        false
+        true
       );
     });
   } catch (err) {

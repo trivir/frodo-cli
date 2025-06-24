@@ -47,7 +47,7 @@
  */
 
 /*
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export audit -D testDir1
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export all -F test/e2e/fr-config-manager-pull-config -D allDir1
 
 */
 
@@ -61,9 +61,9 @@ process.env['FRODO_CONNECTION_PROFILES_PATH'] =
 const env = getEnv(c);
 
 describe('frodo config-manager exports', () => {
-   test('"frodo config-manager export audit -D testDir1": should export the audit in fr-config-manager style"', async () => {
-     const dirName = 'testDir1';
-     const CMD = `frodo config-manager export audit -D ${dirName}`;
+   test('"frodo config-manager export all -D allDir1": should export all config in fr-config-manager style"', async () => {
+     const dirName = 'allDir1';
+     const CMD = `frodo config-manager export all -F test/e2e/fr-config-manager-pull-config -D ${dirName}`;
      await testExport(CMD, env, undefined, undefined, dirName, false);
    });
  

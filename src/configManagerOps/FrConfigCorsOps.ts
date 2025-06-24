@@ -33,7 +33,7 @@ export async function configManagerExportCors(): Promise<boolean> {
       newCorsObject,
       getFilePath('cors/cors-config.json', true),
       false,
-      false
+      true
     );
     return true;
   } catch (error) {

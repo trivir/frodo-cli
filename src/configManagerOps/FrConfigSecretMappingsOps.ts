@@ -51,7 +51,7 @@ async function processSecretMappings(mappings, targetDir, name) {
         continue;
       }
       const fileName = `${targetDir}/${mapping._id}.json`;
-      saveJsonToFile(mapping, getFilePath(fileName, true), false, false);
+      saveJsonToFile(mapping, getFilePath(fileName, true), false, true);
     }
   } catch (err) {
     console.error(err);

@@ -16,7 +16,7 @@ export async function configManagerExportSaml(file): Promise<boolean> {
   try {
     const objects = JSON.parse(fs.readFileSync(file, 'utf8'));
     for (const realm of Object.keys(objects)) {
-      state.setRealm(realm)
+      state.setRealm(realm);
       for (const samlProvider of objects[realm].samlProviders) {
         const result = await exportSaml2Provider(samlProvider.entityId, {
           deps: false,
@@ -73,7 +73,7 @@ export async function configManagerExportSaml(file): Promise<boolean> {
           saveObject,
           getFilePath(`${fileDirectory}/${fileName}.json`, true),
           false,
-          false
+          true
         );
       }
       for (const cot of objects[realm].circlesOfTrust) {
@@ -84,7 +84,7 @@ export async function configManagerExportSaml(file): Promise<boolean> {
           cotResult.saml.cot[cot],
           getFilePath(`${fileDirectory}/${cot}.json`, true),
           false,
-          false
+          true
         );
       }
     }

@@ -56,7 +56,7 @@ async function processEmailTemplate(template, fileDir) {
       };
     }
     const fileName = `${templatePath}/${templateName}.json`;
-    saveJsonToFile(template, getFilePath(fileName, true), false, false);
+    saveJsonToFile(template, getFilePath(fileName, true), false, true);
   } catch (err) {
     printError(err);
   }

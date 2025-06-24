@@ -32,7 +32,7 @@ function processLocales(locales, fileDir, name?) {
       }
       const localeFilename = `${fileDir}/${localeName}.json`;
 
-      saveJsonToFile(locale, getFilePath(localeFilename, true), false, false);
+      saveJsonToFile(locale, getFilePath(localeFilename, true), false, true);
     });
   } catch (err) {
     printError(err);

@@ -1,7 +1,8 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 
 import { printError } from '../utils/Console';
-import {realmList} from './FrConfigOps'
+import { realmList } from './FrConfigOps';
+
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { getFullServices } = frodo.service;
 
@@ -46,7 +47,7 @@ async function processServices(services, realm, name) {
             true
           ),
           false,
-          false
+          true
         );
       }
     }
@@ -56,7 +57,7 @@ async function processServices(services, realm, name) {
       service,
       getFilePath(`${fileDir}/${service._type._id}.json`, true),
       false,
-      false
+      true
     );
   }
 }

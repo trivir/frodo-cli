@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo config-manager export oauth2-agents "frodo config-manager export oauth2-agents --directory configManagerExportOauth2AgentsDir5 -f test/e2e/fr-config-manager-pull-config/oauth2-agents.json": should export all the agents defined in the config file. 1`] = `""`;
+exports[`frodo config-manager export oauth2-agents "frodo config-manager export oauth2-agents --directory configManagerExportOauth2AgentsDir5 -f test/e2e/fr-config-manager-pull-config/oauth2-agents.json": should export all the agents defined in the config file. 1`] = `0`;
+
+exports[`frodo config-manager export oauth2-agents "frodo config-manager export oauth2-agents --directory configManagerExportOauth2AgentsDir5 -f test/e2e/fr-config-manager-pull-config/oauth2-agents.json": should export all the agents defined in the config file. 2`] = `""`;
 
 exports[`frodo config-manager export oauth2-agents "frodo config-manager export oauth2-agents --directory configManagerExportOauth2AgentsDir5 -f test/e2e/fr-config-manager-pull-config/oauth2-agents.json": should export all the agents defined in the config file.: configManagerExportOauth2AgentsDir5/realms/alpha/realm-config/agents/2.2_Agent/my-policy-agent.json 1`] = `
 {
@@ -2609,7 +2611,9 @@ exports[`frodo config-manager export oauth2-agents "frodo config-manager export 
 }
 `;
 
-exports[`frodo config-manager export oauth2-agents "frodo config-manager export oauth2-agents -D configManagerExportOauth2AgentsDir0": should export all agents from all realms in fr-config manager style. 1`] = `""`;
+exports[`frodo config-manager export oauth2-agents "frodo config-manager export oauth2-agents -D configManagerExportOauth2AgentsDir0": should export all agents from all realms in fr-config manager style. 1`] = `0`;
+
+exports[`frodo config-manager export oauth2-agents "frodo config-manager export oauth2-agents -D configManagerExportOauth2AgentsDir0": should export all agents from all realms in fr-config manager style. 2`] = `""`;
 
 exports[`frodo config-manager export oauth2-agents "frodo config-manager export oauth2-agents -D configManagerExportOauth2AgentsDir0": should export all agents from all realms in fr-config manager style.: configManagerExportOauth2AgentsDir0/realms/alpha/realm-config/agents/2.2_Agent/my-policy-agent.json 1`] = `
 {
@@ -5218,7 +5222,9 @@ exports[`frodo config-manager export oauth2-agents "frodo config-manager export 
 }
 `;
 
-exports[`frodo config-manager export oauth2-agents "frodo config-manager export oauth2-agents -D configManagerExportOauth2AgentsDir1 -r alpha": should export all agents in the alpha realm in fr-config manager style. 1`] = `""`;
+exports[`frodo config-manager export oauth2-agents "frodo config-manager export oauth2-agents -D configManagerExportOauth2AgentsDir1 -r alpha": should export all agents in the alpha realm in fr-config manager style. 1`] = `0`;
+
+exports[`frodo config-manager export oauth2-agents "frodo config-manager export oauth2-agents -D configManagerExportOauth2AgentsDir1 -r alpha": should export all agents in the alpha realm in fr-config manager style. 2`] = `""`;
 
 exports[`frodo config-manager export oauth2-agents "frodo config-manager export oauth2-agents -D configManagerExportOauth2AgentsDir1 -r alpha": should export all agents in the alpha realm in fr-config manager style.: configManagerExportOauth2AgentsDir1/realms/alpha/realm-config/agents/2.2_Agent/my-policy-agent.json 1`] = `
 {
@@ -7827,7 +7833,9 @@ exports[`frodo config-manager export oauth2-agents "frodo config-manager export 
 }
 `;
 
-exports[`frodo config-manager export oauth2-agents "frodo config-manager export oauth2-agents -D configManagerExportOauth2AgentsDir3 -n frodo-test-java-agent -r alpha": should export only the agent with the id: "frodo-test-java-agent". 1`] = `""`;
+exports[`frodo config-manager export oauth2-agents "frodo config-manager export oauth2-agents -D configManagerExportOauth2AgentsDir3 -n frodo-test-java-agent -r alpha": should export only the agent with the id: "frodo-test-java-agent". 1`] = `0`;
+
+exports[`frodo config-manager export oauth2-agents "frodo config-manager export oauth2-agents -D configManagerExportOauth2AgentsDir3 -n frodo-test-java-agent -r alpha": should export only the agent with the id: "frodo-test-java-agent". 2`] = `""`;
 
 exports[`frodo config-manager export oauth2-agents "frodo config-manager export oauth2-agents -D configManagerExportOauth2AgentsDir3 -n frodo-test-java-agent -r alpha": should export only the agent with the id: "frodo-test-java-agent".: configManagerExportOauth2AgentsDir3/realms/alpha/realm-config/agents/J2EEAgent/frodo-test-java-agent.json 1`] = `
 {

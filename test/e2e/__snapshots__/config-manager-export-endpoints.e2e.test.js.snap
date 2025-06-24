@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo config-manager exports "frodo config-manager export endpoints -D testDir7": should export the endpoints in fr-config-manager style" 1`] = `""`;
+exports[`frodo config-manager exports "frodo config-manager export endpoints -D testDir7": should export the endpoints in fr-config-manager style" 1`] = `0`;
+
+exports[`frodo config-manager exports "frodo config-manager export endpoints -D testDir7": should export the endpoints in fr-config-manager style" 2`] = `""`;
 
 exports[`frodo config-manager exports "frodo config-manager export endpoints -D testDir7": should export the endpoints in fr-config-manager style": testDir7/endpoints/Test/Test.js 1`] = `
 "  (function () {
@@ -64,7 +66,9 @@ exports[`frodo config-manager exports "frodo config-manager export endpoints -D 
 }
 `;
 
-exports[`frodo config-manager exports "frodo config-manager export endpoints -n testEndpoint2 -D testDir8": should export the endpoint with name testEndpoint2 in fr-config-manager style" 1`] = `""`;
+exports[`frodo config-manager exports "frodo config-manager export endpoints -n testEndpoint2 -D testDir8": should export the endpoint with name testEndpoint2 in fr-config-manager style" 1`] = `0`;
+
+exports[`frodo config-manager exports "frodo config-manager export endpoints -n testEndpoint2 -D testDir8": should export the endpoint with name testEndpoint2 in fr-config-manager style" 2`] = `""`;
 
 exports[`frodo config-manager exports "frodo config-manager export endpoints -n testEndpoint2 -D testDir8": should export the endpoint with name testEndpoint2 in fr-config-manager style": testDir8/endpoints/testEndpoint2/testEndpoint2.js 1`] = `
 "  (function () {

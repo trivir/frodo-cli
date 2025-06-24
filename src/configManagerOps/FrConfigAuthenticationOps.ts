@@ -1,6 +1,7 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
-import {realmList} from './FrConfigOps'
+
 import { printError } from '../utils/Console';
+import { realmList } from './FrConfigOps';
 
 const { readAuthenticationSettings: _readAuthenticationSettings } =
   frodo.authn.settings;
@@ -18,12 +19,7 @@ export async function configManagerExportAuthentication(
     if (realm && realm !== '__default__realm__') {
       const exportData = await _readAuthenticationSettings(false);
       const fileName = `realms/${state.getRealm()}/realm-config/authentication.json`;
-      saveJsonToFile(
-        exportData,
-        getFilePath(`${fileName}`, true),
-        false,
-        false
-      );
+      saveJsonToFile(exportData, getFilePath(`${fileName}`, true), false, true);
     } else {
       for (const realmName of await realmList()) {
         state.setRealm(realmName);
@@ -33,7 +29,7 @@ export async function configManagerExportAuthentication(
           exportData,
           getFilePath(`${fileName}`, true),
           false,
-          false
+          true
         );
       }
     }

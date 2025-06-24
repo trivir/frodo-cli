@@ -6,7 +6,6 @@ import { realmList, safeFileName } from './FrConfigOps';
 
 const { getFilePath, saveJsonToFile, decodeBase64, saveTextToFile } =
   frodo.utils;
-const { readRealms } = frodo.realm;
 const { readScripts, readScriptByName } = frodo.script;
 
 type ByName = { scriptName: string };
@@ -47,7 +46,7 @@ export async function configManagerExportScript(
     );
     const fileExtension: string =
       s.language === 'JAVASCRIPT' ? '.js' : '.groovy';
-    const scriptName = safeFileName(s.name)
+    const scriptName = safeFileName(s.name);
     const relScriptPath: string = `scripts-content/${s.context}/${scriptName}${fileExtension}`;
 
     if (!justContent) {
@@ -67,7 +66,7 @@ export async function configManagerExportScript(
       );
     }
 
-    if (justConfig) {
+    if (justConfig && !justContent) {
       // dont create script file
       return true;
     }
@@ -163,7 +162,9 @@ export async function configManagerExportScriptsRealms(
     // if there are no scripts, return
     if (allScripts.length !== 0) {
       for (const s of allScripts) {
-        if (!(await configManagerExportScript({ ss: s }, justContent, justConfig))) {
+        if (
+          !(await configManagerExportScript({ ss: s }, justContent, justConfig))
+        ) {
           return false;
         }
       }

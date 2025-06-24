@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo config-manager export themes -D themeTestDir "frodo config-manager export test": should receive access tokens" 1`] = `""`;
+exports[`frodo config-manager export themes -D themeTestDir "frodo config-manager export test": should receive access tokens" 1`] = `0`;
+
+exports[`frodo config-manager export themes -D themeTestDir "frodo config-manager export test": should receive access tokens" 2`] = `""`;
 
 exports[`frodo config-manager export themes -D themeTestDir "frodo config-manager export test": should receive access tokens": themeTestDir/realms/alpha/themes/Contrast/Contrast.json 1`] = `
 {
@@ -1210,28 +1212,5 @@ exports[`frodo config-manager export themes -D themeTestDir "frodo config-manage
   "profileMenuTextHighlightColor": "#009C80",
   "secondaryColor": "#69788b",
   "textColor": "#ffffff",
-}
-`;
-
-exports[`frodo config-manager export themes -D themeTestDir "frodo config-manager export test": should receive access tokens": themeTestDir/terms-conditions/terms-conditions.json 1`] = `
-{
-  "_id": "selfservice.terms",
-  "active": "0.0",
-  "uiConfig": {
-    "buttonText": "Accept",
-    "displayName": "We've updated our terms",
-    "purpose": "You must accept the updated terms in order to proceed.",
-  },
-  "versions": [
-    {
-      "createDate": "2019-10-28T04:20:11.320Z",
-      "termsTranslations": {
-        "en": {
-          "file": "0.0/en.html",
-        },
-      },
-      "version": "0.0",
-    },
-  ],
 }
 `;

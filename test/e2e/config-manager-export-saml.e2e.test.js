@@ -48,7 +48,6 @@
 
 /*
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export saml -f test/e2e/fr-config-manager-pull-config/saml.json -D testDir22
-
 */
 
 
@@ -61,9 +60,9 @@ process.env['FRODO_CONNECTION_PROFILES_PATH'] =
 const env = getEnv(c);
 
 describe('frodo config-manager exports', () => {
-  test('"frodo config-manager export saml -f test/fr-config-manager-pull-config/saml-config.json -D testDir22": should export the saml based on salm-config.json file in fr-config-manager style"', async () => {
+  test('"frodo config-manager export saml -f test/e2e/fr-config-manager-pull-config/saml.json -D testDir22": should export the saml based on salm-config.json file in fr-config-manager style"', async () => {
       const dirName = 'testDir22';
-      const CMD = `frodo config-manager export saml -f test/e2e/fr-config-manager-pull-config/saml-config.json -D ${dirName}`;
+      const CMD = `frodo config-manager export saml -f test/e2e/fr-config-manager-pull-config/saml.json -D ${dirName}`;
       await testExport(CMD, env, undefined, undefined, dirName, false);
     });
 });

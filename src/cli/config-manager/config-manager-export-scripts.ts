@@ -2,9 +2,9 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import {
+  configManagerExportScript,
   configManagerExportScriptsAll,
   configManagerExportScriptsRealms,
-  configManagerExportScript,
 } from '../../configManagerOps/FrConfigScriptOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage } from '../../utils/Console';
@@ -57,29 +57,28 @@ export default function setup() {
       new Option(
         /**Availble script types
          *
-         * Saml2 SP Adapter
-         * OAuth2 Access Token Modification
+         * AUTHENTICATION_TREE_DECISION_NODE
+         * SAML2_SP_ADAPTER
+         * OAUTH2_ACCESS_TOKEN_MODIFICATION
          * Scripted Decision Node
-         * Client-side Authentication
-         * Device Match Node
-         * Decision node script for authentication trees
-         * OAuth2 Trusted JWT Issuer
-         * Server-side Authentication
-         * Social Identity Provider Profile Transformation
-         * Config Provider
-         * OAuth2 Validate Scope
-         * Library
-         * OAuth2 Authorize Endpoint Data Provider
-         * OAuth2 Evaluate Scope
-         * Policy Condition
-         * OIDC Claims
-         * Saml2 IDP Adapter
+         * AUTHENTICATION_CLIENT_SIDE
+         * DEVICE_MATCH_NODE
+         * OAUTH2_SCRIPTED_JWT_ISSUER
+         * AUTHENTICATION_SERVER_SIDE
+         * SOCIAL_IDP_PROFILE_TRANSFORMATION
+         * CONFIG_PROVIDER_NODE
+         * OAUTH2_VALIDATE_SCOPE
+         * LIBRARY
+         * OAUTH2_AUTHORIZE_ENDPOINT_DATA_PROVIDER
+         * OAUTH2_EVALUATE_SCOPE
+         * POLICY_CONDITION
+         * OIDC_CLAIMS
+         * SAML2_IDP_ADAPTER
          * PingOne Verify Completion Decision Node
-         * Policy Condition (Next-Gen)
-         * Saml2 NameID Mapper
-         * Saml2 IDP Attribute Mapper
-         * Config Provider Node (Next-Gen)
-         * OAuth2 May Act
+         * SAML2_NAMEID_MAPPER
+         * SAML2_IDP_ATTRIBUTE_MAPPER
+         * CONFIG_PROVIDER_NODE
+         * OAUTH2_MAY_ACT
          */
         '--script-type <script type>',
         'Export all scripts of a certain type. Ignored with -n.'

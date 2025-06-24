@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo config-manager exports "frodo config-manager export authz-policies --directory configManagerExportAuthzPoliciesDir4 -r bravo": should export policies, policy-sets, and resource-types from the bravo realm in fr-config manager style. 1`] = `""`;
+exports[`frodo config-manager exports "frodo config-manager export authz-policies --directory configManagerExportAuthzPoliciesDir4 -r bravo": should export policies, policy-sets, and resource-types from the bravo realm in fr-config manager style. 1`] = `0`;
+
+exports[`frodo config-manager exports "frodo config-manager export authz-policies --directory configManagerExportAuthzPoliciesDir4 -r bravo": should export policies, policy-sets, and resource-types from the bravo realm in fr-config manager style. 2`] = `""`;
 
 exports[`frodo config-manager exports "frodo config-manager export authz-policies --directory configManagerExportAuthzPoliciesDir4 -r bravo": should export policies, policy-sets, and resource-types from the bravo realm in fr-config manager style.: configManagerExportAuthzPoliciesDir4/realms/bravo/authorization/policy-sets/murphyTestPolicySet/murphyTestPolicySet.json 1`] = `
 {
@@ -259,7 +261,9 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 }
 `;
 
-exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style. 1`] = `""`;
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style. 1`] = `0`;
+
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style. 2`] = `""`;
 
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.: configManagerExportAuthzPoliciesDir2/realms/alpha/authorization/policy-sets/EdgePolicySet/EdgePolicySet.json 1`] = `
 {
@@ -1017,7 +1021,9 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 }
 `;
 
-exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir3 -r alpha": should export policies, policy-sets, and resource-types from the alpha realm in fr-config manager style. 1`] = `""`;
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir3 -r alpha": should export policies, policy-sets, and resource-types from the alpha realm in fr-config manager style. 1`] = `0`;
+
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir3 -r alpha": should export policies, policy-sets, and resource-types from the alpha realm in fr-config manager style. 2`] = `""`;
 
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir3 -r alpha": should export policies, policy-sets, and resource-types from the alpha realm in fr-config manager style.: configManagerExportAuthzPoliciesDir3/realms/alpha/authorization/policy-sets/EdgePolicySet/EdgePolicySet.json 1`] = `
 {
@@ -1518,7 +1524,9 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 }
 `;
 
-exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet". 1`] = `""`;
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet". 1`] = `0`;
+
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet". 2`] = `""`;
 
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir5 -p murphyTestPolicySet -r bravo": should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir5/realms/bravo/authorization/policy-sets/murphyTestPolicySet/murphyTestPolicySet.json 1`] = `
 {
@@ -1723,7 +1731,9 @@ exports[`frodo config-manager exports "frodo config-manager export authz-policie
 }
 `;
 
-exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir6-f test/e2e/fr-config-manager-pull-config/authz-policies.json" : should export only the policy set with the id: "murphyTestPolicySet". 1`] = `""`;
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir6-f test/e2e/fr-config-manager-pull-config/authz-policies.json" : should export only the policy set with the id: "murphyTestPolicySet". 1`] = `0`;
+
+exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir6-f test/e2e/fr-config-manager-pull-config/authz-policies.json" : should export only the policy set with the id: "murphyTestPolicySet". 2`] = `""`;
 
 exports[`frodo config-manager exports "frodo config-manager export authz-policies -D configManagerExportAuthzPoliciesDir6-f test/e2e/fr-config-manager-pull-config/authz-policies.json" : should export only the policy set with the id: "murphyTestPolicySet".: configManagerExportAuthzPoliciesDir6/realms/alpha/authorization/policy-sets/EdgePolicySet/EdgePolicySet.json 1`] = `
 {

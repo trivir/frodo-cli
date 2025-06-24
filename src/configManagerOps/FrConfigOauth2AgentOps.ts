@@ -103,7 +103,7 @@ export async function configManagerExportAgent(
         true
       ),
       false,
-      false
+      true
     );
 
     return true;
@@ -119,7 +119,9 @@ export async function configManagerExportAgent(
  * @param configFile The path to the file
  * @returns True if all specified agents were exported successfully
  */
-export async function configManagerExportConfigAgents(configFile: string): Promise<boolean> {
+export async function configManagerExportConfigAgents(
+  configFile: string
+): Promise<boolean> {
   try {
     verboseMessage(`Reading the config file "${configFile}"`);
     const configFileData = JSON.parse(
@@ -130,7 +132,9 @@ export async function configManagerExportConfigAgents(configFile: string): Promi
       const agents: idAndOverrids[] = getAgents(configFileData, realm);
       if (agents.length !== 0) {
         for (const agent of agents) {
-          if (!(await configManagerExportAgent(agent.id, null, agent.overrides))) {
+          if (
+            !(await configManagerExportAgent(agent.id, null, agent.overrides))
+          ) {
             return false;
           }
         }

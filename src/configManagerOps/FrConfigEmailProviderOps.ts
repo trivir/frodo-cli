@@ -19,7 +19,7 @@ export async function configManagerExportEmailProviderConfiguration(): Promise<b
       emailProvider,
       getFilePath('email-provider/external.email.json', true),
       false,
-      false
+      true
     );
     return true;
   } catch (error) {

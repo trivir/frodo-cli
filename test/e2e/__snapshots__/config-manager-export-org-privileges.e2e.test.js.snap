@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo config-manager export org-privileges "frodo config-manager export org-privileges -D configManagerExportOrgPrivilegesDir0": should export all the realms organizations privileges in fr-config manager style. 1`] = `""`;
+exports[`frodo config-manager export org-privileges "frodo config-manager export org-privileges -D configManagerExportOrgPrivilegesDir0": should export all the realms organizations privileges in fr-config manager style. 1`] = `0`;
+
+exports[`frodo config-manager export org-privileges "frodo config-manager export org-privileges -D configManagerExportOrgPrivilegesDir0": should export all the realms organizations privileges in fr-config manager style. 2`] = `""`;
 
 exports[`frodo config-manager export org-privileges "frodo config-manager export org-privileges -D configManagerExportOrgPrivilegesDir0": should export all the realms organizations privileges in fr-config manager style.: configManagerExportOrgPrivilegesDir0/org-privileges/alphaOrgPrivileges.json 1`] = `
 {

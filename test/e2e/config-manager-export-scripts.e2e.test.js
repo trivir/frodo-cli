@@ -50,7 +50,7 @@
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export scripts -D configManagerExportScriptsDir0
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export scripts -D configManagerExportScriptsDir1 -p OAuth2
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export scripts -D configManagerExportScriptsDir2 -r bravo
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export scripts -D configManagerExportScriptsDir3 -r bravo -n 'Bravo OIDC Claims Script'
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export scripts -D configManagerExportScriptsDir3 -n 'Bravo OIDC Claims Script' -r bravo 
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export scripts -D configManagerExportScriptsDir4 -r bravo -p OAuth2 --just-config --script-type OAUTH2_MAY_ACT --just-content --language GROOVY
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export scripts -D configManagerExportScriptsDir5 --language GROOVY
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager export scripts -D configManagerExportScriptsDir6 --just-content
@@ -111,86 +111,79 @@ describe('frodo config-manager export scripts', () => {
         const CMD = `frodo config-manager export scripts -D ${dirName} -r ${realm} -p ${prefix} --just-config --script-type ${scriptType} --just-content --language ${language}`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
     });
-    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir5 --language GROOVY" should export all groovy scripts`, async () => {
+    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir5 --language GROOVY": should export all groovy scripts`, async () => {
         const language = 'GROOVY';
         const dirName = 'configManagerExportScriptsDir5';
         const CMD = `frodo config-manager export scripts -D ${dirName} --language ${language}`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
 
     });
-    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir6 --language GROOVY" should export all groovy scripts`, async () => {
-        const language = 'GROOVY';
-        const dirName = 'configManagerExportScriptsDir6';
-        const CMD = `frodo config-manager export scripts -D ${dirName} --language ${language}`;
-        await testExport(CMD, env, undefined, undefined, dirName, false);
-
-    });
-    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir7 -r bravo -p SAML2 --just-config" should export all groovy scripts`, async () => {
+    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir7 -r bravo -p SAML2 --just-config": should export just-config with prefix SAML2 in bravo realm `, async () => {
         const dirName = 'configManagerExportScriptsDir7';
         const CMD = `frodo config-manager export scripts -D ${dirName} -r bravo -p SAML2 --just-config`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
 
     });
-    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir8 -r bravo --just-content" should export all groovy scripts`, async () => {
+    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir8 -r bravo --just-content": should export just content in bravo realm `, async () => {
         const dirName = 'configManagerExportScriptsDir8';
         const CMD = `frodo config-manager export scripts -D ${dirName} -r bravo --just-content`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
 
     });
-    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir9 -r bravo -p SAML2 --just-config --script-type SAML2_NAMEID_MAPPER" should export all groovy scripts`, async () => {
+    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir9 -r bravo -p SAML2 --just-config --script-type SAML2_NAMEID_MAPPER": should export scripts with prefix: SAML2, just-config, script-type: SAML2_NAMEID_MAPPER in bravo realm`, async () => {
         const dirName = 'configManagerExportScriptsDir9';
         const CMD = `frodo config-manager export scripts -D ${dirName} -r bravo -p SAML2 --just-config --script-type SAML2_NAMEID_MAPPER`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
 
     });
-    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir10 --just-config" should export all groovy scripts`, async () => {
+    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir10 --just-config": should export just-config`, async () => {
         const dirName = 'configManagerExportScriptsDir10';
         const CMD = `frodo config-manager export scripts -D ${dirName} --just-config`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
 
     });
-    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir11 -r bravo --just-config" should export all groovy scripts`, async () => {
+    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir11 -r bravo --just-config": should export all groovy scripts`, async () => {
         const dirName = 'configManagerExportScriptsDir11';
         const CMD = `frodo config-manager export scripts -D ${dirName} -r bravo --just-config`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
 
     });
-    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir12 -r bravo -p SAML2 --just-content" should export all groovy scripts`, async () => {
+    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir12 -r bravo -p SAML2 --just-content": should export all groovy scripts`, async () => {
         const dirName = 'configManagerExportScriptsDir12';
         const CMD = `frodo config-manager export scripts -D ${dirName} -r bravo -p SAML2 --just-content`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
 
     });
-    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir13 --just-config --just-content" should export all groovy scripts`, async () => {
+    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir13 --just-config --just-content": should export all just config and just content`, async () => {
         const dirName = 'configManagerExportScriptsDir13';
         const CMD = `frodo config-manager export scripts -D ${dirName} --just-config --just-content`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
     });
-    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir14 ---script-type LIBRARY" should export all groovy scripts`, async () => {
+    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir14 --script-type LIBRARY": should export all scripts-type library`, async () => {
         const dirName = 'configManagerExportScriptsDir14';
         const CMD = `frodo config-manager export scripts -D ${dirName} --script-type LIBRARY`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
 
     });
-    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir15 -r bravo --script-type LIBRARY" should export all groovy scripts`, async () => {
+    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir15 -r bravo --script-type LIBRARY": should export scripts-type LIBRARY in bravo realm only`, async () => {
         const dirName = 'configManagerExportScriptsDir15';
         const CMD = `frodo config-manager export scripts -D ${dirName} -r bravo --script-type LIBRARY`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
 
     });
-    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir16 -n 'Coin Flip'" should export all groovy scripts`, async () => {
+    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir16 -n 'Coin Flip'": should export script name: coin Flip`, async () => {
         const dirName = 'configManagerExportScriptsDir16';
         const CMD = `frodo config-manager export scripts -D ${dirName} -n 'Coin Flip'`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
 
     });
-    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir17 -r bravo -p SAML2 --script-type SAML2_NAMEID_MAPPER" should export all groovy scripts`, async () => {
+    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir17 -r bravo -p SAML2 --script-type SAML2_NAMEID_MAPPER": should export scripts with prefix SAML2 and script-type SAML2_NAMEID_MAPPER in bravo realm`, async () => {
         const dirName = 'configManagerExportScriptsDir17';
         const CMD = `frodo config-manager export scripts -D ${dirName} -r bravo -p SAML2 --script-type SAML2_NAMEID_MAPPER`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
 
     });
-    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir18 -r bravo -p SAML2" should export all groovy scripts`, async () => {
+    test(`"frodo config-manager export scripts -D configManagerExportScriptsDir18 -r bravo -p SAML2" should export scripts with prefix SAML2 from bravo realm `, async () => {
         const dirName = 'configManagerExportScriptsDir18';
         const CMD = `frodo config-manager export scripts -D ${dirName} -r bravo -p SAML2`;
         await testExport(CMD, env, undefined, undefined, dirName, false);

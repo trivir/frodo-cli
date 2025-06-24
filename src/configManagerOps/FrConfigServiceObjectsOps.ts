@@ -40,7 +40,7 @@ export async function configManagerExportServiceObjectsFromFile(
             true
           ),
           false,
-          false
+          true
         );
       }
     }
@@ -81,7 +81,7 @@ export async function configManagerExportServiceObject(
       result,
       getFilePath(`service-objects/${type}/${searchValue}.json`, true),
       false,
-      false
+      true
     );
     return true;
   } catch (err) {

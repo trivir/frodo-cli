@@ -22,7 +22,7 @@ export async function configManagerExportOrgPrivilegesRealm(
       realmPrivileges,
       getFilePath(`org-privileges/${realm}OrgPrivileges.json`, true),
       false,
-      false
+      true
     );
     return true;
   } catch (error) {

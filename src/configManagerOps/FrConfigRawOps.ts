@@ -1,8 +1,8 @@
 import { frodo } from '@rockcarver/frodo-lib';
+import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 import { readFile } from 'fs/promises';
 
 import { printError, verboseMessage } from '../utils/Console';
-import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 
 const { getFilePath, saveJsonToFile, json } = frodo.utils;
 const { exportRawIdm, exportRawAm, exportRawEnv } = frodo.raw;
@@ -12,53 +12,62 @@ const { exportRawIdm, exportRawAm, exportRawEnv } = frodo.raw;
  * @returns True if each file was successfully exported
  */
 export async function configManagerExportRaw(file: string): Promise<boolean> {
-    try {
-        const jsonData = JSON.parse(await readFile(file, { encoding: 'utf8' }));
+  try {
+    const jsonData = JSON.parse(await readFile(file, { encoding: 'utf8' }));
 
-        // Create export json file for every item in the provided json file
-        for (const config of jsonData) {
-            let response: IdObjectSkeletonInterface;
-        
-            // remove starting slash from path if it exists
-            if (config.path.startsWith('/')) {
-                config.path = config.path.substring(1);
-            }
+    // Create export json file for every item in the provided json file
+    for (const config of jsonData) {
+      let response: IdObjectSkeletonInterface;
 
-            // support for only three root paths, am, openidm, and environment
-            const urlParts: string[] = config.path.split('/');
-            const startPath: string = (urlParts.reverse().pop());
-            const noStart: string = urlParts.reverse().join('/');
-            switch (startPath) {
-                case 'openidm':
-                    response = await exportRawIdm(noStart);
-                    break;
-                case 'am':
-                    response = await exportRawAm(noStart);
-                    // fr-config-manager has this option, only for am end points
-                    if (config.pushApiVersion) {
-                        response._pushApiVersion = config.pushApiVersion;
-                    }
-                    break;
-                case 'environment':
-                    response = await exportRawEnv(noStart);
-                    break;
-                default:
-                    printError(new Error(`URL paths that start with ${startPath} are not supported`));
-                    break;
-            }
+      // remove starting slash from path if it exists
+      if (config.path.startsWith('/')) {
+        config.path = config.path.substring(1);
+      }
 
-            // all endpoints can have overrides
-            if (config.overrides) {
-                response = json.mergeDeep(response, config.overrides);
-            }
+      // support for only three root paths, am, openidm, and environment
+      const urlParts: string[] = config.path.split('/');
+      const startPath: string = urlParts.reverse().pop();
+      const noStart: string = urlParts.reverse().join('/');
+      switch (startPath) {
+        case 'openidm':
+          response = await exportRawIdm(noStart);
+          break;
+        case 'am':
+          response = await exportRawAm(noStart);
+          // fr-config-manager has this option, only for am end points
+          if (config.pushApiVersion) {
+            response._pushApiVersion = config.pushApiVersion;
+          }
+          break;
+        case 'environment':
+          response = await exportRawEnv(noStart);
+          break;
+        default:
+          printError(
+            new Error(
+              `URL paths that start with ${startPath} are not supported`
+            )
+          );
+          break;
+      }
 
-            verboseMessage(`Saving ${response._id} at ${config.path}.json.`);
-            saveJsonToFile(response, getFilePath(`raw/${config.path}.json`, true), false, false);
-        }
+      // all endpoints can have overrides
+      if (config.overrides) {
+        response = json.mergeDeep(response, config.overrides);
+      }
 
-        return true;
-    } catch (error) {
-        printError(error);
-        return false;
+      verboseMessage(`Saving ${response._id} at ${config.path}.json.`);
+      saveJsonToFile(
+        response,
+        getFilePath(`raw/${config.path}.json`, true),
+        false,
+        true
+      );
     }
+
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
 }

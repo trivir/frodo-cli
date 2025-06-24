@@ -1,6 +1,7 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
-import { printError } from '../utils/Console';
 import fs from 'fs';
+
+import { printError } from '../utils/Console';
 
 const { saveJsonToFile, getFilePath } = frodo.utils;
 const { readRealms } = frodo.realm;

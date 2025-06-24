@@ -3,8 +3,8 @@ import { frodo } from '@rockcarver/frodo-lib';
 import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError } from '../utils/Console';
 
-const { exportTermsAndConditions } = frodo.terms;
 const { saveJsonToFile, getFilePath } = frodo.utils;
+const { readConfigEntity } = frodo.idm.config;
 
 /**
  * Export terms and conditions to file
@@ -12,14 +12,14 @@ const { saveJsonToFile, getFilePath } = frodo.utils;
  */
 export async function configManagerExportTermsAndConditions(): Promise<boolean> {
   try {
-    const exportData = await exportTermsAndConditions();
+    const exportData = (await readConfigEntity('selfservice.terms')) as any;
+    saveJsonToFile(exportData, 'terms.json', false, false);
     for (const version of exportData.versions) {
       for (const [language, text] of Object.entries(
         version.termsTranslations
       )) {
         const languageFileName = `${version.version}/${language}.html`;
         const directoryName = `terms-conditions`;
-        // @ts-expect-error
         version.termsTranslations[language] = extractFrConfigDataToFile(
           text,
           languageFileName,
@@ -32,8 +32,9 @@ export async function configManagerExportTermsAndConditions(): Promise<boolean> 
       getFilePath('terms-conditions/terms-conditions.json', true),
       false
     );
+    return true;
   } catch (error) {
     printError(error);
+    return false;
   }
-  return false;
 }

@@ -21,32 +21,32 @@ export default function setup() {
     )
     .addHelpText(
       'after',
-      'HELP MESSAGE:\n'+
-      'Make sure to create the export config file: saml.json to run this command.\n'+ 
-      'Example command: frodo config-manager export saml -f saml.json -D ../testDir frodo-dev\n\n'+
-      `Config file example:\n` +
-      '-----------------------  Example SAML export config for saml.json file ------------------------\n' +
-      '{\n' +
-      ' "alpha": {\n' +
-      '   "samlProviders": [\n' +
-      '     {\n' +
-      '       "entityId": "urn:federation:MicrosoftOnline",\n' +
-      '       "fileName": "microsoftOnline"\n' +
-      '     },\n' +
-      '     {\n' +
-      '       "entityId": "iSPAzure",\n' +
-      '       "replacements": [\n' +
-      '         {\n' +
-      '         "search": "https://idc.scheuber.io/am",\n' +
-      '         "replacement": "${TENANT_BASE_URL}"\n' +
-      '         }\n' +
-      '       ]\n' +
-      '     }\n' +
-      '   ],\n' +
-      '   "circlesOfTrust": ["AzureCOT", "affiliation-test"]\n' +
-      ' }\n' +
-      '}\n' +
-      '* -------------------------------------------------------------------------------------------- \n'
+      'HELP MESSAGE:\n' +
+        'Make sure to create the export config file: saml.json to run this command.\n' +
+        'Example command: frodo config-manager export saml -f saml.json -D ../testDir frodo-dev\n\n' +
+        `Config file example:\n` +
+        '-----------------------  Example SAML export config for saml.json file ------------------------\n' +
+        '{\n' +
+        ' "alpha": {\n' +
+        '   "samlProviders": [\n' +
+        '     {\n' +
+        '       "entityId": "urn:federation:MicrosoftOnline",\n' +
+        '       "fileName": "microsoftOnline"\n' +
+        '     },\n' +
+        '     {\n' +
+        '       "entityId": "iSPAzure",\n' +
+        '       "replacements": [\n' +
+        '         {\n' +
+        '         "search": "https://idc.scheuber.io/am",\n' +
+        '         "replacement": "${TENANT_BASE_URL}"\n' +
+        '         }\n' +
+        '       ]\n' +
+        '     }\n' +
+        '   ],\n' +
+        '   "circlesOfTrust": ["AzureCOT", "affiliation-test"]\n' +
+        ' }\n' +
+        '}\n' +
+        '* -------------------------------------------------------------------------------------------- \n'
     )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(

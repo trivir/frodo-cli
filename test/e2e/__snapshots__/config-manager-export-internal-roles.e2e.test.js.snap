@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo config-manager exports "frodo config-manager export internal-roles -D testDir9": should export the internal-role in fr-config-manager style" 1`] = `""`;
+exports[`frodo config-manager exports "frodo config-manager export internal-roles -D testDir9": should export the internal-role in fr-config-manager style" 1`] = `0`;
+
+exports[`frodo config-manager exports "frodo config-manager export internal-roles -D testDir9": should export the internal-role in fr-config-manager style" 2`] = `""`;
 
 exports[`frodo config-manager exports "frodo config-manager export internal-roles -D testDir9": should export the internal-role in fr-config-manager style": testDir9/internal-roles/test-internal-role.json 1`] = `
 {
@@ -332,7 +334,9 @@ exports[`frodo config-manager exports "frodo config-manager export internal-role
 }
 `;
 
-exports[`frodo config-manager exports "frodo config-manager export internal-roles -n test-internal-role -D testDir10": should export the internal-role with name test-internal-role in fr-config-manager style" 1`] = `""`;
+exports[`frodo config-manager exports "frodo config-manager export internal-roles -n test-internal-role -D testDir10": should export the internal-role with name test-internal-role in fr-config-manager style" 1`] = `0`;
+
+exports[`frodo config-manager exports "frodo config-manager export internal-roles -n test-internal-role -D testDir10": should export the internal-role with name test-internal-role in fr-config-manager style" 2`] = `""`;
 
 exports[`frodo config-manager exports "frodo config-manager export internal-roles -n test-internal-role -D testDir10": should export the internal-role with name test-internal-role in fr-config-manager style": testDir10/internal-roles/test-internal-role.json 1`] = `
 {

@@ -43,7 +43,7 @@ export async function configManagerExportConnectorDefinition(
         true
       ),
       false,
-      false
+      true
     );
     return true;
   } catch (error) {

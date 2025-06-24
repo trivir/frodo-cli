@@ -1,7 +1,7 @@
 import { frodo } from '@rockcarver/frodo-lib';
 
 const { readRealms } = frodo.realm;
-const {sanitize } =frodo.utils
+const { sanitize } = frodo.utils;
 
 export async function realmList(): Promise<string[]> {
   const realms = await readRealms();
@@ -11,7 +11,6 @@ export async function realmList(): Promise<string[]> {
   });
   return realmList;
 }
-
 
 export function safeFileName(filename) {
   return sanitize(filename, {

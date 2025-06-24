@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo config-manager exports "frodo config-manager export access-config -D testDir0": should export the access-config in fr-config-manager style" 1`] = `""`;
+exports[`frodo config-manager exports "frodo config-manager export access-config -D testDir0": should export the access-config in fr-config-manager style" 1`] = `0`;
+
+exports[`frodo config-manager exports "frodo config-manager export access-config -D testDir0": should export the access-config in fr-config-manager style" 2`] = `""`;
 
 exports[`frodo config-manager exports "frodo config-manager export access-config -D testDir0": should export the access-config in fr-config-manager style": testDir0/access-config/access.json 1`] = `
 {

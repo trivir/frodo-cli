@@ -5,7 +5,7 @@ import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError } from '../utils/Console';
 
 const { readConfigEntity } = frodo.idm.config;
-const { getFilePath, saveTextToFile , saveJsonToFile} = frodo.utils;
+const { getFilePath, saveTextToFile } = frodo.utils;
 const { stringify } = frodo.utils.json;
 
 type ObjectSkeleton = IdObjectSkeletonInterface & {
