@@ -60,7 +60,7 @@ export default function setup() {
           printMessage(
             'Provide --variable-id and either one or both of --value and --description.'
           );
-          program.help();
+          program.outputHelp();
           process.exitCode = 1;
         }
       }

@@ -102,7 +102,7 @@ export default function setup() {
       // no log api credentials
       else {
         printMessage('No log api credentials found!');
-        program.help();
+        program.outputHelp();
         process.exitCode = 1;
       }
     });

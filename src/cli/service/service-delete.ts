@@ -50,7 +50,7 @@ export default function setup() {
           const outcome = await deleteServices(globalConfig);
           if (!outcome) process.exitCode = 1;
         } else {
-          program.help();
+          program.outputHelp();
           process.exitCode = 1;
         }
       }

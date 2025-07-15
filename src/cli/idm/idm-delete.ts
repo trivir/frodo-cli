@@ -45,7 +45,7 @@ export default function setup() {
           const outcome = await deleteConfigEntityById(options.id);
           if (!outcome) process.exitCode = 1;
         } else {
-          program.help();
+          program.outputHelp();
           process.exitCode = 1;
         }
       }

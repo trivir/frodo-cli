@@ -73,7 +73,7 @@ export default function setup() {
           verboseMessage(
             'Unrecognized combination of options or no options...'
           );
-          program.help();
+          program.outputHelp();
           process.exitCode = 1;
         }
       }
