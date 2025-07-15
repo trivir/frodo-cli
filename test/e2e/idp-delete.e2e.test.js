@@ -47,8 +47,9 @@
  */
 
 /*
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idp delete -i insta openam
+ * FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idp delete -i insta
  */
+
 import cp from 'child_process';
 import { promisify } from 'util';
 import { getEnv, removeAnsiEscapeCodes } from './utils/TestUtils';
