@@ -9,7 +9,7 @@ Arguments:
   host                                 AM base URL, e.g.:
                                        https://cdk.iam.example.com/am. To use a
                                        connection profile, just specify a
-                                       unique substring.
+                                       unique substring or alias.
   realm                                Realm. Specify realm as '/' for the root
                                        realm or 'realm' or '/parent/child'
                                        otherwise. (default: "alpha" for

@@ -9,7 +9,7 @@ Arguments:
   host                                 AM base URL, e.g.:
                                        https://cdk.iam.example.com/am. To use a
                                        connection profile, just specify a
-                                       unique substring.
+                                       unique substring or alias.
   realm                                Realm. Specify realm as '/' for the root
                                        realm or 'realm' or '/parent/child'
                                        otherwise. (default: "alpha" for
@@ -112,9 +112,9 @@ Options:
                                        associated with the the service account.
   -u, --server-url <server-url>        Server url. Can be a unique substring of
                                        the full url (if not unique, it will
-                                       error out). If specified, only one
-                                       server is exported and the options -a
-                                       and -A are ignored.
+                                       error out) or a saved alias. If
+                                       specified, only one server is exported
+                                       and the options -a and -A are ignored.
   --verbose                            Verbose output during command execution.
                                        If specified, may or may not produce
                                        additional output.
