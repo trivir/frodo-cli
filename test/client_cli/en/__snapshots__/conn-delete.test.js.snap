@@ -9,7 +9,7 @@ Arguments:
   host                                 AM base URL, e.g.:
                                        https://cdk.iam.example.com/am. To use a
                                        connection profile, just specify a
-                                       unique substring.
+                                       unique substring or alias.
 
 Options:
   -D, --directory <directory>          Set the working directory.

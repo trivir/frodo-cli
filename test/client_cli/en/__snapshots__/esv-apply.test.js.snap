@@ -11,7 +11,7 @@ Arguments:
   host                                 AM base URL, e.g.:
                                        https://cdk.iam.example.com/am. To use a
                                        connection profile, just specify a
-                                       unique substring.
+                                       unique substring or alias.
   username                             Username to login with. Must be an admin
                                        user with appropriate rights to manage
                                        authentication journeys/trees.
