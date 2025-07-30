@@ -1,7 +1,7 @@
 import { frodo } from '@rockcarver/frodo-lib';
 
 const { readRealms } = frodo.realm;
-const { sanitize } = frodo.utils;
+const { sanitizeFileName } = frodo.utils;
 
 export async function realmList(): Promise<string[]> {
   const realms = await readRealms();
@@ -13,7 +13,7 @@ export async function realmList(): Promise<string[]> {
 }
 
 export function safeFileName(filename) {
-  return sanitize(filename, {
+  return sanitizeFileName(filename, {
     replacement: (character) => encodeURIComponent(character),
   });
 }

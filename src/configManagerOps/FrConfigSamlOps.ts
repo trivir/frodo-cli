@@ -4,7 +4,7 @@ import fs from 'fs';
 import { printError } from '../utils/Console';
 import { escapePlaceholders } from './ConfigManagerOps';
 
-const { getFilePath, saveJsonToFile, sanitize } = frodo.utils;
+const { getFilePath, saveJsonToFile, sanitizeFileName } = frodo.utils;
 const { exportSaml2Provider } = frodo.saml2.entityProvider;
 const { exportCircleOfTrust } = frodo.saml2.circlesOfTrust;
 /**
@@ -96,7 +96,7 @@ export async function configManagerExportSaml(file): Promise<boolean> {
 }
 
 function safeFileNameUnderscore(filename) {
-  return sanitize(filename, {
+  return sanitizeFileName(filename, {
     replacement: '_',
   });
 }
