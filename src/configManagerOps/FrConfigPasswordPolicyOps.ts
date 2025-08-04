@@ -2,7 +2,7 @@ import { frodo } from '@rockcarver/frodo-lib';
 
 import { getIdmImportExportOptions } from '../ops/IdmOps';
 import { printError } from '../utils/Console';
-import { realmList } from './FrConfigOps';
+import { realmList } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { exportConfigEntity } = frodo.idm.config;

@@ -1,7 +1,7 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 
 import { printError } from '../utils/Console';
-import { realmList } from './FrConfigOps';
+import { realmList } from '../utils/FrConfig';
 
 const { readAuthenticationSettings: _readAuthenticationSettings } =
   frodo.authn.settings;

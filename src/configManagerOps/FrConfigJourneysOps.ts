@@ -6,7 +6,7 @@ import {
 
 import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError, verboseMessage } from '../utils/Console';
-import { realmList, safeFileName } from './FrConfigOps';
+import { realmList, safeFileName } from '../utils/FrConfig';
 
 const { saveJsonToFile, getWorkingDirectory, getFilePath, findFilesByName } =
   frodo.utils;

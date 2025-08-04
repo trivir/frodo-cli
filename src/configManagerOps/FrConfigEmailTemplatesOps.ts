@@ -17,7 +17,7 @@ export async function configManagerExportEmailTemplates(
       const exportData = await readEmailTemplate(name);
       processEmailTemplate(exportData, `/email-templates`);
     } else {
-      const exportData = await readEmailTemplates(true);
+      const exportData = await readEmailTemplates();
       exportData.forEach(async (template) => {
         processEmailTemplate(template, `/email-templates`);
       });

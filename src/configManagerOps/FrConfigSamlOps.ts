@@ -2,9 +2,10 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
 import { printError } from '../utils/Console';
+import { safeFileNameUnderscore } from '../utils/FrConfig';
 import { escapePlaceholders } from './ConfigManagerOps';
 
-const { getFilePath, saveJsonToFile, sanitizeFileName } = frodo.utils;
+const { getFilePath, saveJsonToFile } = frodo.utils;
 const { exportSaml2Provider } = frodo.saml2.entityProvider;
 const { exportCircleOfTrust } = frodo.saml2.circlesOfTrust;
 /**
@@ -93,12 +94,6 @@ export async function configManagerExportSaml(file): Promise<boolean> {
     printError(err, `Error exporting SAML`);
   }
   return false;
-}
-
-function safeFileNameUnderscore(filename) {
-  return sanitizeFileName(filename, {
-    replacement: '_',
-  });
 }
 
 async function replaceAllInJson(content, replacements) {

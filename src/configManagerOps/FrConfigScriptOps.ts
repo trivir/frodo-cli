@@ -2,7 +2,7 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import { ScriptSkeleton } from '@rockcarver/frodo-lib/types/api/ScriptApi';
 
 import { printError, verboseMessage } from '../utils/Console';
-import { realmList, safeFileName } from './FrConfigOps';
+import { realmList, safeFileName } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile, decodeBase64, saveTextToFile } =
   frodo.utils;
