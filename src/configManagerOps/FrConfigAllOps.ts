@@ -2,9 +2,7 @@ import { printError } from '../utils/Console';
 import { configManagerExportAccessConfig } from './FrConfigAccessConfigOps';
 import { configManagerExportAudit } from './FrConfigAuditOps';
 import { configManagerExportAuthentication } from './FrConfigAuthenticationOps';
-import {
-  configManagerExportAuthzPolicySets,
-} from './FrConfigAuthzPoliciesOps';
+import { configManagerExportAuthzPolicySets } from './FrConfigAuthzPoliciesOps';
 import { configManagerExportConnectorDefinitionsAll } from './FrConfigConnectorDefinitionsOps';
 import { configManagerExportMappings } from './FrConfigConnectorMappingOps';
 import { configManagerExportCookieDomains } from './FrConfigCookieDomainsOps';
@@ -23,131 +21,16 @@ import { configManagerExportPasswordPolicy } from './FrConfigPasswordPolicyOps';
 import { configManagerExportRemoteServers } from './FrConfigRemoteServersOps';
 import { configManagerExportSaml } from './FrConfigSamlOps';
 import { configManagerExportSchedules } from './FrConfigSchedulesOps';
-import {
-  configManagerExportScriptsAll,
-} from './FrConfigScriptOps';
+import { configManagerExportScriptsAll } from './FrConfigScriptOps';
 import { configManagerExportSecretMappings } from './FrConfigSecretMappingsOps';
 import { configManagerExportSecrets } from './FrConfigSecretOps';
-import {
-  configManagerExportServiceObjectsFromFile,
-} from './FrConfigServiceObjectsOps';
+import { configManagerExportServiceObjectsFromFile } from './FrConfigServiceObjectsOps';
 import { configManagerExportServices } from './FrConfigServiceOps';
 import { configManagerExportTermsAndConditions } from './FrConfigTermsAndConditionsOps';
 import { configManagerExportThemes } from './FrConfigThemeOps';
 import { configManagerExportUiConfig } from './FrConfigUiConfigOps';
 import { configManagerExportVariables } from './FrConfigVariableOps';
 
-const COMMAND = {
-  ALL: 'all',
-  ALL_STATIC: 'all-static',
-  JOURNEYS: 'journeys',
-  CONNECTOR_DEFINITIONS: 'connector-definitions',
-  CONNECTOR_MAPPINGS: 'connector-mappings',
-  COOKIE_DOMAINS: 'cookie-domains',
-  CORS: 'cors',
-  CSP: 'csp',
-  MANAGED_OBJECTS: 'managed-objects',
-  EMAIL_TEMPLATES: 'email-templates',
-  EMAIL_PROVIDER: 'email-provider',
-  THEMES: 'themes',
-  REMOTE_SERVERS: 'remote-servers',
-  SCRIPTS: 'scripts',
-  SERVICES: 'services',
-  AUTHENTICATION: 'authentication',
-  TERMS_AND_CONDITIONS: 'terms-and-conditions',
-  PASSWORD_POLICY: 'password-policy',
-  UI_CONFIG: 'ui-config',
-  IDM_ENDPOINTS: 'endpoints',
-  IDM_SCHEDULES: 'schedules',
-  IDM_ACCESS_CONFIG: 'access-config',
-  KBA: 'kba',
-  INTERNAL_ROLES: 'internal-roles',
-  SECRETS: 'secrets',
-  ESVS: 'variables',
-  SECRET_MAPPINGS: 'secret-mappings',
-  OAUTH2_AGENTS: 'oauth2-agents',
-  AUTHZ_POLICIES: 'authz-policies',
-  SERVICE_OBJECTS: 'service-objects',
-  LOCALES: 'locales',
-  AUDIT: 'audit',
-  CONFIG_METADATA: 'config-metadata',
-  VERSION: 'version',
-  TEST: 'test',
-  ORG_PRIVILEGES: 'org-privileges',
-  RAW: 'raw',
-  SAML: 'saml',
-};
-const COMMAND_MAP = {
-  all: [
-    //27
-    COMMAND.JOURNEYS,
-    COMMAND.CONNECTOR_DEFINITIONS,
-    COMMAND.CONNECTOR_MAPPINGS,
-    COMMAND.COOKIE_DOMAINS,
-    COMMAND.CORS,
-
-    COMMAND.MANAGED_OBJECTS,
-    COMMAND.EMAIL_TEMPLATES,
-    COMMAND.EMAIL_PROVIDER,
-    COMMAND.THEMES,
-    COMMAND.REMOTE_SERVERS,
-
-    COMMAND.SCRIPTS,
-    COMMAND.SERVICES,
-    COMMAND.AUTHENTICATION,
-    COMMAND.TERMS_AND_CONDITIONS,
-    COMMAND.PASSWORD_POLICY,
-
-    COMMAND.UI_CONFIG,
-    COMMAND.IDM_ENDPOINTS,
-    COMMAND.IDM_SCHEDULES,
-    COMMAND.IDM_ACCESS_CONFIG,
-    COMMAND.KBA,
-
-    COMMAND.INTERNAL_ROLES,
-    COMMAND.SECRETS,
-    COMMAND.ESVS,
-    COMMAND.SECRET_MAPPINGS,
-    COMMAND.OAUTH2_AGENTS,
-
-    COMMAND.AUTHZ_POLICIES,
-    COMMAND.SERVICE_OBJECTS,
-    COMMAND.LOCALES,
-    COMMAND.AUDIT,
-    COMMAND.ORG_PRIVILEGES,
-
-    COMMAND.SAML,
-  ],
-  'all-static': [
-    //22
-    COMMAND.JOURNEYS,
-    COMMAND.CONNECTOR_DEFINITIONS,
-    COMMAND.CONNECTOR_MAPPINGS,
-    COMMAND.CORS,
-    COMMAND.MANAGED_OBJECTS,
-
-    COMMAND.EMAIL_TEMPLATES,
-    COMMAND.EMAIL_PROVIDER,
-    COMMAND.THEMES,
-    COMMAND.REMOTE_SERVERS,
-    COMMAND.SCRIPTS,
-
-    COMMAND.SERVICES,
-    COMMAND.AUTHENTICATION,
-    COMMAND.TERMS_AND_CONDITIONS,
-    COMMAND.PASSWORD_POLICY,
-    COMMAND.UI_CONFIG,
-
-    COMMAND.IDM_ENDPOINTS,
-    COMMAND.IDM_SCHEDULES,
-    COMMAND.IDM_ACCESS_CONFIG,
-    COMMAND.KBA,
-    COMMAND.LOCALES,
-
-    COMMAND.AUDIT,
-    COMMAND.ORG_PRIVILEGES,
-  ],
-};
 export interface ConfigManagerAllOptions {
   all?: boolean;
   realm?: string;

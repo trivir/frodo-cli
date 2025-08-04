@@ -83,6 +83,7 @@ function processManagedObjects(managedObjects, targetDir, name) {
         ([key, value]) => {
           SCRIPT_HOOKS.forEach((hook) => {
             if (
+              // eslint-disable-next-line no-prototype-builtins
               value.hasOwnProperty(hook) &&
               value[hook].type === 'text/javascript' &&
               value[hook].source

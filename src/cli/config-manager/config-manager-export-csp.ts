@@ -25,19 +25,19 @@ export default function setup() {
     .addHelpText(
       'after',
       'There is an option to overrides the export file.\n' +
-      '-----------------------  Example CSP_OVERRIDES json file ---------------------------------- \n'+
-      '{\n'+
-      ' "enforced": {\n'+
-      '   "active": {\n'+
-      '     "$bool": "${CSP_ENFORCED}"\n'+
-      '   }\n'+
-      ' },\n'+
-      ' "report-only": {\n'+
-          '"active": {\n'+
-            '"$bool": "${CSP_REPORT_ONLY}"\n'+
-          '}\n'+
-      ' }\n'+
-      '}\n'
+        '-----------------------  Example CSP_OVERRIDES json file ---------------------------------- \n' +
+        '{\n' +
+        ' "enforced": {\n' +
+        '   "active": {\n' +
+        '     "$bool": "${CSP_ENFORCED}"\n' +
+        '   }\n' +
+        ' },\n' +
+        ' "report-only": {\n' +
+        '"active": {\n' +
+        '"$bool": "${CSP_REPORT_ONLY}"\n' +
+        '}\n' +
+        ' }\n' +
+        '}\n'
     )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(

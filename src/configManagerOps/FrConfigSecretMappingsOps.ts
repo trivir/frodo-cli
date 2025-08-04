@@ -54,7 +54,7 @@ async function processSecretMappings(mappings, targetDir, name) {
       saveJsonToFile(mapping, getFilePath(fileName, true), false, true);
     }
   } catch (err) {
-    console.error(err);
+    printError(err);
   }
 }
 

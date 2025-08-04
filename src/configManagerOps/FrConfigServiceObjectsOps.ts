@@ -17,14 +17,19 @@ export async function configManagerExportServiceObjectsFromFile(
     const objects = JSON.parse(fs.readFileSync(file, 'utf8'));
     for (const objectType of Object.keys(objects)) {
       for (const object of objects[objectType]) {
-        const queryFilter = `${object.searchField} eq "${object.searchValue}"`
-        const queryResult = await queryManagedObjects(objectType, queryFilter, object.fields)
+        const queryFilter = `${object.searchField} eq "${object.searchValue}"`;
+        const queryResult = await queryManagedObjects(
+          objectType,
+          queryFilter,
+          object.fields
+        );
         if (queryResult.length > 1) {
-          const error = new Error(`Unexpected result from search: ${queryResult.length} entries found for ${objectType} - ${object.searchValue}`);
-          printError(error)
-          return false
-        }
-        else {
+          const error = new Error(
+            `Unexpected result from search: ${queryResult.length} entries found for ${objectType} - ${object.searchValue}`
+          );
+          printError(error);
+          return false;
+        } else {
           const result = queryResult[0];
           if (
             object.overrides &&
@@ -49,9 +54,7 @@ export async function configManagerExportServiceObjectsFromFile(
             false,
             true
           );
-
         }
-
       }
     }
     return true;
@@ -81,14 +84,15 @@ export async function configManagerExportServiceObject(
             : {},
       },
     };
-    const queryFilter = `${searchField} eq "${searchValue}"`
-    const queryResult = await queryManagedObjects(type, queryFilter, fields)
+    const queryFilter = `${searchField} eq "${searchValue}"`;
+    const queryResult = await queryManagedObjects(type, queryFilter, fields);
     if (queryResult.length > 1) {
-      const error = new Error(`Unexpected result from search: ${queryResult.length} entries found for ${type} - ${searchValue}`);
-      printError(error)
-      return false
-    }
-    else {
+      const error = new Error(
+        `Unexpected result from search: ${queryResult.length} entries found for ${type} - ${searchValue}`
+      );
+      printError(error);
+      return false;
+    } else {
       const result = queryResult[0];
       if (Object.keys(object[type].overrides).length !== 0) {
         for (const [key, value] of Object.entries(object[type].overrides)) {

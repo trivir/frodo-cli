@@ -1,7 +1,7 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
-import { printError } from '../utils/Console';
+import { printError, printMessage } from '../utils/Console';
 
 const { saveJsonToFile, getFilePath } = frodo.utils;
 const { readRealms } = frodo.realm;
@@ -55,7 +55,10 @@ function extractHtmlFields(theme: any, themePath: string): void {
       }
 
       default:
-        console.error(`Unexpected type for ${field.name} in ${theme.name}`);
+        printMessage(
+          `Unexpected type for ${field.name} in ${theme.name}`,
+          'error'
+        );
         process.exit(1);
     }
   }

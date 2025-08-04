@@ -70,28 +70,28 @@ export default function setup() {
     .addHelpText(
       'after',
       'Availble script types: \n' +
-      'AUTHENTICATION_TREE_DECISION_NODE\n' +
-      'SAML2_SP_ADAPTER\n' +
-      'OAUTH2_ACCESS_TOKEN_MODIFICATION\n' +
-      'Scripted Decision Node\n' +
-      'AUTHENTICATION_CLIENT_SIDE\n' +
-      'DEVICE_MATCH_NODE\n' +
-      'OAUTH2_SCRIPTED_JWT_ISSUER\n' +
-      'AUTHENTICATION_SERVER_SIDE\n' +
-      'SOCIAL_IDP_PROFILE_TRANSFORMATION\n' +
-      'CONFIG_PROVIDER_NODE\n' +
-      'OAUTH2_VALIDATE_SCOPE\n' +
-      'LIBRARY\n' +
-      'OAUTH2_AUTHORIZE_ENDPOINT_DATA_PROVIDER\n' +
-      'OAUTH2_EVALUATE_SCOPE\n' +
-      'POLICY_CONDITION\n' +
-      'OIDC_CLAIMS\n' +
-      'SAML2_IDP_ADAPTER\n' +
-      'PingOne Verify Completion Decision Node\n' +
-      'SAML2_NAMEID_MAPPER\n' +
-      'SAML2_IDP_ATTRIBUTE_MAPPER\n' +
-      'CONFIG_PROVIDER_NODE\n' +
-      'OAUTH2_MAY_ACT'
+        'AUTHENTICATION_TREE_DECISION_NODE\n' +
+        'SAML2_SP_ADAPTER\n' +
+        'OAUTH2_ACCESS_TOKEN_MODIFICATION\n' +
+        'Scripted Decision Node\n' +
+        'AUTHENTICATION_CLIENT_SIDE\n' +
+        'DEVICE_MATCH_NODE\n' +
+        'OAUTH2_SCRIPTED_JWT_ISSUER\n' +
+        'AUTHENTICATION_SERVER_SIDE\n' +
+        'SOCIAL_IDP_PROFILE_TRANSFORMATION\n' +
+        'CONFIG_PROVIDER_NODE\n' +
+        'OAUTH2_VALIDATE_SCOPE\n' +
+        'LIBRARY\n' +
+        'OAUTH2_AUTHORIZE_ENDPOINT_DATA_PROVIDER\n' +
+        'OAUTH2_EVALUATE_SCOPE\n' +
+        'POLICY_CONDITION\n' +
+        'OIDC_CLAIMS\n' +
+        'SAML2_IDP_ADAPTER\n' +
+        'PingOne Verify Completion Decision Node\n' +
+        'SAML2_NAMEID_MAPPER\n' +
+        'SAML2_IDP_ATTRIBUTE_MAPPER\n' +
+        'CONFIG_PROVIDER_NODE\n' +
+        'OAUTH2_MAY_ACT'
     )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(

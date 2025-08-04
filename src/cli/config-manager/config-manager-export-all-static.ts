@@ -11,7 +11,7 @@ export default function setup() {
     [],
     deploymentTypes
   );
-  // TO DO: adding a realm option to export all-static for specific realm 
+  // TO DO: adding a realm option to export all-static for specific realm
   program
     .description('Export audit objects.')
     .action(async (host, realm, user, password, options, command) => {

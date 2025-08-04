@@ -186,7 +186,9 @@ async function processJourneys(
 
 function journeyNodeNeedsScript(node) {
   return (
+    // eslint-disable-next-line no-prototype-builtins
     node.hasOwnProperty('script') &&
+    // eslint-disable-next-line no-prototype-builtins
     (!node.hasOwnProperty('useScript') || node.useScript)
   );
 }

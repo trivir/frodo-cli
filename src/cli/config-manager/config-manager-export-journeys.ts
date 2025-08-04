@@ -1,4 +1,5 @@
 import { Option } from 'commander';
+
 import { configManagerExportJourneys } from '../../configManagerOps/FrConfigJourneysOps';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
@@ -28,7 +29,7 @@ export default function setup() {
       )
     )
     .addOption(new Option('-d, --pull-dependencies', 'Pull dependencies.'))
-    // TO DO: implementing for 'clean' 
+    // TO DO: implementing for 'clean'
     // .addOption(
     //   new Option('-c, --clean', 'Clear existing configuration before pull.')
     // )
