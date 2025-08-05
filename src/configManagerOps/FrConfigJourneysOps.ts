@@ -6,10 +6,9 @@ import {
 
 import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError, verboseMessage } from '../utils/Console';
-import { realmList, safeFileName } from '../utils/FrConfig';
+import { existScript, realmList, safeFileName } from '../utils/FrConfig';
 
-const { saveJsonToFile, getWorkingDirectory, getFilePath, findFilesByName } =
-  frodo.utils;
+const { saveJsonToFile, getFilePath } = frodo.utils;
 const { exportJourneys } = frodo.authn.journey;
 
 export async function configManagerExportJourneys(
@@ -191,19 +190,4 @@ function journeyNodeNeedsScript(node) {
     // eslint-disable-next-line no-prototype-builtins
     (!node.hasOwnProperty('useScript') || node.useScript)
   );
-}
-
-async function existScript(fileName, realm): Promise<boolean> {
-  await getFilePath(`realms/${realm}/scripts/scripts-config/`, true);
-  const result = await findFilesByName(
-    `${fileName}.json`,
-    true,
-    `${getWorkingDirectory()}/realms/${realm}/scripts/scripts-config`
-  );
-
-  if (result.length) {
-    return true;
-  } else {
-    return false;
-  }
 }

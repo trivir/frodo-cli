@@ -22,6 +22,7 @@ const { readSecrets, exportSecret } = frodo.cloud.secret;
 type FrConfigSecret = SecretSkeleton & {
   valueBase64: string;
 };
+
 async function getFrConfigSecrets(): Promise<FrConfigSecret[]> {
   const originalSecrets = await readSecrets();
   return originalSecrets.map((secret) => ({
@@ -29,6 +30,7 @@ async function getFrConfigSecrets(): Promise<FrConfigSecret[]> {
     valueBase64: `\${${secret._id.toUpperCase().replace(/-/g, '_')}}`,
   }));
 }
+
 export async function configManagerExportSecrets(
   target?: string
 ): Promise<boolean> {

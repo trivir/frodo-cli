@@ -7,17 +7,10 @@ import {
   stopProgressIndicator,
   updateProgressIndicator,
 } from '../utils/Console';
+import { escapePlaceholders, esvToEnv } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { readVariables } = frodo.cloud.variable;
-
-function escapePlaceholders(content: string): string {
-  return JSON.parse(JSON.stringify(content).replace(/\$\{/g, '\\\\${'));
-}
-
-function esvToEnv(esv: string): string {
-  return esv.toUpperCase().replace(/-/g, '_');
-}
 
 /**
  * Export all variables to seperate files

@@ -1,7 +1,9 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
+import { ThemeSkeleton } from '@rockcarver/frodo-lib/types/ops/ThemeOps';
 import fs from 'fs';
 
 import { printError, printMessage } from '../utils/Console';
+import { decodeOrNot } from '../utils/FrConfig';
 
 const { saveJsonToFile, getFilePath } = frodo.utils;
 const { readRealms } = frodo.realm;
@@ -16,11 +18,7 @@ const THEME_HTML_FIELDS = [
   { name: 'accountFooterScriptTag', encoded: true },
 ];
 
-function decodeOrNot(value: string, encoded: boolean): string {
-  return encoded ? Buffer.from(value, 'base64').toString('utf8') : value;
-}
-
-function extractHtmlFields(theme: any, themePath: string): void {
+function extractHtmlFields(theme: ThemeSkeleton, themePath: string): void {
   for (const field of THEME_HTML_FIELDS) {
     if (!theme[field.name]) continue;
 

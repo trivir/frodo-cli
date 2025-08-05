@@ -2,8 +2,11 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
 import { printError } from '../utils/Console';
-import { safeFileNameUnderscore } from '../utils/FrConfig';
-import { escapePlaceholders } from './ConfigManagerOps';
+import {
+  escapePlaceholders,
+  replaceAllInJson,
+  safeFileNameUnderscore,
+} from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { exportSaml2Provider } = frodo.saml2.entityProvider;
@@ -33,7 +36,7 @@ export async function configManagerExportSaml(file): Promise<boolean> {
           const remoteTemp = Object.values(samlResult.saml.remote)[0];
 
           if (samlProvider.replacements) {
-            saveObject.config = await replaceAllInJson(
+            saveObject.config = replaceAllInJson(
               remoteTemp,
               samlProvider.replacements
             );
@@ -48,7 +51,7 @@ export async function configManagerExportSaml(file): Promise<boolean> {
           const hostedTemp = Object.values(samlResult.saml.hosted)[0];
 
           if (samlProvider.replacements) {
-            saveObject.config = await replaceAllInJson(
+            saveObject.config = replaceAllInJson(
               hostedTemp,
               samlProvider.replacements
             );
@@ -94,13 +97,4 @@ export async function configManagerExportSaml(file): Promise<boolean> {
     printError(err, `Error exporting SAML`);
   }
   return false;
-}
-
-async function replaceAllInJson(content, replacements) {
-  let contentString = JSON.stringify(content);
-
-  replacements.forEach(({ search, replacement }) => {
-    contentString = contentString.split(search).join(replacement);
-  });
-  return JSON.parse(contentString);
 }
