@@ -65,6 +65,7 @@ const { initTokenCache } = frodo.cache;
     program.addCommand(authz());
     program.addCommand(app());
     program.addCommand(config());
+    program.addCommand(configManager());
     program.addCommand(conn());
     program.addCommand(email());
     program.addCommand(esv());
@@ -84,7 +85,6 @@ const { initTokenCache } = frodo.cache;
     program.addCommand(service());
     program.addCommand(shell());
     program.addCommand(theme());
-    program.addCommand(configManager());
     // enable sample command template.
     // program.addCommand(something());
 

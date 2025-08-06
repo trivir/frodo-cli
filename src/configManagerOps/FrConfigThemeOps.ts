@@ -28,7 +28,7 @@ function extractHtmlFields(theme: ThemeSkeleton, themePath: string): void {
         const filePath = `${themePath}/${fileName}`;
         fs.writeFileSync(
           filePath,
-          decodeOrNot(theme[field.name], field.encoded)
+          decodeOrNot(theme[field.name] as string, field.encoded)
         );
         theme[field.name] = { file: fileName };
         break;

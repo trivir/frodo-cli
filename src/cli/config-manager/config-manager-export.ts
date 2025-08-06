@@ -38,15 +38,15 @@ import Variables from './config-manager-export-variables';
 
 export default function setup() {
   const program = new FrodoStubCommand('config-manager export').description(
-    'Export IDM configuration objects.'
+    'Export cloud configuration using fr-config-manager.'
   );
+
   program.addCommand(All().name('all'));
   program.addCommand(AllStatic().name('all-static'));
   program.addCommand(AccessConfig().name('access-config'));
   program.addCommand(Audit().name('audit'));
   program.addCommand(Authentication().name('authentication'));
   program.addCommand(AuthzPolicies().name('authz-policies'));
-
   program.addCommand(ConnectorDefinitions().name('connector-definitions'));
   program.addCommand(ConnectorMappings().name('connector-mappings'));
   program.addCommand(CookieDomains().name('cookie-domains'));
@@ -77,6 +77,6 @@ export default function setup() {
   program.addCommand(Test().name('test'));
   program.addCommand(UiConfig().name('ui-config'));
   program.addCommand(Variables().name('variables'));
-
+  
   return program;
 }
