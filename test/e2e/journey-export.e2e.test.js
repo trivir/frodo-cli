@@ -120,4 +120,9 @@ describe('frodo journey export', () => {
         const CMD = `frodo journey export -NAD ${exportDirectory}`;
         await testExport(CMD, env, type, undefined, exportDirectory, false);
     });
+
+    test('"frodo journey export -i TestLogin --sep-coords": should export the journey with journey id "TestLogin" and coordinates in a separate file', async () => {
+        const CMD = `frodo journey export -i TestLogin --sep-coords`;
+        await testExport(CMD, env, ['journey', 'coords'], undefined, './', false);
+    });
 });
