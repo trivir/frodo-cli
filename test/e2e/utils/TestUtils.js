@@ -56,11 +56,12 @@ export async function testExport(
   expect(exitCode).toMatchSnapshot();
   // console.error(`stdout:\n${stdout}`);
   // console.error(`stderr:\n${stderr}`);
+  const regexType = Array.isArray(type) ? type.join('|') : type;
   const regex = new RegExp(
     fileName
       ? fileName
-      : type
-        ? `.*\\.${type}\\.(json|js|groovy|xml)`
+      : regexType
+        ? `.*\\.${regexType}\\.(json|js|groovy|xml)`
         : `.*\\.(json|js|groovy|xml)`
   );
   const filePaths = getFilePaths(directory, !isCurrentDirectory).filter((p) =>

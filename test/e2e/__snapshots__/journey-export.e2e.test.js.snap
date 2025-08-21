@@ -17566,6 +17566,184 @@ a{
 }
 `;
 
+exports[`frodo journey export "frodo journey export -i TestLogin --sep-coords": should export the journey with journey id "TestLogin" and coordinates in a separate file 1`] = `0`;
+
+exports[`frodo journey export "frodo journey export -i TestLogin --sep-coords": should export the journey with journey id "TestLogin" and coordinates in a separate file 2`] = `""`;
+
+exports[`frodo journey export "frodo journey export -i TestLogin --sep-coords": should export the journey with journey id "TestLogin" and coordinates in a separate file: TestLogin.coords.json 1`] = `
+{
+  "meta": Any<Object>,
+  "nodeCoordinates": {
+    "093076ce-d1d6-4fc2-9066-c7cf66e1f513": {
+      "x": 508,
+      "y": 128,
+    },
+    "48c6399d-808f-4c54-8f69-10a720a397c4": {
+      "x": 210,
+      "y": 81.5,
+    },
+    "49c2e06a-6e22-4f75-8591-9dcff462e362": {
+      "x": 315,
+      "y": 468.015625,
+    },
+    "dfbd94f9-4a1c-49ec-b3b6-f8d0bf3cb79d": {
+      "x": 343,
+      "y": 292.015625,
+    },
+  },
+  "staticNodeCoordinates": {
+    "70e691a5-1e33-4ac3-a356-e7b6d60d92e0": {
+      "x": 788,
+      "y": 80,
+    },
+    "e301438c-0bd0-429c-ab0c-66126501069a": {
+      "x": 788,
+      "y": 230,
+    },
+    "startNode": {
+      "x": 70,
+      "y": 155,
+    },
+  },
+}
+`;
+
+exports[`frodo journey export "frodo journey export -i TestLogin --sep-coords": should export the journey with journey id "TestLogin" and coordinates in a separate file: TestLogin.journey.json 1`] = `
+{
+  "meta": Any<Object>,
+  "trees": {
+    "TestLogin": {
+      "circlesOfTrust": {},
+      "emailTemplates": {},
+      "innerNodes": {},
+      "nodes": {
+        "093076ce-d1d6-4fc2-9066-c7cf66e1f513": {
+          "_id": "093076ce-d1d6-4fc2-9066-c7cf66e1f513",
+          "_outcomes": [
+            {
+              "displayName": "True",
+              "id": "true",
+            },
+            {
+              "displayName": "False",
+              "id": "false",
+            },
+          ],
+          "_type": {
+            "_id": "DataStoreDecisionNode",
+            "collection": true,
+            "name": "Data Store Decision",
+            "version": "1.0",
+          },
+        },
+        "48c6399d-808f-4c54-8f69-10a720a397c4": {
+          "_id": "48c6399d-808f-4c54-8f69-10a720a397c4",
+          "_outcomes": [],
+          "_type": {
+            "_id": "PageNode",
+            "collection": true,
+            "name": "Page Node",
+            "version": "1.0",
+          },
+          "nodes": [],
+          "pageDescription": {},
+          "pageHeader": {},
+        },
+        "49c2e06a-6e22-4f75-8591-9dcff462e362": {
+          "_id": "49c2e06a-6e22-4f75-8591-9dcff462e362",
+          "_outcomes": [
+            {
+              "displayName": "Outcome",
+              "id": "outcome",
+            },
+          ],
+          "_type": {
+            "_id": "ValidatedUsernameNode",
+            "collection": true,
+            "name": "Platform Username",
+            "version": "1.0",
+          },
+          "autocompleteValues": [],
+          "usernameAttribute": "userName",
+          "validateInput": false,
+        },
+        "dfbd94f9-4a1c-49ec-b3b6-f8d0bf3cb79d": {
+          "_id": "dfbd94f9-4a1c-49ec-b3b6-f8d0bf3cb79d",
+          "_outcomes": [
+            {
+              "displayName": "Outcome",
+              "id": "outcome",
+            },
+          ],
+          "_type": {
+            "_id": "ValidatedPasswordNode",
+            "collection": true,
+            "name": "Platform Password",
+            "version": "1.0",
+          },
+          "passwordAttribute": "password",
+          "validateInput": false,
+        },
+      },
+      "saml2Entities": {},
+      "scripts": {},
+      "socialIdentityProviders": {},
+      "themes": [],
+      "tree": {
+        "_id": "TestLogin",
+        "description": "Delete me",
+        "enabled": true,
+        "entryNodeId": "48c6399d-808f-4c54-8f69-10a720a397c4",
+        "identityResource": "managed/alpha_user",
+        "innerTreeOnly": false,
+        "mustRun": false,
+        "noSession": false,
+        "nodes": {
+          "093076ce-d1d6-4fc2-9066-c7cf66e1f513": {
+            "connections": {
+              "false": "e301438c-0bd0-429c-ab0c-66126501069a",
+              "true": "70e691a5-1e33-4ac3-a356-e7b6d60d92e0",
+            },
+            "displayName": "Data Store Decision",
+            "nodeType": "DataStoreDecisionNode",
+            "version": "1.0",
+          },
+          "48c6399d-808f-4c54-8f69-10a720a397c4": {
+            "connections": {},
+            "displayName": "Page Node",
+            "nodeType": "PageNode",
+            "version": "1.0",
+          },
+          "49c2e06a-6e22-4f75-8591-9dcff462e362": {
+            "connections": {},
+            "displayName": "Platform Username",
+            "nodeType": "ValidatedUsernameNode",
+            "version": "1.0",
+          },
+          "dfbd94f9-4a1c-49ec-b3b6-f8d0bf3cb79d": {
+            "connections": {},
+            "displayName": "Platform Password",
+            "nodeType": "ValidatedPasswordNode",
+            "version": "1.0",
+          },
+        },
+        "staticNodes": {
+          "70e691a5-1e33-4ac3-a356-e7b6d60d92e0": {},
+          "e301438c-0bd0-429c-ab0c-66126501069a": {},
+          "startNode": {},
+        },
+        "transactionalOnly": false,
+        "uiConfig": {
+          "annotations": "{"forNodes":{},"structural":[]}",
+          "categories": "["Authentication"]",
+        },
+      },
+      "variable": {},
+    },
+  },
+}
+`;
+
 exports[`frodo journey export "frodo journey export -i j01 -f my-j01.json": should export the journey with journey id "j01" into file named my-j01.json 1`] = `0`;
 
 exports[`frodo journey export "frodo journey export -i j01 -f my-j01.json": should export the journey with journey id "j01" into file named my-j01.json 2`] = `""`;
