@@ -2,6 +2,7 @@ import { Option } from 'commander';
 
 import { getTokens } from '../../ops/AuthenticateOps';
 import {
+  exportJourneyCoords,
   exportJourneysToFile,
   exportJourneysToFiles,
   exportJourneyToFile,
@@ -62,6 +63,12 @@ export default function setup() {
         'Do not include the x and y coordinate positions of the journey/tree nodes.'
       )
     )
+    .addOption(
+      new Option(
+        '--sep-coords',
+        'Export x and y coordinate positions of the journey/tree nodes to separate files.'
+      ).default(false)
+    )
     // .addOption(
     //   new Option(
     //     '-O, --organize <method>',
@@ -82,44 +89,80 @@ export default function setup() {
           options,
           command
         );
+        if (!(await getTokens())) {
+          printMessage('Authentication failed.', 'error');
+          process.exitCode = 1;
+          return;
+        }
+        let outcome = false;
         // export
-        if (options.journeyId && (await getTokens())) {
+        if (options.journeyId) {
           verboseMessage('Exporting journey...');
-          const outcome = await exportJourneyToFile(
+          outcome = await exportJourneyToFile(
             options.journeyId,
             options.file,
             options.metadata,
             {
               useStringArrays: options.useStringArrays,
               deps: options.deps,
-              coords: options.coords,
+              coords: !options.sepCoords,
             }
           );
-          if (!outcome) process.exitCode = 1;
+          if (outcome && options.sepCoords) {
+            verboseMessage('Exporting journey coordinates separately...');
+            await exportJourneyCoords([options.journeyId], {
+              deps: options.journeyId,
+              useStringArrays: options.useStringArrays,
+              coords: true,
+              sepCoords: true,
+            });
+          }
         }
         // --all -a
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Exporting all journeys to a single file...');
-          const outcome = await exportJourneysToFile(
-            options.file,
-            options.metadata,
-            {
-              useStringArrays: options.useStringArrays,
-              deps: options.deps,
-              coords: options.coords,
-            }
-          );
-          if (!outcome) process.exitCode = 1;
-        }
-        // --all-separate -A
-        else if (options.allSeparate && (await getTokens())) {
-          verboseMessage('Exporting all journeys to separate files...');
-          const outcome = await exportJourneysToFiles(options.metadata, {
+          outcome = await exportJourneysToFile(options.file, options.metadata, {
             useStringArrays: options.useStringArrays,
             deps: options.deps,
-            coords: options.coords,
+            coords: !options.sepCoords,
           });
-          if (!outcome) process.exitCode = 1;
+          if (outcome && options.sepCoords) {
+            verboseMessage(
+              'Exporting coordinates of all journeys to a separate file...'
+            );
+            await exportJourneyCoords(
+              'all',
+              {
+                deps: options.deps,
+                useStringArrays: options.useStringArrays,
+                coords: true,
+              },
+              'all'
+            );
+          }
+        }
+        // --all-separate -A
+        else if (options.allSeparate) {
+          verboseMessage('Exporting all journeys to separate files...');
+          outcome = await exportJourneysToFiles(options.metadata, {
+            useStringArrays: options.useStringArrays,
+            deps: options.deps,
+            coords: !options.sepCoords,
+          });
+          if (outcome && options.sepCoords) {
+            verboseMessage(
+              'Exporting coordinates of all journeys to separate files...'
+            );
+            await exportJourneyCoords(
+              'all',
+              {
+                deps: options.deps,
+                useStringArrays: options.useStringArrays,
+                coords: true,
+              },
+              'allSeparate'
+            );
+          }
         }
         // unrecognized combination of options or no options
         else {
@@ -129,10 +172,11 @@ export default function setup() {
           );
           program.help();
           process.exitCode = 1;
+          return;
         }
-      }
-      // end command logic inside action handler
-    );
 
+        if (!outcome) process.exitCode = 1;
+      }
+    );
   return program;
 }

@@ -291,6 +291,119 @@ export async function exportJourneysToFiles(
   return false;
 }
 
+export async function exportJourneyCoords(
+  journeyIds: string[] | 'all',
+  options: TreeExportOptions = {
+    deps: false,
+    useStringArrays: false,
+    coords: true,
+  },
+  mode: 'single' | 'all' | 'allSeparate' = 'single'
+): Promise<boolean> {
+  try {
+    let idsToExport: string[] = [];
+    if (journeyIds === 'all') {
+      const journeysExport = await exportJourneys(options, errorHandler);
+      idsToExport = Object.keys(journeysExport.trees);
+    } else {
+      idsToExport = journeyIds;
+    }
+    if (mode === 'all') {
+      const allCoords: Record<
+        string,
+        {
+          nodeCoordinates: Record<string, { x: number; y: number }>;
+          staticNodeCoordinates: Record<string, { x: number; y: number }>;
+        }
+      > = {};
+      for (const treeId of idsToExport) {
+        const treeExport = await exportJourney(treeId, options);
+        const nodeCoordinates: Record<string, { x: number; y: number }> = {};
+        const staticNodeCoordinates: Record<string, { x: number; y: number }> =
+          {};
+        const justNodes: typeof treeExport.tree.nodes = {};
+        for (const [nodeId, nodeData] of Object.entries(
+          treeExport.tree.nodes
+        )) {
+          const { x, y, ...etc } = nodeData as any;
+          if (typeof x === 'number' && typeof y === 'number')
+            nodeCoordinates[nodeId] = { x, y };
+          justNodes[nodeId] = etc;
+        }
+        const justStaticNodes: typeof treeExport.tree.staticNodes = {};
+        for (const [nodeId, nodeData] of Object.entries(
+          treeExport.tree.staticNodes ?? {}
+        )) {
+          const { x, y, ...etc } = nodeData as any;
+          if (typeof x === 'number' && typeof y === 'number')
+            staticNodeCoordinates[nodeId] = { x, y };
+          justStaticNodes[nodeId] = etc;
+        }
+        allCoords[treeId] = { nodeCoordinates, staticNodeCoordinates };
+      }
+      const coordsFile = getFilePath(
+        getTypedFilename(`allJourneys`, 'coords'),
+        true
+      );
+      saveJsonToFile({ coordinates: allCoords }, coordsFile);
+      return true;
+    }
+    for (const treeId of idsToExport) {
+      try {
+        const treeExport = await exportJourney(treeId, options);
+        const nodeCoordinates: Record<string, { x: number; y: number }> = {};
+        const staticNodeCoordinates: Record<string, { x: number; y: number }> =
+          {};
+        const justNodes: typeof treeExport.tree.nodes = {};
+        for (const [nodeId, nodeData] of Object.entries(
+          treeExport.tree.nodes
+        )) {
+          const { x, y, ...etc } = nodeData as any;
+          if (typeof x === 'number' && typeof y === 'number')
+            nodeCoordinates[nodeId] = { x, y };
+          justNodes[nodeId] = etc;
+        }
+        const justStaticNodes: typeof treeExport.tree.staticNodes = {};
+        for (const [nodeId, nodeData] of Object.entries(
+          treeExport.tree.staticNodes ?? {}
+        )) {
+          const { x, y, ...etc } = nodeData as any;
+          if (typeof x === 'number' && typeof y === 'number')
+            staticNodeCoordinates[nodeId] = { x, y };
+          justStaticNodes[nodeId] = etc;
+        }
+        const justTree = {
+          ...treeExport,
+          tree: {
+            ...treeExport.tree,
+            nodes: justNodes,
+            staticNodes: justStaticNodes,
+          },
+        };
+        if (mode === 'single') {
+          const journeyFile = getFilePath(
+            getTypedFilename(treeId, 'journey'),
+            true
+          );
+          saveJsonToFile({ trees: { [treeId]: justTree } }, journeyFile);
+        }
+        const coordsFile = getFilePath(
+          getTypedFilename(treeId, 'coords'),
+          true
+        );
+        saveJsonToFile({ nodeCoordinates, staticNodeCoordinates }, coordsFile);
+        printMessage(`${treeId} node coordinates saved.`, 'info');
+      } catch (error) {
+        throw new FrodoError(`Error saving ${treeId}`);
+      }
+    }
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
+}
+
 /**
  * Import a journey from file
  * @param {string} journeyId journey id/name
