@@ -2,6 +2,7 @@ import { frodo, FrodoError, state } from '@rockcarver/frodo-lib';
 import { Argument, Command, Help, Option } from 'commander';
 import fs from 'fs';
 
+import { getTokens } from '../ops/AuthenticateOps.js';
 import {
   cleanupProgressIndicators,
   createProgressIndicator,
@@ -13,6 +14,12 @@ import {
   updateProgressIndicator,
   verboseMessage,
 } from '../utils/Console.js';
+import {
+  Differ,
+  DiffOptions,
+  Exporter,
+  readJsonFromFile,
+} from '../utils/Diff.js';
 
 const { DEFAULT_REALM_KEY, DEPLOYMENT_TYPES } = frodo.utils.constants;
 
@@ -355,5 +362,96 @@ export class FrodoCommand extends FrodoStubCommand {
         `Command does not support deployment type '${state.getDeploymentType()}'`
       );
     }
+  }
+}
+
+export class DiffCommand<T, V> extends FrodoCommand {
+  /**
+   * Creates a new DiffCommand instance
+   * @param name Name of the command
+   * @param description Description of the command
+   * @param namesOption Add options for exporting cloud config by name
+   * @param exporter Function to export a config entity by id or name
+   * @param differ Function to perform the diff between two exported config entities
+   * @param omits Array of default argument names and default option names that should not be added to this command
+   * @param types Array of deployment types this command supports
+   */
+  constructor(
+    name: string,
+    description: string,
+    namesOption: boolean = false,
+    exporter: Exporter<T, V> = () => ({}) as Promise<T>,
+    differ: Differ<T, V> = () => [],
+    omits: string[] = [],
+    types: string[] = DEPLOYMENT_TYPES
+  ) {
+    super(name, omits, types);
+    this.description(description);
+    this.option('-of, --old-file <path>', 'old local config file');
+    this.option('-nf, --new-file <path>', 'new local config file');
+    this.option('-oi, --old-id <id>', 'old cloud config by ID');
+    this.option('-ni, --new-id <id>', 'new cloud config by ID');
+    if (namesOption) {
+      this.option('-on, --old-name <name>', 'old cloud config by name');
+      this.option('-nn, --new-name <name>', 'new cloud config by name');
+    }
+    this.action(
+      async (
+        host,
+        realm,
+        user,
+        password,
+        options: DiffOptions & V,
+        command
+      ) => {
+        command.handleDefaultArgsAndOpts(
+          host,
+          realm,
+          user,
+          password,
+          options,
+          command
+        );
+        const oldName = namesOption && options.oldName;
+        const newName = namesOption && options.newName;
+        const oldOptionsCount = [
+          options.oldFile,
+          options.oldId,
+          oldName,
+        ].filter((o) => o).length;
+        const newOptionsCount = [
+          options.newFile,
+          options.newId,
+          newName,
+        ].filter((o) => o).length;
+        if (
+          oldOptionsCount !== 1 ||
+          newOptionsCount !== 1 ||
+          ((options.oldId || options.newId || oldName || newName) &&
+            !(await getTokens()))
+        ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          this.outputHelp();
+          process.exit(1);
+        }
+        let oldExport: T;
+        let newExport: T;
+        if (options.oldFile) oldExport = readJsonFromFile<T>(options.oldFile);
+        if (options.oldId)
+          oldExport = await exporter(options.oldId, undefined, options);
+        if (oldName)
+          oldExport = await exporter(undefined, options.oldName, options);
+        if (options.newFile) newExport = readJsonFromFile<T>(options.newFile);
+        if (options.newId)
+          newExport = await exporter(options.newId, undefined, options);
+        if (newName)
+          newExport = await exporter(undefined, options.newName, options);
+        const diffs = differ(oldExport, newExport, options);
+        printMessage(diffs.join('\n'), 'data');
+      }
+    );
   }
 }

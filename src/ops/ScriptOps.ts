@@ -3,7 +3,7 @@ import { type ScriptSkeleton } from '@rockcarver/frodo-lib/types/api/ScriptApi';
 import { FullExportInterface } from '@rockcarver/frodo-lib/types/ops/ConfigOps';
 import {
   type ScriptExportInterface,
-  ScriptExportOptions,
+  type ScriptExportOptions,
   type ScriptImportOptions,
 } from '@rockcarver/frodo-lib/types/ops/ScriptOps';
 import chokidar from 'chokidar';
@@ -29,6 +29,7 @@ import {
   succeedSpinner,
   updateProgressIndicator,
 } from '../utils/Console';
+import { DepsOption } from '../utils/Diff';
 import { errorHandler } from './utils/OpsUtils';
 import wordwrap from './utils/Wordwrap';
 
@@ -44,6 +45,7 @@ const {
   decodeBase64,
 } = frodo.utils;
 const {
+  createScriptExportTemplate,
   readScript,
   readScriptByName,
   readScripts,
@@ -825,4 +827,37 @@ function getScriptLocations(
     }
   }
   return locations;
+}
+
+export async function scriptExporter(
+  id?: string,
+  name?: string,
+  options?: DepsOption
+): Promise<ScriptExportInterface> {
+  const exportOptions = {
+    deps: options.deps,
+    includeDefault: true,
+    useStringArrays: true,
+  };
+  const identifier = name ? name : id;
+  showSpinner(``);
+  spinSpinner(`Exporting script '${identifier}'...`);
+  try {
+    const script = name
+      ? await exportScriptByName(identifier, exportOptions)
+      : await exportScript(identifier, exportOptions);
+    succeedSpinner(`Exported script '${identifier}'.`);
+    return script;
+  } catch (e) {
+    failSpinner(`Unable to export script '${identifier}'`);
+    printError(e);
+    return createScriptExportTemplate();
+  }
+}
+
+export function scriptDiffer(
+  c1: ScriptExportInterface,
+  c2: ScriptExportInterface
+): string[] {
+  return [JSON.stringify(c1), JSON.stringify(c2)];
 }
