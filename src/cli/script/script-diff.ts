@@ -7,7 +7,7 @@ import { DiffCommand } from '../FrodoCommand';
 
 export default function setup() {
   const program = new DiffCommand<ScriptExportInterface, DepsOption>(
-    'frodo script list',
+    'frodo script diff',
     'Diff scripts',
     true,
     scriptExporter,

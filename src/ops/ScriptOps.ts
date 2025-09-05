@@ -29,7 +29,13 @@ import {
   succeedSpinner,
   updateProgressIndicator,
 } from '../utils/Console';
-import { DepsOption } from '../utils/Diff';
+import {
+  deleteDeepByKeys,
+  DepsOption,
+  diffObjects,
+  DiffOptions,
+  diffStrings,
+} from '../utils/Diff';
 import { errorHandler } from './utils/OpsUtils';
 import wordwrap from './utils/Wordwrap';
 
@@ -44,6 +50,7 @@ const {
   saveToFile,
   decodeBase64,
 } = frodo.utils;
+
 const {
   createScriptExportTemplate,
   readScript,
@@ -661,13 +668,32 @@ export function getScriptExportByScriptFile(
   scriptFile: string
 ): ScriptExportInterface {
   const scriptExport = getScriptExport(scriptFile);
+  return getExtractedScript(scriptExport, scriptFile);
+}
+
+/**
+ * Updates the script export with the extracted script (assuming it's extracted) and returns the updated script export object.
+ *
+ * @param {ScriptExportInterface} scriptExport The script export
+ * @param {string} scriptExportLocation The location of the script export file
+ * @returns {ScriptExportInterface} The updated script export
+ */
+export function getExtractedScript(
+  scriptExport: ScriptExportInterface,
+  scriptExportLocation: string | undefined
+): ScriptExportInterface {
   for (const script of Object.values(scriptExport.script)) {
     if (!isScriptExtracted(script.script)) {
       continue;
     }
+    if (!scriptExportLocation) {
+      throw new FrodoError(
+        `Script ${script.name} is extracted, but no export location was provided.`
+      );
+    }
     const scriptRaw = getExtractedData(
       script.script as string,
-      scriptFile.substring(0, scriptFile.lastIndexOf('/'))
+      scriptExportLocation.substring(0, scriptExportLocation.lastIndexOf('/'))
     );
     script.script = scriptRaw.split('\n');
   }
@@ -856,8 +882,54 @@ export async function scriptExporter(
 }
 
 export function scriptDiffer(
-  c1: ScriptExportInterface,
-  c2: ScriptExportInterface
+  oldScript: ScriptExportInterface,
+  newScript: ScriptExportInterface,
+  diffOptions: DiffOptions
 ): string[] {
-  return [JSON.stringify(c1), JSON.stringify(c2)];
+  const diffs = [];
+  getExtractedScript(oldScript, diffOptions.oldFile);
+  getExtractedScript(newScript, diffOptions.newFile);
+  const allIds = new Set(
+    [
+      ...Object.values(oldScript.script),
+      ...Object.values(newScript.script),
+    ].map((s) => s._id)
+  );
+  for (const id of allIds) {
+    const sOld = oldScript.script[id];
+    const sNew = newScript.script[id];
+    const scriptName = sOld.name === sNew.name ? sOld.name : id;
+    if (sOld && sNew) {
+      const diff = diffStrings(
+        getScriptAsString(sOld.script),
+        getScriptAsString(sNew.script)
+      );
+      if (diff.length) {
+        diffs.push(`@@ Script changes for '${scriptName}' @@`.magenta);
+        diffs.push(...diff);
+      }
+      deleteDeepByKeys([sOld, sNew], ['_rev', 'script']);
+      const confDiffs = diffObjects(sOld, sNew);
+      if (confDiffs.length) {
+        diffs.push(`@@ Script config changes for '${scriptName}' @@`.magenta);
+        diffs.push(...confDiffs);
+      }
+    } else if (sOld) {
+      diffs.push(`@@ Script removed: '${sOld.name}' @@`.red);
+    } else if (sNew) {
+      diffs.push(`@@ Script added: '${sNew.name}' @@`.green);
+    }
+  }
+  return diffs;
+}
+
+/**
+ * Takes in a script either as a string, base 64 encoded string, or string array, and returns its string representation.
+ * @param {script | string[]} script The script
+ * @returns {string} The script as a string
+ */
+function getScriptAsString(script: string | string[]): string {
+  if (Array.isArray(script)) return script.join('\n');
+  if (isBase64Encoded(script)) return decodeBase64(script);
+  return script;
 }
