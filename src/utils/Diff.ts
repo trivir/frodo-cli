@@ -99,25 +99,33 @@ export function diffObjects(
       } else if (JSON.stringify(oldVal) !== JSON.stringify(newVal)) {
         const prefix = '~' + ' '.repeat(level * indentation + 1);
         diffs.push(
-          `${prefix}"${key}": ${getValueDiffString(oldVal)} -> ${getValueDiffString(newVal)}`
-            .yellow
+          `${prefix}"${key}": ${getValueDiffString(oldVal)} -> ${getValueDiffString(newVal)},`
         );
       }
     } else if (oldVal !== undefined) {
       const prefix = '-' + ' '.repeat(level * indentation + 1);
-      diffs.push(
-        `${prefix}"${key}": ${getValueDiffString(oldVal, prefix)},`.red
-      );
+      diffs.push(`${prefix}"${key}": ${getValueDiffString(oldVal, prefix)},`);
     } else if (newVal !== undefined) {
       const prefix = '+' + ' '.repeat(level * indentation + 1);
-      diffs.push(
-        `${prefix}"${key}": ${getValueDiffString(oldVal, prefix)},`.green
-      );
+      diffs.push(`${prefix}"${key}": ${getValueDiffString(oldVal, prefix)},`);
     }
   }
-  diffs[diffs.length - 1] = diffs[diffs.length - 1].slice(0, -1);
+  if (diffs[diffs.length - 1][diffs[diffs.length - 1].length - 1] === ',') {
+    diffs[diffs.length - 1] = diffs[diffs.length - 1].slice(0, -1);
+  }
   diffs.push(' '.repeat(level) + '}');
-  return diffs;
+  return diffs.map((d) => {
+    switch (d[0]) {
+      case '+':
+        return d.green;
+      case '-':
+        return d.red;
+      case '~':
+        return d.yellow;
+      default:
+        return d;
+    }
+  });
 }
 
 /**
