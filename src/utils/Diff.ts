@@ -1,4 +1,4 @@
-import { frodo } from '@rockcarver/frodo-lib';
+import { frodo, state } from '@rockcarver/frodo-lib';
 import { structuredPatch } from 'diff';
 import fs from 'fs';
 
@@ -6,7 +6,7 @@ import { printMessage } from './Console';
 
 const { getFilePath } = frodo.utils;
 
-const { deleteDeepByKey } = frodo.utils.json;
+const { deleteDeepByKey, stringify } = frodo.utils.json;
 
 export type DiffOptions = {
   oldFile?: string;
@@ -68,49 +68,55 @@ export function deleteDeepByKeys<T>(objs: T[], keys: string[]): T[] {
  *
  * @param {object} objOld - The original sanitized object.
  * @param {object} objNew - The updated sanitized object.
- * @param {string} path - The path to the current object (for context).
+ * @param {number} level - The level of diff recursion.
+ * @param {number} indentation - The indentation for the diff.
  * @returns {string[]} Array of diff strings representing the changes.
  */
 export function diffObjects(
   objOld: object,
   objNew: object,
-  path: string = ''
+  level: number = 0,
+  indentation: number = 2
 ): string[] {
   const diffs = [];
   const keys1 = Object.keys(objOld || {});
   const keys2 = Object.keys(objNew || {});
   const allKeys = new Set([...keys1, ...keys2]);
 
+  diffs.push(' '.repeat(level) + '{');
   for (const key of allKeys) {
-    const pathWithKey = path ? `${path}.${key}` : key;
-    const val1 = objOld ? objOld[key] : undefined;
-    const val2 = objNew ? objNew[key] : undefined;
+    const oldVal = objOld ? objOld[key] : undefined;
+    const newVal = objNew ? objNew[key] : undefined;
 
-    if (val1 !== undefined && val2 !== undefined) {
+    if (oldVal !== undefined && newVal !== undefined) {
       if (
-        typeof val1 === 'object' &&
-        typeof val2 === 'object' &&
-        val1 !== null &&
-        val2 !== null
+        typeof oldVal === 'object' &&
+        typeof newVal === 'object' &&
+        oldVal !== null &&
+        newVal !== null
       ) {
-        diffs.push(...diffObjects(val1, val2, pathWithKey));
-      } else if (JSON.stringify(val1) !== JSON.stringify(val2)) {
+        diffs.push(...diffObjects(oldVal, newVal, level + 1, indentation));
+      } else if (JSON.stringify(oldVal) !== JSON.stringify(newVal)) {
+        const prefix = '~' + ' '.repeat(level * indentation + 1);
         diffs.push(
-          `~ Property '${pathWithKey}' changed from '${JSON.stringify(val1)}' to '${JSON.stringify(val2)}'`
+          `${prefix}"${key}": ${getValueDiffString(oldVal)} -> ${getValueDiffString(newVal)}`
             .yellow
         );
       }
-    } else if (val1 !== undefined) {
+    } else if (oldVal !== undefined) {
+      const prefix = '-' + ' '.repeat(level * indentation + 1);
       diffs.push(
-        `- Property '${pathWithKey}' removed (was '${JSON.stringify(val1)}')`
-          .red
+        `${prefix}"${key}": ${getValueDiffString(oldVal, prefix)},`.red
       );
-    } else if (val2 !== undefined) {
+    } else if (newVal !== undefined) {
+      const prefix = '+' + ' '.repeat(level * indentation + 1);
       diffs.push(
-        `+ Property '${pathWithKey}' added (is '${JSON.stringify(val2)}')`.green
+        `${prefix}"${key}": ${getValueDiffString(oldVal, prefix)},`.green
       );
     }
   }
+  diffs[diffs.length - 1] = diffs[diffs.length - 1].slice(0, -1);
+  diffs.push(' '.repeat(level) + '}');
   return diffs;
 }
 
@@ -151,4 +157,19 @@ export function diffStrings(oldStr: string, newStr: string): string[] {
     }
   }
   return diff;
+}
+
+function getValueDiffString(val: any, prefix: string = ''): string {
+  if (typeof val === 'object' && val !== null) {
+    if (!state.getVerbose()) {
+      return Array.isArray(val) ? '[...]' : '{...}';
+    }
+    const str = stringify(val);
+    const lines = str.split('\n');
+    for (let i = 1; i < lines.length; ++i) {
+      lines[i] = prefix + lines[i];
+    }
+    return lines.join('\n');
+  }
+  return stringify(val);
 }
