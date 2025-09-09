@@ -14,6 +14,7 @@ import {
 import fs from 'fs';
 
 import {
+  createKeyValueTable,
   createProgressIndicator,
   createTable,
   debugMessage,
@@ -31,6 +32,7 @@ import * as Script from './ScriptOps';
 import * as Theme from './ThemeOps';
 import { cloneDeep, errorHandler } from './utils/OpsUtils';
 import wordwrap from './utils/Wordwrap';
+import { getFullExportConfig } from '../utils/Config';
 
 const {
   getTypedFilename,
@@ -192,7 +194,11 @@ export async function exportJourneyToFile(
     delete fileData.meta;
     if (verbose)
       spinnerId = createProgressIndicator('indeterminate', 0, `${journeyId}`);
-    saveJsonToFile({ trees: { [fileData.tree._id]: fileData } }, filePath, includeMeta);
+    saveJsonToFile(
+      { trees: { [fileData.tree._id]: fileData } },
+      filePath,
+      includeMeta
+    );
     stopProgressIndicator(
       spinnerId,
       `Exported ${journeyId['brightCyan']} to ${filePath['brightCyan']}.`,
@@ -270,7 +276,11 @@ export async function exportJourneysToFiles(
       const file = getFilePath(getTypedFilename(`${treeId}`, 'journey'), true);
       try {
         updateProgressIndicator(indicatorId, `Saving ${treeId} to ${file}`);
-        saveJsonToFile({ trees: { [treeValue.tree._id]: treeValue } }, file, includeMeta);
+        saveJsonToFile(
+          { trees: { [treeValue.tree._id]: treeValue } },
+          file,
+          includeMeta
+        );
         stopProgressIndicator(indicatorId, `${treeId} saved to ${file}`);
       } catch (error) {
         stopProgressIndicator(indicatorId, `Error saving ${treeId} to ${file}`);
@@ -696,7 +706,8 @@ function describeTreeDescendentsMd(
  */
 export async function describeJourney(
   journeyData: SingleTreeExportInterface,
-  resolveTreeExport: TreeExportResolverInterface = onlineTreeExportResolver
+  resolveTreeExport: TreeExportResolverInterface = onlineTreeExportResolver,
+  usage = false
 ): Promise<boolean> {
   const errors: Error[] = [];
   try {
@@ -757,6 +768,30 @@ export async function describeJourney(
         `${JSON.parse(journeyData.tree.uiConfig.categories).join(', ')}`,
         'data'
       );
+    }
+    // Usage
+    if (usage) {
+      try {
+        const fullExport = await getFullExportConfig();
+        let journey = journeyData as SingleTreeExportInterface & {
+          locations: string[];
+        };
+        const journeyName = 
+          typeof journey.tree === 'string'? journey.tree : journey.tree?._id;
+        journey.locations = getJourneyLocations(fullExport, journeyName);
+        const table = createKeyValueTable();
+        table.push([
+          `Usage Locations (${journey.locations.length} total)`['brightCyan'],
+          journey.locations.length > 0 ? journey.locations[0] : '',
+        ]);
+        for (let i = 1; i < journey.locations.length; i++) {
+          table.push(['', journey.locations[i]]);
+        }
+        printMessage(table.toString(), 'data');
+        return true;
+      } catch (error) {
+        return false;
+      }
     }
 
     // Dependency Tree
@@ -1204,3 +1239,32 @@ export async function deleteJourneys(
   }
   return false;
 }
+
+function getJourneyLocations(configuration: any, journeyName: string): string[] {
+  const locations: string[] = [];
+  for (const [realm, realmExport] of Object.entries(
+    configuration.realm as Record<string, { journey: Record<string, any> }>
+  )) {
+    for (const journeyData of Object.values(realmExport.journey)) {
+      interface InnerTreeNode {
+        _id: string;
+        _type?: { _id?: string };
+        tree?: string | { _id: string };
+      }
+      for (const node of Object.values(journeyData.nodes ?? {}) as InnerTreeNode[]) {
+        const innerTreeName =
+          typeof node.tree === 'string' ? node.tree : node.tree?._id;
+        if (
+          node._type?._id === 'InnerTreeEvaluatorNode' &&
+          innerTreeName === journeyName
+        ) {
+          locations.push(
+            `realm.${realm}.journey.${journeyData.tree?._id ?? journeyData._id}`
+          );
+        }
+      }
+    }
+  }
+  return locations;
+}
+
