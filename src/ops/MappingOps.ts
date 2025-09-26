@@ -116,8 +116,7 @@ function saveMappingScript(
     object.source = extractDataToFile(
       script,
       `${id}/${objectFileName}`,
-      directory,
-      true
+      directory
     );
     return true;
   } catch (error) {

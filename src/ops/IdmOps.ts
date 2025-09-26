@@ -775,7 +775,7 @@ export function writeManagedJsonToDirectory(
       }
     }
     const fileName = getTypedFilename(object.name, 'managed');
-    objectPaths.push(extractDataToFile(object, fileName, directory, true));
+    objectPaths.push(extractDataToFile(object, fileName, directory));
   }
   managed.objects = objectPaths;
   saveToFile(
@@ -799,8 +799,7 @@ export function extractIdmScriptsToFolder(
     sourceObj.source = extractDataToFile(
       result.source,
       `${id}/${objectFileName}`,
-      directory,
-      true
+      directory
     );
   }
   return false;
@@ -822,8 +821,7 @@ export function extractIdmScriptToSameLevel(
     sourceObj.source = extractDataToFile(
       result.source,
       objectFileName,
-      directory,
-      true
+      directory
     );
   }
   return false;
@@ -840,8 +838,7 @@ export function extractIdmEndpointScript(
     object.source = extractDataToFile(
       result.source,
       objectFileName,
-      directory,
-      true
+      directory
     );
   }
   return false;

@@ -311,13 +311,12 @@ export function extractDataToFile(
   data: any,
   file: string,
   directory?: string,
-  noEndLine?: boolean
 ): string {
   const filePath = getFilePath((directory ? `${directory}/` : '') + file, true);
   if (typeof data === 'object') {
     saveJsonToFile(data, filePath, false);
   } else {
-    saveTextToFile(String(data), filePath, noEndLine);
+    saveTextToFile(String(data), filePath);
   }
   return `file://${file}`;
 }
