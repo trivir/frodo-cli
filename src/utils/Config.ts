@@ -266,7 +266,7 @@ export async function getConfig(
 export function extractDataToFile(
   data: any,
   file: string,
-  directory?: string
+  directory?: string,
 ): string {
   const filePath = getFilePath((directory ? `${directory}/` : '') + file, true);
   if (typeof data === 'object') {

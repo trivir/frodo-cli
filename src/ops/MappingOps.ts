@@ -91,12 +91,15 @@ function saveIdmScript(
 
 ): boolean {
   try {
-    const objectFileName = getTypedFilename(fileName, 'script', 'js');
-    object.source = extractDataToFile(script, `${id}/${objectFileName}`, directory);
-    return true
-  }
-  catch (error) {
-    printError(error)
+    const objectFileName = getTypedFilename(fileName, 'script', type);
+    object.source = extractDataToFile(
+      script,
+      `${id}/${objectFileName}`,
+      directory
+    );
+    return true;
+  } catch (error) {
+    printError(error);
   }
   return false;
 }

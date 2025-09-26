@@ -58,9 +58,11 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idm export -AD testDir1
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idm export --all-separate --no-metadata --separate-mappings --directory testDir3 --entities-file test/e2e/env/testEntitiesFile.json --env-file test/e2e/env/testEnvFile.env
 
-// IDM
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openidm-frodo-dev.classic.com:9080/openidm frodo idm export -AD testDir4 -m idm
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openidm-frodo-dev.classic.com:9080/openidm frodo idm export -aD testDir5 -m idm 
+//idm
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openidm-frodo-dev.classic.com:9080/openidm frodo idm export -AD testDir6 
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openidm-frodo-dev.classic.com:9080/openidm frodo idm export -aD testDir7 
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openidm-frodo-dev.classic.com:9080/openidm frodo idm export -AxD testDir8 
+
 */
 import { getEnv, testExport } from './utils/TestUtils';
 import { connection as c , idm_connection as ic} from './utils/TestConfig';
@@ -141,6 +143,10 @@ describe('frodo idm export', () => {
     const CMD = `frodo idm export -aD testDir7 -m idm`;
     await testExport(CMD, idmenv, undefined, undefined, dirName, false);
   });
-
+  test(`"frodo idm export -AxD testDir8 -m idm": should export all idm config entities for on prem idm`, async () => {
+    const dirName = 'testDir6';
+    const CMD = `frodo idm export -AD testDir6 -m idm`;
+    await testExport(CMD, idmenv, undefined, undefined, dirName, false);
+  });
 
 });

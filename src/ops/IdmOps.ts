@@ -761,10 +761,14 @@ function extractScriptsFromIdmManaged(
   foundResult,
   directory: string,
 ): boolean {
-  for (const behavior of foundResult) {
-    const sourceObj  = getObjectByPath(object,behavior.path);
-    const objectFileName = getTypedFilename(behavior.path, 'script', 'js');
-    sourceObj.source = extractDataToFile(behavior.source, `${id}/${objectFileName}`, directory);
+  for (const result of foundResults) {
+    const sourceObj = getObjectByPath(object, result.path);
+    const objectFileName = getTypedFilename(result.path, 'script', result.type);
+    sourceObj.source = extractDataToFile(
+      result.source,
+      `${id}/${objectFileName}`,
+      directory
+    );
   }
   return false
 }
@@ -775,10 +779,18 @@ function extractScriptsFromIdmSchedule(
   foundResult,
   directory: string,
 ): boolean {
-  for (const behavior of foundResult) {
-    const sourceObj  = getObjectByPath(object,behavior.path);
-    const objectFileName = getTypedFilename(`${id}.${behavior.path}`, 'script', 'js');
-    sourceObj.source = extractDataToFile(behavior.source, objectFileName,directory);
+  for (const result of foundResults) {
+    const sourceObj = getObjectByPath(object, result.path);
+    const objectFileName = getTypedFilename(
+      `${id}.${result.path}`,
+      'script',
+      result.type
+    );
+    sourceObj.source = extractDataToFile(
+      result.source,
+      objectFileName,
+      directory
+    );
   }
   return false
 }
@@ -789,9 +801,13 @@ function extractScriptsFromIdmEndpoint(
   foundResult:any,
   directory: string,
 ): boolean {
-  for (const behavior of foundResult) {
-    const objectFileName = getTypedFilename(id, 'script', 'js');
-    object.source = extractDataToFile(behavior.source, objectFileName, directory);
+  for (const result of foundResults) {
+    const objectFileName = getTypedFilename(id, 'script', result.type);
+    object.source = extractDataToFile(
+      result.source,
+      objectFileName,
+      directory
+    );
   }
   return false
   console.log(directory)
