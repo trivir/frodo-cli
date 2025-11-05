@@ -88,7 +88,7 @@ Options:
                                        walk through the tenant admin login flow
                                        of Identity Cloud and handle MFA
                                        (choices: "classic", "cloud",
-                                       "forgeops")
+                                       "forgeops", "idm")
   -N, --no-metadata                    Does not include metadata in the export
                                        file.
   --no-cache                           Disable token cache for this operation.
@@ -103,6 +103,9 @@ Options:
   --verbose                            Verbose output during command execution.
                                        If specified, may or may not produce
                                        additional output.
+  -x, --extract                        Extract the scripts from the exported
+                                       file, and save it to a separate file.
+                                       Ignored with -a.
 
 Environment Variables:
   FRODO_HOST: AM base URL. Overridden by 'host' argument.

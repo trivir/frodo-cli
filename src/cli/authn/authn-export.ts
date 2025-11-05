@@ -10,7 +10,11 @@ const { CLASSIC_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 const globalDeploymentTypes = [CLASSIC_DEPLOYMENT_TYPE_KEY];
 
 export default function setup() {
-  const program = new FrodoCommand('frodo authn export');
+  const program = new FrodoCommand(
+    'frodo authn export',
+    [],
+    globalDeploymentTypes
+  );
 
   program
     .description('Export authentication settings.')
@@ -39,7 +43,7 @@ export default function setup() {
           await getTokens(
             false,
             true,
-            options.global ? globalDeploymentTypes : undefined
+            options.global ?globalDeploymentTypes : undefined
           )
         ) {
           verboseMessage('Exporting authentication settings to file...');
