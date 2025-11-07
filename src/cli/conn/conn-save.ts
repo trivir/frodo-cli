@@ -7,6 +7,7 @@ import { addExistingServiceAccount } from '../../ops/ConnectionProfileOps.js';
 import { provisionCreds } from '../../ops/LogOps';
 import { printError, printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
+import { deviceAuthenticate, webAuthenticate } from './ExpressExample';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 const { isServiceAccountsFeatureAvailable } = frodo.cloud.serviceAccount;
@@ -48,6 +49,18 @@ export default function setup() {
       new Option(
         '--authentication-header-overrides [headers]',
         'Map of headers: {"host":"am.example.com:8081"}.'
+      )
+    )
+    .addOption(
+      new Option(
+        '--interactive',
+        'Log in using a Ping AIC end-user account via web browser.'
+      )
+    )
+    .addOption(
+      new Option (
+        '--device',
+        'Log in using another device.'
       )
     )
     .addHelpText(
@@ -96,10 +109,19 @@ export default function setup() {
           !state.getLogApiSecret() &&
           needSa;
         const forceLoginAsUser = needSa || needLogApiKey;
-        if (
-          (options.validate && (await getTokens(forceLoginAsUser))) ||
-          !options.validate
-        ) {
+        if (options.interactive) {
+          await webAuthenticate();
+        }
+        if (options.device) {
+          await deviceAuthenticate();
+        }
+        let haveTokens = false;
+        if (options.validate) {
+          haveTokens = await getTokens(forceLoginAsUser);
+        } else {
+          haveTokens = true;
+        }
+        if (haveTokens) {
           verboseMessage(
             `Saving connection profile for tenant ${state.getHost()}...`
           );
