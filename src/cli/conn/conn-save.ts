@@ -64,6 +64,10 @@ export default function setup() {
         `  Save an existing service account to an existing connection profile (partial host URL only updates an existing profile):\n` +
         `  $ frodo conn save --sa-id ${s.saId} --sa-jwk-file ${s.saJwkFile} ${s.connId}\n`[
           'brightCyan'
+        ] +
+        `  Save an existing log API key and secret to an existing connection profile (partial host URL only updates an existing profile):\n` +
+        `  $ frodo conn save --log-api-key [key] --log-api-secret [secret] ${s.connId}\n`[
+          'brightCyan'
         ]
     )
     .action(
@@ -91,10 +95,7 @@ export default function setup() {
           !state.getServiceAccountId() &&
           !state.getServiceAccountJwk();
         const needLogApiKey =
-          options.logApi &&
-          !state.getLogApiKey() &&
-          !state.getLogApiSecret() &&
-          needSa;
+          options.logApi && !state.getLogApiKey() && !state.getLogApiSecret();
         const forceLoginAsUser = needSa || needLogApiKey;
         if (
           (options.validate && (await getTokens(forceLoginAsUser))) ||
@@ -126,7 +127,11 @@ export default function setup() {
               }
             }
             // add new service account if none already exists in the profile
-            else if (!state.getServiceAccountId()) {
+            else if (
+              !state.getServiceAccountId() &&
+              !options.logApiKey &&
+              !options.logApiSecret
+            ) {
               try {
                 verboseMessage(`Creating service account...`);
                 const sa = await addNewServiceAccount();
@@ -194,8 +199,38 @@ export default function setup() {
               }
             }
           }
-          // add existing log api key and secret without validation
-          // storing log API key and secret in the connection profile is happening default, therefore no code required here
+          // add existing log api key and secret to existing connection profile
+          if (options.logApiKey && options.logApiSecret) {
+            if (options.validate) {
+              state.setLogApiKey(options.logApiKey);
+              state.setLogApiSecret(options.logApiSecret);
+              verboseMessage(
+                `Added log API key ${options.logApiKey} to profile without validation.`
+              );
+            }
+          }
+          // if no existing key/secret is passed create a fresh pair and add to the profile
+          else if (
+            state.getDeploymentType() === CLOUD_DEPLOYMENT_TYPE_KEY &&
+            options.logApi &&
+            !state.getLogApiKey()
+          ) {
+            try {
+              const creds = await provisionCreds();
+              state.setLogApiKey(creds.api_key_id as string);
+              state.setLogApiSecret(creds.api_key_secret as string);
+              printMessage(
+                `Created log API key ${creds.api_key_id} and secret.`
+              );
+            } catch (error) {
+              printMessage(error.response?.data, 'error');
+              printMessage(
+                `Error creating log API key and secret: ${error.response?.data?.message}`,
+                'error'
+              );
+              process.exitCode = 1;
+            }
+          }
           try {
             await saveConnectionProfile(host);
             printMessage(`Saved connection profile ${state.getHost()}`);
