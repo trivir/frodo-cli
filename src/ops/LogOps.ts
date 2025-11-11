@@ -18,10 +18,12 @@ import {
 const {
   getLogApiKeys,
   createLogApiKey,
+  isLogApiKeyValid,
   fetch,
   tail,
   getDefaultNoiseFilter,
   resolvePayloadLevel,
+  updateLogApiKey: _updateLogApiKey,
   deleteLogApiKey: _deleteLogApiKey,
   deleteLogApiKeys: _deleteLogApiKeys,
 } = frodo.cloud.log;
@@ -109,6 +111,18 @@ export async function deleteLogApiKeys() {
   }
   debugMessage(`cli.LogOps.deleteKeys: end [${outcome}]`);
   return outcome;
+}
+
+export async function updateLogApiKey(keyId: string, secret: string) {
+  if (await isLogApiKeyValid(keyId, secret)) {
+    state.setLogApiKey(keyId);
+    state.setLogApiSecret(secret);
+    _updateLogApiKey();
+    return true;
+  } else {
+    console.error('api key id or secret is invalid');
+    return false;
+  }
 }
 
 export async function tailLogs(
