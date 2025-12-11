@@ -2,7 +2,7 @@
 
 exports[`frodo node delete "frodo node delete --all": should not delete any nodes if they are all in use 1`] = `
 "Connected to https://openam-frodo-dev.forgeblocks.com/am [alpha] as service account Frodo TriVir [b672336b-41ef-428d-ae4a-e0c082875377]
-- Deleting custom nodes...
+◜ Deleting custom nodes...
 Error deleting custom node Display Callback
   Error deleting custom node Display Callback
     Network error:
@@ -11,6 +11,8 @@ Error deleting custom node Display Callback
       Code: ERR_BAD_REQUEST
       Reason: Bad Request
       Message: Cannot delete node type that is in use
+◜ Deleting custom nodes...
+◠ Deleting custom nodes...
 Error deleting custom node Has Session AM
   Error deleting custom node Has Session AM
     Network error:
@@ -19,6 +21,7 @@ Error deleting custom node Has Session AM
       Code: ERR_BAD_REQUEST
       Reason: Bad Request
       Message: Cannot delete node type that is in use
+◠ Deleting custom nodes...
 Error deleting custom node Display State
   Error deleting custom node Display State
     Network error:
@@ -27,6 +30,7 @@ Error deleting custom node Display State
       Code: ERR_BAD_REQUEST
       Reason: Bad Request
       Message: Cannot delete node type that is in use
+◠ Deleting custom nodes...
 Error deleting custom node Vector ALU
   Error deleting custom node Vector ALU
     Network error:
@@ -35,6 +39,7 @@ Error deleting custom node Vector ALU
       Code: ERR_BAD_REQUEST
       Reason: Bad Request
       Message: Cannot delete node type that is in use
+◠ Deleting custom nodes...
 Error deleting custom node Has Session
   Error deleting custom node Has Session
     Network error:
@@ -43,6 +48,7 @@ Error deleting custom node Has Session
       Code: ERR_BAD_REQUEST
       Reason: Bad Request
       Message: Cannot delete node type that is in use
+◠ Deleting custom nodes...
 Error deleting custom node ALU
   Error deleting custom node ALU
     Network error:
@@ -51,14 +57,15 @@ Error deleting custom node ALU
       Code: ERR_BAD_REQUEST
       Reason: Bad Request
       Message: Cannot delete node type that is in use
-✔ Deleted custom nodes.
+◠ Deleting custom nodes...
+✓ Deleted custom nodes.
 "
 `;
 
 exports[`frodo node delete "frodo node delete --node-id c605506774a848f7877b4d17a453bd39-1": should display error when the custom node with id 'c605506774a848f7877b4d17a453bd39-1' cannot be deleted since it is being used 1`] = `
 "Connected to https://openam-frodo-dev.forgeblocks.com/am [alpha] as service account Frodo TriVir [b672336b-41ef-428d-ae4a-e0c082875377]
-- Deleting c605506774a848f7877b4d17a453bd39-1...
-✖ Error: Error deleting custom node c605506774a848f7877b4d17a453bd39-1
+◜ Deleting c605506774a848f7877b4d17a453bd39-1...
+✗ Error: Error deleting custom node c605506774a848f7877b4d17a453bd39-1
 Error deleting custom node c605506774a848f7877b4d17a453bd39-1
   Network error:
     URL: https://openam-frodo-dev.forgeblocks.com/am/json/node-designer/node-type/c605506774a848f7877b4d17a453bd39-1
@@ -71,8 +78,8 @@ Error deleting custom node c605506774a848f7877b4d17a453bd39-1
 
 exports[`frodo node delete "frodo node delete --node-name 'Unknown'": should display error when the custom node named 'Unknown' cannot be deleted since it doesn't exist 1`] = `
 "Connected to https://openam-frodo-dev.forgeblocks.com/am [alpha] as service account Frodo TriVir [b672336b-41ef-428d-ae4a-e0c082875377]
-- Deleting Unknown...
-✖ Error: Error deleting custom node Unknown
+◜ Deleting Unknown...
+✗ Error: Error deleting custom node Unknown
 Error deleting custom node Unknown
   Error reading custom node Unknown
     Custom node 'Unknown' not found
@@ -81,7 +88,7 @@ Error deleting custom node Unknown
 
 exports[`frodo node delete "frodo node delete -a": should delete all nodes that are not being used 1`] = `
 "Connected to https://openam-frodo-dev.forgeblocks.com/am [alpha] as service account Frodo TriVir [b672336b-41ef-428d-ae4a-e0c082875377]
-- Deleting custom nodes...
+◜ Deleting custom nodes...
 Error deleting custom node Display Callback
   Error deleting custom node Display Callback
     Network error:
@@ -90,6 +97,8 @@ Error deleting custom node Display Callback
       Code: ERR_BAD_REQUEST
       Reason: Bad Request
       Message: Cannot delete node type that is in use
+◜ Deleting custom nodes...
+◠ Deleting custom nodes...
 Error deleting custom node Has Session AM
   Error deleting custom node Has Session AM
     Network error:
@@ -98,6 +107,7 @@ Error deleting custom node Has Session AM
       Code: ERR_BAD_REQUEST
       Reason: Bad Request
       Message: Cannot delete node type that is in use
+◠ Deleting custom nodes...
 Error deleting custom node Display State
   Error deleting custom node Display State
     Network error:
@@ -106,6 +116,7 @@ Error deleting custom node Display State
       Code: ERR_BAD_REQUEST
       Reason: Bad Request
       Message: Cannot delete node type that is in use
+◠ Deleting custom nodes...
 Error deleting custom node Vector ALU
   Error deleting custom node Vector ALU
     Network error:
@@ -114,6 +125,7 @@ Error deleting custom node Vector ALU
       Code: ERR_BAD_REQUEST
       Reason: Bad Request
       Message: Cannot delete node type that is in use
+◠ Deleting custom nodes...
 Error deleting custom node Has Session
   Error deleting custom node Has Session
     Network error:
@@ -122,6 +134,7 @@ Error deleting custom node Has Session
       Code: ERR_BAD_REQUEST
       Reason: Bad Request
       Message: Cannot delete node type that is in use
+◠ Deleting custom nodes...
 Error deleting custom node ALU
   Error deleting custom node ALU
     Network error:
@@ -130,7 +143,8 @@ Error deleting custom node ALU
       Code: ERR_BAD_REQUEST
       Reason: Bad Request
       Message: Cannot delete node type that is in use
-✔ Deleted custom nodes.
+◠ Deleting custom nodes...
+✓ Deleted custom nodes.
 "
 `;
 

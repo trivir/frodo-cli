@@ -178,6 +178,245 @@ Usage Locations (22 total)│realm.root-alpha.trees.j00.nodes.01d3785f-7fb4-44a7
 
 exports[`frodo script describe "frodo script describe -un shared": should describe the script with name "shared" with usage 1`] = `
 "Connected to https://openam-frodo-dev.forgeblocks.com/am [alpha] as service account Frodo-SA-1720799681233 [b672336b-41ef-428d-ae4a-e0c082875377]
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/22 Exporting am config entitie
+s...
+[█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 4% | 1/22 Exporting serverInformation
+[███░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 9% | 2/22 Exporting serverVersion
+[█████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 13% | 3/22 Exporting applicationTypes
+[███████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 18% | 4/22 Exporting authenticationCh
+ains
+[████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 22% | 5/22 Exporting authenticationMo
+dules
+[██████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 27% | 6/22 Exporting conditionTypes
+[████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 31% | 7/22 Exporting decisionCombiner
+s
+[██████████████░░░░░░░░░░░░░░░░░░░░░░░░░░] 36% | 8/22 Exporting secrets
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 40% | 9/22 Exporting subjectAttribute
+s
+[██████████████████░░░░░░░░░░░░░░░░░░░░░░] 45% | 10/22 Exporting subjectTypes
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 50% | 11/22 Exporting webhookService
+[█████████████████████░░░░░░░░░░░░░░░░░░░] 54% | 12/22 Exporting wsEntity
+[███████████████████████░░░░░░░░░░░░░░░░░] 59% | 13/22 Exporting applicationType
+s
+[█████████████████████████░░░░░░░░░░░░░░░] 63% | 14/22 Exporting authenticationC
+hains
+[███████████████████████████░░░░░░░░░░░░░] 68% | 15/22 Exporting authenticationM
+odules
+[████████████████████████████░░░░░░░░░░░░] 72% | 16/22 Exporting conditionTypes
+[██████████████████████████████░░░░░░░░░░] 77% | 17/22 Exporting decisionCombine
+rs
+[████████████████████████████████░░░░░░░░] 81% | 18/22 Exporting secrets
+[██████████████████████████████████░░░░░░] 86% | 19/22 Exporting subjectAttribut
+es
+[████████████████████████████████████░░░░] 90% | 20/22 Exporting subjectTypes
+[██████████████████████████████████████░░] 95% | 21/22 Exporting webhookService
+[████████████████████████████████████████] 100% | 22/22 Exporting wsEntity
+• Exported 22 am config entities.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/13 Exporting mappings
+[██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 7% | 1/13 Exporting mapping sync/mana
+gedBravo_user_managedBravo_user
+[██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 15% | 2/13 Exporting mapping sync/man
+agedAlpha_user_managedBravo_user
+[█████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 23% | 3/13 Exporting mapping sync/man
+agedBravo_user_managedAlpha_user
+[████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 30% | 4/13 Exporting mapping sync/Alp
+haUser2GoogleApps
+[███████████████░░░░░░░░░░░░░░░░░░░░░░░░░] 38% | 5/13 Exporting mapping mapping/
+managedAlpha_assignment_managedBravo_assignment
+[██████████████████░░░░░░░░░░░░░░░░░░░░░░] 46% | 6/13 Exporting mapping mapping/
+managedAlpha_user_systemAzureUser
+[█████████████████████░░░░░░░░░░░░░░░░░░░] 53% | 7/13 Exporting mapping mapping/
+managedBravo_group_managedBravo_group
+[████████████████████████░░░░░░░░░░░░░░░░] 61% | 8/13 Exporting mapping mapping/
+managedBravo_user_managedBravo_user0
+[███████████████████████████░░░░░░░░░░░░░] 69% | 9/13 Exporting mapping mapping/
+systemAzure__group___managedAlpha_assignment
+[██████████████████████████████░░░░░░░░░░] 76% | 10/13 Exporting mapping mapping
+/systemAzureDirectoryrole_managedAlpha_assignment
+[█████████████████████████████████░░░░░░░] 84% | 11/13 Exporting mapping mapping
+/systemAzureServiceplan_managedAlpha_assignment
+[████████████████████████████████████░░░░] 92% | 12/13 Exporting mapping mapping
+/systemAzureUser_managedAlpha_user
+[████████████████████████████████████████] 100% | 13/13 Exporting mapping mappin
+g/mapping12
+• 13 mappings exported.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/17 Exporting email templates..
+.
+[██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 5% | 1/17 Exporting email template ba
+selineDemoEmailVerification
+[████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 11% | 2/17 Exporting email template b
+aselineDemoMagicLink
+[██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 17% | 3/17 Exporting email template f
+orgottenUsername
+[█████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 23% | 4/17 Exporting email template f
+rEmailUpdated
+[███████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 29% | 5/17 Exporting email template f
+rForgotUsername
+[██████████████░░░░░░░░░░░░░░░░░░░░░░░░░░] 35% | 6/17 Exporting email template f
+rOnboarding
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 41% | 7/17 Exporting email template f
+rPasswordUpdated
+[██████████████████░░░░░░░░░░░░░░░░░░░░░░] 47% | 8/17 Exporting email template f
+rProfileUpdated
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 52% | 9/17 Exporting email template f
+rResetPassword
+[███████████████████████░░░░░░░░░░░░░░░░░] 58% | 10/17 Exporting email template 
+frUsernameUpdated
+[█████████████████████████░░░░░░░░░░░░░░░] 64% | 11/17 Exporting email template 
+idv
+[████████████████████████████░░░░░░░░░░░░] 70% | 12/17 Exporting email template 
+joiner
+[██████████████████████████████░░░░░░░░░░] 76% | 13/17 Exporting email template 
+registerPasswordlessDevice
+[████████████████████████████████░░░░░░░░] 82% | 14/17 Exporting email template 
+registration
+[███████████████████████████████████░░░░░] 88% | 15/17 Exporting email template 
+resetPassword
+[█████████████████████████████████████░░░] 94% | 16/17 Exporting email template 
+updatePassword
+[████████████████████████████████████████] 100% | 17/17 Exporting email template
+ welcome
+• Exported 17 email templates.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/69 Exporting config entities..
+.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 1% | 1/69 Exporting config entity acc
+ess
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 2% | 2/69 Exporting config entity alp
+haOrgPrivileges
+[█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 4% | 3/69 Exporting config entity aud
+it
+[██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 5% | 4/69 Exporting config entity aut
+hentication
+[██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 7% | 5/69 Exporting config entity bra
+voOrgPrivileges
+[███░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 8% | 6/69 Exporting config entity ema
+ilTemplate/baselineDemoEmailVerification
+[████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 10% | 7/69 Exporting config entity em
+ailTemplate/baselineDemoMagicLink
+[████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 11% | 8/69 Exporting config entity em
+ailTemplate/forgottenUsername
+[█████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 13% | 9/69 Exporting config entity em
+ailTemplate/frEmailUpdated
+[█████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 14% | 10/69 Exporting config entity e
+mailTemplate/frForgotUsername
+[██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 15% | 11/69 Exporting config entity e
+mailTemplate/frOnboarding
+[██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 17% | 12/69 Exporting config entity e
+mailTemplate/frPasswordUpdated
+[███████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 18% | 13/69 Exporting config entity e
+mailTemplate/frProfileUpdated
+[████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 20% | 14/69 Exporting config entity e
+mailTemplate/frResetPassword
+[████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 21% | 15/69 Exporting config entity e
+mailTemplate/frUsernameUpdated
+[█████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 23% | 16/69 Exporting config entity e
+mailTemplate/idv
+[█████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 24% | 17/69 Exporting config entity e
+mailTemplate/joiner
+[██████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 26% | 18/69 Exporting config entity e
+mailTemplate/registerPasswordlessDevice
+[██████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 27% | 19/69 Exporting config entity e
+mailTemplate/registration
+[███████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 28% | 20/69 Exporting config entity e
+mailTemplate/resetPassword
+[████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 30% | 21/69 Exporting config entity e
+mailTemplate/updatePassword
+[████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 31% | 22/69 Exporting config entity e
+mailTemplate/welcome
+[█████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░] 33% | 23/69 Exporting config entity e
+ndpoint/Test
+[█████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░] 34% | 24/69 Exporting config entity e
+ndpoint/testEndpoint2
+[██████████████░░░░░░░░░░░░░░░░░░░░░░░░░░] 36% | 25/69 Exporting config entity e
+ntityId
+[██████████████░░░░░░░░░░░░░░░░░░░░░░░░░░] 37% | 26/69 Exporting config entity e
+xternal.email
+[███████████████░░░░░░░░░░░░░░░░░░░░░░░░░] 39% | 27/69 Exporting config entity e
+xternal.emailDefault
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 40% | 28/69 Exporting config entity f
+idc/federation-EntraID
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 42% | 29/69 Exporting config entity f
+ieldPolicy/alpha_user
+[█████████████████░░░░░░░░░░░░░░░░░░░░░░░] 43% | 30/69 Exporting config entity f
+ieldPolicy/bravo_user
+[█████████████████░░░░░░░░░░░░░░░░░░░░░░░] 44% | 31/69 Exporting config entity i
+nternal
+[██████████████████░░░░░░░░░░░░░░░░░░░░░░] 46% | 32/69 Exporting config entity m
+anaged
+[██████████████████░░░░░░░░░░░░░░░░░░░░░░] 47% | 33/69 Exporting config entity m
+apping/managedAlpha_assignment_managedBravo_assignment
+[███████████████████░░░░░░░░░░░░░░░░░░░░░] 49% | 34/69 Exporting config entity m
+apping/managedAlpha_user_systemAzureUser
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 50% | 35/69 Exporting config entity m
+apping/managedBravo_group_managedBravo_group
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 52% | 36/69 Exporting config entity m
+apping/managedBravo_user_managedBravo_user0
+[█████████████████████░░░░░░░░░░░░░░░░░░░] 53% | 37/69 Exporting config entity m
+apping/mapping12
+[██████████████████████░░░░░░░░░░░░░░░░░░] 55% | 38/69 Exporting config entity m
+apping/systemAzure__group___managedAlpha_assignment
+[██████████████████████░░░░░░░░░░░░░░░░░░] 56% | 39/69 Exporting config entity m
+apping/systemAzureDirectoryrole_managedAlpha_assignment
+[██████████████████████░░░░░░░░░░░░░░░░░░] 57% | 40/69 Exporting config entity m
+apping/systemAzureServiceplan_managedAlpha_assignment
+[███████████████████████░░░░░░░░░░░░░░░░░] 59% | 41/69 Exporting config entity m
+apping/systemAzureUser_managedAlpha_user
+[████████████████████████░░░░░░░░░░░░░░░░] 60% | 42/69 Exporting config entity p
+olicy
+[████████████████████████░░░░░░░░░░░░░░░░] 62% | 43/69 Exporting config entity p
+rivilegeAssignments
+[█████████████████████████░░░░░░░░░░░░░░░] 63% | 44/69 Exporting config entity p
+rivileges
+[██████████████████████████░░░░░░░░░░░░░░] 65% | 45/69 Exporting config entity p
+rovisioner.openic/GoogleApps
+[██████████████████████████░░░░░░░░░░░░░░] 66% | 46/69 Exporting config entity p
+rovisioner.openicf.connectorinfoprovider
+[███████████████████████████░░░░░░░░░░░░░] 68% | 47/69 Exporting config entity p
+rovisioner.openicf/Azure
+[███████████████████████████░░░░░░░░░░░░░] 69% | 48/69 Exporting config entity p
+rovisioner.openicf/GoogleApps
+[████████████████████████████░░░░░░░░░░░░] 71% | 49/69 Exporting config entity r
+epo.ds
+[████████████████████████████░░░░░░░░░░░░] 72% | 50/69 Exporting config entity r
+outer
+[█████████████████████████████░░░░░░░░░░░] 73% | 51/69 Exporting config entity s
+cript
+[██████████████████████████████░░░░░░░░░░] 75% | 52/69 Exporting config entity s
+ecrets
+[██████████████████████████████░░░░░░░░░░] 76% | 53/69 Exporting config entity s
+elfservice.kba
+[███████████████████████████████░░░░░░░░░] 78% | 54/69 Exporting config entity s
+elfservice.terms
+[███████████████████████████████░░░░░░░░░] 79% | 55/69 Exporting config entity s
+ervletfilter/cors
+[████████████████████████████████░░░░░░░░] 81% | 56/69 Exporting config entity s
+ervletfilter/payload
+[████████████████████████████████░░░░░░░░] 82% | 57/69 Exporting config entity s
+ervletfilter/upload
+[█████████████████████████████████░░░░░░░] 84% | 58/69 Exporting config entity s
+ync
+[██████████████████████████████████░░░░░░] 85% | 59/69 Exporting config entity u
+i.context/admin
+[██████████████████████████████████░░░░░░] 86% | 60/69 Exporting config entity u
+i.context/api
+[███████████████████████████████████░░░░░] 88% | 61/69 Exporting config entity u
+i.context/enduser
+[███████████████████████████████████░░░░░] 89% | 62/69 Exporting config entity u
+i.context/oauth
+[████████████████████████████████████░░░░] 91% | 63/69 Exporting config entity u
+i/configuration
+[████████████████████████████████████░░░░] 92% | 64/69 Exporting config entity u
+i/dashboard
+[█████████████████████████████████████░░░] 94% | 65/69 Exporting config entity u
+i/profile
+[██████████████████████████████████████░░] 95% | 66/69 Exporting config entity u
+i/themeconfig
+[██████████████████████████████████████░░] 97% | 67/69 Exporting config entity u
+i/themerealm
+[███████████████████████████████████████░] 98% | 68/69 Exporting config entity u
+ilocale/fr
+[████████████████████████████████████████] 100% | 69/69 Exporting config entity 
+undefined
 Error exporting idm config entity fidc/federation-EntraID
   Error reading config entity fidc/federation-EntraID
     Network error:
@@ -186,6 +425,757 @@ Error exporting idm config entity fidc/federation-EntraID
       Code: ERR_BAD_REQUEST
       Reason: Forbidden
       Message: Access denied
+[████████████████████████████████████████] 100% | 69/69 Exporting config entity 
+undefined
+✓ Exported 69 config entities.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/7 Exporting internal roles...
+[█████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 14% | 1/7 Exporting internal role ope
+nidm-admin
+[███████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 28% | 2/7 Exporting internal role ope
+nidm-authorized
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 42% | 3/7 Exporting internal role ope
+nidm-reg
+[██████████████████████░░░░░░░░░░░░░░░░░░] 57% | 4/7 Exporting internal role ope
+nidm-cert
+[████████████████████████████░░░░░░░░░░░░] 71% | 5/7 Exporting internal role ope
+nidm-tasks-manager
+[██████████████████████████████████░░░░░░] 85% | 6/7 Exporting internal role pla
+tform-provisioning
+[████████████████████████████████████████] 100% | 7/7 Exporting internal role te
+st-internal-role
+• Exported 7 internal roles
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/7 Exporting custom nodes...
+[█████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 14% | 1/7 Exporting custom node ALU
+[███████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 28% | 2/7 Exporting custom node Gener
+ate JWT
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 42% | 3/7 Exporting custom node Displ
+ay Callback
+[██████████████████████░░░░░░░░░░░░░░░░░░] 57% | 4/7 Exporting custom node Has S
+ession
+[████████████████████████████░░░░░░░░░░░░] 71% | 5/7 Exporting custom node Has S
+ession AM
+[██████████████████████████████████░░░░░░] 85% | 6/7 Exporting custom node Displ
+ay State
+[████████████████████████████████████████] 100% | 7/7 Exporting custom node Vect
+or ALU
+• Exported 7 custom nodes.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/2 Exporting realms...
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 50% | 1/2 Exporting realm alpha
+[████████████████████████████████████████] 100% | 2/2 Exporting realm bravo
+• Exported 2 realms.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/22 Exporting scriptTypes...
+[█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 4% | 1/22 Exporting scriptType SAML2_
+SP_ADAPTER
+[███░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 9% | 2/22 Exporting scriptType OAUTH2
+_ACCESS_TOKEN_MODIFICATION
+[█████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 13% | 3/22 Exporting scriptType SCRIP
+TED_DECISION_NODE
+[███████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 18% | 4/22 Exporting scriptType AUTHE
+NTICATION_CLIENT_SIDE
+[████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 22% | 5/22 Exporting scriptType DEVIC
+E_MATCH_NODE
+[██████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 27% | 6/22 Exporting scriptType AUTHE
+NTICATION_TREE_DECISION_NODE
+[████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 31% | 7/22 Exporting scriptType OAUTH
+2_SCRIPTED_JWT_ISSUER
+[██████████████░░░░░░░░░░░░░░░░░░░░░░░░░░] 36% | 8/22 Exporting scriptType AUTHE
+NTICATION_SERVER_SIDE
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 40% | 9/22 Exporting scriptType SOCIA
+L_IDP_PROFILE_TRANSFORMATION
+[██████████████████░░░░░░░░░░░░░░░░░░░░░░] 45% | 10/22 Exporting scriptType CONF
+IG_PROVIDER_NODE
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 50% | 11/22 Exporting scriptType OAUT
+H2_VALIDATE_SCOPE
+[█████████████████████░░░░░░░░░░░░░░░░░░░] 54% | 12/22 Exporting scriptType LIBR
+ARY
+[███████████████████████░░░░░░░░░░░░░░░░░] 59% | 13/22 Exporting scriptType OAUT
+H2_AUTHORIZE_ENDPOINT_DATA_PROVIDER
+[█████████████████████████░░░░░░░░░░░░░░░] 63% | 14/22 Exporting scriptType OAUT
+H2_EVALUATE_SCOPE
+[███████████████████████████░░░░░░░░░░░░░] 68% | 15/22 Exporting scriptType POLI
+CY_CONDITION
+[████████████████████████████░░░░░░░░░░░░] 72% | 16/22 Exporting scriptType OIDC
+_CLAIMS
+[██████████████████████████████░░░░░░░░░░] 77% | 17/22 Exporting scriptType SAML
+2_IDP_ADAPTER
+[████████████████████████████████░░░░░░░░] 81% | 18/22 Exporting scriptType PING
+ONE_VERIFY_COMPLETION_DECISION_NODE
+[██████████████████████████████████░░░░░░] 86% | 19/22 Exporting scriptType SAML
+2_NAMEID_MAPPER
+[████████████████████████████████████░░░░] 90% | 20/22 Exporting scriptType SAML
+2_IDP_ATTRIBUTE_MAPPER
+[██████████████████████████████████████░░] 95% | 21/22 Exporting scriptType OAUT
+H2_MAY_ACT
+[████████████████████████████████████████] 100% | 22/22 Exporting scriptType NOD
+E_DESIGNER
+• Exported 22 scriptTypes.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/13 Exporting secrets...
+[██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 7% | 1/13 Exporting secret esv-admin-
+token
+[██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 15% | 2/13 Exporting secret esv-brand
+o-pingone
+[█████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 23% | 3/13 Exporting secret esv-secre
+t-import-test1
+[████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 30% | 4/13 Exporting secret esv-secre
+t-import-test2
+[███████████████░░░░░░░░░░░░░░░░░░░░░░░░░] 38% | 5/13 Exporting secret esv-test-
+secret
+[██████████████████░░░░░░░░░░░░░░░░░░░░░░] 46% | 6/13 Exporting secret esv-test-
+secret-cert-pem
+[█████████████████████░░░░░░░░░░░░░░░░░░░] 53% | 7/13 Exporting secret esv-test-
+secret-cert-pem-raw
+[████████████████████████░░░░░░░░░░░░░░░░] 61% | 8/13 Exporting secret esv-test-
+secret-euler
+[███████████████████████████░░░░░░░░░░░░░] 69% | 9/13 Exporting secret esv-test-
+secret-file-base64hmac
+[██████████████████████████████░░░░░░░░░░] 76% | 10/13 Exporting secret esv-test
+-secret-file-base64hmac-raw
+[█████████████████████████████████░░░░░░░] 84% | 11/13 Exporting secret esv-test
+-secret-pi
+[████████████████████████████████████░░░░] 92% | 12/13 Exporting secret esv-test
+-secret-pi-generic
+[████████████████████████████████████████] 100% | 13/13 Exporting secret esv-vol
+kers-test-secret
+• Exported 13 secrets.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/2 Exporting global services...
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 50% | 1/2 Exporting global service 
+[████████████████████████████████████████] 100% | 2/2 Exporting global service 
+• Exported 2 global services.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/12 Exporting variables...
+[███░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 8% | 1/12 Exporting variable esv-blue
+-piller
+[██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 16% | 2/12 Exporting variable esv-ipv
+4-cidr-access-rules
+[██████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 25% | 3/12 Exporting variable esv-neb
+uchadnezzar-crew
+[█████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░] 33% | 4/12 Exporting variable esv-neb
+uchadnezzar-crew-structure
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 41% | 5/12 Exporting variable esv-neo
+-age
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 50% | 6/12 Exporting variable esv-num
+ber
+[███████████████████████░░░░░░░░░░░░░░░░░] 58% | 7/12 Exporting variable esv-tes
+t
+[██████████████████████████░░░░░░░░░░░░░░] 66% | 8/12 Exporting variable esv-tes
+t-var
+[██████████████████████████████░░░░░░░░░░] 75% | 9/12 Exporting variable esv-tes
+t-var-pi
+[█████████████████████████████████░░░░░░░] 83% | 10/12 Exporting variable esv-te
+st-var-pi-string
+[████████████████████████████████████░░░░] 91% | 11/12 Exporting variable esv-te
+st-variable-light
+[████████████████████████████████████████] 100% | 12/12 Exporting variable esv-t
+rinity-phone
+• Exported 12 variables.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/2 Exporting alpha realm SAML2 
+providers...
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 50% | 1/2 Exporting alpha realm SAML2
+ provider aVNQQXp1cmU
+[████████████████████████████████████████] 100% | 2/2 Exporting alpha realm SAML
+2 provider dXJuOmZlZGVyYXRpb246TWljcm9zb2Z0T25saW5l
+• Exported 2 alpha realm SAML2 providers.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/3 Exporting alpha realm circle
+s of trust...
+[█████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░] 33% | 1/3 Exporting alpha realm circl
+e of trust 2f04818d-561e-4f8a-82e8-af2426112138
+[██████████████████████████░░░░░░░░░░░░░░] 66% | 2/3 Exporting alpha realm circl
+e of trust affiliation-test
+[████████████████████████████████████████] 100% | 3/3 Exporting alpha realm circ
+le of trust AzureCOT
+• Exported 3 alpha realm circles of trust.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/3 Exporting alpha realm agent 
+groups...
+[█████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░] 33% | 1/3 Exporting alpha realm agent
+ group test_web_agent_group
+[██████████████████████████░░░░░░░░░░░░░░] 66% | 2/3 Exporting alpha realm agent
+ group test_java_group
+[████████████████████████████████████████] 100% | 3/3 Exporting alpha realm agen
+t group test_ig_group
+• Exported 3 alpha realm agent groups.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/11 Exporting alpha realm agent
+s...
+[███░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 9% | 1/11 Exporting alpha realm agent
+ cdsso-ig-agent
+[███████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 18% | 2/11 Exporting alpha realm agen
+t frodo-test-ig-agent
+[██████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 27% | 3/11 Exporting alpha realm agen
+t frodo-test-ig-agent2
+[██████████████░░░░░░░░░░░░░░░░░░░░░░░░░░] 36% | 4/11 Exporting alpha realm agen
+t frodo-test-java-agent
+[██████████████████░░░░░░░░░░░░░░░░░░░░░░] 45% | 5/11 Exporting alpha realm agen
+t frodo-test-java-agent2
+[█████████████████████░░░░░░░░░░░░░░░░░░░] 54% | 6/11 Exporting alpha realm agen
+t frodo-test-web-agent
+[█████████████████████████░░░░░░░░░░░░░░░] 63% | 7/11 Exporting alpha realm agen
+t frodo-test-web-agent2
+[████████████████████████████░░░░░░░░░░░░] 72% | 8/11 Exporting alpha realm agen
+t ig-agent
+[████████████████████████████████░░░░░░░░] 81% | 9/11 Exporting alpha realm agen
+t my-policy-agent
+[████████████████████████████████████░░░░] 90% | 10/11 Exporting alpha realm age
+nt test
+[████████████████████████████████████████] 100% | 11/11 Exporting alpha realm ag
+ent test software publisher
+• Exported 11 alpha realm agents.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/17 Exporting alpha realm OAuth
+2 clients...
+[██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 5% | 1/17 Exporting alpha realm OAuth
+2 client EncoreRCSClient
+[████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 11% | 2/17 Exporting alpha realm OAut
+h2 client hrlite-client
+[██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 17% | 3/17 Exporting alpha realm OAut
+h2 client testapp
+[█████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 23% | 4/17 Exporting alpha realm OAut
+h2 client 60b7b032-68fc-45ed-98ca-262c1985fb7e
+[███████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 29% | 5/17 Exporting alpha realm OAut
+h2 client 0b48992b-a2dd-4ed5-8b07-1fc5d7306da8
+[██████████████░░░░░░░░░░░░░░░░░░░░░░░░░░] 35% | 6/17 Exporting alpha realm OAut
+h2 client frodo-idm-access
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 41% | 7/17 Exporting alpha realm OAut
+h2 client RCSClient
+[██████████████████░░░░░░░░░░░░░░░░░░░░░░] 47% | 8/17 Exporting alpha realm OAut
+h2 client EncoreWindowsRCSClient
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 52% | 9/17 Exporting alpha realm OAut
+h2 client rfc7523-client1
+[███████████████████████░░░░░░░░░░░░░░░░░] 58% | 10/17 Exporting alpha realm OAu
+th2 client 49a2981c-e192-4739-a0e6-c7582168bdf5
+[█████████████████████████░░░░░░░░░░░░░░░] 64% | 11/17 Exporting alpha realm OAu
+th2 client baseline-device
+[████████████████████████████░░░░░░░░░░░░] 70% | 12/17 Exporting alpha realm OAu
+th2 client baseline-ios-sdk
+[██████████████████████████████░░░░░░░░░░] 76% | 13/17 Exporting alpha realm OAu
+th2 client baseline-ciba
+[████████████████████████████████░░░░░░░░] 82% | 14/17 Exporting alpha realm OAu
+th2 client baseline-web
+[███████████████████████████████████░░░░░] 88% | 15/17 Exporting alpha realm OAu
+th2 client da190d6b-0fcc-42aa-b890-0cef7486e6d4
+[█████████████████████████████████████░░░] 94% | 16/17 Exporting alpha realm OAu
+th2 client test2
+[████████████████████████████████████████] 100% | 17/17 Exporting alpha realm OA
+uth2 client testclient
+• Exported 17 alpha realm OAuth2 clients.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/7 Exporting alpha realm provid
+ers
+[█████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 14% | 1/7 Exporting alpha realm provi
+der google
+[███████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 28% | 2/7 Exporting alpha realm provi
+der github
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 42% | 3/7 Exporting alpha realm provi
+der apple-stoyan
+[██████████████████████░░░░░░░░░░░░░░░░░░] 57% | 4/7 Exporting alpha realm provi
+der apple_web
+[████████████████████████████░░░░░░░░░░░░] 71% | 5/7 Exporting alpha realm provi
+der okta-trial-5735851
+[██████████████████████████████████░░░░░░] 85% | 6/7 Exporting alpha realm provi
+der adfs
+[████████████████████████████████████████] 100% | 7/7 Exporting alpha realm prov
+ider azure
+• 7 alpha realm providers exported.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/21 Exporting alpha realm journ
+eys...
+[█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 4% | 1/21 Exporting alpha realm journ
+ey ForgottenUsername
+[███░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 9% | 2/21 Exporting alpha realm journ
+ey FrodoTest
+[█████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 14% | 3/21 Exporting alpha realm jour
+ney j00
+[███████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 19% | 4/21 Exporting alpha realm jour
+ney j01
+[█████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 23% | 5/21 Exporting alpha realm jour
+ney j02
+[███████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 28% | 6/21 Exporting alpha realm jour
+ney j03
+[█████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░] 33% | 7/21 Exporting alpha realm jour
+ney j04
+[███████████████░░░░░░░░░░░░░░░░░░░░░░░░░] 38% | 8/21 Exporting alpha realm jour
+ney j05
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 42% | 9/21 Exporting alpha realm jour
+ney j06
+[██████████████████░░░░░░░░░░░░░░░░░░░░░░] 47% | 10/21 Exporting alpha realm jou
+rney j07
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 52% | 11/21 Exporting alpha realm jou
+rney j08
+[██████████████████████░░░░░░░░░░░░░░░░░░] 57% | 12/21 Exporting alpha realm jou
+rney j09
+[████████████████████████░░░░░░░░░░░░░░░░] 61% | 13/21 Exporting alpha realm jou
+rney j10
+[██████████████████████████░░░░░░░░░░░░░░] 66% | 14/21 Exporting alpha realm jou
+rney Login
+[████████████████████████████░░░░░░░░░░░░] 71% | 15/21 Exporting alpha realm jou
+rney OrphanedTest
+[██████████████████████████████░░░░░░░░░░] 76% | 16/21 Exporting alpha realm jou
+rney ProgressiveProfile
+[████████████████████████████████░░░░░░░░] 80% | 17/21 Exporting alpha realm jou
+rney RadioChoice
+[██████████████████████████████████░░░░░░] 85% | 18/21 Exporting alpha realm jou
+rney Registration
+[████████████████████████████████████░░░░] 90% | 19/21 Exporting alpha realm jou
+rney ResetPassword
+[██████████████████████████████████████░░] 95% | 20/21 Exporting alpha realm jou
+rney test
+[████████████████████████████████████████] 100% | 21/21 Exporting alpha realm jo
+urney UpdatePassword
+• Exported 21 alpha realm journeys.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/3 Exporting alpha realm applic
+ations...
+[█████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░] 33% | 1/3 Exporting alpha realm appli
+cation Azure
+[██████████████████████████░░░░░░░░░░░░░░] 66% | 2/3 Exporting alpha realm appli
+cation testLDAP
+[████████████████████████████████████████] 100% | 3/3 Exporting alpha realm appl
+ication Google
+• Exported 3 alpha realm applications
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/6 Exporting alpha realm polici
+es...
+[██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 16% | 1/6 Exporting alpha realm polic
+y FeatureStorePolicy
+[█████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░] 33% | 2/6 Exporting alpha realm polic
+y Test Policy
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 50% | 3/6 Exporting alpha realm polic
+y activity
+[██████████████████████████░░░░░░░░░░░░░░] 66% | 4/6 Exporting alpha realm polic
+y apply
+[█████████████████████████████████░░░░░░░] 83% | 5/6 Exporting alpha realm polic
+y HR-webapp
+[████████████████████████████████████████] 100% | 6/6 Exporting alpha realm poli
+cy actions
+• Exported 6 alpha realm policies.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/5 Exporting alpha realm policy
+ sets...
+[████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 20% | 1/5 Exporting alpha realm polic
+y set undefined
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 40% | 2/5 Exporting alpha realm polic
+y set undefined
+[████████████████████████░░░░░░░░░░░░░░░░] 60% | 3/5 Exporting alpha realm polic
+y set undefined
+[████████████████████████████████░░░░░░░░] 80% | 4/5 Exporting alpha realm polic
+y set undefined
+[████████████████████████████████████████] 100% | 5/5 Exporting alpha realm poli
+cy set undefined
+• Exported 5 alpha realm policy sets.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/8 Exporting alpha realm resour
+ce types...
+[████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 12% | 1/8 Exporting alpha realm resou
+rce type undefined
+[██████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 25% | 2/8 Exporting alpha realm resou
+rce type undefined
+[██████████████░░░░░░░░░░░░░░░░░░░░░░░░░░] 37% | 3/8 Exporting alpha realm resou
+rce type undefined
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 50% | 4/8 Exporting alpha realm resou
+rce type undefined
+[████████████████████████░░░░░░░░░░░░░░░░] 62% | 5/8 Exporting alpha realm resou
+rce type undefined
+[██████████████████████████████░░░░░░░░░░] 75% | 6/8 Exporting alpha realm resou
+rce type undefined
+[██████████████████████████████████░░░░░░] 87% | 7/8 Exporting alpha realm resou
+rce type undefined
+[████████████████████████████████████████] 100% | 8/8 Exporting alpha realm reso
+urce type undefined
+• Exported 8 alpha realm resource types.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/67 Exporting alpha realm 67 sc
+ripts...
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 1% | 1/67 Reading alpha realm script 
+Saml2 IDP Adapter Always Auth
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 2% | 2/67 Reading alpha realm script 
+ADFS Profile Normalization (JS)
+[█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 4% | 3/67 Reading alpha realm script 
+Alpha endUserUIClient OIDC Claims Script
+[██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 5% | 4/67 Reading alpha realm script 
+EmailAsUsername
+[██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 7% | 5/67 Reading alpha realm script 
+Itsme Profile Normalization
+[███░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 8% | 6/67 Reading alpha realm script 
+OAuth2 May Act Script
+[████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 10% | 7/67 Reading alpha realm script
+ Next Generation Scripted Decision Node Script
+[████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 11% | 8/67 Reading alpha realm script
+ Social Identity Provider Profile Transformation Script
+[█████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 13% | 9/67 Reading alpha realm script
+ Device Id (Match) - Client Side
+[█████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 14% | 10/67 Reading alpha realm scrip
+t Google Profile Normalization
+[██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 16% | 11/67 Reading alpha realm scrip
+t LINE Profile Normalization
+[██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 17% | 12/67 Reading alpha realm scrip
+t OAuth2 Evaluate Scope Script
+[███████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 19% | 13/67 Reading alpha realm scrip
+t OIDC Claims Script
+[████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 20% | 14/67 Reading alpha realm scrip
+t Normalized Profile to Identity
+[████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 22% | 15/67 Reading alpha realm scrip
+t SAML2 IDP Adapter Script
+[█████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 23% | 16/67 Reading alpha realm scrip
+t OAuth2 Validate Scope Script
+[██████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 25% | 17/67 Reading alpha realm scrip
+t OAuth2 Access Token Modification Script
+[██████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 26% | 18/67 Reading alpha realm scrip
+t Library Script
+[███████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 28% | 19/67 Reading alpha realm scrip
+t Inactive Device Match Script
+[███████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 29% | 20/67 Reading alpha realm scrip
+t debug
+[████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 31% | 21/67 Reading alpha realm scrip
+t OAuth2 JWT Issuer Script
+[████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 32% | 22/67 Reading alpha realm scrip
+t WordPress Profile Normalization
+[█████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░] 34% | 23/67 Reading alpha realm scrip
+t LinkedIn Profile Normalization
+[██████████████░░░░░░░░░░░░░░░░░░░░░░░░░░] 35% | 24/67 Reading alpha realm scrip
+t SAML2 IDP Attribute Mapper Script
+[██████████████░░░░░░░░░░░░░░░░░░░░░░░░░░] 37% | 25/67 Reading alpha realm scrip
+t Amazon Profile Normalization
+[███████████████░░░░░░░░░░░░░░░░░░░░░░░░░] 38% | 26/67 Reading alpha realm scrip
+t My Other Example Library Script
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 40% | 27/67 Reading alpha realm scrip
+t Device Profile Match Template - Decision Node Script
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 41% | 28/67 Reading alpha realm scrip
+t Scripted Policy Condition
+[█████████████████░░░░░░░░░░░░░░░░░░░░░░░] 43% | 29/67 Reading alpha realm scrip
+t VKontakte Profile Normalization
+[█████████████████░░░░░░░░░░░░░░░░░░░░░░░] 44% | 30/67 Reading alpha realm scrip
+t SAML2 NameID Mapper Script
+[██████████████████░░░░░░░░░░░░░░░░░░░░░░] 46% | 31/67 Reading alpha realm scrip
+t ForgeRock Internal: OIDC Claims Script
+[██████████████████░░░░░░░░░░░░░░░░░░░░░░] 47% | 32/67 Reading alpha realm scrip
+t Scripted Module - Server Side
+[███████████████████░░░░░░░░░░░░░░░░░░░░░] 49% | 33/67 Reading alpha realm scrip
+t Alpha OAuth2 Access Token Modification Script
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 50% | 34/67 Reading alpha realm scrip
+t Format Username
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 52% | 35/67 Reading alpha realm scrip
+t My Example Library
+[█████████████████████░░░░░░░░░░░░░░░░░░░] 53% | 36/67 Reading alpha realm scrip
+t Instagram Profile Normalization
+[██████████████████████░░░░░░░░░░░░░░░░░░] 55% | 37/67 Reading alpha realm scrip
+t GitHub Profile Normalization
+[██████████████████████░░░░░░░░░░░░░░░░░░] 56% | 38/67 Reading alpha realm scrip
+t SAML2 SP Adapter Script
+[███████████████████████░░░░░░░░░░░░░░░░░] 58% | 39/67 Reading alpha realm scrip
+t Salesforce Profile Normalization
+[███████████████████████░░░░░░░░░░░░░░░░░] 59% | 40/67 Reading alpha realm scrip
+t WeChat Profile Normalization
+[████████████████████████░░░░░░░░░░░░░░░░] 61% | 41/67 Reading alpha realm scrip
+t Twitter Profile Normalization
+[████████████████████████░░░░░░░░░░░░░░░░] 62% | 42/67 Reading alpha realm scrip
+t Check Username
+[█████████████████████████░░░░░░░░░░░░░░░] 64% | 43/67 Reading alpha realm scrip
+t Custom Device Match Script
+[██████████████████████████░░░░░░░░░░░░░░] 65% | 44/67 Reading alpha realm scrip
+t Okta Profile Normalization
+[██████████████████████████░░░░░░░░░░░░░░] 67% | 45/67 Reading alpha realm scrip
+t level
+[███████████████████████████░░░░░░░░░░░░░] 68% | 46/67 Reading alpha realm scrip
+t My Example Script Using Libraries
+[████████████████████████████░░░░░░░░░░░░] 70% | 47/67 Reading alpha realm scrip
+t Remove Button
+[████████████████████████████░░░░░░░░░░░░] 71% | 48/67 Reading alpha realm scrip
+t Device Id (Match) - Server Side
+[█████████████████████████████░░░░░░░░░░░] 73% | 49/67 Reading alpha realm scrip
+t mode
+[█████████████████████████████░░░░░░░░░░░] 74% | 50/67 Reading alpha realm scrip
+t Scripted Module - Client Side
+[██████████████████████████████░░░░░░░░░░] 76% | 51/67 Reading alpha realm scrip
+t GitHub Profile Normalization (VS)
+[██████████████████████████████░░░░░░░░░░] 77% | 52/67 Reading alpha realm scrip
+t LinkedIn Profile Normalization
+[███████████████████████████████░░░░░░░░░] 79% | 53/67 Reading alpha realm scrip
+t ForgeRock Internal: OAuth2 Access Token Modification Script
+[████████████████████████████████░░░░░░░░] 80% | 54/67 Reading alpha realm scrip
+t Alpha OIDC Claims Script
+[████████████████████████████████░░░░░░░░] 82% | 55/67 Reading alpha realm scrip
+t Config Provider Node Script
+[█████████████████████████████████░░░░░░░] 83% | 56/67 Reading alpha realm scrip
+t test-script-with-secrets-and-variables
+[██████████████████████████████████░░░░░░] 85% | 57/67 Reading alpha realm scrip
+t FrodoSPAdapter
+[██████████████████████████████████░░░░░░] 86% | 58/67 Reading alpha realm scrip
+t Microsoft Profile Normalization
+[███████████████████████████████████░░░░░] 88% | 59/67 Reading alpha realm scrip
+t shared
+[███████████████████████████████████░░░░░] 89% | 60/67 Reading alpha realm scrip
+t Alpha endUserUIClient OAuth2 Access Token Modification Script
+[████████████████████████████████████░░░░] 91% | 61/67 Reading alpha realm scrip
+t Next Generation Device Match Node Script
+[████████████████████████████████████░░░░] 92% | 62/67 Reading alpha realm scrip
+t OAuth2 Authorize Endpoint Data Provider Script
+[█████████████████████████████████████░░░] 94% | 63/67 Reading alpha realm scrip
+t Yahoo Profile Normalization
+[██████████████████████████████████████░░] 95% | 64/67 Reading alpha realm scrip
+t Authentication Tree Decision Node Script
+[██████████████████████████████████████░░] 97% | 65/67 Reading alpha realm scrip
+t Normalized Profile to Managed User
+[███████████████████████████████████████░] 98% | 66/67 Reading alpha realm scrip
+t Apple Profile Normalization
+[████████████████████████████████████████] 100% | 67/67 Reading alpha realm scri
+pt Facebook Profile Normalization
+• Exported alpha realm 67 scripts.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/1 Exporting secret stores...
+[████████████████████████████████████████] 100% | 1/1 Exporting secret store ESV
+• Exported 1 secret stores.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/10 Exporting alpha realm servi
+ces...
+[████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 10% | 1/10 Exporting alpha realm serv
+ice 
+[████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 20% | 2/10 Exporting alpha realm serv
+ice 
+[████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 30% | 3/10 Exporting alpha realm serv
+ice 
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 40% | 4/10 Exporting alpha realm serv
+ice 
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 50% | 5/10 Exporting alpha realm serv
+ice 
+[████████████████████████░░░░░░░░░░░░░░░░] 60% | 6/10 Exporting alpha realm serv
+ice 
+[████████████████████████████░░░░░░░░░░░░] 70% | 7/10 Exporting alpha realm serv
+ice 
+[████████████████████████████████░░░░░░░░] 80% | 8/10 Exporting alpha realm serv
+ice 
+[████████████████████████████████████░░░░] 90% | 9/10 Exporting alpha realm serv
+ice 
+[████████████████████████████████████████] 100% | 10/10 Exporting alpha realm se
+rvice 
+• Exported 10 alpha realm services.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/7 Exporting alpha realm themes
+...
+[█████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 14% | 1/7 Exporting alpha realm theme
+ Contrast
+[███████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 28% | 2/7 Exporting alpha realm theme
+ Copy of Zardoz
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 42% | 3/7 Exporting alpha realm theme
+ Highlander
+[██████████████████████░░░░░░░░░░░░░░░░░░] 57% | 4/7 Exporting alpha realm theme
+ NoAccess
+[████████████████████████████░░░░░░░░░░░░] 71% | 5/7 Exporting alpha realm theme
+ Robroy
+[██████████████████████████████████░░░░░░] 85% | 6/7 Exporting alpha realm theme
+ Starter Theme
+[████████████████████████████████████████] 100% | 7/7 Exporting alpha realm them
+e Zardoz
+• Exported 7 alpha realm themes.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/0 Exporting bravo realm SAML2 
+providers...
+• Exported 0 bravo realm SAML2 providers.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/0 Exporting bravo realm circle
+s of trust...
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/0 Exporting bravo realm agent 
+groups...
+• Exported 0 bravo realm agent groups.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/0 Exporting bravo realm agents
+...
+• Exported 0 bravo realm agents.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/3 Exporting bravo realm OAuth2
+ clients...
+[█████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░] 33% | 1/3 Exporting bravo realm OAuth
+2 client RCSClient
+[██████████████████████████░░░░░░░░░░░░░░] 66% | 2/3 Exporting bravo realm OAuth
+2 client testclient
+[████████████████████████████████████████] 100% | 3/3 Exporting bravo realm OAut
+h2 client testapp
+• Exported 3 bravo realm OAuth2 clients.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/0 Exporting bravo realm provid
+ers
+• 0 bravo realm providers exported.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/10 Exporting bravo realm journ
+eys...
+[████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 10% | 1/10 Exporting bravo realm jour
+ney ForgottenUsername
+[████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 20% | 2/10 Exporting bravo realm jour
+ney FullVerificationResult
+[████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 30% | 3/10 Exporting bravo realm jour
+ney IntervieweeFullVerification
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 40% | 4/10 Exporting bravo realm jour
+ney IntervieweeRegistration
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 50% | 5/10 Exporting bravo realm jour
+ney IntervieweeSelfieAuthentication
+[████████████████████████░░░░░░░░░░░░░░░░] 60% | 6/10 Exporting bravo realm jour
+ney Login
+[████████████████████████████░░░░░░░░░░░░] 70% | 7/10 Exporting bravo realm jour
+ney ProgressiveProfile
+[████████████████████████████████░░░░░░░░] 80% | 8/10 Exporting bravo realm jour
+ney Registration
+[████████████████████████████████████░░░░] 90% | 9/10 Exporting bravo realm jour
+ney ResetPassword
+[████████████████████████████████████████] 100% | 10/10 Exporting bravo realm jo
+urney UpdatePassword
+• Exported 10 bravo realm journeys.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/0 Exporting bravo realm applic
+ations...
+• Exported 0 bravo realm applications
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/0 Exporting bravo realm polici
+es...
+• Exported 0 bravo realm policies.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/1 Exporting bravo realm policy
+ sets...
+[████████████████████████████████████████] 100% | 1/1 Exporting bravo realm poli
+cy set undefined
+• Exported 1 bravo realm policy sets.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/2 Exporting bravo realm resour
+ce types...
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 50% | 1/2 Exporting bravo realm resou
+rce type undefined
+[████████████████████████████████████████] 100% | 2/2 Exporting bravo realm reso
+urce type undefined
+• Exported 2 bravo realm resource types.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/60 Exporting bravo realm 60 sc
+ripts...
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 1% | 1/60 Reading bravo realm script 
+Itsme Profile Normalization
+[█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 3% | 2/60 Reading bravo realm script 
+OAuth2 May Act Script
+[██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 5% | 3/60 Reading bravo realm script 
+Load Reference Selfie
+[██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 6% | 4/60 Reading bravo realm script 
+Next Generation Scripted Decision Node Script
+[███░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 8% | 5/60 Reading bravo realm script 
+Social Identity Provider Profile Transformation Script
+[████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 10% | 6/60 Reading bravo realm script
+ Device Id (Match) - Client Side
+[████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 11% | 7/60 Reading bravo realm script
+ Check Resolved Username
+[█████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 13% | 8/60 Reading bravo realm script
+ Google Profile Normalization
+[██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 15% | 9/60 Reading bravo realm script
+ LINE Profile Normalization
+[██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 16% | 10/60 Reading bravo realm scrip
+t OAuth2 Evaluate Scope Script
+[███████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 18% | 11/60 Reading bravo realm scrip
+t OIDC Claims Script
+[████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 20% | 12/60 Reading bravo realm scrip
+t Normalized Profile to Identity
+[████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 21% | 13/60 Reading bravo realm scrip
+t SAML2 IDP Adapter Script
+[█████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 23% | 14/60 Reading bravo realm scrip
+t OAuth2 Validate Scope Script
+[██████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 25% | 15/60 Reading bravo realm scrip
+t OAuth2 Access Token Modification Script
+[██████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 26% | 16/60 Reading bravo realm scrip
+t Full Verification Results
+[███████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 28% | 17/60 Reading bravo realm scrip
+t Library Script
+[████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 30% | 18/60 Reading bravo realm scrip
+t debug - imported (1)
+[████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 31% | 19/60 Reading bravo realm scrip
+t OAuth2 JWT Issuer Script
+[█████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░] 33% | 20/60 Reading bravo realm scrip
+t WordPress Profile Normalization
+[██████████████░░░░░░░░░░░░░░░░░░░░░░░░░░] 35% | 21/60 Reading bravo realm scrip
+t LinkedIn Profile Normalization
+[██████████████░░░░░░░░░░░░░░░░░░░░░░░░░░] 36% | 22/60 Reading bravo realm scrip
+t SAML2 IDP Attribute Mapper Script
+[███████████████░░░░░░░░░░░░░░░░░░░░░░░░░] 38% | 23/60 Reading bravo realm scrip
+t Amazon Profile Normalization
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 40% | 24/60 Reading bravo realm scrip
+t Bravo OIDC Claims Script
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 41% | 25/60 Reading bravo realm scrip
+t Device Profile Match Template - Decision Node Script
+[█████████████████░░░░░░░░░░░░░░░░░░░░░░░] 43% | 26/60 Reading bravo realm scrip
+t Scripted Policy Condition
+[██████████████████░░░░░░░░░░░░░░░░░░░░░░] 45% | 27/60 Reading bravo realm scrip
+t Prepare Account Update
+[██████████████████░░░░░░░░░░░░░░░░░░░░░░] 46% | 28/60 Reading bravo realm scrip
+t Bravo endUserUIClient OAuth2 Access Token Modification Script
+[███████████████████░░░░░░░░░░░░░░░░░░░░░] 48% | 29/60 Reading bravo realm scrip
+t VKontakte Profile Normalization
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 50% | 30/60 Reading bravo realm scrip
+t SAML2 NameID Mapper Script
+[████████████████████░░░░░░░░░░░░░░░░░░░░] 51% | 31/60 Reading bravo realm scrip
+t ForgeRock Internal: OIDC Claims Script
+[█████████████████████░░░░░░░░░░░░░░░░░░░] 53% | 32/60 Reading bravo realm scrip
+t Scripted Module - Server Side
+[██████████████████████░░░░░░░░░░░░░░░░░░] 55% | 33/60 Reading bravo realm scrip
+t Instagram Profile Normalization
+[██████████████████████░░░░░░░░░░░░░░░░░░] 56% | 34/60 Reading bravo realm scrip
+t GitHub Profile Normalization
+[███████████████████████░░░░░░░░░░░░░░░░░] 58% | 35/60 Reading bravo realm scrip
+t SAML2 SP Adapter Script
+[████████████████████████░░░░░░░░░░░░░░░░] 60% | 36/60 Reading bravo realm scrip
+t Salesforce Profile Normalization
+[████████████████████████░░░░░░░░░░░░░░░░] 61% | 37/60 Reading bravo realm scrip
+t WeChat Profile Normalization
+[█████████████████████████░░░░░░░░░░░░░░░] 63% | 38/60 Reading bravo realm scrip
+t Twitter Profile Normalization
+[██████████████████████████░░░░░░░░░░░░░░] 65% | 39/60 Reading bravo realm scrip
+t Check Username
+[██████████████████████████░░░░░░░░░░░░░░] 66% | 40/60 Reading bravo realm scrip
+t Selfie Authentication Results
+[███████████████████████████░░░░░░░░░░░░░] 68% | 41/60 Reading bravo realm scrip
+t Remove Button
+[████████████████████████████░░░░░░░░░░░░] 70% | 42/60 Reading bravo realm scrip
+t Device Id (Match) - Server Side
+[████████████████████████████░░░░░░░░░░░░] 71% | 43/60 Reading bravo realm scrip
+t Scripted Module - Client Side
+[█████████████████████████████░░░░░░░░░░░] 73% | 44/60 Reading bravo realm scrip
+t LinkedIn Profile Normalization
+[██████████████████████████████░░░░░░░░░░] 75% | 45/60 Reading bravo realm scrip
+t Bravo OIDC Claims Script - imported (1)
+[██████████████████████████████░░░░░░░░░░] 76% | 46/60 Reading bravo realm scrip
+t ForgeRock Internal: OAuth2 Access Token Modification Script
+[███████████████████████████████░░░░░░░░░] 78% | 47/60 Reading bravo realm scrip
+t Config Provider Node Script
+[████████████████████████████████░░░░░░░░] 80% | 48/60 Reading bravo realm scrip
+t Microsoft Profile Normalization
+[████████████████████████████████░░░░░░░░] 81% | 49/60 Reading bravo realm scrip
+t Next Generation Device Match Node Script
+[█████████████████████████████████░░░░░░░] 83% | 50/60 Reading bravo realm scrip
+t OAuth2 Authorize Endpoint Data Provider Script
+[██████████████████████████████████░░░░░░] 85% | 51/60 Reading bravo realm scrip
+t Prepare Account Creation
+[██████████████████████████████████░░░░░░] 86% | 52/60 Reading bravo realm scrip
+t Yahoo Profile Normalization
+[███████████████████████████████████░░░░░] 88% | 53/60 Reading bravo realm scrip
+t Authentication Tree Decision Node Script
+[████████████████████████████████████░░░░] 90% | 54/60 Reading bravo realm scrip
+t Normalized Profile to Managed User
+[████████████████████████████████████░░░░] 91% | 55/60 Reading bravo realm scrip
+t Dummy
+[█████████████████████████████████████░░░] 93% | 56/60 Reading bravo realm scrip
+t Apple Profile Normalization
+[██████████████████████████████████████░░] 95% | 57/60 Reading bravo realm scrip
+t Bravo endUserUIClient OIDC Claims Script
+[██████████████████████████████████████░░] 96% | 58/60 Reading bravo realm scrip
+t Facebook Profile Normalization
+[███████████████████████████████████████░] 98% | 59/60 Reading bravo realm scrip
+t Check Resolved Username - imported (1)
+[████████████████████████████████████████] 100% | 60/60 Reading bravo realm scri
+pt Bravo OAuth2 Access Token Modification Script
+• Exported bravo realm 60 scripts.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/1 Exporting secret stores...
+[████████████████████████████████████████] 100% | 1/1 Exporting secret store ESV
+• Exported 1 secret stores.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/9 Exporting bravo realm servic
+es...
+[████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 11% | 1/9 Exporting bravo realm servi
+ce 
+[████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 22% | 2/9 Exporting bravo realm servi
+ce 
+[█████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░] 33% | 3/9 Exporting bravo realm servi
+ce 
+[█████████████████░░░░░░░░░░░░░░░░░░░░░░░] 44% | 4/9 Exporting bravo realm servi
+ce 
+[██████████████████████░░░░░░░░░░░░░░░░░░] 55% | 5/9 Exporting bravo realm servi
+ce 
+[██████████████████████████░░░░░░░░░░░░░░] 66% | 6/9 Exporting bravo realm servi
+ce 
+[██████████████████████████████░░░░░░░░░░] 77% | 7/9 Exporting bravo realm servi
+ce 
+[███████████████████████████████████░░░░░] 88% | 8/9 Exporting bravo realm servi
+ce 
+[████████████████████████████████████████] 100% | 9/9 Exporting bravo realm serv
+ice 
+• Exported 9 bravo realm services.
+[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% | 0/5 Exporting bravo realm themes
+...
+[████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 20% | 1/5 Exporting bravo realm theme
+ Highlander
+[████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 40% | 2/5 Exporting bravo realm theme
+ Zardoz
+[████████████████████████░░░░░░░░░░░░░░░░] 60% | 3/5 Exporting bravo realm theme
+ Starter Theme
+[████████████████████████████████░░░░░░░░] 80% | 4/5 Exporting bravo realm theme
+ Robroy
+[████████████████████████████████████████] 100% | 5/5 Exporting bravo realm them
+e Contrast
+• Exported 5 bravo realm themes.
 "
 `;
 

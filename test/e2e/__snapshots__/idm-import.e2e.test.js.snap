@@ -2,7 +2,7 @@
 
 exports[`frodo idm import "frodo idm import --all --file all.idm.json -D test/e2e/exports/all": Should import all configs from the file 'all.idm.json' in directory 'test/e2e/exports/all'" 1`] = `
 "Connected to https://openam-frodo-dev.forgeblocks.com/am [alpha] as service account Frodo-SA-1720799681233 [b672336b-41ef-428d-ae4a-e0c082875377]
-- Importing config entities from test/e2e/exports/all/all.idm.json...
+◜ Importing config entities from test/e2e/exports/all/all.idm.json...
 Error updating config entity bravoOrgPrivileges
   Network error:
     URL: https://openam-frodo-dev.forgeblocks.com/openidm/config/bravoOrgPrivileges
@@ -10,7 +10,15 @@ Error updating config entity bravoOrgPrivileges
     Code: ERR_BAD_REQUEST
     Reason: Forbidden
     Message: Access denied
-✔ Imported config entities
+◜ Importing config entities from test/e2e/exports/all/all.idm.json...
+◠ Importing config entities from test/e2e/exports/all/all.idm.json...
+◝ Importing config entities from test/e2e/exports/all/all.idm.json...
+◞ Importing config entities from test/e2e/exports/all/all.idm.json...
+◡ Importing config entities from test/e2e/exports/all/all.idm.json...
+◟ Importing config entities from test/e2e/exports/all/all.idm.json...
+◜ Importing config entities from test/e2e/exports/all/all.idm.json...
+◠ Importing config entities from test/e2e/exports/all/all.idm.json...
+✓ Imported config entities
 "
 `;
 
@@ -20,7 +28,10 @@ exports[`frodo idm import "frodo idm import --entity-id script --file test/e2e/e
 
 exports[`frodo idm import "frodo idm import -AD test/e2e/exports/all-separate/cloud/global/idm": Should import all configs from the directory 'test/e2e/exports/all-separate/cloud/global/idm'" 1`] = `
 "Connected to https://openam-frodo-dev.forgeblocks.com/am [alpha] as service account Frodo-SA-1720799681233 [b672336b-41ef-428d-ae4a-e0c082875377]
-- Importing config entities from test/e2e/exports/all-separate/cloud/global/idm...
+◜ Importing config entities from test/e2e/exports/all-separate/cloud/global/idm.
+..
+◠ Importing config entities from test/e2e/exports/all-separate/cloud/global/idm.
+..
 Error updating config entity endpoint/Test
   Network error:
     URL: https://openam-frodo-dev.forgeblocks.com/openidm/config/endpoint/Test
@@ -28,6 +39,10 @@ Error updating config entity endpoint/Test
     Code: ERR_BAD_REQUEST
     Reason: Unauthorized
     Message: Access Denied
+◠ Importing config entities from test/e2e/exports/all-separate/cloud/global/idm.
+..
+◝ Importing config entities from test/e2e/exports/all-separate/cloud/global/idm.
+..
 Error updating config entity endpoint/testEndpoint2
   Network error:
     URL: https://openam-frodo-dev.forgeblocks.com/openidm/config/endpoint/testEndpoint2
@@ -35,7 +50,13 @@ Error updating config entity endpoint/testEndpoint2
     Code: ERR_BAD_REQUEST
     Reason: Unauthorized
     Message: Access Denied
-✔ Imported config entities
+◝ Importing config entities from test/e2e/exports/all-separate/cloud/global/idm.
+..
+◞ Importing config entities from test/e2e/exports/all-separate/cloud/global/idm.
+..
+◡ Importing config entities from test/e2e/exports/all-separate/cloud/global/idm.
+..
+✓ Imported config entities
 "
 `;
 
