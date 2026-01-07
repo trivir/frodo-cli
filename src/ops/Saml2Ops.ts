@@ -6,6 +6,7 @@ import type {
   Saml2ExportInterface,
 } from '@rockcarver/frodo-lib/types/ops/Saml2Ops';
 import fs from 'fs';
+import c from 'tinyrainbow';
 
 import {
   createObjectTable,
@@ -55,7 +56,7 @@ export function getOneLineDescription(
       roles.push(value);
     }
   }
-  const description = `[${saml2ProviderObj.entityId['brightCyan']}]${
+  const description = `[${c.cyan(saml2ProviderObj.entityId)}]${
     ' (' + saml2ProviderObj.entityLocation
   }${roles.length ? ' ' + roles.join(', ') + ')' : ')'}`;
   return description;
@@ -108,9 +109,9 @@ export async function listSaml2Providers(
       return true;
     } else {
       const table = createTable([
-        'Entity Id'['brightCyan'],
-        'Location'['brightCyan'],
-        'Role(s)'['brightCyan'],
+        c.cyan('Entity Id'),
+        c.cyan('Location'),
+        c.cyan('Role(s)'),
       ]);
       for (const provider of providerList) {
         table.push([
@@ -182,7 +183,7 @@ export async function exportSaml2MetadataToFile(
     updateProgressIndicator(indicatorId, `Exported provider ${entityId}`);
     stopProgressIndicator(
       indicatorId,
-      `Exported ${entityId['brightCyan']} metadata to ${filePath['brightCyan']}.`
+      `Exported ${c.cyan(entityId)} metadata to ${c.cyan(filePath)}.`
     );
     return true;
   } catch (error) {
