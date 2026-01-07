@@ -63,12 +63,12 @@ Environment Variables:
 
 Usage Examples:
   Retrieve the state of the direct configuration session with full tenant URL, username, and password:
-[96m  $ frodo direct-config-session state https://openam-matrix.id.forgerock.io/am thomas.anderson@metacortex.com 'Blu3P!ll3d'
-[39m  Retrieve the state of the direct configuration session with connection ID:
-[96m  $ frodo direct-config-session state matrix
-[39m  Retrieve the state of the direct configuration session in JSON format with connection ID:
-[96m  $ frodo direct-config-session state --json matrix
-[39m
+  $ frodo direct-config-session state https://openam-matrix.id.forgerock.io/am thomas.anderson@metacortex.com 'Blu3P!ll3d'
+  Retrieve the state of the direct configuration session with connection ID:
+  $ frodo direct-config-session state matrix
+  Retrieve the state of the direct configuration session in JSON format with connection ID:
+  $ frodo direct-config-session state --json matrix
+
 "
 `;
 
@@ -135,11 +135,11 @@ Environment Variables:
 
 Usage Examples:
   Retrieve the state of the direct configuration session with full tenant URL, username, and password:
-[96m  $ frodo direct-config-session state https://openam-matrix.id.forgerock.io/am thomas.anderson@metacortex.com 'Blu3P!ll3d'
-[39m  Retrieve the state of the direct configuration session with connection ID:
-[96m  $ frodo direct-config-session state matrix
-[39m  Retrieve the state of the direct configuration session in JSON format with connection ID:
-[96m  $ frodo direct-config-session state --json matrix
-[39m
+  $ frodo direct-config-session state https://openam-matrix.id.forgerock.io/am thomas.anderson@metacortex.com 'Blu3P!ll3d'
+  Retrieve the state of the direct configuration session with connection ID:
+  $ frodo direct-config-session state matrix
+  Retrieve the state of the direct configuration session in JSON format with connection ID:
+  $ frodo direct-config-session state --json matrix
+
 "
 `;

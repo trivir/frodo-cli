@@ -63,11 +63,11 @@ Environment Variables:
 
 Usage Examples:
   Launch a frodo shell using explicit login parameters:
-[96m  $ frodo shell https://openam-matrix.id.forgerock.io/am /alpha thomas.anderson@metacortex.com 'Blu3P!ll3d'
-[39m  Launch a frodo shell using a connection profile (identified by the full AM base URL):
-[96m  $ frodo shell https://openam-matrix.id.forgerock.io/am
-[39m  Launch a frodo shell using a connection profile (identified by a unique substring of the AM base URL or a saved alias):
-[96m  $ frodo shell matrix
-[39m
+  $ frodo shell https://openam-matrix.id.forgerock.io/am /alpha thomas.anderson@metacortex.com 'Blu3P!ll3d'
+  Launch a frodo shell using a connection profile (identified by the full AM base URL):
+  $ frodo shell https://openam-matrix.id.forgerock.io/am
+  Launch a frodo shell using a connection profile (identified by a unique substring of the AM base URL or a saved alias):
+  $ frodo shell matrix
+
 "
 `;

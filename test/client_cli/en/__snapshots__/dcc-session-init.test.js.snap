@@ -63,12 +63,12 @@ Environment Variables:
 
 Usage Examples:
   Initialize a direct configuration session with full tenant URL, username, and password:
-[96m  $ frodo direct-config-session init https://openam-matrix.id.forgerock.io/am thomas.anderson@metacortex.com 'Blu3P!ll3d'
-[39m  Initialize a direct configuration session with connection ID:
-[96m  $ frodo direct-config-session init matrix
-[39m  Initialize a direct configuration session in JSON format with connection ID:
-[96m  $ frodo direct-config-session init --json matrix
-[39m
+  $ frodo direct-config-session init https://openam-matrix.id.forgerock.io/am thomas.anderson@metacortex.com 'Blu3P!ll3d'
+  Initialize a direct configuration session with connection ID:
+  $ frodo direct-config-session init matrix
+  Initialize a direct configuration session in JSON format with connection ID:
+  $ frodo direct-config-session init --json matrix
+
 "
 `;
 
@@ -135,11 +135,11 @@ Environment Variables:
 
 Usage Examples:
   Initialize a direct configuration session with full tenant URL, username, and password:
-[96m  $ frodo direct-config-session init https://openam-matrix.id.forgerock.io/am thomas.anderson@metacortex.com 'Blu3P!ll3d'
-[39m  Initialize a direct configuration session with connection ID:
-[96m  $ frodo direct-config-session init matrix
-[39m  Initialize a direct configuration session in JSON format with connection ID:
-[96m  $ frodo direct-config-session init --json matrix
-[39m
+  $ frodo direct-config-session init https://openam-matrix.id.forgerock.io/am thomas.anderson@metacortex.com 'Blu3P!ll3d'
+  Initialize a direct configuration session with connection ID:
+  $ frodo direct-config-session init matrix
+  Initialize a direct configuration session in JSON format with connection ID:
+  $ frodo direct-config-session init --json matrix
+
 "
 `;
