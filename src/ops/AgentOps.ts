@@ -1,6 +1,7 @@
 import { frodo, FrodoError, state } from '@rockcarver/frodo-lib';
 import { type AgentExportInterface } from '@rockcarver/frodo-lib/types/ops/AgentOps';
 import fs from 'fs';
+import c from 'tinyrainbow';
 
 import {
   createProgressIndicator,
@@ -86,7 +87,7 @@ export async function listAgents(
         }
         table.push([
           agent._id,
-          status === 'Active' ? 'Active'['brightGreen'] : status['brightRed'],
+          status === 'Active' ? c.green('Active') : c.red(status),
           agent._type.name,
         ]);
       }
@@ -117,9 +118,7 @@ export async function listIdentityGatewayAgents(
       for (const agent of agents) {
         table.push([
           agent._id,
-          agent.status === 'Active'
-            ? 'Active'['brightGreen']
-            : agent.status['brightRed'],
+          agent.status === 'Active' ? c.green('Active') : c.red(agent.status),
         ]);
       }
       printMessage(table.toString(), 'data');
@@ -148,8 +147,8 @@ export async function listJavaAgents(long: boolean = false): Promise<boolean> {
         table.push([
           agent._id,
           agent['globalJ2EEAgentConfig']['status'] === 'Active'
-            ? 'Active'['brightGreen']
-            : agent['globalJ2EEAgentConfig']['status']['brightRed'],
+            ? c.green('Active')
+            : c.red(agent['globalJ2EEAgentConfig']['status']),
         ]);
       }
       printMessage(table.toString(), 'data');
@@ -178,8 +177,8 @@ export async function listWebAgents(long: boolean = false): Promise<boolean> {
         table.push([
           agent._id,
           agent['globalWebAgentConfig']['status'] === 'Active'
-            ? 'Active'['brightGreen']
-            : agent['globalWebAgentConfig']['status']['brightRed'],
+            ? c.green('Active')
+            : c.red(agent['globalWebAgentConfig']['status']),
         ]);
       }
       printMessage(table.toString(), 'data');

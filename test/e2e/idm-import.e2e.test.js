@@ -58,7 +58,7 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 */
 import cp from 'child_process';
 import { promisify } from 'util';
-import { getEnv, removeAnsiEscapeCodes } from './utils/TestUtils';
+import { getEnv } from './utils/TestUtils';
 import { connection as c } from './utils/TestConfig';
 
 const exec = promisify(cp.exec);
@@ -79,31 +79,31 @@ describe('frodo idm import', () => {
     test(`"frodo idm import -i script -D ${idmExportDirectory}": should import the idm config with name 'script' from the directory ${idmExportDirectory}"`, async () => {
         const CMD = `frodo idm import -i script -D ${idmExportDirectory}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo idm import -f ${idmScriptConfigExport}": should import the idm config from the file named '${idmScriptConfigExport}'"`, async () => {
         const CMD = `frodo idm import -f ${idmScriptConfigExport}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo idm import --entity-id script --file ${idmScriptConfigExport}": should import the idm config with name 'script' from the file named '${idmScriptConfigExport}'"`, async () => {
         const CMD = `frodo idm import --entity-id script --file ${idmScriptConfigExport}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo idm import -i script -e ${testEnvFile} -f ${idmScriptConfigFileName} -D ${idmExportDirectory}": should import the idm config with name 'script' from the file named '${idmScriptConfigExport}'"`, async () => {
         const CMD = `frodo idm import -i script -e ${testEnvFile} -f ${idmScriptConfigFileName} -D ${idmExportDirectory}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo idm import -af ${allIdmExport} -e ${testEnvFile} -E ${testEntitiesFile}": Should import all configs from the file '${allIdmExport}' according to the env and entity files"`, async () => {
         const CMD = `frodo idm import -af ${allIdmExport} -e ${testEnvFile} -E ${testEntitiesFile}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo idm import --all --file ${allIdmExportFileName} -D ${allIdmExportDirectory}": Should import all configs from the file '${allIdmExportFileName}' in directory '${allIdmExportDirectory}'"`, async () => {
@@ -112,7 +112,7 @@ describe('frodo idm import', () => {
             await exec(CMD, env);
             fail("Command should've failed");
         } catch (e) {
-            expect(removeAnsiEscapeCodes(e.stderr)).toMatchSnapshot();
+            expect(e.stderr).toMatchSnapshot();
         }
     });
 
@@ -122,13 +122,13 @@ describe('frodo idm import', () => {
             await exec(CMD, env);
             fail("Command should've failed");
         } catch (e) {
-            expect(removeAnsiEscapeCodes(e.stderr)).toMatchSnapshot();
+            expect(e.stderr).toMatchSnapshot();
         }
     });
 
     test(`"frodo idm import --all-separate --directory ${idmExportDirectory} --env-file ${testEnvFile} --entities-file ${testEntitiesFile}": Should import all configs from the directory '${idmExportDirectory}' according to the env and entity files"`, async () => {
         const CMD = `frodo idm import --all-separate --directory ${idmExportDirectory} --env-file ${testEnvFile} --entities-file ${testEntitiesFile}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

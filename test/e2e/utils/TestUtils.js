@@ -7,19 +7,6 @@ import tmp from 'tmp'
 const exec = promisify(cp.exec);
 const fspromise = fs.promises
 
-const ansiEscapeCodes =
-  // eslint-disable-next-line no-control-regex
-  /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
-
-/**
- * Remove ANSI escape codes
- * @param {string} text Text containing ANSI escape codes
- * @returns {string} Text without ANSI escape codes
- */
-export function removeAnsiEscapeCodes(text) {
-  return text ? text.replace(ansiEscapeCodes, '') : text;
-}
-
 /**
  * Method that runs an export command and tests that it was executed correctly.
  * @param {string} command The export command to run
@@ -73,8 +60,8 @@ export async function testExport(
   } else {
     expect(filePaths.length >= 1).toBeTruthy();
   }
-  expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-  if (checkStderr) expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+  expect(stdout).toMatchSnapshot()
+  if (checkStderr) expect(stderr).toMatchSnapshot()
   let deleteExportDirectory = true;
   filePaths.forEach((path) => {
     let deleteExportFile = true;
@@ -165,8 +152,8 @@ export async function testPromote(
   const tempDir = await copyAndModifyDirectory(sourceDir, modifiedFilesDir, referenceSubDirs)
   const CMD = `frodo promote -M ${sourceDir} -E ${tempDir}`;
   const { stdout, stderr } = await exec(CMD, env);
-  expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-  expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+  expect(stdout).toMatchSnapshot()
+  expect(stderr).toMatchSnapshot()
 }
 
 async function copyAndModifyDirectory(sourceDir, modifiedFilesDir, referenceSubDirs) {
@@ -256,8 +243,8 @@ export async function testSuccess(
   env,
 ) {
   const { stdout, stderr } = await exec(command, env);
-  expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-  expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+  expect(stdout).toMatchSnapshot()
+  expect(stderr).toMatchSnapshot()
 }
 
 /**
@@ -275,7 +262,7 @@ export async function testFail(
     await exec(command, env);
     commandSucceeded = true;
   } catch (e) {
-    expect(removeAnsiEscapeCodes(e.stderr)).toMatchSnapshot();
+    expect(e.stderr).toMatchSnapshot();
     expect(e.code).toMatchSnapshot();
   }
   if (commandSucceeded) {

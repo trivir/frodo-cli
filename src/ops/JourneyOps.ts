@@ -12,6 +12,7 @@ import {
   type TreeImportOptions,
 } from '@rockcarver/frodo-lib/types/ops/JourneyOps';
 import fs from 'fs';
+import c from 'tinyrainbow';
 
 import {
   createProgressIndicator,
@@ -81,8 +82,8 @@ export async function listJourneys(
           table.push([
             `${journeyStub._id}`,
             journeyStub.enabled === false
-              ? 'disabled'['brightRed']
-              : 'enabled'['brightGreen'],
+              ? c.red('disabled')
+              : c.green('enabled'),
             journeyStub.uiConfig?.categories
               ? wordwrap(
                   JSON.parse(journeyStub.uiConfig.categories).join(', '),
@@ -126,8 +127,8 @@ export async function listJourneys(
             table.push([
               `${journeyExport.tree._id}`,
               journeyExport.tree.enabled === false
-                ? 'disabled'['brightRed']
-                : 'enabled'['brightGreen'],
+                ? c.red('disabled')
+                : c.green('enabled'),
               getJourneyClassification(journeyExport).join(', '),
               journeyExport.tree.uiConfig?.categories
                 ? wordwrap(
@@ -199,7 +200,7 @@ export async function exportJourneyToFile(
     );
     stopProgressIndicator(
       spinnerId,
-      `Exported ${journeyId['brightCyan']} to ${filePath['brightCyan']}.`,
+      `Exported ${c.cyan(journeyId)} to ${c.cyan(filePath)}.`,
       'success'
     );
     return true;
@@ -569,16 +570,16 @@ export function getJourneyClassification(
   return _getJourneyClassification(journey).map((it) => {
     switch (it) {
       case 'standard':
-        return it['brightGreen'];
+        return c.green(it) as JourneyClassificationType;
 
       case 'cloud':
-        return it['brightMagenta'];
+        return c.magenta(it) as JourneyClassificationType;
 
       case 'custom':
-        return it['brightRed'];
+        return c.red(it) as JourneyClassificationType;
 
       case 'premium':
-        return it['brightYellow'];
+        return c.yellow(it) as JourneyClassificationType;
     }
   });
 }
@@ -614,7 +615,7 @@ export function getJourneyClassificationMd(
  * @returns {string} a one-line description
  */
 export function getOneLineDescription(treeObj: TreeSkeleton): string {
-  const description = `[${treeObj._id['brightCyan']}]`;
+  const description = `[${c.cyan(treeObj._id)}]`;
   return description;
 }
 
@@ -649,7 +650,7 @@ function describeTreeDescendents(
       .fill(' ')
       .join('');
     const [tree] = Object.keys(descendents);
-    printMessage(`${indent}- ${tree['brightCyan']}`, 'data');
+    printMessage(`${indent}- ${c.cyan(tree)}`, 'data');
     for (const descendent of descendents[tree]) {
       describeTreeDescendents(descendent, depth + 1);
     }
@@ -742,8 +743,8 @@ export async function describeJourney(
     printMessage(
       `\nStatus\n${
         journeyData.tree.enabled === false
-          ? 'disabled'['brightRed']
-          : 'enabled'['brightGreen']
+          ? c.red('disabled')
+          : c.green('enabled')
       }`
     );
 
@@ -786,9 +787,9 @@ export async function describeJourney(
       );
       for (const [nodeType, count] of Object.entries(nodeTypeMap)) {
         printMessage(
-          `- ${String(count)} [${
-            nodeType['brightCyan']
-          }] (${Node.getNodeClassification(nodeType).join(', ')})`,
+          `- ${String(count)} [${c.cyan(
+            nodeType
+          )}] (${Node.getNodeClassification(nodeType).join(', ')})`,
           'data'
         );
       }
