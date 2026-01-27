@@ -54,7 +54,7 @@ export default function setup() {
             '-D, --directory or -f, --file required to import managed objects',
             'error'
           );
-          program.help();
+          program.outputHelp();
           process.exitCode = 1;
         } // -i, --individual-object
         else if (
@@ -103,7 +103,7 @@ export default function setup() {
             'Unrecognized combination of options or no options...',
             'error'
           );
-          program.help();
+          program.outputHelp();
           process.exitCode = 1;
         }
       }

@@ -96,7 +96,7 @@ export default function setup() {
             'Unrecognized combination of options or no options...',
             'error'
           );
-          program.help();
+          program.outputHelp();
           process.exitCode = 1;
         }
       }

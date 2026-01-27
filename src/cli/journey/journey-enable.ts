@@ -38,7 +38,7 @@ export default function setup() {
         // unrecognized combination of options or no options
         else {
           printMessage('Unrecognized combination of options or no options...');
-          program.help();
+          program.outputHelp();
           process.exitCode = 1;
         }
       }

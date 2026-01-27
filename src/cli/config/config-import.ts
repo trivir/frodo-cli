@@ -109,7 +109,7 @@ export default function setup() {
         // Require --file -f for all function
         if (options.all && !options.file) {
           printMessage('-f or --file required when using -a or --all', 'error');
-          program.help();
+          program.outputHelp();
           process.exitCode = 1;
         }
         // --all -a
@@ -131,7 +131,7 @@ export default function setup() {
             '-D or --directory required when using -A or --all-separate',
             'error'
           );
-          program.help();
+          program.outputHelp();
           process.exitCode = 1;
         }
         // --all-separate -A
@@ -169,7 +169,7 @@ export default function setup() {
           verboseMessage(
             'Unrecognized combination of options or no options...'
           );
-          program.help();
+          program.outputHelp();
           process.exitCode = 1;
         }
       }

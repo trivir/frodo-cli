@@ -138,7 +138,7 @@ export default function setup() {
             '-D or --directory required when using -A or --all-separate',
             'error'
           );
-          program.help();
+          program.outputHelp();
           process.exitCode = 1;
         }
         // --all-separate -A
@@ -161,7 +161,7 @@ export default function setup() {
             'Unrecognized combination of options or no options...',
             'error'
           );
-          program.help();
+          program.outputHelp();
           process.exitCode = 1;
         }
       }
