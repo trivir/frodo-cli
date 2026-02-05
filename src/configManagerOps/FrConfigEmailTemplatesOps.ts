@@ -13,13 +13,14 @@ export async function configManagerExportEmailTemplates(
   name?: string
 ): Promise<boolean> {
   try {
+    //name passed by user using -n flag
     if (name) {
       const exportData = await readEmailTemplate(name);
-      processEmailTemplate(exportData, `/email-templates`);
+      processEmailTemplate(exportData, `./email-templates`);
     } else {
       const exportData = await readEmailTemplates();
       exportData.forEach(async (template) => {
-        processEmailTemplate(template, `/email-templates`);
+        processEmailTemplate(template, `./email-templates`);
       });
     }
     return true;

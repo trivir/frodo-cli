@@ -60,12 +60,12 @@ export async function configManagerExportOrgPrivilegesAllRealms(): Promise<boole
   try {
     configManagerExportOrgPrivileges();
     for (const realm of await readRealms()) {
-      if (realm.name === '/' &&
-          state.getDeploymentType() === frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY) continue;
-
-      state.setRealm(realm.name);
-      if (!(await configManagerExportOrgPrivilegesRealm(realm.name))) {
-        return false;
+      if (realm._id !== 'Lw')
+      {
+        state.setRealm(realm.name);
+        if (!(await configManagerExportOrgPrivilegesRealm(realm.name))) {
+          return false;
+        }
       }
     }
     return true;

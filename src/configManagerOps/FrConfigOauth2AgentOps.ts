@@ -188,10 +188,18 @@ export async function configManagerExportAgentsRealm(): Promise<boolean> {
 export async function configManagerExportAgentsAll(): Promise<boolean> {
   try {
     for (const realm of await readRealms()) {
-      // set realm of state because readAgents() uses state to check realm
-      state.setRealm(realm.name);
-      if (!(await configManagerExportAgentsRealm())) {
-        return false;
+      if (
+        realm._id === 'Lw' &&
+        state.getDeploymentType() ===
+          frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY
+      )
+        continue;
+      {
+        // set realm of state because readAgents() uses state to check realm
+        state.setRealm(realm.name);
+        if (!(await configManagerExportAgentsRealm())) {
+          return false;
+        }
       }
     }
     return true;
