@@ -21,7 +21,8 @@ export async function configManagerExportAuthentication(
       const fileName = `realms/${state.getRealm()}/realm-config/authentication.json`;
       saveJsonToFile(exportData, getFilePath(`${fileName}`, true), false, true);
     } else {
-      for (const realmName of await realmList()) {
+      for (const realmName of await realmList())
+        if (realmName !== '/') {
         state.setRealm(realmName);
         const exportData = await _readAuthenticationSettings(false);
         const fileName = `realms/${realmName}/realm-config/authentication.json`;
