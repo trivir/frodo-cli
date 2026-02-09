@@ -1,7 +1,7 @@
-import { configManagerImportUiConfig } from '../../configManagerOps/FrConfigUiConfigOps';
-import { getTokens } from '../../ops/AuthenticateOps';
-import { printMessage, verboseMessage } from '../../utils/Console';
-import { FrodoCommand } from '../FrodoCommand';
+import { configManagerImportUiConfig } from '../../../configManagerOps/FrConfigUiConfigOps';
+import { getTokens } from '../../../ops/AuthenticateOps';
+import { printMessage, verboseMessage } from '../../../utils/Console';
+import { FrodoCommand } from '../../FrodoCommand';
 import { Option } from 'commander';
 
 
