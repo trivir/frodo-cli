@@ -1,6 +1,6 @@
 import { FrodoStubCommand } from '../FrodoCommand';
-import PullCmd from './config-manager-pull';
-import PushCmd from './config-manager-push';
+import PullCmd from './config-manager-pull/config-manager-pull';
+import PushCmd from './config-manager-push/config-manager-push';
 
 export default function setup() {
   const program = new FrodoStubCommand('config-manager').description(
