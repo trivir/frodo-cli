@@ -4,10 +4,11 @@ import fs from 'fs';
 
 import { printError, printMessage } from '../utils/Console';
 import { decodeOrNot } from '../utils/FrConfig';
+import { encodeOrNot } from '../utils/FrConfig'
 
-const { saveJsonToFile, getFilePath } = frodo.utils;
+const { saveJsonToFile, getFilePath, getRealmPath } = frodo.utils;
 const { readRealms } = frodo.realm;
-const { readThemes } = frodo.theme;
+const { readThemes, importThemes } = frodo.theme;
 
 const THEME_HTML_FIELDS = [
   { name: 'accountFooter', encoded: false },
@@ -76,6 +77,54 @@ export async function configManagerExportThemes(): Promise<boolean> {
         extractHtmlFields(theme, themeDir);
         saveJsonToFile(theme, `${themeDir}/${theme.name}.json`, false);
       }
+    }
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+export async function processTheme(theme: ThemeSkeleton, themePath: string) {
+  // create the for loop that will read and iterate through each realm to find the themes
+  for (const field of THEME_HTML_FIELDS) {
+    if (!theme[field.name]) continue;
+ 
+    if (typeof theme[field.name] === 'object' && typeof (theme[field.name]as any).file === 'string' ) {
+      const fileName = (theme[field.name] as any).file
+      const filePath = `${themePath}/${fileName}`;
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+      const encodedContent = encodeOrNot(fileContent, field.encoded);
+      theme[field.name] = encodedContent;
+    }        
+  }    
+}
+  
+export async function configManagerImportThemes(): Promise<boolean> {
+  try {
+    const realms = await readRealms();
+    for (const realm of realms) {
+      state.setRealm(realm.name);
+      const importDir = getFilePath(`realms${realm.name === '/' ? '' : realm.parentPath + realm.name}/themes`, true);
+      const themesDir = fs.readdirSync(importDir, { withFileTypes: true})
+        .filter(dirent => dirent.isDirectory())
+        .map(dirent => dirent.name);
+      const themeMap: Record<string, ThemeSkeleton> = {};
+      
+      for (const themeName of themesDir) {
+        const themeDir = `${importDir}/${themeName}`;
+        const themeJsonPath = `${themeDir}/${themeName}.json`;
+        const theme: ThemeSkeleton = JSON.parse(fs.readFileSync(themeJsonPath, 'utf8'));
+        processTheme(theme, themeDir);
+        themeMap[theme._id] = theme;
+      } 
+      
+      // Import all themes for this realm
+      // await importThemes(
+      //   { theme: themeMap }
+      // );
+
+      saveJsonToFile( { theme: themeMap }, 'export.json');
     }
     return true;
   } catch (error) {
