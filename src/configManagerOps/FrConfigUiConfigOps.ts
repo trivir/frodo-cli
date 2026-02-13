@@ -1,11 +1,12 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 import path from 'path';
-import { getIdmImportExportOptions } from '../ops/IdmOps';
-import { printError } from '../utils/Console';
-import { errorHandler } from '../ops/utils/OpsUtils';
 
-const { exportConfigEntity, importConfigEntities} = frodo.idm.config;
+import { getIdmImportExportOptions } from '../ops/IdmOps';
+import { errorHandler } from '../ops/utils/OpsUtils';
+import { printError } from '../utils/Console';
+
+const { exportConfigEntity, importConfigEntities } = frodo.idm.config;
 const { getFilePath, saveJsonToFile } = frodo.utils;
 
 /**
@@ -43,10 +44,7 @@ export async function configManagerImportUiConfig(
   validate: boolean = false
 ): Promise<boolean> {
   try {
-    const fileData = fs.readFileSync(
-      path.resolve(process.cwd(), file),
-      'utf8'
-    );
+    const fileData = fs.readFileSync(path.resolve(process.cwd(), file), 'utf8');
     let importData = JSON.parse(fileData);
     importData = { idm: { [importData._id]: importData } };
     //saveJsonToFile (importData, './frconfigtestfile.json');
@@ -54,7 +52,7 @@ export async function configManagerImportUiConfig(
 
     await importConfigEntities(
       importData,
-      "ui/configuration",
+      'ui/configuration',
       {
         envReplaceParams: options.envReplaceParams,
         entitiesToImport: undefined,
@@ -62,10 +60,9 @@ export async function configManagerImportUiConfig(
       },
       errorHandler
     );
-    return true
-  }
-  catch (error) {
+    return true;
+  } catch (error) {
     printError(error);
   }
-  return false
+  return false;
 }
