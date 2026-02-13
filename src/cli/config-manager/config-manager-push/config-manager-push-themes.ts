@@ -1,4 +1,3 @@
-
 import { configManagerImportThemes } from '../../../configManagerOps/FrConfigThemeOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../../utils/Console';
@@ -28,7 +27,7 @@ export default function setup() {
       if (await getTokens(false, true, deploymentTypes)) {
         verboseMessage('Importing themes');
         const outcome = await configManagerImportThemes();
-        
+        if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options
       else {
@@ -42,4 +41,3 @@ export default function setup() {
     });
   return program;
 }
-

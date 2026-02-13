@@ -3,10 +3,9 @@ import { ThemeSkeleton } from '@rockcarver/frodo-lib/types/ops/ThemeOps';
 import fs from 'fs';
 
 import { printError, printMessage } from '../utils/Console';
-import { decodeOrNot } from '../utils/FrConfig';
-import { encodeOrNot } from '../utils/FrConfig'
+import { decodeOrNot, encodeOrNot } from '../utils/FrConfig';
 
-const { saveJsonToFile, getFilePath, getRealmPath } = frodo.utils;
+const { saveJsonToFile, getFilePath } = frodo.utils;
 const { readRealms } = frodo.realm;
 const { readThemes, importThemes } = frodo.theme;
 
@@ -67,6 +66,8 @@ export async function configManagerExportThemes(): Promise<boolean> {
   try {
     const realms = await readRealms();
     for (const realm of realms) {
+      // fr-config-manager doesn't support root themes
+      if (realm.name === '/') continue;
       state.setRealm(realm.name);
       const themes = await readThemes();
       const exportDir = getFilePath(`realms/${realm.name}/themes`, true);
@@ -86,45 +87,49 @@ export async function configManagerExportThemes(): Promise<boolean> {
 }
 
 export async function processTheme(theme: ThemeSkeleton, themePath: string) {
-  // create the for loop that will read and iterate through each realm to find the themes
   for (const field of THEME_HTML_FIELDS) {
     if (!theme[field.name]) continue;
- 
-    if (typeof theme[field.name] === 'object' && typeof (theme[field.name]as any).file === 'string' ) {
-      const fileName = (theme[field.name] as any).file
+
+    if (
+      typeof theme[field.name] === 'object' &&
+      typeof (theme[field.name] as any).file === 'string'
+    ) {
+      const fileName = (theme[field.name] as any).file;
       const filePath = `${themePath}/${fileName}`;
       const fileContent = fs.readFileSync(filePath, 'utf8');
       const encodedContent = encodeOrNot(fileContent, field.encoded);
       theme[field.name] = encodedContent;
-    }        
-  }    
+    }
+  }
 }
-  
+
 export async function configManagerImportThemes(): Promise<boolean> {
   try {
     const realms = await readRealms();
     for (const realm of realms) {
+      // fr-config-manager doesn't support root themes
+      if (realm.name === '/') continue;
       state.setRealm(realm.name);
-      const importDir = getFilePath(`realms${realm.name === '/' ? '' : realm.parentPath + realm.name}/themes`, true);
-      const themesDir = fs.readdirSync(importDir, { withFileTypes: true})
-        .filter(dirent => dirent.isDirectory())
-        .map(dirent => dirent.name);
+      const importDir = getFilePath(
+        `realms${realm.parentPath + realm.name}/themes`
+      );
+      const themesDir = fs
+        .readdirSync(importDir, { withFileTypes: true })
+        .filter((dirent) => dirent.isDirectory())
+        .map((dirent) => dirent.name);
       const themeMap: Record<string, ThemeSkeleton> = {};
-      
+
       for (const themeName of themesDir) {
         const themeDir = `${importDir}/${themeName}`;
         const themeJsonPath = `${themeDir}/${themeName}.json`;
-        const theme: ThemeSkeleton = JSON.parse(fs.readFileSync(themeJsonPath, 'utf8'));
+        const theme: ThemeSkeleton = JSON.parse(
+          fs.readFileSync(themeJsonPath, 'utf8')
+        );
         processTheme(theme, themeDir);
         themeMap[theme._id] = theme;
-      } 
-      
-      // Import all themes for this realm
-      // await importThemes(
-      //   { theme: themeMap }
-      // );
+      }
 
-      saveJsonToFile( { theme: themeMap }, 'export.json');
+      await importThemes({ theme: themeMap });
     }
     return true;
   } catch (error) {
