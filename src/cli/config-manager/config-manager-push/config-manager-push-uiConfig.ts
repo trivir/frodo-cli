@@ -1,9 +1,9 @@
+import { Option } from 'commander';
+
 import { configManagerImportUiConfig } from '../../../configManagerOps/FrConfigUiConfigOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
-import { Option } from 'commander';
-
 
 const deploymentTypes = ['cloud', 'forgeops'];
 
@@ -16,7 +16,12 @@ export default function setup() {
 
   program
     .description('Import ui-configuration objects.')
-    .addOption(new Option('-f, --file [file]', 'Fr-config-manager format file to import.'))
+    .addOption(
+      new Option(
+        '-f, --file [file]',
+        'Fr-config-manager format file to import.'
+      )
+    )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
