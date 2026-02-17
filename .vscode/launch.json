@@ -11,7 +11,7 @@
         "request": "launch",
         "name": "Run Frodo CLI",
         "program": "${workspaceFolder}/src/app.ts",
-        "args": ["config-manager", "push", "terms-and-conditions", "dev"],
+        "args": ["config-manager", "push", "password-policy", "dev"],
         "outFiles": [
           "${workspaceFolder}/dist/**/*.(m|c|)js",
           "${workspaceFolder}/node_modules/@rockcarver/frodo-lib/dist/**/*.(m|c|)js"

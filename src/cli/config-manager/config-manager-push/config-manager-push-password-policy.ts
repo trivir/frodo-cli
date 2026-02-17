@@ -1,6 +1,6 @@
 import { Option } from 'commander';
 
-import { configManagerImportUiConfig } from '../../../configManagerOps/FrConfigUiConfigOps';
+import { configManagerImportPasswordPolicy } from '../../../configManagerOps/FrConfigPasswordPolicyOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
@@ -9,17 +9,17 @@ const deploymentTypes = ['cloud', 'forgeops'];
 
 export default function setup() {
   const program = new FrodoCommand(
-    'frodo config-manager push ui-config',
+    'frodo config-manager push password-policy',
     [],
     deploymentTypes
   );
 
   program
-    .description('Import ui-configuration objects.')
+    .description('Import password-policy objects.')
     .addOption(
       new Option(
-        '-f, --file [file]',
-        'Fr-config-manager format file to import.'
+        '-r, --realm <realm>',
+        'Specifies the realm to Import from. Only the entity object from this realm will be imported.'
       )
     )
     .action(async (host, realm, user, password, options, command) => {
@@ -31,10 +31,12 @@ export default function setup() {
         options,
         command
       );
-
+      if (options.realm) {
+        realm = options.realm;
+      }
       if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Importing config entity ui-configuration');
-        const outcome = await configManagerImportUiConfig(options.file);
+        verboseMessage('Importing config entity password-policy');
+        const outcome = await configManagerImportPasswordPolicy(realm);
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options
