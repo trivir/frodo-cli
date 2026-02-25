@@ -3,7 +3,7 @@ import { ThemeSkeleton } from '@rockcarver/frodo-lib/types/ops/ThemeOps';
 import fs from 'fs';
 
 import { printError, printMessage } from '../utils/Console';
-import { decodeOrNot, encodeOrNot } from '../utils/FrConfig';
+import { decodeOrNot } from '../utils/FrConfig';
 
 const { saveJsonToFile, getFilePath } = frodo.utils;
 const { readRealms } = frodo.realm;
@@ -97,8 +97,7 @@ export async function processTheme(theme: ThemeSkeleton, themePath: string) {
       const fileName = (theme[field.name] as any).file;
       const filePath = `${themePath}/${fileName}`;
       const fileContent = fs.readFileSync(filePath, 'utf8');
-      const encodedContent = encodeOrNot(fileContent, field.encoded);
-      theme[field.name] = encodedContent;
+      theme[field.name] = fileContent;
     }
   }
 }

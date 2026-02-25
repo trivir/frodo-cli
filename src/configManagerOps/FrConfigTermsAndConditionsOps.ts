@@ -39,26 +39,3 @@ export async function configManagerExportTermsAndConditions(): Promise<boolean> 
   }
 }
 
-export async function configManagerImportTermsAndConditions(): Promise<boolean> {
-  try {
-    const mainFile = getFilePath('terms-conditions/terms-conditions.json');
-    const readMain = fs.readFileSync(mainFile, 'utf8') as any;
-    let importData = JSON.parse(readMain) as any;
-    const id = importData._id;
-    importData = { idm: { [id]: importData } };
-    for (const version of importData.idm[id].versions) {
-      for (const [language] of Object.entries(version.termsTranslations)) {
-        const languageFileName = `${version.version}/${language}.html`;
-        const directoryName = `terms-conditions`;
-        const fileDir = getFilePath(`${directoryName}/${languageFileName}`);
-        version.termsTranslations[language] = fs.readFileSync(fileDir, 'utf8');
-      }
-    }
-    await importConfigEntities(importData);
-
-    return true;
-  } catch (error) {
-    printError(error);
-    return false;
-  }
-}
