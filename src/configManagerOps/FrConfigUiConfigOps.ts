@@ -1,12 +1,9 @@
 import { frodo } from '@rockcarver/frodo-lib';
-import fs from 'fs';
-import path from 'path';
 
 import { getIdmImportExportOptions } from '../ops/IdmOps';
-import { errorHandler } from '../ops/utils/OpsUtils';
 import { printError } from '../utils/Console';
 
-const { exportConfigEntity, importConfigEntities } = frodo.idm.config;
+const { exportConfigEntity } = frodo.idm.config;
 const { getFilePath, saveJsonToFile } = frodo.utils;
 
 /**
@@ -37,5 +34,3 @@ export async function configManagerExportUiConfig(
   }
   return false;
 }
-
-

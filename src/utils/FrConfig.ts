@@ -34,8 +34,6 @@ export function decodeOrNot(value: string, encoded: boolean): string {
   return encoded ? Buffer.from(value, 'base64').toString('utf8') : value;
 }
 
-
-
 export function replaceAllInJson(
   content: object,
   replacements: { search: string | RegExp; replacement?: string }[]

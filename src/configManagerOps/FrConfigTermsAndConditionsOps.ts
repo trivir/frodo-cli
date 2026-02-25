@@ -1,11 +1,10 @@
 import { frodo } from '@rockcarver/frodo-lib';
-import fs from 'fs';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError } from '../utils/Console';
 
 const { saveJsonToFile, getFilePath } = frodo.utils;
-const { readConfigEntity, importConfigEntities } = frodo.idm.config;
+const { readConfigEntity } = frodo.idm.config;
 
 /**
  * Export terms and conditions to file
@@ -38,4 +37,3 @@ export async function configManagerExportTermsAndConditions(): Promise<boolean> 
     return false;
   }
 }
-
