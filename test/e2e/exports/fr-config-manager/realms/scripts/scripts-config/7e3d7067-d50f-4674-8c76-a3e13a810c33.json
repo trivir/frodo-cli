@@ -1,0 +1,16 @@
+{
+  "_id": "7e3d7067-d50f-4674-8c76-a3e13a810c33",
+  "context": "AUTHENTICATION_SERVER_SIDE",
+  "createdBy": "null",
+  "creationDate": 0,
+  "default": true,
+  "description": "Default global script for server side Scripted Authentication Module",
+  "evaluatorVersion": "1.0",
+  "language": "JAVASCRIPT",
+  "lastModifiedBy": "null",
+  "lastModifiedDate": 0,
+  "name": "Scripted Module - Server Side",
+  "script": {
+    "file": "scripts-content/AUTHENTICATION_SERVER_SIDE/Scripted Module - Server Side.js"
+  }
+}

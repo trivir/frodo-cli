@@ -1,0 +1,16 @@
+{
+  "_id": "6c49bebe-3a62-11ed-a261-0242ac120002",
+  "context": "LIBRARY",
+  "createdBy": "id=dsameuser,ou=user,dc=openam,dc=forgerock,dc=org",
+  "creationDate": 1433147666269,
+  "default": true,
+  "description": "Default global library script to be referenced from other scripts",
+  "evaluatorVersion": "2.0",
+  "language": "JAVASCRIPT",
+  "lastModifiedBy": "id=dsameuser,ou=user,dc=openam,dc=forgerock,dc=org",
+  "lastModifiedDate": 1433147666269,
+  "name": "Library Script",
+  "script": {
+    "file": "scripts-content/LIBRARY/Library Script.js"
+  }
+}
