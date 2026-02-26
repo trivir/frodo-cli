@@ -1,0 +1,6 @@
+{
+  "_id": "endpoint/linkedView",
+  "context": "endpoint/linkedView/*",
+  "file": "linkedView.js",
+  "type": "text/javascript"
+}
