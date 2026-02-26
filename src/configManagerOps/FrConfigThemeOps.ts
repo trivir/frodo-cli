@@ -90,16 +90,14 @@ export async function processTheme(theme: ThemeSkeleton, themePath: string) {
   for (const field of THEME_HTML_FIELDS) {
     if (
       !theme[field.name] ||
-      typeof theme[field.name] != 'object' ||
+      typeof theme[field.name] !== 'object' ||
       typeof (theme[field.name] as any).file !== 'string'
     )
       continue;
-    {
-      const fileName = (theme[field.name] as any).file;
-      const filePath = `${themePath}/${fileName}`;
-      const fileContent = fs.readFileSync(filePath, 'utf8');
-      theme[field.name] = fileContent;
-    }
+    const fileName = (theme[field.name] as any).file;
+    const filePath = `${themePath}/${fileName}`;
+    const fileContent = fs.readFileSync(filePath, 'utf8');
+    theme[field.name] = fileContent;
   }
 }
 
