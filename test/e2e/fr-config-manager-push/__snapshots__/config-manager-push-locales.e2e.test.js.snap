@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`"frodo config-manager push locales -D test/e2e/exports/fr-config-manager -m forgeops": should import the locales into forgeops" 1`] = `""`;

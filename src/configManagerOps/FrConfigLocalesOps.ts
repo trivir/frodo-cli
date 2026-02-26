@@ -1,8 +1,9 @@
 import { frodo } from '@rockcarver/frodo-lib';
+import fs from 'fs';
 
 import { printError } from '../utils/Console';
 
-const { readConfigEntitiesByType } = frodo.idm.config;
+const { readConfigEntitiesByType, importConfigEntities } = frodo.idm.config;
 const { saveJsonToFile, getFilePath } = frodo.utils;
 
 /**
@@ -36,5 +37,32 @@ function processLocales(locales, fileDir, name?) {
     });
   } catch (err) {
     printError(err);
+  }
+}
+
+export async function configManagerImportLocales(
+  localeName?: string
+): Promise<boolean> {
+  try {
+    const localeDir = getFilePath('locales');
+    const localeFiles = fs.readdirSync(localeDir, 'utf8');
+    const importLocaleData = { idm: {} };
+    for (const localeFile of localeFiles) {
+      const filePath = getFilePath(`locales/${localeFile}`);
+      const readLocale = fs.readFileSync(filePath, 'utf8') as any;
+      const importData = JSON.parse(readLocale) as any;
+      const id = importData._id;
+
+      if (localeName && id !== `uilocale/${localeName}`) {
+        continue;
+      }
+
+      importLocaleData.idm[id] = importData;
+    }
+    await importConfigEntities(importLocaleData);
+    return true;
+  } catch (error) {
+    printError(error, `Error importing config entity locales`);
+    return false;
   }
 }
