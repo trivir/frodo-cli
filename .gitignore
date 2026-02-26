@@ -143,3 +143,4 @@ test/fs_tmp/*
 
 temp
 .vscode/settings.json
+*.jwk
