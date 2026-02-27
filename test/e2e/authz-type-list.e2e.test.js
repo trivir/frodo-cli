@@ -65,18 +65,18 @@ describe('frodo authz type list', () => {
     test('"frodo authz type list": should list the names of the authz types', async () => {
         const CMD = `frodo authz type list`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo authz type list -l": should list the names, descriptions, and uuids of the authz types', async () => {
         const CMD = `frodo authz type list -l`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo authz type list --long": should list the names, descriptions, and uuids of the authz types', async () => {
         const CMD = `frodo authz type list --long`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

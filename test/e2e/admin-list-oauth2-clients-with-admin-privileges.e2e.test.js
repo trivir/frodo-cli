@@ -63,6 +63,6 @@ describe('frodo admin list-oauth2-clients-with-admin-privileges', () => {
     test('"frodo admin list-oauth2-clients-with-admin-privileges": should list the ids of the oauth2 clients with admin privileges.', async () => {
         const CMD = `frodo admin list-oauth2-clients-with-admin-privileges`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

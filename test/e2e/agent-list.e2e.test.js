@@ -70,24 +70,24 @@ describe('frodo agent list', () => {
     test('"frodo agent list": should list the ids of the agents', async () => {
         const CMD = `frodo agent list`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo agent list -l": should list the ids, statuses, and types of the agents', async () => {
         const CMD = `frodo agent list -l`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo agent list -gm classic": should list the ids of the global agents', async () => {
         const CMD = `frodo agent list -gm classic`;
         const { stdout } = await exec(CMD, classicEnv);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo agent list --global --long --type classic": should list the ids, statuses, and types of the global agents', async () => {
         const CMD = `frodo agent list --global --long --type classic`;
         const { stdout } = await exec(CMD, classicEnv);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

@@ -68,7 +68,7 @@ describe('frodo node delete', () => {
     test("\"frodo node delete -n 'Generate JWT'\": should delete the custom node named 'Generate JWT'", async () => {
       const CMD = `frodo node delete -n 'Generate JWT'`;
       const { stdout } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+      expect(stdout).toMatchSnapshot()
     });
 
     test("\"frodo node delete --node-name 'Unknown'\": should display error when the custom node named 'Unknown' cannot be deleted since it doesn't exist", async () => {
@@ -84,7 +84,7 @@ describe('frodo node delete', () => {
     test('"frodo node delete -i e5ad0110c8ee4dafaae983003cd05d4a": should delete the custom node with service name \'e5ad0110c8ee4dafaae983003cd05d4a\'', async () => {
       const CMD = `frodo node delete -i e5ad0110c8ee4dafaae983003cd05d4a`;
       const { stdout } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+      expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo node delete --node-id c605506774a848f7877b4d17a453bd39-1": should display error when the custom node with id \'c605506774a848f7877b4d17a453bd39-1\' cannot be deleted since it is being used', async () => {

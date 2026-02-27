@@ -64,12 +64,12 @@ describe('frodo saml describe', () => {
     test('"frodo saml describe -i iSPAzure": should describe the iSPAzure saml provider', async () => {
         const CMD = `frodo saml describe -i iSPAzure`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo saml describe --entity-id iSPAzure": should describe the iSPAzure saml provider', async () => {
         const CMD = `frodo saml describe --entity-id iSPAzure`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

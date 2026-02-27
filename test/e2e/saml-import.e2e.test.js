@@ -78,66 +78,66 @@ describe('frodo saml import', () => {
     test(`"frodo saml import -i iSPAzure -f ${allAlphaSamlProvidersExport}": should import the saml provider with the id "iSPAzure" from the file "${allAlphaSamlProvidersExport}"`, async () => {
         const CMD = `frodo saml import -i iSPAzure -f ${allAlphaSamlProvidersExport}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo saml import --no-deps --entity-id iSPAzure --file ${allAlphaSamlProvidersExport}": should import the saml provider with the id "iSPAzure" from the file "${allAlphaSamlProvidersExport}"`, async () => {
         const CMD = `frodo saml import --no-deps --entity-id iSPAzure --file ${allAlphaSamlProvidersExport}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo saml import -i iSPAzure -f ${allAlphaSamlProvidersFileName} -D ${allDirectory}": should import the saml provider with the id "iSPAzure" from the file "${allAlphaSamlProvidersExport}"`, async () => {
         const CMD = `frodo saml import -i iSPAzure -f ${allAlphaSamlProvidersFileName} -D ${allDirectory}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo saml import -f ${allAlphaSamlProvidersExport}": should import the first saml provider from the file "${allAlphaSamlProvidersExport}"`, async () => {
         const CMD = `frodo saml import -f ${allAlphaSamlProvidersExport}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo saml import --no-deps --file ${allAlphaSamlProvidersExport}": should import the first saml from the file "${allAlphaSamlProvidersExport}"`, async () => {
         const CMD = `frodo saml import --no-deps --file ${allAlphaSamlProvidersExport}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo saml import -f ${allAlphaSamlProvidersExport}": should import the first saml provider from the file "${allAlphaSamlProvidersExport}"`, async () => {
         const CMD = `frodo saml import -f ${allAlphaSamlProvidersFileName} -D ${allDirectory}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo saml import -af ${allAlphaSamlProvidersExport}": should import all saml providers from the file "${allAlphaSamlProvidersExport}"`, async () => {
         const CMD = `frodo saml import -af ${allAlphaSamlProvidersExport}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo saml import --all --no-deps --file ${allAlphaSamlProvidersExport}": should import all saml providers from the file "${allAlphaSamlProvidersExport}"`, async () => {
         const CMD = `frodo saml import --all --no-deps --file ${allAlphaSamlProvidersExport}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo saml import -af ${allAlphaSamlProvidersExport}": should import all saml providers from the file "${allAlphaSamlProvidersExport}"`, async () => {
         const CMD = `frodo saml import -af ${allAlphaSamlProvidersFileName} -D ${allDirectory}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo saml import -AD ${allSeparateSamlProvidersDirectory}": should import all saml providers from the '${allSeparateSamlProvidersDirectory}' directory"`, async () => {
         const CMD = `frodo saml import -AD ${allSeparateSamlProvidersDirectory}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo saml import --all-separate --no-deps --directory ${allSeparateSamlProvidersDirectory}": should import all saml providers from the '${allSeparateSamlProvidersDirectory}' directory"`, async () => {
         const CMD = `frodo saml import --all-separate --no-deps --directory ${allSeparateSamlProvidersDirectory}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

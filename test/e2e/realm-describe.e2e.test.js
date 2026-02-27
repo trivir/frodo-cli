@@ -63,6 +63,6 @@ describe('frodo realm describe', () => {
     test('"frodo realm describe": should describe the current realm', async () => {
         const CMD = `frodo realm describe`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

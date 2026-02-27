@@ -74,7 +74,7 @@ describe('frodo conn delete', () => {
     async () => {
       const CMD = `frodo conn delete ${c.host}`;
       const { stderr } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+      expect(stderr).toMatchSnapshot()
     }
   );
 });

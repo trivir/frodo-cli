@@ -64,12 +64,12 @@ describe('frodo esv variable set', () => {
     test('"frodo esv variable set -i esv-test-var-pi-string --description "This is a pi test variable."": should update the "esv-test-var-pi-string" variable\'s description.', async () => {
         const CMD = `frodo esv variable set -i esv-test-var-pi-string --description "This is a pi test variable."`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo esv variable set --variable-id esv-test-var-pi-string --description "This is a test variable of pi." --value "3.14"": should update the "esv-test-var-pi-string" variable', async () => {
         const CMD = `frodo esv variable set --variable-id esv-test-var-pi-string --description "This is a test variable of pi." --value "3.14"`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

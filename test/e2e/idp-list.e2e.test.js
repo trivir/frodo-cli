@@ -63,6 +63,6 @@ describe('frodo idp list', () => {
     test('"frodo idp list": should list the ids of the idps', async () => {
         const CMD = `frodo idp list`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

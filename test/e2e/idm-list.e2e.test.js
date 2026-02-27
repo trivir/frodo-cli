@@ -63,6 +63,6 @@ describe('frodo idm list', () => {
     test('"frodo idm list": should list the ids of the idm config entities', async () => {
         const CMD = `frodo idm list`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

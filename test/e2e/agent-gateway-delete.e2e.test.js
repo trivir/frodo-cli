@@ -67,7 +67,7 @@ describe('frodo agent gateway delete', () => {
     test('"frodo agent gateway delete -i frodo-test-ig-agent": should delete the agent gateway with id \'frodo-test-ig-agent\'', async () => {
         const CMD = `frodo agent gateway delete -i frodo-test-ig-agent`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo agent gateway delete --agent-id frodo-test-ig-agent": should display error when the agent gateway with id \'frodo-test-ig-agent\' cannot be deleted since it does not exist', async () => {
@@ -83,13 +83,13 @@ describe('frodo agent gateway delete', () => {
     test('"frodo agent gateway delete -a": should delete all agent gateways', async () => {
         const CMD = `frodo agent gateway delete -a`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo agent gateway delete --all": should do nothing when no agent gateways can be deleted', async () => {
         const CMD = `frodo agent gateway delete --all`;
         const { stderr } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+        expect(stderr).toMatchSnapshot()
     });
 
 });

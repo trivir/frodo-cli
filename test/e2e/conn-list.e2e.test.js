@@ -72,7 +72,7 @@ describe('frodo conn list', () => {
     async () => {
       const CMD = `frodo conn list`;
       const { stdout } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+      expect(stdout).toMatchSnapshot()
     }
   );
 
@@ -81,7 +81,7 @@ describe('frodo conn list', () => {
     async () => {
       const CMD = `frodo conn list -l`;
       const { stdout } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+      expect(stdout).toMatchSnapshot()
     }
   );
 
@@ -90,7 +90,7 @@ describe('frodo conn list', () => {
     async () => {
       const CMD = `frodo conn list --long`;
       const { stdout } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+      expect(stdout).toMatchSnapshot()
     }
   );
 });
