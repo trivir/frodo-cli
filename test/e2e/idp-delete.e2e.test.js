@@ -63,6 +63,6 @@ describe('"frodo idp delete -i insta"', () => {
     test('"frodo idp delete -i insta": should delete idp config with Id insta', async () => {
         const CMD = `frodo idp delete -i insta`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

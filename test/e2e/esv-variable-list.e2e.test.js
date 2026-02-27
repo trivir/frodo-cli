@@ -73,13 +73,13 @@ describe('frodo esv variable list', () => {
     test('"frodo esv variable list": should list the ids of the esv variables', async () => {
         const CMD = `frodo esv variable list`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo esv variable list -l": should list the ids, values, statuses, descriptions, modifiers, and modified times of the esv variables', async () => {
         const CMD = `frodo esv variable list -l`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo esv variable list -u": should list the usage of the esv variables', async () => {
@@ -107,24 +107,24 @@ describe('frodo esv variable list', () => {
     test(`"frodo esv variable list -uf ${allConfigFile}": should list the usage of the esv variables in the ${allConfigFile} file`, async () => {
         const CMD = `frodo esv variable list -uf ${allConfigFile}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo esv variable list --usage --long --file ${allConfigFile}": should list the ids, values, statuses, descriptions, modifiers, usage, and modified times of the esv variables in the ${allConfigFile} file`, async () => {
         const CMD = `frodo esv variable list --usage --long --file ${allConfigFile}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo esv variable list -uD ${allConfigDirectory}": should list the usage of the esv variables in the ${allConfigDirectory} directory`, async () => {
         const CMD = `frodo esv variable list -uD ${allConfigDirectory}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo esv variable list --usage --long --directory ${allConfigDirectory}": should list the ids, values, statuses, descriptions, modifiers, usage, and modified times of the esv variables in the ${allConfigDirectory} directory`, async () => {
         const CMD = `frodo esv variable list --usage --long --directory ${allConfigDirectory}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

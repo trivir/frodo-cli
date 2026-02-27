@@ -82,7 +82,7 @@ describe('frodo conn save', () => {
     async () => {
       const CMD = `frodo conn save --no-validate ${c.host} ${c.user} ${c.pass}`;
       const { stderr } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+      expect(stderr).toMatchSnapshot()
     }
   );
 
@@ -91,7 +91,7 @@ describe('frodo conn save', () => {
     async () => {
       const CMD = `frodo conn save --no-validate --sa-id ${c.saId} --sa-jwk-file ${jwkFile} ${c.host}`;
       const { stderr } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+      expect(stderr).toMatchSnapshot()
     }
   );
 
@@ -100,7 +100,7 @@ describe('frodo conn save', () => {
     async () => {
       const CMD = `frodo conn save --no-validate ${cc.host} ${cc.user} ${cc.pass}`;
       const { stderr } = await exec(CMD, classicEnv);
-      expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+      expect(stderr).toMatchSnapshot()
     }
   );
 
@@ -109,7 +109,7 @@ describe('frodo conn save', () => {
     async () => {
       const CMD = `frodo conn save --no-validate --private-key ${pkFile} --authentication-service ${cc.authService} ${cc.host}`;
       const { stderr } = await exec(CMD, classicEnv);
-      expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+      expect(stderr).toMatchSnapshot()
     }
   );
 });

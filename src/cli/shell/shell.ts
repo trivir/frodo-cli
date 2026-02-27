@@ -2,6 +2,7 @@ import repl from 'node:repl';
 
 import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
+import c from 'tinyrainbow';
 import util from 'util';
 import vm from 'vm';
 
@@ -52,13 +53,13 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Launch a frodo shell using explicit login parameters:\n` +
-        `  $ frodo shell ${s.amBaseUrl} ${s.realm} ${s.username} '${s.password}'\n`[
-          'brightCyan'
-        ] +
+        c.cyan(
+          `  $ frodo shell ${s.amBaseUrl} ${s.realm} ${s.username} '${s.password}'\n`
+        ) +
         `  Launch a frodo shell using a connection profile (identified by the full AM base URL):\n` +
-        `  $ frodo shell ${s.amBaseUrl}\n`['brightCyan'] +
+        c.cyan(`  $ frodo shell ${s.amBaseUrl}\n`) +
         `  Launch a frodo shell using a connection profile (identified by a unique substring of the AM base URL or a saved alias):\n` +
-        `  $ frodo shell ${s.connId}\n`['brightCyan']
+        c.cyan(`  $ frodo shell ${s.connId}\n`)
     )
     .addOption(
       new Option(

@@ -63,6 +63,6 @@ describe('frodo esv secret set', () => {
     test('"frodo esv secret set -i esv-test-secret-pi-generic --description "Test secret containing value of pi"": should update the "esv-test-secret-pi-generic" secret\'s description.', async () => {
         const CMD = `frodo esv secret set -i esv-test-secret-pi-generic --description "Test secret containing value of pi"`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

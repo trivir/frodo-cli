@@ -5,12 +5,10 @@ import {
   ProgressIndicatorType,
 } from '@rockcarver/frodo-lib/types/utils/Console';
 import Table from 'cli-table3';
-import Color from 'colors';
 import { stderr as logUpdateStderr } from 'log-update';
 import c from 'tinyrainbow';
 import { v4 as uuidv4 } from 'uuid';
 
-Color.enable();
 const arcSpinner = {
   frames: ['◜', '◠', '◝', '◞', '◡', '◟'],
 };
@@ -59,7 +57,7 @@ function text(message: string | object, newline = true) {
 }
 
 /**
- * Output a message in bright cyan to stderr
+ * Output a message in cyan to stderr
  * @param {Object} message the message
  */
 function info(message: string | object, newline = true) {
@@ -67,9 +65,9 @@ function info(message: string | object, newline = true) {
   if (typeof message === 'object') {
     console.dir(message, { depth: 3 });
   } else if (newline) {
-    console.error(message['brightCyan']);
+    console.error(c.cyan(message));
   } else {
-    process.stderr.write(message['brightCyan']);
+    process.stderr.write(c.cyan(message));
   }
 }
 
@@ -82,14 +80,14 @@ function warn(message: string | object, newline = true) {
   if (typeof message === 'object') {
     console.dir(message, { depth: 3 });
   } else if (newline) {
-    console.error(message['yellow']);
+    console.error(c.yellow(message));
   } else {
-    process.stderr.write(message['yellow']);
+    process.stderr.write(c.yellow(message));
   }
 }
 
 /**
- * Output a message in bright red to stderr
+ * Output a message in red to stderr
  * @param {Object} message the message
  */
 function error(message: string | object, newline = true) {
@@ -97,9 +95,9 @@ function error(message: string | object, newline = true) {
   if (typeof message === 'object') {
     console.dir(message, { depth: 3 });
   } else if (newline) {
-    console.error(message['brightRed']);
+    console.error(c.red(message));
   } else {
-    process.stderr.write(message['brightRed']);
+    process.stderr.write(c.red(message));
   }
 }
 
@@ -112,9 +110,9 @@ function debug(message: string | object, newline = true) {
   if (typeof message === 'object') {
     console.dir(message, { depth: 6 });
   } else if (newline) {
-    console.error(message['brightMagenta']);
+    console.error(c.magenta(message));
   } else {
-    process.stderr.write(message['brightMagenta']);
+    process.stderr.write(c.magenta(message));
   }
 }
 
@@ -124,7 +122,7 @@ function debug(message: string | object, newline = true) {
  */
 function curlirize(message: string) {
   if (!message) return;
-  console.error(message['brightBlue']);
+  console.error(c.blue(message));
 }
 
 /**
@@ -452,7 +450,7 @@ export function cleanupProgressIndicators() {
  */
 export function createTable(head) {
   const table = new Table({
-    head,
+    head: head.map(c.cyan),
     chars: {
       top: '',
       'top-mid': '',
@@ -468,8 +466,9 @@ export function createTable(head) {
       'mid-mid': '',
       right: '',
       'right-mid': '',
+      middle: c.gray('│'),
     },
-    style: { 'padding-left': 0, 'padding-right': 0, head: ['brightCyan'] },
+    style: { 'padding-left': 0, 'padding-right': 0, head: [], border: [] },
   });
   return table;
 }
@@ -495,8 +494,9 @@ export function createKeyValueTable() {
       'mid-mid': '',
       right: '',
       'right-mid': '',
+      middle: c.gray('│'),
     },
-    style: { 'padding-left': 0, 'padding-right': 0 },
+    style: { 'padding-left': 0, 'padding-right': 0, head: [], border: [] },
     wordWrap: true,
   });
   return table;
@@ -546,14 +546,14 @@ function addRows(object, depth, level, table, keyMap) {
     if (Object(object[key]) !== object[key]) {
       if (level === 1) {
         table.push([
-          keyMap[key] ? keyMap[key].brightCyan : key['brightCyan'],
+          keyMap[key] ? c.cyan(keyMap[key]) : c.cyan(key),
           object[key],
         ]);
       } else {
         table.push([
           {
             hAlign: 'right',
-            content: keyMap[key] ? keyMap[key].gray : key.gray,
+            content: keyMap[key] ? c.gray(keyMap[key]) : c.gray(key),
           },
           object[key],
         ]);
@@ -567,9 +567,7 @@ function addRows(object, depth, level, table, keyMap) {
         let indention = new Array(level).fill(space).join('');
         if (level < 3) indention = `\n${indention}`;
         table.push([
-          indention.concat(
-            keyMap[key] ? keyMap[key].brightCyan : key['brightCyan']
-          ),
+          indention.concat(keyMap[key] ? c.cyan(keyMap[key]) : c.cyan(key)),
           '',
         ]);
       }
@@ -608,8 +606,9 @@ export function createObjectTable(object, keyMap = {}) {
       'mid-mid': '',
       right: '',
       'right-mid': '',
+      middle: c.gray('│'),
     },
-    style: { 'padding-left': 0, 'padding-right': 0, head: ['brightCyan'] },
+    style: { 'padding-left': 0, 'padding-right': 0, head: [], border: [] },
   });
   addRows(object, depth, level + 1, table, keyMap);
   return table;

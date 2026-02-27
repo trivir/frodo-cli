@@ -64,12 +64,12 @@ describe('frodo idm count', () => {
     test('"frodo idm count -o alpha_user": should count all alpha_users', async () => {
         const CMD = `frodo idm count -o alpha_user`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo idm count --managed-object alpha_user": should count all alpha_users', async () => {
         const CMD = `frodo idm count --managed-object alpha_user`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

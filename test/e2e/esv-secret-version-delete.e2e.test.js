@@ -64,7 +64,7 @@ describe('frodo esv secret version delete', () => {
     test('"frodo esv secret version delete -i esv-test-secret-pi-generic -v 2": should delete version 2 of the "esv-test-var-pi-generic" secret', async () => {
         const CMD = `frodo esv secret version delete -i esv-test-secret-pi-generic -v 2`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo esv secret version delete --secret-id esv-test-secret-pi-generic --version 4": should display error when deleting non-existent version 4 of the "esv-test-var-pi-generic" secret', async () => {

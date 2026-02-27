@@ -73,8 +73,8 @@ export async function testExport(
   } else {
     expect(filePaths.length >= 1).toBeTruthy();
   }
-  expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-  if (checkStderr) expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+  expect(stdout).toMatchSnapshot()
+  if (checkStderr) expect(stderr).toMatchSnapshot()
   let deleteExportDirectory = true;
   filePaths.forEach((path) => {
     let deleteExportFile = true;
@@ -165,8 +165,8 @@ export async function testPromote(
   const tempDir = await copyAndModifyDirectory(sourceDir, modifiedFilesDir, referenceSubDirs)
   const CMD = `frodo promote -M ${sourceDir} -E ${tempDir}`;
   const { stdout, stderr } = await exec(CMD, env);
-  expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-  expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+  expect(stdout).toMatchSnapshot()
+  expect(stderr).toMatchSnapshot()
 }
 
 async function copyAndModifyDirectory(sourceDir, modifiedFilesDir, referenceSubDirs) {
@@ -255,8 +255,8 @@ export async function testSuccess(
   env,
 ) {
   const { stdout, stderr } = await exec(command, env);
-  expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-  expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+  expect(stdout).toMatchSnapshot()
+  expect(stderr).toMatchSnapshot()
 }
 
 /**

@@ -65,18 +65,18 @@ describe('frodo email template list', () => {
     test('"frodo email template list": should list the ids of the email templates', async () => {
         const CMD = `frodo email template list`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo email template list -l": should list the ids, names, statuses, locales, senders (from), and subjects of the email templates', async () => {
         const CMD = `frodo email template list -l`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo email template list --long": should list the ids, names, statuses, locales, senders (from), and subjects of the email templates', async () => {
         const CMD = `frodo email template list --long`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

@@ -69,6 +69,6 @@ describe('frodo log list', () => {
   test('"frodo log list": should list the names of the logs sources', async () => {
     const CMD = `frodo log list`;
     const { stdout } = await exec(CMD, env);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    expect(stdout).toMatchSnapshot()
   });
 });

@@ -76,24 +76,24 @@ describe('frodo authn import', () => {
     test(`"frodo authn import -f ${authnSettingsDirectory}/${realmAuthnSettingsName}": should import authentication settings from the file ${realmAuthnSettingsName}`, async () => {
         const CMD = `frodo authn import -f ${authnSettingsDirectory}/${realmAuthnSettingsName}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo authn import --file ${realmAuthnSettingsName} --directory ${authnSettingsDirectory}": should import authentication settings from the file ${realmAuthnSettingsName} in the directory ${authnSettingsDirectory}`, async () => {
         const CMD = `frodo authn import --file ${realmAuthnSettingsName} --directory ${authnSettingsDirectory}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo authn import -gf ${globalAuthnSettingsName} -D ${globalAuthnSettingsDirectory} -m classic": should import global authentication settings from the file ${globalAuthnSettingsName} in the directory ${globalAuthnSettingsDirectory}`, async () => {
         const CMD = `frodo authn import -gf ${globalAuthnSettingsName} -D ${globalAuthnSettingsDirectory} -m classic`;
         const { stdout } = await exec(CMD, classicEnv);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo authn import --global --file ${globalAuthnSettingsDirectory}/${globalAuthnSettingsName} --type classic": should import global authentication settings from the file ${globalAuthnSettingsName}`, async () => {
         const CMD = `frodo authn import --global --file ${globalAuthnSettingsDirectory}/${globalAuthnSettingsName} --type classic`;
         const { stdout } = await exec(CMD, classicEnv);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

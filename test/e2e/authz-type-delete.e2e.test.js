@@ -68,7 +68,7 @@ describe('frodo authz type delete', () => {
   test('"frodo authz type delete -n FrodoTestResourceType13": should delete the resource type with name FrodoTestResourceType13', async () => {
     const CMD = `frodo authz type delete -n FrodoTestResourceType13`;
     const { stdout } = await exec(CMD, env);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    expect(stdout).toMatchSnapshot()
   });
 
   test('"frodo authz type delete --type-name FrodoTestResourceType13": should display error when the resource type with name FrodoTestResourceType13 cannot be deleted since it does not exist', async () => {
@@ -85,7 +85,7 @@ describe('frodo authz type delete', () => {
   test('"frodo authz type delete -i 0aa5ed25-0c62-4ff5-9a42-3bda8c5cbb76": should delete the resource type with id 0aa5ed25-0c62-4ff5-9a42-3bda8c5cbb76', async () => {
     const CMD = `frodo authz type delete -i 0aa5ed25-0c62-4ff5-9a42-3bda8c5cbb76`;
     const { stdout } = await exec(CMD, env);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    expect(stdout).toMatchSnapshot()
   });
 
   test('"frodo authz type delete --type-id 0aa5ed25-0c62-4ff5-9a42-3bda8c5cbb76": should display error when the resource type with id 0aa5ed25-0c62-4ff5-9a42-3bda8c5cbb76 cannot be deleted since it does not exist', async () => {
@@ -103,13 +103,13 @@ describe('frodo authz type delete', () => {
   test.skip('"frodo authz type delete -a": should delete all resource types', async () => {
     const CMD = `frodo authz type delete -a`;
     const { stdout } = await exec(CMD, env);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    expect(stdout).toMatchSnapshot()
   });
 
   //TODO: Generate mock for this test (skip for meantime)
   test.skip('"frodo authz type delete --all": should do nothing when no resource types can be deleted', async () => {
     const CMD = `frodo authz type delete --all`;
     const { stderr } = await exec(CMD, env);
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    expect(stderr).toMatchSnapshot()
   });
 });

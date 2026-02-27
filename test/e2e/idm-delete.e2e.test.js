@@ -63,6 +63,6 @@ describe('frodo idm delete -i "emailTemplate/deleteTemplate"', () => {
     test('"frodo idm delete -i emailTemplate/deleteTemplate": should delete idm config with entityId emailTemplate/deleteTemplate', async () => {
         const CMD = `frodo idm delete -i emailTemplate/deleteTemplate`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

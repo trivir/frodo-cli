@@ -81,8 +81,8 @@ describe('frodo conn alias delete', () => {
     async () => {
       const CMD = `frodo conn alias delete ${c.host}`;
       const { stdout, stderr } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-      expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+      expect(stdout).toMatchSnapshot()
+      expect(stderr).toMatchSnapshot()
     }
   );
   testif(process.env['FRODO_MASTER_KEY'] || process.env['FRODO_MASTER_KEY_PATH'])(

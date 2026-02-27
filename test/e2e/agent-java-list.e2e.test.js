@@ -65,18 +65,18 @@ describe('frodo agent java list', () => {
     test('"frodo agent java list": should list the ids of the java agents', async () => {
         const CMD = `frodo agent java list`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo agent java list -l": should list the ids and statuses of the java agents', async () => {
         const CMD = `frodo agent java list -l`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo agent java list --long": should list the ids and statuses of the java agents', async () => {
         const CMD = `frodo agent java list --long`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

@@ -91,25 +91,25 @@ describe('frodo info', () => {
     test.skip(`frodo info <host> <user> <pass>`, async () => {
       const CMD = `frodo info ${c.host} ${c.user} ${c.pass}`;
       const { stderr } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+      expect(stderr).toMatchSnapshot()
     });
 
     test.skip(`frodo info <host> <user> <pass> --json`, async () => {
       const CMD = `frodo info ${c.host} ${c.user} ${c.pass} --json`;
       const { stdout } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+      expect(stdout).toMatchSnapshot()
     });
 
     test.skip(`frodo info <host> <user> <pass> --scriptFriendly`, async () => {
       const CMD = `frodo info ${c.host} ${c.user} ${c.pass} --scriptFriendly`;
       const { stdout } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+      expect(stdout).toMatchSnapshot()
     });
 
     test.skip(`frodo info <host> <user> <pass> -s`, async () => {
       const CMD = `frodo info ${c.host} ${c.user} ${c.pass} -s`;
       const { stdout } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+      expect(stdout).toMatchSnapshot()
     });
   });
 
@@ -117,25 +117,25 @@ describe('frodo info', () => {
     test(`frodo info <host> --sa-id <sa-id> --sa-jwk-file <sa-jwk-file>`, async () => {
       const CMD = `frodo info ${c.host} --sa-id ${c.saId} --sa-jwk-file ${jwkFile}`;
       const { stderr } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+      expect(stderr).toMatchSnapshot()
     });
 
     test(`frodo info <host> --sa-id <sa-id> --sa-jwk-file <sa-jwk-file> --json`, async () => {
       const CMD = `frodo info ${c.host} --sa-id ${c.saId} --sa-jwk-file ${jwkFile} --json`;
       const { stdout } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+      expect(stdout).toMatchSnapshot()
     });
 
     test(`frodo info <host> --sa-id <sa-id> --sa-jwk-file <sa-jwk-file> --scriptFriendly`, async () => {
       const CMD = `frodo info ${c.host} --sa-id ${c.saId} --sa-jwk-file ${jwkFile} --scriptFriendly`;
       const { stdout } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+      expect(stdout).toMatchSnapshot()
     });
 
     test(`frodo info <host> --sa-id <sa-id> --sa-jwk-file <sa-jwk-file> -s`, async () => {
       const CMD = `frodo info ${c.host} --sa-id ${c.saId} --sa-jwk-file ${jwkFile} -s`;
       const { stdout } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+      expect(stdout).toMatchSnapshot()
     });
   });
 
@@ -146,7 +146,7 @@ describe('frodo info', () => {
       env.env.FRODO_SA_ID = c.saId;
       env.env.FRODO_SA_JWK = c.saJwk;
       const { stderr } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+      expect(stderr).toMatchSnapshot()
     });
 
     test(`frodo info --json`, async () => {
@@ -155,7 +155,7 @@ describe('frodo info', () => {
       env.env.FRODO_SA_ID = c.saId;
       env.env.FRODO_SA_JWK = c.saJwk;
       const { stdout } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+      expect(stdout).toMatchSnapshot()
     });
 
     test(`frodo info --scriptFriendly`, async () => {
@@ -164,7 +164,7 @@ describe('frodo info', () => {
       env.env.FRODO_SA_ID = c.saId;
       env.env.FRODO_SA_JWK = c.saJwk;
       const { stdout } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+      expect(stdout).toMatchSnapshot()
     });
 
     test(`frodo info -s`, async () => {
@@ -173,7 +173,7 @@ describe('frodo info', () => {
       env.env.FRODO_SA_ID = c.saId;
       env.env.FRODO_SA_JWK = c.saJwk;
       const { stdout } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+      expect(stdout).toMatchSnapshot()
     });
   });
 });

@@ -74,7 +74,7 @@ describe.skip('frodo conn describe', () => {
         async () => {
             const CMD = `frodo conn describe ${c.host}`;
             const { stdout } = await exec(CMD, env);
-            expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+            expect(stdout).toMatchSnapshot()
         }
     );
 
@@ -83,7 +83,7 @@ describe.skip('frodo conn describe', () => {
         async () => {
             const CMD = `frodo conn describe ${cc.host}`;
             const { stdout } = await exec(CMD, classicEnv);
-            expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+            expect(stdout).toMatchSnapshot()
         }
     );
 

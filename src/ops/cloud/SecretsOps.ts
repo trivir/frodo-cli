@@ -6,6 +6,7 @@ import {
 } from '@rockcarver/frodo-lib/types/api/cloud/SecretsApi';
 import { SecretsExportInterface } from '@rockcarver/frodo-lib/types/ops/cloud/SecretsOps';
 import fs from 'fs';
+import c from 'tinyrainbow';
 
 import { getFullExportConfig, getIdLocations } from '../../utils/Config';
 import {
@@ -85,15 +86,15 @@ export async function listSecrets(
   let fullExport = null;
   const headers = long
     ? [
-        'Id'['brightCyan'],
-        { hAlign: 'right', content: 'Active\nVersion'['brightCyan'] },
-        { hAlign: 'right', content: 'Loaded\nVersion'['brightCyan'] },
-        'Status'['brightCyan'],
-        'Description'['brightCyan'],
-        'Modifier'['brightCyan'],
-        'Modified (UTC)'['brightCyan'],
+        c.cyan('Id'),
+        { hAlign: 'right', content: c.cyan('Active\nVersion') },
+        { hAlign: 'right', content: c.cyan('Loaded\nVersion') },
+        c.cyan('Status'),
+        c.cyan('Description'),
+        c.cyan('Modifier'),
+        c.cyan('Modified (UTC)'),
       ]
-    : ['Id'['brightCyan']];
+    : [c.cyan('Id')];
   if (usage) {
     try {
       fullExport = await getFullExportConfig(file);
@@ -103,7 +104,7 @@ export async function listSecrets(
     }
     //Delete secrets from full export so they aren't mistakenly used for determining usage
     delete fullExport.global.secret;
-    headers.push('Used'['brightCyan']);
+    headers.push(c.cyan('Used'));
   }
   const table = createTable(headers);
   for (const secret of secrets) {
@@ -122,7 +123,9 @@ export async function listSecrets(
           secret._id,
           { hAlign: 'right', content: secret.activeVersion },
           { hAlign: 'right', content: secret.loadedVersion },
-          secret.loaded ? 'loaded'['brightGreen'] : 'unloaded'['brightRed'],
+          secret.loaded
+            ? (c.green('loaded') as any)
+            : (c.red('unloaded') as any),
           wordwrap(secret.description, 40),
           lastChangedBy,
           new Date(secret.lastChangeDate).toUTCString(),
@@ -132,8 +135,8 @@ export async function listSecrets(
       const locations = getIdLocations(fullExport, secret._id, true);
       values.push(
         locations.length > 0
-          ? `${'yes'['brightGreen']} (${locations.length === 1 ? `at` : `${locations.length} uses, including:`} ${locations[0]})`
-          : 'no'['brightRed']
+          ? `${c.green('yes')} (${locations.length === 1 ? `at` : `${locations.length} uses, including:`} ${locations[0]})`
+          : c.red('no')
       );
     }
     table.push(values);
@@ -344,21 +347,21 @@ export async function listSecretVersions(
       return true;
     }
     const table = createTable([
-      { hAlign: 'right', content: 'Version'['brightCyan'] },
-      'Status'['brightCyan'],
-      'Loaded'['brightCyan'],
-      'Created'['brightCyan'],
+      { hAlign: 'right', content: c.cyan('Version') },
+      c.cyan('Status'),
+      c.cyan('Loaded'),
+      c.cyan('Created'),
     ]);
     const statusMap = {
-      ENABLED: 'active'['brightGreen'],
-      DISABLED: 'inactive'['brightRed'],
-      DESTROYED: 'deleted'['brightRed'],
+      ENABLED: c.green('active'),
+      DISABLED: c.red('inactive'),
+      DESTROYED: c.red('deleted'),
     };
     for (const version of versions) {
       table.push([
         { hAlign: 'right', content: version.version },
         statusMap[version.status],
-        version.loaded ? 'loaded'['brightGreen'] : 'unloaded'['brightRed'],
+        version.loaded ? c.green('loaded') : c.red('unloaded'),
         new Date(version.createDate).toLocaleString(),
       ]);
     }
@@ -404,19 +407,16 @@ export async function describeSecret(
       printMessage(secret, 'data');
     } else {
       const table = createKeyValueTable();
-      table.push(['Name'['brightCyan'], secret._id]);
-      table.push(['Active Version'['brightCyan'], secret.activeVersion]);
-      table.push(['Loaded Version'['brightCyan'], secret.loadedVersion]);
+      table.push([c.cyan('Name'), secret._id]);
+      table.push([c.cyan('Active Version'), secret.activeVersion]);
+      table.push([c.cyan('Loaded Version'), secret.loadedVersion]);
       table.push([
-        'Status'['brightCyan'],
-        secret.loaded ? 'loaded'['brightGreen'] : 'unloaded'['brightRed'],
+        c.cyan('Status'),
+        secret.loaded ? c.green('loaded') : c.red('unloaded'),
       ]);
+      table.push([c.cyan('Description'), wordwrap(secret.description, 60)]);
       table.push([
-        'Description'['brightCyan'],
-        wordwrap(secret.description, 60),
-      ]);
-      table.push([
-        'Modified'['brightCyan'],
+        c.cyan('Modified'),
         new Date(secret.lastChangeDate).toLocaleString(),
       ]);
       let lastChangedBy = secret.lastChangedBy;
@@ -427,16 +427,13 @@ export async function describeSecret(
       } catch {
         // ignore
       }
-      table.push(['Modifier'['brightCyan'], lastChangedBy]);
-      table.push(['Modifier UUID'['brightCyan'], secret.lastChangedBy]);
-      table.push(['Encoding'['brightCyan'], secret.encoding]);
-      table.push([
-        'Use In Placeholders'['brightCyan'],
-        secret.useInPlaceholders,
-      ]);
+      table.push([c.cyan('Modifier'), lastChangedBy]);
+      table.push([c.cyan('Modifier UUID'), secret.lastChangedBy]);
+      table.push([c.cyan('Encoding'), secret.encoding]);
+      table.push([c.cyan('Use In Placeholders'), secret.useInPlaceholders]);
       if (usage) {
         table.push([
-          `Usage Locations (${secret.locations.length} total)`['brightCyan'],
+          c.cyan(`Usage Locations (${secret.locations.length} total)`),
           secret.locations.length > 0 ? secret.locations[0] : '',
         ]);
         for (let i = 1; i < secret.locations.length; i++) {
@@ -489,7 +486,7 @@ export async function exportSecretToFile(
     saveJsonToFile(fileData, filePath, includeMeta);
     stopProgressIndicator(
       spinnerId,
-      `Exported ${secretId['brightCyan']} to ${filePath['brightCyan']}.`,
+      `Exported ${c.cyan(secretId)} to ${c.cyan(filePath)}.`,
       'success'
     );
     debugMessage(

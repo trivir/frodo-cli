@@ -65,18 +65,18 @@ describe('frodo agent web list', () => {
     test('"frodo agent web list": should list the ids of the web agents', async () => {
         const CMD = `frodo agent web list`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo agent web list -l": should list the ids and statuses of the web agents', async () => {
         const CMD = `frodo agent web list -l`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo agent web list --long": should list the ids and statuses of the web agents', async () => {
         const CMD = `frodo agent web list --long`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

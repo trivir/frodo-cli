@@ -13,6 +13,7 @@ import {
 } from '@rockcarver/frodo-lib/types/ops/NodeOps';
 import { Table } from 'cli-table3';
 import fs from 'fs';
+import c from 'tinyrainbow';
 
 import { extractDataToFile, getExtractedData } from '../utils/Config';
 import {
@@ -59,22 +60,22 @@ export function getNodeClassification(nodeType: string): string[] {
   return _getNodeClassification(nodeType).map((it) => {
     switch (it) {
       case 'standard':
-        return it.toString()['brightGreen'];
+        return c.green(it.toString());
 
       case 'cloud':
-        return it.toString()['brightMagenta'];
+        return c.magenta(it.toString());
 
       case 'custom':
-        return it.toString()['brightRed'];
+        return c.red(it.toString());
 
       case 'excluded':
-        return it.toString()['brightRed'];
+        return c.red(it.toString());
 
       case 'premium':
-        return it.toString()['brightYellow'];
+        return c.yellow(it.toString());
 
       case 'deprecated':
-        return it.toString()['brightYellow'];
+        return c.yellow(it.toString());
     }
   });
 }
@@ -118,7 +119,7 @@ export function getOneLineDescription(
   nodeObj: NodeSkeleton,
   nodeRef?: NodeRefSkeletonInterface | InnerNodeRefSkeletonInterface
 ): string {
-  const description = `[${nodeObj._id['brightCyan']}] (${getNodeClassification(
+  const description = `[${c.cyan(nodeObj._id)}] (${getNodeClassification(
     nodeObj._type._id
   ).join(', ')}) ${nodeObj._type._id}${
     nodeRef ? ' - ' + nodeRef?.displayName : ''
@@ -203,11 +204,11 @@ export async function listCustomNodes(long: boolean = false): Promise<boolean> {
         table.push([
           wordwrap(node.displayName, 25, '  '),
           node._id,
-          numJourneys ? String(numJourneys)['brightGreen'] : '0'['brightRed'],
-          numInstances ? String(numInstances)['brightGreen'] : '0'['brightRed'],
+          numJourneys ? c.green(String(numJourneys)) : c.red('0'),
+          numInstances ? c.green(String(numInstances)) : c.red('0'),
           node.errorOutcome
-            ? 'enabled'['brightGreen']
-            : 'disabled'['brightRed'],
+            ? c.green('enabled')
+            : c.red('disabled'),
           wordwrap(node.description, 30),
         ]);
       }
@@ -249,10 +250,10 @@ export async function describeCustomNode(
       return true;
     }
     const nodeTable = createKeyValueTable();
-    nodeTable.push(['Id'['brightCyan'], node._id]);
-    nodeTable.push(['Service Name'['brightCyan'], node.serviceName]);
-    nodeTable.push(['Display Name'['brightCyan'], node.displayName]);
-    nodeTable.push(['Description'['brightCyan'], node.description]);
+    nodeTable.push([c.cyan('Id'), node._id]);
+    nodeTable.push([c.cyan('Service Name'), node.serviceName]);
+    nodeTable.push([c.cyan('Display Name'), node.displayName]);
+    nodeTable.push([c.cyan('Description'), node.description]);
     getTableRowsFromArray(nodeTable, 'Inputs', node.inputs);
     getTableRowsFromArray(nodeTable, 'Outputs', node.outputs);
     const outcomes = node.outcomes;
@@ -268,17 +269,17 @@ export async function describeCustomNode(
     printMessage('\nProperties', 'data');
     for (const [name, prop] of Object.entries(node.properties)) {
       const propTable = createKeyValueTable();
-      propTable.push(['Name'['brightCyan'], name]);
-      propTable.push(['Title'['brightCyan'], prop.title]);
-      propTable.push(['Description'['brightCyan'], prop.description]);
+      propTable.push([c.cyan('Name'), name]);
+      propTable.push([c.cyan('Title'), prop.title]);
+      propTable.push([c.cyan('Description'), prop.description]);
       propTable.push([
-        'Required'['brightCyan'],
-        prop.required ? 'true'['brightGreen'] : 'false'['brightRed'],
+        c.cyan('Required'),
+        prop.required ? c.green('true') : c.red('false'),
       ]);
-      propTable.push(['Type'['brightCyan'], prop.type]);
+      propTable.push([c.cyan('Type'), prop.type]);
       propTable.push([
-        'Multivalued'['brightCyan'],
-        prop.multivalued ? 'true'['brightGreen'] : 'false'['brightRed'],
+        c.cyan('Multivalued'),
+        prop.multivalued ? c.green('true') : c.red('false'),
       ]);
       if (prop.defaultValue) {
         getTableRowsFromArray(
@@ -714,7 +715,7 @@ function getTableRowsFromArray(
   rowName: string,
   array: string[]
 ): void {
-  table.push([rowName['brightCyan'], array.length > 0 ? array[0] : '']);
+  table.push([c.cyan(rowName), array.length > 0 ? array[0] : '']);
   for (let i = 1; i < array.length; ++i) {
     table.push(['', array[i]]);
   }
