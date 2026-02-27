@@ -80,9 +80,9 @@ function warn(message: string | object, newline = true) {
   if (typeof message === 'object') {
     console.dir(message, { depth: 3 });
   } else if (newline) {
-    console.error(message['yellow']);
+    console.error(c.yellow(message));
   } else {
-    process.stderr.write(message['yellow']);
+    process.stderr.write(c.yellow(message));
   }
 }
 

@@ -204,8 +204,8 @@ export async function listCustomNodes(long: boolean = false): Promise<boolean> {
         table.push([
           wordwrap(node.displayName, 25, '  '),
           node._id,
-          numJourneys ? String(numJourneys)['brightGreen'] : c.red('0'),
-          numInstances ? String(numInstances)['brightGreen'] : c.red('0'),
+          numJourneys ? c.green(String(numJourneys)) : c.red('0'),
+          numInstances ? c.green(String(numInstances)) : c.red('0'),
           node.errorOutcome
             ? c.green('enabled')
             : c.red('disabled'),
@@ -715,7 +715,7 @@ function getTableRowsFromArray(
   rowName: string,
   array: string[]
 ): void {
-  table.push([rowName['brightCyan'], array.length > 0 ? array[0] : '']);
+  table.push([c.cyan(rowName), array.length > 0 ? array[0] : '']);
   for (let i = 1; i < array.length; ++i) {
     table.push(['', array[i]]);
   }
