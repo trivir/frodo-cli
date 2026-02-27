@@ -229,8 +229,7 @@ export async function exportSaml2ProviderToFile(
     updateProgressIndicator(indicatorId, `Exported provider ${entityId}`);
     stopProgressIndicator(
       indicatorId,
-      // @ts-expect-error - brightCyan colors the string, even though it is not a property of string
-      `Exported ${entityId.brightCyan} to ${filePath.brightCyan}.`
+      `Exported ${c.cyan(entityId)} to ${c.cyan(filePath)}.`
     );
     debugMessage(
       `cli.Saml2Ops.exportSaml2ProviderToFile: end [entityId=${entityId}, file=${filePath}]`

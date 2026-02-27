@@ -12,6 +12,7 @@ import {
   stopProgressIndicator,
   updateProgressIndicator,
 } from '../utils/Console';
+import c from 'tinyrainbow';
 import { errorHandler } from './utils/OpsUtils';
 
 const {
@@ -65,7 +66,7 @@ export async function listSecretStores(
           store._type.name,
           mappings
             ? mappings.map((m) => m.secretId).join('\n')
-            : 'N/A'['brightRed'],
+            : c.red('N/A'),
         ]);
       }
       printMessage(table.toString(), 'data');
@@ -142,8 +143,8 @@ export async function listSecretStoreMappingAliases(
           alias,
           // The first one is always active
           active && !(active = false)
-            ? 'true'['brightGreen']
-            : 'false'['brightRed'],
+            ? c.green('true')
+            : c.red('false'),
         ]);
       }
       printMessage(table.toString(), 'data');
@@ -179,13 +180,13 @@ export async function describeSecretStore(
     secretStoreTypeId = secretStore._type._id || secretStoreTypeId;
     const schema = await readSecretStoreSchema(secretStoreTypeId, global);
     const table = createKeyValueTable();
-    table.push(['Id'['brightCyan'], secretStoreId]);
-    table.push(['Type'['brightCyan'], secretStoreTypeId]);
+    table.push([c.cyan('Id'), secretStoreId]);
+    table.push([c.cyan('Type'), secretStoreTypeId]);
     for (const [key, info] of Object.entries(schema.properties).sort(
       // This sorts the properties in ascending order (see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#parameters)
       (p1, p2) => p1[1].propertyOrder - p2[1].propertyOrder
     )) {
-      table.push([`${info.title}`['brightCyan'], secretStore[key]]);
+      table.push([c.cyan(info.title) as any, secretStore[key]]);
     }
     printMessage(table.toString(), 'data');
     if (!canSecretStoreHaveMappings(secretStoreTypeId)) return true;

@@ -57,7 +57,7 @@ function text(message: string | object, newline = true) {
 }
 
 /**
- * Output a message in bright cyan to stderr
+ * Output a message in cyan to stderr
  * @param {Object} message the message
  */
 function info(message: string | object, newline = true) {
@@ -87,7 +87,7 @@ function warn(message: string | object, newline = true) {
 }
 
 /**
- * Output a message in bright red to stderr
+ * Output a message in red to stderr
  * @param {Object} message the message
  */
 function error(message: string | object, newline = true) {
