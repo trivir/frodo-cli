@@ -450,7 +450,7 @@ export function cleanupProgressIndicators() {
  */
 export function createTable(head) {
   const table = new Table({
-    head,
+    head: head.map(c.cyan),
     chars: {
       top: '',
       'top-mid': '',
@@ -466,8 +466,9 @@ export function createTable(head) {
       'mid-mid': '',
       right: '',
       'right-mid': '',
+      middle: c.gray('│'),
     },
-    style: { 'padding-left': 0, 'padding-right': 0, head: ['brightCyan'] },
+    style: { 'padding-left': 0, 'padding-right': 0, head: [], border: [] },
   });
   return table;
 }
@@ -493,8 +494,9 @@ export function createKeyValueTable() {
       'mid-mid': '',
       right: '',
       'right-mid': '',
+      middle: c.gray('│'),
     },
-    style: { 'padding-left': 0, 'padding-right': 0 },
+    style: { 'padding-left': 0, 'padding-right': 0, head: [], border: [] },
     wordWrap: true,
   });
   return table;
@@ -544,14 +546,14 @@ function addRows(object, depth, level, table, keyMap) {
     if (Object(object[key]) !== object[key]) {
       if (level === 1) {
         table.push([
-          keyMap[key] ? keyMap[key].brightCyan : c.cyan(key),
+          keyMap[key] ? c.cyan(keyMap[key]) : c.cyan(key),
           object[key],
         ]);
       } else {
         table.push([
           {
             hAlign: 'right',
-            content: keyMap[key] ? keyMap[key].gray : key.gray,
+            content: keyMap[key] ? c.gray(keyMap[key]) : c.gray(key),
           },
           object[key],
         ]);
@@ -565,7 +567,7 @@ function addRows(object, depth, level, table, keyMap) {
         let indention = new Array(level).fill(space).join('');
         if (level < 3) indention = `\n${indention}`;
         table.push([
-          indention.concat(keyMap[key] ? keyMap[key].brightCyan : c.cyan(key)),
+          indention.concat(keyMap[key] ? c.cyan(keyMap[key]) : c.cyan(key)),
           '',
         ]);
       }
@@ -604,8 +606,9 @@ export function createObjectTable(object, keyMap = {}) {
       'mid-mid': '',
       right: '',
       'right-mid': '',
+      middle: c.gray('│'),
     },
-    style: { 'padding-left': 0, 'padding-right': 0, head: ['brightCyan'] },
+    style: { 'padding-left': 0, 'padding-right': 0, head: [], border: [] },
   });
   addRows(object, depth, level + 1, table, keyMap);
   return table;
