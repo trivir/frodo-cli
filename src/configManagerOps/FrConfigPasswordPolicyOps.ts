@@ -29,15 +29,17 @@ export async function configManagerExportPasswordPolicy(
       saveJsonToFile(realmData, getFilePath(fileName, true), false, true);
     } else {
       for (const realmName of await realmList()) {
-        const realmData = (
-          await exportConfigEntity(`fieldPolicy/${realmName}_user`, {
-            envReplaceParams: options.envReplaceParams,
-            entitiesToExport: undefined,
-          })
-        ).idm[`fieldPolicy/${realmName}_user`];
-        //const exportData = await readConfigEntitiesByType('fieldPolicy')
-        const fileName = `realms/${realmName}/password-policy/${realmName}_user-password-policy.json`;
-        saveJsonToFile(realmData, getFilePath(fileName, true), false, true);
+        if (realmName !== '/') {
+          const realmData = (
+            await exportConfigEntity(`fieldPolicy/${realmName}_user`, {
+              envReplaceParams: options.envReplaceParams,
+              entitiesToExport: undefined,
+            })
+          ).idm[`fieldPolicy/${realmName}_user`];
+          //const exportData = await readConfigEntitiesByType('fieldPolicy')
+          const fileName = `realms/${realmName}/password-policy/${realmName}_user-password-policy.json`;
+          saveJsonToFile(realmData, getFilePath(fileName, true), false, true);
+        }
       }
     }
     return true;

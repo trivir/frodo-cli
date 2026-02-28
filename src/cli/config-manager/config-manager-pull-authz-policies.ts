@@ -151,7 +151,7 @@ export default function setup() {
 
         if (!outcome) {
           printMessage(
-            `Failed to export one or more authorization policy sets. ${options.verbose ? '' : 'Check --verbose for me details.'}`
+            `Failed to export one or more authorization policy sets. ${options.verbose ? '' : 'Check --verbose for more details.'}`
           );
           process.exitCode = 1;
         }

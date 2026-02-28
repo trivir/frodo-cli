@@ -59,7 +59,8 @@ export async function configManagerExportOrgPrivileges(): Promise<boolean> {
 export async function configManagerExportOrgPrivilegesAllRealms(): Promise<boolean> {
   try {
     configManagerExportOrgPrivileges();
-    for (const realm of await readRealms()) {
+    for (const realm of await readRealms())
+      if (realm._id !== 'Lw') {
       state.setRealm(realm.name);
       if (!(await configManagerExportOrgPrivilegesRealm(realm.name))) {
         return false;

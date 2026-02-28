@@ -98,6 +98,12 @@ export async function configManagerExportServiceObject(
       );
       printError(error);
       return false;
+    } else if (queryResult.length === 0) {
+      const error = new Error(
+        `No result from search: ${queryResult.length} entries found for ${type} - ${searchValue}`
+      );
+      printError(error);
+      return false;
     } else {
       const result = queryResult[0];
       if (Object.keys(object[type].overrides).length !== 0) {

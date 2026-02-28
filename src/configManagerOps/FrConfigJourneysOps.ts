@@ -31,17 +31,19 @@ export async function configManagerExportJourneys(
       processJourneys(exportData.trees, realm, name, pullDependency, 'realms');
     } else {
       for (const realm of await realmList()) {
-        state.setRealm(realm);
-        const exportData = (await exportJourneys(
-          options
-        )) as MultiTreeExportInterface;
-        await processJourneys(
-          exportData.trees,
-          realm,
-          name,
-          pullDependency,
-          'realms'
-        );
+        if (realm !== '/') {
+          state.setRealm(realm);
+          const exportData = (await exportJourneys(
+            options
+          )) as MultiTreeExportInterface;
+          await processJourneys(
+            exportData.trees,
+            realm,
+            name,
+            pullDependency,
+            'realms'
+          );
+        }
       }
     }
     return true;
