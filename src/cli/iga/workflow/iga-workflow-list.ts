@@ -1,10 +1,10 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
-import { getTokens } from '../../ops/AuthenticateOps';
-import { listWorkflows } from '../../ops/cloud/iga/IgaWorkflowOps';
-import { printMessage, verboseMessage } from '../../utils/Console.js';
-import { FrodoCommand } from '../FrodoCommand';
+import { getTokens } from '../../../ops/AuthenticateOps';
+import { listWorkflows } from '../../../ops/cloud/iga/IgaWorkflowOps';
+import { printMessage, verboseMessage } from '../../../utils/Console.js';
+import { FrodoCommand } from '../../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
@@ -33,12 +33,13 @@ export default function setup() {
           options,
           command
         );
-        const getTokensIsSuccessful = await getTokens(false, true, deploymentTypes);
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
         if (!getTokensIsSuccessful) {
-          printMessage(
-            'Error getting tokens',
-            'error'
-          );
+          printMessage('Error getting tokens', 'error');
           process.exitCode = 1;
           return;
         }

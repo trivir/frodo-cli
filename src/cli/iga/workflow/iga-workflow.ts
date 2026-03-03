@@ -1,4 +1,4 @@
-import { FrodoStubCommand } from '../FrodoCommand';
+import { FrodoStubCommand } from '../../FrodoCommand';
 import DeleteCmd from './iga-workflow-delete.js';
 import ExportCmd from './iga-workflow-export.js';
 import ImportCmd from './iga-workflow-import.js';
