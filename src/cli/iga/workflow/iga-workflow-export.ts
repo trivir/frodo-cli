@@ -1,14 +1,14 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
-import { getTokens } from '../../ops/AuthenticateOps';
+import { getTokens } from '../../../ops/AuthenticateOps';
 import {
   exportWorkflowsToFile,
   exportWorkflowsToFiles,
   exportWorkflowToFile,
-} from '../../ops/cloud/iga/IgaWorkflowOps';
-import { printMessage, verboseMessage } from '../../utils/Console.js';
-import { FrodoCommand } from '../FrodoCommand';
+} from '../../../ops/cloud/iga/IgaWorkflowOps';
+import { printMessage, verboseMessage } from '../../../utils/Console.js';
+import { FrodoCommand } from '../../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
@@ -81,7 +81,7 @@ export default function setup() {
     .addOption(
       new Option(
         '--no-deps',
-        'Do not include any dependencies (scripts, email templates, request forms, events, etc.).'
+        'Do not include any dependencies (email templates, request forms, events, etc.).'
       )
     )
     .action(
@@ -95,7 +95,6 @@ export default function setup() {
           options,
           command
         );
-        // export by id
         if (!options.workflowId && !options.all && !options.allSeparate) {
           printMessage(
             'Unrecognized combination of options or no options...',
@@ -105,12 +104,13 @@ export default function setup() {
           process.exitCode = 1;
           return;
         }
-        const getTokensIsSuccessful = await getTokens(false, true, deploymentTypes);
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
         if (!getTokensIsSuccessful) {
-          printMessage(
-            'Error getting tokens',
-            'error'
-          );
+          printMessage('Error getting tokens', 'error');
           process.exitCode = 1;
           return;
         }
@@ -123,14 +123,8 @@ export default function setup() {
           return;
         }
         // --workflow-id -i
-        if (
-          options.workflowId
-        ) {
-          verboseMessage(
-            `Exporting workflow "${
-              options.workflowId
-            }"...`
-          );
+        if (options.workflowId) {
+          verboseMessage(`Exporting workflow "${options.workflowId}"...`);
           const outcome = await exportWorkflowToFile(
             options.workflowId,
             options.file,
@@ -146,14 +140,11 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all
-        ) {
+        else if (options.all) {
           verboseMessage('Exporting all workflows to a single file...');
           const outcome = await exportWorkflowsToFile(
             options.file,
             options.metadata,
-            options.extract,
             {
               deps: options.deps,
               useStringArrays: options.useStringArrays,
@@ -164,9 +155,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (
-          options.allSeparate
-        ) {
+        else if (options.allSeparate) {
           verboseMessage('Exporting all workflows to separate files...');
           const outcome = await exportWorkflowsToFiles(
             options.metadata,
@@ -180,7 +169,6 @@ export default function setup() {
           );
           if (!outcome) process.exitCode = 1;
         }
-        
       }
       // end command logic inside action handler
     );
