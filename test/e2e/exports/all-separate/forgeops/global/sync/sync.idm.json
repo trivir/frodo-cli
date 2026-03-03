@@ -1,0 +1,11 @@
+{
+  "idm": {
+    "sync": {
+      "_id": "sync",
+      "mappings": [
+        "file://managedUser_managedGroup.sync.json",
+        "file://managedRole_managedUser.sync.json"
+      ]
+    }
+  }
+}

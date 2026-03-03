@@ -10,19 +10,45 @@ import { SyncSkeleton } from '@rockcarver/frodo-lib/types/ops/MappingOps';
 import { CustomNodeExportInterface } from '@rockcarver/frodo-lib/types/ops/NodeOps';
 import { ScriptExportInterface } from '@rockcarver/frodo-lib/types/ops/ScriptOps';
 import fs from 'fs';
+import * as path from 'path';
 
 import {
   getConfig,
   getFullExportConfig,
   getFullExportConfigFromDirectory,
 } from '../utils/Config';
-import { cleanupProgressIndicators, printError } from '../utils/Console';
+import {
+  cleanupProgressIndicators,
+  printError,
+  printMessage,
+  verboseMessage,
+} from '../utils/Console';
+import {
+  deleteAgent,
+  deleteIdentityGatewayAgent,
+  deleteJavaAgent,
+  deleteWebAgent,
+} from './AgentOps';
+import { deleteApplication } from './ApplicationOps';
 import { saveServersToFiles } from './classic/ServerOps';
-import { ManagedSkeleton, writeManagedJsonToDirectory } from './IdmOps';
-import { writeSyncJsonToDirectory } from './MappingOps';
-import { extractCustomNodeScriptsToFiles } from './NodeOps';
-import { extractScriptsToFiles } from './ScriptOps';
+import { deleteVariableById } from './cloud/VariablesOps';
+import {
+  deleteConfigEntityById,
+  ManagedSkeleton,
+  writeManagedJsonToDirectory,
+} from './IdmOps';
+import { deleteJourney } from './JourneyOps';
+import { deleteMapping, writeSyncJsonToDirectory } from './MappingOps';
+import { deleteOauth2ClientById } from './OAuth2ClientOps';
+import { deletePolicyById } from './PolicyOps';
+import { deletePolicySetById } from './PolicySetOps';
+import { deleteResourceTypeUsingName } from './ResourceTypeOps';
+import { deleteScriptId, extractScriptsToFiles } from './ScriptOps';
+import { deleteService, deleteServiceNextDescendents } from './ServiceOps.js';
+import { deleteTheme } from './ThemeOps';
+import { deleteCustomNode, extractCustomNodeScriptsToFiles } from './NodeOps';
 import { errorHandler } from './utils/OpsUtils';
+import { deleteSecretStore } from './SecretStoreOps';
 
 const {
   getTypedFilename,
@@ -33,7 +59,57 @@ const {
   getRealmsForExport,
   getRealmUsingExportFormat,
 } = frodo.utils;
+const { deleteDeepByKey } = frodo.utils.json;
+
 const { exportFullConfiguration, importFullConfiguration } = frodo.config;
+const { findOrphanedNodes, removeOrphanedNodes } = frodo.authn.node;
+
+const logmessages = new Array<string>();
+
+const ignoreList = [
+  'global.agent',
+  'global.authentication',
+  'global.realm',
+  'global.scripttype',
+  'global.secretstore',
+  'global.site',
+  //'realm.root-alpha.secretstore', //later might be promotable once export commmand is editted
+  //'realm.root-bravo.secretstore',
+  'metadata',
+  'lastModifiedDate',
+  'lastModifiedBy',
+  'global.server',
+  'meta.exportDate',
+  'meta.exportTool',
+  'meta.exportToolVersion',
+  'meta.exportedBy',
+  'meta.origin',
+  'meta.originAmVersion',
+  'createdBy',
+  'creationDate',
+];
+
+const priorityList = [
+  ['realm', 'service'],
+  ['realm', 'trees'],
+  ['realm', 'policy'],
+  ['realm', 'policyset'],
+  ['realm', 'application'],
+  ['realm', 'idp'],
+  ['realm', 'saml'],
+  ['realm', 'saml/cot'],
+  ['realm', 'resourcetype'],
+  ['realm', 'agent'],
+  ['realm', 'theme'],
+  ['realm', 'script'],
+  ['global.service'],
+  ['global.mapping'],
+  ['global.sync'],
+  ['global.emailTemplate'],
+  ['global.idm'],
+  ['global.variable'],
+  ['global.secret'],
+];
 
 /**
  * Export everything to separate files
@@ -50,7 +126,7 @@ export async function exportEverythingToFile(
   options: FullExportOptions = {
     useStringArrays: true,
     noDecode: false,
-    coords: true,
+    coords: false,
     includeDefault: false,
     includeActiveValues: false,
     target: '',
@@ -109,12 +185,15 @@ export async function exportEverythingToFiles(
 ): Promise<boolean> {
   try {
     const collectErrors: Error[] = [];
+
     const exportData: FullExportInterface = await exportFullConfiguration(
       options,
       errorHandler
     );
+
     delete exportData.meta;
     const baseDirectory = getWorkingDirectory(true);
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Object.entries(exportData.global).forEach(([type, obj]: [string, any]) =>
       exportItem(
@@ -129,6 +208,7 @@ export async function exportEverythingToFiles(
         separateObjects
       )
     );
+
     Object.entries(exportData.realm).forEach(([realm, data]: [string, any]) =>
       Object.entries(data).forEach(([type, obj]: [string, any]) =>
         exportItem(
@@ -461,6 +541,828 @@ export async function importEntityfromFile(
     const imports = await importFullConfiguration(data, options, errorHandler);
     if (imports.length === 0) {
       throw new FrodoError(`No imports were made`);
+    }
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
+}
+
+
+
+
+
+
+/**
+ * This function changes a keypath to an object.
+ * @param str
+ * @param o
+ * @returns
+ */
+function makeObject(strArr: string[], o: any): any {
+  let obj = o;
+  for (const s of strArr) {
+    obj = obj[s];
+  }
+  return obj;
+}
+
+/**
+ * Save an object to a txt file.
+ * @param obj
+ * @param filePath
+ * @param encoding text encoding (default: utf8)
+ */
+function toText(obj: any, filePath: string): void {
+  const formattedText = JSON.stringify(obj, null, 2);
+  fs.writeFileSync(filePath, formattedText, 'utf8');
+}
+
+/**
+ * Import Master config data to the cloud
+ * @param master
+ * @param options
+ * @returns
+ */
+export async function importMasterToCloud(
+  master: any,
+  options: FullImportOptions
+): Promise<boolean> {
+  try {
+    verboseMessage('importMasterToCloud function in ');
+    const collectErrors: Error[] = [];
+    await importFullConfiguration(master, options, errorHandler);
+    if (collectErrors.length > 0) {
+      throw new FrodoError(
+        `Errors occurred during full config import`,
+        collectErrors
+      );
+    }
+    return true;
+  } catch (error) {
+    cleanupProgressIndicators();
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ *
+ * @param fullConfig orphan full config object
+ * @param orphan orphan object to run recursively
+ * @param master master object to run recursively
+ * @param currentPath
+ * @param result string[] of the keys that are something has added on orphan(tenant).
+ * @param showDetail? boolean to get more detailed result for comparison
+ * @returns
+ */
+export async function compareConfigDeep(
+  fullConfig: any,
+  orphan: any,
+  master: any,
+  currentPath: string[] = [],
+  result: string[] = [],
+  showDetail?:boolean
+): Promise<string[]> {
+  const currentPathStr = currentPath.join('.');
+  const isGlobal = currentPath[0] === 'global';
+
+  if (
+    typeof orphan === 'object' &&
+    orphan !== null &&
+    typeof master === 'object' &&
+    master !== null
+  ) {
+    if (Array.isArray(orphan) && Array.isArray(master)) {
+      const length = Math.max(orphan.length, master.length);
+      for (let i = 0; i < length; i++) {
+        const newPath = [...currentPath, i.toString()];
+        await compareConfigDeep(
+          fullConfig,
+          orphan[i],
+          master[i],
+          newPath,
+          result,
+          showDetail
+        );
+      }
+    } else {
+      for (const key of Object.keys(orphan)) {
+        const newPath = [...currentPath, key];
+        await compareConfigDeep(
+          fullConfig,
+          orphan[key],
+          master[key],
+          newPath,
+          result,
+          showDetail
+        );
+      }
+    }
+  } else {
+    const normalizedOrphan = currentPathStr.endsWith('script')
+      ? await normalizeScriptValue(orphan)
+      : orphan;
+    const normalizedMaster = currentPathStr.endsWith('script')
+      ? await normalizeScriptValue(master)
+      : master;
+
+    if (normalizedOrphan !== normalizedMaster) {
+      if (!ignoreList.some((ignored) => currentPathStr.includes(ignored))) {
+        if (!shouldIgnore(fullConfig, currentPath, isGlobal)) {
+          if(showDetail){
+          printMessage("Detected difference: " + currentPathStr);
+          verboseMessage("--------Compare Result on Cloud ---------");
+          verboseMessage(normalizedOrphan);
+          verboseMessage("--------Compare Result on Master---------");
+          verboseMessage(normalizedMaster);
+          verboseMessage("-------------------------------------------");
+          }
+          result.push(currentPathStr);
+        }
+      }
+    }
+  }
+  return result;
+}
+
+/**
+ * @param {string[]} resultPaths - ["key1.k2.k3", "global.settings"] 형태의 배열
+ * @param {object} fullConfig - 값을 추출할 원본 객체
+ * @returns {object} - 경로에 따른 값들이 채워진 결과 객체
+ */
+function buildResultObject(resultPaths, fullConfig) {
+  const objectResult = {};
+
+  resultPaths.forEach(pathStr => {
+    const pathArray = pathStr.split('.');
+    
+    let valueToCopy = fullConfig;
+    for (const key of pathArray) {
+      if (valueToCopy && typeof valueToCopy === 'object' && key in valueToCopy) {
+        valueToCopy = valueToCopy[key];
+      } else {
+        valueToCopy = undefined;
+        break;
+      }
+    }
+
+    if (valueToCopy !== undefined) {
+      pathArray.reduce((acc, key, index) => {
+        if (index === pathArray.length - 1) {
+          acc[key] = valueToCopy;
+        } else {
+          if (!acc[key] || typeof acc[key] !== 'object') {
+            acc[key] = {};
+          }
+        }
+        return acc[key];
+      }, objectResult);
+    }
+  });
+
+  return objectResult;
+}
+
+async function normalizeScriptValue(value: any): Promise<string> {
+  let result: string;
+
+  if (Array.isArray(value)) {
+    result = value.join('\n');
+  } else if (typeof value === 'string') {
+    result = value;
+  } 
+
+  if (result && result.length > 0 && !result.endsWith('\n')) {
+    result += '\n';
+  }
+  return result;
+}
+
+function isEmptyObject(value: any): boolean {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    !Array.isArray(value) &&
+    Object.keys(value).length === 0
+  );
+}
+function shouldIgnore(config, strArr, isGlobal): boolean {
+  if (isGlobal) {
+    if (strArr.length === 2 && isEmptyObject(makeObject(strArr, config))) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    if (strArr.length === 3 && isEmptyObject(makeObject(strArr, config))) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+async function trimCompareResult(items: string[]): Promise<string[]> {
+  const result: string[] = [];
+  const seen = new Set<string>();
+
+  for (const item of items) {
+    const prefix = getEntityPrefix(item);
+    if (!seen.has(prefix)) {
+      seen.add(prefix);``
+      result.push(prefix);
+    }
+  }
+
+  return result;
+}
+
+async function sortTrimResult(
+  items: string[],
+  keywordCombos: string[][]
+): Promise<string[]> {
+  return [...items].sort((a, b) => {
+    const aIndex = findComboIndex(a, keywordCombos);
+    const bIndex = findComboIndex(b, keywordCombos);
+    return aIndex - bIndex;
+  });
+}
+
+function findComboIndex(item: string, combos: string[][]): number {
+  for (let i = 0; i < combos.length; i++) {
+    const combo = combos[i];
+    const matchedAll = combo.every((keyword) =>
+      item.toLowerCase().includes(keyword.toLowerCase())
+    );
+    if (matchedAll) return i;
+  }
+  return combos.length;
+}
+
+function getEntityPrefix(path: string): string {
+  const parts = path.split('.');
+  if (parts[0] === 'global' && parts[1] !== 'sync') {
+    return parts.slice(0, 3).join('.'); // ex) global.service.dashboard
+  } else {
+    return parts.slice(0, 4).join('.'); // ex) realm.root-alpha.secretstore.config
+  }
+  return path;
+}
+
+/**
+ * in the string of keypath, it will return the type
+ * @param str keypath
+ * @returns Coinfig type
+ */
+function getType(str: string, isGlobal: boolean): string {
+  const parts = str.split('.');
+  let type = '';
+  if (isGlobal) {
+    type = parts[1];
+  } else {
+    type = parts[2];
+  }
+
+  if (type == 'trees') {
+    type = 'journey';
+  } else if (type == 'emailTemplate') {
+    type = 'idm';
+  }
+  verboseMessage(`Entity type detected: ${type}`);
+  return type;
+}
+
+/**
+ *
+ * @param str String of keypath
+ * @returns returns the last key only in string.
+ */
+function getName(str: string, isGlobal: boolean): string {
+  const parts = str.split('.');
+  let name = '';
+  if (isGlobal) {
+    name = parts[2];
+  } else {
+    name = parts[3];
+  }
+
+  return name;
+}
+function getObjectAtKey(key: string, isGlobal: boolean, o): any {
+  const splited = key.split('.');
+  let obj = o;
+  let depth = 4;
+  if (isGlobal && !key.includes('sync.mappings')) {
+    depth = 3;
+  } else {
+    depth = 4;
+  }
+  for (let i = 0; i < depth; i++) {
+    obj = obj[splited[i]];
+  }
+  return obj;
+}
+
+/**
+ * Sets the realm for the next command to run on.
+ * @param path sub-path to the config file currently being looked at
+ * @param inRealm if the object is in a realm or not
+ */
+function setRealm(key: string, type: string, inRealm: boolean) {
+  if (inRealm) {
+    const parts = key.split('.');
+    let realm = parts[1];
+    verboseMessage(`realm right before setRealm = ${realm}`);
+    if (realm === 'root') {
+      realm = '/';
+    }
+    realm = realm.replace('root-', '').replaceAll('-', '/');
+    if (type != 'theme') {
+      realm = '/' + realm;
+    }
+    state.setRealm(realm);
+    verboseMessage(`realm right after setRealm = ${realm}`);
+  }
+}
+
+/**
+ * delete stuff from cloud
+ * @param objectMap
+ * @param effectSecrets
+ * @param orphan
+ * @returns
+ */
+export async function deleteFromCloud(
+  keyString: string[],
+  effectSecrets: boolean,
+  orphan: any
+): Promise<boolean> {
+  try {
+    verboseMessage('deleteFromCloud function in -------- ');
+    for (const key of keyString) {
+      const isGlobal = key.substring(0, key.indexOf('.')) === 'global';
+      const inRealm = key.substring(0, key.indexOf('.')) === 'realm';
+      const currentName = getName(key, isGlobal);
+      verboseMessage(`inRealm is =  ${inRealm}`);
+      const type = getType(key, isGlobal);
+      const keyObject = getObjectAtKey(key, isGlobal, orphan);
+      setRealm(key, type, inRealm);
+
+      switch (type) {
+        case 'application': {
+          const application = keyObject;
+          logmessages.push(`delete application with id ${application._id}`);
+          verboseMessage(`delete application with id ${application._id}`);
+          const outcome = await deleteOauth2ClientById(application._id);
+          logmessages.push(`outcome: ${outcome}`);
+          logmessages.push(' ');
+          break;
+        }
+        case 'authentication': {
+          logmessages.push(`no delete exitsts for authentication`);
+          logmessages.push(`delete authentication ${key}`);
+          logmessages.push(' ');
+          verboseMessage(`no delete exitsts for authentication`);
+          verboseMessage(`delete authentication ${key}\n`);
+          break;
+        }
+        case 'journey': {
+          const journeyId = currentName;
+          verboseMessage(
+            `Deleting journey ${journeyId} in realm "${state.getRealm()}"...`
+          );
+          const outcome = await deleteJourney(journeyId, {
+            deep: true,
+            verbose: false,
+            progress: false,
+          });
+          logmessages.push(`delete journey ${key}`);
+          logmessages.push(`outcome: ${outcome}`);
+          logmessages.push(' ');
+          verboseMessage(`delete journey ${key}\n`);
+          verboseMessage(
+            `Pruning orphaned configuration artifacts in realm "${state.getRealm()}"...`
+          );
+          try {
+            const orphanedNodes = await findOrphanedNodes();
+            if (orphanedNodes.length > 0) {
+              await removeOrphanedNodes(orphanedNodes);
+            } else {
+              verboseMessage('No orphaned nodes found.');
+            }
+          } catch (error) {
+            printError(error);
+            process.exitCode = 1;
+          }
+          break;
+        }
+        case 'managedApplication': {
+          const managedApplication = keyObject;
+          verboseMessage(
+            `Deleting Managed Application with name ${managedApplication.name}`
+          );
+          const outcome = await deleteApplication(
+            managedApplication._id,
+            managedApplication.name,
+            false
+          );
+          logmessages.push(
+            `delete managedApplication ${managedApplication.name}`
+          );
+          logmessages.push(`outcome: ${outcome}`);
+          logmessages.push(' ');
+          verboseMessage(`delete managedApplication ${key}\n`);
+          break;
+        }
+        case 'resourcetype': {
+          const resourcetype = keyObject;
+          verboseMessage(
+            `Deleting authorization resource type ${resourcetype.name}`
+          );
+          const outcome = await deleteResourceTypeUsingName(resourcetype.name);
+          logmessages.push(`delete resourcetype ${key}`);
+          logmessages.push(`outcome: ${outcome}`);
+          logmessages.push(' ');
+          verboseMessage(`delete resourcetype ${key}\n`);
+          break;
+        }
+        case 'script': {
+          const script = keyObject;
+          verboseMessage(
+            `Deleting script ${script._id} in realm "${state.getRealm()}"...`
+          );
+          const outcome = await deleteScriptId(script._id);
+          logmessages.push(`delete script ${key}`);
+          logmessages.push(`outcome: ${outcome}`);
+          logmessages.push(' ');
+          verboseMessage(`delete script ${key}\n`);
+          break;
+        }
+        case 'service': {
+          const serviceId = currentName;
+          if (isGlobal) {
+            //if the service is global.service, it only deletes the descendents
+            verboseMessage(`service Id: ${serviceId}`);
+            const outcome = await deleteServiceNextDescendents(
+              serviceId,
+              isGlobal
+            );
+            logmessages.push(`delete service ${key}`);
+            logmessages.push(`outcome: ${outcome}`);
+            logmessages.push(' ');
+            verboseMessage(`delete service ${key}\n`);
+            break;
+          } else {
+            verboseMessage(`service Id: ${serviceId}`);
+            const outcome = await deleteService(serviceId, isGlobal);
+            logmessages.push(`delete service ${key}`);
+            logmessages.push(`outcome: ${outcome}`);
+            logmessages.push(' ');
+            verboseMessage(`delete service ${key}\n`);
+            break;
+          }
+        }
+        // Taken care of by Idm
+        case 'theme': {
+          const themeName = currentName;
+          verboseMessage(`delete theme with theme Id: ${themeName}`);
+          logmessages.push(`delete theme with theme Id: ${themeName}`);
+          const outcome = await deleteTheme(themeName);
+          logmessages.push(`No delete written for theme`);
+          logmessages.push(`delete theme ${key}`);
+          logmessages.push(`outcome: ${outcome}`);
+          logmessages.push(' ');
+          verboseMessage(`delete theme ${key}\n`);
+          break;
+        }
+        // Taken care of by the Idm config
+        case 'emailTemplate': {
+          break;
+        }
+        case 'idm': {
+          const entityId = keyObject._id;
+          verboseMessage(`delete Idm config with entity Id: ${entityId}`);
+          logmessages.push(`delete Idm config with entity Id: ${entityId}`);
+          const outcome = await deleteConfigEntityById(entityId);
+          logmessages.push(`No delete written for idm`);
+          logmessages.push(`delete idm ${entityId}`);
+          logmessages.push(`outcome: ${outcome}`);
+          logmessages.push(' ');
+          verboseMessage(`delete idm ${key}\n`);
+          break;
+        }
+        // todo: Currently secrets when exported are hashed so it needs to be thought of more
+        case 'secret': {
+          if (effectSecrets) {
+            verboseMessage(
+              'Currently secrets when exported are hashed so it needs to be thought of more'
+            );
+          }
+          break;
+        }
+
+        case 'secretstore':{
+          const secretStore = keyObject;
+          verboseMessage(`Secret Store Id: ${secretStore._id}`);
+          const outcome = await deleteSecretStore(secretStore._id, secretStore._type._id, false);
+          logmessages.push(`delete secret store ${key}`);
+          logmessages.push(`outcome: ${outcome}`);
+          logmessages.push(' ');
+          verboseMessage(`delete secret store ${key}\n`);
+          break;        
+        }
+
+        case 'nodeTypes':{
+          const customNode = keyObject;
+          verboseMessage(`Secret Store Id: ${customNode._id}`);
+          const outcome = await deleteCustomNode(customNode._id, customNode.displayName);
+          logmessages.push(`delete custom node ${key}`);
+          logmessages.push(`outcome: ${outcome}`);
+          logmessages.push(' ');
+          verboseMessage(`delete custom node ${key}\n`);
+          break;        
+        }
+        case 'sync': {
+          const sync = keyObject;
+          verboseMessage(`sync Id: ${sync._id}`);
+          const outcome = await deleteMapping(sync._id);
+          logmessages.push(`delete sync ${key}`);
+          logmessages.push(`outcome: ${outcome}`);
+          logmessages.push(' ');
+          verboseMessage(`delete sync ${key}\n`);
+          break;
+        }
+        case 'variable': {
+          if (effectSecrets) {
+            const variable = keyObject;
+            verboseMessage(`Deleting variable with id: ${variable._id}`);
+            const outcome = await deleteVariableById(variable._id);
+            logmessages.push(`delete variable ${key}`);
+            logmessages.push(`outcome: ${outcome}`);
+            logmessages.push(' ');
+            verboseMessage(`delete variable ${key}\n`);
+          } else {
+            verboseMessage(
+              'Include active value flag is set to false, so we are not deleting variables.'
+            );
+          }
+          break;
+        }
+        case 'mapping': {
+          const mapping = keyObject;
+          verboseMessage(`mapping Id: ${mapping._id}`);
+          const outcome = await deleteMapping(mapping._id);
+          logmessages.push(`delete mapping ${key}`);
+          logmessages.push(`outcome: ${outcome}`);
+          logmessages.push(' ');
+          verboseMessage(`delete mapping ${key}\n`);
+          break;
+        }
+        case 'agent': {
+          const agent = keyObject;
+          const agentType = agent._type._id;
+          verboseMessage(
+            `Deleting agent '${agent._id}' of type ${agentType} in realm "${state.getRealm()}"...`
+          );
+          switch (agentType) {
+            case 'WebAgent': {
+              const outcome = await deleteWebAgent(agent._id);
+              logmessages.push(`delete WebAgent ${key}`);
+              logmessages.push(`outcome: ${outcome}`);
+              verboseMessage(`delete agents ${key}\n`);
+              break;
+            }
+            case 'IdentityGatewayAgent': {
+              const outcome = await deleteIdentityGatewayAgent(agent._id);
+              logmessages.push(`delete IdentityGatewayAgent ${key}`);
+              logmessages.push(`outcome: ${outcome}`);
+              verboseMessage(`delete agents ${key}\n`);
+              break;
+            }
+            case 'J2EEAgent': {
+              const outcome = await deleteJavaAgent(agent._id);
+              logmessages.push(`delete IdentityGatewayAgent ${key}`);
+              logmessages.push(`outcome: ${outcome}`);
+              verboseMessage(`delete agents ${key}\n`);
+              break;
+            }
+            default: {
+              const outcome = await deleteAgent(agent._id);
+              logmessages.push(`delete agents ${key}`);
+              logmessages.push(`outcome: ${outcome}`);
+              verboseMessage(`delete agents ${key}\n`);
+              break;
+            }
+          }
+          logmessages.push(' ');
+          break;
+        }
+        // When an idp object is modified so is a service file, by changing the service config it will also
+        // change the idp config.
+        case 'idp': {
+          break;
+        }
+        case 'policy': {
+          const policy = keyObject;
+          verboseMessage(`policy id: ${policy._id}`);
+          const outcome = await deletePolicyById(policy._id);
+          logmessages.push(`delete policy ${key}`);
+          logmessages.push(`outcome: ${outcome}`);
+          logmessages.push(' ');
+          verboseMessage(`delete policy ${key}\n`);
+          break;
+        }
+        // These next three object types have deletes written for them, but they are not promotable so we don't worry about effecting them
+        case 'cot': {
+          break;
+        }
+        case 'policyset': {
+          const policyset = currentName;
+          verboseMessage(`policy set Id: ${policyset}`);
+          const outcome = await deletePolicySetById(policyset);
+          logmessages.push(`delete policy set ${key}`);
+          logmessages.push(`outcome: ${outcome}`);
+          logmessages.push(' ');
+          verboseMessage(`delete policy set ${key}\n`);
+          break;
+        }
+        case 'saml': {
+          break;
+        }
+        default: {
+          logmessages.push(`No delete ${key} not setup for type ${type}`);
+          logmessages.push(' ');
+          verboseMessage(`No delete ${key} not setup for type ${type}\n`);
+          break;
+        }
+      }
+    }
+  } catch (error) {
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Export from current tenant, compare with master file, delete the differences and import master back
+ */
+export async function compareDeploymentAndSyncWithMasterFile(
+  masterFile: string,
+  dryRun: boolean,
+  showDetail?:boolean,
+  exportOptions: FullExportOptions = {
+    useStringArrays: false,
+    noDecode: false,
+    coords: false,
+    includeDefault: undefined,
+    includeActiveValues: undefined,
+    target: undefined,
+    includeReadOnly: undefined,
+    onlyRealm: undefined,
+    onlyGlobal: undefined,
+  },
+  importOptions: FullImportOptions = {
+    reUuidCustomNodes: false,
+    reUuidJourneys: false,
+    reUuidScripts: false,
+    cleanServices: false,
+    includeDefault: false,
+    includeActiveValues: false,
+    source: '',
+  }
+): Promise<boolean> {
+  try {
+    const collectErrors: Error[] = [];
+    const exportData = await exportFullConfiguration(
+      exportOptions,
+      errorHandler
+    );
+    delete exportData.meta;
+    deleteDeepByKey(exportData, '_rev');
+
+    const rawData = fs.readFileSync(path.resolve(masterFile), 'utf8');
+    const masterConfig = JSON.parse(rawData);
+
+    await runCompareAndSync(
+      exportData,
+      masterConfig,
+      importOptions,
+      dryRun,
+      showDetail
+    );
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Export from current tenant, compare with master directory, delete the differences and import master back
+ */
+export async function compareDeploymentAndSyncWithMasterDirectory(
+  dryRun: boolean,
+  showDetail?: boolean,
+  exportOptions: FullExportOptions = {
+    useStringArrays: false,
+    noDecode: false,
+    coords: false,
+    includeDefault: undefined,
+    includeActiveValues: undefined,
+    target: undefined,
+    includeReadOnly: undefined,
+    onlyRealm: undefined,
+    onlyGlobal: undefined,
+  },
+  importOptions: FullImportOptions = {
+    reUuidCustomNodes:false,
+    reUuidJourneys: false,
+    reUuidScripts: false,
+    cleanServices: false,
+    includeDefault: false,
+    includeActiveValues: false,
+    source: '',
+  }
+): Promise<boolean> {
+  try {
+    const collectErrors: Error[] = [];
+    const exportData = await exportFullConfiguration(
+      exportOptions,
+      errorHandler
+    );
+
+    delete exportData.meta;
+    deleteDeepByKey(exportData, '_rev');
+
+    const masterConfig = await getFullExportConfigFromDirectory(
+      getWorkingDirectory()
+    );
+    await runCompareAndSync(
+      exportData,
+      masterConfig,
+      importOptions,
+      dryRun,
+      showDetail
+    );
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
+}
+
+async function runCompareAndSync(
+  exportData: any,
+  masterConfig: any,
+  importOptions: FullImportOptions,
+  dryRun: boolean,
+  showDetail?: boolean,
+): Promise<boolean> {
+  try {
+    const compareResult = await compareConfigDeep(
+      exportData,
+      exportData,
+      masterConfig,
+      [],
+      [],
+      showDetail
+    );
+    const cloudResultObject = await buildResultObject(compareResult,exportData)
+    const masterResultObject = await buildResultObject(compareResult,masterConfig)
+    const trimResult = await trimCompareResult(compareResult);  
+    const sortResult = await sortTrimResult(trimResult, priorityList); 
+    if (showDetail){
+      saveJsonToFile(cloudResultObject,"cloudDiffObject.json", false,false);
+      printMessage("Detailed cloud config diff ogject saved at cloudDiffObject.json")
+      saveJsonToFile(masterResultObject,"masterDiffObject.json", false,false);
+      printMessage("Detailed master config diff ogject saved at masterDiffObject.json")
+    }
+    else{
+      printMessage("Use --show-detail if you want the detailed result saved.");
+      printMessage("Use --show-detail --verbose to print detail result in the terminal. This might only work with --dry-run.");
+      printMessage("Result after comparison:");
+      printMessage(sortResult);
+    }
+    
+
+    
+    //toText(sortResult, 'sortTrimResult.txt');
+    //toText(compareResult, 'compareResult.txt');
+
+    if (!dryRun) {
+      verboseMessage(
+        '--dry-run is false, so it will prompt to delete from cloud '
+      );
+      await deleteFromCloud(
+        sortResult,
+        importOptions.includeActiveValues,
+        exportData
+      );
+      verboseMessage(
+        '--delete-and-import is true so it will promt to import master to cloud '
+      );
+      await importMasterToCloud(masterConfig, importOptions);
     }
     return true;
   } catch (error) {
