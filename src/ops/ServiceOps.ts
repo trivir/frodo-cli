@@ -330,7 +330,7 @@ export async function deleteService(
   globalConfig = false
 ): Promise<boolean> {
   try {
-    await deleteFullService(serviceId, globalConfig);
+    await deleteFullService(false,serviceId, globalConfig);
     return true;
   } catch (error) {
     printError(error);
@@ -350,4 +350,16 @@ export async function deleteServices(globalConfig = false): Promise<boolean> {
     printError(error);
   }
   return false;
+}
+export async function deleteServiceNextDescendents(
+  serviceId: string,
+  globalConfig = false
+): Promise<boolean> {
+  try {
+    await deleteFullService(true,serviceId, globalConfig);
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
 }
