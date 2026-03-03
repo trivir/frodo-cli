@@ -1,0 +1,20 @@
+{
+  "saml": {
+    "cot": {
+      "testcotalpah": {
+        "_id": "testcotalpah",
+        "_type": {
+          "_id": "circlesoftrust",
+          "collection": true,
+          "name": "Circle of Trust"
+        },
+        "description": "testt cot for alpha",
+        "status": "inactive",
+        "trustedProviders": []
+      }
+    },
+    "hosted": {},
+    "metadata": {},
+    "remote": {}
+  }
+}

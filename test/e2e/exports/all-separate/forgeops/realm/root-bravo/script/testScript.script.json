@@ -1,0 +1,18 @@
+{
+  "script": {
+    "5408735f-0996-4df1-8e26-586f656eaba1": {
+      "_id": "5408735f-0996-4df1-8e26-586f656eaba1",
+      "context": "AUTHENTICATION_CLIENT_SIDE",
+      "createdBy": "id=amadmin,ou=user,ou=am-config",
+      "creationDate": 1772215827007,
+      "default": false,
+      "description": "test",
+      "evaluatorVersion": "1.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "id=amadmin,ou=user,ou=am-config",
+      "lastModifiedDate": 1772492286197,
+      "name": "testScript",
+      "script": "file://testScript.script.js"
+    }
+  }
+}
