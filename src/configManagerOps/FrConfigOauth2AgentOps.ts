@@ -187,7 +187,8 @@ export async function configManagerExportAgentsRealm(): Promise<boolean> {
  */
 export async function configManagerExportAgentsAll(): Promise<boolean> {
   try {
-    for (const realm of await readRealms()) {
+    for (const realm of await readRealms()) 
+    if (realm._id !== 'Lw') {
       // set realm of state because readAgents() uses state to check realm
       state.setRealm(realm.name);
       if (!(await configManagerExportAgentsRealm())) {

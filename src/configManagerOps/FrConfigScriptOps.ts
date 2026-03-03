@@ -191,7 +191,8 @@ export async function configManagerExportScriptsAll(
   language: string = 'JAVASCRIPT'
 ): Promise<boolean> {
   try {
-    for (const realm of await realmList()) {
+    for (const realm of await realmList()) 
+    if (realm !== '/') {
       state.setRealm(realm);
       verboseMessage(`\n${state.getRealm()} realm:`);
       if (
