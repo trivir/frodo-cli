@@ -1,10 +1,12 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
+import fs from 'fs';
 
 import { printError } from '../utils/Console';
 
 const { config } = frodo.idm;
 const { getFilePath, saveJsonToFile } = frodo.utils;
+const { importConfigEntities } = frodo.idm.config;
 const { readRealms } = frodo.realm;
 
 /**
@@ -62,6 +64,60 @@ export async function configManagerExportOrgPrivilegesAllRealms(): Promise<boole
     for (const realm of await readRealms()) {
       state.setRealm(realm.name);
       if (!(await configManagerExportOrgPrivilegesRealm(realm.name))) {
+        return false;
+      }
+    }
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+export async function configManagerImportOrgPrivilegesRealm(
+  realm: string
+): Promise<boolean> {
+  try {
+    const privilegesFile = getFilePath(
+      `org-privileges/${realm}OrgPrivileges.json`
+    );
+    const mainFile = fs.readFileSync(privilegesFile, 'utf-8');
+    let importData = JSON.parse(mainFile);
+    const id = importData._id;
+    importData = { idm: { [id]: importData } };
+    await importConfigEntities(importData);
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+export async function configManagerImportOrgPrivileges(): Promise<boolean> {
+  try {
+    const privilegesFile = getFilePath(
+      'org-privileges/privilegeAssignments.json'
+    );
+    const mainFile = fs.readFileSync(privilegesFile, 'utf-8');
+    let importData = JSON.parse(mainFile);
+    const id = importData._id;
+    importData = { idm: { [id]: importData } };
+    await importConfigEntities(importData);
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+export async function configManagerImportOrgPrivilegesAllRealms(): Promise<boolean> {
+  try {
+    await configManagerImportOrgPrivileges();
+    for (const realm of await readRealms()) {
+      // fr-config-manager doesn't support root org privileges
+      if (realm.name === '/') continue;
+      state.setRealm(realm.name);
+      if (!(await configManagerImportOrgPrivilegesRealm(realm.name))) {
         return false;
       }
     }

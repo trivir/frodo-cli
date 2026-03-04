@@ -2,9 +2,9 @@ import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import {
-  configManagerExportOrgPrivileges,
-  configManagerExportOrgPrivilegesAllRealms,
-  configManagerExportOrgPrivilegesRealm,
+  configManagerImportOrgPrivileges,
+  configManagerImportOrgPrivilegesAllRealms,
+  configManagerImportOrgPrivilegesRealm,
 } from '../../../configManagerOps/FrConfigOrgPrivilegesOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage } from '../../../utils/Console';
@@ -15,17 +15,17 @@ const { constants } = frodo.utils;
 
 export default function setup() {
   const program = new FrodoCommand(
-    'frodo config-manager pull org-privileges',
+    'frodo config-manager push org-privileges',
     [],
     deploymentTypes
   );
 
   program
-    .description('Export organization privileges config.')
+    .description('Import organization privileges config.')
     .addOption(
       new Option(
         '-r, --realm <realm>',
-        'Specifies the realm to export from. Only the entity object from this realm will be exported.'
+        'Specifies the realm to Import from. Only the entity object from this realm will be Imported.'
       )
     )
     .action(async (host, realm, user, password, options, command) => {
@@ -47,16 +47,16 @@ export default function setup() {
         let outcome: boolean;
         if (realm !== constants.DEFAULT_REALM_KEY) {
           printMessage(
-            `Exporting organization privileges config from the realm: "${realm}"`
+            `Importing organization privileges config from the realm: "${realm}"`
           );
           outcome =
-            (await configManagerExportOrgPrivileges()) &&
-            (await configManagerExportOrgPrivilegesRealm(realm));
+            (await configManagerImportOrgPrivileges()) &&
+            (await configManagerImportOrgPrivilegesRealm(realm));
         } else {
           printMessage(
-            'Exporting oranization privileges config from all realms'
+            'Importing oranization privileges config from all realms'
           );
-          outcome = await configManagerExportOrgPrivilegesAllRealms();
+          outcome = await configManagerImportOrgPrivilegesAllRealms();
         }
 
         if (!outcome) process.exitCode = 1;

@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`"frodo config-manager push org-privileges -D test/e2e/exports/fr-config-manager -m forgeops": should import the org-privileges into forgeops" 1`] = `""`;
+
+exports[`"frodo config-manager push org-privileges -D test/e2e/exports/fr-config-manager -m forgeops": should import the org-privileges into forgeops" 2`] = `""`;
+
+exports[`"frodo config-manager push org-privileges -r alpha -D test/e2e/exports/fr-config-manager -m forgeops": should import a specific locale by name into forgeops" 1`] = `""`;
+
+exports[`"frodo config-manager push org-privileges -r alpha -D test/e2e/exports/fr-config-manager -m forgeops": should import a specific locale by name into forgeops" 2`] = `""`;
