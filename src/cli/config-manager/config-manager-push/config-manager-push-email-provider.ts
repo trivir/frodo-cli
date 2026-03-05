@@ -1,19 +1,31 @@
-import { configManagerExportEmailProviderConfiguration } from '../../../configManagerOps/FrConfigEmailProviderOps';
+import { frodo } from '@rockcarver/frodo-lib';
+import { Option } from 'commander';
+
+import { configManagerImportEmailProivder } from '../../../configManagerOps/FrConfigEmailProviderOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
-const deploymentTypes = ['cloud', 'forgeops'];
+const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
+  frodo.utils.constants;
+
+const deploymentTypes = [
+  CLOUD_DEPLOYMENT_TYPE_KEY,
+  FORGEOPS_DEPLOYMENT_TYPE_KEY,
+];
 
 export default function setup() {
   const program = new FrodoCommand(
-    'frodo config-manager pull email-provider',
+    'frodo config-manager push email-provider',
     [],
     deploymentTypes
   );
 
   program
-    .description('Export email provider configuration.')
+    .description('Import email provider configuration.')
+    .addOption(
+      new Option('-f, --file [file]', 'Email provider json to import.')
+    )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -25,8 +37,8 @@ export default function setup() {
       );
 
       if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Exporting email provider configuration');
-        const outcome = await configManagerExportEmailProviderConfiguration();
+        verboseMessage('Importing email provider configuration.');
+        const outcome = await configManagerImportEmailProivder(options.file);
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options
