@@ -1,10 +1,9 @@
 import { FrodoStubCommand } from '../../FrodoCommand';
-
+import Kba from './config-manager-push-kba';
 import Locales from './config-manager-push-locales';
 import PasswordPolicy from './config-manager-push-password-policy';
 import TermsAndConditions from './config-manager-push-terms-and-conditions';
 import Themes from './config-manager-push-themes';
-import Kba from './config-manager-push-kba';
 
 export default function setup() {
   const program = new FrodoStubCommand('push').description(
