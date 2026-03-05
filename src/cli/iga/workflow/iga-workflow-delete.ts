@@ -21,23 +21,23 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --workflow-id <workflow-id>',
-        'Workflow id/name. If specified, -a is ignored. By default, deletes both draft and published unless -d or -p are defined exclusively.'
+        'Workflow id. If specified, -a is ignored. By default, deletes both draft and published unless -d or -p are used exclusively.'
       )
     )
     .addOption(
-      new Option(
-        '-d, --draft-only',
-        'Delete only the draft workflow. Ignored with -a.'
-      )
+      new Option('-d, --draft-only', 'Delete only the draft workflow(s).')
     )
     .addOption(
       new Option(
         '-p, --published-only',
-        'Delete only the published workflow. Ignored with -a.'
+        'Delete only the published workflow(s).'
       )
     )
     .addOption(
-      new Option('-a, --all', 'Delete all workflows. Ignored with -i.')
+      new Option(
+        '-a, --all',
+        'Delete all workflows. By default, deletes both draft and published unless -d or -p are used exclusively. Ignored with -i.'
+      )
     )
     .action(
       // implement command logic inside action handler
@@ -90,7 +90,10 @@ export default function setup() {
         // --all -a
         else if (options.all) {
           verboseMessage('Deleting all workflows...');
-          const outcome = await deleteWorkflows();
+          const outcome = await deleteWorkflows(
+            options.draftOnly,
+            options.publishedOnly
+          );
           if (!outcome) process.exitCode = 1;
         }
       }
