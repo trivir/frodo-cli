@@ -2,15 +2,22 @@ import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import {
-  configManagerImportOrgPrivileges,
+  configManagerImportOrgPrivilegeAssignments,
   configManagerImportOrgPrivilegesAllRealms,
+  configManagerImportOrgPrivilegesByName,
   configManagerImportOrgPrivilegesRealm,
 } from '../../../configManagerOps/FrConfigOrgPrivilegesOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
-const deploymentTypes = ['cloud', 'forgeops'];
+const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
+  frodo.utils.constants;
+
+const deploymentTypes = [
+  CLOUD_DEPLOYMENT_TYPE_KEY,
+  FORGEOPS_DEPLOYMENT_TYPE_KEY,
+];
 const { constants } = frodo.utils;
 
 export default function setup() {
@@ -24,8 +31,8 @@ export default function setup() {
     .description('Import organization privileges config.')
     .addOption(
       new Option(
-        '-r, --realm <realm>',
-        'Specifies the realm to Import from. Only the entity object from this realm will be Imported.'
+        '-n, --name <name>',
+        'Organization Privileges name, it only imports the privileges with the specified name'
       )
     )
     .action(async (host, realm, user, password, options, command) => {
@@ -38,23 +45,24 @@ export default function setup() {
         command
       );
 
-      // -r flag has precedence
-      if (options.realm) {
-        realm = options.realm;
-      }
-
       if (await getTokens(false, true, deploymentTypes)) {
         let outcome: boolean;
-        if (realm !== constants.DEFAULT_REALM_KEY) {
+
+        if (options.name) {
           printMessage(
-            `Importing organization privileges config from the realm: "${realm}"`
+            `Importing organization privileges config for "${options.name}"`
+          );
+          outcome = await configManagerImportOrgPrivilegesByName(options.name);
+        } else if (realm !== constants.DEFAULT_REALM_KEY) {
+          printMessage(
+            `Importing organization privileges config to the realm: "${realm}"`
           );
           outcome =
-            (await configManagerImportOrgPrivileges()) &&
+            (await configManagerImportOrgPrivilegeAssignments()) &&
             (await configManagerImportOrgPrivilegesRealm(realm));
         } else {
           printMessage(
-            'Importing oranization privileges config from all realms'
+            'Importing organization privileges config to all realms'
           );
           outcome = await configManagerImportOrgPrivilegesAllRealms();
         }
