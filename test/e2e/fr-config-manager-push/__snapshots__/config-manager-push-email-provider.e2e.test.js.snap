@@ -1,8 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`"frodo config-manager push email-provider -f test/e2e/exports/fr-config-manager/email-provider/external.email.json -m forgeops": should import the email-provider into forgeops" 1`] = `
-"Connected to https://nightly.gcp.forgeops.com/am [alpha] as user amAdmin
-"
-`;
+exports[`"frodo config-manager push email-provider -f test/e2e/exports/fr-config-manager/email-provider/external.email.json -m forgeops": should import the email-provider into forgeops" 1`] = `""`;
 
 exports[`"frodo config-manager push email-provider -f test/e2e/exports/fr-config-manager/email-provider/external.email.json -m forgeops": should import the email-provider into forgeops" 2`] = `""`;
