@@ -1,8 +1,10 @@
 import { frodo } from '@rockcarver/frodo-lib';
+import fs from 'fs';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError } from '../utils/Console';
 
+const { importConfigEntities } = frodo.idm.config;
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { readEmailTemplates, readEmailTemplate } = frodo.email.template;
 /**
@@ -15,11 +17,11 @@ export async function configManagerExportEmailTemplates(
   try {
     if (name) {
       const exportData = await readEmailTemplate(name);
-      processEmailTemplate(exportData, `/email-templates`);
+      processEmailTemplate(exportData, `email-templates`);
     } else {
       const exportData = await readEmailTemplates();
       exportData.forEach(async (template) => {
-        processEmailTemplate(template, `/email-templates`);
+        processEmailTemplate(template, `email-templates`);
       });
     }
     return true;
@@ -60,4 +62,32 @@ async function processEmailTemplate(template, fileDir) {
   } catch (err) {
     printError(err);
   }
+}
+
+export async function configManagerImportEmailTemplates(
+  templateName?: string
+): Promise<boolean> {
+  try {
+    const templateDir = getFilePath('email-templates');
+    const templateFiles = fs.readdirSync(templateDir);
+    const importTemplateData = { idm: {} };
+    for (const templateFile of templateFiles) {
+      const filePath = getFilePath(
+        `email-templates/${templateFile}/${templateFile}.json`
+      );
+      const readTemplate = fs.readFileSync(filePath, 'utf8') as any;
+      const importData = JSON.parse(readTemplate) as any;
+      const id = importData._id;
+      if (templateName && id !== `email-templates/${templateName}`) {
+        continue;
+      }
+      importTemplateData.idm[id] = importData;
+    }
+    await importConfigEntities(importTemplateData);
+    // saveJsonToFile(importTemplateData, 'test-export.js')
+    return true;
+  } catch (error) {
+    printError(error, `Error importing email templates to files`);
+  }
+  return false;
 }
