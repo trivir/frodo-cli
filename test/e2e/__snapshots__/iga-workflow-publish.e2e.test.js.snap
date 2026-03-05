@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga workflow publish "frodo iga workflow publish --workflow-id testWorkflow5": should failed to publish already published workflow 'testWorkflow5' 1`] = `""`;
+
+exports[`frodo iga workflow publish "frodo iga workflow publish --workflow-id testWorkflow5": should failed to publish already published workflow 'testWorkflow5' 2`] = `
+"Connected to https://openam-frodo-dev.forgeblocks.com/am [alpha] as service account Frodo-SA-1766159115537 [b672336b-41ef-428d-ae4a-e0c082875377]
+✖ Error: Error publishing draft workflow testWorkflow5
+Error publishing draft workflow testWorkflow5
+  Error reading draft workflow testWorkflow5
+    Network error:
+      URL: https://openam-frodo-dev.forgeblocks.com/iga/governance/workflow/testWorkflow5/draft
+      Status: 404
+      Code: ERR_BAD_REQUEST
+      Message: Workflow with id: testWorkflow5 was not found
+"
+`;
+
+exports[`frodo iga workflow publish "frodo iga workflow publish -i testWorkflow5": should publish workflow 'testWorkflow5' 1`] = `""`;
+
+exports[`frodo iga workflow publish "frodo iga workflow publish -i testWorkflow5": should publish workflow 'testWorkflow5' 2`] = `
+"Connected to https://openam-frodo-dev.forgeblocks.com/am [alpha] as service account Frodo-SA-1766159115537 [b672336b-41ef-428d-ae4a-e0c082875377]
+✔ Published workflow testWorkflow5.
+"
+`;

@@ -35,12 +35,12 @@ const {
   getWorkingDirectory,
 } = frodo.utils;
 const {
+  publishWorkflow: _publishWorkflow,
   importWorkflows,
   readWorkflowGroups,
   exportWorkflow,
   exportWorkflows,
-  deleteDraftWorkflow,
-  deletePublishedWorkflow,
+  deleteWorkflow: _deleteWorkflow,
   deleteWorkflows: _deleteWorkflows,
 } = frodo.cloud.iga.workflow;
 /**
@@ -116,6 +116,10 @@ export async function describeWorkflow(
       workflowExport.workflow[workflowId].draft,
       workflowExport.workflow[workflowId].published,
     ].filter((w) => w)) {
+      printMessage(
+        `${workflow.status.charAt(0).toUpperCase() + workflow.status.slice(1)} Workflow`,
+        'data'
+      );
       const table = createKeyValueTable();
       table.push(['Id'['brightCyan'], workflow.id]);
       table.push(['Name'['brightCyan'], workflow.name]);
@@ -136,7 +140,7 @@ export async function describeWorkflow(
         `Steps (${workflow.steps.length})`,
         workflow.steps.map((s) => s.name)
       );
-      printMessage(table.toString(), 'data');
+      printMessage(table.toString() + '\n', 'data');
     }
     // Email Templates
     if (Object.entries(workflowExport.emailTemplate).length) {
@@ -230,7 +234,7 @@ export async function exportWorkflowToFile(
     `Exporting ${workflowId}...`
   );
   try {
-    const exportData = await exportWorkflow(workflowId, options, errorHandler);
+    const exportData = await exportWorkflow(workflowId, options);
     if (!file) {
       file = getTypedFilename(workflowId, 'workflow');
     }
@@ -306,7 +310,7 @@ export async function exportWorkflowsToFiles(
   }
 ): Promise<boolean> {
   try {
-    const exportData = await exportWorkflows(options);
+    const exportData = await exportWorkflows(options, errorHandler);
     if (extract) extractWorkflowScriptsToFiles(exportData);
     for (const [workflowId, workflowGroup] of Object.entries(
       exportData.workflow
@@ -349,7 +353,7 @@ export async function importWorkflowFromFile(
     );
     const importData = getWorkflowExportFromFile(getFilePath(file));
     updateProgressIndicator(indicatorId, 'Importing workflow...');
-    await importWorkflows(workflowId, importData, options, errorHandler);
+    await importWorkflows(workflowId, importData, options);
     stopProgressIndicator(
       indicatorId,
       `Successfully imported workflow ${workflowId}.`,
@@ -476,7 +480,7 @@ export async function importFirstWorkflowFromFile(
     const ids = Object.keys(importData.workflow);
     if (ids.length === 0)
       throw new FrodoError(`No workflows found in import data`);
-    await importWorkflows(ids[0], importData, options, errorHandler);
+    await importWorkflows(ids[0], importData, options);
     stopProgressIndicator(
       indicatorId,
       `Imported workflow from ${file}`,
@@ -498,7 +502,7 @@ export async function importFirstWorkflowFromFile(
  * Delete workflow. If both deleteDraft and deletePublished are truthy or falsy, attempt to delete both, otherwise deletes only one of them.
  * @param {string} workflowId workflow id
  * @param {boolean} deleteDraft true to delete only the draft workflow, false otherwise
- * @param {boolean} deletePublished true to delete only the draft workflow, false otherwise
+ * @param {boolean} deletePublished true to delete only the published workflow, false otherwise
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function deleteWorkflow(
@@ -506,63 +510,82 @@ export async function deleteWorkflow(
   deleteDraft?: boolean,
   deletePublished?: boolean
 ): Promise<boolean> {
-  let isSuccess = true;
-  // Attempt to delete draft first
-  if (deleteDraft || !deletePublished) {
-    const spinnerId = createProgressIndicator(
-      'indeterminate',
-      undefined,
-      `Deleting draft workflow ${workflowId}...`
+  const spinnerId = createProgressIndicator(
+    'indeterminate',
+    undefined,
+    `Deleting workflow ${workflowId}...`
+  );
+  try {
+    const result = await _deleteWorkflow(
+      workflowId,
+      deleteDraft || !deletePublished,
+      deletePublished || !deleteDraft,
+      errorHandler
     );
-    try {
-      await deleteDraftWorkflow(workflowId);
-      stopProgressIndicator(
-        spinnerId,
-        `Deleted draft workflow ${workflowId}.`,
-        'success'
-      );
-    } catch (error) {
-      stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
-      printError(error);
-      isSuccess = false;
+    if (!result.draft && !result.published) {
+      throw new FrodoError(`Failed to delete workflow ${workflowId}`);
     }
-  }
-  // Attempt to delete published second
-  if (deletePublished || !deleteDraft) {
-    const spinnerId = createProgressIndicator(
-      'indeterminate',
-      undefined,
-      `Deleting published workflow ${workflowId}...`
+    stopProgressIndicator(
+      spinnerId,
+      `Deleted workflow ${workflowId}.`,
+      'success'
     );
-    try {
-      await deletePublishedWorkflow(workflowId);
-      stopProgressIndicator(
-        spinnerId,
-        `Deleted published workflow ${workflowId}.`,
-        'success'
-      );
-    } catch (error) {
-      stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
-      printError(error);
-      isSuccess = false;
-    }
+    return true;
+  } catch (error) {
+    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    printError(error);
   }
-  return isSuccess;
+  return false;
 }
 
 /**
- * Delete workflows
+ * Delete workflows. If both deleteDraft and deletePublished are truthy or falsy, attempt to delete all of both types, otherwise deletes only those of one type.
+ * @param {boolean} deleteDraft true to delete only the draft workflows, false otherwise
+ * @param {boolean} deletePublished true to delete only the published workflows, false otherwise
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
-export async function deleteWorkflows(): Promise<boolean> {
+export async function deleteWorkflows(
+  deleteDraft?: boolean,
+  deletePublished?: boolean
+): Promise<boolean> {
   const spinnerId = createProgressIndicator(
     'indeterminate',
     undefined,
     `Deleting workflows...`
   );
   try {
-    await _deleteWorkflows(errorHandler);
+    await _deleteWorkflows(
+      deleteDraft || !deletePublished,
+      deletePublished || !deleteDraft,
+      errorHandler
+    );
     stopProgressIndicator(spinnerId, `Deleted workflows.`, 'success');
+    return true;
+  } catch (error) {
+    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ *
+ * @param {string} workflowId workflow id
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
+export async function publishWorkflow(workflowId: string): Promise<boolean> {
+  const spinnerId = createProgressIndicator(
+    'indeterminate',
+    undefined,
+    `Publishing workflow ${workflowId}...`
+  );
+  try {
+    await _publishWorkflow(workflowId);
+    stopProgressIndicator(
+      spinnerId,
+      `Published workflow ${workflowId}.`,
+      'success'
+    );
     return true;
   } catch (error) {
     stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
@@ -593,7 +616,7 @@ export function getWorkflowExportFromFile(
           case 'approvalTask':
           case 'fulfillmentTask':
           case 'violationTask': {
-            const actors = (step[step.type] as ApprovalTask).actors;
+            const actors = (step[step.type] as ApprovalTask)?.actors;
             if (
               !actors ||
               Array.isArray(actors) ||
@@ -606,6 +629,16 @@ export function getWorkflowExportFromFile(
               file.substring(0, file.lastIndexOf('/'))
             );
             actors.value = scriptRaw;
+            const uiConfigActors =
+              workflow.staticNodes?.uiConfig?.[step.name]?.actors;
+            if (
+              !uiConfigActors ||
+              Array.isArray(uiConfigActors) ||
+              !uiConfigActors.isExpression ||
+              !isScriptExtracted(uiConfigActors.value)
+            )
+              continue;
+            uiConfigActors.value = scriptRaw;
             continue;
           }
           case 'scriptTask': {
@@ -658,7 +691,7 @@ export function extractWorkflowScriptsToFiles(
             case 'approvalTask':
             case 'fulfillmentTask':
             case 'violationTask': {
-              const actors = (step[step.type] as ApprovalTask).actors;
+              const actors = (step[step.type] as ApprovalTask)?.actors;
               if (!actors || Array.isArray(actors) || !actors.isExpression)
                 continue;
               const scriptText = Array.isArray(actors.value)
@@ -669,13 +702,22 @@ export function extractWorkflowScriptsToFiles(
                 'workflow',
                 'js'
               );
+              const extractedFile = extractDataToFile(
+                scriptText,
+                `${workflowDirectory}/${scriptFileName}`
+              );
               (
                 (step[step.type] as ApprovalTask).actors as WorkflowExpression
-              ).value = extractDataToFile(
-                scriptText,
-                scriptFileName,
-                workflowDirectory
-              );
+              ).value = extractedFile;
+              const uiConfigActors =
+                workflow.staticNodes?.uiConfig?.[step.name]?.actors;
+              if (
+                !uiConfigActors ||
+                Array.isArray(uiConfigActors) ||
+                !uiConfigActors.isExpression
+              )
+                continue;
+              (uiConfigActors as WorkflowExpression).value = extractedFile;
               continue;
             }
             case 'scriptTask': {
@@ -693,8 +735,7 @@ export function extractWorkflowScriptsToFiles(
               );
               (step[step.type] as ScriptTask).script = extractDataToFile(
                 scriptText,
-                scriptFileName,
-                workflowDirectory
+                `${workflowDirectory}/${scriptFileName}`
               );
               continue;
             }

@@ -50,7 +50,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-N, --no-metadata',
-        'Does not include metadata in the export file.'
+        'Do not include metadata in the export file.'
       )
     )
 
@@ -69,13 +69,13 @@ export default function setup() {
     .addOption(
       new Option(
         '-R, --read-only',
-        'Export read-only config (with the exception of default scripts) in addition to the importable config.'
+        'Export non-mutable workflows in addition to the mutable workflows.'
       )
     )
     .addOption(
       new Option(
         '--no-coords',
-        'Do not include the x and y coordinate positions of the journey/tree nodes.'
+        'Do not include the x and y coordinate positions of the workflow tasks.'
       )
     )
     .addOption(
