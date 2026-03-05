@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`"frodo config-manager push email-provider -f test/e2e/exports/fr-config-manager/forgeops/email-provider/external.email.json -m forgeops": should import the email-provider into forgeops" 1`] = `""`;

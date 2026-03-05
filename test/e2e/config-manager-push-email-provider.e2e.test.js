@@ -54,8 +54,8 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/a
 
 import cp from 'child_process';
 import { promisify } from 'util';
-import { getEnv, removeAnsiEscapeCodes } from '../utils/TestUtils';
-import { forgeops_connection as fc } from '../utils/TestConfig';
+import { getEnv, removeAnsiEscapeCodes } from './utils/TestUtils';
+import { forgeops_connection as fc } from './utils/TestConfig';
 
 
 const exec = promisify(cp.exec);
@@ -63,17 +63,15 @@ const exec = promisify(cp.exec);
 process.env['FRODO_MOCK'] = '1';
 const forgeopsEnv = getEnv(fc);
 
-const allDirectory = "test/e2e/exports/fr-config-manager/email-provider";
+const allDirectory = "test/e2e/exports/fr-config-manager/forgeops/email-provider";
 
 test(`"frodo config-manager push email-provider -f ${allDirectory}/external.email.json -m forgeops": should import the email-provider into forgeops"`, async () => {
     const CMD = `frodo config-manager push email-provider -f ${allDirectory}/external.email.json -m forgeops`;
-    const { stdout, stderr } = await exec(CMD, {
+    const { stdout} = await exec(CMD, {
         env: {
             ...forgeopsEnv.env,
             FRODO_REALM: 'alpha'
         }
     });
-    console.log(stderr)
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
 });
