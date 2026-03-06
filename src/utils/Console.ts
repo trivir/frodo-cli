@@ -4,7 +4,7 @@ import {
   ProgressIndicatorStatusType,
   ProgressIndicatorType,
 } from '@rockcarver/frodo-lib/types/utils/Console';
-import Table from 'cli-table3';
+import Table, { TableConstructorOptions } from 'cli-table3';
 import { stderr as logUpdateStderr } from 'log-update';
 import c from 'tinyrainbow';
 import { v4 as uuidv4 } from 'uuid';
@@ -447,74 +447,106 @@ export function cleanupProgressIndicators() {
   debugMessage(`cleanupProgressIndicators end`);
 }
 
+const BASE_TABLE_OPTIONS = {
+  chars: {
+    top: '',
+    'top-mid': '',
+    'top-left': '',
+    'top-right': '',
+    bottom: '',
+    'bottom-mid': '',
+    'bottom-left': '',
+    'bottom-right': '',
+    left: '',
+    'left-mid': '',
+    mid: '',
+    'mid-mid': '',
+    right: '',
+    'right-mid': '',
+    middle: c.gray('│'),
+  },
+  style: { "padding-left": 0, "padding-right": 0, head: [], border: [] }
+}
+
 /**
  * Create an empty table
  * @param {string[]} head header row as an array of strings
  * @returns {any} an empty table
  */
 export function createTable(head) {
-  const table = new Table({
-    head: head.map((h) => (typeof h === 'string' ? c.cyan(h) : h)),
-    chars: {
-      top: '',
-      'top-mid': '',
-      'top-left': '',
-      'top-right': '',
-      bottom: '',
-      'bottom-mid': '',
-      'bottom-left': '',
-      'bottom-right': '',
-      left: '',
-      'left-mid': '',
-      mid: '',
-      'mid-mid': '',
-      right: '',
-      'right-mid': '',
-      middle: c.gray('│'),
-    },
-    style: { 'padding-left': 0, 'padding-right': 0, head: [], border: [] },
+  return new Table({
+    ...BASE_TABLE_OPTIONS,
+    head: head.map(c.cyan),
   });
-  return table;
 }
 
 /**
  * Create a new key/value table
  * @returns {any} an empty key/value table
  */
-export function createKeyValueTable() {
-  const table = new Table({
-    chars: {
-      top: '',
-      'top-mid': '',
-      'top-left': '',
-      'top-right': '',
-      bottom: '',
-      'bottom-mid': '',
-      'bottom-left': '',
-      'bottom-right': '',
-      left: '',
-      'left-mid': '',
-      mid: '',
-      'mid-mid': '',
-      right: '',
-      'right-mid': '',
-      middle: c.gray('│'),
-    },
-    style: { 'padding-left': 0, 'padding-right': 0, head: [], border: [] },
+export function createKeyValueTable(): Table.Table {
+  return new Table({
+    ...BASE_TABLE_OPTIONS,
     wordWrap: true,
   });
+}
+
+/**
+ * Create and populate an object table from any JSON object. Use for describe commands.
+ * @param {Object} object JSON object to create
+ * @param {Object} keyMap optional JSON map to map raw config names to human readable names {'raw': 'readable'}
+ * @returns {any} a table that can be printed to the console
+ */
+export function createObjectTable(object, keyMap = {}) {
+  const table = createKeyValueTable();
+  addRows(object, 1, table, keyMap);
   return table;
 }
 
 /**
- * Helper function to determine the total depth of an object
- * @param {Object} object input object
- * @returns {Number} total depth of the input object
+ * Helper function (recursive) to add rows to an object table
+ * @param {Object} object object to render
+ * @param {Number} level current level
+ * @param {Table} table the object table to add the rows to
+ * @param {Object} keyMap optional JSON map to map raw config names to human readable names {'raw': 'readable'}
+ * @returns the updated object table
  */
-function getObjectDepth(object) {
-  return Object(object) === object
-    ? 1 + Math.max(-1, ...Object.values(object).map(getObjectDepth))
-    : 0;
+function addRows(object, level, table, keyMap) {
+  const keys = Object.keys(object);
+  const space = '  ';
+
+  for (const key of keys) {
+    const value = object[key];
+    if (Object(value) !== value) {
+      const label = keyMap[key] ?? key;
+      if (level === 1) {
+        table.push([c.cyan(label), value]);
+      } else {
+        table.push([
+          {
+            hAlign: 'right',
+            content: c.gray(label),
+          },
+          value,
+        ]);
+      }
+    }
+  }
+
+  for (const key of keys) {
+    const value = object[key];
+
+    if (Object(value) === value && hasValues(value)) {
+      const label = keyMap[key] ?? key;
+
+      let indent = space.repeat(level);
+      if (level < 3) indent = `\n${indent}`;
+
+      table.push([indent + c.cyan(label), '']);
+
+      addRows(value, level + 1, table, keyMap);
+    }
+  }
 }
 
 /**
@@ -532,88 +564,4 @@ function hasValues(object) {
     has = has || hasValues(object[key]);
   }
   return has;
-}
-
-/**
- * Helper function (recursive) to add rows to an object table
- * @param {object} object object to render
- * @param {number} depth total depth of initial object
- * @param {number} level current level
- * @param {any} table the object table to add the rows to
- * @param {Object} keyMap optional JSON map to map raw config names to human readable names {'raw': 'readable'}
- * @returns the updated object table
- */
-function addRows(object, depth, level, table, keyMap) {
-  const space = '  ';
-  const keys = Object.keys(object);
-  for (const key of keys) {
-    if (Object(object[key]) !== object[key]) {
-      if (level === 1) {
-        table.push([
-          keyMap[key] ? c.cyan(keyMap[key]) : c.cyan(key),
-          object[key],
-        ]);
-      } else {
-        table.push([
-          {
-            hAlign: 'right',
-            content: keyMap[key] ? c.gray(keyMap[key]) : c.gray(key),
-          },
-          object[key],
-        ]);
-      }
-    }
-  }
-  for (const key of keys) {
-    if (Object(object[key]) === object[key]) {
-      // only print header if there are any values below
-      if (hasValues(object[key])) {
-        let indention = new Array(level).fill(space).join('');
-        if (level < 3) indention = `\n${indention}`;
-        table.push([
-          indention.concat(keyMap[key] ? c.cyan(keyMap[key]) : c.cyan(key)),
-          '',
-        ]);
-      }
-      // eslint-disable-next-line no-param-reassign
-      table = addRows(object[key], depth, level + 1, table, keyMap);
-    }
-  }
-  return table;
-}
-
-/**
- * Create and populate an object table from any JSON object. Use for describe commands.
- * @param {Object} object JSON object to create
- * @param {Object} keyMap optional JSON map to map raw config names to human readable names {'raw': 'readable'}
- * @returns {any} a table that can be printed to the console
- */
-export function createObjectTable(object, keyMap = {}) {
-  // eslint-disable-next-line no-param-reassign
-  const depth = getObjectDepth(object);
-  // eslint-disable-next-line no-param-reassign
-  const level = 0;
-  // eslint-disable-next-line no-param-reassign
-  const table = new Table({
-    chars: {
-      top: '',
-      'top-mid': '',
-      'top-left': '',
-      'top-right': '',
-      bottom: '',
-      'bottom-mid': '',
-      'bottom-left': '',
-      'bottom-right': '',
-      left: '',
-      'left-mid': '',
-      mid: '',
-      'mid-mid': '',
-      right: '',
-      'right-mid': '',
-      middle: c.gray('│'),
-    },
-    style: { 'padding-left': 0, 'padding-right': 0, head: [], border: [] },
-  });
-  addRows(object, depth, level + 1, table, keyMap);
-  return table;
 }
