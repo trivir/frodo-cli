@@ -84,7 +84,6 @@ export async function configManagerImportEmailTemplates(
       importTemplateData.idm[id] = importData;
     }
     await importConfigEntities(importTemplateData);
-    // saveJsonToFile(importTemplateData, 'test-export.js')
     return true;
   } catch (error) {
     printError(error, `Error importing email templates to files`);
