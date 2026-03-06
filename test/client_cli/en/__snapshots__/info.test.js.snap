@@ -62,13 +62,13 @@ Environment Variables:
 
 Usage Examples:
   Show human-readable output and login using AM base URL, username, and password (note the quotes around password to allow special characters):
-[96m  $ frodo info https://openam-matrix.id.forgerock.io/am thomas.anderson@metacortex.com 'Blu3P!ll3d'
-[39m  Show human-readable output and login using a connection profile (identified by the full AM base URL):
-[96m  $ frodo info https://openam-matrix.id.forgerock.io/am
-[39m  Show human-readable output and login using a connection profile (identified by a unique substring of the AM base URL or a saved alias):
-[96m  $ frodo info matrix
-[39m  Show JSON output and login using the AM base URL's unique substring or a saved alias to identify the connection profile:
-[96m  $ frodo info --json matrix
-[39m
+  $ frodo info https://openam-matrix.id.forgerock.io/am thomas.anderson@metacortex.com 'Blu3P!ll3d'
+  Show human-readable output and login using a connection profile (identified by the full AM base URL):
+  $ frodo info https://openam-matrix.id.forgerock.io/am
+  Show human-readable output and login using a connection profile (identified by a unique substring of the AM base URL or a saved alias):
+  $ frodo info matrix
+  Show JSON output and login using the AM base URL's unique substring to identify the connection profile:
+  $ frodo info --json matrix
+
 "
 `;

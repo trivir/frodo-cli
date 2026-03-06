@@ -65,15 +65,15 @@ Environment Variables:
 
 Usage Examples:
   Create an ESV variable using implied default type "string":
-[96m  $ frodo esv variable create --variable-id "esv-trinity-phone" --value "(312)-555-0690" --description "Trinity's phone number." matrix
-[39m  Create an ESV variable of type "array":
-[96m  $ frodo esv variable create --variable-id "esv-nebuchadnezzar-crew" --variable-type array --value '["Morpheus","Trinity","Link","Tank","Dozer","Apoc","Cypher","Mouse","Neo","Switch"]' --description "The crew of the Nebuchadnezzar hovercraft." matrix
-[39m  Create an ESV variable of type "object":
-[96m  $ frodo esv variable create --variable-id "esv-nebuchadnezzar-crew-structure" --variable-type object --value '{"Captain":"Morpheus","FirstMate":"Trinity","Operator":["Link","Tank"],"Medic":"Dozer","Crewmen":["Apoc","Cypher","Mouse","Neo","Switch"]}' --description "The structure of the crew of the Nebuchadnezzar hovercraft." matrix
-[39m  Create an ESV variable of type "int":
-[96m  $ frodo esv variable create --variable-id "esv-neo-age" --variable-type int --value '28' --description "Neo's age in the matrix." matrix
-[39m  Create an ESV variable of type "bool":
-[96m  $ frodo esv variable create --variable-id "esv-blue-piller" --variable-type bool --value 'false' --description "Zion membership criteria." matrix
-[39m
+  $ frodo esv variable create --variable-id "esv-trinity-phone" --value "(312)-555-0690" --description "Trinity's phone number." matrix
+  Create an ESV variable of type "array":
+  $ frodo esv variable create --variable-id "esv-nebuchadnezzar-crew" --variable-type array --value '["Morpheus","Trinity","Link","Tank","Dozer","Apoc","Cypher","Mouse","Neo","Switch"]' --description "The crew of the Nebuchadnezzar hovercraft." matrix
+  Create an ESV variable of type "object":
+  $ frodo esv variable create --variable-id "esv-nebuchadnezzar-crew-structure" --variable-type object --value '{"Captain":"Morpheus","FirstMate":"Trinity","Operator":["Link","Tank"],"Medic":"Dozer","Crewmen":["Apoc","Cypher","Mouse","Neo","Switch"]}' --description "The structure of the crew of the Nebuchadnezzar hovercraft." matrix
+  Create an ESV variable of type "int":
+  $ frodo esv variable create --variable-id "esv-neo-age" --variable-type int --value '28' --description "Neo's age in the matrix." matrix
+  Create an ESV variable of type "bool":
+  $ frodo esv variable create --variable-id "esv-blue-piller" --variable-type bool --value 'false' --description "Zion membership criteria." matrix
+
 "
 `;

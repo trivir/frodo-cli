@@ -57,7 +57,7 @@
  */
 import cp from 'child_process';
 import { promisify } from 'util';
-import { getEnv, removeAnsiEscapeCodes, testif } from './utils/TestUtils';
+import { getEnv, testif } from './utils/TestUtils';
 import { connection as c, amster_connection as cc } from './utils/TestConfig';
 
 const exec = promisify(cp.exec);
@@ -74,7 +74,7 @@ describe('frodo conn describe', () => {
         async () => {
             const CMD = `frodo conn describe ${c.host}`;
             const { stdout } = await exec(CMD, env);
-            expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+            expect(stdout).toMatchSnapshot()
         }
     );
 
@@ -83,7 +83,7 @@ describe('frodo conn describe', () => {
         async () => {
             const CMD = `frodo conn describe ${cc.host}`;
             const { stdout } = await exec(CMD, classicEnv);
-            expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+            expect(stdout).toMatchSnapshot()
         }
     );
 
@@ -93,7 +93,7 @@ describe('frodo conn describe', () => {
             const CMD = `frodo conn describe --show-secrets ${c.host}`;
             const { stdout } = await exec(CMD, env);
             //Don't test with snapshot, otherwise the snapshot would contain secrets. Instead, just check to make sure "[present]" doesn't exist anywhere.
-            expect(removeAnsiEscapeCodes(stdout).includes("[present]")).toBeFalsy();
+            expect(stdout).includes("[present]").toBeFalsy();
         }
     );
 
@@ -103,7 +103,7 @@ describe('frodo conn describe', () => {
             const CMD = `frodo conn describe --show-secrets ${cc.host}`;
             const { stdout } = await exec(CMD, classicEnv);
             //Don't test with snapshot, otherwise the snapshot would contain secrets. Instead, just check to make sure "[present]" doesn't exist anywhere.
-            expect(removeAnsiEscapeCodes(stdout).includes("[present]")).toBeFalsy();
+            expect(stdout).includes("[present]").toBeFalsy();
         }
     );
 });

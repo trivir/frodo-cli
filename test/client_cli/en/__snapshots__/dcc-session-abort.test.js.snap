@@ -63,12 +63,12 @@ Environment Variables:
 
 Usage Examples:
   Abort a direct configuration session with full tenant URL, username, and password:
-[96m  $ frodo direct-config-session abort https://openam-matrix.id.forgerock.io/am thomas.anderson@metacortex.com 'Blu3P!ll3d'
-[39m  Abort a direct configuration session with connection ID:
-[96m  $ frodo direct-config-session abort matrix
-[39m  Abort a direct configuration session in JSON format with connection ID:
-[96m  $ frodo direct-config-session abort --json matrix
-[39m
+  $ frodo direct-config-session abort https://openam-matrix.id.forgerock.io/am thomas.anderson@metacortex.com 'Blu3P!ll3d'
+  Abort a direct configuration session with connection ID:
+  $ frodo direct-config-session abort matrix
+  Abort a direct configuration session in JSON format with connection ID:
+  $ frodo direct-config-session abort --json matrix
+
 "
 `;
 
@@ -135,11 +135,11 @@ Environment Variables:
 
 Usage Examples:
   Abort a direct configuration session with full tenant URL, username, and password:
-[96m  $ frodo direct-config-session abort https://openam-matrix.id.forgerock.io/am thomas.anderson@metacortex.com 'Blu3P!ll3d'
-[39m  Abort a direct configuration session with connection ID:
-[96m  $ frodo direct-config-session abort matrix
-[39m  Abort a direct configuration session in JSON format with connection ID:
-[96m  $ frodo direct-config-session abort --json matrix
-[39m
+  $ frodo direct-config-session abort https://openam-matrix.id.forgerock.io/am thomas.anderson@metacortex.com 'Blu3P!ll3d'
+  Abort a direct configuration session with connection ID:
+  $ frodo direct-config-session abort matrix
+  Abort a direct configuration session in JSON format with connection ID:
+  $ frodo direct-config-session abort --json matrix
+
 "
 `;
