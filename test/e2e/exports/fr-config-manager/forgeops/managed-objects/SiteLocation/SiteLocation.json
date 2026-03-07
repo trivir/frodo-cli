@@ -1,0 +1,48 @@
+{
+  "iconClass": "fa fa-database",
+  "name": "SiteLocation",
+  "schema": {
+    "$schema": "http://forgerock.org/json-schema#",
+    "description": "FCPS Site Location",
+    "icon": "fa-map-marker",
+    "order": [
+      "custom_SiteLocation",
+      "custom_Ad_Ou",
+      "custom_Ad_Group"
+    ],
+    "properties": {
+      "custom_Ad_Group": {
+        "searchable": false,
+        "title": "AD Group",
+        "type": "string",
+        "userEditable": true,
+        "viewable": true
+      },
+      "custom_Ad_Ou": {
+        "searchable": false,
+        "title": "AD OU",
+        "type": "string",
+        "userEditable": true,
+        "viewable": true
+      },
+      "custom_SiteLocation": {
+        "description": null,
+        "format": null,
+        "isVirtual": false,
+        "searchable": true,
+        "title": "Site Location",
+        "type": "string",
+        "userEditable": true,
+        "viewable": true
+      }
+    },
+    "required": [
+      "custom_SiteLocation",
+      "custom_Ad_Ou",
+      "custom_Ad_Group"
+    ],
+    "title": "SiteLocation",
+    "type": "object"
+  },
+  "type": "Managed Object"
+}
