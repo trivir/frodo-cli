@@ -1,0 +1,3 @@
+{
+  "file": "resetPassword.fr.md"
+}

@@ -1,0 +1,25 @@
+{
+  "_id": "emailTemplate/newTemplate",
+  "defaultLocale": "en",
+  "description": "",
+  "displayName": "new template",
+  "enabled": true,
+  "from": "\"tester\" <test@new.com>",
+  "html": {
+    "en": {
+      "file": "newTemplate.en.html"
+    }
+  },
+  "message": {
+    "en": {
+      "file": "newTemplate.en.md"
+    }
+  },
+  "mimeType": "text/html",
+  "styles": {
+    "file": "newTemplate.css"
+  },
+  "subject": {
+    "en": ""
+  }
+}

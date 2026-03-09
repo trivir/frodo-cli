@@ -1,0 +1,33 @@
+{
+  "_id": "emailTemplate/testTemplate",
+  "defaultLocale": "en",
+  "description": "This is a test template",
+  "displayName": "test template",
+  "enabled": true,
+  "from": "\"Test\" <test@user.com>",
+  "html": {
+    "en": {
+      "file": "testTemplate.en.html"
+    },
+    "fr": {
+      "file": "testTemplate.fr.html"
+    }
+  },
+  "message": {
+    "en": {
+      "file": "testTemplate.en.md"
+    },
+    "fr": {
+      "file": "testTemplate.fr.md"
+    }
+  },
+  "mimeType": "text/html",
+  "styles": {
+    "file": "testTemplate.css"
+  },
+  "subject": {
+    "en": "",
+    "fr": ""
+  },
+  "templateId": "testTemplate"
+}
