@@ -1,3 +1,0 @@
-{
-  "file": "resetPassword.en.md"
-}

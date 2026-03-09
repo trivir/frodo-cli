@@ -1,3 +1,0 @@
-{
-  "file": "updatePassword.en.md"
-}
