@@ -26,7 +26,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-n, --name <name>',
-        'Email-templates name, will only import the endpoint with the name'
+        'Email-template name; only imports the email-template with that name'
       )
     )
     .action(async (host, realm, user, password, options, command) => {
