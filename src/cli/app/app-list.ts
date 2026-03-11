@@ -1,4 +1,5 @@
 import { Option } from 'commander';
+import c from 'tinyrainbow';
 
 import * as s from '../../help/SampleData';
 import { listApplications } from '../../ops/ApplicationOps';
@@ -18,18 +19,18 @@ export default function setup() {
     )
     .addHelpText(
       'after',
-      `Important Note:\n`['brightYellow'] +
-        `  The ${'frodo app'['brightCyan']} command to manage OAuth2 clients in v1.x has been renamed to ${'frodo oauth client'['brightCyan']} in v2.x\n` +
-        `  The ${'frodo app'['brightCyan']} command in v2.x manages the new applications created using the new application templates in ForgeRock Identity Cloud. To manage oauth clients, use the ${'frodo oauth client'['brightCyan']} command.\n\n` +
+      c.yellow(`Important Note:\n`) +
+        `  The ${c.cyan('frodo app')} command to manage OAuth2 clients in v1.x has been renamed to ${c.cyan('frodo oauth client')} in v2.x\n` +
+        `  The ${c.cyan('frodo app')} command in v2.x manages the new applications created using the new application templates in ForgeRock Identity Cloud. To manage oauth clients, use the ${c.cyan('frodo oauth client')} command.\n\n` +
         `Usage Examples:\n` +
         `  List applications using AM base URL, username, and password (note the quotes around password to allow special characters):\n` +
-        `  $ frodo app list ${s.amBaseUrl} ${s.username} '${s.password}'\n`[
-          'brightCyan'
-        ] +
+        c.cyan(
+          `  $ frodo app list ${s.amBaseUrl} ${s.username} '${s.password}'\n`
+        ) +
         `  List applications using a connection profile (identified by the full AM base URL):\n` +
-        `  $ frodo app list ${s.amBaseUrl}\n`['brightCyan'] +
+        c.cyan(`  $ frodo app list ${s.amBaseUrl}\n`) +
         `  List applications using a connection profile (identified by a unique substring of the AM base URL or a saved alias):\n` +
-        `  $ frodo app list ${s.connId}\n`['brightCyan']
+        c.cyan(`  $ frodo app list ${s.connId}\n`)
     )
     .action(
       // implement command logic inside action handler

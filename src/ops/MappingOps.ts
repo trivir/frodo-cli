@@ -7,6 +7,7 @@ import {
   SyncSkeleton,
 } from '@rockcarver/frodo-lib/types/ops/MappingOps';
 import fs from 'fs';
+import c from 'tinyrainbow';
 
 import { extractDataToFile, getExtractedJsonData } from '../utils/Config';
 import {
@@ -65,10 +66,8 @@ export async function listMappings(long: boolean = false): Promise<boolean> {
           mapping.displayName,
           mapping.source,
           mapping.target,
-          mapping.consentRequired ? 'yes'['brightGreen'] : 'no'['brightRed'],
-          isLegacyMapping(mapping._id)
-            ? 'yes'['brightGreen']
-            : 'no'['brightRed'],
+          mapping.consentRequired ? c.green('yes') : c.red('no'),
+          isLegacyMapping(mapping._id) ? c.green('yes') : c.red('no'),
         ]);
       }
       printMessage(table.toString(), 'data');

@@ -58,7 +58,7 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
  */
 import cp from 'child_process';
 import { promisify } from 'util';
-import { getEnv, removeAnsiEscapeCodes } from './utils/TestUtils';
+import { getEnv } from './utils/TestUtils';
 import { connection as c } from './utils/TestConfig';
 
 const exec = promisify(cp.exec);
@@ -73,13 +73,13 @@ describe('frodo esv secret list', () => {
     test('"frodo esv secret list": should list the ids of the esv secrets', async () => {
         const CMD = `frodo esv secret list`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo esv secret list -l": should list the ids, active/loaded versions, statuses, descriptions, modifiers, and modified times of the esv secrets', async () => {
         const CMD = `frodo esv secret list -l`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test('"frodo esv secret list -u": should list the usage of the esv secrets', async () => {
@@ -88,8 +88,8 @@ describe('frodo esv secret list', () => {
             await exec(CMD, env);
             fail("Command should've failed")
         } catch (e) {
-            expect(removeAnsiEscapeCodes(e.stderr)).toMatchSnapshot();
-            expect(removeAnsiEscapeCodes(e.stdout)).toMatchSnapshot();
+            expect(e.stderr).toMatchSnapshot();
+            expect(e.stdout).toMatchSnapshot();
         }
     });
 
@@ -99,32 +99,32 @@ describe('frodo esv secret list', () => {
             await exec(CMD, env);
             fail("Command should've failed")
         } catch (e) {
-            expect(removeAnsiEscapeCodes(e.stderr)).toMatchSnapshot();
-            expect(removeAnsiEscapeCodes(e.stdout)).toMatchSnapshot();
+            expect(e.stderr).toMatchSnapshot();
+            expect(e.stdout).toMatchSnapshot();
         }
     });
 
     test(`"frodo esv secret list -uf ${allConfigFile}": should list the usage of the esv secrets in the ${allConfigFile} file`, async () => {
         const CMD = `frodo esv secret list -uf ${allConfigFile}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo esv secret list --usage --long --file ${allConfigFile}": should list the ids, active/loaded versions, statuses, descriptions, modifiers, modified times, and usage of the esv secrets in the ${allConfigFile} file`, async () => {
         const CMD = `frodo esv secret list --usage --long --file ${allConfigFile}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo esv secret list -uD ${allConfigDirectory}": should list the usage of the esv secrets in the ${allConfigDirectory} directory`, async () => {
         const CMD = `frodo esv secret list -uD ${allConfigDirectory}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 
     test(`"frodo esv secret list --usage --long --directory ${allConfigDirectory}": should list the ids, active/loaded versions, statuses, descriptions, modifiers, modified times, and usage of the esv secrets in the ${allConfigDirectory} directory`, async () => {
         const CMD = `frodo esv secret list --usage --long --directory ${allConfigDirectory}`;
         const { stdout } = await exec(CMD, env);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(stdout).toMatchSnapshot()
     });
 });

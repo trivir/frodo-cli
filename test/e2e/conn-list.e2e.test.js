@@ -56,7 +56,7 @@ FRODO_CONNECTION_PROFILES_PATH=~/temp/frodo/Connections.json FRODO_MOCK=record F
  */
 import cp from 'child_process';
 import { promisify } from 'util';
-import { getEnv, removeAnsiEscapeCodes, testif } from './utils/TestUtils';
+import { getEnv, testif } from './utils/TestUtils';
 import { connection as c } from './utils/TestConfig';
 
 const exec = promisify(cp.exec);
@@ -74,7 +74,7 @@ describe('frodo conn list', () => {
     async () => {
       const CMD = `frodo conn list`;
       const { stdout } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+      expect(stdout).toMatchSnapshot()
     }
   );
 
@@ -83,7 +83,7 @@ describe('frodo conn list', () => {
     async () => {
       const CMD = `frodo conn list -l`;
       const { stdout } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+      expect(stdout).toMatchSnapshot()
     }
   );
 
@@ -92,7 +92,7 @@ describe('frodo conn list', () => {
     async () => {
       const CMD = `frodo conn list --long`;
       const { stdout } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+      expect(stdout).toMatchSnapshot()
     }
   );
 });
