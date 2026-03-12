@@ -31,7 +31,7 @@ export async function configManagerExportInternalRoles(
 }
 
 export async function configManagerImportInternalRoles(
-  InternalRolename?: string
+  internalRoleName?: string
 ): Promise<boolean> {
   try {
     const internalRolesDir = getFilePath('internal-roles');
@@ -41,7 +41,7 @@ export async function configManagerImportInternalRoles(
       const filePath = getFilePath(`internal-roles/${internalRolesFile}`);
       const readFile = fs.readFileSync(filePath) as any;
       const roleData = JSON.parse(readFile) as any;
-      if (InternalRolename && roleData.name !== InternalRolename) {
+      if (internalRoleName && roleData.name !== internalRoleName) {
         continue;
       }
       importData.internalRole[roleData._id] = roleData;
