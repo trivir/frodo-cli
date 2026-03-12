@@ -48,7 +48,7 @@
 
 /*
 // ForgeOps
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push kba -f test/e2e/exports/fr-config-manager/forgeops/kba/selfservice.kba.json -m forgeops
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push kba -D test/e2e/exports/fr-config-manager/forgeops -m forgeops
 
 
 
@@ -66,10 +66,10 @@ const exec = promisify(cp.exec);
 process.env['FRODO_MOCK'] = '1';
 const forgeopsEnv = getEnv(fc);
 
-const allDirectory = "test/e2e/exports/fr-config-manager/forgeops/kba";
+const allDirectory = "test/e2e/exports/fr-config-manager/forgeops/";
 
-test(`"frodo config-manager push kba -f ${allDirectory}/selfservice.kba.json -m forgeops": should import KBA into forgeops"`, async () => {
-    const CMD = `frodo config-manager push kba -f ${allDirectory}/selfservice.kba.json -m forgeops`;
+test(`"frodo config-manager push kba -D ${allDirectory}-m forgeops": should import KBA into forgeops"`, async () => {
+    const CMD = `frodo config-manager push kba -D ${allDirectory} -m forgeops`;
     const { stdout, stderr } = await exec(CMD, forgeopsEnv);
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     console.log(stderr)

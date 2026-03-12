@@ -1,5 +1,4 @@
 import { frodo } from '@rockcarver/frodo-lib';
-import { Option } from 'commander';
 
 import { configManagerImportKbaConfig } from '../../../configManagerOps/FrConfigKbaOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
@@ -23,20 +22,12 @@ export default function setup() {
 
   program
     .description('Import kba configuration.')
-    .addOption(new Option('-f, --file [file]', 'Kba json file to import'))
-    .action(async (host, realm, user, password, options, command) => {
-      command.handleDefaultArgsAndOpts(
-        host,
-        realm,
-        user,
-        password,
-        options,
-        command
-      );
+    .action(async (host, realm, user, password, command) => {
+      command.handleDefaultArgsAndOpts(host, realm, user, password, command);
 
       if (await getTokens(false, true, deploymentTypes)) {
         verboseMessage('Importing kba configuration.');
-        const outcome = await configManagerImportKbaConfig(options.file);
+        const outcome = await configManagerImportKbaConfig();
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options

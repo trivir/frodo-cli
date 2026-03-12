@@ -1,9 +1,7 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
-import path from 'path';
 
 import { getIdmImportExportOptions } from '../ops/IdmOps';
-import { errorHandler } from '../ops/utils/OpsUtils';
 import { printError } from '../utils/Console';
 
 const { exportConfigEntity, importConfigEntities } = frodo.idm.config;
@@ -38,26 +36,13 @@ export async function configManagerExportKbaConfig(
   return false;
 }
 
-export async function configManagerImportKbaConfig(
-  file?: string,
-  envFile?: string,
-  validate: boolean = false
-): Promise<boolean> {
+export async function configManagerImportKbaConfig(): Promise<boolean> {
   try {
-    const fileData = fs.readFileSync(path.resolve(process.cwd(), file), 'utf8');
+    const filePath = getFilePath('kba/');
+    const fileData = fs.readFileSync(`${filePath}/selfservice.kba.json`) as any;
     let importData = JSON.parse(fileData);
     importData = { idm: { [importData._id]: importData } };
-    const options = getIdmImportExportOptions(undefined, envFile);
-    await importConfigEntities(
-      importData,
-      'selfservice.kba',
-      {
-        envReplaceParams: options.envReplaceParams,
-        entitiesToImport: undefined,
-        validate,
-      },
-      errorHandler
-    );
+    await importConfigEntities(importData);
     return true;
   } catch (error) {
     printError(error);
