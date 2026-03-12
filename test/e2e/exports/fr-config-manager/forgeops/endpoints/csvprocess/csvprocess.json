@@ -1,0 +1,7 @@
+{
+  "_id": "endpoint/csvprocess",
+  "description": "",
+  "file": "csvprocess.js",
+  "globalsObject": "\"  {\\n    \\\"request\\\": {\\n      \\\"method\\\": \\\"create\\\"\\n    }\\n  }\"",
+  "type": "text/javascript"
+}

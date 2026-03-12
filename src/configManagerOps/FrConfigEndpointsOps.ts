@@ -63,15 +63,21 @@ export async function configManagerImportEndpoints(
         `endpoints/${endpointsFile}/${endpointsFile}.json`
       );
       const readJsonEndpoint = fs.readFileSync(jsonFilePath, 'utf8') as any;
-
       const importData = JSON.parse(readJsonEndpoint) as any;
       const id = importData._id;
-      const js = importData.file;
-      if (endpointName && id !== `endpoints/${endpointName}`) {
+
+      if (endpointName && id !== `endpoint/${endpointName}`) {
         continue;
       }
+      if (importData.file) {
+        const scriptPath = getFilePath(
+          `endpoints/${endpointsFile}/${importData.file}`
+        );
+        importData.source = fs.readFileSync(scriptPath, 'utf8');
+        delete importData.file;
+      }
+
       importEndpointData.idm[id] = importData;
-      importEndpointData.idm[js] = importData;
     }
     await importConfigEntities(importEndpointData);
     return true;
