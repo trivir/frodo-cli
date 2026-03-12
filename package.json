@@ -1,6 +1,6 @@
 {
   "name": "@rockcarver/frodo-cli",
-  "version": "4.0.0-16",
+  "version": "4.0.0-17",
   "type": "module",
   "description": "A command line interface to manage ForgeRock Identity Cloud tenants, ForgeOps deployments, and classic deployments.",
   "keywords": [
@@ -38,7 +38,7 @@
     "test:debug": "FRODO_TEST=1 NODE_OPTIONS='--no-warnings --experimental-vm-modules' npx jest --silent=false --json --outputFile=./testResults.json",
     "test:update": "FRODO_TEST=1 NODE_OPTIONS='--no-warnings --experimental-vm-modules' npx jest --silent=false --updateSnapshot",
     "lint": "eslint --cache --cache-location .eslintcache \"src/**/*.ts\"",
-    "lint:fix": "eslint --cache --cache-location .eslintcache --fix \"src/**/*.ts\"",  
+    "lint:fix": "eslint --cache --cache-location .eslintcache --fix \"src/**/*.ts\"",
     "build": "npm run build:binary",
     "build:only": "npx tsup && npx tsc",
     "build:binary": "npm run build:only && npm run dist-pkg",
@@ -95,7 +95,7 @@
     ]
   },
   "devDependencies": {
-    "@rockcarver/frodo-lib": "4.0.0-23",
+    "@rockcarver/frodo-lib": "4.0.0-24",
     "@types/colors": "^1.2.1",
     "@types/fs-extra": "^11.0.1",
     "@types/jest": "^29.2.3",

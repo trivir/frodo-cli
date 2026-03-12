@@ -10,7 +10,14 @@ import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
-const deploymentTypes = ['cloud', 'forgeops'];
+const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
+  frodo.utils.constants;
+
+const deploymentTypes = [
+  CLOUD_DEPLOYMENT_TYPE_KEY,
+  FORGEOPS_DEPLOYMENT_TYPE_KEY,
+];
+
 const { constants } = frodo.utils;
 
 export default function setup() {
