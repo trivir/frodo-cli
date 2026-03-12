@@ -1,10 +1,7 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 import fs from 'fs';
-import path from 'path';
 
-import { getIdmImportExportOptions } from '../ops/IdmOps';
-import { errorHandler } from '../ops/utils/OpsUtils';
 import { printError } from '../utils/Console';
 
 const { config } = frodo.idm;
@@ -32,27 +29,13 @@ export async function configManagerExportEmailProviderConfiguration(): Promise<b
   }
 }
 
-export async function configManagerImportEmailProivder(
-  file?: string,
-  envFile?: string,
-  validate: boolean = false
-): Promise<boolean> {
+export async function configManagerImportEmailProivder(): Promise<boolean> {
   try {
-    const fileData = fs.readFileSync(path.resolve(process.cwd(), file), 'utf8');
+    const filePath = getFilePath('email-provider');
+    const fileData = fs.readFileSync(`${filePath}/external.email.json`) as any;
     let importData = JSON.parse(fileData);
     importData = { idm: { [importData._id]: importData } };
-    const options = getIdmImportExportOptions(undefined, envFile);
-
-    await config.importConfigEntities(
-      importData,
-      'external.email',
-      {
-        envReplaceParams: options.envReplaceParams,
-        entitiesToImport: undefined,
-        validate,
-      },
-      errorHandler
-    );
+    await config.importConfigEntities(importData);
     return true;
   } catch (error) {
     printError(error);

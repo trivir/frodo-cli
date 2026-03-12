@@ -48,7 +48,7 @@
 
 /*
 // ForgeOps
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am FRODO_REALM=alpha frodo config-manager push email-provider -f external.email.json -m forgeops
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am FRODO_REALM=alpha frodo config-manager push email-provider -D test/e2e/exports/fr-config-manager/forgeops -m forgeops
 */
 
 
@@ -57,21 +57,15 @@ import { promisify } from 'util';
 import { getEnv, removeAnsiEscapeCodes } from './utils/TestUtils';
 import { forgeops_connection as fc } from './utils/TestConfig';
 
-
 const exec = promisify(cp.exec);
 
 process.env['FRODO_MOCK'] = '1';
 const forgeopsEnv = getEnv(fc);
 
-const allDirectory = "test/e2e/exports/fr-config-manager/forgeops/email-provider";
+const allDirectory = "test/e2e/exports/fr-config-manager/forgeops";
 
-test(`"frodo config-manager push email-provider -f ${allDirectory}/external.email.json -m forgeops": should import the email-provider into forgeops"`, async () => {
-    const CMD = `frodo config-manager push email-provider -f ${allDirectory}/external.email.json -m forgeops`;
-    const { stdout} = await exec(CMD, {
-        env: {
-            ...forgeopsEnv.env,
-            FRODO_REALM: 'alpha'
-        }
-    });
+test(`"frodo config-manager push email-provider -D ${allDirectory} -m forgeops": should import the locales into forgeops"`, async () => {
+    const CMD = `frodo config-manager push email-provider -D ${allDirectory} -m forgeops`;
+    const { stdout } = await exec(CMD, forgeopsEnv);
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
 });

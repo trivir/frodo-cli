@@ -1,5 +1,4 @@
 import { frodo } from '@rockcarver/frodo-lib';
-import { Option } from 'commander';
 
 import { configManagerImportEmailProivder } from '../../../configManagerOps/FrConfigEmailProviderOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
@@ -23,9 +22,7 @@ export default function setup() {
 
   program
     .description('Import email provider configuration.')
-    .addOption(
-      new Option('-f, --file [file]', 'Email provider json to import.')
-    )
+
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -38,7 +35,7 @@ export default function setup() {
 
       if (await getTokens(false, true, deploymentTypes)) {
         verboseMessage('Importing email provider configuration.');
-        const outcome = await configManagerImportEmailProivder(options.file);
+        const outcome = await configManagerImportEmailProivder();
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options
