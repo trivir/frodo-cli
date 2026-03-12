@@ -1,9 +1,10 @@
 import { frodo } from '@rockcarver/frodo-lib';
+import fs from 'fs';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError } from '../utils/Console';
 
-const { readConfigEntitiesByType } = frodo.idm.config;
+const { readConfigEntitiesByType, importConfigEntities } = frodo.idm.config;
 const { saveJsonToFile, getFilePath } = frodo.utils;
 
 /**
@@ -48,4 +49,40 @@ function processEndpoints(endpoints, fileDir, name?) {
   } catch (err) {
     printError(err);
   }
+}
+
+export async function configManagerImportEndpoints(
+  endpointName?: string
+): Promise<boolean> {
+  try {
+    const endpointsDir = getFilePath(`endpoints`);
+    const endpointsFiles = fs.readdirSync(endpointsDir);
+    const importEndpointData = { idm: {} };
+    for (const endpointsFile of endpointsFiles) {
+      const jsonFilePath = getFilePath(
+        `endpoints/${endpointsFile}/${endpointsFile}.json`
+      );
+      const readJsonEndpoint = fs.readFileSync(jsonFilePath, 'utf8') as any;
+      const importData = JSON.parse(readJsonEndpoint) as any;
+      const id = importData._id;
+
+      if (endpointName && id !== `endpoint/${endpointName}`) {
+        continue;
+      }
+      if (importData.file) {
+        const scriptPath = getFilePath(
+          `endpoints/${endpointsFile}/${importData.file}`
+        );
+        importData.source = fs.readFileSync(scriptPath, 'utf8');
+        delete importData.file;
+      }
+
+      importEndpointData.idm[id] = importData;
+    }
+    await importConfigEntities(importEndpointData);
+    return true;
+  } catch (error) {
+    printError(error, `Error importing config entity endpoints`);
+  }
+  return false;
 }
