@@ -1,9 +1,10 @@
 import { frodo } from '@rockcarver/frodo-lib';
+import fs from 'fs';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError } from '../utils/Console';
 
-const { readConfigEntitiesByType } = frodo.idm.config;
+const { readConfigEntitiesByType, importConfigEntities } = frodo.idm.config;
 const { getFilePath, saveJsonToFile } = frodo.utils;
 /**
  * Export an internal roles in fr-config-manager format.
@@ -66,4 +67,39 @@ function processSchedules(schedules, fileDir, name?) {
   } catch (err) {
     printError(err);
   }
+}
+
+export async function configManagerImportSchedules(
+  schedulesName?: string
+): Promise<boolean> {
+  try {
+    const schedulesPath = getFilePath('schedules');
+    const schedulesFiles = fs.readdirSync(schedulesPath);
+    const importScheduleData = { idm: {} };
+    for (const schedulesFile of schedulesFiles) {
+      const jsonFilePath = getFilePath(
+        `schedules/${schedulesFile}/${schedulesFile}.json`
+      );
+      const readJsonSchedules = fs.readFileSync(jsonFilePath, 'utf8') as any;
+      const importData = JSON.parse(readJsonSchedules) as any;
+      const id = importData._id;
+
+      if (schedulesName && id !== `schedules/${schedulesName}`) {
+        continue;
+      }
+      if (importData.invokeContext?.task?.script?.file) {
+        const scriptPath = getFilePath(
+          `schedules/${schedulesFile}/${importData.invokeContext.task.script.file}`
+        );
+        importData.invokeContext.task.script.source = fs.readFileSync(scriptPath, 'utf8');
+        delete importData.invokeContext.task.script.file;
+      }
+      importScheduleData.idm[id] = importData;
+    }
+    await importConfigEntities(importScheduleData);
+    return true;
+  } catch (error) {
+    printError(error, `Error exporting internal schedules to files`);
+  }
+  return false;
 }
