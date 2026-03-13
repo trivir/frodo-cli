@@ -1,10 +1,11 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
+import fs from 'fs';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError } from '../utils/Console';
 
-const { readConfigEntity } = frodo.idm.config;
+const { readConfigEntity, importConfigEntities } = frodo.idm.config;
 const { getFilePath, saveTextToFile } = frodo.utils;
 const { stringify } = frodo.utils.json;
 
@@ -109,4 +110,42 @@ function processManagedObjects(managedObjects, targetDir, name) {
   } catch (err) {
     printError(err);
   }
+}
+
+/**
+ * Import an IDM configuration object in the fr-config-manager format.
+ * @param {string} envFile File that defines environment specific variables for replacement during configuration export/import
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function configManagerImportManagedObjects(
+  objectName?: string
+): Promise<boolean> {
+  try {
+    const managedObjectsPath = getFilePath('managed-objects');
+    const managedObjectsFiles = fs.readdirSync(managedObjectsPath);
+    const importManagedObjectData = {
+      idm: { managed: { _id: 'managed', objects: [] } },
+    };
+    for (const managedObjectsFile of managedObjectsFiles) {
+      const filePath = getFilePath(
+        `managed-objects/${managedObjectsFile}/${managedObjectsFile}.json`
+      );
+      const readManagedObject = fs.readFileSync(filePath) as any;
+      const importData = JSON.parse(readManagedObject);
+      const id = importData._id;
+
+      if (objectName && id !== `managed-objects/${objectName}`) {
+        continue;
+      }
+
+      importManagedObjectData.idm.managed.objects.push(importData);
+    }
+
+    await importConfigEntities(importManagedObjectData);
+
+    return true;
+  } catch (error) {
+    printError(error, `Error exporting config entity endpoints`);
+  }
+  return false;
 }
