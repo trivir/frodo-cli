@@ -7,7 +7,7 @@ import { printError } from '../utils/Console';
 const { readConfigEntitiesByType, importConfigEntities } = frodo.idm.config;
 const { getFilePath, saveJsonToFile } = frodo.utils;
 /**
- * Export an internal roles in fr-config-manager format.
+ * Export schedules in fr-config-manager format.
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function configManagerExportSchedules(
@@ -69,6 +69,10 @@ function processSchedules(schedules, fileDir, name?) {
   }
 }
 
+/**
+ * Import schedules in fr-config-manager format.
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
 export async function configManagerImportSchedules(
   schedulesName?: string
 ): Promise<boolean> {
@@ -99,7 +103,7 @@ export async function configManagerImportSchedules(
     await importConfigEntities(importScheduleData);
     return true;
   } catch (error) {
-    printError(error, `Error exporting internal schedules to files`);
+    printError(error, `Error importing internal schedules`);
   }
   return false;
 }

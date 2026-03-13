@@ -27,7 +27,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-n, --name <name>',
-        'schedule name, It only export the endpoint with the name'
+        'schedule name, import only the specified schedule name'
       )
     )
     .action(async (host, realm, user, password, options, command) => {
