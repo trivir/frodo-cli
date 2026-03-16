@@ -1,0 +1,11 @@
+{
+  "idm": {
+    "endpoint/testEndpoint": {
+      "_id": "endpoint/testEndpoint",
+      "description": "",
+      "globalsObject": "\"  {\\n    \\\"request\\\": {\\n      \\\"method\\\": \\\"create\\\"\\n    }\\n  }\"",
+      "source": "file://testEndpoint.script.js",
+      "type": "text/javascript"
+    }
+  }
+}

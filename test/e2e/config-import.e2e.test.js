@@ -59,6 +59,12 @@ rm -rf test/e2e/exports/all-separate/classic
 FRODO_NO_CACHE=1 FRODO_HOST=http://openam-frodo-dev.classic.com:8080/am frodo config export -NRdaD test/e2e/exports/all -f all.classic.json --include-active-values
 FRODO_NO_CACHE=1 FRODO_HOST=http://openam-frodo-dev.classic.com:8080/am frodo config export -NRdxAD test/e2e/exports/all-separate/classic --include-active-values
 
+To update idm exports, ensure you have a local on-prem instance of idm with the host https://platform.dev.trivir.com/am, then run these:
+FRODO_NO_CACHE=1 FRODO_HOST=https://platform.dev.trivir.com/am frodo config export -NRdaD test/e2e/exports/all/idm -f all.config.json --include-active-values
+FRODO_NO_CACHE=1 FRODO_HOST=https://platform.dev.trivir.com/am frodo config export -NRdxAD test/e2e/exports/all-separate-extracted-script/idm --include-active-values
+
+
+
 To record, run these:
 
 // Cloud
@@ -80,6 +86,9 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openam-frodo-dev.classic.co
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openam-frodo-dev.classic.com:8080/am frodo config import -gf test/e2e/exports/all-separate/classic/global/server/01.server.json -m classic
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openam-frodo-dev.classic.com:8080/am frodo config import --global --file test/e2e/exports/all-separate/classic/global/authenticationModules/authPushReg.authenticationModules.json --type classic
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openam-frodo-dev.classic.com:8080/am frodo config import -f test/e2e/exports/all-separate/classic/realm/root/webhookService/Cool-Webhook.webhookService.json -m classic
+
+// ForgeOps
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config import -AD test/e2e/exports/all-separate/forgeops --type forgeops
 */
 import cp from 'child_process';
 import { promisify } from 'util';
@@ -87,13 +96,14 @@ import {
   getEnv,
   removeAnsiEscapeCodes
 } from './utils/TestUtils';
-import { connection as c, classic_connection as cc } from './utils/TestConfig';
+import { connection as c, classic_connection as cc, forgeops_connection as fc } from './utils/TestConfig';
 
 const exec = promisify(cp.exec);
 
 process.env['FRODO_MOCK'] = '1';
 const env = getEnv(c);
 const classicEnv = getEnv(cc);
+const forgeopsEnv = getEnv(fc);
 
 const allDirectory = 'test/e2e/exports/all';
 const allCloudFileName = 'all.cloud.json';
@@ -103,8 +113,8 @@ const allClassicExport = `${allDirectory}/${allClassicFileName}`;
 const allSeparateCloudDirectory = `test/e2e/exports/all-separate/cloud`;
 const allSeparateClassicDirectory = `test/e2e/exports/all-separate/classic`;
 
-describe.skip('frodo config import', () => {
-  test(`"frodo config import -adf ${allCloudExport}" Import everything from "${allCloudFileName}", including default scripts.`, async () => {
+describe('frodo config import', () => {
+  test.skip(`"frodo config import -adf ${allCloudExport}" Import everything from "${allCloudFileName}", including default scripts.`, async () => {
     const CMD = `frodo config import -adf ${allCloudExport}`;
     try {
       await exec(CMD, env);
@@ -125,7 +135,7 @@ describe.skip('frodo config import', () => {
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
   });
 
-  test(`"frodo config import -aCf ${allCloudExport}" Import everything from "${allCloudFileName}". Clean old services`, async () => {
+  test.skip(`"frodo config import -aCf ${allCloudExport}" Import everything from "${allCloudFileName}". Clean old services`, async () => {
     const CMD = `frodo config import -aCf ${allCloudExport}`;
     try {
       await exec(CMD, env);
@@ -139,7 +149,7 @@ describe.skip('frodo config import', () => {
     }
   });
 
-  test(`"frodo config import -AD ${allSeparateCloudDirectory}" Import everything from directory "${allSeparateCloudDirectory}"`, async () => {
+  test.skip(`"frodo config import -AD ${allSeparateCloudDirectory}" Import everything from directory "${allSeparateCloudDirectory}"`, async () => {
     const CMD = `frodo config import -AD ${allSeparateCloudDirectory}`;
     try {
       await exec(CMD, env);
@@ -160,7 +170,7 @@ describe.skip('frodo config import', () => {
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
   });
 
-  test(`"frodo config import -CAD ${allSeparateCloudDirectory}" Import everything from directory "${allSeparateCloudDirectory}". Clean old services`, async () => {
+  test.skip(`"frodo config import -CAD ${allSeparateCloudDirectory}" Import everything from directory "${allSeparateCloudDirectory}". Clean old services`, async () => {
     const CMD = `frodo config import -CAD ${allSeparateCloudDirectory}`;
     try {
       await exec(CMD, env);
@@ -174,7 +184,7 @@ describe.skip('frodo config import', () => {
     }
   });
 
-  test(`"frodo config import --default -CAD ${allSeparateCloudDirectory}" Import everything from directory "${allSeparateCloudDirectory}", including default scripts. Clean old services`, async () => {
+  test.skip(`"frodo config import --default -CAD ${allSeparateCloudDirectory}" Import everything from directory "${allSeparateCloudDirectory}", including default scripts. Clean old services`, async () => {
     const CMD = `frodo config import --default -CAD ${allSeparateCloudDirectory}`;
     try {
       await exec(CMD, env);
@@ -188,7 +198,7 @@ describe.skip('frodo config import', () => {
     }
   });
 
-  test(`"frodo config import -AD ${allSeparateCloudDirectory} --include-active-values" Import everything with secret values from directory "${allSeparateCloudDirectory}"`, async () => {
+  test.skip(`"frodo config import -AD ${allSeparateCloudDirectory} --include-active-values" Import everything with secret values from directory "${allSeparateCloudDirectory}"`, async () => {
     const CMD = `frodo config import -AD ${allSeparateCloudDirectory} --include-active-values`;
     try {
       await exec(CMD, env);
@@ -202,13 +212,13 @@ describe.skip('frodo config import', () => {
     }
   });
 
-  test(`"frodo config import -gf test/e2e/exports/all-separate/cloud/global/sync/sync.idm.json" Import sync.idm.json along with extracted mappings and no errors`, async () => {
+  test.skip(`"frodo config import -gf test/e2e/exports/all-separate/cloud/global/sync/sync.idm.json" Import sync.idm.json along with extracted mappings and no errors`, async () => {
     const CMD = `frodo config import -gf test/e2e/exports/all-separate/cloud/global/sync/sync.idm.json`;
     const { stdout } = await exec(CMD, env);
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
   });
 
-  test(`"frodo config import --file test/e2e/exports/all-separate/cloud/realm/root-alpha/script/mode.script.json" Import mode.script.json long with extracted scripts and no errors`, async () => {
+  test.skip(`"frodo config import --file test/e2e/exports/all-separate/cloud/realm/root-alpha/script/mode.script.json" Import mode.script.json long with extracted scripts and no errors`, async () => {
     const CMD = `frodo config import --file test/e2e/exports/all-separate/cloud/realm/root-alpha/script/mode.script.json`;
     const { stdout } = await exec(CMD, env);
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
@@ -282,5 +292,19 @@ describe.skip('frodo config import', () => {
     const CMD = `frodo config import -f test/e2e/exports/all-separate/classic/realm/root/webhookService/Cool-Webhook.webhookService.json -m classic`;
     const { stdout } = await exec(CMD, classicEnv);
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+  });
+
+  test(`"frodo config import -AD test/e2e/exports/all-separate/forgeops --type forgeops" Import all forgeops config with extracted idm scripts.`, async () => {
+    const CMD = `frodo config import -AD test/e2e/exports/all-separate/forgeops --type forgeops`;
+    try {
+      await exec(CMD, forgeopsEnv);
+      fail("Command should've failed");
+    } catch (e) {
+      // parallel test execution alters the progress bar output causing the snapshot to mismatch.
+      // only workable solution I could find was to remove progress bar output altogether from such tests.
+      expect(
+        removeAnsiEscapeCodes(e.stderr)
+      ).toMatchSnapshot();
+    }
   });
 });

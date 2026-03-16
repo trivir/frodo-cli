@@ -1,0 +1,21 @@
+{
+  "policy": {
+    "test0policy": {
+      "_id": "test0policy",
+      "actionValues": {},
+      "active": true,
+      "applicationName": "testPolicySet",
+      "createdBy": "id=amadmin,ou=user,ou=am-config",
+      "creationDate": "2026-02-27T18:11:55.294Z",
+      "description": "",
+      "name": "test0policy",
+      "resourceTypeUuid": "d60b7a71-1dc6-44a5-8e48-e4b9d92dee8b",
+      "resources": [
+        "*"
+      ],
+      "subject": {
+        "type": "NONE"
+      }
+    }
+  }
+}

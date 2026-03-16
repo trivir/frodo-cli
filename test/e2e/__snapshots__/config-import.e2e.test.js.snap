@@ -112,6 +112,32 @@ Error Importing Services
 "
 `;
 
+exports[`frodo config import "frodo config import -AD test/e2e/exports/all-separate/forgeops --type forgeops" Import all forgeops config with extracted idm scripts. 1`] = `
+"Error Importing Services
+  Error importing services
+    Error putting global full service configs
+      Error putting global full service config DataStoreService
+        Error putting descendent 'application-store' of service 'DataStoreService'
+          Network error:
+            URL: https://nightly.gcp.forgeops.com/am/json/global-config/services/DataStoreService/config/application-store
+            Status: 400
+            Code: ERR_BAD_REQUEST
+            Reason: Bad Request
+            Message: The request body must include 'bindPassword'.
+✔ Finished Importing Everything to global!
+✔ Resolved all / realm dependencies.
+• Finished importing / realm journeys
+✔ Finished Importing Everything to root realm!
+✔ Resolved all alpha realm dependencies.
+• Finished importing alpha realm journeys
+✔ Finished Importing Everything to root-alpha realm!
+✔ Resolved all bravo realm dependencies.
+• Finished importing bravo realm journeys
+✔ Finished Importing Everything to root-bravo realm!
+✔ Finished Importing all other AM config entities!
+"
+`;
+
 exports[`frodo config import "frodo config import -AdD test/e2e/exports/all-separate/classic -m classic" Import everything from directory "test/e2e/exports/all-separate/classic" 1`] = `
 "Connected to http://openam-frodo-dev.classic.com:8080/am [/] as user amAdmin
 Error Importing Authentication Settings
