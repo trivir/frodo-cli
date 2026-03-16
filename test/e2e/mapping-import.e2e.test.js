@@ -55,17 +55,20 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo mapping import --all --no-deps --file allMappings.mapping.json --directory test/e2e/exports/all
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo mapping import -AD test/e2e/exports/all-separate/cloud/global/idm
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo mapping import --all-separate --no-deps --directory test/e2e/exports/all-separate/cloud/global/idm
+
+// Forgeops
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo mapping import -AD test/e2e/exports/all-separate/forgeops/global/sync -m forgeops
 */
 import cp from 'child_process';
 import { promisify } from 'util';
 import { getEnv, removeAnsiEscapeCodes } from './utils/TestUtils';
-import { connection as c } from './utils/TestConfig';
+import { connection as c, forgeops_connection as fc } from './utils/TestConfig';
 
 const exec = promisify(cp.exec);
 
 process.env['FRODO_MOCK'] = '1';
 const env = getEnv(c);
-
+const forgeopsEnv =getEnv(fc);
 const allDirectory = "test/e2e/exports/all";
 const allMappingsFileName = "allMappings.mapping.json";
 const allMappingsExport = `${allDirectory}/${allMappingsFileName}`;
@@ -120,4 +123,9 @@ describe('frodo mapping import', () => {
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     });
 
+    test(`"frodo mapping import -AD test/e2e/exports/all-separate/forgeops/global/sync -m forgeops": should import all mappings from Forgeops with extracted scripts from the directory"`, async () => {
+        const CMD = `frodo mapping import -AD test/e2e/exports/all-separate/forgeops/global/sync -m forgeops`;
+        const { stdout } = await exec(CMD, forgeopsEnv);
+        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    });
 });
