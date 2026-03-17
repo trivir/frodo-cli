@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`"frodo config-manager push connector-mappings -D test/e2e/exports/fr-config-manager/forgeops -m forgeops": should import the connector mappings into cloud" 1`] = `""`;
+
+exports[`"frodo config-manager push connector-mappings -D test/e2e/exports/fr-config-manager/forgeops -m forgeops": should import the connector mappings into cloud" 2`] = `""`;

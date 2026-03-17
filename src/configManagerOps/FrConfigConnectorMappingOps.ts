@@ -1,10 +1,11 @@
 import { frodo } from '@rockcarver/frodo-lib';
+import fs from 'fs';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError } from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
-const { readConfigEntity } = frodo.idm.config;
+const { readConfigEntity, importConfigEntities } = frodo.idm.config;
 
 function processMappings(mapping, targetDir, name) {
   try {
@@ -52,6 +53,34 @@ export async function configManagerExportMappings(): Promise<boolean> {
     for (const mapping of Object.values(exportData.mappings)) {
       processMappings(mapping, `${fileDir}/${mapping.name}`, mapping.name);
     }
+    return true;
+  } catch (error) {
+    printError(error, `Error exporting mappings to files`);
+  }
+  return false;
+}
+
+/**
+ * Import all mappings in fr-config-manager format
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
+export async function configManagerImportMappings(): Promise<boolean> {
+  try {
+    const connMappingDir = getFilePath('sync/connectors/');
+    const connMappingFiles = fs.readdirSync(connMappingDir);
+    const connMappingImportData = { idm: {} };
+
+    for (const connMappingFile of connMappingFiles) {
+      const filePath = getFilePath('sync/connectors/');
+      const fileData = fs.readFileSync(
+        `${filePath}/${connMappingFile}`,
+        'utf-8'
+      );
+      const importData = JSON.parse(fileData);
+      const id = importData._id;
+      connMappingImportData.idm[id] = importData;
+    }
+    await importConfigEntities(connMappingImportData);
     return true;
   } catch (error) {
     printError(error, `Error exporting mappings to files`);
