@@ -63,7 +63,7 @@ const cloudEnv = getEnv(c);
 
 const allDirectory = "test/e2e/exports/fr-config-manager/forgeops";
 
-describe('frodo config-manager pulls', () => {
+describe('frodo config-manager push', () => {
 test(`"frodo config-manager push connector-mappings -D ${allDirectory} -m forgeops": should import the connector mappings into cloud"`, async () => {
     const CMD = `frodo config-manager push connector-mappings -D ${allDirectory} -m cloud`;
     const { stdout, stderr } = await exec(CMD, cloudEnv);
