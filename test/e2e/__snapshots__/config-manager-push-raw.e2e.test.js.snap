@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo config-manager push raw  "frodo config-manager push raw -f raw.json -D test/e2e/exports/fr-config-manager/forgeops -m forgeops": should import a specific raw by file into forgeops" 1`] = `""`;
+
+exports[`frodo config-manager push raw  "frodo config-manager push raw -f raw.json -D test/e2e/exports/fr-config-manager/forgeops -m forgeops": should import a specific raw by file into forgeops" 2`] = `""`;
