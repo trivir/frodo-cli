@@ -20,6 +20,7 @@ import Locales from './config-manager-push-locales';
 import ManagedObjects from './config-manager-push-managed-objects';
 import OrgPrivileges from './config-manager-push-org-privileges';
 import PasswordPolicy from './config-manager-push-password-policy';
+import Raw from './config-manager-push-raw';
 import RemoteServers from './config-manager-push-remote-servers';
 import Restart from './config-manager-push-restart';
 import Schedules from './config-manager-push-schedules';
@@ -64,6 +65,7 @@ export default function setup() {
   program.addCommand(Restart().name('restart'));
   program.addCommand(Journeys().name('journeys'));
   program.addCommand(Variables().name('variables'));
+  program.addCommand(Raw().name('raw'));
 
   return program;
 }
