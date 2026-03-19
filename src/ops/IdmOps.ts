@@ -847,11 +847,7 @@ export function extractIdmEndpointScript(
 ): boolean {
   for (const result of foundResults) {
     const objectFileName = getTypedFilename(id, 'script', result.type);
-    object.source = extractDataToFile(
-      result.source,
-      objectFileName,
-      directory
-    );
+    object.source = extractDataToFile(result.source, objectFileName, directory);
   }
   return false;
 }

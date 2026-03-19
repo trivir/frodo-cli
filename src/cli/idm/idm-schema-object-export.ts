@@ -53,7 +53,6 @@ export default function setup() {
         'Extract idm scripts and save the extracted scripts to separate files. Ignored with -a.'
       )
     )
-
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {

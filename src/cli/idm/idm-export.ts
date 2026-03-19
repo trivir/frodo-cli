@@ -67,7 +67,6 @@ export default function setup() {
         'Does not include metadata in the export file.'
       )
     )
-
     .addOption(
       new Option(
         '-x, --extract',
