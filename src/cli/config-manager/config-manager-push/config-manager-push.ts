@@ -24,6 +24,7 @@ import Restart from './config-manager-push-restart';
 import Schedules from './config-manager-push-schedules';
 import SecretMappings from './config-manager-push-secret-mappings';
 import ServiceObjects from './config-manager-push-service-objects';
+import Services from './config-manager-push-services';
 import TermsAndConditions from './config-manager-push-terms-and-conditions';
 import Themes from './config-manager-push-themes';
 import UiConfig from './config-manager-push-ui-config';
@@ -62,6 +63,7 @@ export default function setup() {
   program.addCommand(Restart().name('restart'));
   program.addCommand(Journeys().name('journeys'));
   program.addCommand(Variables().name('variables'));
-
+  program.addCommand(Services().name('services'));
+  
   return program;
 }
