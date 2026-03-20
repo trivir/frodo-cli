@@ -16,6 +16,7 @@ import OrgPrivileges from './config-manager-push-org-privileges';
 import PasswordPolicy from './config-manager-push-password-policy';
 import Schedules from './config-manager-push-schedules';
 import ServiceObjects from './config-manager-push-service-objects';
+import Services from './config-manager-push-services';
 import TermsAndConditions from './config-manager-push-terms-and-conditions';
 import Themes from './config-manager-push-themes';
 import UiConfig from './config-manager-push-ui-config';
@@ -45,6 +46,7 @@ export default function setup() {
   program.addCommand(Authentication().name('authentication'));
   program.addCommand(ConnectorDefinitions().name('connector-definitions'));
   program.addCommand(ConnectorMappings().name('connector-mappings'));
-
+  program.addCommand(Services().name('services'));
+  
   return program;
 }
