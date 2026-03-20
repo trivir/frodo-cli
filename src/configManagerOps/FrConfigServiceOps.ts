@@ -1,10 +1,11 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
+import fs from 'fs';
 
 import { printError } from '../utils/Console';
 import { realmList } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
-const { getFullServices } = frodo.service;
+const { getFullServices, importService } = frodo.service;
 
 /**
  * Export all services to separate files in fr-config-manager format
@@ -60,4 +61,43 @@ async function processServices(services, realm, name) {
       true
     );
   }
+}
+
+async function processImportServices(realm: string, dir?: string) {
+  if (realm !== 'alpha' && realm !== 'bravo') {
+    return [];
+  }
+  const getDir = dir ?? getFilePath(`realms/${realm}/services/`);
+  const entries = fs.readdirSync(getDir, { withFileTypes: true });
+  const results = [];
+
+  for (const entry of entries) {
+    const fullPath = `${getDir}/${entry.name}`;
+    if (entry.isDirectory()) {
+      const subResults = await processImportServices(realm, fullPath);
+      results.push(...subResults);
+    } else if (entry.name.endsWith('.json')) {
+      results.push(fullPath);
+    }
+  }
+  return results;
+}
+
+export async function configManagerImportServices(realm?): Promise<boolean> {
+  try {
+    const filePaths = await processImportServices(realm);
+    for (const filePath of filePaths) {
+      const serviceData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      const serviceId = serviceData._type._id;
+      await importService(
+        serviceId,
+        { service: { [serviceId]: { ...serviceData, location: realm } } },
+        { clean: false, global: false, realm: true }
+      );
+    }
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
 }
