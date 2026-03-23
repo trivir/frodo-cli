@@ -1,4 +1,5 @@
 import { FrodoStubCommand } from '../../FrodoCommand';
+import CSP from './config-manager-push-csp';
 import EmailProvider from './config-manager-push-email-provider';
 import Endpoints from './config-manager-push-endpoints';
 import Kba from './config-manager-push-kba';
@@ -19,6 +20,6 @@ export default function setup() {
   program.addCommand(EmailProvider().name('email-provider'));
   program.addCommand(Endpoints().name('endpoints'));
   program.addCommand(Kba().name('kba'));
-
+  program.addCommand(CSP().name('csp'));
   return program;
 }

@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo config-manager push csp "frodo config-manager push csp -D test/e2e/exports/fr-config-manager/forgeops -m cloud": should import the csp into cloud" 1`] = `""`;
+
+exports[`frodo config-manager push csp "frodo config-manager push csp -D test/e2e/exports/fr-config-manager/forgeops -m cloud": should import the csp into cloud" 2`] = `""`;
