@@ -4,6 +4,7 @@ import Audit from './config-manager-push-audit';
 import Authentication from './config-manager-push-authentication';
 import ConnectorDefinitions from './config-manager-push-connector-definitions';
 import CookieDomains from './config-manager-push-cookie-domain';
+import AuthzPolicies from './config-manager-push-authz-policies';
 import EmailProvider from './config-manager-push-email-provider';
 import EmailTemplates from './config-manager-push-email-templates';
 import Endpoints from './config-manager-push-endpoints';
@@ -43,6 +44,6 @@ export default function setup() {
   program.addCommand(UiConfig().name('ui-config'));
   program.addCommand(Authentication().name('authentication'));
   program.addCommand(ConnectorDefinitions().name('connector-definitions'));
-
+  program.addCommand(AuthzPolicies().name('authz-policies'));
   return program;
 }
