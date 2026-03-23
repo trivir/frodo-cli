@@ -8,6 +8,7 @@ import CookieDomains from './config-manager-push-cookie-domain';
 import Cors from './config-manager-push-cors';
 import CSP from './config-manager-push-csp';
 import CustomNodes from './config-manager-push-custom-nodes';
+import AuthzPolicies from './config-manager-push-authz-policies';
 import EmailProvider from './config-manager-push-email-provider';
 import EmailTemplates from './config-manager-push-email-templates';
 import Endpoints from './config-manager-push-endpoints';
@@ -64,6 +65,7 @@ export default function setup() {
   program.addCommand(Restart().name('restart'));
   program.addCommand(Journeys().name('journeys'));
   program.addCommand(Variables().name('variables'));
+  program.addCommand(AuthzPolicies().name('authz-policies'));
 
   return program;
 }
