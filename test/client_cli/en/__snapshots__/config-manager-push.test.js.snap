@@ -10,6 +10,7 @@ Options:
   -h, --help            Help
 
 Commands:
+  authz-policies        Import authorization policies from realm.
   email-provider        Import email provider configuration.
   endpoints             Import custom endpoints objects.
   help                  display help for command
