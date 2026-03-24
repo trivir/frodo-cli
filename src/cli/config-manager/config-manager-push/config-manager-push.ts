@@ -1,4 +1,5 @@
 import { FrodoStubCommand } from '../../FrodoCommand';
+import SecretMappings from './config-manager-push-secret-mappings';
 import EmailProvider from './config-manager-push-email-provider';
 import EmailTemplates from './config-manager-push-email-templates';
 import Endpoints from './config-manager-push-endpoints';
@@ -27,6 +28,7 @@ export default function setup() {
   program.addCommand(EmailTemplates().name('email-templates'));
   program.addCommand(Schedules().name('schedules'));
   program.addCommand(OrgPrivileges().name('org-privileges'));
+  program.addCommand(SecretMappings().name('secret-mappings'));
 
   return program;
 }
