@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo config-manager push authz-policies "frodo config-manager push authz-policies -D test/e2e/exports/fr-config-manager/forgeops -m forgeops": should import the authz-policies into forgeops" 1`] = `""`;
+
+exports[`frodo config-manager push authz-policies "frodo config-manager push authz-policies -n test_id -D test/e2e/exports/fr-config-manager/forgeops -m forgeops": should import a specific auth policy by name into forgeops" 1`] = `""`;
+
+exports[`frodo config-manager push authz-policies "frodo config-manager push authz-policies -r alpha -D test/e2e/exports/fr-config-manager/forgeops -m forgeops": should import a specific authz policy by name into forgeops" 1`] = `""`;
