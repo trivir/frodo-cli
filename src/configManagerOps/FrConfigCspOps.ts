@@ -1,11 +1,16 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { ContentSecurityPolicy } from '@rockcarver/frodo-lib/types/api/cloud/EnvContentSecurityPolicyApi';
 import { applyDiff } from 'deep-diff';
+import fs from 'fs';
 import { readFile } from 'fs/promises';
 
 import { printError } from '../utils/Console';
 
 const { env } = frodo.cloud;
+const {
+  updateEnforcedContentSecurityPolicy,
+  updateReportOnlyContentSecurityPolicy,
+} = frodo.cloud.env;
 const { getFilePath, saveJsonToFile } = frodo.utils;
 
 /**
@@ -34,6 +39,22 @@ export async function configManagerExportCsp(
     }
 
     saveJsonToFile(csp, getFilePath('csp/csp.json', true), false, true);
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+export async function configManagerImportCsp(): Promise<boolean> {
+  try {
+    const getCspFile = getFilePath('csp/csp.json');
+    const readCspFile = fs.readFileSync(getCspFile, 'utf8');
+    const csp = JSON.parse(readCspFile);
+
+    await updateEnforcedContentSecurityPolicy(csp.enforced);
+    await updateReportOnlyContentSecurityPolicy(csp['report-only']);
+
     return true;
   } catch (error) {
     printError(error);

@@ -10,6 +10,7 @@ Options:
   -h, --help            Help
 
 Commands:
+  csp                   Import content security policy.
   email-provider        Import email provider configuration.
   endpoints             Import custom endpoints objects.
   help                  display help for command
