@@ -4,6 +4,7 @@ import Endpoints from './config-manager-push-endpoints';
 import Kba from './config-manager-push-kba';
 import Locales from './config-manager-push-locales';
 import PasswordPolicy from './config-manager-push-password-policy';
+import Services from './config-manager-push-services';
 import TermsAndConditions from './config-manager-push-terms-and-conditions';
 import Themes from './config-manager-push-themes';
 
@@ -19,6 +20,6 @@ export default function setup() {
   program.addCommand(EmailProvider().name('email-provider'));
   program.addCommand(Endpoints().name('endpoints'));
   program.addCommand(Kba().name('kba'));
-
+  program.addCommand(Services().name('services'));
   return program;
 }

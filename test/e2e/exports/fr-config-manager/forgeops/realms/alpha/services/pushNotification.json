@@ -1,0 +1,18 @@
+{
+  "_id": "",
+  "_rev": "1527221944",
+  "_type": {
+    "_id": "pushNotification",
+    "collection": false,
+    "name": "Push Notification Service"
+  },
+  "accessKey": "AKIAVMMPFBOEKG3LF3OR",
+  "appleEndpoint": "arn:aws:sns:us-east-1:370204281736:app/APNS/A-ZzH-tjSJK3UvLk_bnnhg",
+  "delegateFactory": "org.forgerock.openam.services.push.sns.SnsHttpDelegateFactory",
+  "googleEndpoint": "arn:aws:sns:us-east-1:370204281736:app/GCM/A-ZzH-tjSJK3UvLk_bnnhg",
+  "mdCacheSize": 10000,
+  "mdConcurrency": 16,
+  "mdDuration": 120,
+  "region": "us-east-1",
+  "secret": null
+}
