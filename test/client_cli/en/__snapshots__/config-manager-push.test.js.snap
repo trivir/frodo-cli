@@ -18,5 +18,6 @@ Commands:
   password-policy       Import password-policy objects.
   terms-and-conditions  Import terms and conditions.
   themes                Import themes.
+  variables             Import variables objects.
 "
 `;

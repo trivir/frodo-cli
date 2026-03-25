@@ -1,0 +1,6 @@
+{
+  "_id": "esv-welcomehub-api-host",
+  "description": "",
+  "expressionType": "string",
+  "valueBase64": "${ESV_WELCOMEHUB_API_HOST}"
+}
