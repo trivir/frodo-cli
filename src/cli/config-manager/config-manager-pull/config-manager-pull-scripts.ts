@@ -17,6 +17,7 @@ const deploymentTypes = [
   CLOUD_DEPLOYMENT_TYPE_KEY,
   FORGEOPS_DEPLOYMENT_TYPE_KEY,
 ];
+
 const { constants } = frodo.utils;
 const { readRealms } = frodo.realm;
 

@@ -1,12 +1,13 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import { ScriptSkeleton } from '@rockcarver/frodo-lib/types/api/ScriptApi';
+import fs from 'fs';
 
 import { printError, verboseMessage } from '../utils/Console';
 import { realmList, safeFileName } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile, decodeBase64, saveTextToFile } =
   frodo.utils;
-const { readScripts, readScriptByName } = frodo.script;
+const { readScripts, readScriptByName, importScripts } = frodo.script;
 
 type ByName = { scriptName: string };
 type BySkeleton = { ss: ScriptSkeleton };
@@ -213,6 +214,60 @@ export async function configManagerExportScriptsAll(
         return false;
       }
     }
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+/**
+ * Import script in fr-config-manager format
+ * @param realm option to determine which realm to import
+ * @param name option to import a specific script by name
+ * @returns True if Import was successful
+ */
+export async function configManagerImportScripts(
+  realmName?: string,
+  name?: string
+): Promise<boolean> {
+  try {
+    const realmsDir = getFilePath('realms/');
+    const realms: string[] = realmName
+      ? [realmName]
+      : fs
+          .readdirSync(realmsDir, { withFileTypes: true })
+          .filter((entry) => entry.isDirectory())
+          .map((entry) => entry.name);
+
+    for (const realm of realms) {
+      if (!realmName) state.setRealm(realm);
+
+      const configDir = getFilePath(`realms/${realm}/scripts/scripts-config/`);
+
+      const configFiles = name ? [name] : fs.readdirSync(configDir);
+
+      const scripts = { script: {} };
+
+      for (const file of configFiles) {
+        try {
+          const configPath = `${configDir}/${file}`;
+          if (!fs.existsSync(configPath)) continue;
+          const importData = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+          const fullScriptPath = getFilePath(
+            `realms/${realm}/scripts/${importData.script.file}`
+          );
+          delete importData.script.file;
+          importData.script = fs.readFileSync(fullScriptPath, 'utf8');
+          scripts.script[importData._id] = importData;
+        } catch (error) {
+          printError(error);
+        }
+      }
+
+      await importScripts(null, null, scripts);
+    }
+
     return true;
   } catch (error) {
     printError(error);
