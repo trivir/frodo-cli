@@ -1,12 +1,13 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import { ScriptSkeleton } from '@rockcarver/frodo-lib/types/api/ScriptApi';
+import fs from 'fs';
 
 import { printError, verboseMessage } from '../utils/Console';
 import { realmList, safeFileName } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile, decodeBase64, saveTextToFile } =
   frodo.utils;
-const { readScripts, readScriptByName } = frodo.script;
+const { readScripts, readScriptByName, importScripts } = frodo.script;
 
 type ByName = { scriptName: string };
 type BySkeleton = { ss: ScriptSkeleton };
@@ -192,9 +193,12 @@ export async function configManagerExportScriptsAll(
 ): Promise<boolean> {
   try {
     for (const realm of await realmList()) {
-      if (realm === '/' &&
-          state.getDeploymentType() === frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY) continue;
-
+      if (
+        realm === '/' &&
+        state.getDeploymentType() ===
+          frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY
+      )
+        continue;
       state.setRealm(realm);
       verboseMessage(`\n${state.getRealm()} realm:`);
       if (
@@ -210,6 +214,51 @@ export async function configManagerExportScriptsAll(
       }
     }
     return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+/**
+ * Import script in fr-config-manager format
+ * @returns True if Import was successful
+ */
+export async function configManagerImportScripts(): Promise<boolean> {
+  try {
+    for (const realm of await realmList()) {
+      if (
+        realm === '/' &&
+        state.getDeploymentType() ===
+          frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY
+      )
+        continue;
+      state.setRealm(realm);
+      const configFiles = getFilePath(
+        `realms/${realm}/scripts/scripts-config/`
+      );
+
+      const configDir = fs.readdirSync(configFiles);
+      const scripts = { script: {} };
+
+      for (const file of configDir) {
+        const filePath = `${configFiles}/${file}`;
+        if (!fs.existsSync(filePath)) continue;
+        const readFile = fs.readFileSync(filePath, 'utf8');
+        const importData = JSON.parse(readFile);
+        const scriptFilePath = importData.script.file;
+        const fullScriptPath = getFilePath(
+          `realms/${realm}/scripts/${scriptFilePath}`
+        );
+        const scriptContent = fs.readFileSync(fullScriptPath, 'utf8');
+        importData.script = scriptContent;
+        scripts.script[importData._id] = importData;
+
+        await importScripts(null, null, scripts);
+      }
+
+      return true;
+    }
   } catch (error) {
     printError(error);
     return false;
