@@ -58,6 +58,7 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idm schema object export -i alpha_role -f test2.file.json -D testDir4
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idm schema object export -i alpha_group -D testDir5
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idm schema object export -AxD testDir7
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idm schema object export -xi test -D idmSchemaTestDir8
 */
 import { getEnv, testExport } from './utils/TestUtils';
 import { connection as c } from './utils/TestConfig';
@@ -133,5 +134,10 @@ describe('frodo idm schema object export', () => {
     const dirName = 'testDir7';
     const CMD = `frodo idm schema object export -AxD ${dirName}`;
     await testExport(CMD, env, type, undefined, dirName, false);
+  });
+  test('"frodo idm schema object export -xi test -D idmSchemaTestDir8": should export test object with extracted idm scripts" in the directory "idmSchemaTestDir8"', async () => {
+    const dirName = 'idmSchemaTestDir8';
+    const CMD = `frodo idm schema object export -xi test -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
   });
 });

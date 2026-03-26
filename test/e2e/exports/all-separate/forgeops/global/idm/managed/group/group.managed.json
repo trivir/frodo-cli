@@ -2,7 +2,7 @@
   "name": "group",
   "onCreate": {
     "globals": {},
-    "source": "file://group.managed.scripts/onCreate.script.js",
+    "source": "file://onCreate.js",
     "type": "text/javascript"
   },
   "schema": {

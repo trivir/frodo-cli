@@ -1,7 +1,7 @@
 import { frodo, FrodoError } from '@rockcarver/frodo-lib';
 import { type IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 import { type ConfigEntityExportInterface } from '@rockcarver/frodo-lib/types/ops/IdmConfigOps';
-import { SyncSkeleton } from '@rockcarver/frodo-lib/types/ops/MappingOps';
+import { MappingExportInterface, MappingSkeleton, SyncSkeleton } from '@rockcarver/frodo-lib/types/ops/MappingOps';
 import fs from 'fs';
 import path from 'path';
 import propertiesReader from 'properties-reader';
@@ -20,6 +20,7 @@ import {
 import {
   extractMappingScripts,
   getLegacyMappingsFromFiles,
+  writeMappingJsonToDirectory,
   writeSyncJsonToDirectory,
 } from './MappingOps';
 import { errorHandler } from './utils/OpsUtils';
@@ -100,19 +101,17 @@ export type ManagedSkeleton = IdObjectSkeletonInterface & {
  * @param {string} id the desired configuration object
  * @param {string} file optional export file name (or directory name if exporting mappings separately)
  * @param {string} envFile File that defines environment specific variables for replacement during configuration export/import
- * @param {boolean} separateMappings separate sync.idm.json mappings if true (and id is "sync"), otherwise keep them in a single file
- * @param {boolean} separateObjects separate managed.idm.json objects if true (and id is "managed"), otherwise keep them in a single file
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} extract true to extract idm script, false otherwise. Default: false
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function exportConfigEntityToFile(
   id: string,
   file?: string,
   envFile?: string,
-  separateMappings: boolean = false,
-  separateObjects: boolean = false,
   includeMeta: boolean = true,
-  extract: boolean = false
+  extract: boolean = false,
+  schemaExport?:boolean
 ): Promise<boolean> {
   try {
     const options = getIdmImportExportOptions(undefined, envFile);
@@ -120,23 +119,40 @@ export async function exportConfigEntityToFile(
       envReplaceParams: options.envReplaceParams,
       entitiesToExport: undefined,
     });
-    if ((separateMappings || extract) && id === 'sync') {
-      writeSyncJsonToDirectory(
-        exportData.idm[id] as SyncSkeleton,
-        file,
-        includeMeta,
-        extract
-      );
-      return true;
-    }
-    if ((separateObjects || extract) && id === 'managed') {
+    if(schemaExport && !extract){
       writeManagedJsonToDirectory(
-        exportData.idm[id] as ManagedSkeleton,
-        file,
-        includeMeta,
-        extract
-      );
-      return true;
+          exportData.idm[id] as ManagedSkeleton,
+          'managed',
+          includeMeta,
+          false
+        );
+        return true;
+    }
+    if (extract) {
+      if (id === 'sync') {
+        writeSyncJsonToDirectory(
+          exportData.idm[id] as SyncSkeleton,
+          'sync',
+          includeMeta,
+          extract
+        );
+        return true;
+      }
+      if (id === 'managed') {
+        writeManagedJsonToDirectory(
+          exportData.idm[id] as ManagedSkeleton,
+          'managed',
+          includeMeta,
+          extract
+        );
+        return true;
+      }
+      else {
+        const result = findScriptsFromIdm(exportData.idm[id]);
+        if (result.length !== 0) {
+          extractIdmScriptToSameLevel(id, exportData.idm[id], result, '', true);
+        }
+      }
     }
     let fileName = file;
     if (!fileName) {
@@ -160,14 +176,21 @@ export async function exportConfigEntityToFile(
 export async function exportManagedObjectToFile(
   name: string,
   file?: string,
-  envFile?: string
+  envFile?: string,
+  extract?: boolean
 ): Promise<boolean> {
   try {
     const options = getIdmImportExportOptions(undefined, envFile);
     const exportData = await readSubConfigEntity('managed', name, {
       envReplaceParams: options.envReplaceParams,
       entitiesToExport: undefined,
-    });
+    }) as ObjectSkeleton;
+    if (extract) {
+      const result = findScriptsFromIdm(exportData);
+      if (result.length !== 0) {
+        extractIdmScriptsForManaged(exportData.name, exportData, result);
+      }
+    }
 
     let fileName = file;
     if (!fileName) {
@@ -220,15 +243,11 @@ export async function exportAllConfigEntitiesToFile(
  * Export all IDM configuration objects to separate files
  * @param {string} entitiesFile JSON file that specifies the config entities to export/import
  * @param {string} envFile File that defines environment specific variables for replacement during configuration export/import
- * @param {boolean} separateMappings separate sync.idm.json mappings if true, otherwise keep them in a single file
- * @param {boolean} separateObjects separate managed.idm.json objects if true, otherwise keep them in a single file
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function exportAllConfigEntitiesToFiles(
   entitiesFile?: string,
   envFile?: string,
-  separateMappings: boolean = false,
-  separateObjects: boolean = false,
   includeMeta: boolean = true,
   extract: boolean = false
 ): Promise<boolean> {
@@ -245,7 +264,7 @@ export async function exportAllConfigEntitiesToFiles(
     for (const [id, obj] of Object.entries(exportData.idm)) {
       if (obj) {
         try {
-          if ((separateMappings || extract) && id === 'sync') {
+          if (extract && id === 'sync') {
             writeSyncJsonToDirectory(
               obj as SyncSkeleton,
               'sync',
@@ -254,7 +273,7 @@ export async function exportAllConfigEntitiesToFiles(
             );
             continue;
           }
-          if ((separateObjects || extract) && id === 'managed') {
+          else if (extract && id === 'managed') {
             writeManagedJsonToDirectory(
               obj as ManagedSkeleton,
               'managed',
@@ -263,49 +282,29 @@ export async function exportAllConfigEntitiesToFiles(
             );
             continue;
           }
-          if (extract && (id !== 'sync' || 'managed')) {
-            if (id.includes('endpoint/')) {
+          else if (extract && id.includes('mapping/')) {
+            writeMappingJsonToDirectory(
+              obj as MappingSkeleton,
+              'mapping',
+              includeMeta,
+              extract
+            );
+          }
+          else {
+            if (extract) {
               const result = findScriptsFromIdm(obj);
               if (result.length !== 0) {
-                const endpointId = id.replace('endpoint/', '');
-                extractIdmEndpointScript(endpointId, obj, result, `endpoint/`);
-              }
-            } else if (id.includes('schedule/')) {
-              const result = findScriptsFromIdm(obj);
-              if (result.length !== 0) {
-                const scheduleId = id.replace('schedule/', '');
-                extractIdmScriptToSameLevel(
-                  scheduleId,
-                  obj,
-                  result,
-                  `schedule/`
-                );
-              }
-            } else if (id.includes('mapping/')) {
-              const result = findScriptsFromIdm(obj);
-              if (result.length !== 0) {
-                const mappingId = id.replace('mapping/', '');
-                extractMappingScripts(
-                  `${mappingId}.mapping.script`,
-                  obj,
-                  result,
-                  `mapping/`
-                );
-              }
-            } else {
-              const result = findScriptsFromIdm(obj);
-              if (result.length !== 0) {
-                extractIdmScriptsToFolder(`${id}.idm.scripts`, obj, result);
+                extractIdmScriptToSameLevel(id, obj, result);
               }
             }
+            saveToFile(
+              'idm',
+              obj,
+              '_id',
+              getFilePath(`${id}.idm.json`, true),
+              includeMeta
+            );
           }
-          saveToFile(
-            'idm',
-            obj,
-            '_id',
-            getFilePath(`${id}.idm.json`, true),
-            includeMeta
-          );
         } catch (error) {
           errors.push(
             new FrodoError(`Error saving config entity ${id}`, error)
@@ -445,7 +444,7 @@ export async function importFirstConfigEntityFromFile(
 
     const parsed = JSON.parse(fileData);
     const allEntities = Object.entries(parsed.idm)
-      .filter(([id]) => id !== 'meta') // ✅ "meta" 필터링
+      .filter(([id]) => id !== 'meta')
       .map(([, val]) => val) as IdObjectSkeletonInterface[];
 
     if (allEntities.length === 0) {
@@ -524,7 +523,9 @@ export async function importAllConfigEntitiesFromFile(
   let filePath;
   try {
     filePath = getFilePath(file);
+    const baseDir = path.dirname(filePath);
     const importData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    resolveAllExtractedScriptsForImport(importData, baseDir);
     indicatorId = createProgressIndicator(
       'indeterminate',
       0,
@@ -603,7 +604,7 @@ export async function importManagedObjectFromFile(
   return false;
 }
 /**
- * Import all Idm configuration objects from working directory
+ * Import all IDM configuration objects from working directory
  * @param {string} entitiesFile JSON file that specifies the config entities to export/import
  * @param {string} envFile File that defines environment specific variables for replacement during configuration export/import
  * @param {boolean} validate True to validate script hooks. Default: false
@@ -777,17 +778,17 @@ export function writeManagedJsonToDirectory(
 ) {
   const objectPaths = [];
   for (const object of managed.objects) {
+    const fileName = getTypedFilename(object.name, 'managed');
     if (extract) {
       const result = findScriptsFromIdm(object);
       if (result.length !== 0) {
-        const dirName = getTypedFilename(object.name, 'managed', 'scripts');
-        // getFilePath(`${directory}/${dirName}`, true);
-        extractIdmScriptsToFolder(dirName, object, result, `${directory}/`);
-        //dirname= oobject name +
+        extractIdmScriptsForManaged(object.name, object, result, `${directory}/`);
       }
+      objectPaths.push(extractDataToFile(object, `${object.name}/${fileName}`, directory));
     }
-    const fileName = getTypedFilename(object.name, 'managed');
-    objectPaths.push(extractDataToFile(object, fileName, directory));
+    else {
+      objectPaths.push(extractDataToFile(object, fileName, directory));
+    }
   }
   managed.objects = objectPaths;
   saveToFile(
@@ -799,18 +800,20 @@ export function writeManagedJsonToDirectory(
   );
 }
 
-export function extractIdmScriptsToFolder(
+export function extractIdmScriptsForManaged(
   id: string,
   object: any,
   foundResults,
   directory?: string
 ): boolean {
+  directory = directory ? `${directory}/${id}` : '';
   for (const result of foundResults) {
+    const managedObjectPath = result.path.replace('schema.', '').replaceAll('properties.', '');
     const sourceObj = getObjectByPath(object, result.path);
-    const objectFileName = getTypedFilename(result.path, 'script', result.type);
+    const objectFileName = `${managedObjectPath}.${result.type}`;
     sourceObj.source = extractDataToFile(
       result.source,
-      `${id}/${objectFileName}`,
+      objectFileName,
       directory
     );
   }
@@ -821,16 +824,32 @@ export function extractIdmScriptToSameLevel(
   id: string,
   object: any,
   foundResults: any,
-  directory?: string
+  directory?: string,
+  noSubDirectory?: boolean
 ): boolean {
+  const idmId = id.split("/");
+  var objectFileName = "";
+  var sourceObject = object;
+  if (idmId.length > 1) {
+    id = idmId[1];
+    if (noSubDirectory) {
+      directory = '';
+    }
+    else {
+      directory = directory ? `${directory}${idmId[0]}` : idmId[0];
+    }
+  }
   for (const result of foundResults) {
-    const sourceObj = getObjectByPath(object, result.path);
-    const objectFileName = getTypedFilename(
-      `${id}.${result.path}`,
-      'script',
-      result.type
-    );
-    sourceObj.source = extractDataToFile(
+    // const sourceObject = getObjectByPath(object, result.path);
+    if (!result.path) {
+      objectFileName = `${id}.${result.type}`;
+      sourceObject = object;
+    }
+    else {
+      objectFileName = `${id}.${result.path}.${result.type}`;
+      sourceObject = getObjectByPath(object, result.path);
+    }
+    sourceObject.source = extractDataToFile(
       result.source,
       objectFileName,
       directory
@@ -839,18 +858,6 @@ export function extractIdmScriptToSameLevel(
   return false;
 }
 
-export function extractIdmEndpointScript(
-  id: string,
-  object: any,
-  foundResults: any,
-  directory?: string
-): boolean {
-  for (const result of foundResults) {
-    const objectFileName = getTypedFilename(id, 'script', result.type);
-    object.source = extractDataToFile(result.source, objectFileName, directory);
-  }
-  return false;
-}
 
 /**
  * Helper that returns the managed.idm.json object containing all the mappings in it by looking through the files
@@ -888,7 +895,7 @@ export function getManagedObjectsFromFiles(
         } else {
           resolvedObject = object;
         }
-        resolveAllExtractedScriptsForImport(resolvedObject, managedJsonDir);
+        resolveAllExtractedScriptsForImport(resolvedObject, `${managedJsonDir}/${resolvedObject.name}`);
         managed.objects.push(resolvedObject);
       }
     }

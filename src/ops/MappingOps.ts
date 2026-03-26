@@ -55,47 +55,41 @@ export function extractMappingScripts(
   id: string,
   mapping: any,
   foundResult,
-  directory: string
+  directory?: string
 ): boolean {
+  directory = directory ? `${directory}/${id}` : '';
   for (const behavior of foundResult) {
     if (getTopString(behavior.path) === 'policies') {
       const situation = getObjectByPathExcludeLast(
         mapping,
         behavior.path
       ).situation;
-      const fileName = `policies.${situation}.${getLastString(behavior.path)}`;
+      const fileName = `${situation}.${getLastString(behavior.path)}`;
       const objectSource = getObjectByPath(mapping, behavior.path);
-      saveMappingScript(
-        id,
-        objectSource,
-        fileName,
-        behavior.type,
+      objectSource.source = extractDataToFile(
         behavior.source,
+        `${fileName}.${behavior.type}`,
         directory
       );
+
     } else if (getTopString(behavior.path) === 'properties') {
       let source = getObjectByPathExcludeLast(mapping, behavior.path).source;
       if (!source) source = 'SOURCE';
       let target = getObjectByPathExcludeLast(mapping, behavior.path).target;
       if (!target) target = 'TARGET';
-      const fileName = `properties.${source}.${target}.${getLastString(behavior.path)}`;
+      const fileName = `${source}.${target}.${getLastString(behavior.path)}`;
       const objectSource = getObjectByPath(mapping, behavior.path);
-      saveMappingScript(
-        id,
-        objectSource,
-        fileName,
-        behavior.type,
+
+      objectSource.source = extractDataToFile(
         behavior.source,
+        `${fileName}.${behavior.type}`,
         directory
       );
     } else {
-      const objectSource = getObjectByPath(mapping, behavior.path);
-      saveMappingScript(
-        id,
-        objectSource,
-        behavior.path,
-        behavior.type,
+      const objectSource = getObjectByPath(mapping, behavior.path); 
+      objectSource.source = extractDataToFile(
         behavior.source,
+        `${behavior.path}.${behavior.type}`,
         directory
       );
     }
@@ -103,27 +97,6 @@ export function extractMappingScripts(
   return false;
 }
 
-function saveMappingScript(
-  id: string,
-  object: any,
-  fileName: string,
-  type: string,
-  script?: string,
-  directory?: string
-): boolean {
-  try {
-    const objectFileName = getTypedFilename(fileName, 'script', type);
-    object.source = extractDataToFile(
-      script,
-      `${id}/${objectFileName}`,
-      directory
-    );
-    return true;
-  } catch (error) {
-    printError(error);
-  }
-  return false;
-}
 /**
  * List mappings
  * @param {boolean} [long=false] detailed list
@@ -178,6 +151,7 @@ export async function exportMappingToFile(
   mappingId: string,
   file: string,
   includeMeta: boolean = true,
+  extract:boolean= false,
   options: MappingExportOptions = {
     deps: true,
     useStringArrays: true,
@@ -185,9 +159,25 @@ export async function exportMappingToFile(
 ): Promise<boolean> {
   try {
     const exportData = await exportMapping(mappingId, options);
+    const mappingName= getMappingNameFromId(mappingId);
+    const mappingType= getMappingTypeFromId(mappingId)
+    if(extract){
+      if(mappingType === 'sync'){
+        const result = findScriptsFromIdm(exportData.sync.mappings[0]);
+      if (result.length !== 0) {
+          extractMappingScripts(mappingName, exportData.sync.mappings[0], result);
+        }
+      }
+        else{
+          const result = findScriptsFromIdm(exportData.mapping[mappingId]);
+            if (result.length !== 0) {
+          extractMappingScripts(mappingName, exportData.mapping[mappingId], result);
+        }
+      }
+    }
     let fileName = getTypedFilename(
-      getMappingNameFromId(mappingId),
-      getMappingTypeFromId(mappingId)
+      mappingName,
+      mappingType    
     );
     if (file) {
       fileName = file;
@@ -245,13 +235,14 @@ export async function exportMappingsToFiles(
 ): Promise<boolean> {
   try {
     const exportData = await exportMappings(options);
-    writeMappingJsonToDirectory(
-      exportData.mapping,
+    for (const mapping of Object.values(exportData.mapping)){
+      writeMappingJsonToDirectory(
+        mapping,
       'mapping',
       includeMeta,
       extract
     );
-
+    }
     writeSyncJsonToDirectory(exportData.sync, 'sync', includeMeta, extract);
     return true;
   } catch (error) {
@@ -570,16 +561,20 @@ export function writeSyncJsonToDirectory(
 ) {
   const mappingPaths = [];
   for (const mapping of sync.mappings) {
+    const fileName = getTypedFilename(mapping.name, 'sync');
+
     if (extract) {
       const result = findScriptsFromIdm(mapping);
       if (result.length !== 0) {
-        const dirName = getTypedFilename(mapping.name, 'sync', 'scripts');
         //getFilePath(`${directory}/${dirName}`, true);
-        extractMappingScripts(dirName, mapping, result, `${directory}/`);
+        extractMappingScripts(mapping.name, mapping, result, `${directory}/`);
       }
+    const extractFileName = `${mapping.name}/${fileName}`
+    mappingPaths.push(extractDataToFile(mapping, extractFileName, directory));
     }
-    const fileName = getTypedFilename(mapping.name, 'sync');
-    mappingPaths.push(extractDataToFile(mapping, fileName, directory));
+    else{
+      mappingPaths.push(extractDataToFile(mapping,  fileName, directory));
+    }
   }
   sync.mappings = mappingPaths;
   saveToFile(
@@ -592,26 +587,21 @@ export function writeSyncJsonToDirectory(
 }
 
 export function writeMappingJsonToDirectory(
-  mappings: Record<string, MappingSkeleton>,
+  mapping:MappingSkeleton,
   directory: string = 'mapping',
   includeMeta: boolean,
   extract: boolean
 ) {
-  for (const mapping of Object.values(mappings)) {
     if (extract) {
       const result = findScriptsFromIdm(mapping);
       if (result.length !== 0) {
-        const dirName = getTypedFilename(
-          mapping.name,
-          getMappingTypeFromId(mapping._id),
-          'scripts'
-        );
-        extractMappingScripts(dirName, mapping, result, `${directory}/`);
+        extractMappingScripts(mapping.name, mapping, result,`${directory}/`);
       }
+      directory = `${directory}/${mapping.name}`
     }
     const fileName = getTypedFilename(
-      mapping.name,
-      getMappingTypeFromId(mapping._id)
+      mapping.name, //mappingTest
+      'mapping'    
     );
     saveToFile(
       getMappingTypeFromId(mapping._id),
@@ -620,7 +610,6 @@ export function writeMappingJsonToDirectory(
       getFilePath(`${directory}/${fileName}`, true),
       includeMeta
     );
-  }
 }
 
 /**
@@ -653,7 +642,7 @@ export function getLegacyMappingsFromFiles(
         } else {
           resolvedMapping = mapping;
         }
-        resolveAllExtractedScriptsForImport(resolvedMapping, syncJsonDir);
+        resolveAllExtractedScriptsForImport(resolvedMapping, `${syncJsonDir}/${resolvedMapping.name}`);
         sync.mappings.push(resolvedMapping);
       }
     }

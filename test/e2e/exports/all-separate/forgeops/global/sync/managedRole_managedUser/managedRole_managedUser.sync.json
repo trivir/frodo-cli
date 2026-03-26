@@ -1,9 +1,9 @@
 {
-  "_id": "sync/managedUser_managedGroup",
+  "_id": "sync/managedRole_managedUser",
   "consentRequired": false,
-  "displayName": "managedUser_managedGroup",
+  "displayName": "managedRole_managedUser",
   "icon": null,
-  "name": "managedUser_managedGroup",
+  "name": "managedRole_managedUser",
   "policies": [
     {
       "action": "ASYNC",
@@ -60,10 +60,25 @@
   ],
   "properties": [
     {
-      "target": "name"
+      "source": "name",
+      "target": "mail",
+      "transform": {
+        "globals": {},
+        "source": "file://name.mail.transform.js",
+        "type": "text/javascript"
+      }
+    },
+    {
+      "target": "sn"
+    },
+    {
+      "target": "givenName"
+    },
+    {
+      "target": "userName"
     }
   ],
-  "source": "managed/user",
+  "source": "managed/role",
   "syncAfter": [],
-  "target": "managed/group"
+  "target": "managed/user"
 }

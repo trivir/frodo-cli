@@ -58,6 +58,7 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 
 // ForgeOps
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo idm import -AD test/e2e/exports/all-separate/forgeops/global/idm -m forgeops
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo idm import -f test/e2e/exports/all-separate/forgeops/global/idm/endpoint/testEndpoint.idm.json -m forgeops
 */
 import cp from 'child_process';
 import { promisify } from 'util';
@@ -137,6 +138,11 @@ describe('frodo idm import', () => {
     });
     test(`"frodo idm import -AD test/e2e/exports/all-separate/forgeops/global/idm -m forgeops": Should import idm config with extracted script files on forgeops tenanat."`, async () => {
         const CMD = `frodo idm import -AD test/e2e/exports/all-separate/forgeops/global/idm -m forgeops`;
+        const { stdout } = await exec(CMD, forgeopsEnv);
+        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    });
+    test(`"frodo idm import -f test/e2e/exports/all-separate/forgeops/global/idm/endpoint/testEndpoint.idm.json -m forgeops": Should import idm config with extracted script files on forgeops tenanat."`, async () => {
+        const CMD = `frodo idm import -f test/e2e/exports/all-separate/forgeops/global/idm/endpoint/testEndpoint.idm.json -m forgeops`;
         const { stdout } = await exec(CMD, forgeopsEnv);
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     });

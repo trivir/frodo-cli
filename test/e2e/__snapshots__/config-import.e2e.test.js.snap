@@ -113,27 +113,228 @@ Error Importing Services
 `;
 
 exports[`frodo config import "frodo config import -AD test/e2e/exports/all-separate/forgeops --type forgeops" Import all forgeops config with extracted idm scripts. 1`] = `
-"Error Importing Services
-  Error importing services
-    Error putting global full service configs
-      Error putting global full service config DataStoreService
-        Error putting descendent 'application-store' of service 'DataStoreService'
-          Network error:
-            URL: https://nightly.gcp.forgeops.com/am/json/global-config/services/DataStoreService/config/application-store
-            Status: 400
-            Code: ERR_BAD_REQUEST
-            Reason: Bad Request
-            Message: The request body must include 'bindPassword'.
+"Errored ➞ PUT https://nightly.gcp.forgeops.com/openidm/config/mapping/managedUser_managedGroup _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://nightly.gcp.forgeops.com/openidm/config/mapping/managedUser_managedGroup",
+  "method": "PUT",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-30",
+    "x-forgerock-transactionid": "frodo-1269e4c2-d4e0-4578-b62b-3601076fd8f8",
+    "authorization": "Bearer <access token>",
+    "content-length": "939",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "nightly.gcp.forgeops.com"
+  },
+  "body": "{\\"_id\\":\\"mapping/managedUser_managedGroup\\",\\"consentRequired\\":false,\\"displayName\\":\\"managedUser_managedGroup\\",\\"icon\\":null,\\"name\\":\\"managedUser_managedGroup\\",\\"policies\\":[{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ABSENT\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ALL_GONE\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"AMBIGUOUS\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"CONFIRMED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND_ALREADY_LINKED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"LINK_ONLY\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"TARGET_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNASSIGNED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNQUALIFIED\\"}],\\"properties\\":[{\\"source\\":\\"city\\",\\"target\\":\\"name\\",\\"transform\\":{\\"globals\\":{},\\"source\\":\\"// extract script test \\\\nsource\\\\n\\",\\"type\\":\\"text/javascript\\"}}],\\"source\\":\\"managed/user\\",\\"target\\":\\"managed/group\\"}",
+  "recordingName": "config/import/0_AD_type/openidm",
+  "id": "68da4eee6cdfa1199ce90abc7fccda69",
+  "order": 0,
+  "identifiers": {
+    "method": "PUT",
+    "body": "{\\"_id\\":\\"mapping/managedUser_managedGroup\\",\\"consentRequired\\":false,\\"displayName\\":\\"managedUser_managedGroup\\",\\"icon\\":null,\\"name\\":\\"managedUser_managedGroup\\",\\"policies\\":[{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ABSENT\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ALL_GONE\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"AMBIGUOUS\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"CONFIRMED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND_ALREADY_LINKED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"LINK_ONLY\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"TARGET_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNASSIGNED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNQUALIFIED\\"}],\\"properties\\":[{\\"source\\":\\"city\\",\\"target\\":\\"name\\",\\"transform\\":{\\"globals\\":{},\\"source\\":\\"// extract script test \\\\nsource\\\\n\\",\\"type\\":\\"text/javascript\\"}}],\\"source\\":\\"managed/user\\",\\"target\\":\\"managed/group\\"}",
+    "url": "/openidm/config/mapping/managedUser_managedGroup"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:142821:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:156602:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:156591:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:156475:7)
+Errored ➞ PUT https://nightly.gcp.forgeops.com/openidm/config/sync _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://nightly.gcp.forgeops.com/openidm/config/sync",
+  "method": "PUT",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-30",
+    "x-forgerock-transactionid": "frodo-1269e4c2-d4e0-4578-b62b-3601076fd8f8",
+    "authorization": "Bearer <access token>",
+    "content-length": "1852",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "nightly.gcp.forgeops.com"
+  },
+  "body": "{\\"mappings\\":[{\\"_id\\":\\"sync/managedUser_managedGroup\\",\\"consentRequired\\":false,\\"displayName\\":\\"managedUser_managedGroup\\",\\"icon\\":null,\\"name\\":\\"managedUser_managedGroup\\",\\"policies\\":[{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ABSENT\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ALL_GONE\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"AMBIGUOUS\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"CONFIRMED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND_ALREADY_LINKED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"LINK_ONLY\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"TARGET_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNASSIGNED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNQUALIFIED\\"}],\\"properties\\":[{\\"target\\":\\"name\\"}],\\"source\\":\\"managed/user\\",\\"syncAfter\\":[],\\"target\\":\\"managed/group\\"},{\\"_id\\":\\"sync/managedRole_managedUser\\",\\"consentRequired\\":false,\\"displayName\\":\\"managedRole_managedUser\\",\\"icon\\":null,\\"name\\":\\"managedRole_managedUser\\",\\"policies\\":[{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ABSENT\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ALL_GONE\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"AMBIGUOUS\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"CONFIRMED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND_ALREADY_LINKED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"LINK_ONLY\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"TARGET_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNASSIGNED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNQUALIFIED\\"}],\\"properties\\":[{\\"source\\":\\"name\\",\\"target\\":\\"mail\\",\\"transform\\":{\\"globals\\":{},\\"source\\":\\"//test script\\\\nsource\\\\n\\",\\"type\\":\\"text/javascript\\"}},{\\"target\\":\\"sn\\"},{\\"target\\":\\"givenName\\"},{\\"target\\":\\"userName\\"}],\\"source\\":\\"managed/role\\",\\"syncAfter\\":[],\\"target\\":\\"managed/user\\"}]}",
+  "recordingName": "config/import/0_AD_type/openidm",
+  "id": "8e76b5843e7a4d10d574d1cbf0931238",
+  "order": 0,
+  "identifiers": {
+    "method": "PUT",
+    "body": "{\\"mappings\\":[{\\"_id\\":\\"sync/managedUser_managedGroup\\",\\"consentRequired\\":false,\\"displayName\\":\\"managedUser_managedGroup\\",\\"icon\\":null,\\"name\\":\\"managedUser_managedGroup\\",\\"policies\\":[{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ABSENT\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ALL_GONE\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"AMBIGUOUS\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"CONFIRMED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND_ALREADY_LINKED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"LINK_ONLY\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"TARGET_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNASSIGNED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNQUALIFIED\\"}],\\"properties\\":[{\\"target\\":\\"name\\"}],\\"source\\":\\"managed/user\\",\\"syncAfter\\":[],\\"target\\":\\"managed/group\\"},{\\"_id\\":\\"sync/managedRole_managedUser\\",\\"consentRequired\\":false,\\"displayName\\":\\"managedRole_managedUser\\",\\"icon\\":null,\\"name\\":\\"managedRole_managedUser\\",\\"policies\\":[{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ABSENT\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ALL_GONE\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"AMBIGUOUS\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"CONFIRMED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND_ALREADY_LINKED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"LINK_ONLY\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"TARGET_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNASSIGNED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNQUALIFIED\\"}],\\"properties\\":[{\\"source\\":\\"name\\",\\"target\\":\\"mail\\",\\"transform\\":{\\"globals\\":{},\\"source\\":\\"//test script\\\\nsource\\\\n\\",\\"type\\":\\"text/javascript\\"}},{\\"target\\":\\"sn\\"},{\\"target\\":\\"givenName\\"},{\\"target\\":\\"userName\\"}],\\"source\\":\\"managed/role\\",\\"syncAfter\\":[],\\"target\\":\\"managed/user\\"}]}",
+    "url": "/openidm/config/sync"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:142821:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:156602:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:156591:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:156475:7)
+Error Importing Mappings
+  Error importing mappings
+    Error updating mapping mapping/managedUser_managedGroup
+      [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://nightly.gcp.forgeops.com/openidm/config/mapping/managedUser_managedGroup",
+  "method": "PUT",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-30",
+    "x-forgerock-transactionid": "frodo-1269e4c2-d4e0-4578-b62b-3601076fd8f8",
+    "authorization": "Bearer <access token>",
+    "content-length": "939",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "nightly.gcp.forgeops.com"
+  },
+  "body": "{\\"_id\\":\\"mapping/managedUser_managedGroup\\",\\"consentRequired\\":false,\\"displayName\\":\\"managedUser_managedGroup\\",\\"icon\\":null,\\"name\\":\\"managedUser_managedGroup\\",\\"policies\\":[{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ABSENT\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ALL_GONE\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"AMBIGUOUS\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"CONFIRMED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND_ALREADY_LINKED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"LINK_ONLY\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"TARGET_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNASSIGNED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNQUALIFIED\\"}],\\"properties\\":[{\\"source\\":\\"city\\",\\"target\\":\\"name\\",\\"transform\\":{\\"globals\\":{},\\"source\\":\\"// extract script test \\\\nsource\\\\n\\",\\"type\\":\\"text/javascript\\"}}],\\"source\\":\\"managed/user\\",\\"target\\":\\"managed/group\\"}",
+  "recordingName": "config/import/0_AD_type/openidm",
+  "id": "68da4eee6cdfa1199ce90abc7fccda69",
+  "order": 0,
+  "identifiers": {
+    "method": "PUT",
+    "body": "{\\"_id\\":\\"mapping/managedUser_managedGroup\\",\\"consentRequired\\":false,\\"displayName\\":\\"managedUser_managedGroup\\",\\"icon\\":null,\\"name\\":\\"managedUser_managedGroup\\",\\"policies\\":[{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ABSENT\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ALL_GONE\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"AMBIGUOUS\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"CONFIRMED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND_ALREADY_LINKED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"LINK_ONLY\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"TARGET_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNASSIGNED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNQUALIFIED\\"}],\\"properties\\":[{\\"source\\":\\"city\\",\\"target\\":\\"name\\",\\"transform\\":{\\"globals\\":{},\\"source\\":\\"// extract script test \\\\nsource\\\\n\\",\\"type\\":\\"text/javascript\\"}}],\\"source\\":\\"managed/user\\",\\"target\\":\\"managed/group\\"}",
+    "url": "/openidm/config/mapping/managedUser_managedGroup"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    Error updating sync mapping sync/managedRole_managedUser
+      [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://nightly.gcp.forgeops.com/openidm/config/sync",
+  "method": "PUT",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-30",
+    "x-forgerock-transactionid": "frodo-1269e4c2-d4e0-4578-b62b-3601076fd8f8",
+    "authorization": "Bearer <access token>",
+    "content-length": "1852",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "nightly.gcp.forgeops.com"
+  },
+  "body": "{\\"mappings\\":[{\\"_id\\":\\"sync/managedUser_managedGroup\\",\\"consentRequired\\":false,\\"displayName\\":\\"managedUser_managedGroup\\",\\"icon\\":null,\\"name\\":\\"managedUser_managedGroup\\",\\"policies\\":[{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ABSENT\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ALL_GONE\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"AMBIGUOUS\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"CONFIRMED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND_ALREADY_LINKED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"LINK_ONLY\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"TARGET_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNASSIGNED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNQUALIFIED\\"}],\\"properties\\":[{\\"target\\":\\"name\\"}],\\"source\\":\\"managed/user\\",\\"syncAfter\\":[],\\"target\\":\\"managed/group\\"},{\\"_id\\":\\"sync/managedRole_managedUser\\",\\"consentRequired\\":false,\\"displayName\\":\\"managedRole_managedUser\\",\\"icon\\":null,\\"name\\":\\"managedRole_managedUser\\",\\"policies\\":[{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ABSENT\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ALL_GONE\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"AMBIGUOUS\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"CONFIRMED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND_ALREADY_LINKED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"LINK_ONLY\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"TARGET_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNASSIGNED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNQUALIFIED\\"}],\\"properties\\":[{\\"source\\":\\"name\\",\\"target\\":\\"mail\\",\\"transform\\":{\\"globals\\":{},\\"source\\":\\"//test script\\\\nsource\\\\n\\",\\"type\\":\\"text/javascript\\"}},{\\"target\\":\\"sn\\"},{\\"target\\":\\"givenName\\"},{\\"target\\":\\"userName\\"}],\\"source\\":\\"managed/role\\",\\"syncAfter\\":[],\\"target\\":\\"managed/user\\"}]}",
+  "recordingName": "config/import/0_AD_type/openidm",
+  "id": "8e76b5843e7a4d10d574d1cbf0931238",
+  "order": 0,
+  "identifiers": {
+    "method": "PUT",
+    "body": "{\\"mappings\\":[{\\"_id\\":\\"sync/managedUser_managedGroup\\",\\"consentRequired\\":false,\\"displayName\\":\\"managedUser_managedGroup\\",\\"icon\\":null,\\"name\\":\\"managedUser_managedGroup\\",\\"policies\\":[{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ABSENT\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ALL_GONE\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"AMBIGUOUS\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"CONFIRMED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND_ALREADY_LINKED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"LINK_ONLY\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"TARGET_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNASSIGNED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNQUALIFIED\\"}],\\"properties\\":[{\\"target\\":\\"name\\"}],\\"source\\":\\"managed/user\\",\\"syncAfter\\":[],\\"target\\":\\"managed/group\\"},{\\"_id\\":\\"sync/managedRole_managedUser\\",\\"consentRequired\\":false,\\"displayName\\":\\"managedRole_managedUser\\",\\"icon\\":null,\\"name\\":\\"managedRole_managedUser\\",\\"policies\\":[{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ABSENT\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"ALL_GONE\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"AMBIGUOUS\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"CONFIRMED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"FOUND_ALREADY_LINKED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"LINK_ONLY\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"SOURCE_MISSING\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"TARGET_IGNORED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNASSIGNED\\"},{\\"action\\":\\"ASYNC\\",\\"situation\\":\\"UNQUALIFIED\\"}],\\"properties\\":[{\\"source\\":\\"name\\",\\"target\\":\\"mail\\",\\"transform\\":{\\"globals\\":{},\\"source\\":\\"//test script\\\\nsource\\\\n\\",\\"type\\":\\"text/javascript\\"}},{\\"target\\":\\"sn\\"},{\\"target\\":\\"givenName\\"},{\\"target\\":\\"userName\\"}],\\"source\\":\\"managed/role\\",\\"syncAfter\\":[],\\"target\\":\\"managed/user\\"}]}",
+    "url": "/openidm/config/sync"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
 ✔ Finished Importing Everything to global!
-✔ Resolved all / realm dependencies.
-• Finished importing / realm journeys
 ✔ Finished Importing Everything to root realm!
-✔ Resolved all alpha realm dependencies.
-• Finished importing alpha realm journeys
-✔ Finished Importing Everything to root-alpha realm!
-✔ Resolved all bravo realm dependencies.
-• Finished importing bravo realm journeys
-✔ Finished Importing Everything to root-bravo realm!
 ✔ Finished Importing all other AM config entities!
 "
 `;

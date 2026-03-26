@@ -49,5 +49,13 @@
         ]
       }
     }
+  },
+  "meta": {
+    "exportDate": "2026-03-26T01:24:58.314Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-30 [v24.13.0]",
+    "exportedBy": "amadmin",
+    "origin": "https://platform.dev.trivir.com/am",
+    "originAmVersion": "8.0.1"
   }
 }

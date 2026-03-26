@@ -16,4 +16,6 @@ exports[`frodo mapping import "frodo mapping import -af test/e2e/exports/all/all
 
 exports[`frodo mapping import "frodo mapping import -f test/e2e/exports/all/allMappings.mapping.json": should import the first mapping from the file "test/e2e/exports/all/allMappings.mapping.json" 1`] = `""`;
 
+exports[`frodo mapping import "frodo mapping import -f test/e2e/exports/all-separate/forgeops/global/mapping/managedUser_managedGroup/managedUser_managedGroup.mapping.json -m forgeops": should import one mappings from Forgeops with extracted scripts." 1`] = `""`;
+
 exports[`frodo mapping import "frodo mapping import -i sync/managedAlpha_application_managedBravo_application -f test/e2e/exports/all/allMappings.mapping.json": should import the mapping with the id "sync/managedAlpha_application_managedBravo_application" from the file "test/e2e/exports/all/allMappings.mapping.json" 1`] = `""`;

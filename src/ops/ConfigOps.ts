@@ -6,7 +6,7 @@ import {
   FullImportOptions,
   FullRealmExportInterface,
 } from '@rockcarver/frodo-lib/types/ops/ConfigOps';
-import { SyncSkeleton } from '@rockcarver/frodo-lib/types/ops/MappingOps';
+import { MappingSkeleton, SyncSkeleton } from '@rockcarver/frodo-lib/types/ops/MappingOps';
 import { CustomNodeExportInterface } from '@rockcarver/frodo-lib/types/ops/NodeOps';
 import { ScriptExportInterface } from '@rockcarver/frodo-lib/types/ops/ScriptOps';
 import fs from 'fs';
@@ -19,15 +19,12 @@ import {
 import { cleanupProgressIndicators, printError } from '../utils/Console';
 import { saveServersToFiles } from './classic/ServerOps';
 import {
-  extractIdmEndpointScript,
-  extractIdmScriptsToFolder,
   extractIdmScriptToSameLevel,
   findScriptsFromIdm,
   ManagedSkeleton,
   writeManagedJsonToDirectory,
 } from './IdmOps';
 import {
-  extractMappingScripts,
   writeMappingJsonToDirectory,
   writeSyncJsonToDirectory,
 } from './MappingOps';
@@ -93,8 +90,6 @@ export async function exportEverythingToFile(
 /**
  * Export everything to separate files
  * @param {boolean} extract Extracts the scripts from the exports into separate files if true
- * @param {boolean} separateMappings separate sync.idm.json mappings if true, otherwise keep them in a single file
- * @param {boolean} separateObjects separate managed.idm.json objects if true, otherwise keep them in a single file
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
  * @param {boolean} keepModifiedProperties true to keep modified properties, otherwise delete them. Default: false
  * @param {FullExportOptions} options export options
@@ -102,8 +97,6 @@ export async function exportEverythingToFile(
  */
 export async function exportEverythingToFiles(
   extract: boolean = false,
-  separateMappings: boolean = false,
-  separateObjects: boolean = false,
   includeMeta: boolean = true,
   keepModifiedProperties: boolean = false,
   options: FullExportOptions = {
@@ -135,9 +128,7 @@ export async function exportEverythingToFiles(
         `${baseDirectory}/global`,
         includeMeta,
         keepModifiedProperties,
-        extract,
-        separateMappings,
-        separateObjects
+        extract
       )
     );
     Object.entries(exportData.realm).forEach(([realm, data]: [string, any]) =>
@@ -149,9 +140,7 @@ export async function exportEverythingToFiles(
           `${baseDirectory}/realm/${realm}`,
           includeMeta,
           keepModifiedProperties,
-          extract,
-          separateMappings,
-          separateObjects
+          extract
         )
       )
     );
@@ -174,8 +163,6 @@ export async function exportEverythingToFiles(
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
  * @param {boolean} keepModifiedProperties true to keep modified properties, otherwise delete them. Default: false
  * @param {boolean} extract Extracts the scripts from the exports into separate files if true
- * @param {boolean} separateMappings separate sync.idm.json mappings if true, otherwise keep them in a single file
- * @param {boolean} separateObjects separate managed.idm.json objects if true, otherwise keep them in a single file
  */
 export function exportItem(
   exportData,
@@ -184,9 +171,7 @@ export function exportItem(
   baseDirectory,
   includeMeta,
   keepModifiedProperties,
-  extract,
-  separateMappings = false,
-  separateObjects = false
+  extract
 ) {
   if (!obj || !Object.keys(obj).length) {
     return;
@@ -287,76 +272,37 @@ export function exportItem(
       includeMeta
     );
   } else if (type === 'mapping') {
-    writeMappingJsonToDirectory(
-      obj,
+    for (const [id, mapping] of Object.entries(obj)){
+      writeMappingJsonToDirectory(
+      mapping as MappingSkeleton,
       `${baseDirectory.substring(getWorkingDirectory(false).length + 1)}/${fileType}`,
       includeMeta,
       extract
     );
+    }
   } else {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Object.entries(obj).forEach(([id, value]: [string, any]) => {
       if (type === 'idm') {
         if (value != null) {
-          if ((separateMappings || extract) && id === 'sync') {
-            writeSyncJsonToDirectory(
-              value as SyncSkeleton,
-              `${baseDirectory.substring(getWorkingDirectory(false).length + 1)}/${fileType}/sync`,
-              includeMeta,
-              extract
-            );
-          } else if ((separateObjects || extract) && id === 'managed') {
+          if (extract && id === 'managed') {
             writeManagedJsonToDirectory(
               value as ManagedSkeleton,
               `${baseDirectory.substring(getWorkingDirectory(false).length + 1)}/${fileType}/managed`,
               includeMeta,
               extract
             );
-          } else {
+          }
+          else {
             if (extract) {
-              if (id.includes('endpoint/')) {
-                const result = findScriptsFromIdm(value);
-                if (result.length !== 0) {
-                  const endpointId = id.replace('endpoint/', '');
-                  extractIdmEndpointScript(
-                    endpointId,
-                    value,
-                    result,
-                    `${baseDirectory.substring(getWorkingDirectory(false).length + 1)}/${fileType}/endpoint/`
-                  );
-                }
-              } else if (id.includes('schedule/')) {
-                const result = findScriptsFromIdm(value);
-                if (result.length !== 0) {
-                  const scheduleId = id.replace('schedule/', '');
-                  extractIdmScriptToSameLevel(
-                    scheduleId,
-                    value,
-                    result,
-                    `${baseDirectory.substring(getWorkingDirectory(false).length + 1)}/${fileType}/schedule/`
-                  );
-                }
-              } else if (id.includes('mapping/')) {
-                const result = findScriptsFromIdm(obj);
-                if (result.length !== 0) {
-                  const mappingId = id.replace('mapping/', '');
-                  extractMappingScripts(
-                    `${mappingId}.mapping.script`,
-                    obj,
-                    result,
-                    `mapping/`
-                  );
-                }
-              } else {
-                const result = findScriptsFromIdm(value);
-                if (result.length !== 0) {
-                  extractIdmScriptsToFolder(
-                    `${id}.idm.scripts`,
-                    value,
-                    result,
-                    `${baseDirectory.substring(getWorkingDirectory(false).length + 1)}/${fileType}`
-                  );
-                }
+              const result = findScriptsFromIdm(value);
+              if (result.length !== 0) {
+                extractIdmScriptToSameLevel(
+                  id,
+                  value,
+                  result,
+                  `${baseDirectory.substring(getWorkingDirectory(false).length + 1)}/${fileType}/`
+                );
               }
             }
             const filename = `${id}.idm.json`;

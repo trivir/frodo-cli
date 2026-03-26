@@ -3,13 +3,21 @@
     "managed": {
       "_id": "managed",
       "objects": [
-        "file://user.managed.json",
-        "file://role.managed.json",
-        "file://assignment.managed.json",
-        "file://organization.managed.json",
-        "file://group.managed.json",
-        "file://application.managed.json"
+        "file://user/user.managed.json",
+        "file://role/role.managed.json",
+        "file://assignment/assignment.managed.json",
+        "file://organization/organization.managed.json",
+        "file://group/group.managed.json",
+        "file://application/application.managed.json"
       ]
     }
+  },
+  "meta": {
+    "exportDate": "2026-03-26T01:24:58.317Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-30 [v24.13.0]",
+    "exportedBy": "amadmin",
+    "origin": "https://platform.dev.trivir.com/am",
+    "originAmVersion": "8.0.1"
   }
 }

@@ -82,7 +82,8 @@ export default function setup() {
           const outcome = await exportManagedObjectToFile(
             options.individualObject,
             options.file,
-            options.envFile
+            options.envFile,
+            options.extract
           );
           if (!outcome) process.exitCode = 1;
         } // -a, --all
@@ -97,8 +98,6 @@ export default function setup() {
             'managed',
             options.file,
             options.envFile,
-            false,
-            false,
             options.metadata,
             false
           );
@@ -115,10 +114,9 @@ export default function setup() {
             'managed',
             options.file,
             options.envFile,
-            false,
-            true,
             options.metadata,
-            options.extract
+            options.extract,
+            true
           );
           if (!outcome) process.exitCode = 1;
           await warnAboutOfflineConnectorServers();

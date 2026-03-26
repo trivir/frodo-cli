@@ -68,18 +68,18 @@ exports[`frodo idm schema object export "frodo idm schema object export -AxD tes
     "managed": {
       "_id": "managed",
       "objects": [
-        "file://alpha_user.managed.json",
-        "file://bravo_user.managed.json",
-        "file://alpha_role.managed.json",
-        "file://bravo_role.managed.json",
-        "file://alpha_assignment.managed.json",
-        "file://bravo_assignment.managed.json",
-        "file://alpha_organization.managed.json",
-        "file://bravo_organization.managed.json",
-        "file://alpha_group.managed.json",
-        "file://bravo_group.managed.json",
-        "file://alpha_application.managed.json",
-        "file://bravo_application.managed.json",
+        "file://alpha_user/alpha_user.managed.json",
+        "file://bravo_user/bravo_user.managed.json",
+        "file://alpha_role/alpha_role.managed.json",
+        "file://bravo_role/bravo_role.managed.json",
+        "file://alpha_assignment/alpha_assignment.managed.json",
+        "file://bravo_assignment/bravo_assignment.managed.json",
+        "file://alpha_organization/alpha_organization.managed.json",
+        "file://bravo_organization/bravo_organization.managed.json",
+        "file://alpha_group/alpha_group.managed.json",
+        "file://bravo_group/bravo_group.managed.json",
+        "file://alpha_application/alpha_application.managed.json",
+        "file://bravo_application/bravo_application.managed.json",
       ],
     },
   },
@@ -24967,6 +24967,114 @@ exports[`frodo idm schema object export "frodo idm schema object export -i bravo
       "mapping",
     ],
     "title": "Bravo realm - Assignment",
+    "type": "object",
+  },
+}
+`;
+
+exports[`frodo idm schema object export "frodo idm schema object export -xi test -D idmSchemaTestDir8": should export test object with extracted idm scripts" in the directory "idmSchemaTestDir8" 1`] = `0`;
+
+exports[`frodo idm schema object export "frodo idm schema object export -xi test -D idmSchemaTestDir8": should export test object with extracted idm scripts" in the directory "idmSchemaTestDir8" 2`] = `""`;
+
+exports[`frodo idm schema object export "frodo idm schema object export -xi test -D idmSchemaTestDir8": should export test object with extracted idm scripts" in the directory "idmSchemaTestDir8": idmSchemaTestDir8/obj1.obj2.obj3.onValidate.js 1`] = `
+"//test obj1 obj2 obj3
+"
+`;
+
+exports[`frodo idm schema object export "frodo idm schema object export -xi test -D idmSchemaTestDir8": should export test object with extracted idm scripts" in the directory "idmSchemaTestDir8": idmSchemaTestDir8/obj1.obj2.onValidate.js 1`] = `
+"//test obj1 obj2
+"
+`;
+
+exports[`frodo idm schema object export "frodo idm schema object export -xi test -D idmSchemaTestDir8": should export test object with extracted idm scripts" in the directory "idmSchemaTestDir8": idmSchemaTestDir8/obj1.onValidate.js 1`] = `
+"//test obj1
+"
+`;
+
+exports[`frodo idm schema object export "frodo idm schema object export -xi test -D idmSchemaTestDir8": should export test object with extracted idm scripts" in the directory "idmSchemaTestDir8": idmSchemaTestDir8/onValidate.js 1`] = `
+"//test
+"
+`;
+
+exports[`frodo idm schema object export "frodo idm schema object export -xi test -D idmSchemaTestDir8": should export test object with extracted idm scripts" in the directory "idmSchemaTestDir8": idmSchemaTestDir8/test.managed.json 1`] = `
+{
+  "name": "test",
+  "onValidate": {
+    "globals": {},
+    "source": "file://onValidate.js",
+    "type": "text/javascript",
+  },
+  "schema": {
+    "$schema": "http://forgerock.org/json-schema#",
+    "description": "test",
+    "icon": "fa-database",
+    "mat-icon": null,
+    "order": [
+      "obj1",
+    ],
+    "properties": {
+      "obj1": {
+        "description": null,
+        "isVirtual": false,
+        "nullable": false,
+        "onValidate": {
+          "globals": {},
+          "source": "file://obj1.onValidate.js",
+          "type": "text/javascript",
+        },
+        "order": [
+          "obj2",
+        ],
+        "properties": {
+          "obj2": {
+            "description": null,
+            "isVirtual": false,
+            "nullable": false,
+            "onValidate": {
+              "globals": {},
+              "source": "file://obj1.obj2.onValidate.js",
+              "type": "text/javascript",
+            },
+            "order": [
+              "obj3",
+            ],
+            "properties": {
+              "obj3": {
+                "description": null,
+                "isVirtual": false,
+                "onValidate": {
+                  "globals": {},
+                  "source": "file://obj1.obj2.obj3.onValidate.js",
+                  "type": "text/javascript",
+                },
+                "order": [],
+                "properties": {},
+                "required": [],
+                "searchable": false,
+                "title": null,
+                "type": "object",
+                "userEditable": true,
+                "viewable": true,
+              },
+            },
+            "required": [],
+            "searchable": false,
+            "title": null,
+            "type": "object",
+            "userEditable": true,
+            "viewable": true,
+          },
+        },
+        "required": [],
+        "searchable": false,
+        "title": null,
+        "type": "object",
+        "userEditable": true,
+        "viewable": true,
+      },
+    },
+    "required": [],
+    "title": "test",
     "type": "object",
   },
 }

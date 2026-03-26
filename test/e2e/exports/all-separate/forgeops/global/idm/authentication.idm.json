@@ -11,7 +11,7 @@
           ]
         },
         "augmentSecurityContext": {
-          "source": "file://authentication.idm.scripts/rsFilter.augmentSecurityContext.script.js",
+          "source": "file://authentication.rsFilter.augmentSecurityContext.js",
           "type": "text/javascript"
         },
         "cache": {
@@ -60,5 +60,13 @@
         "tokenIntrospectUrl": "http://am/am/oauth2/introspect"
       }
     }
+  },
+  "meta": {
+    "exportDate": "2026-03-26T01:24:58.314Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-30 [v24.13.0]",
+    "exportedBy": "amadmin",
+    "origin": "https://platform.dev.trivir.com/am",
+    "originAmVersion": "8.0.1"
   }
 }

@@ -51,18 +51,6 @@ export default function setup() {
     )
     .addOption(
       new Option(
-        '-s, --separate-mappings',
-        'Export sync.idm.json mappings separately in their own directory. Ignored with -a.'
-      )
-    )
-    .addOption(
-      new Option(
-        '-o, --separate-objects',
-        'Export managed.idm.json objects separately in their own directory. Ignored with -a.'
-      )
-    )
-    .addOption(
-      new Option(
         '-N, --no-metadata',
         'Does not include metadata in the export file.'
       )
@@ -106,8 +94,6 @@ export default function setup() {
             options.entityId,
             options.file,
             options.envFile,
-            options.separateMappings,
-            options.separateObjects,
             options.metadata,
             options.extract
           );
@@ -149,8 +135,6 @@ export default function setup() {
           const outcome = await exportAllConfigEntitiesToFiles(
             options.entitiesFile,
             options.envFile,
-            options.separateMappings,
-            options.separateObjects,
             options.metadata,
             options.extract
           );

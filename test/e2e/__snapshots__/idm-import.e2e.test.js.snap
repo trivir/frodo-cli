@@ -41,6 +41,8 @@ exports[`frodo idm import "frodo idm import -af test/e2e/exports/all/all.idm.jso
 
 exports[`frodo idm import "frodo idm import -f test/e2e/exports/all-separate/cloud/global/idm/script.idm.json": should import the idm config from the file named 'test/e2e/exports/all-separate/cloud/global/idm/script.idm.json'" 1`] = `""`;
 
+exports[`frodo idm import "frodo idm import -f test/e2e/exports/all-separate/forgeops/global/idm/endpoint/testEndpoint.idm.json -m forgeops": Should import idm config with extracted script files on forgeops tenanat." 1`] = `""`;
+
 exports[`frodo idm import "frodo idm import -i script -D test/e2e/exports/all-separate/cloud/global/idm": should import the idm config with name 'script' from the directory test/e2e/exports/all-separate/cloud/global/idm" 1`] = `""`;
 
 exports[`frodo idm import "frodo idm import -i script -e test/e2e/env/testEnvFile.env -f script.idm.json -D test/e2e/exports/all-separate/cloud/global/idm": should import the idm config with name 'script' from the file named 'test/e2e/exports/all-separate/cloud/global/idm/script.idm.json'" 1`] = `""`;

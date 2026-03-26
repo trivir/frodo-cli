@@ -51,16 +51,16 @@
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config export -adND exportAllTestDir4
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config export --all --modified-properties --file testExportAll.json --use-string-arrays --no-decode --no-coords
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config export -AD exportAllTestDir1
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config export -MAsxD exportAllTestDir2
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config export --all-separate --read-only --no-metadata --default --directory exportAllTestDir3 --use-string-arrays --no-decode --no-coords --extract --separate-mappings
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config export -MAxD exportAllTestDir2
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config export --all-separate --read-only --no-metadata --default --directory exportAllTestDir3 --use-string-arrays --no-decode --no-coords --extract
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config export -RAD exportAllTestDir5 --include-active-values
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config export -raf testExportAllAlpha.json
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config export -gAD exportAllTestDir9
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config export -AxNosD exportAllTestDir10
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config export -AxND exportAllTestDir10
 // Classic
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openam-frodo-dev.classic.com:8080/am frodo config export -adND exportAllTestDir6 -m classic
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openam-frodo-dev.classic.com:8080/am frodo config export --all --modified-properties --read-only --file testExportAll2.json --include-active-values --use-string-arrays --no-decode --no-coords --type classic
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openam-frodo-dev.classic.com:8080/am frodo config export -RMAsxD exportAllTestDir7 -m classic
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openam-frodo-dev.classic.com:8080/am frodo config export -RMAxD exportAllTestDir7 -m classic
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openam-frodo-dev.classic.com:8080/am frodo config export --all-separate --no-metadata --default --directory exportAllTestDir8 --include-active-values --use-string-arrays --no-decode --no-coords --type classic
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openam-frodo-dev.classic.com:8080/am frodo config export --realm-only -AD exportAllTestDir10 -m classic
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openam-frodo-dev.classic.com:8080/am frodo config export --global-only -af testExportAllGlobal.json -m classic
@@ -96,15 +96,15 @@ describe('frodo config export', () => {
     await testExport(CMD, env, undefined, undefined, exportDirectory, false);
   });
 
-  test.skip('"frodo config export -MAsxD exportAllTestDir2": should export everything into separate files in the directory exportAllTestDir2 with scripts extracted and mappings separate', async () => {
+  test.skip('"frodo config export -MAxD exportAllTestDir2": should export everything into separate files in the directory exportAllTestDir2 with scripts extracted and mappings separate', async () => {
     const exportDirectory = 'exportAllTestDir2';
-    const CMD = `frodo config export -MAsxD ${exportDirectory}`;
+    const CMD = `frodo config export -MAxD ${exportDirectory}`;
     await testExport(CMD, env, undefined, undefined, exportDirectory, false);
   });
 
-  test.skip('"frodo config export --all-separate --read-only --no-metadata --default --directory exportAllTestDir3 --use-string-arrays --no-decode --no-coords --extract --separate-mappings": should export everything, including default scripts, into separate files in the directory exportAllTestDir3 with scripts extracted, no decoding variables, no journey coordinates, separate mappings, and using string arrays', async () => {
+  test.skip('"frodo config export --all-separate --read-only --no-metadata --default --directory exportAllTestDir3 --use-string-arrays --no-decode --no-coords --extract": should export everything, including default scripts, into separate files in the directory exportAllTestDir3 with scripts extracted, no decoding variables, no journey coordinates, separate mappings, and using string arrays', async () => {
     const exportDirectory = 'exportAllTestDir3';
-    const CMD = `frodo config export --all-separate --read-only --no-metadata --default --directory ${exportDirectory} --use-string-arrays --no-decode --no-coords --extract --separate-mappings`;
+    const CMD = `frodo config export --all-separate --read-only --no-metadata --default --directory ${exportDirectory} --use-string-arrays --no-decode --no-coords --extract`;
     await testExport(CMD, env, undefined, undefined, exportDirectory, false);
   });
 
@@ -141,9 +141,9 @@ describe('frodo config export', () => {
     await testExport(CMD, classicEnv, type, exportFile);
   });
 
-  test.skip('"frodo config export -RMAsxD exportAllTestDir7 -m classic": should export everything into separate files in the directory exportAllTestDir7 with scripts extracted and mappings separate', async () => {
+  test.skip('"frodo config export -RMAxD exportAllTestDir7 -m classic": should export everything into separate files in the directory exportAllTestDir7 with scripts extracted and mappings separate', async () => {
     const exportDirectory = 'exportAllTestDir7';
-    const CMD = `frodo config export -RMAsxD ${exportDirectory} -m classic`;
+    const CMD = `frodo config export -RMAxD ${exportDirectory} -m classic`;
     await testExport(
       CMD,
       classicEnv,
@@ -179,9 +179,9 @@ describe('frodo config export', () => {
     await testExport(CMD, env, type, exportFile);
   });
 
-   test('"frodo config export -AxNosD exportAllTestDir10": should export all separated files with extracted idm scripts.', async () => {
+   test('"frodo config export -AxND exportAllTestDir10": should export all separated files with extracted idm scripts.', async () => {
     const exportDirectory = 'exportAllTestDir10';
-    const CMD = `frodo config export -AxNosD ${exportDirectory}`;
+    const CMD = `frodo config export -AxND ${exportDirectory}`;
     await testExport(CMD, env, undefined, undefined, exportDirectory, false);
   });
 });

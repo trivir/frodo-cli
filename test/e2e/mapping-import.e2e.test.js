@@ -58,6 +58,7 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 
 // Forgeops
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo mapping import -AD test/e2e/exports/all-separate/forgeops/global/sync -m forgeops
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo mapping import -f test/e2e/exports/all-separate/forgeops/global/mapping/managedUser_managedGroup/managedUser_managedGroup.mapping.json -m forgeops
 */
 import cp from 'child_process';
 import { promisify } from 'util';
@@ -125,6 +126,12 @@ describe('frodo mapping import', () => {
 
     test(`"frodo mapping import -AD test/e2e/exports/all-separate/forgeops/global/sync -m forgeops": should import all mappings from Forgeops with extracted scripts from the directory"`, async () => {
         const CMD = `frodo mapping import -AD test/e2e/exports/all-separate/forgeops/global/sync -m forgeops`;
+        const { stdout } = await exec(CMD, forgeopsEnv);
+        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    });
+
+    test(`"frodo mapping import -f test/e2e/exports/all-separate/forgeops/global/mapping/managedUser_managedGroup/managedUser_managedGroup.mapping.json -m forgeops": should import one mappings from Forgeops with extracted scripts."`, async () => {
+        const CMD = `frodo mapping import -f test/e2e/exports/all-separate/forgeops/global/mapping/managedUser_managedGroup/managedUser_managedGroup.mapping.json -m forgeops`;
         const { stdout } = await exec(CMD, forgeopsEnv);
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     });

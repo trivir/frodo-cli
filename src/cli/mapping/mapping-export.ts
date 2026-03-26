@@ -84,6 +84,7 @@ export default function setup() {
             options.mappingId,
             options.file,
             options.metadata,
+            options.extract,
             {
               deps: options.deps,
               useStringArrays: options.useStringArrays,
