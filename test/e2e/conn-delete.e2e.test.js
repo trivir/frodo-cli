@@ -47,7 +47,7 @@
  */
 import cp from 'child_process';
 import { promisify } from 'util';
-import { getEnv, removeAnsiEscapeCodes, testif } from './utils/TestUtils';
+import { getEnv, testif } from './utils/TestUtils';
 import { connection as c } from './utils/TestConfig';
 import { readFileSync, rmSync, writeFileSync } from 'fs';
 
@@ -76,7 +76,7 @@ describe('frodo conn delete', () => {
     async () => {
       const CMD = `frodo conn delete ${c.host}`;
       const { stderr } = await exec(CMD, env);
-      expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+      expect(stderr).toMatchSnapshot()
     }
   );
 });
