@@ -1,0 +1,72 @@
+{
+  "idm": {
+    "repo.init": {
+      "_id": "repo.init",
+      "delete": {},
+      "insert": {
+        "internal/role": [
+          {
+            "description": "Administrative access",
+            "id": "openidm-admin",
+            "name": "openidm-admin"
+          },
+          {
+            "description": "Basic minimum user",
+            "id": "openidm-authorized",
+            "name": "openidm-authorized"
+          },
+          {
+            "description": "Anonymous access",
+            "id": "openidm-reg",
+            "name": "openidm-reg"
+          },
+          {
+            "description": "Authenticated via certificate",
+            "id": "openidm-cert",
+            "name": "openidm-cert"
+          },
+          {
+            "description": "Allowed to reassign workflow tasks",
+            "id": "openidm-tasks-manager",
+            "name": "openidm-tasks-manager"
+          },
+          {
+            "description": "Prometheus access",
+            "id": "openidm-prometheus",
+            "name": "openidm-prometheus"
+          },
+          {
+            "description": "Platform provisioning access",
+            "id": "platform-provisioning",
+            "name": "platform-provisioning"
+          }
+        ],
+        "internal/user": [
+          {
+            "id": "openidm-admin",
+            "password": "&{openidm.admin.password|openidm-admin}"
+          },
+          {
+            "id": "anonymous",
+            "password": "anonymous"
+          },
+          {
+            "id": "idm-provisioning"
+          },
+          {
+            "id": "connector-server-client"
+          }
+        ]
+      },
+      "update": {}
+    }
+  },
+  "meta": {
+    "exportDate": "2026-03-26T01:24:58.319Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-30 [v24.13.0]",
+    "exportedBy": "amadmin",
+    "origin": "https://platform.dev.trivir.com/am",
+    "originAmVersion": "8.0.1"
+  }
+}

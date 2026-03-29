@@ -1,0 +1,72 @@
+{
+  "idm": {
+    "authentication": {
+      "_id": "authentication",
+      "rsFilter": {
+        "anonymousUserMapping": {
+          "executeAugmentationScript": false,
+          "localUser": "internal/user/anonymous",
+          "roles": [
+            "internal/role/openidm-reg"
+          ]
+        },
+        "augmentSecurityContext": {
+          "source": "file://authentication.rsFilter.augmentSecurityContext.js",
+          "type": "text/javascript"
+        },
+        "cache": {
+          "maxTimeout": "300 seconds"
+        },
+        "clientId": "idm-resource-server",
+        "clientSecret": "&{rs.client.secret|password}",
+        "scopes": [
+          "fr:idm:*"
+        ],
+        "staticUserMapping": [
+          {
+            "executeAugmentationScript": false,
+            "localUser": "internal/user/openidm-admin",
+            "roles": [
+              "internal/role/openidm-authorized",
+              "internal/role/openidm-admin"
+            ],
+            "subject": "amadmin"
+          },
+          {
+            "executeAugmentationScript": false,
+            "localUser": "internal/user/idm-provisioning",
+            "roles": [
+              "internal/role/openidm-admin"
+            ],
+            "subject": "idm-provisioning"
+          }
+        ],
+        "subjectMapping": [
+          {
+            "additionalUserFields": [
+              "adminOfOrg",
+              "ownerOfOrg"
+            ],
+            "defaultRoles": [
+              "internal/role/openidm-authorized"
+            ],
+            "propertyMapping": {
+              "sub": "_id"
+            },
+            "queryOnResource": "managed/user",
+            "userRoles": "authzRoles/*"
+          }
+        ],
+        "tokenIntrospectUrl": "http://am/am/oauth2/introspect"
+      }
+    }
+  },
+  "meta": {
+    "exportDate": "2026-03-26T01:24:58.314Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-30 [v24.13.0]",
+    "exportedBy": "amadmin",
+    "origin": "https://platform.dev.trivir.com/am",
+    "originAmVersion": "8.0.1"
+  }
+}

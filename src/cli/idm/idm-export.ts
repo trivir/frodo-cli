@@ -51,20 +51,14 @@ export default function setup() {
     )
     .addOption(
       new Option(
-        '-s, --separate-mappings',
-        'Export sync.idm.json mappings separately in their own directory. Ignored with -a.'
-      )
-    )
-    .addOption(
-      new Option(
-        '-o, --separate-objects',
-        'Export managed.idm.json objects separately in their own directory. Ignored with -a.'
-      )
-    )
-    .addOption(
-      new Option(
         '-N, --no-metadata',
         'Does not include metadata in the export file.'
+      )
+    )
+    .addOption(
+      new Option(
+        '-x, --extract',
+        'Extract idm scripts and save the extracted scripts to separate files. Ignored with -a.'
       )
     )
     .action(
@@ -100,9 +94,8 @@ export default function setup() {
             options.entityId,
             options.file,
             options.envFile,
-            options.separateMappings,
-            options.separateObjects,
-            options.metadata
+            options.metadata,
+            options.extract
           );
           if (!outcome) process.exitCode = 1;
           // --all -a
@@ -142,9 +135,8 @@ export default function setup() {
           const outcome = await exportAllConfigEntitiesToFiles(
             options.entitiesFile,
             options.envFile,
-            options.separateMappings,
-            options.separateObjects,
-            options.metadata
+            options.metadata,
+            options.extract
           );
           if (!outcome) process.exitCode = 1;
           await warnAboutOfflineConnectorServers();

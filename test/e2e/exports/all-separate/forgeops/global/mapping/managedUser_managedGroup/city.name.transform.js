@@ -1,0 +1,2 @@
+// extract script test 
+source

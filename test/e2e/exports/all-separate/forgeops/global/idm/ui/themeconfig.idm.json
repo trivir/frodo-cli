@@ -1,0 +1,39 @@
+{
+  "idm": {
+    "ui/themeconfig": {
+      "_id": "ui/themeconfig",
+      "icon": "favicon.ico",
+      "path": "",
+      "settings": {
+        "footer": {
+          "mailto": "info@pingidentity.com"
+        },
+        "loginLogo": {
+          "alt": "Ping Identity",
+          "height": "120px",
+          "src": "images/login-logo-dark.png",
+          "title": "Ping Identity",
+          "width": "120px"
+        },
+        "logo": {
+          "alt": "Ping Identity",
+          "src": "images/logo-horizontal-white.png",
+          "title": "Ping Identity"
+        }
+      },
+      "stylesheets": [
+        "css/bootstrap-3.4.1-custom.css",
+        "css/structure.css",
+        "css/theme.css"
+      ]
+    }
+  },
+  "meta": {
+    "exportDate": "2026-03-26T01:24:58.320Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-30 [v24.13.0]",
+    "exportedBy": "amadmin",
+    "origin": "https://platform.dev.trivir.com/am",
+    "originAmVersion": "8.0.1"
+  }
+}

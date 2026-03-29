@@ -1,0 +1,39 @@
+{
+  "idm": {
+    "privilegeAssignments": {
+      "_id": "privilegeAssignments",
+      "privilegeAssignments": [
+        {
+          "name": "ownerPrivileges",
+          "privileges": [
+            "owner-view-update-delete-orgs",
+            "owner-create-orgs",
+            "owner-view-update-delete-admins-and-members",
+            "owner-create-admins",
+            "admin-view-update-delete-members",
+            "admin-create-members"
+          ],
+          "relationshipField": "ownerOfOrg"
+        },
+        {
+          "name": "adminPrivileges",
+          "privileges": [
+            "admin-view-update-delete-orgs",
+            "admin-create-orgs",
+            "admin-view-update-delete-members",
+            "admin-create-members"
+          ],
+          "relationshipField": "adminOfOrg"
+        }
+      ]
+    }
+  },
+  "meta": {
+    "exportDate": "2026-03-26T01:24:58.317Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-30 [v24.13.0]",
+    "exportedBy": "amadmin",
+    "origin": "https://platform.dev.trivir.com/am",
+    "originAmVersion": "8.0.1"
+  }
+}

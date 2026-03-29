@@ -57,6 +57,12 @@ export default function setup() {
         'Where applicable, use string arrays to store multi-line text (e.g. scripts).'
       ).default(false, 'off')
     )
+    .addOption(
+      new Option(
+        '-x, --extract',
+        'Extract idm scripts and save the extracted scripts to separate files. Ignored with -a.'
+      )
+    )
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {
@@ -78,6 +84,7 @@ export default function setup() {
             options.mappingId,
             options.file,
             options.metadata,
+            options.extract,
             {
               deps: options.deps,
               useStringArrays: options.useStringArrays,
@@ -109,12 +116,16 @@ export default function setup() {
           (await getTokens(false, true, deploymentTypes))
         ) {
           verboseMessage('Exporting all mappings to separate files...');
-          const outcome = await exportMappingsToFiles(options.metadata, {
-            connectorId: options.connectorId,
-            moType: options.managedObjectType,
-            deps: options.deps,
-            useStringArrays: options.useStringArrays,
-          });
+          const outcome = await exportMappingsToFiles(
+            options.metadata,
+            options.extract,
+            {
+              connectorId: options.connectorId,
+              moType: options.managedObjectType,
+              deps: options.deps,
+              useStringArrays: options.useStringArrays,
+            }
+          );
           if (!outcome) process.exitCode = 1;
         }
         // unrecognized combination of options or no options
