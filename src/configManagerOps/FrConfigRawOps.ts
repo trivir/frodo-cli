@@ -45,10 +45,21 @@ export async function configManagerImportRaw(file: string): Promise<boolean> {
     const rawConfig = JSON.parse(fs.readFileSync(filePath, 'utf8'));
     for (const { path } of rawConfig) {
       const filePath = getFilePath(`raw${path}.json`);
-
       const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
-      await importRawConfig({ path }, data);
+      if (data.result && Array.isArray(data.result)) {
+        for (const item of data.result) {
+          const itemPath = `${path}/${item._id}`;
+
+          delete data._rev;
+          delete data._type;
+          await importRawConfig({ path: itemPath }, item);
+        }
+      } else {
+        delete data._rev;
+        delete data._type;
+        await importRawConfig({ path }, data);
+      }
     }
     return true;
   } catch (error) {

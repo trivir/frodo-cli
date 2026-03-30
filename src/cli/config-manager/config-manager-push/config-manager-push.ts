@@ -7,8 +7,8 @@ import Kba from './config-manager-push-kba';
 import Locales from './config-manager-push-locales';
 import OrgPrivileges from './config-manager-push-org-privileges';
 import PasswordPolicy from './config-manager-push-password-policy';
-import Schedules from './config-manager-push-schedules';
 import Raw from './config-manager-push-raw';
+import Schedules from './config-manager-push-schedules';
 import TermsAndConditions from './config-manager-push-terms-and-conditions';
 import Themes from './config-manager-push-themes';
 

@@ -1,0 +1,107 @@
+{
+  "pagedResultsCookie": null,
+  "remainingPagedResults": -1,
+  "result": [
+    {
+      "_id": "esv-frodo-test-variable-1",
+      "description": "description1",
+      "expressionType": "string",
+      "loaded": true,
+      "valueBase64": "dmFsdWUx"
+    },
+    {
+      "_id": "esv-frodo-test-variable-2",
+      "description": "description2",
+      "expressionType": "int",
+      "loaded": true,
+      "valueBase64": "NDI="
+    },
+    {
+      "_id": "esv-osaic-fradmin-serviceclient-name",
+      "description": "Used in OSUserLogin journey. Not sure what this is used for.\n\n1/12/2026 Dylan Berry",
+      "expressionType": "string",
+      "loaded": true,
+      "valueBase64": "JHtFU1ZfT1NBSUNfRlJBRE1JTl9TRVJWSUNFQ0xJRU5UX05BTUV9"
+    },
+    {
+      "_id": "esv-osaic-onehub-fqdn",
+      "description": "Used in OSUserLogin journey. Not sure what this is used for.\n\n1/12/2026 Dylan Berry",
+      "expressionType": "string",
+      "loaded": true,
+      "valueBase64": "JHtFU1ZfT1NBSUNfT05FSFVCX0ZRRE59"
+    },
+    {
+      "_id": "esv-osaic-tenant-birth-fqdn",
+      "description": "Used in OSUserLogin journey. Not sure what this is used for.\n\n1/12/2026 Dylan Berry",
+      "expressionType": "string",
+      "loaded": true,
+      "valueBase64": "JHtFU1ZfT1NBSUNfVEVOQU5UX0JJUlRIX0ZRRE59"
+    },
+    {
+      "_id": "esv-otel-datadog-service",
+      "description": "",
+      "expressionType": "string",
+      "loaded": true,
+      "valueBase64": "JHtFU1ZfT1RFTF9EQVRBRE9HX1NFUlZJQ0V9"
+    },
+    {
+      "_id": "esv-password-words",
+      "description": "",
+      "expressionType": "string",
+      "loaded": true,
+      "valueBase64": "JHtFU1ZfUEFTU1dPUkRfV09SRFN9"
+    },
+    {
+      "_id": "esv-push-apns-endpoint",
+      "description": "",
+      "expressionType": "string",
+      "loaded": true,
+      "valueBase64": "JHtFU1ZfUFVTSF9BUE5TX0VORFBPSU5UfQ=="
+    },
+    {
+      "_id": "esv-push-aws-sns-region",
+      "description": "",
+      "expressionType": "string",
+      "loaded": true,
+      "valueBase64": "JHtFU1ZfUFVTSF9BV1NfU05TX1JFR0lPTn0="
+    },
+    {
+      "_id": "esv-push-gcm-endpoint",
+      "description": "",
+      "expressionType": "string",
+      "loaded": true,
+      "valueBase64": "JHtFU1ZfUFVTSF9HQ01fRU5EUE9JTlR9"
+    },
+    {
+      "_id": "esv-sns-apns-endpoint",
+      "description": "",
+      "expressionType": "string",
+      "loaded": true,
+      "valueBase64": "JHtFU1ZfU05TX0FQTlNfRU5EUE9JTlR9"
+    },
+    {
+      "_id": "esv-sns-gcm-endpoint",
+      "description": "",
+      "expressionType": "string",
+      "loaded": true,
+      "valueBase64": "JHtFU1ZfU05TX0dDTV9FTkRQT0lOVH0="
+    },
+    {
+      "_id": "esv-test-variable",
+      "description": "test",
+      "expressionType": "string",
+      "loaded": true,
+      "valueBase64": "dGVzdA=="
+    },
+    {
+      "_id": "esv-welcomehub-api-host",
+      "description": "",
+      "expressionType": "string",
+      "loaded": true,
+      "valueBase64": "JHtFU1ZfV0VMQ09NRUhVQl9BUElfSE9TVH0="
+    }
+  ],
+  "resultCount": 14,
+  "totalPagedResults": -1,
+  "totalPagedResultsPolicy": "NONE"
+}
