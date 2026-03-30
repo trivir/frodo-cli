@@ -7,6 +7,7 @@ import Kba from './config-manager-push-kba';
 import Locales from './config-manager-push-locales';
 import PasswordPolicy from './config-manager-push-password-policy';
 import Schedules from './config-manager-push-schedules';
+import Secrets from './config-manager-push-secrets';
 import TermsAndConditions from './config-manager-push-terms-and-conditions';
 import Themes from './config-manager-push-themes';
 
@@ -25,6 +26,7 @@ export default function setup() {
   program.addCommand(InternalRoles().name('internal-roles'));
   program.addCommand(EmailTemplates().name('email-templates'));
   program.addCommand(Schedules().name('schedules'));
+  program.addCommand(Secrets().name('secrets'));
 
   return program;
 }

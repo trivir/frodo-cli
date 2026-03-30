@@ -19,6 +19,7 @@ Commands:
   locales               Import custom locales objects.
   password-policy       Import password-policy objects.
   schedules             Import schedules.
+  secrets               Import secrets.
   terms-and-conditions  Import terms and conditions.
   themes                Import themes.
 "

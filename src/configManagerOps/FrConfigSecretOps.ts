@@ -1,6 +1,7 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { SecretSkeleton } from '@rockcarver/frodo-lib/types/api/cloud/SecretsApi';
 import { SecretsExportInterface } from '@rockcarver/frodo-lib/types/ops/cloud/SecretsOps';
+import fs from 'fs';
 
 import {
   createProgressIndicator,
@@ -10,7 +11,7 @@ import {
 } from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
-const { readSecrets, exportSecret } = frodo.cloud.secret;
+const { readSecrets, exportSecret, importSecret } = frodo.cloud.secret;
 
 /**
  * Export all secrets to individual files in fr-config-manager format
@@ -86,4 +87,28 @@ export async function configManagerExportSecrets(
     printError(error);
   }
   return false;
+}
+
+/**
+ * Imports ESV secrets from files in fr-config-manager format
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
+export async function configManagerImportSecrets(): Promise<boolean> {
+  try {
+    const secretsDir = getFilePath('esvs/secrets');
+    const secretsFiles = fs.readdirSync(secretsDir);
+    for (const secretsFile of secretsFiles) {
+      const filePath = `${secretsDir}/${secretsFile}`;
+      const readFile = fs.readFileSync(filePath, 'utf-8');
+      const importData = JSON.parse(readFile);
+      const singleSecretImport: SecretsExportInterface = {
+        secret: { [importData._id]: importData },
+      };
+      await importSecret(importData._id, singleSecretImport, false);
+    }
+    return true;
+  } catch (err) {
+    printError(err);
+    return false;
+  }
 }
