@@ -36,23 +36,72 @@ export async function configManagerExportRaw(file: string): Promise<boolean> {
 }
 
 /**
- * Import every item from the list in the provided json file
- * @returns True if each file was successfully exported
+ * Import all raw configuration exported in fr-config-manager format
+ * @param path optional flag to provide path to service config file
+ * @returns {Promise<boolean>} true if each file was successfully imported
  */
-export async function configManagerImportRaw(file: string): Promise<boolean> {
+export async function configManagerImportRaw(path?: string): Promise<boolean> {
   try {
-    const filePath = getFilePath(file);
-    const rawConfig = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    for (const { path } of rawConfig) {
-      const filePath = getFilePath(`raw${path}.json`);
-
+    const rawDir = getFilePath('raw/');
+    if (path) {
+      const filePath = getFilePath(`raw/${path}.json`);
+      const rawPath = path;
       const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-
-      await importRawConfig({ path }, data);
+      if (data.result && Array.isArray(data.result)) {
+        for (const item of data.result) {
+          const itemPath = `${rawPath}/${item._id}`;
+          delete item._rev;
+          delete item._type;
+          await importRawConfig({ path: itemPath }, item);
+        }
+      } else {
+        delete data._rev;
+        delete data._type;
+        await importRawConfig({ path: rawPath }, data);
+      }
+    } else {
+      const files = getJsonFiles(rawDir);
+      for (const filePath of files) {
+        const rawPath = filePath
+          .replace(rawDir, '')
+          .replace(/^\//, '')
+          .replace(/\.json$/, '');
+        const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+        if (data.result && Array.isArray(data.result)) {
+          for (const item of data.result) {
+            const itemPath = `${rawPath}/${item._id}`;
+            delete item._rev;
+            delete item._type;
+            await importRawConfig({ path: itemPath }, item);
+          }
+        } else {
+          delete data._rev;
+          delete data._type;
+          await importRawConfig({ path: rawPath }, data);
+        }
+      }
     }
     return true;
   } catch (error) {
     printError(error);
     return false;
   }
+}
+
+/**
+ * Recursively walks a directory tree and returns the full paths of all .json files found.
+ * @param dir root directory to search
+ * @returns full paths of all .json files found
+ */
+function getJsonFiles(dir: string): string[] {
+  const results: string[] = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = `${dir}/${entry.name}`;
+    if (entry.isDirectory()) {
+      results.push(...getJsonFiles(full));
+    } else if (entry.name.endsWith('.json')) {
+      results.push(full);
+    }
+  }
+  return results;
 }
