@@ -118,6 +118,7 @@ export async function configManagerExportServiceObject(
   }
 }
 
+
 /**
  * Import service objects exported in fr-config-manager format.
  * @returns {Promise<boolean>} true if succesful, false otherwise

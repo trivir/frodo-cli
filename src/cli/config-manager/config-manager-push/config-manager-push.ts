@@ -1,9 +1,13 @@
 import { FrodoStubCommand } from '../../FrodoCommand';
+<<<<<<< HEAD
 import AccessConfig from './config-manager-push-access-config';
 import Audit from './config-manager-push-audit';
 import Authentication from './config-manager-push-authentication';
 import ConnectorDefinitions from './config-manager-push-connector-definitions';
 import CookieDomains from './config-manager-push-cookie-domain';
+=======
+import ServiceObjects from './config-manager-pus-service-objects';
+>>>>>>> 0c45e1a8 (feat: Add config-manager-push service-object command)
 import EmailProvider from './config-manager-push-email-provider';
 import EmailTemplates from './config-manager-push-email-templates';
 import Endpoints from './config-manager-push-endpoints';
@@ -43,6 +47,6 @@ export default function setup() {
   program.addCommand(UiConfig().name('ui-config'));
   program.addCommand(Authentication().name('authentication'));
   program.addCommand(ConnectorDefinitions().name('connector-definitions'));
-
+  program.addCommand(ServiceObjects().name('service-objects'));
   return program;
 }
