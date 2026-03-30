@@ -10,7 +10,7 @@ import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
-const deploymentTypes = ['cloud'];
+const deploymentTypes = ['cloud', 'forgeops'];
 const { constants } = frodo.utils;
 const { readRealms } = frodo.realm;
 

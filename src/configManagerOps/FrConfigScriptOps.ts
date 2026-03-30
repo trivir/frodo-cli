@@ -243,22 +243,23 @@ export async function configManagerImportScripts(): Promise<boolean> {
 
       for (const file of configDir) {
         const filePath = `${configFiles}/${file}`;
-        if (!fs.existsSync(filePath)) continue;
         const readFile = fs.readFileSync(filePath, 'utf8');
         const importData = JSON.parse(readFile);
         const scriptFilePath = importData.script.file;
         const fullScriptPath = getFilePath(
           `realms/${realm}/scripts/${scriptFilePath}`
         );
-        const scriptContent = fs.readFileSync(fullScriptPath, 'utf8');
-        importData.script = scriptContent;
-        scripts.script[importData._id] = importData;
-
-        await importScripts(null, null, scripts);
+        try {
+          const scriptContent = fs.readFileSync(fullScriptPath, 'utf8');
+          importData.script = scriptContent;
+          scripts.script[importData._id] = importData;
+          await importScripts(null, null, scripts);
+        } catch (error) {
+          printError(error);
+        }
       }
-
-      return true;
     }
+    return true;
   } catch (error) {
     printError(error);
     return false;
