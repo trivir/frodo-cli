@@ -1,5 +1,4 @@
 import { FrodoStubCommand } from '../../FrodoCommand';
-import ServiceObjects from './config-manager-push-service-objects';
 import EmailProvider from './config-manager-push-email-provider';
 import EmailTemplates from './config-manager-push-email-templates';
 import Endpoints from './config-manager-push-endpoints';
@@ -9,6 +8,7 @@ import Locales from './config-manager-push-locales';
 import OrgPrivileges from './config-manager-push-org-privileges';
 import PasswordPolicy from './config-manager-push-password-policy';
 import Schedules from './config-manager-push-schedules';
+import ServiceObjects from './config-manager-push-service-objects';
 import TermsAndConditions from './config-manager-push-terms-and-conditions';
 import Themes from './config-manager-push-themes';
 
