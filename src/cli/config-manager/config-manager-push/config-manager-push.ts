@@ -1,13 +1,10 @@
 import { FrodoStubCommand } from '../../FrodoCommand';
-<<<<<<< HEAD
 import AccessConfig from './config-manager-push-access-config';
 import Audit from './config-manager-push-audit';
 import Authentication from './config-manager-push-authentication';
 import ConnectorDefinitions from './config-manager-push-connector-definitions';
 import CookieDomains from './config-manager-push-cookie-domain';
-=======
-import ServiceObjects from './config-manager-pus-service-objects';
->>>>>>> 0c45e1a8 (feat: Add config-manager-push service-object command)
+import ServiceObjects from './config-manager-push-service-objects';
 import EmailProvider from './config-manager-push-email-provider';
 import EmailTemplates from './config-manager-push-email-templates';
 import Endpoints from './config-manager-push-endpoints';
@@ -18,7 +15,6 @@ import ManagedObjects from './config-manager-push-managed-objects';
 import OrgPrivileges from './config-manager-push-org-privileges';
 import PasswordPolicy from './config-manager-push-password-policy';
 import Schedules from './config-manager-push-schedules';
-import ServiceObjects from './config-manager-push-service-objects';
 import TermsAndConditions from './config-manager-push-terms-and-conditions';
 import Themes from './config-manager-push-themes';
 import UiConfig from './config-manager-push-ui-config';
