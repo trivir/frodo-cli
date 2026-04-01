@@ -71,10 +71,36 @@ export async function configManagerImportAuthentication(
       const importData: AuthenticationSettingsExportInterface = {
         authentication: authData,
       };
+
       await importAuthenticationSettings(importData, false);
     } else {
-      //TODO: Import all configuration
+      const realmsPath = getFilePath(`realms/`);
+      const realmDirs = fs.readdirSync(realmsPath);
+      for (const realmName of realmDirs) {
+        await state.setRealm(realmName);
+        let realmPath;
+
+        if (realmName === 'realm-config') {
+          await state.setRealm('/');
+          realmPath = getFilePath(`realms/realm-config/authentication.json`);
+        } else {
+          await state.setRealm(realmName);
+          realmPath = getFilePath(
+            `realms/${realmName}/realm-config/authentication.json`
+          );
+        }
+
+        const fileContent = fs.readFileSync(realmPath, 'utf-8');
+        const authData = JSON.parse(fileContent);
+        delete authData._rev;
+        const importData: AuthenticationSettingsExportInterface = {
+          authentication: authData,
+        };
+
+        await importAuthenticationSettings(importData, false);
+      }
     }
+
     return true;
   } catch (error) {
     printError(error, `Error importing authentication settings`);
