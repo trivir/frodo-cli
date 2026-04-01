@@ -64,31 +64,42 @@ export async function configManagerExportMappings(): Promise<boolean> {
  * Import all mappings in fr-config-manager format
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
-export async function configManagerImportMappings(): Promise<boolean> {
+export async function configManagerImportMappings(
+  file: string
+): Promise<boolean> {
   try {
     const mappingDir = getFilePath('sync/mappings');
     const mappingFiles = fs.readdirSync(mappingDir);
-    const importmappingData = { idm: {} };
+    const importMappingData = {
+      idm: { sync: { _id: 'sync', mappings: [] as any } },
+    };
 
-    for (const mappingFile of mappingFiles) {
-      const jsonFilePath = getFilePath(
-        `sync/mappings/${mappingFile}/${mappingFile}.json`
-      );
-      const readMappingFile = fs.readFileSync(jsonFilePath, 'utf8');
-      const importData = JSON.parse(readMappingFile) as any;
-      const id = importData._id;
-
-      if (importData.file) {
-        const scriptPath = getFilePath(
-          `sync/mappings/${mappingFile}/${importData.file}`
+    if (file) {
+      const jsonFilePath = getFilePath(`sync/mappings/${file}.json`);
+      const readFile = fs.readFileSync(jsonFilePath, 'utf8');
+      const importData = JSON.parse(readFile);
+      importMappingData.idm.sync.mappings.push(importData);
+      await importConfigEntities(importMappingData)
+    } else {
+      for (const mappingFile of mappingFiles) {
+        const jsonFilePath = getFilePath(
+          `sync/mappings/${mappingFile}/${mappingFile}.json`
         );
-        importData.source = fs.readFileSync(scriptPath, 'utf8');
-        delete importData.file;
-      }
+        const readMappingFile = fs.readFileSync(jsonFilePath, 'utf8');
+        const importData = JSON.parse(readMappingFile) as any;
 
-      importmappingData.idm[id] = importData;
+        if (importData.file) {
+          const scriptPath = getFilePath(
+            `sync/mappings/${mappingFile}/${importData.file}`
+          );
+          importData.source = fs.readFileSync(scriptPath, 'utf8');
+          delete importData.file;
+        }
+
+        importMappingData.idm.sync.mappings.push(importData);
+      }
     }
-    await importConfigEntities(importmappingData);
+    await importConfigEntities(importMappingData);
 
     return true;
   } catch (error) {
