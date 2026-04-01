@@ -1,5 +1,5 @@
 import { FrodoStubCommand } from '../../FrodoCommand';
-import ServiceObjects from './config-manager-pus-service-objects';
+import ServiceObjects from './config-manager-push-service-objects';
 import EmailProvider from './config-manager-push-email-provider';
 import EmailTemplates from './config-manager-push-email-templates';
 import Endpoints from './config-manager-push-endpoints';
