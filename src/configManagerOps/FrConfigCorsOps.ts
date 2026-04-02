@@ -1,11 +1,13 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 import { FullService } from '@rockcarver/frodo-lib/types/api/ServiceApi';
+import fs from 'fs';
 
 import { printError } from '../utils/Console';
 
 const { config } = frodo.idm;
 const { getFilePath, saveJsonToFile } = frodo.utils;
+const { importConfigEntities } = frodo.idm.config;
 
 type CorsObject = { idmCorsConfig; corsServices; corsServiceGlobal };
 
@@ -35,6 +37,34 @@ export async function configManagerExportCors(): Promise<boolean> {
       false,
       true
     );
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+/**
+ * Import the global CORS configuration into forgeops
+ * @returns True if file was successfully saved
+ */
+export async function configManagerImportCors(): Promise<boolean> {
+  try {
+    const filePath = getFilePath('cors/cors-config.json');
+    const readFile = fs.readFileSync(filePath, 'utf8');
+    const importData = JSON.parse(readFile);
+    const fullCorsService = {
+      ...importData.corsServiceGlobal,
+      nextDescendents: importData.corsServices,
+    };
+    const corsImport = {
+      idm: {
+        [importData.idmCorsConfig._id]: importData.idmCorsConfig,
+        [fullCorsService._type._id]: fullCorsService,
+      },
+    };
+
+    importConfigEntities(corsImport);
     return true;
   } catch (error) {
     printError(error);
