@@ -79,25 +79,38 @@ export async function configManagerExportConnectorDefinitionsAll(): Promise<bool
 
 /**
  * Import all mappings in fr-config-manager format
+ * @param name optional name of connector definition to import
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
-export async function configManagerImportDefinitions(): Promise<boolean> {
+export async function configManagerImportDefinitions(
+  name: string
+): Promise<boolean> {
   try {
     const connMappingDir = getFilePath('sync/connectors/');
     const connMappingFiles = fs.readdirSync(connMappingDir);
     const connMappingImportData = { idm: {} };
 
-    for (const connMappingFile of connMappingFiles) {
-      const filePath = getFilePath('sync/connectors/');
-      const fileData = fs.readFileSync(
-        `${filePath}/${connMappingFile}`,
-        'utf-8'
-      );
+    if (name) {
+      const filePath = getFilePath(`sync/connectors/${name}.json`);
+      const fileData = fs.readFileSync(filePath, 'utf8');
       const importData = JSON.parse(fileData);
       const id = importData._id;
       connMappingImportData.idm[id] = importData;
+      await importConfigEntities(connMappingImportData);
+    } else {
+      for (const connMappingFile of connMappingFiles) {
+        const filePath = getFilePath(`sync/connectors/`);
+        const fileData = fs.readFileSync(
+          `${filePath}/${connMappingFile}`,
+          'utf-8'
+        );
+        const importData = JSON.parse(fileData);
+        const id = importData._id;
+        connMappingImportData.idm[id] = importData;
+      }
+      await importConfigEntities(connMappingImportData);
     }
-    await importConfigEntities(connMappingImportData);
+
     return true;
   } catch (error) {
     printError(error, `Error exporting mappings to files`);

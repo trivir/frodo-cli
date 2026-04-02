@@ -1,4 +1,5 @@
 import { frodo } from '@rockcarver/frodo-lib';
+import { Option } from 'commander';
 
 import { configManagerImportDefinitions } from '../../../configManagerOps/FrConfigConnectorDefinitionsOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
@@ -22,6 +23,12 @@ export default function setup() {
 
   program
     .description('Import connector definitions.')
+    .addOption(
+      new Option(
+        '-n, --name <name>',
+        'Connector definition name; imports only the specified connector definition.'
+      )
+    )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -34,7 +41,7 @@ export default function setup() {
 
       if (await getTokens(false, true, deploymentTypes)) {
         verboseMessage('Importing connector definitions');
-        const outcome = await configManagerImportDefinitions();
+        const outcome = await configManagerImportDefinitions(options.name);
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options
