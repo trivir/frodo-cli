@@ -28,5 +28,6 @@ Commands:
   schedules             [Experimental] Import schedules.
   terms-and-conditions  [Experimental] Import terms and conditions.
   themes                [Experimental] Import themes.
+  ui-config             [Experimental] Import UI configuration.
 "
 `;

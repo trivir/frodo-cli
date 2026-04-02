@@ -13,6 +13,7 @@ import PasswordPolicy from './config-manager-push-password-policy';
 import Schedules from './config-manager-push-schedules';
 import TermsAndConditions from './config-manager-push-terms-and-conditions';
 import Themes from './config-manager-push-themes';
+import UiConfig from './config-manager-push-ui-config';
 
 export default function setup() {
   const program = new FrodoStubCommand('push').description(
@@ -33,6 +34,7 @@ export default function setup() {
   program.addCommand(ManagedObjects().name('managed-objects'));
   program.addCommand(AccessConfig().name('access-config'));
   program.addCommand(Audit().name('audit'));
+  program.addCommand(UiConfig().name('ui-config'));
 
   return program;
 }
