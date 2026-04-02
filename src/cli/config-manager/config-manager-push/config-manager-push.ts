@@ -1,4 +1,5 @@
 import UiConfig from './config-manager-push-uiConfig';
+import RemoteServers from './config-manager-push-remote-servers';
 import { FrodoStubCommand } from '../../FrodoCommand';
 
 export default function setup() {
@@ -7,5 +8,6 @@ export default function setup() {
   );
 
   program.addCommand(UiConfig().name('ui-config'));
+  program.addCommand(RemoteServers().name('remote-servers'));
   return program;
 }
