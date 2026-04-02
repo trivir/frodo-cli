@@ -7,6 +7,7 @@ import Kba from './config-manager-push-kba';
 import Locales from './config-manager-push-locales';
 import OrgPrivileges from './config-manager-push-org-privileges';
 import PasswordPolicy from './config-manager-push-password-policy';
+import Raw from './config-manager-push-raw';
 import Schedules from './config-manager-push-schedules';
 import TermsAndConditions from './config-manager-push-terms-and-conditions';
 import Themes from './config-manager-push-themes';
@@ -27,6 +28,6 @@ export default function setup() {
   program.addCommand(EmailTemplates().name('email-templates'));
   program.addCommand(Schedules().name('schedules'));
   program.addCommand(OrgPrivileges().name('org-privileges'));
-
+  program.addCommand(Raw().name('raw'));
   return program;
 }

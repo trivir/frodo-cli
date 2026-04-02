@@ -1,21 +1,28 @@
+import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
-import { configManagerExportRaw } from '../../../configManagerOps/FrConfigRawOps';
+import { configManagerImportRaw } from '../../../configManagerOps/FrConfigRawOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
-const deploymentTypes = ['cloud', 'forgeops'];
+const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
+  frodo.utils.constants;
+
+const deploymentTypes = [
+  CLOUD_DEPLOYMENT_TYPE_KEY,
+  FORGEOPS_DEPLOYMENT_TYPE_KEY,
+];
 
 export default function setup() {
   const program = new FrodoCommand(
-    'frodo config-manager pull raw',
+    'frodo config-manager push raw',
     [],
     deploymentTypes
   );
 
   program
-    .description('Export raw configurations from the tenant.')
+    .description('Import raw configurations to the tenant.')
     .addOption(
       new Option(
         '-f, --config-file <file>',
@@ -25,10 +32,10 @@ export default function setup() {
     .addHelpText(
       'after',
       'HELP MESSAGE:\n' +
-        'Make sure to create an export config file: raw.json to run this command.\n' +
+        'Make sure to create an import config file: raw.json to run this command.\n' +
         'Example command: frodo config-manager pull raw -f raw.json -D ../testDir frodo-dev\n\n' +
         `Config file example:\n` +
-        '------------  Example Oauth2 agents export config for oauth2-agents.json file -----------\n' +
+        '------------  Example Oauth2 agents import config for oauth2-agents.json file -----------\n' +
         '[\n' +
         '  { "path": "/openidm/config/authentication" },\n' +
         '  {\n' +
@@ -54,7 +61,7 @@ export default function setup() {
       );
 
       if (await getTokens(false, true, deploymentTypes)) {
-        const outcome: boolean = await configManagerExportRaw(
+        const outcome: boolean = await configManagerImportRaw(
           options.configFile
         );
 

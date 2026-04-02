@@ -1,0 +1,6 @@
+[
+  {"path": "/openidm/config/cluster" },
+  {"path": "/am/json/realms/root/realms/alpha/realm-config/services/SocialIdentityProviders" },
+  {"path": "/environment/variables"}
+] 
+

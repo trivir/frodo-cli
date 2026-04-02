@@ -1,11 +1,12 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
+import fs from 'fs';
 import { readFile } from 'fs/promises';
 
 import { printError, verboseMessage } from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
-const { exportRawConfig } = frodo.rawConfig;
+const { exportRawConfig, importRawConfig } = frodo.rawConfig;
 
 /**
  * Export every item from the list in the provided json file
@@ -27,6 +28,39 @@ export async function configManagerExportRaw(file: string): Promise<boolean> {
       );
     }
 
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+/**
+ * Import every item from the list in the provided json file
+ * @returns True if each file was successfully exported
+ */
+export async function configManagerImportRaw(file: string): Promise<boolean> {
+  try {
+    const filePath = getFilePath(file);
+    const rawConfig = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    for (const { path } of rawConfig) {
+      const filePath = getFilePath(`raw${path}.json`);
+      const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+
+      if (data.result && Array.isArray(data.result)) {
+        for (const item of data.result) {
+          const itemPath = `${path}/${item._id}`;
+
+          delete data._rev;
+          delete data._type;
+          await importRawConfig({ path: itemPath }, item);
+        }
+      } else {
+        delete data._rev;
+        delete data._type;
+        await importRawConfig({ path }, data);
+      }
+    }
     return true;
   } catch (error) {
     printError(error);

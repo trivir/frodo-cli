@@ -1,0 +1,5 @@
+[
+    { "path": "/openidm/config/authentication" },
+    {"path": "/am/json/realms/root/realms/alpha/realm-config/authentication"},
+    {"path": "/environment/variables"}
+  ] 
