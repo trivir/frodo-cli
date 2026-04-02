@@ -22,6 +22,7 @@ Commands:
   locales               [Experimental] Import custom locales objects.
   org-privileges        [Experimental] Import organization privileges config.
   password-policy       [Experimental] Import password-policy objects.
+  remote-servers        [Experimental] Import remote server objects.
   schedules             [Experimental] Import schedules.
   terms-and-conditions  [Experimental] Import terms and conditions.
   themes                [Experimental] Import themes.
