@@ -2,8 +2,10 @@ import { frodo } from '@rockcarver/frodo-lib';
 
 import { getIdmImportExportOptions } from '../ops/IdmOps';
 import { printError } from '../utils/Console';
+import fs from 'fs'
+import path from 'path';
 
-const { exportConfigEntity } = frodo.idm.config;
+const { exportConfigEntity, importConfigEntities } = frodo.idm.config;
 const { getFilePath, saveJsonToFile } = frodo.utils;
 
 /**
@@ -33,4 +35,52 @@ export async function configManagerExportUiConfig(
     printError(error, `Error exporting config entity ui-configuration`);
   }
   return false;
+}
+
+export async function configManagerImportUiConfig(
+  file?: string,
+  envFile?: string,
+  validate: boolean = false
+): Promise<boolean> {
+  try {
+    if (file){
+      const fileData = getFilePath(`ui/${file}`)
+      const readFile = fs.readFileSync(fileData, 'utf8')
+      let importData = JSON.parse(readFile);
+      importData = { idm: { [importData._id]: importData } };
+      const options = getIdmImportExportOptions(undefined, envFile);
+  
+      await importConfigEntities(
+        importData,
+        "ui/configuration",
+        {
+          envReplaceParams: options.envReplaceParams,
+          entitiesToImport: undefined,
+          validate,
+        },
+      );
+    }else{
+      const fileData = getFilePath(`ui/ui-configuration.json`)
+      const readFile = fs.readFileSync(fileData, 'utf8')
+      let importData = JSON.parse(readFile);
+      importData = { idm: { [importData._id]: importData } };
+      const options = getIdmImportExportOptions(undefined, envFile);
+  
+      await importConfigEntities(
+        importData,
+        "ui/configuration",
+        {
+          envReplaceParams: options.envReplaceParams,
+          entitiesToImport: undefined,
+          validate,
+        },
+      );
+    }
+    
+    return true
+  }
+  catch (error) {
+    printError(error);
+  }
+  return false
 }
