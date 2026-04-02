@@ -49,8 +49,8 @@
 /*
 // ForgeOps
 
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push raw -f raw.json -D test/e2e/exports/fr-config-manager/forgeops -m forgeops
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push raw -f raw.json -D test/e2e/exports/fr-config-manager/cloud -m cloud
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push raw -f rawForgeops.json -D test/e2e/exports/fr-config-manager/forgeops -m forgeops
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push raw -f rawCloud.json -D test/e2e/exports/fr-config-manager/cloud 
 
 */
 
@@ -71,14 +71,14 @@ const forgeopsDirectory = "test/e2e/exports/fr-config-manager/forgeops";
 const cloudDirectory = "test/e2e/exports/fr-config-manager/cloud"
 
 describe('frodo config-manager push raw ', () => {
-    test(`"frodo config-manager push raw -f raw.json -D ${forgeopsDirectory} -m forgeops": should import a specific raw by file into forgeops"`, async () => {
-    const CMD = `frodo config-manager push raw -f raw.json -D ${forgeopsDirectory} -m forgeops`;
+    test(`"frodo config-manager push raw -f rawForgeops.json -D ${forgeopsDirectory} -m forgeops": should import a specific raw by file into forgeops"`, async () => {
+    const CMD = `frodo config-manager push raw -f rawForgeops.json -D ${forgeopsDirectory} -m forgeops`;
     const { stdout, stderr } = await exec(CMD, forgeopsEnv);
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot()
     });
-    test(`"frodo config-manager push raw -f raw.json -D ${cloudDirectory}: should import a specific raw by file into cloud"`, async () => {
-        const CMD = `frodo config-manager push raw -f raw.json -D ${cloudDirectory} -m cloud`;
+    test(`"frodo config-manager push raw -f rawCloud.json -D ${cloudDirectory}: should import a specific raw by file into cloud"`, async () => {
+        const CMD = `frodo config-manager push raw -f rawCloud.json -D ${cloudDirectory} `;
         const { stdout, stderr } = await exec(CMD, cloudEnv);
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
         expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot()
