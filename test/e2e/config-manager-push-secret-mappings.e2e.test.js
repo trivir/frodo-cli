@@ -48,9 +48,9 @@
 
 /*
 // ForgeOps
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push secret-mappings -D test/e2e/exports/fr-config-manager/forgeops -m cloud
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push secret-mappings -r alpha -D test/e2e/exports/fr-config-manager/forgeops -m cloud
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push secret-mappings -n am.services.oauth2.stateless.signing.HMAC -D test/e2e/exports/fr-config-manager/forgeops -m cloud
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push secret-mappings -D test/e2e/exports/fr-config-manager/cloud 
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push secret-mappings -r bravo -D test/e2e/exports/fr-config-manager/cloud 
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push secret-mappings -r alpha -n am.services.iot.cert.verification -D test/e2e/exports/fr-config-manager/cloud 
 
 */
 
@@ -67,19 +67,19 @@ const cloudEnv = getEnv(c);
 const allDirectory = "test/e2e/exports/fr-config-manager/cloud";
 
 describe('frodo config-manager push secret-mappings', () => {
-    test(`"frodo config-manager push secret-mappings -D ${allDirectory} -m cloud": should import the password policy into cloud"`, async () => {
-        const CMD = `frodo config-manager push secret-mappings -D ${allDirectory} -m cloud`;
+    test(`"frodo config-manager push secret-mappings -D ${allDirectory} ": should import the secret mapping into cloud"`, async () => {
+        const CMD = `frodo config-manager push secret-mappings -D ${allDirectory} `;
         const { stdout } = await exec(CMD, cloudEnv);
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     });
 
-    test(`"frodo config-manager push secret-mappings -r alpha ${allDirectory} -m cloud": should import a specific password policy by name into cloud"`, async () => {
-        const CMD = `frodo config-manager push secret-mappings -r alpha -D ${allDirectory} -m cloud`;
+    test(`"frodo config-manager push secret-mappings -r bravo -D ${allDirectory}": should import a specific secret-mapping by name into cloud"`, async () => {
+        const CMD = `frodo config-manager push secret-mappings -r bravo -D ${allDirectory}`;
         const { stdout } = await exec(CMD, cloudEnv);
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     });
-    test(`"frodo config-manager push secret-mappings -n am.services.oauth2.stateless.signing.HMAC ${allDirectory} -m cloud": should import a specific password policy by name into cloud"`, async () => {
-        const CMD = `frodo config-manager push secret-mappings -n am.services.oauth2.stateless.signing.HMAC -D ${allDirectory} -m cloud`;
+    test(`"frodo config-manager push secret-mappings -r alpha -n am.services.iot.cert.verification -D ${allDirectory}": should import a specific secret mapping by name into cloud"`, async () => {
+        const CMD = `frodo config-manager push secret-mappings -r alpha -n am.services.iot.cert.verification -D ${allDirectory}`;
         const { stdout } = await exec(CMD, cloudEnv);
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     });
