@@ -12,13 +12,6 @@ import {
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { readSecrets, exportSecret } = frodo.cloud.secret;
 
-/**
- * Export all secrets to individual files in fr-config-manager format
- * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
- * @param {boolean} includeActiveValues include active value of secret (default: false)
- * @param {string} target Host URL of target environment to encrypt secret value for
- * @returns {Promise<boolean>} true if successful, false otherwise
- */
 type FrConfigSecret = SecretSkeleton & {
   valueBase64: string;
 };
@@ -31,7 +24,16 @@ async function getFrConfigSecrets(): Promise<FrConfigSecret[]> {
   }));
 }
 
+/**
+ * Export all secrets to individual files in fr-config-manager format
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} includeActiveValues include active value of secret (default: false)
+ * @param {string} target Host URL of target environment to encrypt secret value for
+ * @param {string} name secret name
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
 export async function configManagerExportSecrets(
+  name?: string,
   target?: string
 ): Promise<boolean> {
   let secrets: FrConfigSecret[] = [];
@@ -43,6 +45,14 @@ export async function configManagerExportSecrets(
   try {
     secrets = await getFrConfigSecrets();
     secrets.sort((a, b) => a._id.localeCompare(b._id));
+    if (name) {
+      const match = secrets.find((s) => s._id === name);
+      if (!match) {
+        stopProgressIndicator(spinnerId, `Secret '${name}' not found.`, 'fail');
+        return false;
+      }
+      secrets = [match];
+    }
     stopProgressIndicator(
       spinnerId,
       `Successfully read ${secrets.length} secrets.`,
