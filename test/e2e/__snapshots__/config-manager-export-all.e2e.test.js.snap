@@ -608,36 +608,69 @@ exports[`frodo config-manager pulls "frodo config-manager pull all -D allDir1": 
   "subject": {
     "en": "Your account has been created",
   },
+  "templateId": "welcome",
 }
 `;
 
-exports[`frodo config-manager pulls "frodo config-manager pull all -D allDir1": should export all config in fr-config-manager style": allDir1/esvs/secrets/esv-test-secret.json 1`] = `
+exports[`frodo config-manager pulls "frodo config-manager pull all -D allDir1": should export all config in fr-config-manager style": allDir1/endpoints/Test/Test.js 1`] = `
+"  (function () {
+    if (request.method === 'create') {
+      // POST
+      return {};
+    } else if (request.method === 'read') {
+      // GET
+      return {};
+    } else if (request.method === 'update') {
+      // PUT
+      return {};
+    } else if (request.method === 'patch') {
+      return {};
+    } else if (request.method === 'delete') {
+      return {};
+    }
+    throw { code: 500, message: 'Unknown error' };
+  }());
+"
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull all -D allDir1": should export all config in fr-config-manager style": allDir1/endpoints/Test/Test.json 1`] = `
 {
-  "_id": "esv-test-secret",
-  "description": "Test Secret",
-  "encoding": "generic",
-  "useInPlaceholders": true,
-  "valueBase64": "\${ESV_TEST_SECRET}",
+  "_id": "endpoint/Test",
+  "description": "test",
+  "file": "Test.js",
+  "globalsObject": ""  {\\n    \\"request\\": {\\n      \\"method\\": \\"create\\"\\n    }\\n  }"",
+  "type": "text/javascript",
 }
 `;
 
-exports[`frodo config-manager pulls "frodo config-manager pull all -D allDir1": should export all config in fr-config-manager style": allDir1/esvs/secrets/esv-test-secret-2.json 1`] = `
-{
-  "_id": "esv-test-secret-2",
-  "description": "Test Secret Two",
-  "encoding": "generic",
-  "useInPlaceholders": true,
-  "valueBase64": "\${ESV_TEST_SECRET_2}",
-}
+exports[`frodo config-manager pulls "frodo config-manager pull all -D allDir1": should export all config in fr-config-manager style": allDir1/endpoints/testEndpoint2/testEndpoint2.js 1`] = `
+"  (function () {
+    if (request.method === 'create') {
+      // POST
+      return {};
+    } else if (request.method === 'read') {
+      // GET
+      return {};
+    } else if (request.method === 'update') {
+      // PUT
+      return {};
+    } else if (request.method === 'patch') {
+      return {};
+    } else if (request.method === 'delete') {
+      return {};
+    }
+    throw { code: 500, message: 'Unknown error' };
+  }());
+"
 `;
 
-exports[`frodo config-manager pulls "frodo config-manager pull all -D allDir1": should export all config in fr-config-manager style": allDir1/esvs/secrets/esv-test-secret-3.json 1`] = `
+exports[`frodo config-manager pulls "frodo config-manager pull all -D allDir1": should export all config in fr-config-manager style": allDir1/endpoints/testEndpoint2/testEndpoint2.json 1`] = `
 {
-  "_id": "esv-test-secret-3",
-  "description": "Test Secret Three",
-  "encoding": "generic",
-  "useInPlaceholders": true,
-  "valueBase64": "\${ESV_TEST_SECRET_3}",
+  "_id": "endpoint/testEndpoint2",
+  "description": "",
+  "file": "testEndpoint2.js",
+  "globalsObject": ""  {\\n    \\"request\\": {\\n      \\"method\\": \\"create\\"\\n    }\\n  }"",
+  "type": "text/javascript",
 }
 `;
 
