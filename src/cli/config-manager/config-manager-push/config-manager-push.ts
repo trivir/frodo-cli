@@ -1,4 +1,5 @@
 import { FrodoStubCommand } from '../../FrodoCommand';
+import ConnectorDefinitions from './config-manager-push-connector-definitions';
 import EmailProvider from './config-manager-push-email-provider';
 import EmailTemplates from './config-manager-push-email-templates';
 import Endpoints from './config-manager-push-endpoints';
@@ -27,6 +28,6 @@ export default function setup() {
   program.addCommand(EmailTemplates().name('email-templates'));
   program.addCommand(Schedules().name('schedules'));
   program.addCommand(OrgPrivileges().name('org-privileges'));
-
+  program.addCommand(ConnectorDefinitions().name('connector-definitions'));
   return program;
 }
