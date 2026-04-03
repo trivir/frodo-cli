@@ -6,5 +6,3 @@ exports[`frodo config-manager push ui-config "frodo config-manager push ui-confi
 "Experimental feature in use: 'frodo config-manager push ui-config'. This feature may change without notice.
 "
 `;
-
-exports[`frodo config-manager push ui-config "frodo config-manager push ui-config -f ui-configuration.json -D test/e2e/exports/fr-config-manager/forgeops/ -m forgeops": should import ui configurations by name into forgeops" 1`] = `""`;

@@ -1,10 +1,9 @@
 import { frodo } from '@rockcarver/frodo-lib';
+
 import { configManagerImportUiConfig } from '../../../configManagerOps/FrConfigUiConfigOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
-import { Option } from 'commander';
-
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
   frodo.utils.constants;
@@ -13,7 +12,6 @@ const deploymentTypes = [
   CLOUD_DEPLOYMENT_TYPE_KEY,
   FORGEOPS_DEPLOYMENT_TYPE_KEY,
 ];
-
 
 export default function setup() {
   const program = new FrodoCommand(
@@ -24,7 +22,6 @@ export default function setup() {
 
   program
     .description('Import ui-configuration objects.')
-    .addOption(new Option('-f, --file [file]', 'Fr-config-manager format file to import.'))
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -37,7 +34,7 @@ export default function setup() {
 
       if (await getTokens(false, true, deploymentTypes)) {
         verboseMessage('Importing config entity ui-configuration');
-        const outcome = await configManagerImportUiConfig(options.file);
+        const outcome = await configManagerImportUiConfig();
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options
