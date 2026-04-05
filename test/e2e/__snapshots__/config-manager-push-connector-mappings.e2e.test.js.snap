@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo config-manager push connector mappings "frodo config-manager push connector-mappings -D test/e2e/exports/fr-config-manager/cloud ": should import the connector mappings into cloud" 1`] = `""`;
+
+exports[`frodo config-manager push connector mappings "frodo config-manager push connector-mappings -D test/e2e/exports/fr-config-manager/cloud ": should import the connector mappings into cloud" 2`] = `
+"Experimental feature in use: 'frodo config-manager push connector-mappings'. This feature may change without notice.
+"
+`;
+
+exports[`frodo config-manager push connector mappings "frodo config-manager push connector-mappings -n test/test -D test/e2e/exports/fr-config-manager/cloud ": should import a specific connector mapping by name into cloud" 1`] = `""`;
+
+exports[`frodo config-manager push connector mappings "frodo config-manager push connector-mappings -n test/test -D test/e2e/exports/fr-config-manager/cloud ": should import a specific connector mapping by name into cloud" 2`] = `
+"Experimental feature in use: 'frodo config-manager push connector-mappings'. This feature may change without notice.
+"
+`;
