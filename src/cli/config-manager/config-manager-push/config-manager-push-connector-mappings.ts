@@ -41,7 +41,7 @@ export default function setup() {
 
       if (await getTokens(false, true, deploymentTypes)) {
         verboseMessage('Importing connector mappings');
-        const outcome = await configManagerImportMappings(options.file);
+        const outcome = await configManagerImportMappings(options.name);
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options

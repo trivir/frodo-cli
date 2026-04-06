@@ -1,11 +1,13 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
+import path from 'path';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError } from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
-const { readConfigEntity, importConfigEntities } = frodo.idm.config;
+const { readConfigEntity, importConfigEntities, importSubConfigEntity } =
+  frodo.idm.config;
 
 function processMappings(mapping, targetDir, name) {
   try {
@@ -61,11 +63,46 @@ export async function configManagerExportMappings(): Promise<boolean> {
 }
 
 /**
+ * Helper that recursively reads in extracted files and stores them back in the connector
+ * @param obj The connector configuration
+ * @param connectorMappingDirectory The directory where the connector resides
+ */
+function getExtractedFiles(obj: any, connectorMappingDirectory: string): void {
+  if (!obj || typeof obj !== 'object') return;
+  for (const key of Object.keys(obj)) {
+    const value = obj[key];
+    if (value?.type === 'text/javascript' && value.file) {
+      const scriptPath = path.join(connectorMappingDirectory, value.file);
+      if (fs.existsSync(scriptPath)) {
+        value.source = fs.readFileSync(scriptPath, { encoding: 'utf-8' });
+        delete value.file;
+      }
+    } else if (typeof value === 'object') {
+      getExtractedFiles(value, connectorMappingDirectory);
+    }
+  }
+}
+
+/**
+ * Helper that returns the import data for a connector mapping given the file where it is saved
+ * @param file The file where the connector mapping is saved
+ * @returns The connector mapping data from the file, including data from any extracted files
+ */
+function getConnectorMappingImportData(file: string): object {
+  const readManagedObject = fs.readFileSync(file, 'utf-8');
+  const importData = JSON.parse(readManagedObject);
+  const connectorMappingDirectory = path.dirname(file);
+  getExtractedFiles(importData, connectorMappingDirectory);
+  return importData;
+}
+
+/**
  * Import all mappings in fr-config-manager format
+ * @param name optional connector name to import
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function configManagerImportMappings(
-  file: string
+  name?: string
 ): Promise<boolean> {
   try {
     const mappingDir = getFilePath('sync/mappings');
@@ -74,19 +111,17 @@ export async function configManagerImportMappings(
       idm: { sync: { _id: 'sync', mappings: [] as any } },
     };
 
-    if (file) {
-      const jsonFilePath = getFilePath(`sync/mappings/${file}.json`);
-      const readFile = fs.readFileSync(jsonFilePath, 'utf8');
-      const importData = JSON.parse(readFile);
-      importMappingData.idm.sync.mappings.push(importData);
-      await importConfigEntities(importMappingData)
+    if (name) {
+      const jsonFilePath = getFilePath(`sync/mappings/${name}/${name}.json`);
+      const importData = getConnectorMappingImportData(jsonFilePath) as any;
+      await importSubConfigEntity('sync', importData);
+      return true;
     } else {
       for (const mappingFile of mappingFiles) {
         const jsonFilePath = getFilePath(
           `sync/mappings/${mappingFile}/${mappingFile}.json`
         );
-        const readMappingFile = fs.readFileSync(jsonFilePath, 'utf8');
-        const importData = JSON.parse(readMappingFile) as any;
+        const importData = getConnectorMappingImportData(jsonFilePath) as any;
 
         if (importData.file) {
           const scriptPath = getFilePath(
@@ -98,12 +133,12 @@ export async function configManagerImportMappings(
 
         importMappingData.idm.sync.mappings.push(importData);
       }
+      await importConfigEntities(importMappingData);
     }
-    await importConfigEntities(importMappingData);
 
     return true;
   } catch (error) {
-    printError(error, `Error Importing mappings to files`);
+    printError(error, `Error importing mappings from files`);
   }
   return false;
 }
