@@ -1,0 +1,12 @@
+{
+  "_id": "",
+  "_rev": "1064971965",
+  "_type": {
+    "_id": "validation",
+    "collection": false,
+    "name": "Validation Service"
+  },
+  "validGotoDestinations": [
+    "https://platform.dev.trivir.com/*?*"
+  ]
+}

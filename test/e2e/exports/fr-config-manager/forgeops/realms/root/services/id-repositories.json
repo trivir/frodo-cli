@@ -1,0 +1,15 @@
+{
+  "_id": "",
+  "_rev": "-1741783487",
+  "_type": {
+    "_id": "id-repositories",
+    "collection": false,
+    "name": "sunIdentityRepositoryService"
+  },
+  "sunIdRepoAttributeCombiner": "com.iplanet.am.sdk.AttributeCombiner",
+  "sunIdRepoAttributeValidator": [
+    "class=com.sun.identity.idm.server.IdRepoAttributeValidatorImpl",
+    "minimumPasswordLength=8",
+    "usernameInvalidChars=*|(|)|&|!"
+  ]
+}
