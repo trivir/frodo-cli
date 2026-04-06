@@ -16,6 +16,8 @@ Arguments:
                      appropriate rights to manage authentication journeys/trees.
   password           Password.
 
+Deployment: ForgeOps-only
+
 Options:
   -n, --name <name>  Connector mapping name; imports only the connector mapping
                      with the specified name.
