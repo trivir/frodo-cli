@@ -8,6 +8,7 @@ import EmailProvider from './config-manager-push-email-provider';
 import EmailTemplates from './config-manager-push-email-templates';
 import Endpoints from './config-manager-push-endpoints';
 import InternalRoles from './config-manager-push-internal-roles';
+import Journeys from './config-manager-push-journeys';
 import Kba from './config-manager-push-kba';
 import Locales from './config-manager-push-locales';
 import ManagedObjects from './config-manager-push-managed-objects';
@@ -43,6 +44,7 @@ export default function setup() {
   program.addCommand(UiConfig().name('ui-config'));
   program.addCommand(Authentication().name('authentication'));
   program.addCommand(ConnectorDefinitions().name('connector-definitions'));
+  program.addCommand(Journeys().name('journeys'));
 
   return program;
 }
