@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo config-manager push journeys "frodo config-manager push journeys -D test/e2e/exports/fr-config-manager/forgeops -m forgeops": should import the journeys into forgeops" 1`] = `""`;
+
+exports[`frodo config-manager push journeys "frodo config-manager push journeys -d -D test/e2e/exports/fr-config-manager/forgeops -m forgeops": should resolve dependencies when importing to  forgeops" 1`] = `""`;
+
+exports[`frodo config-manager push journeys "frodo config-manager push journeys -n testJourney -D test/e2e/exports/fr-config-manager/forgeops -m forgeops": should import a specific journey by name into forgeops" 1`] = `""`;
+
+exports[`frodo config-manager push journeys "frodo config-manager push journeys -r alpha -D test/e2e/exports/fr-config-manager/forgeops -m forgeops": should import a journey to a specific realm" 1`] = `""`;
