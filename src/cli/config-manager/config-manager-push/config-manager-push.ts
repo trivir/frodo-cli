@@ -11,6 +11,7 @@ import Locales from './config-manager-push-locales';
 import ManagedObjects from './config-manager-push-managed-objects';
 import OrgPrivileges from './config-manager-push-org-privileges';
 import PasswordPolicy from './config-manager-push-password-policy';
+import Saml from './config-manager-push-saml';
 import Schedules from './config-manager-push-schedules';
 import ServiceObjects from './config-manager-push-service-objects';
 import TermsAndConditions from './config-manager-push-terms-and-conditions';
@@ -39,6 +40,6 @@ export default function setup() {
   program.addCommand(CookieDomains().name('cookie-domains'));
   program.addCommand(ServiceObjects().name('service-objects'));
   program.addCommand(UiConfig().name('ui-config'));
-
+  program.addCommand(Saml().name('saml'));
   return program;
 }
