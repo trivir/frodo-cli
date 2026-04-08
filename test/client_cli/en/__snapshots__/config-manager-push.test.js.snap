@@ -28,5 +28,8 @@ Commands:
   schedules             [Experimental] Import schedules.
   terms-and-conditions  [Experimental] Import terms and conditions.
   themes                [Experimental] Import themes.
+
+  (Cloud-only):
+  secret-mappings       [Experimental] Import secret mappings.
 "
 `;

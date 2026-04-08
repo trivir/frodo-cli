@@ -11,6 +11,7 @@ import ManagedObjects from './config-manager-push-managed-objects';
 import OrgPrivileges from './config-manager-push-org-privileges';
 import PasswordPolicy from './config-manager-push-password-policy';
 import Schedules from './config-manager-push-schedules';
+import SecretMappings from './config-manager-push-secret-mappings';
 import TermsAndConditions from './config-manager-push-terms-and-conditions';
 import Themes from './config-manager-push-themes';
 
@@ -33,6 +34,6 @@ export default function setup() {
   program.addCommand(ManagedObjects().name('managed-objects'));
   program.addCommand(AccessConfig().name('access-config'));
   program.addCommand(Audit().name('audit'));
-
+  program.addCommand(SecretMappings().name('secret-mappings'));
   return program;
 }

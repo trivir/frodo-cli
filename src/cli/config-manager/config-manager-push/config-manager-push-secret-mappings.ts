@@ -1,0 +1,74 @@
+import { frodo } from '@rockcarver/frodo-lib';
+import { Option } from 'commander';
+
+import { configManagerImportSecretMappings } from '../../../configManagerOps/FrConfigSecretMappingsOps';
+import { getTokens } from '../../../ops/AuthenticateOps';
+import { printMessage, verboseMessage } from '../../../utils/Console';
+import { FrodoCommand } from '../../FrodoCommand';
+
+const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
+
+const deploymentTypes = [CLOUD_DEPLOYMENT_TYPE_KEY];
+
+export default function setup() {
+  const program = new FrodoCommand(
+    'frodo config-manager push secret-mappings',
+    [],
+    deploymentTypes
+  );
+
+  program
+    .description('Import secret mappings.')
+    .addOption(
+      new Option(
+        '-n, --name <name>',
+        'Name of the secret mapping, It will only import secret mapping with the specified name.'
+      )
+    )
+    .addOption(
+      new Option(
+        '-r, --realm <realm>',
+        'Realm name; imports only the secret mappings of the specified realm.'
+      )
+    )
+    .action(async (host, realm, user, password, options, command) => {
+      command.handleDefaultArgsAndOpts(
+        host,
+        realm,
+        user,
+        password,
+        options,
+        command
+      );
+
+      if (options.name && !options.realm) {
+        printMessage(
+          'The -n/--policy-name option requires -r/--realm to be specified.',
+          'error'
+        );
+        program.help();
+        process.exitCode = 1;
+        return;
+      }
+
+      if (await getTokens(false, true, deploymentTypes)) {
+        verboseMessage('importing config entity secret-mappings');
+        const outcome = await configManagerImportSecretMappings(
+          options.name,
+          options.realm
+        );
+        if (!outcome) process.exitCode = 1;
+      }
+      // unrecognized combination of options or no options
+      else {
+        printMessage(
+          'Unrecognized combination of options or no options...',
+          'error'
+        );
+        program.help();
+        process.exitCode = 1;
+      }
+    });
+
+  return program;
+}

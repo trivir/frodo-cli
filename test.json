@@ -1,0 +1,60 @@
+{
+  "meta": {
+    "exportDate": "2026-04-02T17:35:45.032Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-34 [v24.13.0]",
+    "exportedBy": "phales@trivir.com",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  },
+  "secretstore": {
+    "am.authentication.nodes.persistentcookie.encryption": {
+      "_id": "am.authentication.nodes.persistentcookie.encryption",
+      "_type": {
+        "_id": "mappings",
+        "collection": true,
+        "name": "Mappings"
+      },
+      "aliases": [
+        "Btest2"
+      ],
+      "secretId": "am.authentication.nodes.persistentcookie.encryption"
+    },
+    "am.authentication.nodes.webauthn.fidometadataservice.rootcertificate": {
+      "_id": "am.authentication.nodes.webauthn.fidometadataservice.rootcertificate",
+      "_type": {
+        "_id": "mappings",
+        "collection": true,
+        "name": "Mappings"
+      },
+      "aliases": [
+        "Btest"
+      ],
+      "secretId": "am.authn.authid.signing.HMAC"
+    },
+    "am.services.oauth2.oidc.signing.RSA": {
+      "_id": "am.services.oauth2.oidc.signing.RSA",
+      "_type": {
+        "_id": "mappings",
+        "collection": true,
+        "name": "Mappings"
+      },
+      "aliases": [
+        "Atest"
+      ],
+      "secretId": "am.services.oauth2.oidc.signing.RSA"
+    },
+    "am.services.selfservice.token.signing": {
+      "_id": "am.services.selfservice.token.signing",
+      "_type": {
+        "_id": "mappings",
+        "collection": true,
+        "name": "Mappings"
+      },
+      "aliases": [
+        "Atest2"
+      ],
+      "secretId": "am.services.selfservice.token.signing"
+    }
+  }
+}
