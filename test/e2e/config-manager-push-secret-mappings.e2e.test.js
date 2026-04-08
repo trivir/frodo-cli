@@ -47,7 +47,7 @@
  */
 
 /*
-// ForgeOps
+// Cloud
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push secret-mappings -D test/e2e/exports/fr-config-manager/cloud 
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push secret-mappings -r bravo -D test/e2e/exports/fr-config-manager/cloud 
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push secret-mappings -r alpha -n am.services.iot.cert.verification -D test/e2e/exports/fr-config-manager/cloud 
