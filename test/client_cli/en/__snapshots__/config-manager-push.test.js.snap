@@ -16,6 +16,7 @@ Commands:
   access-config         [Experimental] Import access configuration.
   audit                 [Experimental] Import audit configuration.
   cookie-domains        [Experimental] Import cookie domains.
+  cors                  [Experimental] Import CORS configuration.
   email-provider        [Experimental] Import email provider configuration.
   email-templates       [Experimental] Import email template objects.
   endpoints             [Experimental] Import custom endpoints objects.
