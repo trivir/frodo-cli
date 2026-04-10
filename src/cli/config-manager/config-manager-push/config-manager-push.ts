@@ -2,6 +2,7 @@ import { FrodoStubCommand } from '../../FrodoCommand';
 import AccessConfig from './config-manager-push-access-config';
 import Audit from './config-manager-push-audit';
 import CookieDomains from './config-manager-push-cookie-domain';
+import CSP from './config-manager-push-csp';
 import EmailProvider from './config-manager-push-email-provider';
 import EmailTemplates from './config-manager-push-email-templates';
 import Endpoints from './config-manager-push-endpoints';
@@ -40,5 +41,6 @@ export default function setup() {
   program.addCommand(ServiceObjects().name('service-objects'));
   program.addCommand(UiConfig().name('ui-config'));
 
+  program.addCommand(CSP().name('csp'));
   return program;
 }
