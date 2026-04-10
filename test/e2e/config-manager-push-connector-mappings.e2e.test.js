@@ -74,7 +74,7 @@ describe('frodo config-manager push connector mappings', () => {
         expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
     });
     test(`"frodo config-manager push connector-mappings -n UserToUserJavascriptSync -D ${allDirectory} -m forgeops ": should import a specific connector mapping by name into forgeops"`, async () => {
-        const CMD = `frodo config-manager push connector-mappings -D ${allDirectory} -m forgeops `;
+        const CMD = `frodo config-manager push connector-mappings -n UserToUserJavascriptSync -D ${allDirectory} -m forgeops `;
         const { stdout, stderr } = await exec(CMD, forgeopsEnv);
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
         expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();

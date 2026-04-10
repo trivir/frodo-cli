@@ -64,8 +64,8 @@ export async function configManagerExportMappings(): Promise<boolean> {
 
 /**
  * Helper that recursively reads in extracted files and stores them back in the connector
- * @param obj The connector configuration
- * @param connectorMappingDirectory The directory where the connector resides
+ * @param {Record<string, any>} obj The connector configuration
+ * @param {string} connectorMappingDirectory The directory where the connector resides
  */
 function getExtractedFiles(obj: any, connectorMappingDirectory: string): void {
   if (!obj || typeof obj !== 'object') return;
@@ -85,8 +85,8 @@ function getExtractedFiles(obj: any, connectorMappingDirectory: string): void {
 
 /**
  * Helper that returns the import data for a connector mapping given the file where it is saved
- * @param file The file where the connector mapping is saved
- * @returns The connector mapping data from the file, including data from any extracted files
+ * @param {string} file The file where the connector mapping is saved
+ * @returns {object} The connector mapping data from the file, including data from any extracted files
  */
 function getConnectorMappingImportData(file: string): object {
   const readManagedObject = fs.readFileSync(file, 'utf-8');
@@ -98,31 +98,29 @@ function getConnectorMappingImportData(file: string): object {
 
 /**
  * Import all mappings in fr-config-manager format
- * @param name optional connector name to import
+ * @param {string} [name] optional connector name to import
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function configManagerImportMappings(
   name?: string
 ): Promise<boolean> {
   try {
-    const mappingDir = getFilePath('sync/mappings');
-    const mappingFiles = fs.readdirSync(mappingDir);
-    const importMappingData = {
-      idm: { sync: { _id: 'sync', mappings: [] as any } },
-    };
-
     if (name) {
       const jsonFilePath = getFilePath(`sync/mappings/${name}/${name}.json`);
       const importData = getConnectorMappingImportData(jsonFilePath) as any;
       await importSubConfigEntity('sync', importData);
       return true;
     } else {
+      const mappingDir = getFilePath('sync/mappings');
+      const mappingFiles = fs.readdirSync(mappingDir);
+      const importMappingData = {
+        idm: { sync: { _id: 'sync', mappings: [] as any } },
+      };
       for (const mappingFile of mappingFiles) {
         const jsonFilePath = getFilePath(
           `sync/mappings/${mappingFile}/${mappingFile}.json`
         );
         const importData = getConnectorMappingImportData(jsonFilePath) as any;
-
         if (importData.file) {
           const scriptPath = getFilePath(
             `sync/mappings/${mappingFile}/${importData.file}`
@@ -130,12 +128,10 @@ export async function configManagerImportMappings(
           importData.source = fs.readFileSync(scriptPath, 'utf8');
           delete importData.file;
         }
-
         importMappingData.idm.sync.mappings.push(importData);
       }
       await importConfigEntities(importMappingData);
     }
-
     return true;
   } catch (error) {
     printError(error, `Error importing mappings from files`);
