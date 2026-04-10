@@ -2,12 +2,15 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import { PolicySkeleton } from '@rockcarver/frodo-lib/types/api/PoliciesApi';
 import { PolicySetSkeleton } from '@rockcarver/frodo-lib/types/api/PolicySetApi';
 import { ResourceTypeSkeleton } from '@rockcarver/frodo-lib/types/api/ResourceTypesApi';
+import { PolicySetExportInterface } from '@rockcarver/frodo-lib/types/ops/PolicySetOps';
+import fs from 'fs';
 import { readFile } from 'fs/promises';
 
 import { printError, verboseMessage } from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { policySet, policy, resourceType } = frodo.authz;
+const { importPolicySet, importPolicySets } = frodo.authz.policySet;
 const { readRealms } = frodo.realm;
 
 type ByName = { policySetName: string };
@@ -222,6 +225,99 @@ export async function configManagerExportAuthzPoliciesAll(): Promise<boolean> {
         return false;
       }
     }
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+/**
+ * Import authz policy sets
+ * @param realm optional realm to import to
+ * @param name optional name to import
+ * @returns {Promise<boolean>} true if all imports were successful
+ */
+export async function configManagerImportAuthzPolicy(
+  realm: string,
+  name: string
+): Promise<boolean> {
+  try {
+    let realmsToProcess: string[];
+    if (realm) {
+      realmsToProcess = [realm];
+    } else {
+      const realmsDir = getFilePath('realms/');
+      realmsToProcess = fs
+        .readdirSync(realmsDir, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => entry.name);
+    }
+
+    for (const realmName of realmsToProcess) {
+      state.setRealm(realmName);
+
+      const realmAuthzDir = `realms/${realmName}/authorization`;
+
+      const policySetsDir = getFilePath(`${realmAuthzDir}/policy-sets`);
+      const psDirs = name
+        ? [name]
+        : fs.existsSync(policySetsDir)
+          ? fs.readdirSync(policySetsDir)
+          : [];
+
+      const policyset: Record<string, any> = {};
+      const policyMap: Record<string, any> = {};
+      const referencedResourceTypeUuids: Set<string> = new Set();
+
+      for (const psDir of psDirs) {
+        const psFilePath = `${policySetsDir}/${psDir}/${psDir}.json`;
+        const psData = JSON.parse(fs.readFileSync(psFilePath, 'utf8'));
+        policyset[psData.name] = psData;
+        psData.resourceTypeUuids?.forEach((id: string) =>
+          referencedResourceTypeUuids.add(id)
+        );
+
+        const policiesDir = `${policySetsDir}/${psDir}/policies`;
+        for (const file of fs.readdirSync(policiesDir)) {
+          if (file.endsWith('.json')) {
+            const pData = JSON.parse(
+              fs.readFileSync(`${policiesDir}/${file}`, 'utf8')
+            );
+            policyMap[pData.name] = pData;
+          }
+        }
+      }
+
+      const resourcetype: Record<string, any> = {};
+      const resourceTypesDir = getFilePath(`${realmAuthzDir}/resource-types`);
+      if (fs.existsSync(resourceTypesDir)) {
+        for (const file of fs.readdirSync(resourceTypesDir)) {
+          if (file.endsWith('.json')) {
+            const rtData = JSON.parse(
+              fs.readFileSync(`${resourceTypesDir}/${file}`, 'utf8')
+            );
+            if (!name || referencedResourceTypeUuids.has(rtData.uuid)) {
+              resourcetype[rtData.uuid] = rtData;
+            }
+          }
+        }
+      }
+
+      const importData: PolicySetExportInterface = {
+        script: {},
+        resourcetype,
+        policy: policyMap,
+        policyset,
+      };
+
+      if (name) {
+        await importPolicySet(name, importData);
+      } else {
+        await importPolicySets(importData);
+      }
+    }
+
     return true;
   } catch (error) {
     printError(error);

@@ -1,0 +1,20 @@
+{
+  "_id": "test value",
+  "_rev": "1774279459670",
+  "actionValues": {},
+  "active": true,
+  "applicationName": "test_id",
+  "createdBy": "id=amadmin,ou=user,ou=am-config",
+  "creationDate": "2026-03-23T15:24:19.670Z",
+  "description": "",
+  "lastModifiedBy": "id=amadmin,ou=user,ou=am-config",
+  "lastModifiedDate": "2026-03-23T15:24:19.670Z",
+  "name": "test value",
+  "resourceTypeUuid": "d60b7a71-1dc6-44a5-8e48-e4b9d92dee8b",
+  "resources": [
+    "*://*:*/*"
+  ],
+  "subject": {
+    "type": "NONE"
+  }
+}
