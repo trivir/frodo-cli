@@ -10,82 +10,80 @@ import {
 } from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
-const { readSecrets, exportSecret } = frodo.cloud.secret;
+const { readSecrets, readVersionsOfSecret, exportSecret } = frodo.cloud.secret;
 
 type FrConfigSecret = SecretSkeleton & {
   valueBase64: string;
 };
 
-async function getFrConfigSecrets(): Promise<FrConfigSecret[]> {
-  const originalSecrets = await readSecrets();
-  return originalSecrets.map((secret) => ({
-    ...secret,
-    valueBase64: `\${${secret._id.toUpperCase().replace(/-/g, '_')}}`,
-  }));
-}
-
 /**
  * Export all secrets to individual files in fr-config-manager format
- * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
- * @param {boolean} includeActiveValues include active value of secret (default: false)
- * @param {string} target Host URL of target environment to encrypt secret value for
- * @param {string} name secret name
+ * @param {string} name secret name. If not specified, will export all secrets
+ * @param {boolean} activeOnly true to exclude secret version history. Default: false
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function configManagerExportSecrets(
   name?: string,
-  target?: string
+  activeOnly?: boolean
 ): Promise<boolean> {
-  let secrets: FrConfigSecret[] = [];
+  let secrets: FrConfigSecret[];
   const spinnerId = createProgressIndicator(
     'indeterminate',
     0,
     `Reading secrets...`
   );
   try {
-    secrets = await getFrConfigSecrets();
-    secrets.sort((a, b) => a._id.localeCompare(b._id));
+    const allSecrets = (await readSecrets()).map((secret) => ({
+      ...secret,
+      valueBase64: `\${${secret._id.toUpperCase().replace(/-/g, '_')}}`,
+    }));
     if (name) {
-      const match = secrets.find((s) => s._id === name);
+      const match = allSecrets.find((s) => s._id === name);
       if (!match) {
         stopProgressIndicator(spinnerId, `Secret '${name}' not found.`, 'fail');
         return false;
       }
       secrets = [match];
+    } else {
+      secrets = allSecrets.sort((a, b) => a._id.localeCompare(b._id));
     }
-    stopProgressIndicator(
-      spinnerId,
-      `Successfully read ${secrets.length} secrets.`,
-      'success'
-    );
-    const indicatorId = createProgressIndicator(
-      'determinate',
-      secrets.length,
-      'Exporting secrets'
-    );
+    updateProgressIndicator(spinnerId, `Saving secrets...`);
     for (const secret of secrets) {
       const exportData: SecretsExportInterface = await exportSecret(
         secret._id,
-        false,
-        target
+        false
       );
       const [secretKey] = Object.keys(exportData.secret);
       const fullSecret = exportData.secret[secretKey] as FrConfigSecret;
-      const cleanSecret = {
+      const cleanSecret: Record<string, unknown> = {
         _id: fullSecret._id,
         description: fullSecret.description,
         encoding: fullSecret.encoding,
         useInPlaceholders: fullSecret.useInPlaceholders,
-        valueBase64: `\${${secret._id.toUpperCase().replace(/-/g, '_')}}`,
+        valueBase64: secret.valueBase64,
       };
+      if (!activeOnly) {
+        const versions = await readVersionsOfSecret(secret._id);
+        const baseKey = secret._id.toUpperCase().replace(/-/g, '_');
+        delete cleanSecret.valueBase64;
+        cleanSecret.versions = versions
+          .sort((a, b) => Number(a.version) - Number(b.version))
+          .map(({ version }) => ({
+            valueBase64: `\${${baseKey}_${version}}`,
+            version,
+          }));
+      }
       saveJsonToFile(
         cleanSecret,
         getFilePath(`esvs/secrets/${secret._id}.json`, true),
         false
       );
-      updateProgressIndicator(indicatorId, `Exported secret ${secret._id}`);
     }
-    stopProgressIndicator(indicatorId, `${secrets.length} secrets exported.`);
+    stopProgressIndicator(
+      spinnerId,
+      `${secrets.length} secrets exported.`,
+      'success'
+    );
     return true;
   } catch (error) {
     stopProgressIndicator(
