@@ -1,28 +1,25 @@
 import { frodo } from '@rockcarver/frodo-lib';
-
 import { printError, printMessage } from '../utils/Console';
+const { checkForUpdates, applyUpdates, getStatus } = frodo.cloud.startup;
 
-const { checkForUpdates, applyUpdates } = frodo.cloud.startup;
-
+/**
+ * Restart the environment to apply pending ESV updates.
+ * @param {boolean} status if true, only report the current restart status without restarting
+ * @param {boolean} check if true, only restart if there are ESVs that need loading
+ * @param {boolean} wait if true, wait for the restart to complete before returning
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
 export async function configManagerRestart(
   status?: boolean,
   check?: boolean,
   wait?: boolean
 ): Promise<boolean> {
   try {
-    if (check) {
-      const updates = await checkForUpdates();
-      const updateCount =
-        (updates.secrets?.length || 0) + (updates.variables?.length || 0);
-      if (updateCount > 0) {
-        printMessage(`${updateCount} update(s) need to be applied`);
-      } else {
-        printMessage('No updates need to be applied');
-      }
+    if (status) {
+      printMessage(await getStatus());
       return true;
     }
-
-    if (status) {
+    if (check) {
       const updates = await checkForUpdates();
       const updateCount =
         (updates.secrets?.length || 0) + (updates.variables?.length || 0);
@@ -31,7 +28,7 @@ export async function configManagerRestart(
         return true;
       }
     }
-    const outcome = await applyUpdates(wait || false);
+    const outcome = await applyUpdates(!!wait);
     return outcome;
   } catch (error) {
     printError(error, 'Error restarting environment');
