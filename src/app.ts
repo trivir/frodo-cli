@@ -53,6 +53,9 @@ const { initTokenCache } = frodo.cache;
 process.noDeprecation = true;
 process.argv = normalizeExpandedHelpArgv(process.argv);
 
+// Override SIGINT (ctrl+c) to exit the program immediately. Exit code 130 is normally associated with SIGINT.
+process.on('SIGINT', () => process.exit(130));
+
 (async () => {
   try {
     // override default library output handlers with our own
