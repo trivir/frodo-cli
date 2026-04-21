@@ -34,6 +34,9 @@ Options:
   --no-deps                   Do not include any dependencies (scripts, email
                               templates, SAML entity providers and circles of
                               trust, social identity providers, themes).
+  --sep-coords                Export x and y coordinate positions of the
+                              journey/tree nodes to separate files. (default:
+                              false)
   --use-string-arrays         Where applicable, use string arrays to store
                               multi-line text (e.g. scripts). (default: off)
   -h, --help                  Help
