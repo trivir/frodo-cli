@@ -40,8 +40,19 @@ export default function setup() {
           options,
           command
         );
+        if (!options.entityId) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
         // export by id/name
-        if (options.entityId && (await getTokens())) {
+        if (options.entityId) {
           printMessage(
             `Exporting metadata for provider "${
               options.entityId
@@ -54,21 +65,11 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // // --all-separate -A
-        // else if (options.allSeparate && (await getTokens())) {
+        // else if (options.allSeparate) {
         //   printMessage('Exporting all providers to separate files...');
         //   exportProvidersToFiles();
         // }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

@@ -7,7 +7,7 @@ import {
   deleteApplications,
 } from '../../ops/ApplicationOps';
 import { getTokens } from '../../ops/AuthenticateOps';
-import { verboseMessage } from '../../utils/Console';
+import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
@@ -66,11 +66,25 @@ export default function setup() {
           options,
           command
         );
+
+        if (!options.appId && !options.appName && !options.all) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          return;
+        }
+
+        const getTokensisSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensisSuccessful) process.exit(1);
+
         // -i/--app-id or -n/--app-name
-        if (
-          (options.appId || options.appName) &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        if (options.appId || options.appName) {
           verboseMessage('Deleting application...');
           const outcome = await deleteApplication(
             options.appId,
@@ -80,21 +94,10 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // -a/--all
-        else if (
-          options.all &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.all) {
           verboseMessage('Deleting all applications...');
           const outcome = await deleteApplications(options.deep);
           if (!outcome) process.exitCode = 1;
-        }
-        // unrecognized combination of options or no options
-        else {
-          verboseMessage(
-            'Unrecognized combination of options or no options...'
-          );
-          program.help();
-          process.exitCode = 1;
         }
       }
       // end command logic inside action handler

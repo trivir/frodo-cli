@@ -3,7 +3,7 @@ import { Option } from 'commander';
 
 import { configManagerExportSchedules } from '../../../configManagerOps/FrConfigSchedulesOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
-import { printMessage, verboseMessage } from '../../../utils/Console';
+import { printMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
@@ -41,17 +41,14 @@ export default function setup() {
       );
 
       if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Exporting schedules');
+        if (options.name) {
+          printMessage(`Exporting schedule with name ${options.name}`);
+        } else {
+          printMessage('Exporting all schedules...');
+        }
         const outcome = await configManagerExportSchedules(options.name);
         if (!outcome) process.exitCode = 1;
-      }
-      // unrecognized combination of options or no options
-      else {
-        printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
-        );
-        program.help();
+      } else {
         process.exitCode = 1;
       }
     });

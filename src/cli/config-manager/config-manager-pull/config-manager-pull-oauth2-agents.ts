@@ -99,88 +99,76 @@ export default function setup() {
         realm = options.realm;
       }
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        let outcome: boolean;
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
 
-        // -n/--script-name
-        if (options.agentName) {
-          printMessage(
-            `Exporting the agent "${options.agentName}" from the ${state.getRealm()} realm.`
-          );
+      let outcome: boolean;
 
-          // try and find the agent in current realm
-          outcome = await configManagerExportAgent(
-            options.agentName,
-            options.file
-          );
+      // -n/--script-name
+      if (options.agentName) {
+        printMessage(
+          `Exporting the agent "${options.agentName}" from the ${state.getRealm()} realm.`
+        );
 
-          // check other realms for the agent
-          if (!outcome && !options.file) {
-            const checkedRealms: string[] = [state.getRealm()];
-            for (const realm of await readRealms()) {
-              if (outcome) {
-                break;
-              }
-              if (!checkedRealms.includes(realm.name)) {
-                printMessage(
-                  `Exporting the agent "${options.agentName}" from the ${state.getRealm()} realm failed.`
-                );
-                state.setRealm(realm.name);
-                checkedRealms.push(state.getRealm());
-                printMessage(
-                  `Looking for the agent "${options.agentName}" in the ${state.getRealm()} realm now.`
-                );
-                outcome = await configManagerExportAgent(
-                  options.agentName,
-                  null
-                );
-              }
+        // try and find the agent in current realm
+        outcome = await configManagerExportAgent(
+          options.agentName,
+          options.file
+        );
+
+        // check other realms for the agent
+        if (!outcome && !options.file) {
+          const checkedRealms: string[] = [state.getRealm()];
+          for (const realm of await readRealms()) {
+            if (outcome) {
+              break;
             }
-            if (!outcome) {
+            if (!checkedRealms.includes(realm.name)) {
               printMessage(
-                `Did not find the agent "${options.agentName}" anywhere.`
+                `Exporting the agent "${options.agentName}" from the ${state.getRealm()} realm failed.`
               );
+              state.setRealm(realm.name);
+              checkedRealms.push(state.getRealm());
+              printMessage(
+                `Looking for the agent "${options.agentName}" in the ${state.getRealm()} realm now.`
+              );
+              outcome = await configManagerExportAgent(options.agentName, null);
             }
           }
-        }
-
-        // -f/--file
-        else if (options.file) {
-          printMessage(
-            `Exporting all the agents defined in the provided config file.`
-          );
-          outcome = await configManagerExportConfigAgents(options.file);
-        }
-
-        // -r/--realm
-        else if (realm !== constants.DEFAULT_REALM_KEY) {
-          printMessage(
-            `Exporting all the agents from the ${state.getRealm()} realm.`
-          );
-          outcome = await configManagerExportAgentsRealm();
-        }
-
-        // export all oauth2 agents, the default when no options are provided
-        else {
-          printMessage(`Exporting all the agents in the host tenant.`);
-          outcome = await configManagerExportAgentsAll();
-        }
-
-        if (!outcome) {
-          printMessage(
-            `Failed to export one or more oauth2 agents. ${options.verbose ? '' : 'Check --verbose for me details.'}`
-          );
-          process.exitCode = 1;
+          if (!outcome) {
+            printMessage(
+              `Did not find the agent "${options.agentName}" anywhere.`
+            );
+          }
         }
       }
-
-      // unrecognized combination of options or no options
-      else {
+      // -f/--file
+      else if (options.file) {
         printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
+          `Exporting all the agents defined in the provided config file.`
         );
-        program.help();
+        outcome = await configManagerExportConfigAgents(options.file);
+      }
+      // -r/--realm
+      else if (realm !== constants.DEFAULT_REALM_KEY) {
+        printMessage(
+          `Exporting all the agents from the ${state.getRealm()} realm.`
+        );
+        outcome = await configManagerExportAgentsRealm();
+      }
+      // export all oauth2 agents, the default when no options are provided
+      else {
+        printMessage(`Exporting all the agents in the host tenant.`);
+        outcome = await configManagerExportAgentsAll();
+      }
+      if (!outcome) {
+        printMessage(
+          `Failed to export one or more oauth2 agents. ${options.verbose ? '' : 'Check --verbose for me details.'}`
+        );
         process.exitCode = 1;
       }
     });

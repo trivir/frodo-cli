@@ -45,10 +45,6 @@ export default function setup() {
         }
         // unrecognized combination of options or no options
         else {
-          verboseMessage(
-            'Unrecognized combination of options or no options...'
-          );
-          program.help();
           process.exitCode = 1;
         }
       }

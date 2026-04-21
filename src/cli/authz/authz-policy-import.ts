@@ -7,7 +7,7 @@ import {
   importPoliciesFromFiles,
   importPolicyFromFile,
 } from '../../ops/PolicyOps';
-import { verboseMessage } from '../../utils/Console';
+import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
 export default function setup() {
@@ -60,8 +60,26 @@ export default function setup() {
           options,
           command
         );
+
+        if (
+          !options.policyId &&
+          !options.all &&
+          !options.allSeparate &&
+          !options.file
+        ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
         // import
-        if (options.policyId && (await getTokens())) {
+        if (options.policyId) {
           verboseMessage('Importing authorization policy from file...');
           const outcome = await importPolicyFromFile(
             options.policyId,
@@ -75,7 +93,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // -a/--all
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Importing all authorization policies from file...');
           const outcome = await importPoliciesFromFile(options.file, {
             deps: options.deps,
@@ -85,7 +103,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // -A/--all-separate
-        else if (options.allSeparate && (await getTokens())) {
+        else if (options.allSeparate) {
           verboseMessage(
             'Importing all authorization policies from separate files...'
           );
@@ -97,7 +115,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // import first policy set from file
-        else if (options.file && (await getTokens())) {
+        else if (options.file) {
           verboseMessage(
             `Importing first authorization policy from file "${options.file}"...`
           );
@@ -107,14 +125,6 @@ export default function setup() {
             policySetName: options.setId,
           });
           if (!outcome) process.exitCode = 1;
-        }
-        // unrecognized combination of options or no options
-        else {
-          verboseMessage(
-            'Unrecognized combination of options or no options...'
-          );
-          program.help();
-          process.exitCode = 1;
         }
       }
       // end command logic inside action handler

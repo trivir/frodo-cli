@@ -8,7 +8,7 @@ import {
   importFirstAgentFromFile,
 } from '../../ops/AgentOps.js';
 import { getTokens } from '../../ops/AuthenticateOps';
-import { verboseMessage } from '../../utils/Console.js';
+import { printMessage, verboseMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
 
 const { CLASSIC_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
@@ -50,57 +50,63 @@ export default function setup() {
           options,
           command
         );
+
         if (
-          await getTokens(
-            false,
-            true,
-            options.global ? globalDeploymentTypes : undefined
-          )
+          !options.agentId &&
+          !options.all &&
+          !options.file &&
+          !options.allSeparate
         ) {
-          // import
-          if (options.agentId && options.file) {
-            verboseMessage(`Importing agent ${options.agentId}...`);
-            const outcome = await importAgentFromFile(
-              options.agentId,
-              options.file,
-              options.global
-            );
-            if (!outcome) process.exitCode = 1;
-          }
-          // --all -a
-          else if (options.all && options.file) {
-            verboseMessage(
-              `Importing all agents from a single file (${options.file})...`
-            );
-            const outcome = await importAgentsFromFile(
-              options.file,
-              options.global
-            );
-            if (!outcome) process.exitCode = 1;
-          }
-          // --all-separate -A
-          else if (options.allSeparate && !options.file) {
-            verboseMessage('Importing all agents from separate files...');
-            const outcome = await importAgentsFromFiles(options.global);
-            if (!outcome) process.exitCode = 1;
-          }
-          // import first agent in file
-          else if (options.file) {
-            verboseMessage('Importing first agent in file...');
-            const outcome = await importFirstAgentFromFile(
-              options.file,
-              options.global
-            );
-            if (!outcome) process.exitCode = 1;
-          }
-          // unrecognized combination of options or no options
-          else {
-            verboseMessage(
-              'Unrecognized combination of options or no options...'
-            );
-            program.help();
-            process.exitCode = 1;
-          }
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          options.global ? globalDeploymentTypes : undefined
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        // import
+        if (options.agentId && options.file) {
+          verboseMessage(`Importing agent ${options.agentId}...`);
+          const outcome = await importAgentFromFile(
+            options.agentId,
+            options.file,
+            options.global
+          );
+          if (!outcome) process.exitCode = 1;
+        }
+        // --all -a
+        else if (options.all && options.file) {
+          verboseMessage(
+            `Importing all agents from a single file (${options.file})...`
+          );
+          const outcome = await importAgentsFromFile(
+            options.file,
+            options.global
+          );
+          if (!outcome) process.exitCode = 1;
+        }
+        // --all-separate -A
+        else if (options.allSeparate && !options.file) {
+          verboseMessage('Importing all agents from separate files...');
+          const outcome = await importAgentsFromFiles(options.global);
+          if (!outcome) process.exitCode = 1;
+        }
+        // import first agent in file
+        else if (options.file) {
+          verboseMessage('Importing first agent in file...');
+          const outcome = await importFirstAgentFromFile(
+            options.file,
+            options.global
+          );
+          if (!outcome) process.exitCode = 1;
         }
       }
       // end command logic inside action handler

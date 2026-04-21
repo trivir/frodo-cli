@@ -72,14 +72,23 @@ export default function setup() {
           options,
           command
         );
-        if (
-          options.secretstoreId &&
-          (await getTokens(
-            false,
-            true,
-            options.global ? globalDeploymentTypes : deploymentTypes
-          ))
-        ) {
+
+        if (!options.secretstoreId && !options.all && !options.allSeparate) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSucessful = await getTokens(
+          false,
+          true,
+          options.global ? globalDeploymentTypes : deploymentTypes
+        );
+        if (!getTokensIsSucessful) process.exit(1);
+
+        if (options.secretstoreId) {
           verboseMessage(`Exporting secret store ${options.secretstoreId}...`);
           const outcome = await exportSecretStoreToFile(
             options.secretstoreId,
@@ -91,14 +100,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          (await getTokens(
-            false,
-            true,
-            options.global ? globalDeploymentTypes : deploymentTypes
-          ))
-        ) {
+        else if (options.all) {
           verboseMessage(
             `Exporting all${options.global ? ' global' : ''} secret stores to a single file...`
           );
@@ -110,14 +112,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (
-          options.allSeparate &&
-          (await getTokens(
-            false,
-            true,
-            options.global ? globalDeploymentTypes : deploymentTypes
-          ))
-        ) {
+        else if (options.allSeparate) {
           verboseMessage(
             `Exporting all${options.global ? ' global' : ''} secret stores to separate files...`
           );
@@ -126,16 +121,8 @@ export default function setup() {
             options.metadata
           );
           if (!outcome) process.exitCode = 1;
-        } else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.outputHelp();
-          process.exitCode = 1;
         }
       }
-      // end command logic inside action handler
     );
   return program;
 }

@@ -64,12 +64,24 @@ export default function setup() {
           options,
           command
         );
-        // import by id
         if (
-          options.file &&
-          options.templateId &&
-          (await getTokens(false, true, deploymentTypes))
+          !options.templateId &&
+          !options.all &&
+          !options.allSeparate &&
+          !options.file
         ) {
+          printMessage('Unrecognized combination of options or no options...');
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+        // import by id
+        if (options.file && options.templateId) {
           verboseMessage(`Importing email template "${options.templateId}"...`);
           const outcome = await importEmailTemplateFromFile(
             options.templateId,
@@ -79,11 +91,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.all && options.file) {
           verboseMessage(
             `Importing all email templates from a single file (${options.file})...`
           );
@@ -91,11 +99,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (
-          options.allSeparate &&
-          !options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.allSeparate && !options.file) {
           verboseMessage(
             'Importing all email templates from separate files (*.template.email.json) in current directory...'
           );
@@ -103,10 +107,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // import first template from file
-        else if (
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.file) {
           verboseMessage(
             `Importing first email template from file "${options.file}"...`
           );
@@ -116,17 +117,7 @@ export default function setup() {
           );
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end program logic inside action handler
     );
 
   return program;

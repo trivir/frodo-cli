@@ -39,12 +39,23 @@ export default function setup() {
           options,
           command
         );
+        if (!options.secretId && !options.version) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
         // delete by id
-        if (
-          options.secretId &&
-          options.version &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        if (options.secretId && options.version) {
           verboseMessage(`Deleting version of secret...`);
           const outcome = await deleteVersionOfSecret(
             options.secretId,
@@ -58,13 +69,7 @@ export default function setup() {
         //   const outcome = deleteJourneys(options);
         //   if (!outcome) process.exitCode = 1;
         // }
-        // unrecognized combination of options or no options
-        else {
-          printMessage('Unrecognized combination of options or no options...');
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

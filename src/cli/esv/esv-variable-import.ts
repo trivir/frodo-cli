@@ -52,11 +52,27 @@ export default function setup() {
           options,
           command
         );
-        // import
         if (
-          options.variableId &&
-          (await getTokens(false, true, deploymentTypes))
+          !options.variableId &&
+          !options.all &&
+          !options.allSeparate &&
+          !options.file
         ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+        // import
+        if (options.variableId) {
           printMessage(`Importing variable ${options.variableId}...`);
           const outcome = await importVariableFromFile(
             options.variableId,
@@ -65,11 +81,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.all && options.file) {
           printMessage(
             `Importing all variables from a single file (${options.file})...`
           );
@@ -77,11 +89,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (
-          options.allSeparate &&
-          !options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.allSeparate && !options.file) {
           printMessage(
             'Importing all variables from separate files in working directory...'
           );
@@ -89,22 +97,12 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // import first
-        else if (
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.file) {
           printMessage('Importing first variable in file...');
           const outcome = await importVariableFromFile(null, options.file);
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage('Unrecognized combination of options or no options...');
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

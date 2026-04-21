@@ -75,11 +75,23 @@ export default function setup() {
           options,
           command
         );
+        if (!options.mappingId && !options.all && !options.allSeparate) {
+          printMessage(
+            'Unrecognized combinations of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccesful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccesful) process.exit(1);
+
         // export by id/name
-        if (
-          options.mappingId &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        if (options.mappingId) {
           verboseMessage(`Exporting mapping ${options.mappingId}...`);
           const outcome = await exportMappingToFile(
             options.mappingId,
@@ -93,10 +105,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.all) {
           verboseMessage(`Exporting all mappings to a single file...`);
           const outcome = await exportMappingsToFile(
             options.file,
@@ -111,10 +120,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (
-          options.allSeparate &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.allSeparate) {
           verboseMessage('Exporting all mappings to separate files...');
           const outcome = await exportMappingsToFiles(options.metadata, {
             connectorId: options.connectorId,
@@ -124,17 +130,7 @@ export default function setup() {
           });
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

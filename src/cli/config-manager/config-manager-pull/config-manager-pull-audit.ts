@@ -2,7 +2,7 @@ import { frodo } from '@rockcarver/frodo-lib';
 
 import { configManagerExportAudit } from '../../../configManagerOps/FrConfigAuditOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
-import { printMessage, verboseMessage } from '../../../utils/Console';
+import { verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
@@ -39,11 +39,6 @@ export default function setup() {
       }
       // unrecognized combination of options or no options
       else {
-        printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
-        );
-        program.help();
         process.exitCode = 1;
       }
     });

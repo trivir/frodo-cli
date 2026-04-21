@@ -71,15 +71,7 @@ export default function setup() {
           );
           process.exitCode = 1;
         }
-      }
-
-      // unrecognized combination of options or no options
-      else {
-        printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
-        );
-        program.help();
+      } else {
         process.exitCode = 1;
       }
     });

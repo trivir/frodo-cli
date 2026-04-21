@@ -7,7 +7,7 @@ import {
   exportAgentToFile,
 } from '../../ops/AgentOps.js';
 import { getTokens } from '../../ops/AuthenticateOps';
-import { verboseMessage } from '../../utils/Console.js';
+import { printMessage, verboseMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
 
 const { CLASSIC_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
@@ -55,51 +55,52 @@ export default function setup() {
           options,
           command
         );
-        if (
-          await getTokens(
-            false,
-            true,
-            options.global ? globalDeploymentTypes : undefined
-          )
-        ) {
-          // export
-          if (options.agentId) {
-            verboseMessage('Exporting agent...');
-            const outcome = await exportAgentToFile(
-              options.agentId,
-              options.file,
-              options.global,
-              options.metadata
-            );
-            if (!outcome) process.exitCode = 1;
-          }
-          // --all -a
-          else if (options.all) {
-            verboseMessage('Exporting all agents to a single file...');
-            const outcome = await exportAgentsToFile(
-              options.file,
-              options.global,
-              options.metadata
-            );
-            if (!outcome) process.exitCode = 1;
-          }
-          // --all-separate -A
-          else if (options.allSeparate) {
-            verboseMessage('Exporting all agents to separate files...');
-            const outcome = await exportAgentsToFiles(
-              options.global,
-              options.metadata
-            );
-            if (!outcome) process.exitCode = 1;
-          }
-          // unrecognized combination of options or no options
-          else {
-            verboseMessage(
-              'Unrecognized combination of options or no options...'
-            );
-            program.help();
-            process.exitCode = 1;
-          }
+
+        if (!options.agentId && !options.all && !options.allSeparate) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          options.global ? globalDeploymentTypes : undefined
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        // export
+        if (options.agentId) {
+          verboseMessage('Exporting agent...');
+          const outcome = await exportAgentToFile(
+            options.agentId,
+            options.file,
+            options.global,
+            options.metadata
+          );
+          if (!outcome) process.exitCode = 1;
+        }
+        // --all -a
+        else if (options.all) {
+          verboseMessage('Exporting all agents to a single file...');
+          const outcome = await exportAgentsToFile(
+            options.file,
+            options.global,
+            options.metadata
+          );
+          if (!outcome) process.exitCode = 1;
+        }
+        // --all-separate -A
+        else if (options.allSeparate) {
+          verboseMessage('Exporting all agents to separate files...');
+          const outcome = await exportAgentsToFiles(
+            options.global,
+            options.metadata
+          );
+          if (!outcome) process.exitCode = 1;
         }
       }
       // end command logic inside action handler

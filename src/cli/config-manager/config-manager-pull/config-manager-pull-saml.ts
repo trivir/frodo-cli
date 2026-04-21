@@ -3,7 +3,7 @@ import { Option } from 'commander';
 
 import { configManagerExportSaml } from '../../../configManagerOps/FrConfigSamlOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
-import { printMessage, verboseMessage } from '../../../utils/Console';
+import { verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
@@ -72,14 +72,7 @@ export default function setup() {
         verboseMessage('Exporting config entity saml');
         const outcome = await configManagerExportSaml(options.file);
         if (!outcome) process.exitCode = 1;
-      }
-      // unrecognized combination of options or no options
-      else {
-        printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
-        );
-        program.help();
+      } else {
         process.exitCode = 1;
       }
     });

@@ -48,10 +48,22 @@ export default function setup() {
           options,
           command
         );
-        if (
-          options.variableId &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        if (!options.variableId) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        if (options.variableId) {
           verboseMessage(`Describing variable ${options.variableId}...`);
           const outcome = await describeVariable(
             options.variableId,
@@ -61,17 +73,7 @@ export default function setup() {
           );
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

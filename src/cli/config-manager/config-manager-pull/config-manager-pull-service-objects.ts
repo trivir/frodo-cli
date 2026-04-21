@@ -90,18 +90,29 @@ export default function setup() {
         command
       );
 
-      if (options.file && (await getTokens(false, true, deploymentTypes))) {
+      if (!options.file) {
+        printMessage(
+          'Unrecognized combination of options or no options...',
+          'error'
+        );
+        process.exitCode = 1;
+        return;
+      }
+
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+
+      if (options.file) {
         verboseMessage('Exporting service objects');
         const outcome = await configManagerExportServiceObjectsFromFile(
           options.file
         );
         if (!outcome) process.exitCode = 1;
       } else {
-        printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
-        );
-        program.help();
         process.exitCode = 1;
       }
     });

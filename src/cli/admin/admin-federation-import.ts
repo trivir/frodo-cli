@@ -58,12 +58,25 @@ export default function setup() {
           options,
           command
         );
+
+        if (!options.all && !options.allSeparate && !options.idpId) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+
+        const getTokenIsSuccessful = await getTokens(
+          true,
+          true,
+          deploymentTypes
+        );
+        if (!getTokenIsSuccessful) process.exit(1);
+
         // import by id
-        if (
-          options.file &&
-          options.idpId &&
-          (await getTokens(true, true, deploymentTypes))
-        ) {
+        if (options.file && options.idpId) {
           verboseMessage(`Importing provider "${options.idpId}"...`);
           const outcome = await importAdminFederationProviderFromFile(
             options.idpId,
@@ -72,11 +85,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          options.file &&
-          (await getTokens(true, true, deploymentTypes))
-        ) {
+        else if (options.all && options.file) {
           verboseMessage(
             `Importing all providers from a single file (${options.file})...`
           );
@@ -86,11 +95,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (
-          options.allSeparate &&
-          !options.file &&
-          (await getTokens(true, true, deploymentTypes))
-        ) {
+        else if (options.allSeparate && !options.file) {
           verboseMessage(
             'Importing all providers from separate files in current directory...'
           );
@@ -98,10 +103,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // import first provider from file
-        else if (
-          options.file &&
-          (await getTokens(true, true, deploymentTypes))
-        ) {
+        else if (options.file) {
           verboseMessage(
             `Importing first provider from file "${options.file}"...`
           );
@@ -109,12 +111,6 @@ export default function setup() {
             options.file
           );
           if (!outcome) process.exitCode = 1;
-        }
-        // unrecognized combination of options or no options
-        else {
-          printMessage('Unrecognized combination of options or no options...');
-          program.help();
-          process.exitCode = 1;
         }
       }
       // end command logic inside action handler

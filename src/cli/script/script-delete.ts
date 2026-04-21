@@ -44,7 +44,18 @@ export default function setup() {
           options,
           command
         );
-        if (options.scriptId && (await getTokens())) {
+        if (!options.scriptId && !options.scriptName && !options.all) {
+          printMessage(
+            'Unrecognized combination or options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        if (options.scriptId) {
           verboseMessage(
             `Deleting script ${
               options.scriptId
@@ -52,7 +63,7 @@ export default function setup() {
           );
           const outcome = await deleteScriptId(options.scriptId);
           if (!outcome) process.exitCode = 1;
-        } else if (options.scriptName && (await getTokens())) {
+        } else if (options.scriptName) {
           verboseMessage(
             `Deleting script ${
               options.scriptName
@@ -60,22 +71,12 @@ export default function setup() {
           );
           const outcome = await deleteScriptName(options.scriptName);
           if (!outcome) process.exitCode = 1;
-        } else if (options.all && (await getTokens())) {
+        } else if (options.all) {
           verboseMessage('Deleting all non-default scripts...');
           const outcome = await deleteAllScripts();
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

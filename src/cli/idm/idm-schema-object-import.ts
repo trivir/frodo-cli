@@ -46,6 +46,13 @@ export default function setup() {
           options,
           command
         );
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
         const envMessage = options.envFile
           ? ` using ${options.envFile} for variable replacement`
           : '';
@@ -60,14 +67,10 @@ export default function setup() {
             '-D, --directory or -f, --file required to import managed objects',
             'error'
           );
-          program.help();
           process.exitCode = 1;
+          program.help();
         } // -i, --individual-object
-        else if (
-          options.individualObject &&
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.individualObject && options.file) {
           verboseMessage(
             `Importing managed object ${envMessage}${fileMessage}...`
           );
@@ -77,10 +80,7 @@ export default function setup() {
             options.envFile
           );
           if (!outcome) process.exitCode = 1;
-        } else if (
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        } else if (options.file) {
           verboseMessage(
             `Importing IDM configuration objects ${envMessage}${fileMessage}`
           );
@@ -90,10 +90,7 @@ export default function setup() {
             options.envFile
           );
           if (!outcome) process.exitCode = 1;
-        } else if (
-          state.getDirectory() &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        } else if (state.getDirectory()) {
           verboseMessage(
             `Importing IDM configuration objects ${envMessage}${directoryMessage}`
           );
@@ -103,17 +100,7 @@ export default function setup() {
           );
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

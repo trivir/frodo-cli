@@ -6,7 +6,7 @@ import {
   exportPolicySetsToFiles,
   exportPolicySetToFile,
 } from '../../ops/PolicySetOps';
-import { verboseMessage } from '../../utils/Console';
+import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
 export default function setup() {
@@ -65,8 +65,21 @@ export default function setup() {
           options,
           command
         );
+
+        if (!options.setId && !options.all && !options.allSeparate) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
         // export
-        if (options.setId && (await getTokens())) {
+        if (options.setId) {
           verboseMessage('Exporting authorization policy set to file...');
           const outcome = await exportPolicySetToFile(
             options.setId,
@@ -82,7 +95,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // -a/--all
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Exporting all authorization policy sets to file...');
           const outcome = await exportPolicySetsToFile(
             options.file,
@@ -97,7 +110,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // -A/--all-separate
-        else if (options.allSeparate && (await getTokens())) {
+        else if (options.allSeparate) {
           verboseMessage(
             'Exporting all authorization policy sets to separate files...'
           );
@@ -111,14 +124,6 @@ export default function setup() {
             }
           );
           if (!outcome) process.exitCode = 1;
-        }
-        // unrecognized combination of options or no options
-        else {
-          verboseMessage(
-            'Unrecognized combination of options or no options...'
-          );
-          program.help();
-          process.exitCode = 1;
         }
       }
       // end command logic inside action handler

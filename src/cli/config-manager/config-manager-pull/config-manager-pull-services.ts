@@ -3,7 +3,7 @@ import { Option } from 'commander';
 
 import { configManagerExportServices } from '../../../configManagerOps/FrConfigServiceOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
-import { printMessage, verboseMessage } from '../../../utils/Console';
+import { printMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
@@ -48,17 +48,16 @@ export default function setup() {
       }
 
       if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Exporting services');
+        if (options.name) {
+          printMessage(
+            `Exporting service with name ${options.name} from realm ${realm}`
+          );
+        } else {
+          printMessage(`Exporting all services from realm ${realm}`);
+        }
         const outcome = await configManagerExportServices(realm, options.name);
         if (!outcome) process.exitCode = 1;
-      }
-      // unrecognized combination of options or no options
-      else {
-        printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
-        );
-        program.help();
+      } else {
         process.exitCode = 1;
       }
     });

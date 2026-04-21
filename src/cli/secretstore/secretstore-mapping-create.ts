@@ -64,6 +64,25 @@ export default function setup() {
           command
         );
         if (
+          !options.secretstoreType &&
+          !options.secretstoreId &&
+          !options.secretId &&
+          !options.alias
+        ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSucessful = await getTokens(
+          false,
+          true,
+          options.global ? globalDeploymentTypes : deploymentTypes
+        );
+        if (!getTokensIsSucessful) process.exit(1);
+        if (
           options.secretstoreType &&
           !canSecretStoreHaveMappings(options.secretstoreType)
         ) {
@@ -75,12 +94,7 @@ export default function setup() {
         } else if (
           options.secretstoreId &&
           options.secretId &&
-          options.aliases &&
-          (await getTokens(
-            false,
-            true,
-            options.global ? globalDeploymentTypes : deploymentTypes
-          ))
+          options.aliases
         ) {
           verboseMessage(
             `Creating the mapping ${options.secretId} in the secret store ${options.secretstoreId}'`
@@ -93,16 +107,8 @@ export default function setup() {
             options.global
           );
           if (!outcome) process.exitCode = 1;
-        } else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.outputHelp();
-          process.exitCode = 1;
         }
       }
-      // end command logic inside action handler
     );
 
   return program;

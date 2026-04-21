@@ -6,7 +6,7 @@ import {
   exportIdentityGatewayAgentToFile,
 } from '../../ops/AgentOps.js';
 import { getTokens } from '../../ops/AuthenticateOps';
-import { verboseMessage } from '../../utils/Console.js';
+import { printMessage, verboseMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
 
 export default function setup() {
@@ -50,46 +50,49 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens()) {
-          // export
-          if (options.agentId) {
-            verboseMessage('Exporting identity gateway agent...');
-            const outcome = await exportIdentityGatewayAgentToFile(
-              options.agentId,
-              options.file,
-              options.metadata
-            );
-            if (!outcome) process.exitCode = 1;
-          }
-          // --all -a
-          else if (options.all) {
-            verboseMessage(
-              'Exporting all identity gateway agents to a single file...'
-            );
-            const outcome = await exportIdentityGatewayAgentsToFile(
-              options.file,
-              options.metadata
-            );
-            if (!outcome) process.exitCode = 1;
-          }
-          // --all-separate -A
-          else if (options.allSeparate) {
-            verboseMessage(
-              'Exporting all identity gateway agents to separate files...'
-            );
-            const outcome = await exportIdentityGatewayAgentsToFiles(
-              options.metadata
-            );
-            if (!outcome) process.exitCode = 1;
-          }
-          // unrecognized combination of options or no options
-          else {
-            verboseMessage(
-              'Unrecognized combination of options or no options...'
-            );
-            program.help();
-            process.exitCode = 1;
-          }
+
+        if (!options.agentId && !options.all && !options.allSeparate) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        // export
+        if (options.agentId) {
+          verboseMessage('Exporting identity gateway agent...');
+          const outcome = await exportIdentityGatewayAgentToFile(
+            options.agentId,
+            options.file,
+            options.metadata
+          );
+          if (!outcome) process.exitCode = 1;
+        }
+        // --all -a
+        else if (options.all) {
+          verboseMessage(
+            'Exporting all identity gateway agents to a single file...'
+          );
+          const outcome = await exportIdentityGatewayAgentsToFile(
+            options.file,
+            options.metadata
+          );
+          if (!outcome) process.exitCode = 1;
+        }
+        // --all-separate -A
+        else if (options.allSeparate) {
+          verboseMessage(
+            'Exporting all identity gateway agents to separate files...'
+          );
+          const outcome = await exportIdentityGatewayAgentsToFiles(
+            options.metadata
+          );
+          if (!outcome) process.exitCode = 1;
         }
       }
       // end command logic inside action handler

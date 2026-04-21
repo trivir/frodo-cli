@@ -34,7 +34,18 @@ export default function setup() {
         options,
         command
       );
-      if ((options.nodeId || options.nodeName) && (await getTokens())) {
+      if (!options.nodeId && !options.nodeName && !options.all) {
+        printMessage(
+          'Unrecognized combination of options or no options...',
+          'error'
+        );
+        process.exitCode = 1;
+        program.help();
+      }
+      const getTokensIsSuccessful = await getTokens();
+      if (!getTokensIsSuccessful) process.exit(1);
+
+      if (options.nodeId || options.nodeName) {
         verboseMessage(
           `Deleting custom node ${options.nodeName ? options.nodeName : options.nodeId}...`
         );
@@ -43,17 +54,10 @@ export default function setup() {
           options.nodeName
         );
         if (!outcome) process.exitCode = 1;
-      } else if (options.all && (await getTokens())) {
+      } else if (options.all) {
         verboseMessage(`Deleting all custom nodes...`);
         const outcome = await deleteCustomNodes();
         if (!outcome) process.exitCode = 1;
-      } else {
-        printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
-        );
-        program.help();
-        process.exitCode = 1;
       }
     });
 

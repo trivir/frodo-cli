@@ -89,12 +89,31 @@ export default function setup() {
           options,
           command
         );
-        // -i/--app-id or -n/--app-name
+
         if (
-          options.file &&
-          (options.appId || options.appName) &&
-          (await getTokens(false, true, deploymentTypes))
+          !options.appId &&
+          !options.file &&
+          !options.appName &&
+          !options.all &&
+          !options.allSeparate
         ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          return;
+        }
+
+        const getTokensisSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensisSuccessful) process.exit(1);
+
+        // -i/--app-id or -n/--app-name
+        if (options.file && (options.appId || options.appName)) {
           verboseMessage(
             `Importing application "${options.appName ?? options.appId}"...`
           );
@@ -109,11 +128,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.all && options.file) {
           verboseMessage(
             `Importing all applications from a single file (${options.file})...`
           );
@@ -123,11 +138,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (
-          options.allSeparate &&
-          !options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.allSeparate && !options.file) {
           verboseMessage(
             'Importing all applications from separate files in current directory...'
           );
@@ -137,10 +148,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // import first provider from file
-        else if (
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.file) {
           verboseMessage(
             `Importing first application from file "${options.file}"...`
           );
@@ -148,12 +156,6 @@ export default function setup() {
             deps: options.deps,
           });
           if (!outcome) process.exitCode = 1;
-        }
-        // unrecognized combination of options or no options
-        else {
-          printMessage('Unrecognized combination of options or no options...');
-          program.help();
-          process.exitCode = 1;
         }
       }
       // end command logic inside action handler

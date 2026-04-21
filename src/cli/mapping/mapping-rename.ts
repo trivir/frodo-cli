@@ -50,11 +50,23 @@ export default function setup() {
           options,
           command
         );
+        if (!options.mappingId && !options.all) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccesful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccesful) process.exit(1);
+
         // rename by id/name
-        if (
-          options.mappingId &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        if (options.mappingId) {
           verboseMessage('Renaming mapping...');
           const outcome = await renameMapping(
             options.mappingId,
@@ -63,22 +75,12 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.all) {
           verboseMessage('Renaming all mappings...');
           const outcome = await renameMappings(options.legacy);
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage('Unrecognized combination of options or no options...');
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

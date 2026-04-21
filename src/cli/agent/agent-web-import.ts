@@ -7,7 +7,7 @@ import {
   importWebAgentsFromFiles,
 } from '../../ops/AgentOps.js';
 import { getTokens } from '../../ops/AuthenticateOps';
-import { verboseMessage } from '../../utils/Console.js';
+import { printMessage, verboseMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
 
 export default function setup() {
@@ -45,46 +45,49 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens()) {
-          // import
-          if (options.agentId) {
-            verboseMessage(
-              `Importing web agent ${options.agentId} from file...`
-            );
-            const outcome = await importWebAgentFromFile(
-              options.agentId,
-              options.file
-            );
-            if (!outcome) process.exitCode = 1;
-          }
-          // --all -a
-          else if (options.all && options.file) {
-            verboseMessage(
-              `Importing all web agents from a single file (${options.file})...`
-            );
-            const outcome = await importWebAgentsFromFile(options.file);
-            if (!outcome) process.exitCode = 1;
-          }
-          // --all-separate -A
-          else if (options.allSeparate && !options.file) {
-            verboseMessage('Importing all web agents from separate files...');
-            const outcome = await importWebAgentsFromFiles();
-            if (!outcome) process.exitCode = 1;
-          }
-          // import first journey in file
-          else if (options.file) {
-            verboseMessage('Importing first web agent in file...');
-            const outcome = await importFirstWebAgentFromFile(options.file);
-            if (!outcome) process.exitCode = 1;
-          }
-          // unrecognized combination of options or no options
-          else {
-            verboseMessage(
-              'Unrecognized combination of options or no options...'
-            );
-            program.help();
-            process.exitCode = 1;
-          }
+        if (
+          !options.agentId &&
+          !options.file &&
+          !options.all &&
+          !options.allSeparate
+        ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+        // import
+        if (options.agentId) {
+          verboseMessage(`Importing web agent ${options.agentId} from file...`);
+          const outcome = await importWebAgentFromFile(
+            options.agentId,
+            options.file
+          );
+          if (!outcome) process.exitCode = 1;
+        }
+        // --all -a
+        else if (options.all && options.file) {
+          verboseMessage(
+            `Importing all web agents from a single file (${options.file})...`
+          );
+          const outcome = await importWebAgentsFromFile(options.file);
+          if (!outcome) process.exitCode = 1;
+        }
+        // --all-separate -A
+        else if (options.allSeparate && !options.file) {
+          verboseMessage('Importing all web agents from separate files...');
+          const outcome = await importWebAgentsFromFiles();
+          if (!outcome) process.exitCode = 1;
+        }
+        // import first journey in file
+        else if (options.file) {
+          verboseMessage('Importing first web agent in file...');
+          const outcome = await importFirstWebAgentFromFile(options.file);
+          if (!outcome) process.exitCode = 1;
         }
       }
       // end command logic inside action handler

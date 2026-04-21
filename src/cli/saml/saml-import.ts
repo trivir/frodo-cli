@@ -54,8 +54,24 @@ export default function setup() {
           options,
           command
         );
+        if (
+          !options.entityId &&
+          !options.all &&
+          !options.allSeparate &&
+          !options.file
+        ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
         // import by id
-        if (options.file && options.entityId && (await getTokens())) {
+        if (options.file && options.entityId) {
           verboseMessage(
             `Importing provider "${
               options.entityId
@@ -71,7 +87,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (options.all && options.file && (await getTokens())) {
+        else if (options.all && options.file) {
           verboseMessage(
             `Importing all providers from a single file (${options.file})...`
           );
@@ -81,7 +97,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (options.allSeparate && !options.file && (await getTokens())) {
+        else if (options.allSeparate && !options.file) {
           verboseMessage(
             'Importing all providers from separate files (*.saml.json) in current directory...'
           );
@@ -91,7 +107,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // import first provider from file
-        else if (options.file && (await getTokens())) {
+        else if (options.file) {
           verboseMessage(
             `Importing first provider from file "${
               options.file
@@ -102,14 +118,7 @@ export default function setup() {
           });
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage('Unrecognized combination of options or no options...');
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end program logic inside action handler
     );
 
   return program;

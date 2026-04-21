@@ -48,8 +48,24 @@ export default function setup() {
           options,
           command
         );
+        if (
+          !options.appId &&
+          !options.all &&
+          !options.allSeparate &&
+          !options.file
+        ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
         // import by id
-        if (options.file && options.appId && (await getTokens())) {
+        if (options.file && options.appId) {
           verboseMessage(`Importing OAuth2 client "${options.appId}"...`);
           const outcome = await importOAuth2ClientFromFile(
             options.appId,
@@ -61,7 +77,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (options.all && options.file && (await getTokens())) {
+        else if (options.all && options.file) {
           verboseMessage(
             `Importing all OAuth2 clients from a single file (${options.file})...`
           );
@@ -71,7 +87,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (options.allSeparate && !options.file && (await getTokens())) {
+        else if (options.allSeparate && !options.file) {
           verboseMessage(
             'Importing all OAuth2 clients from separate files in current directory...'
           );
@@ -81,7 +97,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // import first provider from file
-        else if (options.file && (await getTokens())) {
+        else if (options.file) {
           verboseMessage(
             `Importing first OAuth2 client from file "${options.file}"...`
           );
@@ -90,14 +106,7 @@ export default function setup() {
           });
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage('Unrecognized combination of options or no options...');
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

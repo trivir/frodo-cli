@@ -2,7 +2,7 @@ import { frodo } from '@rockcarver/frodo-lib';
 
 import { configManagerExportRemoteServers } from '../../../configManagerOps/FrConfigRemoteServersOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
-import { printMessage, verboseMessage } from '../../../utils/Console';
+import { verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
@@ -36,14 +36,7 @@ export default function setup() {
         verboseMessage('Exporting config entity remote-servers');
         const outcome = await configManagerExportRemoteServers(options.envFile);
         if (!outcome) process.exitCode = 1;
-      }
-      // unrecognized combination of options or no options
-      else {
-        printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
-        );
-        program.help();
+      } else {
         process.exitCode = 1;
       }
     });

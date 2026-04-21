@@ -5,7 +5,7 @@ import {
   describeResourceType,
   describeResourceTypeByName,
 } from '../../ops/ResourceTypeOps';
-import { verboseMessage } from '../../utils/Console.js';
+import { printMessage, verboseMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
 
 export default function setup() {
@@ -27,28 +27,33 @@ export default function setup() {
           options,
           command
         );
-        if (options.typeId && (await getTokens())) {
+
+        if (!options.typeId && !options.typeName) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        if (options.typeId) {
           verboseMessage(`Describing authorization resource type by uuid...`);
           const outcome = await describeResourceType(
             options.typeId,
             options.json
           );
           if (!outcome) process.exitCode = 1;
-        } else if (options.typeName && (await getTokens())) {
+        } else if (options.typeName) {
           verboseMessage(`Describing authorization resource type by name...`);
           const outcome = await describeResourceTypeByName(
             options.typeName,
             options.json
           );
           if (!outcome) process.exitCode = 1;
-        }
-        // unrecognized combination of options or no options
-        else {
-          verboseMessage(
-            'Unrecognized combination of options or no options...'
-          );
-          program.help();
-          process.exitCode = 1;
         }
       }
       // end command logic inside action handler

@@ -34,14 +34,7 @@ export default function setup() {
       if (await getTokens(false, true, deploymentTypes)) {
         verboseMessage('Test connection and authentication');
         printMessage('Authenticated successfully');
-      }
-      // unrecognized combination of options or no options
-      else {
-        printMessage(
-          `Error getting tokens from the host: ${host}. Make sure to connect to the host using frodo conn save command.`,
-          'error'
-        );
-        program.help();
+      } else {
         process.exitCode = 1;
       }
     });

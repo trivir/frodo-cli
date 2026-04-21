@@ -40,7 +40,13 @@ export default function setup() {
       );
 
       if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Importing config entity email-templates');
+        if (options.name) {
+          verboseMessage(
+            `Importing email template with name "${options.name}"`
+          );
+        } else {
+          verboseMessage('Importing all email templates');
+        }
         const outcome = await configManagerImportEmailTemplates(options.name);
         if (!outcome) process.exitCode = 1;
       }
@@ -50,8 +56,8 @@ export default function setup() {
           'Unrecognized combination of options or no options...',
           'error'
         );
-        program.help();
         process.exitCode = 1;
+        program.help();
       }
     });
 
