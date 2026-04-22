@@ -1,6 +1,6 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { printError, printMessage } from '../utils/Console';
-const { checkForUpdates, applyUpdates, getStatus } = frodo.cloud.startup;
+const { checkForUpdates, applyUpdates, readStatus } = frodo.cloud.startup;
 
 /**
  * Restart the environment to apply pending ESV updates.
@@ -16,7 +16,7 @@ export async function configManagerRestart(
 ): Promise<boolean> {
   try {
     if (status) {
-      printMessage(await getStatus());
+      printMessage(await readStatus());
       return true;
     }
     if (check) {
