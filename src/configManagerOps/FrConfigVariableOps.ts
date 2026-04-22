@@ -38,7 +38,7 @@ export async function configManagerExportVariables(): Promise<boolean> {
     return false;
   }
   try {
-    const indicatorId = createProgressIndicator(
+    indicatorId = createProgressIndicator(
       'determinate',
       variableList.length,
       'Exporting variables'
@@ -66,7 +66,9 @@ export async function configManagerExportVariables(): Promise<boolean> {
     );
     return true;
   } catch (error) {
-    stopProgressIndicator(indicatorId, `Error exporting variables`);
+    if (indicatorId) {
+      stopProgressIndicator(indicatorId, `Error exporting variables`, 'fail');
+    }
     printError(error);
   }
   return false;

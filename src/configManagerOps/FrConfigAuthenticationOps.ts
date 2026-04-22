@@ -2,7 +2,12 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import { AuthenticationSettingsExportInterface } from '@rockcarver/frodo-lib/types/ops/AuthenticationSettingsOps';
 import fs from 'fs';
 
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 import { realmList } from '../utils/FrConfig';
 
 const {
@@ -19,19 +24,40 @@ const { getFilePath, saveJsonToFile } = frodo.utils;
 export async function configManagerExportAuthentication(
   realm?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     if (realm && realm !== '__default__realm__') {
+      indicatorId = createProgressIndicator(
+        'indeterminate',
+        0,
+        'Exporting authentication settings'
+      );
       const exportData = await _readAuthenticationSettings(false);
       const fileName = `realms/${state.getRealm()}/realm-config/authentication.json`;
       saveJsonToFile(exportData, getFilePath(`${fileName}`, true), false, true);
+      stopProgressIndicator(indicatorId, 'Exported authentication settings');
     } else {
-      for (const realmName of await realmList()) {
+      const realmNames = (await realmList()).filter((realmName) => {
         if (
           realmName === '/' &&
           state.getDeploymentType() ===
             frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY
         )
-          continue;
+          return false;
+        return true;
+      });
+
+      indicatorId = createProgressIndicator(
+        'determinate',
+        realmNames.length,
+        'Exporting authentication settings'
+      );
+
+      for (const realmName of realmNames) {
+        updateProgressIndicator(
+          indicatorId,
+          `Exporting authentication settings (${realmName})`
+        );
 
         state.setRealm(realmName);
         const exportData = await _readAuthenticationSettings(false);
@@ -43,11 +69,19 @@ export async function configManagerExportAuthentication(
           true
         );
       }
+      stopProgressIndicator(indicatorId, 'Exported authentication settings');
     }
 
     return true;
   } catch (error) {
-    printError(error, `Error exporting config entity ui-configuration`);
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting authentication settings',
+        'fail'
+      );
+    }
+    printError(error, `Error exporting config entity authentication`);
   }
   return false;
 }

@@ -2,7 +2,13 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import { AgentSkeleton } from '@rockcarver/frodo-lib/types/api/AgentApi';
 import { readFile } from 'fs/promises';
 
-import { printError, verboseMessage } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+  verboseMessage,
+} from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { readRealms } = frodo.realm;
@@ -122,19 +128,40 @@ export async function configManagerExportAgent(
 export async function configManagerExportConfigAgents(
   configFile: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     verboseMessage(`Reading the config file "${configFile}"`);
     const configFileData = JSON.parse(
       await readFile(configFile, { encoding: 'utf8' })
+    );
+    const totalAgents = Object.keys(configFileData).reduce(
+      (acc: number, realm) => {
+        return acc + getAgents(configFileData, realm).length;
+      },
+      0
+    );
+    indicatorId = createProgressIndicator(
+      'determinate',
+      totalAgents,
+      'Exporting oauth2 agents'
     );
     for (const realm of Object.keys(configFileData)) {
       state.setRealm(realm);
       const agents: idAndOverrids[] = getAgents(configFileData, realm);
       if (agents.length !== 0) {
         for (const agent of agents) {
+          updateProgressIndicator(
+            indicatorId,
+            `Exporting agent ${realm}/${agent.id}`
+          );
           if (
             !(await configManagerExportAgent(agent.id, null, agent.overrides))
           ) {
+            stopProgressIndicator(
+              indicatorId,
+              'Error exporting oauth2 agents',
+              'fail'
+            );
             return false;
           }
         }
@@ -144,8 +171,16 @@ export async function configManagerExportConfigAgents(
         );
       }
     }
+    stopProgressIndicator(indicatorId, 'Exported oauth2 agents');
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting oauth2 agents',
+        'fail'
+      );
+    }
     printError(error);
     return false;
   }

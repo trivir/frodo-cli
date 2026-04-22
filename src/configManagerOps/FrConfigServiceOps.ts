@@ -1,6 +1,11 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 import { realmList } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
@@ -14,25 +19,49 @@ export async function configManagerExportServices(
   realm?,
   name?
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     if (realm && realm !== '__default__realm__') {
       const services = await getFullServices(false);
-      processServices(services, realm, name);
+      const filteredServices = name
+        ? services.filter((s) => s._type._id === name)
+        : services;
+      indicatorId = createProgressIndicator(
+        'determinate',
+        filteredServices.length,
+        `Exporting services (${realm})`
+      );
+      await processServices(filteredServices, realm, name, indicatorId);
+      stopProgressIndicator(indicatorId, 'Exported services');
     } else {
-      for (const realm of await realmList()) {
-        state.setRealm(realm);
+      const realms = await realmList();
+      indicatorId = createProgressIndicator(
+        'determinate',
+        realms.length,
+        'Exporting services'
+      );
+      for (const realmName of realms) {
+        state.setRealm(realmName);
+        updateProgressIndicator(
+          indicatorId,
+          `Exporting services (${realmName})`
+        );
         const services = await getFullServices(false);
-        processServices(services, realm, name);
+        await processServices(services, realmName, name);
       }
+      stopProgressIndicator(indicatorId, 'Exported services');
     }
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(indicatorId, 'Error exporting services', 'fail');
+    }
     printError(error);
   }
   return false;
 }
 
-async function processServices(services, realm, name) {
+async function processServices(services, realm, name, indicatorId?: string) {
   const fileDir = `realms/${realm}/services`;
   for (const service of services) {
     if (name && name !== service._type._id) {
@@ -59,5 +88,11 @@ async function processServices(services, realm, name) {
       false,
       true
     );
+    if (indicatorId) {
+      updateProgressIndicator(
+        indicatorId,
+        `Exporting service ${service._type._id}`
+      );
+    }
   }
 }

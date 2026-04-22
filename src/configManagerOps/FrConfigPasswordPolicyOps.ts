@@ -2,7 +2,12 @@ import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
 import { getIdmImportExportOptions } from '../ops/IdmOps';
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 import { realmList } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
@@ -17,9 +22,15 @@ export async function configManagerExportPasswordPolicy(
   realm?: string,
   envFile?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     const options = getIdmImportExportOptions(undefined, envFile);
     if (realm && realm !== '__default__realm__') {
+      indicatorId = createProgressIndicator(
+        'indeterminate',
+        0,
+        'Exporting password policy'
+      );
       const realmData = (
         await exportConfigEntity(`fieldPolicy/${realm}_user`, {
           envReplaceParams: options.envReplaceParams,
@@ -28,10 +39,23 @@ export async function configManagerExportPasswordPolicy(
       ).idm[`fieldPolicy/${realm}_user`];
       const fileName = `realms/${realm}/password-policy/${realm}_user-password-policy.json`;
       saveJsonToFile(realmData, getFilePath(fileName, true), false, true);
+      stopProgressIndicator(indicatorId, 'Exported password policy');
     } else {
-      for (const realmName of await realmList()) {
+      const realms = (await realmList()).filter(
+        (realmName) => realmName !== '/'
+      );
+      indicatorId = createProgressIndicator(
+        'determinate',
+        realms.length,
+        'Exporting password policy'
+      );
+      for (const realmName of realms) {
         // fr-config-manager doesn't support root themes
         if (realmName === '/') continue;
+        updateProgressIndicator(
+          indicatorId,
+          `Exporting password policy (${realmName})`
+        );
         const realmData = (
           await exportConfigEntity(`fieldPolicy/${realmName}_user`, {
             envReplaceParams: options.envReplaceParams,
@@ -41,9 +65,17 @@ export async function configManagerExportPasswordPolicy(
         const fileName = `realms/${realmName}/password-policy/${realmName}_user-password-policy.json`;
         saveJsonToFile(realmData, getFilePath(fileName, true), false, true);
       }
+      stopProgressIndicator(indicatorId, 'Exported password policy');
     }
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting password policy',
+        'fail'
+      );
+    }
     printError(error, `Error exporting config entity ui-configuration`);
   }
   return false;

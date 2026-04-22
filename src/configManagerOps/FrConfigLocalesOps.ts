@@ -1,7 +1,12 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 
 const { readConfigEntitiesByType, importConfigEntities } = frodo.idm.config;
 const { saveJsonToFile, getFilePath } = frodo.utils;
@@ -14,26 +19,43 @@ const { saveJsonToFile, getFilePath } = frodo.utils;
 export async function configManagerExportLocales(
   localeName?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     const exportData = await readConfigEntitiesByType('uilocale');
-    processLocales(exportData, 'locales', localeName);
+    const localesToExport = exportData.filter((locale) => {
+      const name = locale._id.split('/')[1];
+      return !localeName || localeName === name;
+    });
+    indicatorId = createProgressIndicator(
+      'determinate',
+      localesToExport.length,
+      'Exporting locales'
+    );
+    processLocales(localesToExport, 'locales', indicatorId);
+    stopProgressIndicator(
+      indicatorId,
+      `${localesToExport.length} locales exported.`
+    );
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(indicatorId, 'Error exporting locales', 'fail');
+    }
     printError(error, `Error exporting config entity locales`);
   }
   return false;
 }
 
-function processLocales(locales, fileDir, name?) {
+function processLocales(locales, fileDir, indicatorId?: string) {
   try {
     locales.forEach((locale) => {
       const localeName = locale._id.split('/')[1];
-      if (name && name !== localeName) {
-        return;
-      }
       const localeFilename = `${fileDir}/${localeName}.json`;
 
       saveJsonToFile(locale, getFilePath(localeFilename, true), false, true);
+      if (indicatorId) {
+        updateProgressIndicator(indicatorId, `Exporting locale ${localeName}`);
+      }
     });
   } catch (err) {
     printError(err);

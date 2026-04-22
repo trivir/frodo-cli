@@ -2,7 +2,11 @@ import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+} from '../utils/Console';
 
 const { saveJsonToFile, getFilePath } = frodo.utils;
 const { readConfigEntity, importConfigEntities } = frodo.idm.config;
@@ -12,7 +16,13 @@ const { readConfigEntity, importConfigEntities } = frodo.idm.config;
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function configManagerExportTermsAndConditions(): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting terms and conditions'
+    );
     const exportData = (await readConfigEntity('selfservice.terms')) as any;
     for (const version of exportData.versions) {
       for (const [language, text] of Object.entries(
@@ -32,8 +42,16 @@ export async function configManagerExportTermsAndConditions(): Promise<boolean> 
       getFilePath('terms-conditions/terms-conditions.json', true),
       false
     );
+    stopProgressIndicator(indicatorId, 'Exported terms and conditions');
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting terms and conditions',
+        'fail'
+      );
+    }
     printError(error);
     return false;
   }

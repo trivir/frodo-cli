@@ -2,7 +2,12 @@ import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 
 const { readConfigEntitiesByType, importConfigEntities } = frodo.idm.config;
 const { getFilePath, saveJsonToFile } = frodo.utils;
@@ -13,17 +18,35 @@ const { getFilePath, saveJsonToFile } = frodo.utils;
 export async function configManagerExportSchedules(
   name?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     const exportData = await readConfigEntitiesByType('schedule');
-    processSchedules(exportData, 'schedules', name);
+    const schedulesToExport = exportData.filter((schedule) => {
+      if (schedule._id === 'scheduler') return false;
+      const scheduleName = schedule._id.split('/')[1];
+      return !name || name === scheduleName;
+    });
+    indicatorId = createProgressIndicator(
+      'determinate',
+      schedulesToExport.length,
+      'Exporting schedules'
+    );
+    processSchedules(schedulesToExport, 'schedules', undefined, indicatorId);
+    stopProgressIndicator(
+      indicatorId,
+      `${schedulesToExport.length} schedules exported.`
+    );
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(indicatorId, 'Error exporting schedules', 'fail');
+    }
     printError(error, `Error exporting internal schedules to files`);
   }
   return false;
 }
 
-function processSchedules(schedules, fileDir, name?) {
+function processSchedules(schedules, fileDir, name?, indicatorId?: string) {
   try {
     schedules.forEach((schedule) => {
       if (schedule._id !== 'scheduler') {
@@ -64,6 +87,12 @@ function processSchedules(schedules, fileDir, name?) {
           false,
           true
         );
+        if (indicatorId) {
+          updateProgressIndicator(
+            indicatorId,
+            `Exporting schedule ${schedule._id ?? scheduleName}`
+          );
+        }
       }
     });
   } catch (err) {

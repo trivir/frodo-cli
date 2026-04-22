@@ -1,7 +1,11 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+} from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { readCookieDomains, updateCookieDomains } = frodo.cloud.env;
@@ -11,16 +15,30 @@ const { readCookieDomains, updateCookieDomains } = frodo.cloud.env;
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function configManagerExportCookieDomains(): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      undefined,
+      'Exporting cookie domains'
+    );
     const exportData = await readCookieDomains();
     saveJsonToFile(
       exportData,
       getFilePath('cookie-domains/cookie-domains.json', true),
       false
     );
+    stopProgressIndicator(indicatorId, 'Exported cookie domains');
     return true;
   } catch (error) {
-    printError(error, `Error exporting custom domains`);
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting cookie domains',
+        'fail'
+      );
+    }
+    printError(error, `Error exporting cookie domains`);
   }
   return false;
 }

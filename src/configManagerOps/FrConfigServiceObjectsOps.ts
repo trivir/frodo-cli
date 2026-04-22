@@ -1,7 +1,12 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { queryManagedObjects, updateManagedObject } = frodo.idm.managed;
@@ -13,10 +18,24 @@ const { queryManagedObjects, updateManagedObject } = frodo.idm.managed;
 export async function configManagerExportServiceObjectsFromFile(
   file
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     const objects = JSON.parse(fs.readFileSync(file, 'utf8'));
+    const totalObjects = Object.values(objects).reduce(
+      (acc: number, list: any) => acc + (Array.isArray(list) ? list.length : 0),
+      0
+    );
+    indicatorId = createProgressIndicator(
+      'determinate',
+      totalObjects,
+      'Exporting service objects'
+    );
     for (const objectType of Object.keys(objects)) {
       for (const object of objects[objectType]) {
+        updateProgressIndicator(
+          indicatorId,
+          `Exporting service object ${objectType}/${object.searchValue}`
+        );
         const queryFilter = `${object.searchField} eq "${object.searchValue}"`;
         const queryResult = await queryManagedObjects(
           objectType,
@@ -28,12 +47,22 @@ export async function configManagerExportServiceObjectsFromFile(
             `Unexpected result from search: ${queryResult.length} entries found for ${objectType} - ${object.searchValue}`
           );
           printError(error);
+          stopProgressIndicator(
+            indicatorId,
+            'Error exporting service objects',
+            'fail'
+          );
           return false;
         } else if (queryResult.length == 0) {
           const error = new Error(
             `No result from search: ${queryResult.length} entries found for ${objectType} - ${object.searchValue}`
           );
           printError(error);
+          stopProgressIndicator(
+            indicatorId,
+            'Error exporting service objects',
+            'fail'
+          );
           return false;
         } else {
           const result = queryResult[0];
@@ -63,8 +92,19 @@ export async function configManagerExportServiceObjectsFromFile(
         }
       }
     }
+    stopProgressIndicator(
+      indicatorId,
+      `${totalObjects} service objects exported`
+    );
     return true;
   } catch (err) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting service objects',
+        'fail'
+      );
+    }
     printError(err, `Error exporting service-objects`);
   }
   return false;

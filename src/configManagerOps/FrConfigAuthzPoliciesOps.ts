@@ -4,7 +4,13 @@ import { PolicySetSkeleton } from '@rockcarver/frodo-lib/types/api/PolicySetApi'
 import { ResourceTypeSkeleton } from '@rockcarver/frodo-lib/types/api/ResourceTypesApi';
 import { readFile } from 'fs/promises';
 
-import { printError, verboseMessage } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+  verboseMessage,
+} from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { policySet, policy, resourceType } = frodo.authz;
@@ -127,9 +133,16 @@ export async function configManagerExportAuthzPolicySet(
     const allPoliciesOfThis: PolicySkeleton[] =
       await policy.readPoliciesByPolicySet(ps.name);
     if (allPoliciesOfThis.length !== 0) {
+      const indicatorId = createProgressIndicator(
+        'determinate',
+        allPoliciesOfThis.length,
+        `Exporting policies (${ps.name})`
+      );
       for (const p of allPoliciesOfThis) {
+        updateProgressIndicator(indicatorId, `Exporting policy ${p.name}`);
         await exportPolicy(p);
       }
+      stopProgressIndicator(indicatorId, 'Exported authorization policies');
     } else {
       verboseMessage(
         `    There are no policies in the policy-set "${ps.name}"`

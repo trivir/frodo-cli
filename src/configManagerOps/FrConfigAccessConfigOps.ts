@@ -2,7 +2,11 @@ import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
 import { getIdmImportExportOptions } from '../ops/IdmOps';
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+} from '../utils/Console';
 
 const { exportConfigEntity, importConfigEntities } = frodo.idm.config;
 const { getFilePath, saveJsonToFile } = frodo.utils;
@@ -15,8 +19,14 @@ const { getFilePath, saveJsonToFile } = frodo.utils;
 export async function configManagerExportAccessConfig(
   envFile?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     const options = getIdmImportExportOptions(undefined, envFile);
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      undefined,
+      'Exporting access config'
+    );
     const exportData = (
       await exportConfigEntity('access', {
         envReplaceParams: options.envReplaceParams,
@@ -29,8 +39,17 @@ export async function configManagerExportAccessConfig(
       getFilePath('access-config/access.json', true),
       false
     );
+
+    stopProgressIndicator(indicatorId, 'Exported access config');
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting access config',
+        'fail'
+      );
+    }
     printError(error, `Error exporting config entity access`);
   }
   return false;

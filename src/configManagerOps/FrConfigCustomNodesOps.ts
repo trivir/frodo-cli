@@ -1,6 +1,11 @@
 import { frodo } from '@rockcarver/frodo-lib';
 
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 
 const { saveJsonToFile, getFilePath, saveTextToFile } = frodo.utils;
 const { readCustomNode, readCustomNodes } = frodo.authn.node;
@@ -15,16 +20,33 @@ const { readCustomNode, readCustomNodes } = frodo.authn.node;
 export async function configManagerExportCustomNodes(
   name?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     let customNodes;
     if (name) {
+      indicatorId = createProgressIndicator(
+        'indeterminate',
+        0,
+        'Exporting custom nodes'
+      );
       const customNode = await readCustomNode(undefined, name);
       customNodes = [customNode];
     } else {
       customNodes = await readCustomNodes();
+      indicatorId = createProgressIndicator(
+        'determinate',
+        customNodes.length,
+        'Exporting custom nodes'
+      );
     }
 
     for (const node of customNodes) {
+      if (indicatorId) {
+        updateProgressIndicator(
+          indicatorId,
+          `Exporting custom node ${node.displayName}`
+        );
+      }
       const nodeDir = getFilePath(
         `custom-nodes/nodes/${node.displayName}/`,
         true
@@ -39,8 +61,16 @@ export async function configManagerExportCustomNodes(
       saveJsonToFile(node, filePath, false);
     }
 
+    stopProgressIndicator(indicatorId, 'Exported custom nodes');
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting custom nodes',
+        'fail'
+      );
+    }
     printError(error);
     return false;
   }

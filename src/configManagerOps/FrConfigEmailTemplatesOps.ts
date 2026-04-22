@@ -2,7 +2,12 @@ import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { readEmailTemplates, readEmailTemplate, importEmailTemplates } =
@@ -14,18 +19,46 @@ const { readEmailTemplates, readEmailTemplate, importEmailTemplates } =
 export async function configManagerExportEmailTemplates(
   name?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     if (name) {
+      indicatorId = createProgressIndicator(
+        'indeterminate',
+        0,
+        'Exporting email templates'
+      );
       const exportData = await readEmailTemplate(name);
-      processEmailTemplate(exportData, `email-templates`);
+      await processEmailTemplate(exportData, `email-templates`);
+      stopProgressIndicator(indicatorId, 'Exported email templates');
     } else {
       const exportData = await readEmailTemplates();
-      exportData.forEach(async (template) => {
-        processEmailTemplate(template, `email-templates`);
-      });
+      indicatorId = createProgressIndicator(
+        'determinate',
+        exportData.length,
+        'Exporting email templates'
+      );
+      for (const template of exportData) {
+        const templateName = template._id.split('/')[1];
+        updateProgressIndicator(
+          indicatorId,
+          `Exporting email template ${templateName}`
+        );
+        await processEmailTemplate(template, `email-templates`);
+      }
+      stopProgressIndicator(
+        indicatorId,
+        `${exportData.length} email templates exported`
+      );
     }
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting email templates',
+        'fail'
+      );
+    }
     printError(error, `Error exporting email templates to files`);
   }
   return false;

@@ -4,7 +4,12 @@ import fs from 'fs';
 import path from 'path';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 
 const { readConfigEntity, importConfigEntities, importSubConfigEntity } =
   frodo.idm.config;
@@ -28,17 +33,47 @@ const SCRIPT_HOOKS = ['onStore', 'onRetrieve', 'onValidate'];
 export async function configManagerExportManagedObjects(
   objectName?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     const exportData = (await readConfigEntity('managed')) as ManagedSkeleton;
-    processManagedObjects(exportData.objects, 'managed-objects', objectName);
+    const objectsToExport = exportData.objects.filter((o) => {
+      return !objectName || objectName === o.name;
+    });
+    indicatorId = createProgressIndicator(
+      'determinate',
+      objectsToExport.length,
+      'Exporting managed objects'
+    );
+    processManagedObjects(
+      objectsToExport,
+      'managed-objects',
+      undefined,
+      indicatorId
+    );
+    stopProgressIndicator(
+      indicatorId,
+      `${objectsToExport.length} managed objects exported.`
+    );
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting managed objects',
+        'fail'
+      );
+    }
     printError(error, `Error exporting config entity endpoints`);
   }
   return false;
 }
 
-function processManagedObjects(managedObjects, targetDir, name) {
+function processManagedObjects(
+  managedObjects,
+  targetDir,
+  name,
+  indicatorId?: string
+) {
   try {
     managedObjects.forEach((managedObject) => {
       if (name && name !== managedObject.name) {
@@ -108,6 +143,12 @@ function processManagedObjects(managedObjects, targetDir, name) {
       const fileName = `${objectPath}/${managedObject.name}.json`;
 
       saveTextToFile(stringify(managedObject), getFilePath(fileName, true));
+      if (indicatorId) {
+        updateProgressIndicator(
+          indicatorId,
+          `Exporting managed object ${managedObject.name}`
+        );
+      }
     });
   } catch (err) {
     printError(err);

@@ -75,7 +75,7 @@ export async function configManagerExportSecrets(
       );
       updateProgressIndicator(indicatorId, `Exported secret ${secret._id}`);
     }
-    stopProgressIndicator(indicatorId, `${secrets.length} secrets exported.`);
+    stopProgressIndicator(indicatorId, `${secrets.length} secrets exported`);
     return true;
   } catch (error) {
     stopProgressIndicator(

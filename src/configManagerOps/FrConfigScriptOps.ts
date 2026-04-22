@@ -1,7 +1,13 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import { ScriptSkeleton } from '@rockcarver/frodo-lib/types/api/ScriptApi';
 
-import { printError, verboseMessage } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+  verboseMessage,
+} from '../utils/Console';
 import { realmList, safeFileName } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile, decodeBase64, saveTextToFile } =
@@ -104,8 +110,10 @@ export async function configManagerExportScriptsRealms(
   justContent: boolean = false,
   justConfig: boolean = false,
   scriptType: string = null,
-  language: string = 'JAVASCRIPT'
+  language: string = 'JAVASCRIPT',
+  showProgress: boolean = true
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     // create scripts directory if it doesnt exist even if there are no scripts, thats what fr-config-manager does
     getFilePath(`realms/${state.getRealm()}/scripts/`, true);
@@ -162,18 +170,41 @@ export async function configManagerExportScriptsRealms(
 
     // if there are no scripts, return
     if (allScripts.length !== 0) {
+      if (showProgress) {
+        indicatorId = createProgressIndicator(
+          'determinate',
+          allScripts.length,
+          `Exporting scripts (${state.getRealm()})`
+        );
+      }
       for (const s of allScripts) {
+        if (indicatorId) {
+          updateProgressIndicator(indicatorId, `Exporting script ${s.name}`);
+        }
         if (
           !(await configManagerExportScript({ ss: s }, justContent, justConfig))
         ) {
+          if (indicatorId) {
+            stopProgressIndicator(
+              indicatorId,
+              'Error exporting scripts',
+              'fail'
+            );
+          }
           return false;
         }
+      }
+      if (indicatorId) {
+        stopProgressIndicator(indicatorId, 'Exported scripts');
       }
     } else {
       verboseMessage(`There are no scripts in the realm "${state.getRealm()}"`);
     }
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(indicatorId, 'Error exporting scripts', 'fail');
+    }
     printError(error);
     return false;
   }
@@ -190,8 +221,26 @@ export async function configManagerExportScriptsAll(
   scriptType: string = null,
   language: string = 'JAVASCRIPT'
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
-    for (const realm of await realmList()) {
+    const realms = await realmList();
+    const exportableRealms = realms.filter((realm) => {
+      if (
+        realm === '/' &&
+        state.getDeploymentType() ===
+          frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY
+      )
+        return false;
+      return true;
+    });
+
+    indicatorId = createProgressIndicator(
+      'determinate',
+      exportableRealms.length,
+      'Exporting scripts'
+    );
+
+    for (const realm of exportableRealms) {
       if (
         realm === '/' &&
         state.getDeploymentType() ===
@@ -200,6 +249,10 @@ export async function configManagerExportScriptsAll(
         continue;
 
       state.setRealm(realm);
+      updateProgressIndicator(
+        indicatorId,
+        `Exporting scripts (${state.getRealm()})`
+      );
       verboseMessage(`\n${state.getRealm()} realm:`);
       if (
         !(await configManagerExportScriptsRealms(
@@ -207,14 +260,20 @@ export async function configManagerExportScriptsAll(
           justContent,
           justConfig,
           scriptType,
-          language
+          language,
+          false
         ))
       ) {
+        stopProgressIndicator(indicatorId, 'Error exporting scripts', 'fail');
         return false;
       }
     }
+    stopProgressIndicator(indicatorId, 'Exported scripts');
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(indicatorId, 'Error exporting scripts', 'fail');
+    }
     printError(error);
     return false;
   }

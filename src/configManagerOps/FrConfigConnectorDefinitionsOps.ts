@@ -2,7 +2,13 @@ import { frodo } from '@rockcarver/frodo-lib';
 import { ConnectorSkeleton } from '@rockcarver/frodo-lib/types/ops/ConnectorOps';
 import fs from 'fs';
 
-import { printError, verboseMessage } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+  verboseMessage,
+} from '../utils/Console';
 
 const { connector } = frodo.idm;
 const { getFilePath, saveJsonToFile } = frodo.utils;
@@ -64,15 +70,37 @@ export async function configManagerExportConnectorDefinition(
  * @returns
  */
 export async function configManagerExportConnectorDefinitionsAll(): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     const cs: ConnectorSkeleton[] = await connector.readConnectors();
+    indicatorId = createProgressIndicator(
+      'determinate',
+      cs.length,
+      'Exporting connector definitions'
+    );
     for (const c of cs) {
+      updateProgressIndicator(
+        indicatorId,
+        `Exporting connector definition ${c._id}`
+      );
       if (c._id.includes('provisioner.openicf/')) {
-        configManagerExportConnectorDefinition({ c: c });
+        await configManagerExportConnectorDefinition({ c: c });
       }
     }
+
+    stopProgressIndicator(
+      indicatorId,
+      `Exported ${cs.length} connector definitions`
+    );
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting connector definitions',
+        'fail'
+      );
+    }
     printError(error);
   }
 }

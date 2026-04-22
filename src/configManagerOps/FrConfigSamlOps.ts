@@ -1,7 +1,12 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 import {
   escapePlaceholders,
   replaceAllInJson,
@@ -17,11 +22,26 @@ const { exportCircleOfTrust } = frodo.saml2.circlesOfTrust;
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function configManagerExportSaml(file): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     const objects = JSON.parse(fs.readFileSync(file, 'utf8'));
+    const total = Object.keys(objects).reduce((acc: number, realm: string) => {
+      const samlProviders = objects[realm]?.samlProviders?.length ?? 0;
+      const cots = objects[realm]?.circlesOfTrust?.length ?? 0;
+      return acc + samlProviders + cots;
+    }, 0);
+    indicatorId = createProgressIndicator(
+      'determinate',
+      total,
+      'Exporting saml'
+    );
     for (const realm of Object.keys(objects)) {
       state.setRealm(realm);
       for (const samlProvider of objects[realm].samlProviders) {
+        updateProgressIndicator(
+          indicatorId,
+          `Exporting saml provider ${samlProvider.entityId}`
+        );
         const result = await exportSaml2Provider(samlProvider.entityId, {
           deps: false,
         });
@@ -81,6 +101,10 @@ export async function configManagerExportSaml(file): Promise<boolean> {
         );
       }
       for (const cot of objects[realm].circlesOfTrust) {
+        updateProgressIndicator(
+          indicatorId,
+          `Exporting circle of trust ${cot}`
+        );
         const cotResult = await exportCircleOfTrust(cot);
         const fileDirectory = `realms/${realm}/realm-config/saml/COT`;
 
@@ -92,8 +116,12 @@ export async function configManagerExportSaml(file): Promise<boolean> {
         );
       }
     }
+    stopProgressIndicator(indicatorId, 'Exported saml');
     return true;
   } catch (err) {
+    if (indicatorId) {
+      stopProgressIndicator(indicatorId, 'Error exporting saml', 'fail');
+    }
     printError(err, `Error exporting SAML`);
   }
   return false;

@@ -2,7 +2,12 @@ import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 
 const { readConfigEntitiesByType, importConfigEntities } = frodo.idm.config;
 const { saveJsonToFile, getFilePath } = frodo.utils;
@@ -15,45 +20,67 @@ const { saveJsonToFile, getFilePath } = frodo.utils;
 export async function configManagerExportEndpoints(
   endpointName?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     const exportData = await readConfigEntitiesByType('endpoint');
-    processEndpoints(exportData, 'endpoints', endpointName);
+    const endpointsToExport = exportData.filter(
+      (endpoint) =>
+        !endpoint.file &&
+        endpoint._id.startsWith('endpoint') &&
+        (endpoint.context === undefined ||
+          endpoint.context === null ||
+          (typeof endpoint.context === 'string' &&
+            !endpoint.context.startsWith('util'))) &&
+        endpoint._id !== 'endpoint/linkedView' &&
+        (!endpointName || endpoint._id.split('/')[1] === endpointName)
+    );
+    indicatorId = createProgressIndicator(
+      'determinate',
+      endpointsToExport.length,
+      'Exporting endpoints'
+    );
+    processEndpoints(endpointsToExport, 'endpoints', undefined, indicatorId);
+    stopProgressIndicator(
+      indicatorId,
+      `${endpointsToExport.length} endpoints exported.`
+    );
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(indicatorId, 'Error exporting endpoints', 'fail');
+    }
     printError(error, `Error exporting config entity endpoints`);
   }
   return false;
 }
 
-function processEndpoints(endpoints, fileDir, name?) {
+function processEndpoints(endpoints, fileDir, name?, indicatorId?: string) {
   try {
-    endpoints
-      .filter(
-        (endpoint) =>
-          !endpoint.file &&
-          endpoint._id.startsWith('endpoint') &&
-          (!endpoint.context || !endpoint.context.startsWith('util')) &&
-          endpoint._id !== 'endpoint/linkedView'
-      )
-      .forEach((endpoint) => {
-        const endpointName = endpoint._id.split('/')[1];
-        if (name && name !== endpointName) {
-          return;
-        }
-        const endpointDir = `${fileDir}/${endpointName}`;
-        const scriptFilename = `${endpointName}.${endpoint.type === 'groovy' ? 'groovy' : 'js'}`;
+    endpoints.forEach((endpoint) => {
+      const endpointName = endpoint._id.split('/')[1];
+      if (name && name !== endpointName) {
+        return;
+      }
+      const endpointDir = `${fileDir}/${endpointName}`;
+      const scriptFilename = `${endpointName}.${endpoint.type === 'groovy' ? 'groovy' : 'js'}`;
 
-        extractFrConfigDataToFile(endpoint.source, scriptFilename, endpointDir);
-        delete endpoint.source;
-        endpoint.file = `${scriptFilename}`;
-        const endpointFilename = `${endpointDir}/${endpointName}.json`;
-        saveJsonToFile(
-          endpoint,
-          getFilePath(endpointFilename, true),
-          false,
-          true
+      extractFrConfigDataToFile(endpoint.source, scriptFilename, endpointDir);
+      delete endpoint.source;
+      endpoint.file = `${scriptFilename}`;
+      const endpointFilename = `${endpointDir}/${endpointName}.json`;
+      saveJsonToFile(
+        endpoint,
+        getFilePath(endpointFilename, true),
+        false,
+        true
+      );
+      if (indicatorId) {
+        updateProgressIndicator(
+          indicatorId,
+          `Exporting endpoint ${endpoint._id}`
         );
-      });
+      }
+    });
   } catch (err) {
     printError(err);
   }

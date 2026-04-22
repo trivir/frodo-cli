@@ -2,7 +2,12 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 import fs from 'fs';
 
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 
 const { config } = frodo.idm;
 const { getFilePath, saveJsonToFile } = frodo.utils;
@@ -59,23 +64,56 @@ export async function configManagerExportOrgPrivileges(): Promise<boolean> {
  * @returns True if configuration files were successfully saved
  */
 export async function configManagerExportOrgPrivilegesAllRealms(): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
-    configManagerExportOrgPrivileges();
-    for (const realm of await readRealms()) {
+    const realms = await readRealms();
+    const exportableRealms = realms.filter((realm) => {
       if (
         realm.name === '/' &&
         state.getDeploymentType() ===
           frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY
       )
-        continue;
+        return false;
+      return true;
+    });
 
+    indicatorId = createProgressIndicator(
+      'determinate',
+      exportableRealms.length + 1,
+      'Exporting organization privileges'
+    );
+
+    updateProgressIndicator(
+      indicatorId,
+      'Exporting organization privileges (privilegeAssignments)'
+    );
+    await configManagerExportOrgPrivileges();
+
+    for (const realm of exportableRealms) {
       state.setRealm(realm.name);
+      updateProgressIndicator(
+        indicatorId,
+        `Exporting organization privileges (${realm.name})`
+      );
       if (!(await configManagerExportOrgPrivilegesRealm(realm.name))) {
+        stopProgressIndicator(
+          indicatorId,
+          'Error exporting organization privileges',
+          'fail'
+        );
         return false;
       }
     }
+    stopProgressIndicator(indicatorId, 'Exported organization privileges');
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting organization privileges',
+        'fail'
+      );
+    }
     printError(error);
     return false;
   }
