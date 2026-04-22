@@ -42,17 +42,20 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens(false, true, deploymentTypes)) {
-          printMessage(
-            'Listing all non-oauth2 client subjects of static user mappings...'
-          );
-          const outcome = await listNonOAuth2AdminStaticUserMappings(
-            options.showProtected
-          );
-          if (!outcome) process.exitCode = 1;
-        } else {
-          process.exitCode = 1;
-        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        printMessage(
+          'Listing all non-oauth2 client subjects of static user mappings...'
+        );
+        const outcome = await listNonOAuth2AdminStaticUserMappings(
+          options.showProtected
+        );
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

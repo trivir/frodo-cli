@@ -42,6 +42,8 @@ export default function setup() {
         const getTokensIsSuccessful = await getTokens();
         if (!getTokensIsSuccessful) process.exit(1);
 
+        let outcome;
+
         // delete by id
         if (options.agentId) {
           verboseMessage(
@@ -49,17 +51,16 @@ export default function setup() {
               options.agentId
             }' in realm "${state.getRealm()}"...`
           );
-          const outcome = await deleteAgent(options.agentId);
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteAgent(options.agentId);
         }
         // --all -a
         else if (options.all) {
           verboseMessage(
             `Deleting all agents in realm "${state.getRealm()}"...`
           );
-          const outcome = await deleteAgents();
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteAgents();
         }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

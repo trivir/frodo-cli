@@ -31,13 +31,16 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens(false, true, deploymentTypes)) {
-          printMessage(`Adding AutoId static user mapping...`);
-          const outcome = await addAutoIdStaticUserMapping();
-          if (!outcome) process.exitCode = 1;
-        } else {
-          process.exitCode = 1;
-        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        printMessage(`Adding AutoId static user mapping...`);
+        const outcome = await addAutoIdStaticUserMapping();
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

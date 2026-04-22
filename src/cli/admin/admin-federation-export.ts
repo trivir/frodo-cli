@@ -80,33 +80,33 @@ export default function setup() {
         );
         if (!getTokensIsSuccessful) process.exit(1);
 
+        let outcome;
+
         // export by id/name
         if (options.idpId) {
           verboseMessage(`Exporting provider "${options.idpId}...`);
-          const outcome = await exportAdminFederationProviderToFile(
+          outcome = await exportAdminFederationProviderToFile(
             options.idpId,
             options.file,
             options.metadata
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all -a
         else if (options.all) {
           verboseMessage('Exporting all providers to a single file...');
-          const outcome = await exportAdminFederationProvidersToFile(
+          outcome = await exportAdminFederationProvidersToFile(
             options.file,
             options.metadata
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
         else if (options.allSeparate) {
           verboseMessage('Exporting all providers to separate files...');
-          const outcome = await exportAdminFederationProvidersToFiles(
+          outcome = await exportAdminFederationProvidersToFiles(
             options.metadata
           );
-          if (!outcome) process.exitCode = 1;
         }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

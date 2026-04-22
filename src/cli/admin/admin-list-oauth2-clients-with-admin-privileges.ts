@@ -31,15 +31,17 @@ export default function setup() {
         options,
         command
       );
-      if (await getTokens(false, true, deploymentTypes)) {
-        printMessage(
-          `Listing oauth2 clients with admin privileges in realm "${state.getRealm()}"...`
-        );
-        const outcome = await listOAuth2AdminClients();
-        if (!outcome) process.exitCode = 1;
-      } else {
-        process.exitCode = 1;
-      }
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      printMessage(
+        `Listing oauth2 clients with admin privileges in realm "${state.getRealm()}"...`
+      );
+      const outcome = await listOAuth2AdminClients();
+      if (!outcome) process.exitCode = 1;
     }
     // end command logic inside action handler
   );

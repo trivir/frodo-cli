@@ -41,19 +41,21 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens(false, true, deploymentTypes)) {
-          printMessage(
-            `Revoking admin privileges from oauth2 client "${
-              options.target
-            }" in realm "${state.getRealm()}"...`
-          );
-          const outcome = await revokeOAuth2ClientAdminPrivileges(
-            options.clientId || options.target
-          );
-          if (!outcome) process.exitCode = 1;
-        } else {
-          process.exitCode = 1;
-        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+        printMessage(
+          `Revoking admin privileges from oauth2 client "${
+            options.target
+          }" in realm "${state.getRealm()}"...`
+        );
+        const outcome = await revokeOAuth2ClientAdminPrivileges(
+          options.clientId || options.target
+        );
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

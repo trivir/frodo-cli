@@ -63,35 +63,34 @@ export default function setup() {
         const getTokensIsSuccessful = await getTokens();
         if (!getTokensIsSuccessful) process.exit(1);
 
+        let outcome;
+
         // import
         if (options.agentId) {
           verboseMessage(`Importing web agent ${options.agentId} from file...`);
-          const outcome = await importJavaAgentFromFile(
+          outcome = await importJavaAgentFromFile(
             options.agentId,
             options.file
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all -a
         else if (options.all && options.file) {
           verboseMessage(
             `Importing all web agents from a single file (${options.file})...`
           );
-          const outcome = await importJavaAgentsFromFile(options.file);
-          if (!outcome) process.exitCode = 1;
+          outcome = await importJavaAgentsFromFile(options.file);
         }
         // --all-separate -A
         else if (options.allSeparate && !options.file) {
           verboseMessage('Importing all web agents from separate files...');
-          const outcome = await importJavaAgentsFromFiles();
-          if (!outcome) process.exitCode = 1;
+          outcome = await importJavaAgentsFromFiles();
         }
         // import first journey in file
         else if (options.file) {
           verboseMessage('Importing first web agent in file...');
-          const outcome = await importFirstJavaAgentFromFile(options.file);
-          if (!outcome) process.exitCode = 1;
+          outcome = await importFirstJavaAgentFromFile(options.file);
         }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

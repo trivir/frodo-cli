@@ -71,43 +71,38 @@ export default function setup() {
           options.global ? globalDeploymentTypes : undefined
         );
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome;
 
         // import
         if (options.agentId && options.file) {
           verboseMessage(`Importing agent ${options.agentId}...`);
-          const outcome = await importAgentFromFile(
+          outcome = await importAgentFromFile(
             options.agentId,
             options.file,
             options.global
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all -a
         else if (options.all && options.file) {
           verboseMessage(
             `Importing all agents from a single file (${options.file})...`
           );
-          const outcome = await importAgentsFromFile(
-            options.file,
-            options.global
-          );
-          if (!outcome) process.exitCode = 1;
+          outcome = await importAgentsFromFile(options.file, options.global);
         }
         // --all-separate -A
         else if (options.allSeparate && !options.file) {
           verboseMessage('Importing all agents from separate files...');
-          const outcome = await importAgentsFromFiles(options.global);
-          if (!outcome) process.exitCode = 1;
+          outcome = await importAgentsFromFiles(options.global);
         }
         // import first agent in file
         else if (options.file) {
           verboseMessage('Importing first agent in file...');
-          const outcome = await importFirstAgentFromFile(
+          outcome = await importFirstAgentFromFile(
             options.file,
             options.global
           );
-          if (!outcome) process.exitCode = 1;
         }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

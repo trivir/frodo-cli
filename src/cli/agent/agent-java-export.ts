@@ -61,32 +61,31 @@ export default function setup() {
         }
         const getTokensIsSuccessful = await getTokens();
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome;
 
         // export
         if (options.agentId) {
           verboseMessage('Exporting java agent...');
-          const outcome = await exportJavaAgentToFile(
+          outcome = await exportJavaAgentToFile(
             options.agentId,
             options.file,
             options.metadata
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all -a
         else if (options.all) {
           verboseMessage('Exporting all java agents to a single file...');
-          const outcome = await exportJavaAgentsToFile(
+          outcome = await exportJavaAgentsToFile(
             options.file,
             options.metadata
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
         else if (options.allSeparate) {
           verboseMessage('Exporting all java agents to separate files...');
-          const outcome = await exportJavaAgentsToFiles(options.metadata);
-          if (!outcome) process.exitCode = 1;
+          outcome = await exportJavaAgentsToFiles(options.metadata);
         }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

@@ -75,43 +75,40 @@ export default function setup() {
         );
         if (!getTokenIsSuccessful) process.exit(1);
 
+        let outcome;
+
         // import by id
         if (options.file && options.idpId) {
           verboseMessage(`Importing provider "${options.idpId}"...`);
-          const outcome = await importAdminFederationProviderFromFile(
+          outcome = await importAdminFederationProviderFromFile(
             options.idpId,
             options.file
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all -a
         else if (options.all && options.file) {
           verboseMessage(
             `Importing all providers from a single file (${options.file})...`
           );
-          const outcome = await importAdminFederationProvidersFromFile(
-            options.file
-          );
-          if (!outcome) process.exitCode = 1;
+          outcome = await importAdminFederationProvidersFromFile(options.file);
         }
         // --all-separate -A
         else if (options.allSeparate && !options.file) {
           verboseMessage(
             'Importing all providers from separate files in current directory...'
           );
-          const outcome = await importAdminFederationProvidersFromFiles();
-          if (!outcome) process.exitCode = 1;
+          outcome = await importAdminFederationProvidersFromFiles();
         }
         // import first provider from file
         else if (options.file) {
           verboseMessage(
             `Importing first provider from file "${options.file}"...`
           );
-          const outcome = await importFirstAdminFederationProviderFromFile(
+          outcome = await importFirstAdminFederationProviderFromFile(
             options.file
           );
-          if (!outcome) process.exitCode = 1;
         }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

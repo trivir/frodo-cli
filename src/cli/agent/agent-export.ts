@@ -72,36 +72,33 @@ export default function setup() {
         );
         if (!getTokensIsSuccessful) process.exit(1);
 
+        let outcome;
+
         // export
         if (options.agentId) {
           verboseMessage('Exporting agent...');
-          const outcome = await exportAgentToFile(
+          outcome = await exportAgentToFile(
             options.agentId,
             options.file,
             options.global,
             options.metadata
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all -a
         else if (options.all) {
           verboseMessage('Exporting all agents to a single file...');
-          const outcome = await exportAgentsToFile(
+          outcome = await exportAgentsToFile(
             options.file,
             options.global,
             options.metadata
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
         else if (options.allSeparate) {
           verboseMessage('Exporting all agents to separate files...');
-          const outcome = await exportAgentsToFiles(
-            options.global,
-            options.metadata
-          );
-          if (!outcome) process.exitCode = 1;
+          outcome = await exportAgentsToFiles(options.global, options.metadata);
         }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );
