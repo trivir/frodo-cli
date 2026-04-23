@@ -229,6 +229,12 @@ export async function configManagerExportAuthzPolicySetsRealm(): Promise<boolean
 export async function configManagerExportAuthzPoliciesAll(): Promise<boolean> {
   try {
     for (const realm of await readRealms()) {
+      if (
+        realm.name === '/' &&
+        state.getDeploymentType() ===
+          frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY
+      )
+        continue;
       // set realm of state because policySet.readPolicySets() uses state to check realm
       state.setRealm(realm.name);
       if (!(await configManagerExportAuthzPolicySetsRealm())) {
