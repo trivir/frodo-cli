@@ -80,43 +80,41 @@ export default function setup() {
           deploymentTypes
         );
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome;
         // import by id
         if (options.file && options.templateId) {
           verboseMessage(`Importing email template "${options.templateId}"...`);
-          const outcome = await importEmailTemplateFromFile(
+          outcome = await importEmailTemplateFromFile(
             options.templateId,
             options.file,
             options.raw
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all -a
         else if (options.all && options.file) {
           verboseMessage(
             `Importing all email templates from a single file (${options.file})...`
           );
-          const outcome = await importEmailTemplatesFromFile(options.file);
-          if (!outcome) process.exitCode = 1;
+          outcome = await importEmailTemplatesFromFile(options.file);
         }
         // --all-separate -A
         else if (options.allSeparate && !options.file) {
           verboseMessage(
             'Importing all email templates from separate files (*.template.email.json) in current directory...'
           );
-          const outcome = await importEmailTemplatesFromFiles(options.raw);
-          if (!outcome) process.exitCode = 1;
+          outcome = await importEmailTemplatesFromFiles(options.raw);
         }
         // import first template from file
         else if (options.file) {
           verboseMessage(
             `Importing first email template from file "${options.file}"...`
           );
-          const outcome = await importFirstEmailTemplateFromFile(
+          outcome = await importFirstEmailTemplateFromFile(
             options.file,
             options.raw
           );
-          if (!outcome) process.exitCode = 1;
         }
+        if (!outcome) process.exitCode = 1;
       }
     );
 

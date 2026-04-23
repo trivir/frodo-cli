@@ -54,66 +54,71 @@ export default function setup() {
           options,
           command
         );
+        if (
+          !options.idpId &&
+          !options.all &&
+          !options.allSeparate &&
+          !options.file
+        ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+        let outcome;
         // import by id
-        if (options.file && options.idpId && (await getTokens())) {
+        if (options.file && options.idpId) {
           verboseMessage(
             `Importing provider "${
               options.idpId
             }" into realm "${state.getRealm()}"...`
           );
-          const outcome = await importSocialIdentityProviderFromFile(
+          outcome = await importSocialIdentityProviderFromFile(
             options.idpId,
             options.file,
             {
               deps: options.deps,
             }
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (options.all && options.file && (await getTokens())) {
+        else if (options.all && options.file) {
           verboseMessage(
             `Importing all providers from a single file (${options.file})...`
           );
-          const outcome = await importSocialIdentityProvidersFromFile(
-            options.file,
-            {
-              deps: options.deps,
-            }
-          );
-          if (!outcome) process.exitCode = 1;
+          outcome = await importSocialIdentityProvidersFromFile(options.file, {
+            deps: options.deps,
+          });
         }
         // --all-separate -A
-        else if (options.allSeparate && !options.file && (await getTokens())) {
+        else if (options.allSeparate && !options.file) {
           verboseMessage(
             'Importing all providers from separate files in current directory...'
           );
-          const outcome = await importSocialIdentityProvidersFromFiles({
+          outcome = await importSocialIdentityProvidersFromFiles({
             deps: options.deps,
           });
-          if (!outcome) process.exitCode = 1;
         }
         // import first provider from file
-        else if (options.file && (await getTokens())) {
+        else if (options.file) {
           verboseMessage(
             `Importing first provider from file "${
               options.file
             }" into realm "${state.getRealm()}"...`
           );
-          const outcome = await importFirstSocialIdentityProviderFromFile(
+          outcome = await importFirstSocialIdentityProviderFromFile(
             options.file,
             {
               deps: options.deps,
             }
           );
-          if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage('Unrecognized combination of options or no options...');
-          program.help();
-          process.exitCode = 1;
-        }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

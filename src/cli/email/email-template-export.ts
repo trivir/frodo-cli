@@ -79,6 +79,7 @@ export default function setup() {
           deploymentTypes
         );
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome;
         // export by id/name
         if (options.templateId) {
           verboseMessage(
@@ -86,28 +87,26 @@ export default function setup() {
               options.templateId
             }" from realm "${state.getRealm()}"...`
           );
-          const outcome = await exportEmailTemplateToFile(
+          outcome = await exportEmailTemplateToFile(
             options.templateId,
             options.file,
             options.metadata
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all -a
         else if (options.all) {
           verboseMessage('Exporting all email templates to a single file...');
-          const outcome = await exportEmailTemplatesToFile(
+          outcome = await exportEmailTemplatesToFile(
             options.file,
             options.metadata
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
         else if (options.allSeparate) {
           verboseMessage('Exporting all email templates to separate files...');
-          const outcome = await exportEmailTemplatesToFiles(options.metadata);
-          if (!outcome) process.exitCode = 1;
+          outcome = await exportEmailTemplatesToFiles(options.metadata);
         }
+        if (!outcome) process.exitCode = 1;
       }
     );
 

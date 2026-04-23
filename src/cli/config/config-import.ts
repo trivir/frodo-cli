@@ -124,6 +124,7 @@ export default function setup() {
 
         const getTokensIsSuccessful = await getTokens();
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome;
 
         // Require --file -f for all function
         if (options.all && !options.file) {
@@ -134,7 +135,7 @@ export default function setup() {
         // --all -a
         else if (options.all) {
           verboseMessage('Exporting everything from a single file...');
-          const outcome = await importEverythingFromFile(options.file, {
+          outcome = await importEverythingFromFile(options.file, {
             reUuidJourneys: options.reUuidJourneys,
             reUuidScripts: options.reUuidScripts,
             reUuidCustomNodes: options.reUuidCustomNodes,
@@ -143,7 +144,6 @@ export default function setup() {
             includeActiveValues: options.includeActiveValues,
             source: options.source,
           });
-          if (!outcome) process.exitCode = 1;
         }
         // require --directory -D for all-separate function
         else if (options.allSeparate && !state.getDirectory()) {
@@ -157,7 +157,7 @@ export default function setup() {
         // --all-separate -A
         else if (options.allSeparate) {
           verboseMessage('Importing everything from separate files...');
-          const outcome = await importEverythingFromFiles({
+          outcome = await importEverythingFromFiles({
             reUuidJourneys: options.reUuidJourneys,
             reUuidScripts: options.reUuidScripts,
             reUuidCustomNodes: options.reUuidCustomNodes,
@@ -166,26 +166,21 @@ export default function setup() {
             includeActiveValues: options.includeActiveValues,
             source: options.source,
           });
-          if (!outcome) process.exitCode = 1;
         }
         // Import entity from file
         else if (options.file) {
           verboseMessage('Importing config entity from file...');
-          const outcome = await importEntityfromFile(
-            options.file,
-            options.global,
-            {
-              reUuidJourneys: options.reUuidJourneys,
-              reUuidScripts: options.reUuidScripts,
-              reUuidCustomNodes: options.reUuidCustomNodes,
-              cleanServices: options.clean,
-              includeDefault: options.default,
-              includeActiveValues: options.includeActiveValues,
-              source: options.source,
-            }
-          );
-          if (!outcome) process.exitCode = 1;
+          outcome = await importEntityfromFile(options.file, options.global, {
+            reUuidJourneys: options.reUuidJourneys,
+            reUuidScripts: options.reUuidScripts,
+            reUuidCustomNodes: options.reUuidCustomNodes,
+            cleanServices: options.clean,
+            includeDefault: options.default,
+            includeActiveValues: options.includeActiveValues,
+            source: options.source,
+          });
         }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

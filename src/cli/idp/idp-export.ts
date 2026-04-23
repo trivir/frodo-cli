@@ -56,46 +56,48 @@ export default function setup() {
           options,
           command
         );
+        if (!options.idpId && !options.all && !options.allSeparate) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+        let outcome;
+
         // export by id/name
-        if (options.idpId && (await getTokens())) {
+        if (options.idpId) {
           verboseMessage(
             `Exporting provider "${
               options.idpId
             }" from realm "${state.getRealm()}"...`
           );
-          const outcome = await exportSocialIdentityProviderToFile(
+          outcome = await exportSocialIdentityProviderToFile(
             options.idpId,
             options.file,
             options.metadata
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Exporting all providers to a single file...');
-          const outcome = await exportSocialIdentityProvidersToFile(
+          outcome = await exportSocialIdentityProvidersToFile(
             options.file,
             options.metadata
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (options.allSeparate && (await getTokens())) {
+        else if (options.allSeparate) {
           verboseMessage('Exporting all providers to separate files...');
-          const outcome = await exportSocialIdentityProvidersToFiles(
+          outcome = await exportSocialIdentityProvidersToFiles(
             options.metadata
           );
-          if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

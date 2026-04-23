@@ -44,18 +44,18 @@ export default function setup() {
         }
         const getTokensIsSuccessful = await getTokens();
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome;
         // delete by id
         if (options.templateId) {
           verboseMessage('Deleting email template...');
-          const outcome = await deleteEmailTemplateById(options.templateId);
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteEmailTemplateById(options.templateId);
         }
         // --all -a
         else if (options.all) {
           verboseMessage('Deleting all email templates...');
-          const outcome = await deleteAllEmailTemplates();
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteAllEmailTemplates();
         }
+        if (!outcome) process.exitCode = 1;
       }
     );
 

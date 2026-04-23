@@ -37,7 +37,10 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens()) {
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        if (options) {
           // code goes here
         } else {
           process.exitCode = 1;
