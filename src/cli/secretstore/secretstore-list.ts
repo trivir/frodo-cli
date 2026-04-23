@@ -40,21 +40,18 @@ export default function setup() {
           options,
           command
         );
-        if (
-          await getTokens(
-            false,
-            true,
-            options.global ? globalDeploymentTypes : deploymentTypes
-          )
-        ) {
-          verboseMessage(
-            `Listing all${options.global ? ' global' : ''} secret stores`
-          );
-          const outcome = await listSecretStores(options.long, options.global);
-          if (!outcome) process.exitCode = 1;
-        } else {
-          process.exitCode = 1;
-        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          options.global ? globalDeploymentTypes : deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        verboseMessage(
+          `Listing all${options.global ? ' global' : ''} secret stores`
+        );
+        const outcome = await listSecretStores(options.long, options.global);
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

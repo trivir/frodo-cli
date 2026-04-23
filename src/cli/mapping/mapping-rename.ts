@@ -58,12 +58,12 @@ export default function setup() {
           process.exitCode = 1;
           program.help();
         }
-        const getTokensIsSuccesful = await getTokens(
+        const getTokensIsSuccessful = await getTokens(
           false,
           true,
           deploymentTypes
         );
-        if (!getTokensIsSuccesful) process.exit(1);
+        if (!getTokensIsSuccessful) process.exit(1);
 
         // rename by id/name
         if (options.mappingId) {

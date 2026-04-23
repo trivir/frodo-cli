@@ -60,16 +60,17 @@ export default function setup() {
           options.global ? globalDeploymentTypes : deploymentTypes
         );
         if (!getTokensIsSucessful) process.exit(1);
+        let outcome;
 
         if (options.secretstoreId) {
           verboseMessage(`Describing secret store ${options.secretstoreId}`);
-          const outcome = await describeSecretStore(
+          outcome = await describeSecretStore(
             options.secretstoreId,
             options.secretstoreType,
             options.global
           );
-          if (!outcome) process.exitCode = 1;
         }
+        if (!outcome) process.exitCode = 1;
       }
     );
   return program;

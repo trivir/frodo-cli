@@ -82,23 +82,23 @@ export default function setup() {
           deploymentTypes
         );
         if (!getTokensisSuccessful) process.exit(1);
+        let outcome;
 
         // -i/--app-id or -n/--app-name
         if (options.appId || options.appName) {
           verboseMessage('Deleting application...');
-          const outcome = await deleteApplication(
+          outcome = await deleteApplication(
             options.appId,
             options.appName,
             options.deep
           );
-          if (!outcome) process.exitCode = 1;
         }
         // -a/--all
         else if (options.all) {
           verboseMessage('Deleting all applications...');
-          const outcome = await deleteApplications(options.deep);
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteApplications(options.deep);
         }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

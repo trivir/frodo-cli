@@ -58,12 +58,12 @@ export default function setup() {
           program.help();
         }
 
-        const getTokensIsSuccesful = await getTokens(
+        const getTokensIsSuccessful = await getTokens(
           false,
           true,
           deploymentTypes
         );
-        if (!getTokensIsSuccesful) process.exit(1);
+        if (!getTokensIsSuccessful) process.exit(1);
 
         // delete by id/name
         if (options.mappingId) {

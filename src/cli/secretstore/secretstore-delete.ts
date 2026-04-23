@@ -63,22 +63,22 @@ export default function setup() {
           deploymentTypes
         );
         if (!getTokensIsSucessful) process.exit(1);
+        let outcome;
 
         if (options.secretstoreId) {
           verboseMessage(`Deleting secret store ${options.secretstoreId}...`);
-          const outcome = await deleteSecretStore(
+          outcome = await deleteSecretStore(
             options.secretstoreId,
             options.secretstoreType,
             options.global
           );
-          if (!outcome) process.exitCode = 1;
         } else if (options.all) {
           verboseMessage(
             `Deleting all${options.global ? ' global' : ''} secret stores...`
           );
-          const outcome = await deleteSecretStores(options.global);
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteSecretStores(options.global);
         }
+        if (!outcome) process.exitCode = 1;
       }
     );
   return program;

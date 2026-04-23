@@ -77,55 +77,49 @@ export default function setup() {
 
         const getTokensIsSuccessful = await getTokens();
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome;
 
         // import
         if (options.policyId) {
           verboseMessage('Importing authorization policy from file...');
-          const outcome = await importPolicyFromFile(
-            options.policyId,
-            options.file,
-            {
-              deps: options.deps,
-              prereqs: options.prereqs,
-              policySetName: options.setId,
-            }
-          );
-          if (!outcome) process.exitCode = 1;
-        }
-        // -a/--all
-        else if (options.all) {
-          verboseMessage('Importing all authorization policies from file...');
-          const outcome = await importPoliciesFromFile(options.file, {
+          outcome = await importPolicyFromFile(options.policyId, options.file, {
             deps: options.deps,
             prereqs: options.prereqs,
             policySetName: options.setId,
           });
-          if (!outcome) process.exitCode = 1;
+        }
+        // -a/--all
+        else if (options.all) {
+          verboseMessage('Importing all authorization policies from file...');
+          outcome = await importPoliciesFromFile(options.file, {
+            deps: options.deps,
+            prereqs: options.prereqs,
+            policySetName: options.setId,
+          });
         }
         // -A/--all-separate
         else if (options.allSeparate) {
           verboseMessage(
             'Importing all authorization policies from separate files...'
           );
-          const outcome = await importPoliciesFromFiles({
+          outcome = await importPoliciesFromFiles({
             deps: options.deps,
             prereqs: options.prereqs,
             policySetName: options.setId,
           });
-          if (!outcome) process.exitCode = 1;
         }
         // import first policy set from file
         else if (options.file) {
           verboseMessage(
             `Importing first authorization policy from file "${options.file}"...`
           );
-          const outcome = await importFirstPolicyFromFile(options.file, {
+          outcome = await importFirstPolicyFromFile(options.file, {
             deps: options.deps,
             prereqs: options.prereqs,
             policySetName: options.setId,
           });
-          if (!outcome) process.exitCode = 1;
         }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

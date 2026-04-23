@@ -28,24 +28,21 @@ export default function setup() {
 
         const getTokensIsSuccessful = await getTokens();
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome;
 
         // by policy set
         if (options.setId) {
           verboseMessage(
             `Listing authorization policies in policy set ${options.setId}...`
           );
-          const outcome = await listPoliciesByPolicySet(
-            options.setId,
-            options.long
-          );
-          if (!outcome) process.exitCode = 1;
+          outcome = await listPoliciesByPolicySet(options.setId, options.long);
         }
         // all policies
         else {
           verboseMessage(`Listing authorization policies...`);
-          const outcome = await listPolicies(options.long);
-          if (!outcome) process.exitCode = 1;
+          outcome = await listPolicies(options.long);
         }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

@@ -70,53 +70,50 @@ export default function setup() {
 
         const getTokensIsSuccessful = await getTokens();
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome;
 
         // import by uuid
         if (options.typeId) {
           verboseMessage(
             'Importing authorization resource type by uuid from file...'
           );
-          const outcome = await importResourceTypeFromFile(
+          outcome = await importResourceTypeFromFile(
             options.typeId,
             options.file
           );
-          if (!outcome) process.exitCode = 1;
         }
         // import by name
         else if (options.typeName) {
           verboseMessage(
             'Importing authorization resource type by name from file...'
           );
-          const outcome = await importResourceTypeByNameFromFile(
+          outcome = await importResourceTypeByNameFromFile(
             options.typeName,
             options.file
           );
-          if (!outcome) process.exitCode = 1;
         }
         // -a/--all
         else if (options.all) {
           verboseMessage(
             'Importing all authorization resource types from file...'
           );
-          const outcome = await importResourceTypesFromFile(options.file);
-          if (!outcome) process.exitCode = 1;
+          outcome = await importResourceTypesFromFile(options.file);
         }
         // -A/--all-separate
         else if (options.allSeparate) {
           verboseMessage(
             'Importing all authorization resource types from separate files...'
           );
-          const outcome = await importResourceTypesFromFiles();
-          if (!outcome) process.exitCode = 1;
+          outcome = await importResourceTypesFromFiles();
         }
         // import first
         else if (options.file) {
           verboseMessage(
             `Importing first authorization resource type from file "${options.file}"...`
           );
-          const outcome = await importFirstResourceTypeFromFile(options.file);
-          if (!outcome) process.exitCode = 1;
+          outcome = await importFirstResourceTypeFromFile(options.file);
         }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

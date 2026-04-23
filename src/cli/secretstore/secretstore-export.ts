@@ -87,41 +87,40 @@ export default function setup() {
           options.global ? globalDeploymentTypes : deploymentTypes
         );
         if (!getTokensIsSucessful) process.exit(1);
+        let outcome;
 
         if (options.secretstoreId) {
           verboseMessage(`Exporting secret store ${options.secretstoreId}...`);
-          const outcome = await exportSecretStoreToFile(
+          outcome = await exportSecretStoreToFile(
             options.secretstoreId,
             options.secretstoreType,
             options.file,
             options.global,
             options.metadata
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all -a
         else if (options.all) {
           verboseMessage(
             `Exporting all${options.global ? ' global' : ''} secret stores to a single file...`
           );
-          const outcome = await exportSecretStoresToFile(
+          outcome = await exportSecretStoresToFile(
             options.file,
             options.global,
             options.metadata
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
         else if (options.allSeparate) {
           verboseMessage(
             `Exporting all${options.global ? ' global' : ''} secret stores to separate files...`
           );
-          const outcome = await exportSecretStoresToFiles(
+          outcome = await exportSecretStoresToFiles(
             options.global,
             options.metadata
           );
-          if (!outcome) process.exitCode = 1;
         }
+        if (!outcome) process.exitCode = 1;
       }
     );
   return program;

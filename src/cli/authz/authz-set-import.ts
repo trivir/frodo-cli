@@ -71,53 +71,47 @@ export default function setup() {
 
         const getTokensIsSuccessful = await getTokens();
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome;
 
         // import
         if (options.setId) {
           verboseMessage('Importing authorization policy set from file...');
-          const outcome = await importPolicySetFromFile(
-            options.setId,
-            options.file,
-            {
-              deps: options.deps,
-              prereqs: options.prereqs,
-            }
-          );
-          if (!outcome) process.exitCode = 1;
+          outcome = await importPolicySetFromFile(options.setId, options.file, {
+            deps: options.deps,
+            prereqs: options.prereqs,
+          });
         }
         // -a/--all
         else if (options.all) {
           verboseMessage(
             'Importing all authorization policy sets from file...'
           );
-          const outcome = await importPolicySetsFromFile(options.file, {
+          outcome = await importPolicySetsFromFile(options.file, {
             deps: options.deps,
             prereqs: options.prereqs,
           });
-          if (!outcome) process.exitCode = 1;
         }
         // -A/--all-separate
         else if (options.allSeparate) {
           verboseMessage(
             'Importing all authorization policy sets from separate files...'
           );
-          const outcome = await importPolicySetsFromFiles({
+          outcome = await importPolicySetsFromFiles({
             deps: options.deps,
             prereqs: options.prereqs,
           });
-          if (!outcome) process.exitCode = 1;
         }
         // import first policy set from file
         else if (options.file) {
           verboseMessage(
             `Importing first authorization policy set from file "${options.file}"...`
           );
-          const outcome = await importFirstPolicySetFromFile(options.file, {
+          outcome = await importFirstPolicySetFromFile(options.file, {
             deps: options.deps,
             prereqs: options.prereqs,
           });
-          if (!outcome) process.exitCode = 1;
         }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

@@ -68,12 +68,12 @@ export default function setup() {
           program.help();
         }
 
-        const getTokenIsSuccessful = await getTokens(
+        const getTokensIsSuccessful = await getTokens(
           true,
           true,
           deploymentTypes
         );
-        if (!getTokenIsSuccessful) process.exit(1);
+        if (!getTokensIsSuccessful) process.exit(1);
 
         let outcome;
 

@@ -62,12 +62,6 @@ export default function setup() {
           process.exitCode = 1;
           program.help();
         }
-        const getTokensIsSucessful = await getTokens(
-          false,
-          true,
-          options.global ? globalDeploymentTypes : deploymentTypes
-        );
-        if (!getTokensIsSucessful) process.exit(1);
         if (
           options.secretstoreType &&
           !canSecretStoreHaveMappings(options.secretstoreType)
@@ -76,19 +70,25 @@ export default function setup() {
             `'${options.secretstoreType}' does not have mappings.`,
             'error'
           );
-          process.exitCode = 1;
-        } else if (options.secretstoreId) {
-          verboseMessage(
-            `Listing all secret store mappings for the secret store '${options.secretstoreId}'`
-          );
-          const outcome = await listSecretStoreMappings(
-            options.secretstoreId,
-            options.secretstoreType,
-            options.long,
-            options.global
-          );
-          if (!outcome) process.exitCode = 1;
+          process.exit(1);
         }
+        const getTokensIsSucessful = await getTokens(
+          false,
+          true,
+          options.global ? globalDeploymentTypes : deploymentTypes
+        );
+        if (!getTokensIsSucessful) process.exit(1);
+
+        verboseMessage(
+          `Listing all secret store mappings for the secret store '${options.secretstoreId}'`
+        );
+        const outcome = await listSecretStoreMappings(
+          options.secretstoreId,
+          options.secretstoreType,
+          options.long,
+          options.global
+        );
+        if (!outcome) process.exitCode = 1;
       }
     );
   return program;

@@ -109,11 +109,12 @@ export default function setup() {
           deploymentTypes
         );
         if (!getTokensisSuccessful) process.exit(1);
+        let outcome;
 
         // -i/--app-id or -n/--app-name
         if (options.appId || options.appName) {
           verboseMessage('Exporting application...');
-          const outcome = await exportApplicationToFile(
+          outcome = await exportApplicationToFile(
             options.appId,
             options.appName,
             options.file,
@@ -123,12 +124,11 @@ export default function setup() {
               deps: options.deps,
             }
           );
-          if (!outcome) process.exitCode = 1;
         }
         // -a/--all
         else if (options.all) {
           verboseMessage('Exporting all applications to file...');
-          const outcome = await exportApplicationsToFile(
+          outcome = await exportApplicationsToFile(
             options.file,
             options.metadata,
             {
@@ -136,17 +136,16 @@ export default function setup() {
               deps: options.deps,
             }
           );
-          if (!outcome) process.exitCode = 1;
         }
         // -A/--all-separate
         else if (options.allSeparate) {
           verboseMessage('Exporting all applications to separate files...');
-          const outcome = await exportApplicationsToFiles(options.metadata, {
+          outcome = await exportApplicationsToFiles(options.metadata, {
             useStringArrays: true,
             deps: options.deps,
           });
-          if (!outcome) process.exitCode = 1;
         }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

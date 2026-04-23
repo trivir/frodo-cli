@@ -41,18 +41,19 @@ export default function setup() {
         const getTokensIsSuccessful = await getTokens();
         if (!getTokensIsSuccessful) process.exit(1);
 
+        let outcome;
+
         // delete by id
         if (options.setId) {
           verboseMessage('Deleting authorization policy set...');
-          const outcome = await deletePolicySetById(options.setId);
-          if (!outcome) process.exitCode = 1;
+          outcome = await deletePolicySetById(options.setId);
         }
         // --all -a
         else if (options.all) {
           verboseMessage('Deleting all authorization policy sets...');
-          const outcome = await deletePolicySets();
-          if (!outcome) process.exitCode = 1;
+          outcome = await deletePolicySets();
         }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

@@ -55,25 +55,24 @@ export default function setup() {
 
         const getTokensIsSuccessful = await getTokens();
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome;
 
         // delete by uuid
         if (options.typeId) {
           verboseMessage('Deleting authorization resource type...');
-          const outcome = await deleteResourceTypeById(options.typeId);
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteResourceTypeById(options.typeId);
         }
         // delete by name
         else if (options.typeName) {
           verboseMessage('Deleting authorization resource type...');
-          const outcome = await deleteResourceTypeUsingName(options.typeName);
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteResourceTypeUsingName(options.typeName);
         }
         // --all -a
         else if (options.all) {
           verboseMessage('Deleting all authorization resource types...');
-          const outcome = await deleteResourceTypes();
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteResourceTypes();
         }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

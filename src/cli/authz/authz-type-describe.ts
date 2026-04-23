@@ -39,22 +39,19 @@ export default function setup() {
 
         const getTokensIsSuccessful = await getTokens();
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome;
 
         if (options.typeId) {
           verboseMessage(`Describing authorization resource type by uuid...`);
-          const outcome = await describeResourceType(
-            options.typeId,
-            options.json
-          );
-          if (!outcome) process.exitCode = 1;
+          outcome = await describeResourceType(options.typeId, options.json);
         } else if (options.typeName) {
           verboseMessage(`Describing authorization resource type by name...`);
-          const outcome = await describeResourceTypeByName(
+          outcome = await describeResourceTypeByName(
             options.typeName,
             options.json
           );
-          if (!outcome) process.exitCode = 1;
         }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

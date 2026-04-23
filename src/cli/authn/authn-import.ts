@@ -29,22 +29,19 @@ export default function setup() {
           options,
           command
         );
-        if (
-          await getTokens(
-            false,
-            true,
-            options.global ? globalDeploymentTypes : undefined
-          )
-        ) {
-          verboseMessage('Importing authentication settings from file...');
-          const outcome = importAuthenticationSettingsFromFile(
-            options.file,
-            options.global
-          );
-          if (!outcome) process.exitCode = 1;
-        } else {
-          process.exitCode = 1;
-        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          options.global ? globalDeploymentTypes : undefined
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        verboseMessage('Importing authentication settings from file...');
+        const outcome = importAuthenticationSettingsFromFile(
+          options.file,
+          options.global
+        );
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

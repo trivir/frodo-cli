@@ -53,26 +53,26 @@ export default function setup() {
         const getTokensisSuccessful = await getTokens();
         if (!getTokensisSuccessful) process.exit(1);
 
+        let outcome;
+
         // delete by id
         if (options.policyId) {
           verboseMessage('Deleting authorization policy...');
-          const outcome = await deletePolicyById(options.policyId);
-          if (!outcome) process.exitCode = 1;
+          outcome = await deletePolicyById(options.policyId);
         }
         // --all -a by policy set
         else if (options.setId && options.all) {
           verboseMessage(
             `Deleting all authorization policies in policy set ${options.setId}...`
           );
-          const outcome = await deletePoliciesByPolicySet(options.setId);
-          if (!outcome) process.exitCode = 1;
+          outcome = await deletePoliciesByPolicySet(options.setId);
         }
         // --all -a
         else if (options.all) {
           verboseMessage('Deleting all authorization policies...');
-          const outcome = await deletePolicies();
-          if (!outcome) process.exitCode = 1;
+          outcome = await deletePolicies();
         }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );
