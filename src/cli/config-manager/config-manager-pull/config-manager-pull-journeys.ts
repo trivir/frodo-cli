@@ -53,17 +53,19 @@ export default function setup() {
         realm = options.realm;
       }
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Exporting config entity journeys');
-        const outcome = await configManagerExportJourneys(
-          options.name,
-          realm,
-          options.pullDependencies
-        );
-        if (!outcome) process.exitCode = 1;
-      } else {
-        process.exitCode = 1;
-      }
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      verboseMessage('Exporting config entity journeys');
+      const outcome = await configManagerExportJourneys(
+        options.name,
+        realm,
+        options.pullDependencies
+      );
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;

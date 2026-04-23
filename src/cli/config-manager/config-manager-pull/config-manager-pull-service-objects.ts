@@ -112,8 +112,6 @@ export default function setup() {
           options.file
         );
         if (!outcome) process.exitCode = 1;
-      } else {
-        process.exitCode = 1;
       }
     });
 

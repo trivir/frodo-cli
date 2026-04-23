@@ -72,7 +72,7 @@ export default function setup() {
         );
         if (!getTokensIsSuccessful) process.exit(1);
 
-        let outcome;
+        let outcome: boolean;
 
         // export
         if (options.agentId) {

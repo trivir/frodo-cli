@@ -3,7 +3,7 @@ import { Option } from 'commander';
 
 import { configManagerImportEmailTemplates } from '../../../configManagerOps/FrConfigEmailTemplatesOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
-import { printMessage, verboseMessage } from '../../../utils/Console';
+import { verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
@@ -39,26 +39,19 @@ export default function setup() {
         command
       );
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        if (options.name) {
-          verboseMessage(
-            `Importing email template with name "${options.name}"`
-          );
-        } else {
-          verboseMessage('Importing all email templates');
-        }
-        const outcome = await configManagerImportEmailTemplates(options.name);
-        if (!outcome) process.exitCode = 1;
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      if (options.name) {
+        verboseMessage(`Importing email template with name "${options.name}"`);
+      } else {
+        verboseMessage('Importing all email templates');
       }
-      // unrecognized combination of options or no options
-      else {
-        printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
-        );
-        process.exitCode = 1;
-        program.help();
-      }
+      const outcome = await configManagerImportEmailTemplates(options.name);
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;

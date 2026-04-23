@@ -48,23 +48,23 @@ export default function setup() {
           deploymentTypes
         );
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome: boolean;
 
         if (options.variableId && options.value && options.description) {
           verboseMessage('Updating variable...');
-          const outcome = await updateVariable(
+          outcome = await updateVariable(
             options.variableId,
             options.value,
             options.description
           );
-          if (!outcome) process.exitCode = 1;
         } else if (options.variableId && options.description) {
           verboseMessage('Updating variable...');
-          const outcome = await setVariableDescription(
+          outcome = await setVariableDescription(
             options.variableId,
             options.description
           );
-          if (!outcome) process.exitCode = 1;
         }
+        if (!outcome) process.exitCode = 1;
       }
     );
 

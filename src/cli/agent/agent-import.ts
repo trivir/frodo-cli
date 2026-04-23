@@ -71,7 +71,7 @@ export default function setup() {
           options.global ? globalDeploymentTypes : undefined
         );
         if (!getTokensIsSuccessful) process.exit(1);
-        let outcome;
+        let outcome: boolean;
 
         // import
         if (options.agentId && options.file) {

@@ -124,7 +124,7 @@ export default function setup() {
 
         const getTokensIsSuccessful = await getTokens();
         if (!getTokensIsSuccessful) process.exit(1);
-        let outcome;
+        let outcome: boolean;
 
         // Require --file -f for all function
         if (options.all && !options.file) {

@@ -40,17 +40,15 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens()) {
-          verboseMessage(`Listing scripts in realm "${state.getRealm()}"...`);
-          const outcome = await listScripts(
-            options.long,
-            options.usage,
-            options.file
-          );
-          if (!outcome) process.exitCode = 1;
-        } else {
-          process.exitCode = 1;
-        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+        verboseMessage(`Listing scripts in realm "${state.getRealm()}"...`);
+        const outcome = await listScripts(
+          options.long,
+          options.usage,
+          options.file
+        );
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

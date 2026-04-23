@@ -108,52 +108,50 @@ export default function setup() {
           deploymentTypes
         );
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome: boolean;
 
         // import
         if (options.secretId) {
           printMessage(`Importing secret ${options.secretId}...`);
-          const outcome = await importSecretFromFile(
+          outcome = await importSecretFromFile(
             options.secretId,
             options.file,
             options.includeActiveValues,
             options.source
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all -a
         else if (options.all && options.file) {
           printMessage(
             `Importing all secrets from a single file (${options.file})...`
           );
-          const outcome = await importSecretsFromFile(
+          outcome = await importSecretsFromFile(
             options.file,
             options.includeActiveValues,
             options.source
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
         else if (options.allSeparate && !options.file) {
           printMessage(
             'Importing all secrets from separate files in working directory...'
           );
-          const outcome = await importSecretsFromFiles(
+          outcome = await importSecretsFromFiles(
             options.includeActiveValues,
             options.source
           );
-          if (!outcome) process.exitCode = 1;
         }
         // import first
         else if (options.file) {
           printMessage('Importing first secret in file...');
-          const outcome = await importSecretFromFile(
+          outcome = await importSecretFromFile(
             null,
             options.file,
             options.includeActiveValues,
             options.source
           );
-          if (!outcome) process.exitCode = 1;
         }
+        if (!outcome) process.exitCode = 1;
       }
     );
 

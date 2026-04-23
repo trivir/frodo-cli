@@ -109,7 +109,7 @@ export default function setup() {
           deploymentTypes
         );
         if (!getTokensisSuccessful) process.exit(1);
-        let outcome;
+        let outcome: boolean;
 
         // -i/--app-id or -n/--app-name
         if (options.appId || options.appName) {

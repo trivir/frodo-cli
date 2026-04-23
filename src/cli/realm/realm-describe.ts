@@ -19,12 +19,10 @@ export default function setup() {
         options,
         command
       );
-      if (await getTokens()) {
-        verboseMessage(`Retrieving details of realm ${state.getRealm()}...`);
-        describeRealm(frodo.utils.getRealmName(state.getRealm()));
-      } else {
-        process.exitCode = 1;
-      }
+      const getTokensIsSuccessful = await getTokens();
+      if (!getTokensIsSuccessful) process.exit(1);
+      verboseMessage(`Retrieving details of realm ${state.getRealm()}...`);
+      describeRealm(frodo.utils.getRealmName(state.getRealm()));
     }
     // end command logic inside action handler
   );

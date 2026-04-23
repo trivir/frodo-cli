@@ -32,13 +32,15 @@ export default function setup() {
         command
       );
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Exporting CORS configuration');
-        const outcome = await configManagerExportCors();
-        if (!outcome) process.exitCode = 1;
-      } else {
-        process.exitCode = 1;
-      }
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      verboseMessage('Exporting CORS configuration');
+      const outcome = await configManagerExportCors();
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;

@@ -1,3 +1,4 @@
+import { ResourceTypeSkeleton } from '@rockcarver/frodo-lib/types/api/ResourceTypesApi';
 import { Option } from 'commander';
 
 import { getTokens } from '../../ops/AuthenticateOps';
@@ -55,7 +56,7 @@ export default function setup() {
 
         const getTokensIsSuccessful = await getTokens();
         if (!getTokensIsSuccessful) process.exit(1);
-        let outcome;
+        let outcome: boolean | ResourceTypeSkeleton;
 
         // delete by uuid
         if (options.typeId) {

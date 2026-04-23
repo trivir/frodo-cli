@@ -115,6 +115,7 @@ export default function setup() {
           deploymentTypes
         );
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome: boolean;
 
         if (options.secretId) {
           verboseMessage(
@@ -122,7 +123,7 @@ export default function setup() {
               options.secretId
             }" from realm "${state.getRealm()}"...`
           );
-          const outcome = await exportSecretToFile(
+          outcome = await exportSecretToFile(
             options.secretId,
             options.file,
             options.metadata,
@@ -130,27 +131,25 @@ export default function setup() {
             options.includeActiveValues,
             options.target
           );
-          if (!outcome) process.exitCode = 1;
         } else if (options.all) {
           verboseMessage('Exporting all secrets to a single file...');
-          const outcome = await exportSecretsToFile(
+          outcome = await exportSecretsToFile(
             options.file,
             options.metadata,
             options.modifiedProperties,
             options.includeActiveValues,
             options.target
           );
-          if (!outcome) process.exitCode = 1;
         } else if (options.allSeparate) {
           verboseMessage('Exporting all secrets to separate files...');
-          const outcome = await exportSecretsToFiles(
+          outcome = await exportSecretsToFiles(
             options.metadata,
             options.modifiedProperties,
             options.includeActiveValues,
             options.target
           );
-          if (!outcome) process.exitCode = 1;
         }
+        if (!outcome) process.exitCode = 1;
       }
     );
 

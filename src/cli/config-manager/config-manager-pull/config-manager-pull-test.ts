@@ -31,12 +31,14 @@ export default function setup() {
         command
       );
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Test connection and authentication');
-        printMessage('Authenticated successfully');
-      } else {
-        process.exitCode = 1;
-      }
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      verboseMessage('Test connection and authentication');
+      printMessage('Authenticated successfully');
     });
 
   return program;

@@ -52,18 +52,19 @@ export default function setup() {
           deploymentTypes
         );
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome: boolean;
+
         // delete by id
         if (options.secretId) {
           verboseMessage('Deleting secret...');
-          const outcome = await deleteSecret(options.secretId);
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteSecret(options.secretId);
         }
         // --all -a
         else if (options.all) {
           verboseMessage('Deleting all secrets...');
-          const outcome = await deleteSecrets();
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteSecrets();
         }
+        if (!outcome) process.exitCode = 1;
       }
     );
 

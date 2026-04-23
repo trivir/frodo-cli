@@ -115,7 +115,7 @@ export default function setup() {
           verboseMessage(`Exporting all servers to a single file...`);
           const outcome = await exportServersToFile(
             options.file,
-            options.extract,
+            false,
             options.metadata,
             {
               includeDefault: options.default,

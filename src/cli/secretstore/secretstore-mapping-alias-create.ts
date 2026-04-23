@@ -62,12 +62,7 @@ export default function setup() {
           command
         );
 
-        if (
-          !options.secretstoreType &&
-          !options.secretstoreId &&
-          !options.secretId &&
-          !options.alias
-        ) {
+        if (!options.secretstoreId || !options.secretId || !options.alias) {
           printMessage(
             'Unrecognized combination of options or no options...',
             'error'
@@ -89,21 +84,20 @@ export default function setup() {
             `'${options.secretstoreType}' does not have mappings.`,
             'error'
           );
-          process.exitCode = 1;
-        } else if (options.secretstoreId && options.secretId && options.alias) {
-          verboseMessage(
-            `Creating the mapping alias ${options.alias} in the mapping ${options.secretId} in the secret store ${options.secretstoreId}'`
-          );
-          const outcome = await createSecretStoreMappingAlias(
-            options.secretstoreId,
-            options.secretstoreType,
-            options.secretId,
-            options.alias,
-            options.activate,
-            options.global
-          );
-          if (!outcome) process.exitCode = 1;
+          process.exit(1);
         }
+        verboseMessage(
+          `Creating the mapping alias ${options.alias} in the mapping ${options.secretId} in the secret store ${options.secretstoreId}'`
+        );
+        const outcome = await createSecretStoreMappingAlias(
+          options.secretstoreId,
+          options.secretstoreType,
+          options.secretId,
+          options.alias,
+          options.activate,
+          options.global
+        );
+        if (!outcome) process.exitCode = 1;
       }
     );
   return program;

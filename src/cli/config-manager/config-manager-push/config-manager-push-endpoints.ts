@@ -39,19 +39,21 @@ export default function setup() {
         command
       );
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        if (options.name) {
-          verboseMessage(
-            `Importing config entity endpoint with name "${options.name}"`
-          );
-        } else {
-          verboseMessage('Importing config entity endpoints');
-        }
-        const outcome = await configManagerImportEndpoints(options.name);
-        if (!outcome) process.exitCode = 1;
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      if (options.name) {
+        verboseMessage(
+          `Importing config entity endpoint with name "${options.name}"`
+        );
       } else {
-        process.exitCode = 1;
+        verboseMessage('Importing config entity endpoints');
       }
+      const outcome = await configManagerImportEndpoints(options.name);
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;

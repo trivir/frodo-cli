@@ -41,13 +41,15 @@ export default function setup() {
       if (options.realm) {
         realm = options.realm;
       }
-      if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Exporting config entity password-policy');
-        const outcome = await configManagerExportPasswordPolicy(realm);
-        if (!outcome) process.exitCode = 1;
-      } else {
-        process.exitCode = 1;
-      }
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      verboseMessage('Exporting config entity password-policy');
+      const outcome = await configManagerExportPasswordPolicy(realm);
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;

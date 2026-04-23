@@ -63,7 +63,7 @@ export default function setup() {
           deploymentTypes
         );
         if (!getTokensIsSucessful) process.exit(1);
-        let outcome;
+        let outcome: boolean;
 
         if (options.secretstoreId) {
           verboseMessage(`Deleting secret store ${options.secretstoreId}...`);

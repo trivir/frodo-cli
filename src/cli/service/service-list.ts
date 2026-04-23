@@ -23,13 +23,11 @@ export default function setup() {
         options,
         command
       );
-      if (await getTokens()) {
-        verboseMessage(`Listing all AM services for realm: ${realm}`);
-        const outcome = await listServices(options.long, options.global);
-        if (!outcome) process.exitCode = 1;
-      } else {
-        process.exitCode = 1;
-      }
+      const getTokensIsSuccessful = await getTokens();
+      if (!getTokensIsSuccessful) process.exit(1);
+      verboseMessage(`Listing all AM services for realm: ${realm}`);
+      const outcome = await listServices(options.long, options.global);
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;

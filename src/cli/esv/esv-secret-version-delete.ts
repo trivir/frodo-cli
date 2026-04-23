@@ -53,20 +53,22 @@ export default function setup() {
           deploymentTypes
         );
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome: boolean;
 
         // delete by id
         if (options.secretId && options.version) {
           verboseMessage(`Deleting version of secret...`);
-          const outcome = await deleteVersionOfSecret(
+          outcome = await deleteVersionOfSecret(
             options.secretId,
             options.version
           );
-          if (!outcome) process.exitCode = 1;
         }
+        if (!outcome) process.exitCode = 1;
+
         // --all -a
         // else if (options.all && (await getTokens(false, true, deploymentTypes))) {
         //   printMessage('Deleting all versions...');
-        //   const outcome = deleteJourneys(options);
+        //   outcome = deleteJourneys(options);
         //   if (!outcome) process.exitCode = 1;
         // }
       }

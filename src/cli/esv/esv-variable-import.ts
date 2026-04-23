@@ -71,37 +71,36 @@ export default function setup() {
           deploymentTypes
         );
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome: boolean;
+
         // import
         if (options.variableId) {
           printMessage(`Importing variable ${options.variableId}...`);
-          const outcome = await importVariableFromFile(
+          outcome = await importVariableFromFile(
             options.variableId,
             options.file
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all -a
         else if (options.all && options.file) {
           printMessage(
             `Importing all variables from a single file (${options.file})...`
           );
-          const outcome = await importVariablesFromFile(options.file);
-          if (!outcome) process.exitCode = 1;
+          outcome = await importVariablesFromFile(options.file);
         }
         // --all-separate -A
         else if (options.allSeparate && !options.file) {
           printMessage(
             'Importing all variables from separate files in working directory...'
           );
-          const outcome = await importVariablesFromFiles();
-          if (!outcome) process.exitCode = 1;
+          outcome = await importVariablesFromFiles();
         }
         // import first
         else if (options.file) {
           printMessage('Importing first variable in file...');
-          const outcome = await importVariableFromFile(null, options.file);
-          if (!outcome) process.exitCode = 1;
+          outcome = await importVariableFromFile(null, options.file);
         }
+        if (!outcome) process.exitCode = 1;
       }
     );
 

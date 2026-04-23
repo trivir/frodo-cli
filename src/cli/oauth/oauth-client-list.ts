@@ -24,13 +24,11 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens()) {
-          verboseMessage(`Listing OAuth2 clients...`);
-          const outcome = await listOAuth2Clients(options.long);
-          if (!outcome) process.exitCode = 1;
-        } else {
-          process.exitCode = 1;
-        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+        verboseMessage(`Listing OAuth2 clients...`);
+        const outcome = await listOAuth2Clients(options.long);
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

@@ -60,7 +60,7 @@ export default function setup() {
           options.global ? globalDeploymentTypes : deploymentTypes
         );
         if (!getTokensIsSucessful) process.exit(1);
-        let outcome;
+        let outcome: boolean;
 
         if (options.secretstoreId) {
           verboseMessage(`Describing secret store ${options.secretstoreId}`);

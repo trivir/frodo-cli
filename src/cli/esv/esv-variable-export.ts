@@ -84,6 +84,7 @@ export default function setup() {
           deploymentTypes
         );
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome: boolean;
 
         if (options.variableId) {
           verboseMessage(
@@ -91,7 +92,7 @@ export default function setup() {
               options.variableId
             }" from realm "${state.getRealm()}"...`
           );
-          const outcome = await exportVariableToFile(
+          outcome = await exportVariableToFile(
             options.variableId,
             options.file,
             options.decode,
@@ -101,7 +102,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         } else if (options.all) {
           verboseMessage('Exporting all variables to a single file...');
-          const outcome = await exportVariablesToFile(
+          outcome = await exportVariablesToFile(
             options.file,
             options.decode,
             options.metadata,
@@ -110,13 +111,13 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         } else if (options.allSeparate) {
           verboseMessage('Exporting all variables to separate files...');
-          const outcome = await exportVariablesToFiles(
+          outcome = await exportVariablesToFiles(
             options.decode,
             options.metadata,
             options.modifiedProperties
           );
-          if (!outcome) process.exitCode = 1;
         }
+        if (!outcome) process.exitCode = 1;
       }
     );
 

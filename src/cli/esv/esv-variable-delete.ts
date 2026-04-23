@@ -64,19 +64,19 @@ export default function setup() {
           deploymentTypes
         );
         if (!getTokensIsSuccessful) process.exit(1);
+        let outcome: boolean;
 
         // delete by id
         if (options.variableId) {
           verboseMessage('Deleting variable...');
-          const outcome = await deleteVariableById(options.variableId);
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteVariableById(options.variableId);
         }
         // --all -a
         else if (options.all) {
           verboseMessage('Deleting all variables...');
-          const outcome = await deleteVariables();
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteVariables();
         }
+        if (!outcome) process.exitCode = 1;
       }
     );
 

@@ -31,14 +31,16 @@ export default function setup() {
         options,
         command
       );
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Exporting config entity cookie-domains');
-        const outcome = await configManagerExportCookieDomains();
-        if (!outcome) process.exitCode = 1;
-      } else {
-        process.exitCode = 1;
-      }
+      verboseMessage('Exporting config entity cookie-domains');
+      const outcome = await configManagerExportCookieDomains();
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;

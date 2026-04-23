@@ -75,7 +75,7 @@ export default function setup() {
         );
         if (!getTokensIsSuccessful) process.exit(1);
 
-        let outcome;
+        let outcome: boolean;
 
         // import by id
         if (options.file && options.idpId) {

@@ -47,19 +47,21 @@ export default function setup() {
         realm = options.realm;
       }
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        if (options.name) {
-          printMessage(
-            `Exporting service with name ${options.name} from realm ${realm}`
-          );
-        } else {
-          printMessage(`Exporting all services from realm ${realm}`);
-        }
-        const outcome = await configManagerExportServices(realm, options.name);
-        if (!outcome) process.exitCode = 1;
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      if (options.name) {
+        printMessage(
+          `Exporting service with name ${options.name} from realm ${realm}`
+        );
       } else {
-        process.exitCode = 1;
+        printMessage(`Exporting all services from realm ${realm}`);
       }
+      const outcome = await configManagerExportServices(realm, options.name);
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;

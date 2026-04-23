@@ -85,7 +85,7 @@ export default function setup() {
           options.global ? globalDeploymentTypes : deploymentTypes
         );
         if (!getTokensIsSucessful) process.exit(1);
-        let outcome;
+        let outcome: boolean;
         if (options.secretstoreId && options.secretId) {
           verboseMessage(
             `Deleting secret store mapping ${options.secretId} from secret store ${options.secretstoreId}...`

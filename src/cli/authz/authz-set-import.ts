@@ -71,7 +71,7 @@ export default function setup() {
 
         const getTokensIsSuccessful = await getTokens();
         if (!getTokensIsSuccessful) process.exit(1);
-        let outcome;
+        let outcome: boolean;
 
         // import
         if (options.setId) {

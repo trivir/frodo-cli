@@ -32,15 +32,16 @@ export default function setup() {
         command
       );
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Exporting config entity audit');
-        const outcome = await configManagerExportAudit(options.envFile);
-        if (!outcome) process.exitCode = 1;
-      }
-      // unrecognized combination of options or no options
-      else {
-        process.exitCode = 1;
-      }
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+
+      verboseMessage('Exporting config entity audit');
+      const outcome = await configManagerExportAudit(options.envFile);
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;

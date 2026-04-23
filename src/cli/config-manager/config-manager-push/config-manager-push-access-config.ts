@@ -32,13 +32,16 @@ export default function setup() {
         command
       );
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Importing access configuration...');
-        const outcome = await configManagerImportAccessConfig();
-        if (!outcome) process.exitCode = 1;
-      } else {
-        process.exitCode = 1;
-      }
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+
+      verboseMessage('Importing access configuration...');
+      const outcome = await configManagerImportAccessConfig();
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;

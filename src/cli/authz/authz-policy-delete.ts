@@ -53,7 +53,7 @@ export default function setup() {
         const getTokensisSuccessful = await getTokens();
         if (!getTokensisSuccessful) process.exit(1);
 
-        let outcome;
+        let outcome: boolean;
 
         // delete by id
         if (options.policyId) {

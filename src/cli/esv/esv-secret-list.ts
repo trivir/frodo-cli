@@ -47,17 +47,19 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens(false, true, deploymentTypes)) {
-          verboseMessage('Listing secrets...');
-          const outcome = await listSecrets(
-            options.long,
-            options.usage,
-            options.file
-          );
-          if (!outcome) process.exitCode = 1;
-        } else {
-          process.exitCode = 1;
-        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+        verboseMessage('Listing secrets...');
+        const outcome = await listSecrets(
+          options.long,
+          options.usage,
+          options.file
+        );
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );
