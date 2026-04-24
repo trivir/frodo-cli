@@ -4,7 +4,11 @@ import fs from 'fs';
 import path from 'path';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+} from '../utils/Console';
 
 const { readConfigEntity, importConfigEntities, importSubConfigEntity } =
   frodo.idm.config;
@@ -28,12 +32,26 @@ const SCRIPT_HOOKS = ['onStore', 'onRetrieve', 'onValidate'];
 export async function configManagerExportManagedObjects(
   objectName?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting managed objects'
+    );
     const exportData = (await readConfigEntity('managed')) as ManagedSkeleton;
     processManagedObjects(exportData.objects, 'managed-objects', objectName);
+    stopProgressIndicator(indicatorId, 'Exported managed objects');
     return true;
   } catch (error) {
-    printError(error, `Error exporting config entity endpoints`);
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting managed objects',
+        'fail'
+      );
+    }
+    printError(error, `Error exporting managed objects`);
   }
   return false;
 }
@@ -180,7 +198,7 @@ export async function configManagerImportManagedObjects(
     }
     return true;
   } catch (error) {
-    printError(error, `Error exporting config entity endpoints`);
+    printError(error, `Error importing managed objects`);
   }
   return false;
 }

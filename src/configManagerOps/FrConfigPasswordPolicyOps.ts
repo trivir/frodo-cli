@@ -2,7 +2,12 @@ import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
 import { getIdmImportExportOptions } from '../ops/IdmOps';
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 import { realmList } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
@@ -17,8 +22,14 @@ export async function configManagerExportPasswordPolicy(
   realm?: string,
   envFile?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     const options = getIdmImportExportOptions(undefined, envFile);
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting password policy'
+    );
     if (realm && realm !== '__default__realm__') {
       const realmData = (
         await exportConfigEntity(`fieldPolicy/${realm}_user`, {
@@ -32,6 +43,10 @@ export async function configManagerExportPasswordPolicy(
       for (const realmName of await realmList()) {
         // fr-config-manager doesn't support root themes
         if (realmName === '/') continue;
+        updateProgressIndicator(
+          indicatorId,
+          `Exporting password policy (${realmName})`
+        );
         const realmData = (
           await exportConfigEntity(`fieldPolicy/${realmName}_user`, {
             envReplaceParams: options.envReplaceParams,
@@ -42,9 +57,17 @@ export async function configManagerExportPasswordPolicy(
         saveJsonToFile(realmData, getFilePath(fileName, true), false, true);
       }
     }
+    stopProgressIndicator(indicatorId, 'Exported password policy');
     return true;
   } catch (error) {
-    printError(error, `Error exporting config entity ui-configuration`);
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting password policy',
+        'fail'
+      );
+    }
+    printError(error, `Error exporting password policy`);
   }
   return false;
 }
@@ -74,7 +97,7 @@ export async function configManagerImportPasswordPolicy(
     }
     return true;
   } catch (error) {
-    printError(error, `Error importing config entity ui-configuration`);
+    printError(error, `Error importing password policy`);
   }
   return false;
 }

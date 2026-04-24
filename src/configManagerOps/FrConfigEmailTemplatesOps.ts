@@ -2,7 +2,11 @@ import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+} from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { readEmailTemplates, readEmailTemplate, importEmailTemplates } =
@@ -14,7 +18,13 @@ const { readEmailTemplates, readEmailTemplate, importEmailTemplates } =
 export async function configManagerExportEmailTemplates(
   name?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting email templates'
+    );
     if (name) {
       const exportData = await readEmailTemplate(name);
       processEmailTemplate(exportData, `email-templates`);
@@ -24,9 +34,17 @@ export async function configManagerExportEmailTemplates(
         processEmailTemplate(template, `email-templates`);
       });
     }
+    stopProgressIndicator(indicatorId, 'Exported email templates');
     return true;
   } catch (error) {
-    printError(error, `Error exporting email templates to files`);
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting email templates',
+        'fail'
+      );
+    }
+    printError(error, `Error exporting email templates`);
   }
   return false;
 }

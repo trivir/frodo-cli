@@ -3,7 +3,11 @@ import { ContentSecurityPolicy } from '@rockcarver/frodo-lib/types/api/cloud/Env
 import { applyDiff } from 'deep-diff';
 import { readFile } from 'fs/promises';
 
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+} from '../utils/Console';
 
 const { env } = frodo.cloud;
 const { getFilePath, saveJsonToFile } = frodo.utils;
@@ -15,7 +19,13 @@ const { getFilePath, saveJsonToFile } = frodo.utils;
 export async function configManagerExportCsp(
   file: string = null
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting content security policies'
+    );
     const cspEnforced: ContentSecurityPolicy =
       await env.readEnforcedContentSecurityPolicy();
     const cspReport: ContentSecurityPolicy =
@@ -34,8 +44,16 @@ export async function configManagerExportCsp(
     }
 
     saveJsonToFile(csp, getFilePath('csp/csp.json', true), false, true);
+    stopProgressIndicator(indicatorId, 'Exported content security policies');
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting content security policies',
+        'fail'
+      );
+    }
     printError(error);
     return false;
   }

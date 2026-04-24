@@ -2,7 +2,12 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import { AuthenticationSettingsExportInterface } from '@rockcarver/frodo-lib/types/ops/AuthenticationSettingsOps';
 import fs from 'fs';
 
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 import { realmList } from '../utils/FrConfig';
 
 const {
@@ -19,7 +24,13 @@ const { getFilePath, saveJsonToFile } = frodo.utils;
 export async function configManagerExportAuthentication(
   realm?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting authentication settings'
+    );
     if (realm && realm !== '__default__realm__') {
       const exportData = await _readAuthenticationSettings(false);
       const fileName = `realms/${state.getRealm()}/realm-config/authentication.json`;
@@ -34,6 +45,10 @@ export async function configManagerExportAuthentication(
           continue;
 
         state.setRealm(realmName);
+        updateProgressIndicator(
+          indicatorId,
+          `Exporting authentication settings (${realmName})`
+        );
         const exportData = await _readAuthenticationSettings(false);
         const fileName = `realms/${realmName}/realm-config/authentication.json`;
         saveJsonToFile(
@@ -45,9 +60,17 @@ export async function configManagerExportAuthentication(
       }
     }
 
+    stopProgressIndicator(indicatorId, 'Exported authentication settings');
     return true;
   } catch (error) {
-    printError(error, `Error exporting config entity ui-configuration`);
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting authentication settings',
+        'fail'
+      );
+    }
+    printError(error, `Error exporting authentication settings`);
   }
   return false;
 }

@@ -2,7 +2,11 @@ import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
 import { getIdmImportExportOptions } from '../ops/IdmOps';
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+} from '../utils/Console';
 
 const { exportConfigEntity, importConfigEntities } = frodo.idm.config;
 const { getFilePath, saveJsonToFile } = frodo.utils;
@@ -15,8 +19,10 @@ const { getFilePath, saveJsonToFile } = frodo.utils;
 export async function configManagerExportKbaConfig(
   envFile?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     const options = getIdmImportExportOptions(undefined, envFile);
+    indicatorId = createProgressIndicator('indeterminate', 0, 'Exporting kba');
     const exportData = (
       await exportConfigEntity('selfservice.kba', {
         envReplaceParams: options.envReplaceParams,
@@ -29,9 +35,13 @@ export async function configManagerExportKbaConfig(
       getFilePath('kba/selfservice.kba.json', true),
       false
     );
+    stopProgressIndicator(indicatorId, 'Exported kba');
     return true;
   } catch (error) {
-    printError(error, `Error exporting config entity selfservice.kba`);
+    if (indicatorId) {
+      stopProgressIndicator(indicatorId, 'Error exporting kba', 'fail');
+    }
+    printError(error, `Error exporting kba configuration`);
   }
   return false;
 }

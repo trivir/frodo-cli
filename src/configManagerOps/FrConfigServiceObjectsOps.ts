@@ -1,7 +1,11 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+} from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { queryManagedObjects, updateManagedObject } = frodo.idm.managed;
@@ -13,7 +17,13 @@ const { queryManagedObjects, updateManagedObject } = frodo.idm.managed;
 export async function configManagerExportServiceObjectsFromFile(
   file
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting service objects'
+    );
     const objects = JSON.parse(fs.readFileSync(file, 'utf8'));
     for (const objectType of Object.keys(objects)) {
       for (const object of objects[objectType]) {
@@ -28,12 +38,22 @@ export async function configManagerExportServiceObjectsFromFile(
             `Unexpected result from search: ${queryResult.length} entries found for ${objectType} - ${object.searchValue}`
           );
           printError(error);
+          stopProgressIndicator(
+            indicatorId,
+            'Error exporting service objects',
+            'fail'
+          );
           return false;
         } else if (queryResult.length == 0) {
           const error = new Error(
             `No result from search: ${queryResult.length} entries found for ${objectType} - ${object.searchValue}`
           );
           printError(error);
+          stopProgressIndicator(
+            indicatorId,
+            'Error exporting service objects',
+            'fail'
+          );
           return false;
         } else {
           const result = queryResult[0];
@@ -63,8 +83,16 @@ export async function configManagerExportServiceObjectsFromFile(
         }
       }
     }
+    stopProgressIndicator(indicatorId, 'Exported service objects');
     return true;
   } catch (err) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting service objects',
+        'fail'
+      );
+    }
     printError(err, `Error exporting service-objects`);
   }
   return false;
