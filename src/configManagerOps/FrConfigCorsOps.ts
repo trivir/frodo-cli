@@ -2,7 +2,11 @@ import { frodo } from '@rockcarver/frodo-lib';
 import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 import { FullService } from '@rockcarver/frodo-lib/types/api/ServiceApi';
 
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+} from '../utils/Console';
 
 const { config } = frodo.idm;
 const { getFilePath, saveJsonToFile } = frodo.utils;
@@ -14,7 +18,9 @@ type CorsObject = { idmCorsConfig; corsServices; corsServiceGlobal };
  * @returns True if file was successfully saved
  */
 export async function configManagerExportCors(): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator('indeterminate', 0, 'Exporting cors');
     const cors: IdObjectSkeletonInterface =
       await config.readConfigEntity('servletfilter/cors');
     const services: FullService[] = await frodo.service.getFullServices(true);
@@ -35,8 +41,12 @@ export async function configManagerExportCors(): Promise<boolean> {
       false,
       true
     );
+    stopProgressIndicator(indicatorId, 'Exported cors');
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(indicatorId, 'Error exporting cors', 'fail');
+    }
     printError(error);
     return false;
   }

@@ -4,7 +4,13 @@ import { PolicySetSkeleton } from '@rockcarver/frodo-lib/types/api/PolicySetApi'
 import { ResourceTypeSkeleton } from '@rockcarver/frodo-lib/types/api/ResourceTypesApi';
 import { readFile } from 'fs/promises';
 
-import { printError, verboseMessage } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+  verboseMessage,
+} from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { policySet, policy, resourceType } = frodo.authz;
@@ -74,7 +80,13 @@ export async function configManagerExportAuthzPolicySet(
   criteria: ByName | BySkeleton,
   configFile: string = null
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting authorization policies'
+    );
     // policySet.readPolicySet() will fail if the provided policy-set doesn't exist in the current-state realm
     const ps: PolicySetSkeleton =
       'ps' in criteria
@@ -128,6 +140,7 @@ export async function configManagerExportAuthzPolicySet(
       await policy.readPoliciesByPolicySet(ps.name);
     if (allPoliciesOfThis.length !== 0) {
       for (const p of allPoliciesOfThis) {
+        updateProgressIndicator(indicatorId, `Exporting policy ${p.name}`);
         await exportPolicy(p);
       }
     } else {
@@ -136,8 +149,16 @@ export async function configManagerExportAuthzPolicySet(
       );
     }
 
+    stopProgressIndicator(indicatorId, 'Exported authorization policies');
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting authorization policies',
+        'fail'
+      );
+    }
     printError(error);
     return false;
   }

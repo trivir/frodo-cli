@@ -1,7 +1,13 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import { ScriptSkeleton } from '@rockcarver/frodo-lib/types/api/ScriptApi';
 
-import { printError, verboseMessage } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+  verboseMessage,
+} from '../utils/Console';
 import { realmList, safeFileName } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile, decodeBase64, saveTextToFile } =
@@ -190,7 +196,13 @@ export async function configManagerExportScriptsAll(
   scriptType: string = null,
   language: string = 'JAVASCRIPT'
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting scripts'
+    );
     for (const realm of await realmList()) {
       if (
         realm === '/' &&
@@ -200,6 +212,10 @@ export async function configManagerExportScriptsAll(
         continue;
 
       state.setRealm(realm);
+      updateProgressIndicator(
+        indicatorId,
+        `Exporting scripts (${state.getRealm()})`
+      );
       verboseMessage(`\n${state.getRealm()} realm:`);
       if (
         !(await configManagerExportScriptsRealms(
@@ -210,11 +226,16 @@ export async function configManagerExportScriptsAll(
           language
         ))
       ) {
+        stopProgressIndicator(indicatorId, 'Error exporting scripts', 'fail');
         return false;
       }
     }
+    stopProgressIndicator(indicatorId, 'Exported scripts');
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(indicatorId, 'Error exporting scripts', 'fail');
+    }
     printError(error);
     return false;
   }

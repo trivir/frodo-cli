@@ -2,7 +2,11 @@ import { frodo } from '@rockcarver/frodo-lib';
 import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 import fs from 'fs';
 
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+} from '../utils/Console';
 
 const { config } = frodo.idm;
 const { getFilePath, saveJsonToFile } = frodo.utils;
@@ -12,7 +16,13 @@ const { getFilePath, saveJsonToFile } = frodo.utils;
  * @returns True if file was successfully saved
  */
 export async function configManagerExportEmailProviderConfiguration(): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting email provider configuration'
+    );
     const emailProvider: IdObjectSkeletonInterface =
       await config.readConfigEntity('external.email');
 
@@ -22,8 +32,16 @@ export async function configManagerExportEmailProviderConfiguration(): Promise<b
       false,
       true
     );
+    stopProgressIndicator(indicatorId, 'Exported email provider configuration');
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting email provider configuration',
+        'fail'
+      );
+    }
     printError(error);
     return false;
   }

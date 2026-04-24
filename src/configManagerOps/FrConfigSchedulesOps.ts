@@ -2,7 +2,11 @@ import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+} from '../utils/Console';
 
 const { readConfigEntitiesByType, importConfigEntities } = frodo.idm.config;
 const { getFilePath, saveJsonToFile } = frodo.utils;
@@ -13,12 +17,22 @@ const { getFilePath, saveJsonToFile } = frodo.utils;
 export async function configManagerExportSchedules(
   name?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting schedules'
+    );
     const exportData = await readConfigEntitiesByType('schedule');
     processSchedules(exportData, 'schedules', name);
+    stopProgressIndicator(indicatorId, 'Exported schedules');
     return true;
   } catch (error) {
-    printError(error, `Error exporting internal schedules to files`);
+    if (indicatorId) {
+      stopProgressIndicator(indicatorId, 'Error exporting schedules', 'fail');
+    }
+    printError(error, `Error exporting internal schedules`);
   }
   return false;
 }
