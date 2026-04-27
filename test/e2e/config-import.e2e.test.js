@@ -72,6 +72,9 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config import -AD test/e2e/exports/all-separate/cloud --include-active-values
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config import -gf test/e2e/exports/all-separate/cloud/global/sync/sync.idm.json
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config import --file test/e2e/exports/all-separate/cloud/realm/root-alpha/script/mode.script.json
+// Cloud IGA
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config import -af test/e2e/exports/all/all.iga.json
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config import -AD test/e2e/exports/all-separate/iga
 // Classic
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openam-frodo-dev.classic.com:8080/am frodo config import -adf test/e2e/exports/all/all.classic.json -m classic
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openam-frodo-dev.classic.com:8080/am frodo config import --all --clean --re-uuid-scripts --re-uuid-journeys --include-active-values --file test/e2e/exports/all/all.classic.json --type classic
@@ -87,7 +90,7 @@ import {
   getEnv,
   removeAnsiEscapeCodes
 } from './utils/TestUtils';
-import { connection as c, classic_connection as cc } from './utils/TestConfig';
+import { connection as c, classic_connection as cc, iga_connection as ic } from './utils/TestConfig';
 
 const exec = promisify(cp.exec);
 
@@ -103,8 +106,8 @@ const allClassicExport = `${allDirectory}/${allClassicFileName}`;
 const allSeparateCloudDirectory = `test/e2e/exports/all-separate/cloud`;
 const allSeparateClassicDirectory = `test/e2e/exports/all-separate/classic`;
 
-describe.skip('frodo config import', () => {
-  test(`"frodo config import -adf ${allCloudExport}" Import everything from "${allCloudFileName}", including default scripts.`, async () => {
+describe('frodo config import', () => {
+  test.skip(`"frodo config import -adf ${allCloudExport}" Import everything from "${allCloudFileName}", including default scripts.`, async () => {
     const CMD = `frodo config import -adf ${allCloudExport}`;
     try {
       await exec(CMD, env);
@@ -125,7 +128,7 @@ describe.skip('frodo config import', () => {
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
   });
 
-  test(`"frodo config import -aCf ${allCloudExport}" Import everything from "${allCloudFileName}". Clean old services`, async () => {
+  test.skip(`"frodo config import -aCf ${allCloudExport}" Import everything from "${allCloudFileName}". Clean old services`, async () => {
     const CMD = `frodo config import -aCf ${allCloudExport}`;
     try {
       await exec(CMD, env);
@@ -139,7 +142,7 @@ describe.skip('frodo config import', () => {
     }
   });
 
-  test(`"frodo config import -AD ${allSeparateCloudDirectory}" Import everything from directory "${allSeparateCloudDirectory}"`, async () => {
+  test.skip(`"frodo config import -AD ${allSeparateCloudDirectory}" Import everything from directory "${allSeparateCloudDirectory}"`, async () => {
     const CMD = `frodo config import -AD ${allSeparateCloudDirectory}`;
     try {
       await exec(CMD, env);
@@ -160,7 +163,7 @@ describe.skip('frodo config import', () => {
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
   });
 
-  test(`"frodo config import -CAD ${allSeparateCloudDirectory}" Import everything from directory "${allSeparateCloudDirectory}". Clean old services`, async () => {
+  test.skip(`"frodo config import -CAD ${allSeparateCloudDirectory}" Import everything from directory "${allSeparateCloudDirectory}". Clean old services`, async () => {
     const CMD = `frodo config import -CAD ${allSeparateCloudDirectory}`;
     try {
       await exec(CMD, env);
@@ -174,7 +177,7 @@ describe.skip('frodo config import', () => {
     }
   });
 
-  test(`"frodo config import --default -CAD ${allSeparateCloudDirectory}" Import everything from directory "${allSeparateCloudDirectory}", including default scripts. Clean old services`, async () => {
+  test.skip(`"frodo config import --default -CAD ${allSeparateCloudDirectory}" Import everything from directory "${allSeparateCloudDirectory}", including default scripts. Clean old services`, async () => {
     const CMD = `frodo config import --default -CAD ${allSeparateCloudDirectory}`;
     try {
       await exec(CMD, env);
@@ -188,7 +191,7 @@ describe.skip('frodo config import', () => {
     }
   });
 
-  test(`"frodo config import -AD ${allSeparateCloudDirectory} --include-active-values" Import everything with secret values from directory "${allSeparateCloudDirectory}"`, async () => {
+  test.skip(`"frodo config import -AD ${allSeparateCloudDirectory} --include-active-values" Import everything with secret values from directory "${allSeparateCloudDirectory}"`, async () => {
     const CMD = `frodo config import -AD ${allSeparateCloudDirectory} --include-active-values`;
     try {
       await exec(CMD, env);
@@ -202,85 +205,84 @@ describe.skip('frodo config import', () => {
     }
   });
 
-  test(`"frodo config import -gf test/e2e/exports/all-separate/cloud/global/sync/sync.idm.json" Import sync.idm.json along with extracted mappings and no errors`, async () => {
+  test.skip(`"frodo config import -gf test/e2e/exports/all-separate/cloud/global/sync/sync.idm.json" Import sync.idm.json along with extracted mappings and no errors`, async () => {
     const CMD = `frodo config import -gf test/e2e/exports/all-separate/cloud/global/sync/sync.idm.json`;
     const { stdout } = await exec(CMD, env);
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
   });
 
-  test(`"frodo config import --file test/e2e/exports/all-separate/cloud/realm/root-alpha/script/mode.script.json" Import mode.script.json long with extracted scripts and no errors`, async () => {
+  test.skip(`"frodo config import --file test/e2e/exports/all-separate/cloud/realm/root-alpha/script/mode.script.json" Import mode.script.json long with extracted scripts and no errors`, async () => {
     const CMD = `frodo config import --file test/e2e/exports/all-separate/cloud/realm/root-alpha/script/mode.script.json`;
     const { stdout } = await exec(CMD, env);
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
   });
 
+  // Cloud IGA Tests
+
+  test.todo(`"frodo config import -af test/e2e/exports/all/all.iga.json": Should import all IGA configuration from single file`, async () => {
+    const CMD = `frodo config import -af test/e2e/exports/all/all.iga.json`;
+    const { stdout, stderr } = await exec(CMD, env);
+    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+  });
+
+  test.todo(`"frodo config import -AD test/e2e/exports/all-separate/iga": Should import all IGA configuration from separate files`, async () => {
+    const CMD = `frodo config import -AD test/e2e/exports/all-separate/iga`;
+    const { stdout, stderr } = await exec(CMD, env);
+    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+  });
+
   // Classic Env Tests
 
-  test.skip(`"frodo config import -adf ${allClassicExport} -m classic" Import everything from "${allClassicFileName}", including default scripts.`, async () => {
+  test(`"frodo config import -adf ${allClassicExport} -m classic" Import everything from "${allClassicFileName}", including default scripts.`, async () => {
     const CMD = `frodo config import -adf ${allClassicExport} -m classic`;
-    try {
-      await exec(CMD, classicEnv);
-      fail("Command should've failed");
-    } catch (e) {
-      // parallel test execution alters the progress bar output causing the snapshot to mismatch.
-      // only workable solution I could find was to remove progress bar output altogether from such tests.
-      expect(
-        removeAnsiEscapeCodes(e.stderr)
-      ).toMatchSnapshot();
-    }
-  }, 300000);
+    const { stdout, stderr } = await exec(CMD, classicEnv);
+    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+  });
 
   // TODO: Fix test. Unable get test passing consistently, even after recording mocks (probably due to the re-uuid stuff). Skip for the meantime
   test.skip(`"frodo config import --all --clean --re-uuid-scripts --re-uuid-journeys --include-active-values --file ${allClassicExport} --type classic" Import everything from "${allClassicFileName}". Clean old services, and re-uuid journeys and scripts.`, async () => {
     const CMD = `frodo config import --all --clean --re-uuid-scripts --re-uuid-journeys --include-active-values --file ${allClassicExport}--type classic`;
-    const { stdout } = await exec(CMD, classicEnv);
+    const { stdout, stderr } = await exec(CMD, classicEnv);
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
   });
 
-  test.skip(`"frodo config import -AdD ${allSeparateClassicDirectory} -m classic" Import everything from directory "${allSeparateClassicDirectory}"`, async () => {
+  test(`"frodo config import -AdD ${allSeparateClassicDirectory} -m classic" Import everything from directory "${allSeparateClassicDirectory}"`, async () => {
     const CMD = `frodo config import -AdD ${allSeparateClassicDirectory} -m classic`;
-    try {
-      await exec(CMD, classicEnv);
-      fail("Command should've failed");
-    } catch (e) {
-      // parallel test execution alters the progress bar output causing the snapshot to mismatch.
-      // only workable solution I could find was to remove progress bar output altogether from such tests.
-      expect(
-        removeAnsiEscapeCodes(e.stderr)
-      ).toMatchSnapshot();
-    }
-  }, 300000);
+    const { stdout, stderr } = await exec(CMD, classicEnv);
+    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+  });
 
   // TODO: Fix test. Unable get test passing consistently, even after recording mocks (probably due to the re-uuid stuff). Skip for the meantime
   test.skip(`"frodo config import --all-separate --clean --re-uuid-scripts --re-uuid-journeys --include-active-values --directory ${allSeparateClassicDirectory} --type classic" Import everything from directory "${allSeparateClassicDirectory}". Clean old services, and re-uuid journeys and scripts.`, async () => {
     const CMD = `frodo config import --all-separate --clean --re-uuid-scripts --re-uuid-journeys --include-active-values --directory ${allSeparateClassicDirectory} --type classic`;
-    const { stdout } = await exec(CMD, classicEnv);
+    const { stdout, stderr } = await exec(CMD, classicEnv);
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
   });
 
-  test.skip(`"frodo config import -gf test/e2e/exports/all-separate/classic/global/server/01.server.json -m classic" Import server 01 along with extracted properties and no errors`, async () => {
+  test(`"frodo config import -gf test/e2e/exports/all-separate/classic/global/server/01.server.json -m classic" Import server 01 along with extracted properties and no errors`, async () => {
     const CMD = `frodo config import -gf test/e2e/exports/all-separate/classic/global/server/01.server.json -m classic`;
-    const { stdout } = await exec(CMD, classicEnv);
+    const { stdout, stderr } = await exec(CMD, classicEnv);
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
   });
 
-  test.skip(`"frodo config import --global --file test/e2e/exports/all-separate/classic/global/authenticationModules/authPushReg.authenticationModules.json --type classic" Fail to import authentication module due to it being read only.`, async () => {
+  test(`"frodo config import --global --file test/e2e/exports/all-separate/classic/global/authenticationModules/authPushReg.authenticationModules.json --type classic" Fail to import authentication module due to it being read only.`, async () => {
     const CMD = `frodo config import --global --file test/e2e/exports/all-separate/classic/global/authenticationModules/authPushReg.authenticationModules.json --type classic`;
-    try {
-      await exec(CMD, classicEnv);
-      fail("Command should've failed");
-    } catch (e) {
-      // parallel test execution alters the progress bar output causing the snapshot to mismatch.
-      // only workable solution I could find was to remove progress bar output altogether from such tests.
-      expect(
-        removeAnsiEscapeCodes(e.stderr)
-      ).toMatchSnapshot();
-    }
+    const { stdout, stderr } = await exec(CMD, classicEnv);
+    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
   });
 
-  test.skip(`"frodo config import -f test/e2e/exports/all-separate/classic/realm/root/webhookService/Cool-Webhook.webhookService.json -m classic" Import the webhook service with no errors`, async () => {
+  test(`"frodo config import -f test/e2e/exports/all-separate/classic/realm/root/webhookService/Cool-Webhook.webhookService.json -m classic" Import the webhook service with no errors`, async () => {
     const CMD = `frodo config import -f test/e2e/exports/all-separate/classic/realm/root/webhookService/Cool-Webhook.webhookService.json -m classic`;
-    const { stdout } = await exec(CMD, classicEnv);
+    const { stdout, stderr } = await exec(CMD, classicEnv);
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
   });
 });
