@@ -212,6 +212,7 @@ export async function describeWorkflow(
  * @param {string} workflowId workflow id
  * @param {string} file file name
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} keepModifiedProperties true to keep modified properties, otherwise delete them. Default: false
  * @param {boolean} extract extracts the scripts from the export into separate files if true. Default: false
  * @param {WorkflowExportOptions} options export options
  * @returns {Promise<boolean>} true if successful, false otherwise
@@ -220,6 +221,7 @@ export async function exportWorkflowToFile(
   workflowId: string,
   file: string,
   includeMeta: boolean = true,
+  keepModifiedProperties: boolean = false,
   extract: boolean = false,
   options: WorkflowExportOptions = {
     deps: true,
@@ -244,7 +246,7 @@ export async function exportWorkflowToFile(
       indicatorId,
       `Saving ${workflowId} to ${filePath}...`
     );
-    saveJsonToFile(exportData, filePath, includeMeta);
+    saveJsonToFile(exportData, filePath, includeMeta, false, keepModifiedProperties);
     stopProgressIndicator(
       indicatorId,
       `Exported workflow ${workflowId} to file`,
@@ -266,12 +268,14 @@ export async function exportWorkflowToFile(
  * Export all workflows to file
  * @param {string} file file name
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} keepModifiedProperties true to keep modified properties, otherwise delete them. Default: false
  * @param {WorkflowExportOptions} options export options
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportWorkflowsToFile(
   file: string,
   includeMeta: boolean = true,
+  keepModifiedProperties: boolean = false,
   options: WorkflowExportOptions = {
     deps: true,
     useStringArrays: true,
@@ -284,7 +288,7 @@ export async function exportWorkflowsToFile(
     if (!file) {
       file = getTypedFilename(`allWorkflows`, 'workflow');
     }
-    saveJsonToFile(exportData, getFilePath(file, true), includeMeta);
+    saveJsonToFile(exportData, getFilePath(file, true), includeMeta, false, keepModifiedProperties);
     return true;
   } catch (error) {
     printError(error, `Error exporting workflows to file`);
@@ -295,12 +299,14 @@ export async function exportWorkflowsToFile(
 /**
  * Export all workflows to separate files
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} keepModifiedProperties true to keep modified properties, otherwise delete them. Default: false
  * @param {boolean} extract extracts the scripts from the exports into separate files if true. Default: false
  * @param {WorkflowExportOptions} options export options
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportWorkflowsToFiles(
   includeMeta: boolean = true,
+  keepModifiedProperties: boolean = false,
   extract: boolean = false,
   options: WorkflowExportOptions = {
     deps: true,
@@ -320,7 +326,8 @@ export async function exportWorkflowsToFiles(
         workflowGroup,
         'id',
         getFilePath(getTypedFilename(workflowId, 'workflow'), true),
-        includeMeta
+        includeMeta,
+        keepModifiedProperties
       );
     }
     return true;

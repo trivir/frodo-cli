@@ -53,12 +53,17 @@ export default function setup() {
         'Do not include metadata in the export file.'
       )
     )
-
     .addOption(
       new Option(
-        '-x, --extract',
-        'Extract the scripts from the exported file, and save them to separate files. Ignored with -a.'
-      )
+        '-M, --modified-properties',
+        'Include modified properties in export (e.g. lastModifiedDate, lastModifiedBy, createdBy, creationDate, etc.)'
+      ).default(false, 'false')
+    )
+    .addOption(
+      new Option(
+        '-x, --no-extract',
+        'Do not extract the scripts from the exported file and save them to separate files. Ignored with -a.'
+      ).default(true, 'true')
     )
     .addOption(
       new Option(
@@ -129,6 +134,7 @@ export default function setup() {
             options.workflowId,
             options.file,
             options.metadata,
+            options.modifiedProperties,
             options.extract,
             {
               deps: options.deps,
@@ -145,6 +151,7 @@ export default function setup() {
           const outcome = await exportWorkflowsToFile(
             options.file,
             options.metadata,
+            options.modifiedProperties,
             {
               deps: options.deps,
               useStringArrays: options.useStringArrays,
@@ -159,6 +166,7 @@ export default function setup() {
           verboseMessage('Exporting all workflows to separate files...');
           const outcome = await exportWorkflowsToFiles(
             options.metadata,
+            options.modifiedProperties,
             options.extract,
             {
               deps: options.deps,

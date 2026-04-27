@@ -101,6 +101,12 @@ export default function setup() {
     )
     .addOption(
       new Option(
+        '-c, --only-custom',
+        'Only export custom request types (IGA cloud deployments only).'
+      )
+    )
+    .addOption(
+      new Option(
         '--include-active-values',
         'Include the currently active (and loaded) secret value in the export. By default, secret values are encrypted server-side in the environment they are exported from. Use --target <host url> to have another environment perform the encryption.'
       )
@@ -170,6 +176,7 @@ export default function setup() {
               includeReadOnly: options.readOnly,
               onlyRealm: options.realmOnly,
               onlyGlobal: options.globalOnly,
+              onlyCustom: options.onlyCustom
             }
           );
           if (!outcome) process.exitCode = 1;
@@ -202,6 +209,7 @@ export default function setup() {
               includeReadOnly: options.readOnly,
               onlyRealm: options.realmOnly,
               onlyGlobal: options.globalOnly,
+              onlyCustom: options.onlyCustom
             }
           );
           if (!outcome) process.exitCode = 1;
