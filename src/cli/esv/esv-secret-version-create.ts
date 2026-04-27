@@ -40,24 +40,26 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens(false, true, deploymentTypes)) {
-          verboseMessage('Creating new version of secret...');
-          let outcome = null;
-          if (options.value) {
-            outcome = await createVersionOfSecret(
-              options.secretId,
-              options.value
-            );
-          } else {
-            outcome = await createVersionOfSecretFromFile(
-              options.secretId,
-              options.file
-            );
-          }
-          if (!outcome) process.exitCode = 1;
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+        verboseMessage('Creating new version of secret...');
+        let outcome: boolean = null;
+        if (options.value) {
+          outcome = await createVersionOfSecret(
+            options.secretId,
+            options.value
+          );
         } else {
-          process.exitCode = 1;
+          outcome = await createVersionOfSecretFromFile(
+            options.secretId,
+            options.file
+          );
         }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

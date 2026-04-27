@@ -28,24 +28,32 @@ export default function setup() {
           options,
           command
         );
+
+        if (!options.setId && !options.all) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        let outcome: boolean;
+
         // delete by id
-        if (options.setId && (await getTokens())) {
+        if (options.setId) {
           verboseMessage('Deleting authorization policy set...');
-          const outcome = await deletePolicySetById(options.setId);
-          if (!outcome) process.exitCode = 1;
+          outcome = await deletePolicySetById(options.setId);
         }
         // --all -a
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Deleting all authorization policy sets...');
-          const outcome = await deletePolicySets();
-          if (!outcome) process.exitCode = 1;
+          outcome = await deletePolicySets();
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage('Unrecognized combination of options or no options...');
-          program.help();
-          process.exitCode = 1;
-        }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

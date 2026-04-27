@@ -91,8 +91,24 @@ export default function setup() {
           ? false
           : (options.currentRealm ?? false);
 
+        if (
+          !options.serviceId &&
+          !options.file &&
+          !options.all &&
+          !options.allSeparate
+        ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
         // import by id
-        if (options.serviceId && options.file && (await getTokens())) {
+        if (options.serviceId && options.file) {
           verboseMessage('Importing service...');
           const outcome = await importServiceFromFile(
             options.serviceId,
@@ -106,7 +122,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // -a / --all
-        else if (options.all && options.file && (await getTokens())) {
+        else if (options.all && options.file) {
           verboseMessage('Importing all services from a single file...');
           const outcome = await importServicesFromFile(options.file, {
             clean,
@@ -116,7 +132,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // -A / --all-separate
-        else if (options.allSeparate && (await getTokens())) {
+        else if (options.allSeparate) {
           verboseMessage('Importing all services from separate files...');
           const outcome = await importServicesFromFiles({
             clean,
@@ -126,7 +142,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // import file
-        else if (options.file && (await getTokens())) {
+        else if (options.file) {
           verboseMessage('Importing service...');
           const outcome = await importFirstServiceFromFile(options.file, {
             clean,
@@ -135,17 +151,7 @@ export default function setup() {
           });
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

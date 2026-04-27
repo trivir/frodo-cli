@@ -60,6 +60,14 @@ export default function setup() {
           options,
           command
         );
+        if (!options.secretstoreId || !options.secretId) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
         if (
           options.secretstoreType &&
           !canSecretStoreHaveMappings(options.secretstoreType)
@@ -68,37 +76,26 @@ export default function setup() {
             `'${options.secretstoreType}' does not have mappings.`,
             'error'
           );
-          process.exitCode = 1;
-        } else if (
-          options.secretstoreId &&
-          options.secretId &&
-          (await getTokens(
-            false,
-            true,
-            options.global ? globalDeploymentTypes : deploymentTypes
-          ))
-        ) {
-          verboseMessage(
-            `Listing all secret store mappings for the secret store '${options.secretstoreId}'`
-          );
-          const outcome = await listSecretStoreMappingAliases(
-            options.secretstoreId,
-            options.secretstoreType,
-            options.secretId,
-            options.long,
-            options.global
-          );
-          if (!outcome) process.exitCode = 1;
-        } else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.outputHelp();
-          process.exitCode = 1;
+          process.exit(1);
         }
+        const getTokensIsSucessful = await getTokens(
+          false,
+          true,
+          options.global ? globalDeploymentTypes : deploymentTypes
+        );
+        if (!getTokensIsSucessful) process.exit(1);
+        verboseMessage(
+          `Listing all secret store mappings for the secret store '${options.secretstoreId}'`
+        );
+        const outcome = await listSecretStoreMappingAliases(
+          options.secretstoreId,
+          options.secretstoreType,
+          options.secretId,
+          options.long,
+          options.global
+        );
+        if (!outcome) process.exitCode = 1;
       }
-      // end command logic inside action handler
     );
   return program;
 }

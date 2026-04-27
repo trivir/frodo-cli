@@ -49,33 +49,26 @@ export default function setup() {
         realm = options.realm;
       }
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        let outcome: boolean;
-        if (realm !== constants.DEFAULT_REALM_KEY) {
-          printMessage(
-            `Exporting organization privileges config from the realm: "${realm}"`
-          );
-          outcome =
-            (await configManagerExportOrgPrivileges()) &&
-            (await configManagerExportOrgPrivilegesRealm(realm));
-        } else {
-          printMessage(
-            'Exporting oranization privileges config from all realms'
-          );
-          outcome = await configManagerExportOrgPrivilegesAllRealms();
-        }
-
-        if (!outcome) process.exitCode = 1;
-      }
-      // unrecognized combination of options or no options
-      else {
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      let outcome: boolean;
+      if (realm !== constants.DEFAULT_REALM_KEY) {
         printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
+          `Exporting organization privileges config from the realm: "${realm}"`
         );
-        program.help();
-        process.exitCode = 1;
+        outcome =
+          (await configManagerExportOrgPrivileges()) &&
+          (await configManagerExportOrgPrivilegesRealm(realm));
+      } else {
+        printMessage('Exporting oranization privileges config from all realms');
+        outcome = await configManagerExportOrgPrivilegesAllRealms();
       }
+
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;

@@ -28,16 +28,14 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens()) {
-          verboseMessage(
-            `Adding custom DNS domain ${
-              options.domain
-            } to realm ${state.getRealm()}...`
-          );
-          await addCustomDomain(state.getRealm(), options.domain);
-        } else {
-          process.exitCode = 1;
-        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+        verboseMessage(
+          `Adding custom DNS domain ${
+            options.domain
+          } to realm ${state.getRealm()}...`
+        );
+        await addCustomDomain(state.getRealm(), options.domain);
       }
       // end command logic inside action handler
     );

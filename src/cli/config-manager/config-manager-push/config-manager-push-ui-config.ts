@@ -32,15 +32,15 @@ export default function setup() {
         command
       );
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Importing UI configuration...');
-        const outcome = await configManagerImportUiConfig();
-        if (!outcome) process.exitCode = 1;
-      }
-      // unrecognized combination of options or no options
-      else {
-        process.exitCode = 1;
-      }
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      verboseMessage('Importing UI configuration...');
+      const outcome = await configManagerImportUiConfig();
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;

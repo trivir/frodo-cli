@@ -37,20 +37,19 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens()) {
-          printMessage(
-            `Getting an access token using client "${options.clientId}"...`
-          );
-          const response = await clientCredentialsGrant(
-            state.getHost(),
-            options.clientId,
-            options.clientSecret,
-            options.scope
-          );
-          printMessage(`Token: ${response.access_token}`);
-        } else {
-          process.exitCode = 1;
-        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        printMessage(
+          `Getting an access token using client "${options.clientId}"...`
+        );
+        const response = await clientCredentialsGrant(
+          state.getHost(),
+          options.clientId,
+          options.clientSecret,
+          options.scope
+        );
+        printMessage(`Token: ${response.access_token}`);
       }
       // end command logic inside action handler
     );

@@ -84,92 +84,87 @@ export default function setup() {
         realm = options.realm;
       }
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        let outcome: boolean;
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
 
-        // -p/--p-set
-        if (options.policyName) {
-          printMessage(
-            `Exporting the policy set "${options.policyName}" in the ${state.getRealm()} realm.`
-          );
+      let outcome: boolean;
 
-          // try and find script in current realm
-          outcome = await configManagerExportAuthzPolicySet(
-            {
-              policySetName: options.policyName,
-            },
-            options.file
-          );
+      // -p/--p-set
+      if (options.policyName) {
+        printMessage(
+          `Exporting the policy set "${options.policyName}" in the ${state.getRealm()} realm.`
+        );
 
-          // check other realms for the script but only if there is no config file specified
-          if (!outcome && !options.file) {
-            const checkedRealms: string[] = [state.getRealm()];
-            for (const realm of await readRealms()) {
-              if (outcome) {
-                break;
-              }
-              if (!checkedRealms.includes(realm.name)) {
-                printMessage(
-                  `Exporting the policy set "${options.policyName}" from the ${checkedRealms[checkedRealms.length - 1]} realm failed.`
-                );
-                state.setRealm(realm.name);
-                checkedRealms.push(state.getRealm());
-                printMessage(
-                  `Looking for the policy set "${options.policyName}" in the ${state.getRealm()} realm now.`
-                );
-                outcome = await configManagerExportAuthzPolicySet(
-                  {
-                    policySetName: options.policyName,
-                  },
-                  null
-                );
-              }
+        // try and find script in current realm
+        outcome = await configManagerExportAuthzPolicySet(
+          {
+            policySetName: options.policyName,
+          },
+          options.file
+        );
+
+        // check other realms for the script but only if there is no config file specified
+        if (!outcome && !options.file) {
+          const checkedRealms: string[] = [state.getRealm()];
+          for (const realm of await readRealms()) {
+            if (outcome) {
+              break;
             }
-            if (!outcome) {
+            if (!checkedRealms.includes(realm.name)) {
               printMessage(
-                `Did not find the policy set "${options.policyName}" anywhere.`
+                `Exporting the policy set "${options.policyName}" from the ${checkedRealms[checkedRealms.length - 1]} realm failed.`
+              );
+              state.setRealm(realm.name);
+              checkedRealms.push(state.getRealm());
+              printMessage(
+                `Looking for the policy set "${options.policyName}" in the ${state.getRealm()} realm now.`
+              );
+              outcome = await configManagerExportAuthzPolicySet(
+                {
+                  policySetName: options.policyName,
+                },
+                null
               );
             }
           }
-        }
-
-        // -f/--file
-        else if (options.file) {
-          printMessage(
-            `Exporting all the policy sets in the provided config file.`
-          );
-          outcome = await configManagerExportAuthzPolicySets(options.file);
-        }
-
-        // -r/--realm
-        else if (realm !== constants.DEFAULT_REALM_KEY) {
-          printMessage(
-            `Exporting all the policy sets in the ${state.getRealm()} realm.`
-          );
-          outcome = await configManagerExportAuthzPolicySetsRealm();
-        }
-
-        // export all policy sets from all realms, the default when no options are provided
-        else {
-          printMessage('Exporting all the policy sets in the host tenant.');
-          outcome = await configManagerExportAuthzPoliciesAll();
-        }
-
-        if (!outcome) {
-          printMessage(
-            `Failed to export one or more authorization policy sets. ${options.verbose ? '' : 'Check --verbose for me details.'}`
-          );
-          process.exitCode = 1;
+          if (!outcome) {
+            printMessage(
+              `Did not find the policy set "${options.policyName}" anywhere.`
+            );
+          }
         }
       }
 
-      // unrecognized combination of options or no options
-      else {
+      // -f/--file
+      else if (options.file) {
         printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
+          `Exporting all the policy sets in the provided config file.`
         );
-        program.help();
+        outcome = await configManagerExportAuthzPolicySets(options.file);
+      }
+
+      // -r/--realm
+      else if (realm !== constants.DEFAULT_REALM_KEY) {
+        printMessage(
+          `Exporting all the policy sets in the ${state.getRealm()} realm.`
+        );
+        outcome = await configManagerExportAuthzPolicySetsRealm();
+      }
+
+      // export all policy sets from all realms, the default when no options are provided
+      else {
+        printMessage('Exporting all the policy sets in the host tenant.');
+        outcome = await configManagerExportAuthzPoliciesAll();
+      }
+
+      if (!outcome) {
+        printMessage(
+          `Failed to export one or more authorization policy sets. ${options.verbose ? '' : 'Check --verbose for more details.'}`
+        );
         process.exitCode = 1;
       }
     });

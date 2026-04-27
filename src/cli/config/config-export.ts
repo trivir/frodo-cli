@@ -153,10 +153,24 @@ export default function setup() {
           options,
           command
         );
+
+        if (!options.all && !options.allSeparate) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+        let outcome: boolean;
+
         // --all -a
-        if (options.all && (await getTokens())) {
+        if (options.all) {
           verboseMessage('Exporting everything to a single file...');
-          const outcome = await exportEverythingToFile(
+          outcome = await exportEverythingToFile(
             options.file,
             options.metadata,
             options.modifiedProperties,
@@ -172,7 +186,6 @@ export default function setup() {
               onlyGlobal: options.globalOnly,
             }
           );
-          if (!outcome) process.exitCode = 1;
         }
         // require --directory -D for all-separate function
         else if (options.allSeparate && !state.getDirectory()) {
@@ -180,13 +193,13 @@ export default function setup() {
             '-D or --directory required when using -A or --all-separate',
             'error'
           );
-          program.help();
           process.exitCode = 1;
+          program.help();
         }
         // --all-separate -A
-        else if (options.allSeparate && (await getTokens())) {
+        else if (options.allSeparate) {
           verboseMessage('Exporting everything to separate files...');
-          const outcome = await exportEverythingToFiles(
+          outcome = await exportEverythingToFiles(
             options.extract,
             options.separateMappings,
             options.separateObjects,
@@ -204,16 +217,8 @@ export default function setup() {
               onlyGlobal: options.globalOnly,
             }
           );
-          if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          verboseMessage(
-            'Unrecognized combination of options or no options...'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

@@ -25,27 +25,25 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens()) {
-          verboseMessage(
-            `Pruning orphaned configuration artifacts in realm "${state.getRealm()}"...`
-          );
-          try {
-            const orphanedNodes = await findOrphanedNodes();
-            if (orphanedNodes.length > 0) {
-              const ok = await yesno({
-                question: 'Prune (permanently delete) orphaned nodes? (y|n):',
-              });
-              if (ok) {
-                await removeOrphanedNodes(orphanedNodes);
-              }
-            } else {
-              printMessage('No orphaned nodes found.');
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+        verboseMessage(
+          `Pruning orphaned configuration artifacts in realm "${state.getRealm()}"...`
+        );
+        try {
+          const orphanedNodes = await findOrphanedNodes();
+          if (orphanedNodes.length > 0) {
+            const ok = await yesno({
+              question: 'Prune (permanently delete) orphaned nodes? (y|n):',
+            });
+            if (ok) {
+              await removeOrphanedNodes(orphanedNodes);
             }
-          } catch (error) {
-            printError(error);
-            process.exitCode = 1;
+          } else {
+            printMessage('No orphaned nodes found.');
           }
-        } else {
+        } catch (error) {
+          printError(error);
           process.exitCode = 1;
         }
       }

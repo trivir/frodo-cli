@@ -1,3 +1,4 @@
+import { ResourceTypeSkeleton } from '@rockcarver/frodo-lib/types/api/ResourceTypesApi';
 import { Option } from 'commander';
 
 import { getTokens } from '../../ops/AuthenticateOps';
@@ -43,30 +44,36 @@ export default function setup() {
           options,
           command
         );
+
+        if (!options.typeId && !options.typeName && !options.all) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+        let outcome: boolean | ResourceTypeSkeleton;
+
         // delete by uuid
-        if (options.typeId && (await getTokens())) {
+        if (options.typeId) {
           verboseMessage('Deleting authorization resource type...');
-          const outcome = await deleteResourceTypeById(options.typeId);
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteResourceTypeById(options.typeId);
         }
         // delete by name
-        else if (options.typeName && (await getTokens())) {
+        else if (options.typeName) {
           verboseMessage('Deleting authorization resource type...');
-          const outcome = await deleteResourceTypeUsingName(options.typeName);
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteResourceTypeUsingName(options.typeName);
         }
         // --all -a
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Deleting all authorization resource types...');
-          const outcome = await deleteResourceTypes();
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteResourceTypes();
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage('Unrecognized combination of options or no options...');
-          program.help();
-          process.exitCode = 1;
-        }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

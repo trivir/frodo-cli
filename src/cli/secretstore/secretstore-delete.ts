@@ -49,36 +49,37 @@ export default function setup() {
           options,
           command
         );
-        if (
-          options.secretstoreId &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
-          verboseMessage(`Deleting secret store ${options.secretstoreId}...`);
-          const outcome = await deleteSecretStore(
-            options.secretstoreId,
-            options.secretstoreType,
-            options.global
-          );
-          if (!outcome) process.exitCode = 1;
-        } else if (
-          options.all &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
-          verboseMessage(
-            `Deleting all${options.global ? ' global' : ''} secret stores...`
-          );
-          const outcome = await deleteSecretStores(options.global);
-          if (!outcome) process.exitCode = 1;
-        } else {
+        if (!options.secretstoreId && !options.all) {
           printMessage(
             'Unrecognized combination of options or no options...',
             'error'
           );
-          program.outputHelp();
           process.exitCode = 1;
+          program.help();
         }
+        const getTokensIsSucessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSucessful) process.exit(1);
+        let outcome: boolean;
+
+        if (options.secretstoreId) {
+          verboseMessage(`Deleting secret store ${options.secretstoreId}...`);
+          outcome = await deleteSecretStore(
+            options.secretstoreId,
+            options.secretstoreType,
+            options.global
+          );
+        } else if (options.all) {
+          verboseMessage(
+            `Deleting all${options.global ? ' global' : ''} secret stores...`
+          );
+          outcome = await deleteSecretStores(options.global);
+        }
+        if (!outcome) process.exitCode = 1;
       }
-      // end command logic inside action handler
     );
   return program;
 }

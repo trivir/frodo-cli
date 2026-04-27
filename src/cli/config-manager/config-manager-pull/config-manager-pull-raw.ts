@@ -60,26 +60,18 @@ export default function setup() {
         command
       );
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        const outcome: boolean = await configManagerExportRaw(
-          options.configFile
-        );
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      const outcome: boolean = await configManagerExportRaw(options.configFile);
 
-        if (!outcome) {
-          printMessage(
-            `Failed to export one or more config files. ${options.verbose ? '' : 'Check --verbose for me details.'}`
-          );
-          process.exitCode = 1;
-        }
-      }
-
-      // unrecognized combination of options or no options
-      else {
+      if (!outcome) {
         printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
+          `Failed to export one or more config files. ${options.verbose ? '' : 'Check --verbose for me details.'}`
         );
-        program.help();
         process.exitCode = 1;
       }
     });

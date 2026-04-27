@@ -61,6 +61,14 @@ export default function setup() {
           options,
           command
         );
+        if (!options.secretstoreId && !options.secretId && !options.all) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
         if (
           options.secretstoreType &&
           !canSecretStoreHaveMappings(options.secretstoreType)
@@ -69,54 +77,37 @@ export default function setup() {
             `'${options.secretstoreType}' does not have mappings.`,
             'error'
           );
-          process.exitCode = 1;
-        } else if (
-          options.secretstoreId &&
-          options.secretId &&
-          (await getTokens(
-            false,
-            true,
-            options.global ? globalDeploymentTypes : deploymentTypes
-          ))
-        ) {
+          process.exit(1);
+        }
+        const getTokensIsSucessful = await getTokens(
+          false,
+          true,
+          options.global ? globalDeploymentTypes : deploymentTypes
+        );
+        if (!getTokensIsSucessful) process.exit(1);
+        let outcome: boolean;
+        if (options.secretstoreId && options.secretId) {
           verboseMessage(
             `Deleting secret store mapping ${options.secretId} from secret store ${options.secretstoreId}...`
           );
-          const outcome = await deleteSecretStoreMapping(
+          outcome = await deleteSecretStoreMapping(
             options.secretstoreId,
             options.secretstoreType,
             options.secretId,
             options.global
           );
-          if (!outcome) process.exitCode = 1;
-        } else if (
-          options.secretstoreId &&
-          options.all &&
-          (await getTokens(
-            false,
-            true,
-            options.global ? globalDeploymentTypes : deploymentTypes
-          ))
-        ) {
+        } else if (options.secretstoreId && options.all) {
           verboseMessage(
             `Deleting secret store mappings from secret store ${options.secretstoreId}...`
           );
-          const outcome = await deleteSecretStoreMappings(
+          outcome = await deleteSecretStoreMappings(
             options.secretstoreId,
             options.secretstoreType,
             options.global
           );
-          if (!outcome) process.exitCode = 1;
-        } else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.outputHelp();
-          process.exitCode = 1;
         }
+        if (!outcome) process.exitCode = 1;
       }
-      // end command logic inside action handler
     );
   return program;
 }

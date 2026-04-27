@@ -36,7 +36,18 @@ export default function setup() {
           options,
           command
         );
-        if ((options.scriptName || options.scriptId) && (await getTokens())) {
+        if (!options.scriptName && !options.scriptId) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        if (options.scriptName || options.scriptId) {
           verboseMessage(
             `Describing script ${options.scriptName ? options.scriptName : options.scriptId}...`
           );
@@ -49,17 +60,7 @@ export default function setup() {
           );
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

@@ -8,7 +8,7 @@ import {
   exportApplicationToFile,
 } from '../../ops/ApplicationOps';
 import { getTokens } from '../../ops/AuthenticateOps';
-import { verboseMessage } from '../../utils/Console.js';
+import { printMessage, verboseMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
@@ -88,13 +88,33 @@ export default function setup() {
           options,
           command
         );
-        // -i/--app-id or -n/--app-name
+
         if (
-          (options.appId || options.appName) &&
-          (await getTokens(false, true, deploymentTypes))
+          !options.appId &&
+          !options.appName &&
+          !options.all &&
+          !options.allSeparate
         ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          return;
+        }
+
+        const getTokensisSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensisSuccessful) process.exit(1);
+        let outcome: boolean;
+
+        // -i/--app-id or -n/--app-name
+        if (options.appId || options.appName) {
           verboseMessage('Exporting application...');
-          const outcome = await exportApplicationToFile(
+          outcome = await exportApplicationToFile(
             options.appId,
             options.appName,
             options.file,
@@ -104,15 +124,11 @@ export default function setup() {
               deps: options.deps,
             }
           );
-          if (!outcome) process.exitCode = 1;
         }
         // -a/--all
-        else if (
-          options.all &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.all) {
           verboseMessage('Exporting all applications to file...');
-          const outcome = await exportApplicationsToFile(
+          outcome = await exportApplicationsToFile(
             options.file,
             options.metadata,
             {
@@ -120,28 +136,16 @@ export default function setup() {
               deps: options.deps,
             }
           );
-          if (!outcome) process.exitCode = 1;
         }
         // -A/--all-separate
-        else if (
-          options.allSeparate &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.allSeparate) {
           verboseMessage('Exporting all applications to separate files...');
-          const outcome = await exportApplicationsToFiles(options.metadata, {
+          outcome = await exportApplicationsToFiles(options.metadata, {
             useStringArrays: true,
             deps: options.deps,
           });
-          if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          verboseMessage(
-            'Unrecognized combination of options or no options...'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

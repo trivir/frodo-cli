@@ -40,32 +40,39 @@ export default function setup() {
           options,
           command
         );
+
+        if (!options.policyId && !options.setId && !options.all) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          return;
+        }
+
+        const getTokensisSuccessful = await getTokens();
+        if (!getTokensisSuccessful) process.exit(1);
+
+        let outcome: boolean;
+
         // delete by id
-        if (options.policyId && (await getTokens())) {
+        if (options.policyId) {
           verboseMessage('Deleting authorization policy...');
-          const outcome = await deletePolicyById(options.policyId);
-          if (!outcome) process.exitCode = 1;
+          outcome = await deletePolicyById(options.policyId);
         }
         // --all -a by policy set
-        else if (options.setId && options.all && (await getTokens())) {
+        else if (options.setId && options.all) {
           verboseMessage(
             `Deleting all authorization policies in policy set ${options.setId}...`
           );
-          const outcome = await deletePoliciesByPolicySet(options.setId);
-          if (!outcome) process.exitCode = 1;
+          outcome = await deletePoliciesByPolicySet(options.setId);
         }
         // --all -a
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Deleting all authorization policies...');
-          const outcome = await deletePolicies();
-          if (!outcome) process.exitCode = 1;
+          outcome = await deletePolicies();
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage('Unrecognized combination of options or no options...');
-          program.help();
-          process.exitCode = 1;
-        }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

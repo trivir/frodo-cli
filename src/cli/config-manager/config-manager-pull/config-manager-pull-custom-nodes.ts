@@ -39,19 +39,19 @@ export default function setup() {
         command
       );
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        if (options.nodeName) {
-          verboseMessage(
-            `Fetching custom node with name '${options.nodeName}'`
-          );
-        } else {
-          verboseMessage('Fetching custom nodes');
-        }
-        const outcome = await configManagerExportCustomNodes(options.nodeName);
-        if (!outcome) process.exitCode = 1;
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      if (options.nodeName) {
+        verboseMessage(`Fetching custom node with name '${options.nodeName}'`);
       } else {
-        process.exitCode = 1;
+        verboseMessage('Fetching custom nodes');
       }
+      const outcome = await configManagerExportCustomNodes(options.nodeName);
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;

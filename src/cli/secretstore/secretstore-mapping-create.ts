@@ -63,6 +63,14 @@ export default function setup() {
           options,
           command
         );
+        if (!options.secretstoreId || !options.secretId || !options.aliases) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
         if (
           options.secretstoreType &&
           !canSecretStoreHaveMappings(options.secretstoreType)
@@ -71,38 +79,26 @@ export default function setup() {
             `'${options.secretstoreType}' does not have mappings.`,
             'error'
           );
-          process.exitCode = 1;
-        } else if (
-          options.secretstoreId &&
-          options.secretId &&
-          options.aliases &&
-          (await getTokens(
-            false,
-            true,
-            options.global ? globalDeploymentTypes : deploymentTypes
-          ))
-        ) {
-          verboseMessage(
-            `Creating the mapping ${options.secretId} in the secret store ${options.secretstoreId}'`
-          );
-          const outcome = await createSecretStoreMapping(
-            options.secretstoreId,
-            options.secretstoreType,
-            options.secretId,
-            options.aliases,
-            options.global
-          );
-          if (!outcome) process.exitCode = 1;
-        } else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.outputHelp();
-          process.exitCode = 1;
+          process.exit(1);
         }
+        const getTokensIsSucessful = await getTokens(
+          false,
+          true,
+          options.global ? globalDeploymentTypes : deploymentTypes
+        );
+        if (!getTokensIsSucessful) process.exit(1);
+        verboseMessage(
+          `Creating the mapping ${options.secretId} in the secret store ${options.secretstoreId}'`
+        );
+        const outcome = await createSecretStoreMapping(
+          options.secretstoreId,
+          options.secretstoreType,
+          options.secretId,
+          options.aliases,
+          options.global
+        );
+        if (!outcome) process.exitCode = 1;
       }
-      // end command logic inside action handler
     );
 
   return program;

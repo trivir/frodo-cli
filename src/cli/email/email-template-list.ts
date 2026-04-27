@@ -37,13 +37,15 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens(false, true, deploymentTypes)) {
-          verboseMessage(`Listing email templates ...`);
-          const outcome = await listEmailTemplates(options.long);
-          if (!outcome) process.exitCode = 1;
-        } else {
-          process.exitCode = 1;
-        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+        verboseMessage(`Listing email templates ...`);
+        const outcome = await listEmailTemplates(options.long);
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

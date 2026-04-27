@@ -68,55 +68,46 @@ export default function setup() {
           options,
           command
         );
+        if (!options.templateId && !options.all && !options.allSeparate) {
+          printMessage('Unrecognized combination of options or no options...');
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+        let outcome: boolean;
         // export by id/name
-        if (
-          options.templateId &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        if (options.templateId) {
           verboseMessage(
             `Exporting email template "${
               options.templateId
             }" from realm "${state.getRealm()}"...`
           );
-          const outcome = await exportEmailTemplateToFile(
+          outcome = await exportEmailTemplateToFile(
             options.templateId,
             options.file,
             options.metadata
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.all) {
           verboseMessage('Exporting all email templates to a single file...');
-          const outcome = await exportEmailTemplatesToFile(
+          outcome = await exportEmailTemplatesToFile(
             options.file,
             options.metadata
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (
-          options.allSeparate &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.allSeparate) {
           verboseMessage('Exporting all email templates to separate files...');
-          const outcome = await exportEmailTemplatesToFiles(options.metadata);
-          if (!outcome) process.exitCode = 1;
+          outcome = await exportEmailTemplatesToFiles(options.metadata);
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
+        if (!outcome) process.exitCode = 1;
       }
-      // end command logic inside action handler
     );
 
   return program;

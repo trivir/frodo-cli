@@ -66,8 +66,25 @@ export default function setup() {
         options,
         command
       );
+      if (
+        !options.file &&
+        !options.all &&
+        !options.allSeparate &&
+        !options.nodeId &&
+        !options.nodeName
+      ) {
+        printMessage(
+          'Unrecognized combination of options or no options...',
+          'error'
+        );
+        process.exitCode = 1;
+        program.help();
+      }
+      const getTokensIsSuccessful = await getTokens();
+      if (!getTokensIsSuccessful) process.exit(1);
+
       // export by id or name
-      if ((options.nodeId || options.nodeName) && (await getTokens())) {
+      if (options.nodeId || options.nodeName) {
         verboseMessage(
           `Exporting custom node ${options.nodeId || options.nodeName}...`
         );
@@ -84,7 +101,7 @@ export default function setup() {
         if (!outcome) process.exitCode = 1;
       }
       // --all -a
-      else if (options.all && (await getTokens())) {
+      else if (options.all) {
         verboseMessage(`Exporting all custom nodes to a single file...`);
         const outcome = await exportCustomNodesToFile(
           options.file,
@@ -96,7 +113,7 @@ export default function setup() {
         if (!outcome) process.exitCode = 1;
       }
       // --all-separate -A
-      else if (options.allSeparate && (await getTokens())) {
+      else if (options.allSeparate) {
         verboseMessage('Exporting all custom nodes to separate files...');
         const outcome = await exportCustomNodesToFiles(
           options.metadata,
@@ -107,16 +124,6 @@ export default function setup() {
         );
         if (!outcome) process.exitCode = 1;
       }
-      // unrecognized combination of options or no options
-      else {
-        printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
-        );
-        program.help();
-        process.exitCode = 1;
-      }
     });
-
   return program;
 }

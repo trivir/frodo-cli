@@ -65,11 +65,29 @@ export default function setup() {
           options,
           command
         );
-        // export by id or name
         if (
-          (options.roleId || options.roleName) &&
-          (await getTokens(false, true, deploymentTypes))
+          !options.roleId &&
+          !options.roleName &&
+          !options.file &&
+          !options.allSeparate &&
+          !options.all
         ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        // export by id or name
+        if (options.roleId || options.roleName) {
           verboseMessage(
             `Exporting internal role ${options.roleId || options.roleName}...`
           );
@@ -82,10 +100,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.all) {
           verboseMessage(`Exporting all internal roles to a single file...`);
           const outcome = await exportInternalRolesToFile(
             options.file,
@@ -94,25 +109,12 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (
-          options.allSeparate &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.allSeparate) {
           verboseMessage('Exporting all internal roles to separate files...');
           const outcome = await exportInternalRolesToFiles(options.metadata);
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

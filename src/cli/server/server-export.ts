@@ -73,11 +73,28 @@ export default function setup() {
           options,
           command
         );
-        // export by id or url
         if (
-          (options.serverId || options.serverUrl) &&
-          (await getTokens(false, true, deploymentTypes))
+          !options.serverId &&
+          !options.serverUrl &&
+          !options.all &&
+          !options.allSeparate
         ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        // export by id or url
+        if (options.serverId || options.serverUrl) {
           verboseMessage(
             `Exporting server ${options.serverId || options.serverUrl}...`
           );
@@ -94,10 +111,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.all) {
           verboseMessage(`Exporting all servers to a single file...`);
           const outcome = await exportServersToFile(
             options.file,
@@ -110,10 +124,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (
-          options.allSeparate &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.allSeparate) {
           verboseMessage('Exporting all servers to separate files...');
           const outcome = await exportServersToFiles(
             options.extract,
@@ -124,17 +135,7 @@ export default function setup() {
           );
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

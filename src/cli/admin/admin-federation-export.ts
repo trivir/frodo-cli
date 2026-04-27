@@ -63,44 +63,50 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens(true, true, deploymentTypes)) {
-          // export by id/name
-          if (options.idpId) {
-            verboseMessage(`Exporting provider "${options.idpId}...`);
-            const outcome = await exportAdminFederationProviderToFile(
-              options.idpId,
-              options.file,
-              options.metadata
-            );
-            if (!outcome) process.exitCode = 1;
-          }
-          // --all -a
-          else if (options.all) {
-            verboseMessage('Exporting all providers to a single file...');
-            const outcome = await exportAdminFederationProvidersToFile(
-              options.file,
-              options.metadata
-            );
-            if (!outcome) process.exitCode = 1;
-          }
-          // --all-separate -A
-          else if (options.allSeparate) {
-            verboseMessage('Exporting all providers to separate files...');
-            const outcome = await exportAdminFederationProvidersToFiles(
-              options.metadata
-            );
-            if (!outcome) process.exitCode = 1;
-          }
-          // unrecognized combination of options or no options
-          else {
-            printMessage(
-              'Unrecognized combination of options or no options...',
-              'error'
-            );
-            program.help();
-            process.exitCode = 1;
-          }
+
+        if (!options.idpId && !options.all && !options.allSeparate) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
         }
+
+        const getTokensIsSuccessful = await getTokens(
+          true,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        let outcome: boolean;
+
+        // export by id/name
+        if (options.idpId) {
+          verboseMessage(`Exporting provider "${options.idpId}...`);
+          outcome = await exportAdminFederationProviderToFile(
+            options.idpId,
+            options.file,
+            options.metadata
+          );
+        }
+        // --all -a
+        else if (options.all) {
+          verboseMessage('Exporting all providers to a single file...');
+          outcome = await exportAdminFederationProvidersToFile(
+            options.file,
+            options.metadata
+          );
+        }
+        // --all-separate -A
+        else if (options.allSeparate) {
+          verboseMessage('Exporting all providers to separate files...');
+          outcome = await exportAdminFederationProvidersToFiles(
+            options.metadata
+          );
+        }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

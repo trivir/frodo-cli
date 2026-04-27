@@ -89,16 +89,36 @@ export default function setup() {
           options,
           command
         );
-        // -i/--app-id or -n/--app-name
+
         if (
-          options.file &&
-          (options.appId || options.appName) &&
-          (await getTokens(false, true, deploymentTypes))
+          !options.appId &&
+          !options.file &&
+          !options.appName &&
+          !options.all &&
+          !options.allSeparate
         ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          return;
+        }
+
+        const getTokensisSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensisSuccessful) process.exit(1);
+        let outcome: boolean;
+
+        // -i/--app-id or -n/--app-name
+        if (options.file && (options.appId || options.appName)) {
           verboseMessage(
             `Importing application "${options.appName ?? options.appId}"...`
           );
-          const outcome = await importApplicationFromFile(
+          outcome = await importApplicationFromFile(
             options.appId,
             options.appName,
             options.file,
@@ -106,55 +126,35 @@ export default function setup() {
               deps: options.deps,
             }
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.all && options.file) {
           verboseMessage(
             `Importing all applications from a single file (${options.file})...`
           );
-          const outcome = await importApplicationsFromFile(options.file, {
+          outcome = await importApplicationsFromFile(options.file, {
             deps: options.deps,
           });
-          if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (
-          options.allSeparate &&
-          !options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.allSeparate && !options.file) {
           verboseMessage(
             'Importing all applications from separate files in current directory...'
           );
-          const outcome = await importApplicationsFromFiles({
+          outcome = await importApplicationsFromFiles({
             deps: options.deps,
           });
-          if (!outcome) process.exitCode = 1;
         }
         // import first provider from file
-        else if (
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.file) {
           verboseMessage(
             `Importing first application from file "${options.file}"...`
           );
-          const outcome = await importFirstApplicationFromFile(options.file, {
+          outcome = await importFirstApplicationFromFile(options.file, {
             deps: options.deps,
           });
-          if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage('Unrecognized combination of options or no options...');
-          program.help();
-          process.exitCode = 1;
-        }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

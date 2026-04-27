@@ -71,70 +71,73 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens(false, true, deploymentTypes)) {
-          printMessage(
-            `Creating oauth2 client with admin privileges in realm "${state.getRealm()}"...`
-          );
-          let clientId = uuidv4();
-          let clientSecret = uuidv4();
-          if (options.clientId) {
-            clientId = options.clientId;
-          }
-          if (options.clientSecret) {
-            clientSecret = options.clientSecret;
-          }
-          if (
-            await createOAuth2ClientWithAdminPrivileges(clientId, clientSecret)
-          ) {
-            const table = new Table({
-              chars: {
-                top: '',
-                'top-mid': '',
-                'top-left': '',
-                'top-right': '',
-                bottom: '',
-                'bottom-mid': '',
-                'bottom-left': '',
-                'bottom-right': '',
-                left: '',
-                'left-mid': '',
-                mid: '',
-                'mid-mid': '',
-                right: '',
-                'right-mid': '',
-              },
-              style: { 'padding-left': 0, 'padding-right': 0 },
-              wordWrap: true,
-            });
-            table.push(['Client ID'['brightCyan'], clientId]);
-            table.push(['Client Secret'['brightCyan'], clientSecret]);
-            if (options.llt) {
-              try {
-                const response = await createLongLivedToken(
-                  clientId,
-                  clientSecret,
-                  options.lltScope,
-                  options.lltEsv,
-                  options.lltTtl
-                );
-                if (options.lltEsv)
-                  table.push(['Secret Name'['brightCyan'], response.secret]);
-                table.push(['Scope'['brightCyan'], response.scope]);
-                table.push(['Expires'['brightCyan'], response.expires_on]);
-                printMessage(table.toString());
-                if (options.lltEsv === false) {
-                  printMessage(`\nBearer token:`, 'info');
-                  printMessage(`${response.access_token}`, 'data');
-                }
-              } catch (error) {
-                printError(error);
-                process.exitCode = 1;
-              }
-            } else {
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit();
+
+        printMessage(
+          `Creating oauth2 client with admin privileges in realm "${state.getRealm()}"...`
+        );
+        let clientId = uuidv4();
+        let clientSecret = uuidv4();
+        if (options.clientId) {
+          clientId = options.clientId;
+        }
+        if (options.clientSecret) {
+          clientSecret = options.clientSecret;
+        }
+        if (
+          await createOAuth2ClientWithAdminPrivileges(clientId, clientSecret)
+        ) {
+          const table = new Table({
+            chars: {
+              top: '',
+              'top-mid': '',
+              'top-left': '',
+              'top-right': '',
+              bottom: '',
+              'bottom-mid': '',
+              'bottom-left': '',
+              'bottom-right': '',
+              left: '',
+              'left-mid': '',
+              mid: '',
+              'mid-mid': '',
+              right: '',
+              'right-mid': '',
+            },
+            style: { 'padding-left': 0, 'padding-right': 0 },
+            wordWrap: true,
+          });
+          table.push(['Client ID'['brightCyan'], clientId]);
+          table.push(['Client Secret'['brightCyan'], clientSecret]);
+          if (options.llt) {
+            try {
+              const response = await createLongLivedToken(
+                clientId,
+                clientSecret,
+                options.lltScope,
+                options.lltEsv,
+                options.lltTtl
+              );
+              if (options.lltEsv)
+                table.push(['Secret Name'['brightCyan'], response.secret]);
+              table.push(['Scope'['brightCyan'], response.scope]);
+              table.push(['Expires'['brightCyan'], response.expires_on]);
               printMessage(table.toString());
+              if (options.lltEsv === false) {
+                printMessage(`\nBearer token:`, 'info');
+                printMessage(`${response.access_token}`, 'data');
+              }
+            } catch (error) {
+              printError(error);
+              process.exitCode = 1;
             }
           } else {
-            process.exitCode = 1;
+            printMessage(table.toString());
           }
         } else {
           process.exitCode = 1;

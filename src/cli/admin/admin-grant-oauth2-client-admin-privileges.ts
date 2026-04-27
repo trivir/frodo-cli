@@ -41,19 +41,22 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens(false, true, deploymentTypes)) {
-          printMessage(
-            `Granting oauth2 client "${
-              options.clientId || options.target
-            }" in realm "${state.getRealm()}" admin privileges...`
-          );
-          const outcome = await grantOAuth2ClientAdminPrivileges(
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        printMessage(
+          `Granting oauth2 client "${
             options.clientId || options.target
-          );
-          if (!outcome) process.exitCode = 1;
-        } else {
-          process.exitCode = 1;
-        }
+          }" in realm "${state.getRealm()}" admin privileges...`
+        );
+        const outcome = await grantOAuth2ClientAdminPrivileges(
+          options.clientId || options.target
+        );
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

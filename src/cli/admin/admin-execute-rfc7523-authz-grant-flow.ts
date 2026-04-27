@@ -65,36 +65,35 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens()) {
-          printMessage(`Executing RFC7523 authorization grant flow...`);
-          let clientId = uuidv4();
-          if (options.clientId) {
-            clientId = options.clientId;
-          }
-          let jwk: JwkRsa = undefined;
-          if (options.jwkFile) {
-            try {
-              const data = fs.readFileSync(options.jwkFile);
-              jwk = JSON.parse(data.toString());
-            } catch (error) {
-              printMessage(
-                `Error parsing JWK from file ${options.jwkFile}: ${error.message}`,
-                'error'
-              );
-            }
-          }
-          const outcome = await executeRfc7523AuthZGrantFlow(
-            clientId,
-            options.iss,
-            jwk,
-            options.sub,
-            options.scope.split(' '),
-            options.json
-          );
-          if (!outcome) process.exitCode = 1;
-        } else {
-          process.exitCode = 1;
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        printMessage(`Executing RFC7523 authorization grant flow...`);
+        let clientId = uuidv4();
+        if (options.clientId) {
+          clientId = options.clientId;
         }
+        let jwk: JwkRsa = undefined;
+        if (options.jwkFile) {
+          try {
+            const data = fs.readFileSync(options.jwkFile);
+            jwk = JSON.parse(data.toString());
+          } catch (error) {
+            printMessage(
+              `Error parsing JWK from file ${options.jwkFile}: ${error.message}`,
+              'error'
+            );
+          }
+        }
+        const outcome = await executeRfc7523AuthZGrantFlow(
+          clientId,
+          options.iss,
+          jwk,
+          options.sub,
+          options.scope.split(' '),
+          options.json
+        );
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

@@ -39,13 +39,22 @@ export default function setup() {
         command
       );
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Importing connector definitions');
-        const outcome = await configManagerImportConnectors(options.name);
-        if (!outcome) process.exitCode = 1;
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      if (options.name) {
+        verboseMessage(
+          `Importing connector definition with name "${options.name}"`
+        );
       } else {
-        process.exitCode = 1;
+        verboseMessage('Importing all connector definitions');
       }
+
+      const outcome = await configManagerImportConnectors(options.name);
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;

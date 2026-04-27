@@ -54,12 +54,25 @@ export default function setup() {
         options,
         command
       );
-      // import by id or name
       if (
-        (options.nodeId || options.nodeName) &&
-        options.file &&
-        (await getTokens())
+        !options.nodeId &&
+        !options.nodeName &&
+        !options.all &&
+        !options.file &&
+        !options.allSeparate
       ) {
+        printMessage(
+          'Unrecognized combination of options or no options...',
+          'error'
+        );
+        process.exitCode = 1;
+        program.help();
+      }
+      const getTokensIsSuccessful = await getTokens();
+      if (!getTokensIsSuccessful) process.exit(1);
+
+      // import by id or name
+      if ((options.nodeId || options.nodeName) && options.file) {
         verboseMessage(
           `Importing custom node ${options.nodeId || options.nodeName}...`
         );
@@ -75,7 +88,7 @@ export default function setup() {
         if (!outcome) process.exitCode = 1;
       }
       // --all -a
-      else if (options.all && options.file && (await getTokens())) {
+      else if (options.all && options.file) {
         verboseMessage(
           `Importing all custom nodes from a single file (${options.file})...`
         );
@@ -86,7 +99,7 @@ export default function setup() {
         if (!outcome) process.exitCode = 1;
       }
       // --all-separate -A
-      else if (options.allSeparate && (await getTokens())) {
+      else if (options.allSeparate) {
         verboseMessage('Importing all custom nodes from separate files...');
         const outcome = await importCustomNodesFromFiles({
           reUuid: options.reUuid,
@@ -95,22 +108,13 @@ export default function setup() {
         if (!outcome) process.exitCode = 1;
       }
       // import first node in file
-      else if (options.file && (await getTokens())) {
+      else if (options.file) {
         verboseMessage('Importing first custom node in file...');
         const outcome = await importFirstCustomNodeFromFile(options.file, {
           reUuid: options.reUuid,
           wait: false,
         });
         if (!outcome) process.exitCode = 1;
-      }
-      // unrecognized combination of options or no options
-      else {
-        printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
-        );
-        program.help();
-        process.exitCode = 1;
       }
     });
   return program;

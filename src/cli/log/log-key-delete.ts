@@ -39,30 +39,32 @@ export default function setup() {
           options,
           command
         );
-        // delete by id
-        if (options.keyId && (await getTokens(true, true, deploymentTypes))) {
-          verboseMessage(`Deleting key ${options.keyId}`);
-          deleteLogApiKey(options.keyId);
-        }
-        // --all -a
-        else if (
-          options.all &&
-          (await getTokens(true, true, deploymentTypes))
-        ) {
-          verboseMessage('Deleting keys...');
-          deleteLogApiKeys();
-        }
-        // unrecognized combination of options or no options
-        else {
+        if (!options.keyId && !options.all) {
           printMessage(
             'Unrecognized combination of options or no options...',
             'error'
           );
-          program.help();
           process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSucessful = await getTokens(
+          true,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSucessful) process.exit(1);
+
+        // delete by id
+        if (options.keyId) {
+          verboseMessage(`Deleting key ${options.keyId}`);
+          deleteLogApiKey(options.keyId);
+        }
+        // --all -a
+        else if (options.all) {
+          verboseMessage('Deleting keys...');
+          deleteLogApiKeys();
         }
       }
-      // end command logic inside action handler
     );
 
   return program;

@@ -6,7 +6,7 @@ import {
   exportOAuth2ClientsToFiles,
   exportOAuth2ClientToFile,
 } from '../../ops/OAuth2ClientOps';
-import { verboseMessage } from '../../utils/Console.js';
+import { printMessage, verboseMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
 
 export default function setup() {
@@ -53,8 +53,19 @@ export default function setup() {
           options,
           command
         );
+        if (!options.appId && !options.all && !options.allSeparate) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
         // export
-        if (options.appId && (await getTokens())) {
+        if (options.appId) {
           verboseMessage('Exporting OAuth2 client...');
           const outcome = await exportOAuth2ClientToFile(
             options.appId,
@@ -68,7 +79,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // -a/--all
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Exporting all OAuth2 clients to file...');
           const outcome = await exportOAuth2ClientsToFile(
             options.file,
@@ -81,7 +92,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // -A/--all-separate
-        else if (options.allSeparate && (await getTokens())) {
+        else if (options.allSeparate) {
           verboseMessage('Exporting all clients to separate files...');
           const outcome = await exportOAuth2ClientsToFiles(options.metadata, {
             useStringArrays: true,
@@ -89,16 +100,7 @@ export default function setup() {
           });
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          verboseMessage(
-            'Unrecognized combination of options or no options...'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

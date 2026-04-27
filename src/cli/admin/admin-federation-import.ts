@@ -58,64 +58,57 @@ export default function setup() {
           options,
           command
         );
+
+        if (!options.all && !options.allSeparate && !options.idpId) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+
+        const getTokensIsSuccessful = await getTokens(
+          true,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        let outcome: boolean;
+
         // import by id
-        if (
-          options.file &&
-          options.idpId &&
-          (await getTokens(true, true, deploymentTypes))
-        ) {
+        if (options.file && options.idpId) {
           verboseMessage(`Importing provider "${options.idpId}"...`);
-          const outcome = await importAdminFederationProviderFromFile(
+          outcome = await importAdminFederationProviderFromFile(
             options.idpId,
             options.file
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          options.file &&
-          (await getTokens(true, true, deploymentTypes))
-        ) {
+        else if (options.all && options.file) {
           verboseMessage(
             `Importing all providers from a single file (${options.file})...`
           );
-          const outcome = await importAdminFederationProvidersFromFile(
-            options.file
-          );
-          if (!outcome) process.exitCode = 1;
+          outcome = await importAdminFederationProvidersFromFile(options.file);
         }
         // --all-separate -A
-        else if (
-          options.allSeparate &&
-          !options.file &&
-          (await getTokens(true, true, deploymentTypes))
-        ) {
+        else if (options.allSeparate && !options.file) {
           verboseMessage(
             'Importing all providers from separate files in current directory...'
           );
-          const outcome = await importAdminFederationProvidersFromFiles();
-          if (!outcome) process.exitCode = 1;
+          outcome = await importAdminFederationProvidersFromFiles();
         }
         // import first provider from file
-        else if (
-          options.file &&
-          (await getTokens(true, true, deploymentTypes))
-        ) {
+        else if (options.file) {
           verboseMessage(
             `Importing first provider from file "${options.file}"...`
           );
-          const outcome = await importFirstAdminFederationProviderFromFile(
+          outcome = await importFirstAdminFederationProviderFromFile(
             options.file
           );
-          if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage('Unrecognized combination of options or no options...');
-          program.help();
-          process.exitCode = 1;
-        }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

@@ -3,7 +3,7 @@ import { Option } from 'commander';
 
 import { configManagerImportInternalRoles } from '../../../configManagerOps/FrConfigInternalRolesOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
-import { printMessage, verboseMessage } from '../../../utils/Console';
+import { verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
@@ -40,20 +40,19 @@ export default function setup() {
         command
       );
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Importing internal roles');
-        const outcome = await configManagerImportInternalRoles(options.name);
-        if (!outcome) process.exitCode = 1;
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      if (options.name) {
+        verboseMessage(`Importing internal role with name "${options.name}"`);
+      } else {
+        verboseMessage('Importing all internal roles');
       }
-      // unrecognized combination of options or no options
-      else {
-        printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
-        );
-        program.help();
-        process.exitCode = 1;
-      }
+      const outcome = await configManagerImportInternalRoles(options.name);
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;

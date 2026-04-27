@@ -41,40 +41,38 @@ export default function setup() {
     )
     .action(async (host, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(host, user, password, options, command);
-      if (await getTokens()) {
-        const info = await getInfo();
-        if (!options.scriptFriendly && !options.json) {
-          verboseMessage('Printing info, versions, and tokens...');
-          delete info.sessionToken;
-          delete info.bearerToken;
-          const labels = {
-            amVersion: 'AM Version',
-            authenticatedSubject: 'Subject (Type)',
-            config_promotion_done: 'Promotion Done',
-            cookieName: 'Cookie Name',
-            deploymentType: 'Deployment Type',
-            host: 'Host URL',
-            immutable: 'Immutable',
-            locked: 'Locked',
-            placeholder_management: 'Placeholder Management',
-            region: 'Region',
-            tier: 'Tier',
-          };
-          const table = createObjectTable(info, labels);
-          printMessage(`\n${table.toString()}`);
-          if (state.getCookieValue()) {
-            printMessage(`\nSession token:`, 'info');
-            printMessage(`${state.getCookieValue()}`);
-          }
-          if (state.getBearerToken()) {
-            printMessage(`\nBearer token:`, 'info');
-            printMessage(`${state.getBearerToken()}`);
-          }
-        } else {
-          printMessage(JSON.stringify(info, null, 2), 'data');
+      const getTokensIsSuccessful = await getTokens();
+      if (!getTokensIsSuccessful) process.exit(1);
+      const info = await getInfo();
+      if (!options.scriptFriendly && !options.json) {
+        verboseMessage('Printing info, versions, and tokens...');
+        delete info.sessionToken;
+        delete info.bearerToken;
+        const labels = {
+          amVersion: 'AM Version',
+          authenticatedSubject: 'Subject (Type)',
+          config_promotion_done: 'Promotion Done',
+          cookieName: 'Cookie Name',
+          deploymentType: 'Deployment Type',
+          host: 'Host URL',
+          immutable: 'Immutable',
+          locked: 'Locked',
+          placeholder_management: 'Placeholder Management',
+          region: 'Region',
+          tier: 'Tier',
+        };
+        const table = createObjectTable(info, labels);
+        printMessage(`\n${table.toString()}`);
+        if (state.getCookieValue()) {
+          printMessage(`\nSession token:`, 'info');
+          printMessage(`${state.getCookieValue()}`);
+        }
+        if (state.getBearerToken()) {
+          printMessage(`\nBearer token:`, 'info');
+          printMessage(`${state.getBearerToken()}`);
         }
       } else {
-        process.exitCode = 1;
+        printMessage(JSON.stringify(info, null, 2), 'data');
       }
     });
   return program;

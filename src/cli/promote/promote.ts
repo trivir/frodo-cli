@@ -99,11 +99,14 @@ export default function setup() {
           options,
           command
         );
-        if (
-          (await getTokens(false, true, deploymentTypes)) &&
-          options.masterDir &&
-          options.frodoExportDir
-        ) {
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        if (options.masterDir && options.frodoExportDir) {
           verboseMessage('Comparing export...');
           verboseMessage('comparing');
           const outcome = await compareExportToDirectory(
