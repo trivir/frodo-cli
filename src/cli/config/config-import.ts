@@ -129,6 +129,7 @@ export default function setup() {
             includeDefault: options.default,
             includeActiveValues: options.includeActiveValues,
             source: options.source,
+            includeNonCustom: false,
           });
           if (!outcome) process.exitCode = 1;
         }
@@ -152,6 +153,7 @@ export default function setup() {
             includeDefault: options.default,
             includeActiveValues: options.includeActiveValues,
             source: options.source,
+            includeNonCustom: false,
           });
           if (!outcome) process.exitCode = 1;
         }
@@ -169,6 +171,7 @@ export default function setup() {
               includeDefault: options.default,
               includeActiveValues: options.includeActiveValues,
               source: options.source,
+              includeNonCustom: false,
             }
           );
           if (!outcome) process.exitCode = 1;
