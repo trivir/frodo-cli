@@ -1,0 +1,74 @@
+{
+  "_rev": 0,
+  "childType": false,
+  "description": "test",
+  "displayName": "test",
+  "id": "test",
+  "mutable": true,
+  "name": "test",
+  "staticNodes": {
+    "endNode": {
+      "_outcomes": [],
+      "connections": {},
+      "displayDetails": {
+        "icon": "checkmark",
+        "value": "Success",
+        "variant": "success"
+      },
+      "displayType": "SingleInput",
+      "hasError": false,
+      "id": "endNode",
+      "isDeleteable": false,
+      "isDroppable": false,
+      "isEditable": false,
+      "isHovered": false,
+      "name": "End",
+      "nodeType": "SingleInput",
+      "schema": null,
+      "template": null,
+      "x": 500,
+      "y": 50
+    },
+    "startNode": {
+      "_outcomes": [
+        {
+          "displayName": "start",
+          "id": "start"
+        }
+      ],
+      "connections": {
+        "start": "waitTask-4d9223fb79c5"
+      },
+      "displayDetails": {
+        "icon": "play_arrow",
+        "value": "Start",
+        "variant": "info"
+      },
+      "displayType": "IconOutcomeNode",
+      "hasError": false,
+      "id": "startNode",
+      "isDeleteable": false,
+      "isDroppable": false,
+      "isEditable": false,
+      "isHovered": false,
+      "name": "Start",
+      "nodeType": "IconOutcomeNode",
+      "schema": null,
+      "template": null,
+      "x": 50,
+      "y": 250
+    },
+    "uiConfig": {
+      "waitTask-4d9223fb79c5": {
+        "events": {
+          "resumeDateNumber": 1,
+          "resumeDateTimeSpan": "month(s)",
+          "resumeDateType": "duration"
+        },
+        "x": 285.3999938964844,
+        "y": 211.22499084472656
+      }
+    }
+  },
+  "status": "published"
+}

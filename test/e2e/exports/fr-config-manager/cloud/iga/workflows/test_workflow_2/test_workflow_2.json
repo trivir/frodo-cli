@@ -1,0 +1,74 @@
+{
+  "_rev": 0,
+  "childType": false,
+  "description": "test_workflow_2",
+  "displayName": "test_workflow_2",
+  "id": "testWorkflow2",
+  "mutable": true,
+  "name": "test_workflow_2",
+  "staticNodes": {
+    "endNode": {
+      "_outcomes": [],
+      "connections": {},
+      "displayDetails": {
+        "icon": "checkmark",
+        "value": "Success",
+        "variant": "success"
+      },
+      "displayType": "SingleInput",
+      "hasError": false,
+      "id": "endNode",
+      "isDeleteable": false,
+      "isDroppable": false,
+      "isEditable": false,
+      "isHovered": false,
+      "name": "End",
+      "nodeType": "SingleInput",
+      "schema": null,
+      "template": null,
+      "x": 500,
+      "y": 50
+    },
+    "startNode": {
+      "_outcomes": [
+        {
+          "displayName": "start",
+          "id": "start"
+        }
+      ],
+      "connections": {
+        "start": "waitTask-a8f5232af3c8"
+      },
+      "displayDetails": {
+        "icon": "play_arrow",
+        "value": "Start",
+        "variant": "info"
+      },
+      "displayType": "IconOutcomeNode",
+      "hasError": false,
+      "id": "startNode",
+      "isDeleteable": false,
+      "isDroppable": false,
+      "isEditable": false,
+      "isHovered": false,
+      "name": "Start",
+      "nodeType": "IconOutcomeNode",
+      "schema": null,
+      "template": null,
+      "x": 50,
+      "y": 250
+    },
+    "uiConfig": {
+      "waitTask-a8f5232af3c8": {
+        "events": {
+          "resumeDateNumber": 1,
+          "resumeDateTimeSpan": "day(s)",
+          "resumeDateType": "duration"
+        },
+        "x": 202.22222900390625,
+        "y": 152.3472137451172
+      }
+    }
+  },
+  "status": "published"
+}

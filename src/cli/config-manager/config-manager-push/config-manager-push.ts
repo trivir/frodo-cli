@@ -7,6 +7,7 @@ import CookieDomains from './config-manager-push-cookie-domain';
 import EmailProvider from './config-manager-push-email-provider';
 import EmailTemplates from './config-manager-push-email-templates';
 import Endpoints from './config-manager-push-endpoints';
+import IgaWorkflows from './config-manager-push-iga-workflows';
 import InternalRoles from './config-manager-push-internal-roles';
 import Kba from './config-manager-push-kba';
 import Locales from './config-manager-push-locales';
@@ -43,6 +44,7 @@ export default function setup() {
   program.addCommand(UiConfig().name('ui-config'));
   program.addCommand(Authentication().name('authentication'));
   program.addCommand(ConnectorDefinitions().name('connector-definitions'));
+  program.addCommand(IgaWorkflows().name('iga-workflows'));
 
   return program;
 }
