@@ -457,7 +457,7 @@ export async function importSaml2ProvidersFromFiles(
     );
     return true;
   } catch (error) {
-    stopProgressIndicator(indicatorId, `Error importing providers`);
+    stopProgressIndicator(indicatorId, `Error importing providers`, 'fail');
     printError(error);
   }
   return false;
@@ -471,17 +471,17 @@ export async function importSaml2ProvidersFromFiles(
 export async function deleteSaml2ProviderById(
   entityId: string
 ): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     undefined,
     `Deleting ${entityId}...`
   );
   try {
     await deleteSaml2Provider(entityId);
-    stopProgressIndicator(spinnerId, `Deleted ${entityId}.`, 'success');
+    stopProgressIndicator(indicatorId, `Deleted ${entityId}.`, 'success');
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    stopProgressIndicator(indicatorId, `Error: ${error.message}`, 'fail');
     printError(error);
   }
   return false;

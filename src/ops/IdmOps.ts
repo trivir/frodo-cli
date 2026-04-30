@@ -341,17 +341,17 @@ export async function importConfigEntityByIdFromFile(
 export async function deleteConfigEntityById(
   entityId: string
 ): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     undefined,
     `Deleting ${entityId}...`
   );
   try {
     await deleteConfigEntity(entityId);
-    stopProgressIndicator(spinnerId, `Deleted ${entityId}.`, 'success');
+    stopProgressIndicator(indicatorId, `Deleted ${entityId}.`, 'success');
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    stopProgressIndicator(indicatorId, `Error: ${error.message}`, 'fail');
     printError(error);
   }
   return false;

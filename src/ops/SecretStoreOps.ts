@@ -219,7 +219,7 @@ export async function createSecretStoreMapping(
   aliases: string,
   global: boolean = false
 ) {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     undefined,
     `Creating the mapping ${secretId} in the secret store ${secretStoreId}...`
@@ -237,13 +237,13 @@ export async function createSecretStoreMapping(
       global
     );
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Created the mapping ${secretId} in the secret store ${secretStoreId}.`,
       'success'
     );
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    stopProgressIndicator(indicatorId, `Error: ${error.message}`, 'fail');
     printError(error);
   }
   return false;
@@ -267,7 +267,7 @@ export async function createSecretStoreMappingAlias(
   isActive: boolean = false,
   global: boolean = false
 ) {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     undefined,
     `Creating the mapping alias ${alias} in the mapping ${secretId} in the secret store ${secretStoreId}...`
@@ -281,7 +281,7 @@ export async function createSecretStoreMappingAlias(
     );
     if (mapping.aliases.includes(alias)) {
       stopProgressIndicator(
-        spinnerId,
+        indicatorId,
         `Duplicate alias ${alias} found in the mapping ${secretId} in the secret store ${secretStoreId}.`,
         'fail'
       );
@@ -300,13 +300,13 @@ export async function createSecretStoreMappingAlias(
       global
     );
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Created the mapping alias ${alias} in the mapping ${secretId} in the secret store ${secretStoreId}.`,
       'success'
     );
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    stopProgressIndicator(indicatorId, `Error: ${error.message}`, 'fail');
     printError(error);
   }
   return false;
@@ -328,7 +328,7 @@ export async function activateSecretStoreMappingAlias(
   alias: string,
   global: boolean = false
 ) {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     undefined,
     `Activating the mapping alias ${alias} in the mapping ${secretId} in the secret store ${secretStoreId}...`
@@ -344,7 +344,7 @@ export async function activateSecretStoreMappingAlias(
     const aliasIndex = mapping.aliases.indexOf(alias);
     if (aliasIndex === -1) {
       stopProgressIndicator(
-        spinnerId,
+        indicatorId,
         `Could not find the alias ${alias} in the mapping ${secretId} in the secret store ${secretStoreId}`,
         'fail'
       );
@@ -358,13 +358,13 @@ export async function activateSecretStoreMappingAlias(
       global
     );
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Activated the mapping alias ${alias} in the mapping ${secretId} in the secret store ${secretStoreId}.`,
       'success'
     );
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    stopProgressIndicator(indicatorId, `Error: ${error.message}`, 'fail');
     printError(error);
   }
   return false;
@@ -647,7 +647,7 @@ export async function deleteSecretStore(
   secretStoreTypeId?: string,
   global: boolean = false
 ): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     undefined,
     `Deleting ${secretStoreId}...`
@@ -658,10 +658,10 @@ export async function deleteSecretStore(
       secretStoreTypeId,
       global
     );
-    stopProgressIndicator(spinnerId, `Deleted ${secretStoreId}.`, 'success');
+    stopProgressIndicator(indicatorId, `Deleted ${secretStoreId}.`, 'success');
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    stopProgressIndicator(indicatorId, `Error: ${error.message}`, 'fail');
     printError(error);
   }
   return false;
@@ -675,17 +675,17 @@ export async function deleteSecretStore(
 export async function deleteSecretStores(
   global: boolean = false
 ): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     undefined,
     `Deleting secret stores...`
   );
   try {
     await frodo.secretStore.deleteSecretStores(global, errorHandler);
-    stopProgressIndicator(spinnerId, `Deleted all secret stores.`, 'success');
+    stopProgressIndicator(indicatorId, `Deleted all secret stores.`, 'success');
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    stopProgressIndicator(indicatorId, `Error: ${error.message}`, 'fail');
     printError(error);
   }
   return false;
@@ -705,7 +705,7 @@ export async function deleteSecretStoreMapping(
   secretId: string,
   global: boolean = false
 ): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     undefined,
     `Deleting ${secretId} from secret store ${secretStoreId}...`
@@ -718,13 +718,13 @@ export async function deleteSecretStoreMapping(
       global
     );
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Deleted ${secretId} from secret store ${secretStoreId}.`,
       'success'
     );
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    stopProgressIndicator(indicatorId, `Error: ${error.message}`, 'fail');
     printError(error);
   }
   return false;
@@ -742,7 +742,7 @@ export async function deleteSecretStoreMappings(
   secretStoreTypeId?: string,
   global: boolean = false
 ): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     undefined,
     `Deleting secret store mappings from the secret store ${secretStoreId}...`
@@ -755,13 +755,13 @@ export async function deleteSecretStoreMappings(
       errorHandler
     );
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Deleted all mappings from the secret store ${secretStoreId}.`,
       'success'
     );
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    stopProgressIndicator(indicatorId, `Error: ${error.message}`, 'fail');
     printError(error);
   }
   return false;
@@ -783,7 +783,7 @@ export async function deleteSecretStoreMappingAlias(
   alias: string,
   global: boolean = false
 ): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     undefined,
     `Deleting the alias ${alias} from the mapping ${secretId} in the secret store ${secretStoreId}...`
@@ -799,7 +799,7 @@ export async function deleteSecretStoreMappingAlias(
     const index = mapping.aliases.indexOf(alias);
     if (index === -1) {
       stopProgressIndicator(
-        spinnerId,
+        indicatorId,
         `Could not find the alias ${alias} in the mapping ${secretId} in the secret store ${secretStoreId}`,
         'fail'
       );
@@ -807,7 +807,7 @@ export async function deleteSecretStoreMappingAlias(
     }
     if (mapping.aliases.length === 1) {
       stopProgressIndicator(
-        spinnerId,
+        indicatorId,
         `Cannot delete alias ${alias} since it is the last remaining alias in the mapping ${secretId} in the secret store ${secretStoreId}`,
         'fail'
       );
@@ -821,13 +821,13 @@ export async function deleteSecretStoreMappingAlias(
       global
     );
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Deleted the alias ${alias} from the mapping ${secretId} in the secret store ${secretStoreId}.`,
       'success'
     );
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    stopProgressIndicator(indicatorId, `Error: ${error.message}`, 'fail');
     printError(error);
   }
   return false;
@@ -847,7 +847,7 @@ export async function deleteSecretStoreMappingAliases(
   secretId: string,
   global: boolean = false
 ): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     undefined,
     `Deleting all aliases from the mapping ${secretId} in the secret store ${secretStoreId}...`
@@ -868,13 +868,13 @@ export async function deleteSecretStoreMappingAliases(
       global
     );
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Deleted all aliases from the mapping ${secretId} in the secret store ${secretStoreId}.`,
       'success'
     );
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    stopProgressIndicator(indicatorId, `Error: ${error.message}`, 'fail');
     printError(error);
   }
   return false;

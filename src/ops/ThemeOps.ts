@@ -211,30 +211,30 @@ export async function exportThemesToFile(
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportThemesToFiles(includeMeta = true) {
-  let barId: string;
+  let indicatorId: string;
   try {
     const themes = await readThemes();
-    barId = createProgressIndicator(
+    indicatorId = createProgressIndicator(
       'determinate',
       themes.length,
       'Exporting themes'
     );
     for (const theme of themes) {
       if (!theme._id) theme._id = uuidv4();
-      const fileBarId = createProgressIndicator(
+      const fileindicatorId = createProgressIndicator(
         'determinate',
         1,
         `Exporting theme ${theme.name}...`
       );
-      updateProgressIndicator(barId, `Exporting theme ${theme.name}`);
+      updateProgressIndicator(indicatorId, `Exporting theme ${theme.name}`);
       const file = getFilePath(getTypedFilename(theme.name, 'theme'), true);
       saveToFile('theme', theme, '_id', file, includeMeta);
-      updateProgressIndicator(fileBarId, `${theme.name} saved to ${file}`);
-      stopProgressIndicator(fileBarId, `${theme.name} saved to ${file}.`);
+      updateProgressIndicator(fileindicatorId, `${theme.name} saved to ${file}`);
+      stopProgressIndicator(fileindicatorId, `${theme.name} saved to ${file}.`);
     }
     return true;
   } catch (error) {
-    stopProgressIndicator(barId, `Error exporting themes`, 'fail');
+    stopProgressIndicator(indicatorId, `Error exporting themes`, 'fail');
     printError(error);
   }
   return false;

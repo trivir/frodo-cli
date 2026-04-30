@@ -362,17 +362,17 @@ export async function importSocialIdentityProvidersFromFiles(
 export async function deleteSocialIdentityProviderById(
   id: string
 ): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     undefined,
     `Deleting ${id}...`
   );
   try {
     await deleteSocialIdentityProvider(id);
-    stopProgressIndicator(spinnerId, `Deleted ${id}.`, 'success');
+    stopProgressIndicator(indicatorId, `Deleted ${id}.`, 'success');
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    stopProgressIndicator(indicatorId, `Error: ${error.message}`, 'fail');
     printError(error);
   }
   return false;

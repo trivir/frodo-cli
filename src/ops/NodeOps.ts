@@ -536,7 +536,7 @@ export async function deleteCustomNode(
   nodeId: string,
   nodeName: string
 ): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     undefined,
     `Deleting ${nodeName ? nodeName : nodeId}...`
@@ -544,13 +544,13 @@ export async function deleteCustomNode(
   try {
     await _deleteCustomNode(nodeId, nodeName);
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Deleted ${nodeName ? nodeName : nodeId}.`,
       'success'
     );
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    stopProgressIndicator(indicatorId, `Error: ${error.message}`, 'fail');
     printError(error);
   }
   return false;
@@ -561,17 +561,17 @@ export async function deleteCustomNode(
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function deleteCustomNodes(): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     undefined,
     `Deleting custom nodes...`
   );
   try {
     await _deleteCustomNodes(errorHandler);
-    stopProgressIndicator(spinnerId, `Deleted custom nodes.`, 'success');
+    stopProgressIndicator(indicatorId, `Deleted custom nodes.`, 'success');
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    stopProgressIndicator(indicatorId, `Error: ${error.message}`, 'fail');
     printError(error);
   }
   return false;

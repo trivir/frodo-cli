@@ -224,7 +224,7 @@ export async function deleteResourceTypes(): Promise<
   } finally {
     if (errors.length > 0) {
       if (resourceTypes.length)
-        stopProgressIndicator(indicatorId, `Error deleting all resource types`);
+        stopProgressIndicator(indicatorId, `Error deleting all resource types`, 'fail');
       for (const error of errors) {
         printError(error);
       }
@@ -560,7 +560,7 @@ export async function importResourceTypesFromFiles(): Promise<boolean> {
     debugMessage(`cli.ResourceTypeOps.importResourceTypesFromFiles: end`);
     return true;
   } catch (error) {
-    stopProgressIndicator(indicatorId, `Error importing resource types`);
+    stopProgressIndicator(indicatorId, `Error importing resource types`, 'fail');
     printError(error);
   }
   return false;

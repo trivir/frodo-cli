@@ -365,7 +365,7 @@ export async function renameMapping(
   legacy: boolean = false
 ): Promise<boolean> {
   const name = getMappingNameFromId(mappingId);
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     0,
     `Renaming mapping ${name}...`
@@ -380,7 +380,7 @@ export async function renameMapping(
     await createMapping(newId, oldMapping);
     await frodo.idm.mapping.deleteMapping(oldId);
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Successfully renamed ${name} to ${
         legacy ? 'legacy' : 'new'
       } naming scheme.`,
@@ -389,7 +389,7 @@ export async function renameMapping(
     return true;
   } catch (error) {
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       error.response ? `Error renaming mapping ${name}` : error,
       'fail'
     );
@@ -407,7 +407,7 @@ export async function renameMappings(
   legacy: boolean = false
 ): Promise<boolean> {
   const mappings = await readMappings();
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'determinate',
     mappings.length,
     `Renaming mappings...`
@@ -420,7 +420,7 @@ export async function renameMappings(
     syncAfter.push(mapping.name);
     const name = mapping.name;
     try {
-      updateProgressIndicator(spinnerId, `Renaming mapping ${name}...`);
+      updateProgressIndicator(indicatorId, `Renaming mapping ${name}...`);
       const oldId = `${legacy ? 'mapping' : 'sync'}/${name}`;
       const newId = `${legacy ? 'sync' : 'mapping'}/${name}`;
       let oldMapping;
@@ -436,7 +436,7 @@ export async function renameMappings(
       await frodo.idm.mapping.deleteMapping(oldId);
     } catch (error) {
       stopProgressIndicator(
-        spinnerId,
+        indicatorId,
         error.response ? `Error renaming mapping ${name}` : error,
         'fail'
       );
@@ -445,7 +445,7 @@ export async function renameMappings(
     }
   }
   stopProgressIndicator(
-    spinnerId,
+    indicatorId,
     `Successfully renamed ${mappings.length} mappings to ${
       legacy ? 'legacy' : 'new'
     } naming scheme.`,

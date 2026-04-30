@@ -698,7 +698,7 @@ export async function importPoliciesFromFiles(
     debugMessage(`cli.PolicyOps.importPoliciesFromFiles: end`);
     return true;
   } catch (error) {
-    stopProgressIndicator(indicatorId, `Error importing policies`);
+    stopProgressIndicator(indicatorId, `Error importing policies`, 'fail');
     printError(error);
   }
   return false;

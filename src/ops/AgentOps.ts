@@ -577,45 +577,45 @@ export async function importAgentFromFile(
       importData.agent = null;
     }
     // if an agentId was specified, only import the matching agent
-    let spinnerId: string;
+    let indicatorId: string;
     if (importData.agent) {
       if (!verbose)
-        spinnerId = createProgressIndicator(
+        indicatorId = createProgressIndicator(
           'indeterminate',
           0,
           `Importing ${agentId}...`
         );
       try {
         if (verbose)
-          spinnerId = createProgressIndicator(
+          indicatorId = createProgressIndicator(
             'indeterminate',
             0,
             `Importing ${agentId}...`
           );
         await importAgent(agentId, importData, global);
-        stopProgressIndicator(spinnerId, `Imported ${agentId}.`, 'success');
+        stopProgressIndicator(indicatorId, `Imported ${agentId}.`, 'success');
         return true;
       } catch (error) {
         if (verbose)
-          spinnerId = createProgressIndicator(
+          indicatorId = createProgressIndicator(
             'indeterminate',
             0,
             `Importing ${agentId}...`
           );
         stopProgressIndicator(
-          spinnerId,
+          indicatorId,
           `Error importing agent ${agentId}`,
           'fail'
         );
         printError(error, `Error importing agent ${agentId}`);
       }
     } else {
-      spinnerId = createProgressIndicator(
+      indicatorId = createProgressIndicator(
         'indeterminate',
         0,
         `Importing ${agentId}...`
       );
-      stopProgressIndicator(spinnerId, `${agentId} not found!`, 'fail');
+      stopProgressIndicator(indicatorId, `${agentId} not found!`, 'fail');
     }
   } catch (error) {
     printError(error, `Error importing agent ${agentId} from file`);
@@ -649,39 +649,39 @@ export async function importIdentityGatewayAgentFromFile(
       importData.agent = null;
     }
     // if an agentId was specified, only import the matching agent
-    let spinnerId: string;
+    let indicatorId: string;
     if (importData.agent) {
       if (!verbose)
-        spinnerId = createProgressIndicator(
+        indicatorId = createProgressIndicator(
           'indeterminate',
           0,
           `Importing ${agentId}...`
         );
       try {
         if (verbose)
-          spinnerId = createProgressIndicator(
+          indicatorId = createProgressIndicator(
             'indeterminate',
             0,
             `Importing ${agentId}...`
           );
         await importIdentityGatewayAgent(agentId, importData);
-        stopProgressIndicator(spinnerId, `Imported ${agentId}.`, 'success');
+        stopProgressIndicator(indicatorId, `Imported ${agentId}.`, 'success');
         return true;
       } catch (error) {
         stopProgressIndicator(
-          spinnerId,
+          indicatorId,
           `Error importing identity gateway agent ${agentId}`,
           'fail'
         );
         printError(error, `Error importing identity gateway agent ${agentId}`);
       }
     } else {
-      spinnerId = createProgressIndicator(
+      indicatorId = createProgressIndicator(
         'indeterminate',
         0,
         `Importing ${agentId}...`
       );
-      stopProgressIndicator(spinnerId, `${agentId} not found!`, 'fail');
+      stopProgressIndicator(indicatorId, `${agentId} not found!`, 'fail');
     }
     debugMessage(`cli.AgentOps.importIdentityGatewayAgentFromFile: end`);
   } catch (error) {
@@ -719,39 +719,39 @@ export async function importJavaAgentFromFile(
       importData.agent = null;
     }
     // if an agentId was specified, only import the matching agent
-    let spinnerId: string;
+    let indicatorId: string;
     if (importData.agent) {
       if (!verbose)
-        spinnerId = createProgressIndicator(
+        indicatorId = createProgressIndicator(
           'indeterminate',
           0,
           `Importing ${agentId}...`
         );
       try {
         if (verbose)
-          spinnerId = createProgressIndicator(
+          indicatorId = createProgressIndicator(
             'indeterminate',
             0,
             `Importing ${agentId}...`
           );
         await importJavaAgent(agentId, importData);
-        stopProgressIndicator(spinnerId, `Imported ${agentId}.`, 'success');
+        stopProgressIndicator(indicatorId, `Imported ${agentId}.`, 'success');
         return true;
       } catch (error) {
         stopProgressIndicator(
-          spinnerId,
+          indicatorId,
           `Error importing java agent ${agentId}`,
           'fail'
         );
         printError(error, `Error importing java agent ${agentId}`);
       }
     } else {
-      spinnerId = createProgressIndicator(
+      indicatorId = createProgressIndicator(
         'indeterminate',
         0,
         `Importing ${agentId}...`
       );
-      stopProgressIndicator(spinnerId, `${agentId} not found!`, 'fail');
+      stopProgressIndicator(indicatorId, `${agentId} not found!`, 'fail');
     }
     debugMessage(`cli.AgentOps.importJavaAgentFromFile: end`);
   } catch (error) {
@@ -786,39 +786,39 @@ export async function importWebAgentFromFile(
       importData.agent = null;
     }
     // if an agentId was specified, only import the matching agent
-    let spinnerId: string;
+    let indicatorId: string;
     if (importData.agent) {
       if (!verbose)
-        spinnerId = createProgressIndicator(
+        indicatorId = createProgressIndicator(
           'indeterminate',
           0,
           `Importing ${agentId}...`
         );
       try {
         if (verbose)
-          spinnerId = createProgressIndicator(
+          indicatorId = createProgressIndicator(
             'indeterminate',
             0,
             `Importing ${agentId}...`
           );
         await importWebAgent(agentId, importData);
-        stopProgressIndicator(spinnerId, `Imported ${agentId}.`, 'success');
+        stopProgressIndicator(indicatorId, `Imported ${agentId}.`, 'success');
         return true;
       } catch (error) {
         stopProgressIndicator(
-          spinnerId,
+          indicatorId,
           `Error importing web agent ${agentId}`,
           'fail'
         );
         printError(error, `Error importing web agent ${agentId}`);
       }
     } else {
-      spinnerId = createProgressIndicator(
+      indicatorId = createProgressIndicator(
         'indeterminate',
         0,
         `Importing ${agentId}...`
       );
-      stopProgressIndicator(spinnerId, `${agentId} not found!`, 'fail');
+      stopProgressIndicator(indicatorId, `${agentId} not found!`, 'fail');
     }
     debugMessage(`cli.AgentOps.importWebAgentFromFile: end`);
   } catch (error) {
@@ -844,25 +844,25 @@ export async function importFirstAgentFromFile(
     const importData = normalizeAgentImportData(
       JSON.parse(data) as AgentImportData
     );
-    let spinnerId: string;
+    let indicatorId: string;
     if (Object.keys(importData.agent).length > 0) {
       for (const agent of Object.values(importData.agent)) {
         if (!verbose)
-          spinnerId = createProgressIndicator(
+          indicatorId = createProgressIndicator(
             'indeterminate',
             0,
             `Importing ${agent['_id']}...`
           );
         try {
           if (verbose)
-            spinnerId = createProgressIndicator(
+            indicatorId = createProgressIndicator(
               'indeterminate',
               0,
               `Importing ${agent['_id']}...`
             );
           await importAgent(agent['_id'], importData, global);
           stopProgressIndicator(
-            spinnerId,
+            indicatorId,
             `Imported ${agent['_id']}.`,
             'success'
           );
@@ -870,19 +870,19 @@ export async function importFirstAgentFromFile(
           return true;
         } catch (error) {
           if (verbose)
-            spinnerId = createProgressIndicator(
+            indicatorId = createProgressIndicator(
               'indeterminate',
               0,
               `Importing ${agent['_id']}...`
             );
-          stopProgressIndicator(spinnerId, `${error}`, 'fail');
+          stopProgressIndicator(indicatorId, `${error}`, 'fail');
           printError(error, `Error importing first agent`);
         }
         return;
       }
     } else {
-      spinnerId = createProgressIndicator('indeterminate', 0, `Importing...`);
-      stopProgressIndicator(spinnerId, `No agents found!`, 'fail');
+      indicatorId = createProgressIndicator('indeterminate', 0, `Importing...`);
+      stopProgressIndicator(indicatorId, `No agents found!`, 'fail');
     }
   } catch (error) {
     printError(error, `Error importing first agent from file`);
@@ -905,31 +905,31 @@ export async function importFirstIdentityGatewayAgentFromFile(
     const importData = normalizeAgentImportData(
       JSON.parse(data) as AgentImportData
     );
-    let spinnerId: string;
+    let indicatorId: string;
     if (Object.keys(importData.agent).length > 0) {
       for (const agent of Object.values(importData.agent)) {
         if (!verbose)
-          spinnerId = createProgressIndicator(
+          indicatorId = createProgressIndicator(
             'indeterminate',
             0,
             `Importing ${agent['_id']}...`
           );
         try {
           if (verbose)
-            spinnerId = createProgressIndicator(
+            indicatorId = createProgressIndicator(
               'indeterminate',
               0,
               `Importing ${agent['_id']}...`
             );
           await importIdentityGatewayAgent(agent['_id'], importData);
           stopProgressIndicator(
-            spinnerId,
+            indicatorId,
             `Imported ${agent['_id']}.`,
             'success'
           );
           return true;
         } catch (error) {
-          stopProgressIndicator(spinnerId, `${error}`, 'fail');
+          stopProgressIndicator(indicatorId, `${error}`, 'fail');
           printError(
             error,
             `Error importing first identity gateway agent from file`
@@ -937,8 +937,8 @@ export async function importFirstIdentityGatewayAgentFromFile(
         }
       }
     } else {
-      spinnerId = createProgressIndicator('indeterminate', 0, `Importing...`);
-      stopProgressIndicator(spinnerId, `No agents found!`, 'fail');
+      indicatorId = createProgressIndicator('indeterminate', 0, `Importing...`);
+      stopProgressIndicator(indicatorId, `No agents found!`, 'fail');
     }
     debugMessage(`cli.AgentOps.importFirstIdentityGatewayAgentFromFile: end`);
   } catch (error) {
@@ -962,37 +962,37 @@ export async function importFirstJavaAgentFromFile(
     const importData = normalizeAgentImportData(
       JSON.parse(data) as AgentImportData
     );
-    let spinnerId: string;
+    let indicatorId: string;
     if (Object.keys(importData.agent).length > 0) {
       for (const agent of Object.values(importData.agent)) {
         if (!verbose)
-          spinnerId = createProgressIndicator(
+          indicatorId = createProgressIndicator(
             'indeterminate',
             0,
             `Importing ${agent['_id']}...`
           );
         try {
           if (verbose)
-            spinnerId = createProgressIndicator(
+            indicatorId = createProgressIndicator(
               'indeterminate',
               0,
               `Importing ${agent['_id']}...`
             );
           await importJavaAgent(agent['_id'], importData);
           stopProgressIndicator(
-            spinnerId,
+            indicatorId,
             `Imported ${agent['_id']}.`,
             'success'
           );
           return true;
         } catch (importError) {
-          stopProgressIndicator(spinnerId, `${importError}`, 'fail');
+          stopProgressIndicator(indicatorId, `${importError}`, 'fail');
         }
         return;
       }
     } else {
-      spinnerId = createProgressIndicator('indeterminate', 0, `Importing...`);
-      stopProgressIndicator(spinnerId, `No agents found!`, 'fail');
+      indicatorId = createProgressIndicator('indeterminate', 0, `Importing...`);
+      stopProgressIndicator(indicatorId, `No agents found!`, 'fail');
     }
     debugMessage(`cli.AgentOps.importFirstJavaAgentFromFile: end`);
   } catch (error) {
@@ -1016,32 +1016,32 @@ export async function importFirstWebAgentFromFile(
     const importData = normalizeAgentImportData(
       JSON.parse(data) as AgentImportData
     );
-    let spinnerId: string;
+    let indicatorId: string;
     if (Object.keys(importData.agent).length > 0) {
       for (const agent of Object.values(importData.agent)) {
         if (!verbose)
-          spinnerId = createProgressIndicator(
+          indicatorId = createProgressIndicator(
             'indeterminate',
             0,
             `Importing ${agent['_id']}...`
           );
         try {
           if (verbose)
-            spinnerId = createProgressIndicator(
+            indicatorId = createProgressIndicator(
               'indeterminate',
               0,
               `Importing ${agent['_id']}...`
             );
           await importWebAgent(agent['_id'], importData);
           stopProgressIndicator(
-            spinnerId,
+            indicatorId,
             `Imported ${agent['_id']}.`,
             'success'
           );
           return true;
         } catch (importError) {
           stopProgressIndicator(
-            spinnerId,
+            indicatorId,
             `caught it here ${importError}`,
             'fail'
           );
@@ -1049,8 +1049,8 @@ export async function importFirstWebAgentFromFile(
         break;
       }
     } else {
-      spinnerId = createProgressIndicator('indeterminate', 0, `Importing...`);
-      stopProgressIndicator(spinnerId, `No agents found!`, 'fail');
+      indicatorId = createProgressIndicator('indeterminate', 0, `Importing...`);
+      stopProgressIndicator(indicatorId, `No agents found!`, 'fail');
     }
     debugMessage(`cli.AgentOps.importFirstWebAgentFromFile: end`);
   } catch (error) {

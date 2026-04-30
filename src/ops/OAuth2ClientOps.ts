@@ -219,7 +219,7 @@ export async function exportOAuth2ClientsToFiles(
     debugMessage(`cli.OAuth2ClientOps.exportOAuth2ClientsToFiles: end`);
     return true;
   } catch (error) {
-    stopProgressIndicator(indicatorId, `Error exporting client(s) to file(s)`);
+    stopProgressIndicator(indicatorId, `Error exporting client(s) to file(s)`, 'fail');
     printError(error);
   }
   return false;
@@ -358,7 +358,7 @@ export async function importOAuth2ClientsFromFiles(
     debugMessage(`cli.OAuth2ClientOps.importOAuth2ClientsFromFiles: end`);
     return true;
   } catch (error) {
-    stopProgressIndicator(indicatorId, `Error importing oauth2 clients.`);
+    stopProgressIndicator(indicatorId, `Error importing oauth2 clients.`, 'fail');
     printError(error);
   }
   return false;
@@ -372,17 +372,17 @@ export async function importOAuth2ClientsFromFiles(
 export async function deleteOauth2ClientById(
   clientId: string
 ): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     undefined,
     `Deleting ${clientId}...`
   );
   try {
     await deleteOAuth2Client(clientId);
-    stopProgressIndicator(spinnerId, `Deleted ${clientId}.`, 'success');
+    stopProgressIndicator(indicatorId, `Deleted ${clientId}.`, 'success');
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    stopProgressIndicator(indicatorId, `Error: ${error.message}`, 'fail');
     printError(error);
   }
   return false;
