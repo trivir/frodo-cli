@@ -29,6 +29,7 @@ const {
 const { readPoliciesByPolicySet, deletePolicy } = frodo.authz.policy;
 const {
   readPolicySets,
+  countPolicySets,
   readPolicySet,
   exportPolicySet,
   exportPolicySets,
@@ -300,13 +301,16 @@ export async function exportPolicySetsToFile(
     useStringArrays: true,
   }
 ): Promise<boolean> {
-  debugMessage(`cli.PolicySetOps.exportPolicySetsToFile: begin`);
-  const indicatorId = createProgressIndicator(
-    'indeterminate',
-    0,
-    `Exporting all policy sets...`
-  );
+  let indicatorId: string;
+  const totalPolicySets = await countPolicySets();
   try {
+    debugMessage(`cli.PolicyOps.exportPoliciesToFile: begin`);
+    indicatorId = createProgressIndicator(
+      'determinate',
+      totalPolicySets,
+      `Exporting policy sets...`
+    );
+  debugMessage(`cli.PolicySetOps.exportPolicySetsToFile: begin`);
     let fileName = getTypedFilename(
       `all${titleCase(getRealmName(state.getRealm()))}PolicySets`,
       'policyset.authz'
@@ -315,7 +319,20 @@ export async function exportPolicySetsToFile(
       fileName = file;
     }
     const filePath = getFilePath(fileName, true);
-    const exportData = await exportPolicySets(options);
+    const exportData = await exportPolicySets(options, (error, result) => {
+      if (error) {
+        stopProgressIndicator(
+          indicatorId,
+          `Error exporting policy set ${result?.policyset?._id}`,
+          'fail'
+        );
+      } else {
+        updateProgressIndicator(
+          indicatorId,
+          `Exporting policy set ${result?.policyset?._id}...`
+        );
+      }
+    });
     saveJsonToFile(
       exportData,
       filePath,
@@ -323,10 +340,7 @@ export async function exportPolicySetsToFile(
       false,
       keepModifiedProperties
     );
-    stopProgressIndicator(
-      indicatorId,
-      `Exported all policy sets to ${filePath}.`,
-      'success'
+    stopProgressIndicator(indicatorId, `Exported all policy sets to ${filePath}.`
     );
     debugMessage(`cli.PolicySetOps.exportPolicySetsToFile: end`);
     return true;

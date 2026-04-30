@@ -31,6 +31,7 @@ const {
 } = frodo.utils;
 const {
   readPolicies,
+  countPolicies,
   readPoliciesByPolicySet,
   readPolicy,
   exportPolicy,
@@ -357,9 +358,15 @@ export async function exportPoliciesToFile(
     useStringArrays: true,
   }
 ): Promise<boolean> {
-  debugMessage(`cli.PolicyOps.exportPoliciesToFile: begin`);
-  showSpinner(`Exporting all policies...`);
+  let indicatorId: string;
+  const totalPolicies = await countPolicies();
   try {
+    debugMessage(`cli.PolicyOps.exportPoliciesToFile: begin`);
+    indicatorId = createProgressIndicator(
+      'determinate',
+      totalPolicies,
+      `Exporting policies...`
+    );
     let fileName = getTypedFilename(
       `all${titleCase(getRealmName(state.getRealm()))}Policies`,
       'policy.authz'
@@ -368,7 +375,20 @@ export async function exportPoliciesToFile(
       fileName = file;
     }
     const filePath = getFilePath(fileName, true);
-    const exportData = await exportPolicies(options);
+    const exportData = await exportPolicies(options, (error, result) => {
+      if (error) {
+        stopProgressIndicator(
+          indicatorId,
+          `Error exporting policy ${result?.policy?._id}`,
+          'fail'
+        );
+      } else {
+        updateProgressIndicator(
+          indicatorId,
+          `Exporting policy ${result?.policy?._id}...`
+        );
+      }
+    });
     saveJsonToFile(
       exportData,
       filePath,
@@ -376,11 +396,11 @@ export async function exportPoliciesToFile(
       false,
       keepModifiedProperties
     );
-    succeedSpinner(`Exported all policies to ${filePath}.`);
+    stopProgressIndicator(indicatorId, `Exported all policies to ${filePath}.`);
     debugMessage(`cli.PolicyOps.exportPoliciesToFile: end`);
     return true;
   } catch (error) {
-    failSpinner(`Error exporting policies`);
+    stopProgressIndicator(indicatorId, `Error exporting policies`, 'fail');
     printError(error);
   }
   return false;

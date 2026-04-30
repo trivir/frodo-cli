@@ -1,0 +1,657 @@
+{
+  "meta": {
+    "exportDate": "2026-04-30T21:05:48.181Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v22.14.0]",
+    "origin": "https://openam-frodo-dev.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  },
+  "policy": {
+    "FeatureStorePolicy": {
+      "_id": "FeatureStorePolicy",
+      "actionValues": {},
+      "active": true,
+      "applicationName": "test-policy-set",
+      "description": "FeatureStorePolicy",
+      "name": "FeatureStorePolicy",
+      "resourceTypeUuid": "76656a38-5f8e-401b-83aa-4ccb74ce88d2",
+      "resources": [
+        "https://www.example.com:443/*"
+      ],
+      "subject": {
+        "type": "NONE"
+      }
+    },
+    "Test Policy": {
+      "_id": "Test Policy",
+      "actionValues": {
+        "GET": true,
+        "POST": false
+      },
+      "active": false,
+      "applicationName": "test-policy-set",
+      "condition": {
+        "conditions": [
+          {
+            "endDate": "2023:08:02",
+            "endDay": "fri",
+            "endTime": "11:59",
+            "enforcementTimeZone": "GMT",
+            "startDate": "2023:08:01",
+            "startDay": "mon",
+            "startTime": "12:00",
+            "type": "SimpleTime"
+          },
+          {
+            "scriptId": "58d29080-4563-480b-89bb-1e7719776a21",
+            "type": "Script"
+          }
+        ],
+        "type": "AND"
+      },
+      "description": "Test Policy Description",
+      "name": "Test Policy",
+      "resourceAttributes": [
+        {
+          "propertyName": "Test_Name",
+          "propertyValues": [
+            "Test_Value"
+          ],
+          "type": "Static"
+        }
+      ],
+      "resourceTypeUuid": "76656a38-5f8e-401b-83aa-4ccb74ce88d2",
+      "resources": [
+        "lorem://ipsum:dolor/sit"
+      ],
+      "subject": {
+        "type": "NONE"
+      }
+    },
+    "Test Policy 1": {
+      "_id": "Test Policy 1",
+      "actionValues": {
+        "create": false,
+        "delete": false,
+        "read": true,
+        "update": true
+      },
+      "active": true,
+      "applicationName": "test-policy-set",
+      "condition": {
+        "conditions": [
+          {
+            "requiredScopes": [
+              "test",
+              "scope"
+            ],
+            "type": "OAuth2Scope"
+          },
+          {
+            "scriptId": "01e1a3c0-038b-4c16-956a-6c9d89328cff",
+            "type": "Script"
+          },
+          {
+            "condition": {
+              "scriptId": "05ab4a85-11ec-4a32-94cf-05bbb763c8f3",
+              "type": "Script"
+            },
+            "type": "NOT"
+          },
+          {
+            "conditions": [
+              {
+                "comparator": "REGEX",
+                "decisionField": "decision",
+                "identityResource": "resource",
+                "queryField": "query",
+                "type": "IdmUser",
+                "value": "regex"
+              },
+              {
+                "authenticateToService": "tree",
+                "type": "AuthenticateToService"
+              }
+            ],
+            "type": "OR"
+          }
+        ],
+        "type": "AND"
+      },
+      "description": "Policy Description",
+      "name": "Test Policy 1",
+      "resourceAttributes": [
+        {
+          "propertyName": "sn",
+          "propertyValues": [
+            "surName"
+          ],
+          "type": "Static"
+        },
+        {
+          "propertyName": "cn",
+          "propertyValues": [],
+          "type": "User"
+        },
+        {
+          "propertyName": "sn",
+          "propertyValues": [],
+          "type": "User"
+        },
+        {
+          "propertyName": "cn",
+          "propertyValues": [
+            "currentName"
+          ],
+          "type": "Static"
+        }
+      ],
+      "resourceTypeUuid": "f42519db-f43c-4325-b8d4-04a631ff46cb",
+      "resources": [
+        "test/hello",
+        "*/test"
+      ],
+      "subject": {
+        "subjects": [
+          {
+            "type": "AuthenticatedUsers"
+          },
+          {
+            "type": "NONE"
+          },
+          {
+            "subjects": [
+              {
+                "claimName": "claim",
+                "claimValue": "val",
+                "type": "JwtClaim"
+              }
+            ],
+            "type": "OR"
+          },
+          {
+            "subject": {
+              "subjectValues": [],
+              "type": "Identity"
+            },
+            "type": "NOT"
+          }
+        ],
+        "type": "AND"
+      }
+    },
+    "Test Policy 2": {
+      "_id": "Test Policy 2",
+      "actionValues": {
+        "create": false,
+        "delete": false,
+        "read": true,
+        "update": true
+      },
+      "active": true,
+      "applicationName": "test-policy-set",
+      "condition": {
+        "conditions": [
+          {
+            "requiredScopes": [
+              "test",
+              "scope"
+            ],
+            "type": "OAuth2Scope"
+          },
+          {
+            "scriptId": "01e1a3c0-038b-4c16-956a-6c9d89328cff",
+            "type": "Script"
+          },
+          {
+            "condition": {
+              "scriptId": "ed685f9f-5909-4726-86e8-22bd38b47663",
+              "type": "Script"
+            },
+            "type": "NOT"
+          },
+          {
+            "conditions": [
+              {
+                "comparator": "REGEX",
+                "decisionField": "decision",
+                "identityResource": "resource",
+                "queryField": "query",
+                "type": "IdmUser",
+                "value": "regex"
+              },
+              {
+                "authenticateToService": "tree",
+                "type": "AuthenticateToService"
+              }
+            ],
+            "type": "OR"
+          }
+        ],
+        "type": "AND"
+      },
+      "description": "Policy Description",
+      "name": "Test Policy 2",
+      "resourceAttributes": [
+        {
+          "propertyName": "sn",
+          "propertyValues": [
+            "surName"
+          ],
+          "type": "Static"
+        },
+        {
+          "propertyName": "cn",
+          "propertyValues": [],
+          "type": "User"
+        },
+        {
+          "propertyName": "sn",
+          "propertyValues": [],
+          "type": "User"
+        },
+        {
+          "propertyName": "cn",
+          "propertyValues": [
+            "currentName"
+          ],
+          "type": "Static"
+        }
+      ],
+      "resourceTypeUuid": "88e74fda-3e8b-47b3-b50d-22a456c9bab1",
+      "resources": [
+        "*/test2",
+        "test2/hello"
+      ],
+      "subject": {
+        "subjects": [
+          {
+            "type": "AuthenticatedUsers"
+          },
+          {
+            "type": "NONE"
+          },
+          {
+            "subjects": [
+              {
+                "claimName": "claim",
+                "claimValue": "val",
+                "type": "JwtClaim"
+              }
+            ],
+            "type": "OR"
+          },
+          {
+            "subject": {
+              "subjectValues": [],
+              "type": "Identity"
+            },
+            "type": "NOT"
+          }
+        ],
+        "type": "AND"
+      }
+    }
+  },
+  "policyset": {
+    "FeatureStorePolicySet": {
+      "applicationType": "iPlanetAMWebAgentService",
+      "attributeNames": [],
+      "conditions": [
+        "AMIdentityMembership",
+        "AND",
+        "AuthLevel",
+        "AuthScheme",
+        "AuthenticateToRealm",
+        "AuthenticateToService",
+        "IPv4",
+        "IPv6",
+        "LDAPFilter",
+        "LEAuthLevel",
+        "NOT",
+        "OAuth2Scope",
+        "OR",
+        "Policy",
+        "ResourceEnvIP",
+        "Script",
+        "Session",
+        "SessionProperty",
+        "SimpleTime",
+        "Transaction"
+      ],
+      "description": null,
+      "displayName": "FeatureStorePolicySet",
+      "editable": true,
+      "entitlementCombiner": "DenyOverride",
+      "name": "FeatureStorePolicySet",
+      "resourceComparator": null,
+      "resourceTypeUuids": [
+        "76656a38-5f8e-401b-83aa-4ccb74ce88d2"
+      ],
+      "saveIndex": null,
+      "searchIndex": null,
+      "subjects": [
+        "AND",
+        "AuthenticatedUsers",
+        "Identity",
+        "JwtClaim",
+        "NONE",
+        "NOT",
+        "OR",
+        "Policy"
+      ]
+    },
+    "customerApplicationPolicySet": {
+      "applicationType": "authenticationApplicationType",
+      "attributeNames": [],
+      "conditions": [
+        "Policy",
+        "LEAuthLevel",
+        "AuthenticateToService",
+        "Script",
+        "SimpleTime",
+        "OR",
+        "AMIdentityMembership",
+        "IPv6",
+        "IPv4",
+        "Expiration",
+        "SessionProperty",
+        "Json",
+        "IdmUser",
+        "AuthScheme",
+        "AuthLevel",
+        "NOT",
+        "Transaction",
+        "AuthenticateToRealm",
+        "ResourceEnvIP",
+        "AND",
+        "LDAPFilter",
+        "ClientId",
+        "OAuth2Scope",
+        "Session"
+      ],
+      "description": "Contains policies to be used by the customer application policy decision node.",
+      "displayName": "Customer Application Policy Set",
+      "editable": true,
+      "entitlementCombiner": "DenyOverride",
+      "name": "customerApplicationPolicySet",
+      "resourceComparator": null,
+      "resourceTypeUuids": [
+        "authenticationResourceType"
+      ],
+      "saveIndex": null,
+      "searchIndex": null,
+      "subjects": [
+        "Policy",
+        "ResourceOwnerInGroup",
+        "NOT",
+        "OR",
+        "JwtClaim",
+        "AuthenticatedUsers",
+        "AND",
+        "Uma",
+        "NONE",
+        "Identity",
+        "ResourceOwnerPresent"
+      ]
+    },
+    "oauth2Scopes": {
+      "applicationType": "iPlanetAMWebAgentService",
+      "attributeNames": [],
+      "conditions": [
+        "Script",
+        "AMIdentityMembership",
+        "IPv6",
+        "SimpleTime",
+        "IPv4",
+        "LEAuthLevel",
+        "LDAPFilter",
+        "AuthScheme",
+        "Session",
+        "AND",
+        "AuthenticateToRealm",
+        "ResourceEnvIP",
+        "SessionProperty",
+        "OAuth2Scope",
+        "OR",
+        "Transaction",
+        "NOT",
+        "AuthLevel",
+        "AuthenticateToService"
+      ],
+      "description": "The built-in Application used by the OAuth2 scope authorization process.",
+      "displayName": "Default OAuth2 Scopes Policy Set",
+      "editable": true,
+      "entitlementCombiner": "DenyOverride",
+      "name": "oauth2Scopes",
+      "resourceComparator": null,
+      "resourceTypeUuids": [
+        "d60b7a71-1dc6-44a5-8e48-e4b9d92dee8b"
+      ],
+      "saveIndex": null,
+      "searchIndex": null,
+      "subjects": [
+        "AuthenticatedUsers",
+        "NOT",
+        "Identity",
+        "OR",
+        "AND",
+        "NONE",
+        "JwtClaim"
+      ]
+    },
+    "test-policy-set": {
+      "applicationType": "iPlanetAMWebAgentService",
+      "attributeNames": [],
+      "conditions": [
+        "AMIdentityMembership",
+        "AND",
+        "AuthLevel",
+        "AuthScheme",
+        "AuthenticateToRealm",
+        "AuthenticateToService",
+        "IPv4",
+        "IPv6",
+        "LDAPFilter",
+        "LEAuthLevel",
+        "NOT",
+        "OAuth2Scope",
+        "OR",
+        "Policy",
+        "ResourceEnvIP",
+        "Script",
+        "Session",
+        "SessionProperty",
+        "SimpleTime",
+        "Transaction"
+      ],
+      "description": "Test Policy Set Description",
+      "displayName": "Test Policy Set",
+      "editable": true,
+      "entitlementCombiner": "DenyOverride",
+      "name": "test-policy-set",
+      "resourceComparator": null,
+      "resourceTypeUuids": [
+        "76656a38-5f8e-401b-83aa-4ccb74ce88d2"
+      ],
+      "saveIndex": null,
+      "searchIndex": null,
+      "subjects": [
+        "AND",
+        "AuthenticatedUsers",
+        "Identity",
+        "JwtClaim",
+        "NONE",
+        "NOT",
+        "OR",
+        "Policy"
+      ]
+    }
+  },
+  "resourcetype": {},
+  "script": {
+    "01e1a3c0-038b-4c16-956a-6c9d89328cff": {
+      "_id": "01e1a3c0-038b-4c16-956a-6c9d89328cff",
+      "context": "AUTHENTICATION_TREE_DECISION_NODE",
+      "default": true,
+      "description": "Default global script for a scripted decision node",
+      "evaluatorVersion": "1.0",
+      "language": "JAVASCRIPT",
+      "name": "Authentication Tree Decision Node Script",
+      "script": [
+        "/*",
+        "  - Data made available by nodes that have already executed are available in the sharedState variable.",
+        "  - The script should set outcome to either \"true\" or \"false\".",
+        " */",
+        "",
+        "outcome = \"true\";",
+        ""
+      ]
+    },
+    "05ab4a85-11ec-4a32-94cf-05bbb763c8f3": {
+      "_id": "05ab4a85-11ec-4a32-94cf-05bbb763c8f3",
+      "context": "SAML2_SP_ACCOUNT_MAPPER",
+      "default": true,
+      "description": "Default global script for SAML2 SP Account Mapper",
+      "evaluatorVersion": "2.0",
+      "language": "JAVASCRIPT",
+      "name": "SAML2 SP Account Mapper Script",
+      "script": [
+        "/*",
+        " * Copyright 2025 Ping Identity Corporation. All Rights Reserved",
+        " *",
+        " * This code is to be used exclusively in connection with Ping Identity",
+        " * Corporation software or services. Ping Identity Corporation only offers",
+        " * such software or services to legal entities who have entered into a",
+        " * binding license agreement with Ping Identity Corporation.",
+        " */",
+        "",
+        "/*",
+        " * This script returns the user's distinguished name or the universal ID for the corresponding SAML Assertion.",
+        " *",
+        " * Defined variables:",
+        " * hostedEntityId - String (primitive).",
+        " *      The hosted entity ID.",
+        " * assertion - Map",
+        " *      Map of the SAML Assertion.",
+        " * realm - String (primitive).",
+        " *      The name of the realm the user is authenticating to.",
+        " * accountMapperHelper - SpAccountMapperScriptHelper",
+        " *      An SpAccountMapperScriptHelper instance containing convenience methods used for SP account mapping.",
+        " *",
+        " * Return - a String containing the user's distinguished name or the universal ID. Return null if no user can be mapped.",
+        " *",
+        " * Example return values:",
+        " *      \"uid=jdoe,ou=people,dc=example,dc=com\" - the SP user's distinguished name",
+        " *      \"jdoe\" - the SP user's universal ID",
+        " *      null - no user has been mapped thus requiring the user to enter their SP credentials",
+        " *      \"prefix-\" + nameID[\"value\"] - the NameID value with a hardcoded prefix of \"prefix-\"",
+        " */",
+        "",
+        "/**",
+        " * Default SAML2 SP Account Mapper.",
+        " */",
+        "function getIdentity() {",
+        "    const debugMethod = \"ScriptedSPAccountMapper.getIdentity:: \";",
+        "",
+        "    var nameID = accountMapperHelper.getNameID();",
+        "",
+        "    var userID = null;",
+        "    var isTransient = accountMapperHelper.isTransientNameId(nameID[\"format\"]);",
+        "    if (isTransient) {",
+        "        userID = accountMapperHelper.getTransientUserForSP();",
+        "        accountMapperHelper.validateUserId(userID);",
+        "    }",
+        "",
+        "    if (userID != null && userID.length > 0) {",
+        "        logger.debug(debugMethod + \" use Transient user as userID:\" + userID);",
+        "        return userID;",
+        "    }",
+        "",
+        "    userID = accountMapperHelper.getAutoFedUser(nameID[\"value\"]);",
+        "    if (userID != null && userID.length > 0) {",
+        "        logger.debug(debugMethod + \" use AutoFedUser as userID:\" + userID);",
+        "        return userID;",
+        "    } else {",
+        "        if (accountMapperHelper.useNameIDAsSPUserID() && !accountMapperHelper.isAutoFedEnabled()) {",
+        "            logger.debug(debugMethod + \" use NameID value as userID:\" + nameID[\"value\"]);",
+        "            accountMapperHelper.validateUserId(nameID[\"value\"]);",
+        "            return nameID[\"value\"];",
+        "        } else {",
+        "            return null;",
+        "        }",
+        "    }",
+        "}",
+        "",
+        "getIdentity();"
+      ]
+    },
+    "58d29080-4563-480b-89bb-1e7719776a21": {
+      "_id": "58d29080-4563-480b-89bb-1e7719776a21",
+      "context": "SOCIAL_IDP_PROFILE_TRANSFORMATION",
+      "default": true,
+      "description": "Normalizes raw profile data from Google",
+      "evaluatorVersion": "1.0",
+      "language": "GROOVY",
+      "name": "Google Profile Normalization",
+      "script": [
+        "/*",
+        " * Copyright 2020 ForgeRock AS. All Rights Reserved",
+        " *",
+        " * Use of this code requires a commercial software license with ForgeRock AS.",
+        " * or with one of its affiliates. All use shall be exclusively subject",
+        " * to such license between the licensee and ForgeRock AS.",
+        " */",
+        "",
+        "import static org.forgerock.json.JsonValue.field",
+        "import static org.forgerock.json.JsonValue.json",
+        "import static org.forgerock.json.JsonValue.object",
+        "",
+        "return json(object(",
+        "        field(\"id\", rawProfile.sub),",
+        "        field(\"displayName\", rawProfile.name),",
+        "        field(\"givenName\", rawProfile.given_name),",
+        "        field(\"familyName\", rawProfile.family_name),",
+        "        field(\"photoUrl\", rawProfile.picture),",
+        "        field(\"email\", rawProfile.email),",
+        "        field(\"username\", rawProfile.email),",
+        "        field(\"locale\", rawProfile.locale)))"
+      ]
+    },
+    "ed685f9f-5909-4726-86e8-22bd38b47663": {
+      "_id": "ed685f9f-5909-4726-86e8-22bd38b47663",
+      "context": "SOCIAL_IDP_PROFILE_TRANSFORMATION",
+      "default": true,
+      "description": "Converts a normalized social profile into an Identity",
+      "evaluatorVersion": "1.0",
+      "language": "GROOVY",
+      "name": "Normalized Profile to Identity",
+      "script": [
+        "/*",
+        " * Copyright 2021-2025 Ping Identity Corporation. All Rights Reserved",
+        " *",
+        " * This code is to be used exclusively in connection with Ping Identity",
+        " * Corporation software or services. Ping Identity Corporation only offers",
+        " * such software or services to legal entities who have entered into a",
+        " * binding license agreement with Ping Identity Corporation.",
+        " */",
+        "",
+        "import static org.forgerock.json.JsonValue.field",
+        "import static org.forgerock.json.JsonValue.json",
+        "import static org.forgerock.json.JsonValue.object",
+        "",
+        "import org.forgerock.json.JsonValue",
+        "",
+        "JsonValue identity = json(object(",
+        "        field(\"givenName\", normalizedProfile.givenName),",
+        "        field(\"sn\", normalizedProfile.familyName),",
+        "        field(\"mail\", normalizedProfile.email),",
+        "        field(\"cn\", normalizedProfile.displayName),",
+        "        field(\"userName\", normalizedProfile.username),",
+        "        field(\"iplanet-am-user-alias-list\", selectedIdp + '-' + normalizedProfile.id.asString())))",
+        "",
+        "return identity"
+      ]
+    }
+  }
+}
