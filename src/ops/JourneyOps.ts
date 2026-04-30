@@ -228,10 +228,10 @@ export async function exportJourneysToFile(
       file = getTypedFilename(`all${getRealmString()}Journeys`, 'journey');
     }
     const filePath = getFilePath(file, true);
-    const journeyIds = await countJourneys();
+    const totalJournies = await countJourneys();
     const indicatorId = createProgressIndicator(
       'determinate',
-      journeyIds,
+      totalJournies,
       'Exporting journeys...'
     );
     try {

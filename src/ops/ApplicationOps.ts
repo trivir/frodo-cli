@@ -216,12 +216,12 @@ export async function exportApplicationsToFile(
   options: ApplicationExportOptions = { useStringArrays: true, deps: true }
 ): Promise<boolean> {
   let indicatorId: string;
-  const applicationIds = await queryApplications('true', ['_id']);
+  const totalApplications = await queryApplications('true', ['_id']);
   try {
     debugMessage(`cli.ApplicationOps.exportApplicationsToFile: begin`);
     indicatorId = createProgressIndicator(
       'determinate',
-      applicationIds.length,
+      totalApplications.length,
       `Exporting applications...`
     );
     let fileName = getTypedFilename(
@@ -247,7 +247,7 @@ export async function exportApplicationsToFile(
       }
     });
     saveJsonToFile(exportData, filePath, includeMeta);
-    stopProgressIndicator(indicatorId, `Exported applications to ${filePath}.`);
+    stopProgressIndicator(indicatorId, `Exported all applications to ${filePath}.`);
     debugMessage(`cli.ApplicationOps.exportApplicationsToFile: end`);
     return true;
   } catch (error) {
