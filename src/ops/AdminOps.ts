@@ -1122,7 +1122,7 @@ export async function generateRfc7523AuthZGrantArtefacts(
     issuer: OAuth2TrustedJwtIssuerSkeleton;
   };
   try {
-    const barId = createProgressIndicator(
+    const indicatorId = createProgressIndicator(
       'determinate',
       options.save ? 3 : 1,
       'Generating artefacts...'
@@ -1135,33 +1135,33 @@ export async function generateRfc7523AuthZGrantArtefacts(
       scope,
       options
     );
-    updateProgressIndicator(barId, 'Successfully generated artefacts.');
+    updateProgressIndicator(indicatorId, 'Successfully generated artefacts.');
     let jwkFile: string;
     let jwksFile: string;
     if (options.save) {
-      const jwkBarId = createProgressIndicator(
+      const jwkindicatorId = createProgressIndicator(
         'determinate',
         1,
         'Saving JWK (private key)...'
       );
       jwkFile = getJwkFilePath(clientId);
       saveJsonToFile(artefacts.jwk, jwkFile, false);
-      updateProgressIndicator(jwkBarId, `Saved JWK to ${jwkFile}.`);
-      updateProgressIndicator(barId, 'Successfully saved JWK (private key).');
-      stopProgressIndicator(jwkBarId);
-      const jwksBarId = createProgressIndicator(
+      updateProgressIndicator(jwkindicatorId, `Saved JWK to ${jwkFile}.`);
+      updateProgressIndicator(indicatorId, 'Successfully saved JWK (private key).');
+      stopProgressIndicator(jwkindicatorId);
+      const jwksindicatorId = createProgressIndicator(
         'determinate',
         1,
         'Saving JWKS (public key)...'
       );
       jwksFile = getJwksFilePath(clientId);
       saveJsonToFile(artefacts.jwks, jwksFile, false);
-      updateProgressIndicator(jwksBarId, `Saved JWKS to ${jwksFile}.`);
-      stopProgressIndicator(jwksBarId);
-      updateProgressIndicator(barId, 'Successfully saved JWKS (public key).');
+      updateProgressIndicator(jwksindicatorId, `Saved JWKS to ${jwksFile}.`);
+      stopProgressIndicator(jwksindicatorId);
+      updateProgressIndicator(indicatorId, 'Successfully saved JWKS (public key).');
     }
     stopProgressIndicator(
-      barId,
+      indicatorId,
       `Successfully generated ${
         options.save ? 'and saved artefacts' : 'artefacts'
       }.`
@@ -1272,14 +1272,14 @@ export async function executeRfc7523AuthZGrantFlow(
   json?: boolean
 ): Promise<boolean> {
   let tokenResponse: AccessTokenResponseType;
-  let spinnerId: string;
+  let indicatorId: string;
   try {
     let issuer: OAuth2TrustedJwtIssuerSkeleton;
     // make sure we have an issuer
     if (!iss) {
-      let issSpinnerId: string;
+      let issindicatorId: string;
       try {
-        issSpinnerId = createProgressIndicator(
+        issindicatorId = createProgressIndicator(
           'indeterminate',
           0,
           'No issuer provided, attempting to find suitable issuer...'
@@ -1288,13 +1288,13 @@ export async function executeRfc7523AuthZGrantFlow(
           issuer = await readOAuth2TrustedJwtIssuer(clientId + '-issuer');
         iss = (issuer.issuer as Writable<string>).value;
         stopProgressIndicator(
-          issSpinnerId,
+          issindicatorId,
           `Found suitable issuer: ${clientId + '-issuer'} - ${iss}`,
           'success'
         );
       } catch (error) {
         stopProgressIndicator(
-          issSpinnerId,
+          issindicatorId,
           `No issuer provided and no suitable issuer could be found: ${error.message}`,
           'fail'
         );
@@ -1302,22 +1302,22 @@ export async function executeRfc7523AuthZGrantFlow(
     }
     // make sure we have a JWK
     if (!jwk) {
-      let jwkSpinnerId: string;
+      let jwkindicatorId: string;
       try {
-        jwkSpinnerId = createProgressIndicator(
+        jwkindicatorId = createProgressIndicator(
           'indeterminate',
           0,
           'No JWK provided, attempting to locate a suitable JWK...'
         );
         jwk = JSON.parse(fs.readFileSync(getJwkFilePath(clientId), 'utf8'));
         stopProgressIndicator(
-          jwkSpinnerId,
+          jwkindicatorId,
           `Loaded private key JWK from: ${getJwkFilePath(clientId)}`,
           'success'
         );
       } catch (error) {
         stopProgressIndicator(
-          jwkSpinnerId,
+          jwkindicatorId,
           `No JWK provided and no suitable JWK could be loaded from file: ${error.message}`,
           'fail'
         );
@@ -1325,9 +1325,9 @@ export async function executeRfc7523AuthZGrantFlow(
     }
     // make sure we have a subject
     if (!sub) {
-      let subSpinnerId: string;
+      let subindicatorId: string;
       try {
-        subSpinnerId = createProgressIndicator(
+        subindicatorId = createProgressIndicator(
           'indeterminate',
           0,
           'Executing rfc7523 authz grant flow...'
@@ -1343,27 +1343,27 @@ export async function executeRfc7523AuthZGrantFlow(
           sub = (issuer.allowedSubjects as Writable<string[]>).value[0];
       } catch (error) {
         stopProgressIndicator(
-          subSpinnerId,
+          subindicatorId,
           `No subject provided and no suitable subject could be extracted from the trusted issuer configuration: ${error.message}`,
           'fail'
         );
       }
       if (sub) {
         stopProgressIndicator(
-          subSpinnerId,
+          subindicatorId,
           `Using first subject from issuer's allowed subjects: ${sub}`,
           'success'
         );
       } else {
         stopProgressIndicator(
-          subSpinnerId,
+          subindicatorId,
           `No subject provided and no suitable subject could be extracted from the trusted issuer's list of allowed subjects.`,
           'success'
         );
       }
     }
     // we got everything we need, let's get that token
-    spinnerId = createProgressIndicator(
+    indicatorId = createProgressIndicator(
       'indeterminate',
       0,
       'Executing rfc7523 authz grant flow...'
@@ -1376,13 +1376,13 @@ export async function executeRfc7523AuthZGrantFlow(
       scope
     );
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       'Successfully executed rfc7523 authz grant flow.',
       'success'
     );
   } catch (error) {
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Error executing rfc7523 authz grant flow: ${stringify(
         error.response?.data || error.message
       )}`,

@@ -54,10 +54,10 @@ export async function listVariables(
   usage: boolean = false,
   file: string | null = null
 ): Promise<boolean> {
-  let spinnerId: string;
+  let indicatorId: string;
   let variables: VariableSkeleton[] = [];
   try {
-    spinnerId = createProgressIndicator(
+    indicatorId = createProgressIndicator(
       'indeterminate',
       0,
       `Reading variables...`
@@ -65,12 +65,12 @@ export async function listVariables(
     variables = await readVariables();
     variables.sort((a, b) => a._id.localeCompare(b._id));
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Successfully read ${variables.length} variables.`,
       'success'
     );
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error reading variables`, 'fail');
+    stopProgressIndicator(indicatorId, `Error reading variables`, 'fail');
     printError(error);
     return false;
   }
@@ -150,7 +150,7 @@ export async function createVariable(
   description: string,
   type: VariableExpressionType = 'string'
 ): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     0,
     `Creating variable ${variableId}...`
@@ -158,14 +158,14 @@ export async function createVariable(
   try {
     await _updateVariable(variableId, value, description, type);
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Created variable ${variableId}`,
       'success'
     );
     return true;
   } catch (error) {
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       error.response ? `Error creating variable ${variableId}` : error,
       'fail'
     );
@@ -186,7 +186,7 @@ export async function updateVariable(
   value: string,
   description: string
 ): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     0,
     `Updating variable ${variableId}...`
@@ -194,14 +194,14 @@ export async function updateVariable(
   try {
     await _updateVariable(variableId, value, description);
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Updated variable ${variableId}`,
       'success'
     );
     return true;
   } catch (error) {
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Error updating variable ${variableId}`,
       'fail'
     );
@@ -220,7 +220,7 @@ export async function setVariableDescription(
   variableId: string,
   description: string
 ): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     0,
     `Setting description of variable ${variableId}...`
@@ -228,14 +228,14 @@ export async function setVariableDescription(
   try {
     await updateVariableDescription(variableId, description);
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Set description of variable ${variableId}`,
       'success'
     );
     return true;
   } catch (error) {
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Error setting description of variable ${variableId}`,
       'fail'
     );
@@ -250,7 +250,7 @@ export async function setVariableDescription(
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function deleteVariableById(variableId: string): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     0,
     `Deleting variable ${variableId}...`
@@ -258,14 +258,14 @@ export async function deleteVariableById(variableId: string): Promise<boolean> {
   try {
     await deleteVariable(variableId);
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Deleted variable ${variableId}`,
       'success'
     );
     return true;
   } catch (error) {
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Error deleting variable ${variableId}`,
       'fail'
     );
@@ -304,7 +304,7 @@ export async function deleteVariables(): Promise<boolean> {
     stopProgressIndicator(indicatorId, `Variables deleted`);
     return true;
   } catch (error) {
-    stopProgressIndicator(indicatorId, `Error deleting variables`);
+    stopProgressIndicator(indicatorId, `Error deleting variables`, 'fail');
     printError(error);
   }
   return false;
@@ -470,7 +470,7 @@ export async function exportVariablesToFile(
   debugMessage(
     `Cli.VariablesOps.exportVariablesToFile: start [file=${file}, noDecode=${noDecode}]`
   );
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     0,
     `Exporting variables...`
@@ -488,14 +488,14 @@ export async function exportVariablesToFile(
       keepModifiedProperties
     );
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Exported variables to ${file}`,
       'success'
     );
     return true;
   } catch {
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Error exporting variables to ${getFilePath(file)['brightCyan']}`,
       'fail'
     );
@@ -664,7 +664,7 @@ export async function importVariablesFromFiles(): Promise<boolean> {
     debugMessage(`cli.VariablesOps.importVariablesFromFiles: end`);
     return true;
   } catch (error) {
-    stopProgressIndicator(indicatorId, `Error importing variables`);
+    stopProgressIndicator(indicatorId, `Error importing variables`, 'fail');
     printError(error);
   }
   return false;

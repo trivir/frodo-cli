@@ -56,10 +56,10 @@ export async function listSecrets(
   usage: boolean = false,
   file: string | null = null
 ): Promise<boolean> {
-  let spinnerId: string;
+  let indicatorId: string;
   let secrets: SecretSkeleton[] = [];
   try {
-    spinnerId = createProgressIndicator(
+    indicatorId = createProgressIndicator(
       'indeterminate',
       0,
       `Reading secrets...`
@@ -67,12 +67,12 @@ export async function listSecrets(
     secrets = await readSecrets();
     secrets.sort((a, b) => a._id.localeCompare(b._id));
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Successfully read ${secrets.length} secrets.`,
       'success'
     );
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error reading secrets`, 'fail');
+    stopProgressIndicator(indicatorId, `Error reading secrets`, 'fail');
     printError(error);
     return false;
   }
@@ -159,17 +159,17 @@ export async function createSecret(
   useInPlaceholders: boolean
 ): Promise<boolean> {
   let outcome = false;
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     0,
     `Creating secret ${id}...`
   );
   try {
     await _createSecret(id, value, description, encoding, useInPlaceholders);
-    stopProgressIndicator(spinnerId, `Created secret ${id}`, 'success');
+    stopProgressIndicator(indicatorId, `Created secret ${id}`, 'success');
     outcome = true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error creating secret ${id}`, 'fail');
+    stopProgressIndicator(indicatorId, `Error creating secret ${id}`, 'fail');
     printError(error);
   }
   return outcome;
@@ -193,18 +193,18 @@ export async function createSecretFromFile(
 ): Promise<boolean> {
   let outcome = false;
   const value = fs.readFileSync(getFilePath(file), 'utf8');
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     0,
     `Creating secret ${id}...`
   );
   try {
     await _createSecret(id, value, description, encoding, useInPlaceholders);
-    stopProgressIndicator(spinnerId, `Created secret ${id}`, 'success');
+    stopProgressIndicator(indicatorId, `Created secret ${id}`, 'success');
     outcome = true;
   } catch (error) {
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Error creating secret ${id} from file ${getFilePath(file)}`,
       'fail'
     );
@@ -224,7 +224,7 @@ export async function setSecretDescription(
   description: string
 ): Promise<boolean> {
   let outcome = false;
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     0,
     `Setting description of secret ${secretId}...`
@@ -232,14 +232,14 @@ export async function setSecretDescription(
   try {
     await updateSecretDescription(secretId, description);
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Set description of secret ${secretId}`,
       'success'
     );
     outcome = true;
   } catch (error) {
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Error creating secret ${secretId}`,
       'fail'
     );
@@ -255,18 +255,18 @@ export async function setSecretDescription(
  */
 export async function deleteSecret(secretId: string): Promise<boolean> {
   let outcome = false;
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     0,
     `Deleting secret ${secretId}...`
   );
   try {
     await _deleteSecret(secretId);
-    stopProgressIndicator(spinnerId, `Deleted secret ${secretId}`, 'success');
+    stopProgressIndicator(indicatorId, `Deleted secret ${secretId}`, 'success');
     outcome = true;
   } catch (error) {
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Error deleting secret ${secretId}`,
       'fail'
     );
@@ -325,17 +325,17 @@ export async function listSecretVersions(
   secretId: string,
   json = false
 ): Promise<boolean> {
-  let spinnerId: string;
+  let indicatorId: string;
   let versions: VersionOfSecretSkeleton[] = [];
   try {
-    spinnerId = createProgressIndicator(
+    indicatorId = createProgressIndicator(
       'indeterminate',
       0,
       `Reading secret versions...`
     );
     versions = await readVersionsOfSecret(secretId);
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Successfully read ${versions.length} secret versions.`,
       'success'
     );
@@ -365,7 +365,7 @@ export async function listSecretVersions(
     printMessage(table.toString(), 'data');
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error reading secret versions`, 'fail');
+    stopProgressIndicator(indicatorId, `Error reading secret versions`, 'fail');
     printError(error);
   }
   return false;
@@ -480,9 +480,9 @@ export async function exportSecretToFile(
     fileName = getTypedFilename(secretId, 'secret');
   }
   const filePath = getFilePath(fileName, true);
-  let spinnerId: string;
+  let indicatorId: string;
   try {
-    spinnerId = createProgressIndicator(
+    indicatorId = createProgressIndicator(
       'indeterminate',
       0,
       `Exporting secret ${secretId}`
@@ -496,7 +496,7 @@ export async function exportSecretToFile(
       keepModifiedProperties
     );
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Exported ${secretId['brightCyan']} to ${filePath['brightCyan']}.`,
       'success'
     );
@@ -506,7 +506,7 @@ export async function exportSecretToFile(
     return true;
   } catch (error) {
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Error exporting secret ${secretId} to ${filePath}`,
       'fail'
     );
@@ -725,7 +725,7 @@ export async function importSecretsFromFiles(
     debugMessage(`cli.SecretsOps.importSecretsFromFiles: end`);
     return true;
   } catch (error) {
-    stopProgressIndicator(indicatorId, `Error importing secrets`);
+    stopProgressIndicator(indicatorId, `Error importing secrets`, 'fail');
     printError(error);
   }
   return false;
@@ -741,7 +741,7 @@ export async function createVersionOfSecret(
   secretId: string,
   value: string
 ): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     0,
     `Creating new version of secret ${secretId}...`
@@ -749,14 +749,14 @@ export async function createVersionOfSecret(
   try {
     const version = await _createVersionOfSecret(secretId, value);
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Created version ${version.version} of secret ${secretId}`,
       'success'
     );
     return true;
   } catch (error) {
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Error creating new version of secret ${secretId}`,
       'fail'
     );
@@ -775,24 +775,24 @@ export async function createVersionOfSecretFromFile(
   secretId: string,
   file: string
 ): Promise<boolean> {
-  let spinnerId: string;
+  let indicatorId: string;
   try {
     const value = fs.readFileSync(getFilePath(file), 'utf8');
-    spinnerId = createProgressIndicator(
+    indicatorId = createProgressIndicator(
       'indeterminate',
       0,
       `Creating new version of secret ${secretId}...`
     );
     const version = await _createVersionOfSecret(secretId, value);
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Created version ${version.version} of secret ${secretId}`,
       'success'
     );
     return true;
   } catch (error) {
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Error creating new version of secret ${secretId} from ${getFilePath(
         file
       )}`,
@@ -813,23 +813,23 @@ export async function activateVersionOfSecret(
   secretId: string,
   version: string
 ): Promise<boolean> {
-  let spinnerId: string;
+  let indicatorId: string;
   try {
-    spinnerId = createProgressIndicator(
+    indicatorId = createProgressIndicator(
       'indeterminate',
       0,
       `Activating version ${version} of secret ${secretId}...`
     );
     await enableVersionOfSecret(secretId, version);
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Activated version ${version} of secret ${secretId}`,
       'success'
     );
     return true;
   } catch (error) {
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Error activating version ${version} of secret ${secretId}`,
       'fail'
     );
@@ -848,23 +848,23 @@ export async function deactivateVersionOfSecret(
   secretId: string,
   version: string
 ): Promise<boolean> {
-  let spinnerId: string;
+  let indicatorId: string;
   try {
-    const spinnerId = createProgressIndicator(
+    const indicatorId = createProgressIndicator(
       'indeterminate',
       0,
       `Deactivating version ${version} of secret ${secretId}...`
     );
     await disableVersionOfSecret(secretId, version);
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Deactivated version ${version} of secret ${secretId}`,
       'success'
     );
     return true;
   } catch (error) {
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Error deactivating version ${version} of secret ${secretId}`,
       'fail'
     );
@@ -883,23 +883,23 @@ export async function deleteVersionOfSecret(
   secretId: string,
   version: string
 ): Promise<boolean> {
-  let spinnerId: string;
+  let indicatorId: string;
   try {
-    spinnerId = createProgressIndicator(
+    indicatorId = createProgressIndicator(
       'indeterminate',
       0,
       `Deleting version ${version} of secret ${secretId}...`
     );
     await _deleteVersionOfSecret(secretId, version);
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Deleted version ${version} of secret ${secretId}`,
       'success'
     );
     return true;
   } catch (error) {
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Error deleting version ${version} of secret ${secretId}`,
       'fail'
     );

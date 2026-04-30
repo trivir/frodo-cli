@@ -39,6 +39,7 @@ const {
   getWorkingDirectory,
 } = frodo.utils;
 const {
+  countJourneys,
   readJourneys,
   exportJourney,
   exportJourneys,
@@ -69,7 +70,7 @@ export async function listJourneys(long: boolean = false): Promise<boolean> {
       }
       return true;
     } else {
-      const spinnerId = createProgressIndicator(
+      const indicatorId = createProgressIndicator(
         'indeterminate',
         0,
         `Retrieving details of all journeys...`
@@ -87,7 +88,7 @@ export async function listJourneys(long: boolean = false): Promise<boolean> {
         }
         const journeyExports = await Promise.all(exportPromises);
         stopProgressIndicator(
-          spinnerId,
+          indicatorId,
           'Retrieved details of all journeys.',
           'success'
         );
@@ -134,7 +135,7 @@ export async function listJourneys(long: boolean = false): Promise<boolean> {
         return true;
       } catch (error) {
         stopProgressIndicator(
-          spinnerId,
+          indicatorId,
           'Error retrieving details of all journeys.',
           'fail'
         );
@@ -171,9 +172,9 @@ export async function exportJourneyToFile(
     file = getTypedFilename(journeyId, 'journey');
   }
   const filePath = getFilePath(file, true);
-  let spinnerId: string;
+  let indicatorId: string;
   if (!verbose)
-    spinnerId = createProgressIndicator('indeterminate', 0, `${journeyId}`);
+    indicatorId = createProgressIndicator('indeterminate', 0, `${journeyId}`);
   try {
     const fileData: SingleTreeExportInterface = await exportJourney(
       journeyId,
@@ -181,23 +182,23 @@ export async function exportJourneyToFile(
     );
     delete fileData.meta;
     if (verbose)
-      spinnerId = createProgressIndicator('indeterminate', 0, `${journeyId}`);
+      indicatorId = createProgressIndicator('indeterminate', 0, `${journeyId}`);
     saveJsonToFile(
       { trees: { [fileData.tree._id]: fileData } },
       filePath,
       includeMeta
     );
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Exported ${journeyId['brightCyan']} to ${filePath['brightCyan']}.`,
       'success'
     );
     return true;
   } catch (error) {
     if (verbose)
-      spinnerId = createProgressIndicator('indeterminate', 0, `${journeyId}`);
+      indicatorId = createProgressIndicator('indeterminate', 0, `${journeyId}`);
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Error exporting journey ${journeyId}: ${error}`,
       'fail'
     );
@@ -227,15 +228,37 @@ export async function exportJourneysToFile(
       file = getTypedFilename(`all${getRealmString()}Journeys`, 'journey');
     }
     const filePath = getFilePath(file, true);
-    const fileData: MultiTreeExportInterface = await exportJourneys(
-      options,
-      errorHandler
+    const journeyIds = await countJourneys();
+    const indicatorId = createProgressIndicator(
+      'determinate',
+      journeyIds,
+      'Exporting journeys...'
     );
-    saveJsonToFile(fileData, filePath, includeMeta);
+    try {
+      const fileData: MultiTreeExportInterface = await exportJourneys(
+        options,
+        (error, result) => {
+          updateProgressIndicator(
+            indicatorId,
+            `Exporting ${result?.tree?._id}...`
+          );
+          errorHandler(error);
+        }
+      );
+      saveJsonToFile(fileData, filePath, includeMeta);
+      stopProgressIndicator(indicatorId, `Journeys saved to ${filePath}`);
+    } catch {
+      stopProgressIndicator(
+        indicatorId,
+        `Error saving journeys to ${filePath}`,
+        'fail'
+      );
+    }
     return true;
   } catch (error) {
     printError(error);
   }
+  return false;
 }
 
 /**
@@ -257,13 +280,12 @@ export async function exportJourneysToFiles(
     const trees = Object.entries(journeysExport.trees);
     for (const [treeId, treeValue] of trees) {
       const indicatorId = createProgressIndicator(
-        'determinate',
-        1,
+        'indeterminate',
+        0,
         `Saving ${treeId}...`
       );
       const file = getFilePath(getTypedFilename(`${treeId}`, 'journey'), true);
       try {
-        updateProgressIndicator(indicatorId, `Saving ${treeId} to ${file}`);
         saveJsonToFile(
           { trees: { [treeValue.tree._id]: treeValue } },
           file,
@@ -271,7 +293,7 @@ export async function exportJourneysToFiles(
         );
         stopProgressIndicator(indicatorId, `${treeId} saved to ${file}`);
       } catch {
-        stopProgressIndicator(indicatorId, `Error saving ${treeId} to ${file}`);
+        stopProgressIndicator(indicatorId, `Error saving ${treeId} to ${file}`, 'fail');
       }
     }
     return true;
@@ -418,7 +440,7 @@ export async function importFirstJourneyFromFile(
       const installedJourneys = (await readJourneys()).map((x) => x._id);
       const unresolvedJourneys = {};
       const resolvedJourneys = [];
-      const depSpinnerId = createProgressIndicator(
+      const depindicatorId = createProgressIndicator(
         'indeterminate',
         0,
         'Resolving dependencies'
@@ -431,14 +453,14 @@ export async function importFirstJourneyFromFile(
       );
       if (Object.keys(unresolvedJourneys).length === 0) {
         stopProgressIndicator(
-          depSpinnerId,
+          depindicatorId,
           `Resolved all dependencies.`,
           'success'
         );
 
-        let importSpinnerId: string;
+        let importindicatorId: string;
         if (!verbose)
-          importSpinnerId = createProgressIndicator(
+          importindicatorId = createProgressIndicator(
             'indeterminate',
             0,
             `Importing ${journeyId}...`
@@ -446,33 +468,33 @@ export async function importFirstJourneyFromFile(
         try {
           await importJourney(journeyData, options);
           if (verbose)
-            importSpinnerId = createProgressIndicator(
+            importindicatorId = createProgressIndicator(
               'indeterminate',
               0,
               `Importing ${journeyId}...`
             );
           stopProgressIndicator(
-            importSpinnerId,
+            importindicatorId,
             `Imported ${journeyId}.`,
             'success'
           );
           return true;
         } catch (importError) {
           if (verbose)
-            importSpinnerId = createProgressIndicator(
+            importindicatorId = createProgressIndicator(
               'indeterminate',
               0,
               `Importing ${journeyId}...`
             );
           stopProgressIndicator(
-            importSpinnerId,
+            importindicatorId,
             `Error importing ${journeyId}`,
             'fail'
           );
           printError(importError);
         }
       } else {
-        stopProgressIndicator(depSpinnerId, `Unresolved dependencies:`, 'fail');
+        stopProgressIndicator(depindicatorId, `Unresolved dependencies:`, 'fail');
         for (const journey of Object.keys(unresolvedJourneys)) {
           printMessage(
             `  ${journey} requires ${unresolvedJourneys[journey]}`,
@@ -481,12 +503,12 @@ export async function importFirstJourneyFromFile(
         }
       }
     } else {
-      const importSpinnerId = createProgressIndicator(
+      const importindicatorId = createProgressIndicator(
         'indeterminate',
         0,
         `Importing...`
       );
-      stopProgressIndicator(importSpinnerId, `No journeys found!`, 'fail');
+      stopProgressIndicator(importindicatorId, `No journeys found!`, 'fail');
     }
     // end dependency resolution for single tree import
   } catch (error) {
@@ -1168,7 +1190,7 @@ export async function deleteJourneys(
     );
     return true;
   } catch (error) {
-    stopProgressIndicator(indicatorId, `Error deleting journeys`);
+    stopProgressIndicator(indicatorId, `Error deleting journeys`, 'fail');
     printError(error);
   }
   return false;

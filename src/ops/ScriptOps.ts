@@ -108,11 +108,11 @@ export async function listScripts(
   usage: boolean = false,
   file: string | null = null
 ): Promise<boolean> {
-  let spinnerId: string;
+  let indicatorId: string;
   let scripts: ScriptSkeleton[] = [];
   debugMessage(`Cli.ScriptOps.listScripts: start`);
   try {
-    spinnerId = createProgressIndicator(
+    indicatorId = createProgressIndicator(
       'indeterminate',
       0,
       `Reading scripts...`
@@ -120,12 +120,12 @@ export async function listScripts(
     scripts = await readScripts();
     scripts.sort((a, b) => a.name.localeCompare(b.name));
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Successfully read ${scripts.length} scripts.`,
       'success'
     );
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error reading scripts`, 'fail');
+    stopProgressIndicator(indicatorId, `Error reading scripts`, 'fail');
     printError(error);
     return false;
   }
@@ -417,13 +417,13 @@ export async function exportScriptsToFiles(
   const errors: Error[] = [];
   const scriptExport = await exportScripts(options, errorHandler);
   const scriptList = Object.values(scriptExport.script);
-  const barId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'determinate',
     scriptList.length,
     'Exporting scripts to individual files...'
   );
   for (const script of scriptList) {
-    const fileBarId = createProgressIndicator(
+    const fileindicatorId = createProgressIndicator(
       'determinate',
       1,
       `Exporting script ${script.name}...`
@@ -445,23 +445,23 @@ export async function exportScriptsToFiles(
         includeMeta,
         keepModifiedProperties
       );
-      updateProgressIndicator(fileBarId, `Saving ${script.name} to ${file}.`);
-      stopProgressIndicator(fileBarId, `${script.name} saved to ${file}.`);
+      updateProgressIndicator(fileindicatorId, `Saving ${script.name} to ${file}.`);
+      stopProgressIndicator(fileindicatorId, `${script.name} saved to ${file}.`);
     } catch (error) {
       stopProgressIndicator(
-        fileBarId,
+        fileindicatorId,
         `Error exporting ${script.name}`,
         'fail'
       );
       errors.push(error);
     }
-    updateProgressIndicator(barId, `Exported script ${script.name}`);
+    updateProgressIndicator(indicatorId, `Exported script ${script.name}`);
   }
   if (errors.length > 0) {
     throw new FrodoError(`Error exporting scripts`, errors);
   }
   stopProgressIndicator(
-    barId,
+    indicatorId,
     `Exported ${scriptList.length} scripts to individual files.`
   );
   debugMessage(`Cli.ScriptOps.exportScriptsToFiles: end`);
@@ -754,17 +754,17 @@ function getExtractedPathsAndNames(
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function deleteScriptId(id: string): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     undefined,
     `Deleting ${id}...`
   );
   try {
     await deleteScript(id);
-    stopProgressIndicator(spinnerId, `Deleted ${id}.`, 'success');
+    stopProgressIndicator(indicatorId, `Deleted ${id}.`, 'success');
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    stopProgressIndicator(indicatorId, `Error: ${error.message}`, 'fail');
     printError(error);
   }
   return false;
@@ -776,17 +776,17 @@ export async function deleteScriptId(id: string): Promise<boolean> {
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function deleteScriptName(name: string): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     undefined,
     `Deleting ${name}...`
   );
   try {
     await deleteScriptByName(name);
-    stopProgressIndicator(spinnerId, `Deleted ${name}.`, 'success');
+    stopProgressIndicator(indicatorId, `Deleted ${name}.`, 'success');
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    stopProgressIndicator(indicatorId, `Error: ${error.message}`, 'fail');
     printError(error);
   }
   return false;
@@ -797,7 +797,7 @@ export async function deleteScriptName(name: string): Promise<boolean> {
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function deleteAllScripts(): Promise<boolean> {
-  const spinnerId = createProgressIndicator(
+  const indicatorId = createProgressIndicator(
     'indeterminate',
     undefined,
     `Deleting all non-default scripts...`
@@ -805,13 +805,13 @@ export async function deleteAllScripts(): Promise<boolean> {
   try {
     await deleteScripts(errorHandler);
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Deleted all non-default scripts.`,
       'success'
     );
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
+    stopProgressIndicator(indicatorId, `Error: ${error.message}`, 'fail');
     printError(error);
   }
   return false;

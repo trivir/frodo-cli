@@ -29,12 +29,12 @@ export async function exportAuthenticationSettingsToFile(
   global = false,
   includeMeta = true
 ): Promise<boolean> {
-  let spinnerId: string;
+  let indicatorId: string;
   try {
     debugMessage(
       `cli.AuthenticationSettingsOps.exportAuthenticationSettingsToFile: begin`
     );
-    spinnerId = createProgressIndicator(
+    indicatorId = createProgressIndicator(
       'indeterminate',
       0,
       `Exporting authentication settings...`
@@ -50,7 +50,7 @@ export async function exportAuthenticationSettingsToFile(
     const exportData = await _exportAuthenticationSettings(global);
     saveJsonToFile(exportData, filePath, includeMeta);
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Exported ${frodo.utils.getRealmName(
         state.getRealm()
       )} realm authentication settings to ${filePath}.`,
@@ -62,7 +62,7 @@ export async function exportAuthenticationSettingsToFile(
     return true;
   } catch (error) {
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Error exporting authentication settings`,
       'fail'
     );
@@ -81,12 +81,12 @@ export async function importAuthenticationSettingsFromFile(
   file: string,
   global = false
 ): Promise<boolean> {
-  let spinnerId: string;
+  let indicatorId: string;
   try {
     debugMessage(
       `cli.AuthenticationSettingsOps.importAuthenticationSettingsFromFile: begin`
     );
-    spinnerId = createProgressIndicator(
+    indicatorId = createProgressIndicator(
       'indeterminate',
       0,
       `Importing authentication settings...`
@@ -95,7 +95,7 @@ export async function importAuthenticationSettingsFromFile(
     const fileData = JSON.parse(data);
     await _importAuthenticationSettings(fileData, global);
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Imported ${frodo.utils.getRealmName(
         state.getRealm()
       )} realm authentication settings.`,
@@ -107,7 +107,7 @@ export async function importAuthenticationSettingsFromFile(
     return true;
   } catch (error) {
     stopProgressIndicator(
-      spinnerId,
+      indicatorId,
       `Error importing authentication settings`,
       'fail'
     );
