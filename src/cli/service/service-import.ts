@@ -34,17 +34,20 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --service-id <service-id>',
-        'Service id. If specified, -a and -A are ignored.'
-      )
+        'Service id. If specified, -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-f, --file <file>',
-        'Name of the file to import SAML Entity(s) from. Ignored with -A.'
-      )
+        'Name of the file to import SAML Entity(s) from. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
     )
     .addOption(
-      new Option('-a, --all', 'Import all services from a single file.')
+      new Option(
+        '-a, --all',
+        'Import all services from a single file. Cannot be used with -i, or -A.'
+      ).conflicts(['serviceId', 'allSeparate'])
     )
     .addOption(
       new Option('-C, --clean', 'Remove existing service(s) before importing.')
@@ -52,8 +55,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all services from separate files <id>.service.json.'
-      )
+        'Import all services from separate files <id>.service.json. Cannot be used with -i, or -a.'
+      ).conflicts(['serviceId', 'all'])
     )
     .addOption(
       new Option(

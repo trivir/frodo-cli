@@ -17,27 +17,27 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --node-id <node-id>',
-        'Custom node id or service name. If specified, only one custom node is exported and the options -n, -a and -A are ignored.'
-      )
+        'Custom node id or service name. If specified, only one custom node is exported and the options -n, -a and -A cannot be used.'
+      ).conflicts(['nodeName', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-n, --node-name <node-name>',
-        'Custom node display name. If specified, only one custom node is exported and the options -a and -A are ignored.'
-      )
+        'Custom node display name. If specified, only one custom node is exported and the options -i, -a and -A cannot be used.'
+      ).conflicts(['nodeId', 'all', 'allSeparate'])
     )
     .addOption(new Option('-f, --file <file>', 'Name of the export file.'))
     .addOption(
       new Option(
         '-a, --all',
-        'Export all custom nodes to a single file. Ignored with -i or -n.'
-      )
+        'Export all custom nodes to a single file. Cannot be used with -i, -n and -A.'
+      ).conflicts(['nodeId', 'nodeName', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all custom nodes to separate files (*.nodeTypes.json) in the current directory. Ignored with -i, -n, or -a.'
-      )
+        'Export all custom nodes to separate files (*.nodeTypes.json) in the current directory. Cannot be used with -i, -n, or -a.'
+      ).conflicts(['nodeId', 'nodeName', 'all'])
     )
     .addOption(
       new Option(

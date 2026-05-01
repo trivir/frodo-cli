@@ -22,8 +22,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --app-id <id>',
-        'Application id. If specified, -n is ignored.'
-      )
+        'Application id. If specified, -n cannot be used.'
+      ).conflicts(['appName'])
     )
     .addOption(new Option('-n, --app-name <name>', 'Application name.'))
     .addHelpText(

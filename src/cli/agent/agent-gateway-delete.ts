@@ -17,14 +17,14 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --agent-id <agent-id>',
-        'Agent id. If specified, -a is ignored.'
-      )
+        'Agent id. If specified, -a cannot be used.'
+      ).conflicts(['all'])
     )
     .addOption(
       new Option(
         '-a, --all',
-        'Delete all identity gateway agents. Ignored with -i.'
-      )
+        'Delete all identity gateway agents. Cannot be used with -i.'
+      ).conflicts(['agentId'])
     )
     .action(
       // implement command logic inside action handler

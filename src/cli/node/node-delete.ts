@@ -13,17 +13,20 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --node-id <node-id>',
-        'Custom node id or service name. If specified, only one custom node is deleted and the options -n, -a and -A are ignored.'
-      )
+        'Custom node id or service name. If specified, only one custom node is deleted and the options -n, -a and -A cannot be used.'
+      ).conflicts(['nodeName', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-n, --node-name <node-name>',
-        'Custom node display name. If specified, only one custom node is deleted and the options -a and -A are ignored.'
-      )
+        'Custom node display name. If specified, only one custom node is deleted and the options -i, -a and -A cannot be used.'
+      ).conflicts(['nodeId', 'all', 'allSeparate'])
     )
     .addOption(
-      new Option('-a, --all', 'Delete all custom nodes. Ignored with -i or -n.')
+      new Option(
+        '-a, --all',
+        'Delete all custom nodes. Cannot be used with -i or -n.'
+      ).conflicts(['nodeId', 'nodeName'])
     )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(

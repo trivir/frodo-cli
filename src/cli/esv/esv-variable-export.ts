@@ -26,21 +26,21 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --variable-id <variable-id>',
-        'Variable id. If specified, -a and -A are ignored.'
-      )
+        'Variable id. If specified, -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(new Option('-f, --file <file>', 'Name of the export file.'))
     .addOption(
       new Option(
         '-a, --all',
-        'Export all variables to a single file. Ignored with -i.'
-      )
+        'Export all variables to a single file. Cannot be used with -i or -A.'
+      ).conflicts(['variableId', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all variables to separate files (*.variable.json) in the current directory. Ignored with -i or -a.'
-      )
+        'Export all variables to separate files (*.variable.json) in the current directory. Cannot be used with -i or -a.'
+      ).conflicts(['variableId', 'all'])
     )
     .addOption(
       new Option(

@@ -26,21 +26,21 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --variable-id <variable-id>',
-        'Variable id. If specified, only one variable is imported and the options -a and -A are ignored.'
-      )
+        'Variable id. If specified, only one variable is imported and the options -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(new Option('-f, --file <file>', 'Name of the file to import.'))
     .addOption(
       new Option(
         '-a, --all',
-        'Import all variables from single file. Ignored with -i.'
-      )
+        'Import all variables from single file. Cannot be used with -i or -A.'
+      ).conflicts(['variableId', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all variables from separate files (*.variable.json) in the current directory. Ignored with -i or -a.'
-      )
+        'Import all variables from separate files (*.variable.json) in the current directory. Cannot be used with -i or -a.'
+      ).conflicts(['variableId', 'all'])
     )
     .action(
       // implement command logic inside action handler

@@ -55,14 +55,14 @@ export default function setup() {
         '-b, --begin-timestamp <beginTs>',
         'Begin timestamp for period (in ISO8601, example: "2022-10-13T19:06:28Z", or "2022-09.30". \
   Cannot be more than 30 days in the past. If not specified, logs from one hour ago are fetched \
-  (-e is ignored)'
-      )
+  (-e cannot be used)'
+      ).conflicts(['endTimestamp'])
     )
     .addOption(
       new Option(
         '-e, --end-timestamp <endTs>',
         'End timestamp for period. Default: "now"'
-      )
+      ).conflicts(['beginTimestamp'])
     )
     .addOption(
       new Option(
