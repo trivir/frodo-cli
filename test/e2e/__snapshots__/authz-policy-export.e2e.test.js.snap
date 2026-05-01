@@ -386,11 +386,11 @@ exports[`frodo authz policy export "frodo authz policy export --modified-propert
 }
 `;
 
-exports[`frodo authz policy export "frodo authz policy export --policy-id 'Test Policy' -f my-Test-Policy.policy.authz.json --set-id test-policy-set --no-deps --prereqs": should export the policy with id "Test Policy" from the test-policy-set into the file my-Test-Policy.policy.authz.json with no dependencies and with prereqs 1`] = `0`;
+exports[`frodo authz policy export "frodo authz policy export --policy-id 'Test Policy' -f my-Test-Policy.policy.authz.json --no-deps --prereqs": should export the policy with id "Test Policy" from the test-policy-set into the file my-Test-Policy.policy.authz.json with no dependencies and with prereqs 1`] = `0`;
 
-exports[`frodo authz policy export "frodo authz policy export --policy-id 'Test Policy' -f my-Test-Policy.policy.authz.json --set-id test-policy-set --no-deps --prereqs": should export the policy with id "Test Policy" from the test-policy-set into the file my-Test-Policy.policy.authz.json with no dependencies and with prereqs 2`] = `""`;
+exports[`frodo authz policy export "frodo authz policy export --policy-id 'Test Policy' -f my-Test-Policy.policy.authz.json --no-deps --prereqs": should export the policy with id "Test Policy" from the test-policy-set into the file my-Test-Policy.policy.authz.json with no dependencies and with prereqs 2`] = `""`;
 
-exports[`frodo authz policy export "frodo authz policy export --policy-id 'Test Policy' -f my-Test-Policy.policy.authz.json --set-id test-policy-set --no-deps --prereqs": should export the policy with id "Test Policy" from the test-policy-set into the file my-Test-Policy.policy.authz.json with no dependencies and with prereqs: my-Test-Policy.policy.authz.json 1`] = `
+exports[`frodo authz policy export "frodo authz policy export --policy-id 'Test Policy' -f my-Test-Policy.policy.authz.json --no-deps --prereqs": should export the policy with id "Test Policy" from the test-policy-set into the file my-Test-Policy.policy.authz.json with no dependencies and with prereqs: my-Test-Policy.policy.authz.json 1`] = `
 {
   "meta": Any<Object>,
   "policy": {

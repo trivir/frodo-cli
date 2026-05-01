@@ -18,21 +18,21 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --set-id <set-id>',
-        'Policy set id/name. If specified, only one policy set is imported and the options -a and -A are ignored.'
-      )
+        'Policy set id/name. If specified, only one policy set is imported and the options -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(new Option('-f, --file <file>', 'Name of the file to import.'))
     .addOption(
       new Option(
         '-a, --all',
-        'Import all policy sets from single file. Ignored with -i.'
-      )
+        'Import all policy sets from single file. Cannot be used with -i or -A.'
+      ).conflicts(['setId', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all policy sets from separate files (*.policyset.authz.json) in the current directory. Ignored with -i or -a.'
-      )
+        'Import all policy sets from separate files (*.policyset.authz.json) in the current directory. Cannot be used with -i or -a.'
+      ).conflicts(['setId', 'all'])
     )
     .addOption(
       new Option(

@@ -28,7 +28,7 @@ Options:
                                        name.
   -r, --realm <realm>                  Specifies the realm to export from. Only
                                        policy sets from this realm will be
-                                       exported. Ignored with -f
+                                       exported. Cannot be used with -f
   -h, --help                           Help
   -hh, --help-more                     Help with all options.
   -hhh, --help-all                     Help with all options, environment

@@ -27,8 +27,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --secretstore-id <secretstore-id>',
-        'Secret store id. If specified, -a and -A are ignored.'
-      )
+        'Secret store id. If specified, -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
       new Option(
@@ -46,14 +46,14 @@ export default function setup() {
     .addOption(
       new Option(
         '-a, --all',
-        'Export all secret stores to a single file. Ignored with -i.'
-      )
+        'Export all secret stores to a single file. Cannot be used with -i or -A.'
+      ).conflicts(['secretstoreId', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all secret stores to separate files (*.secretstore.json) in the current directory. Ignored with -i or -a.'
-      )
+        'Export all secret stores to separate files (*.secretstore.json) in the current directory. Cannot be used with -i or -a.'
+      ).conflicts(['secretstoreId', 'all'])
     )
     .addOption(
       new Option(

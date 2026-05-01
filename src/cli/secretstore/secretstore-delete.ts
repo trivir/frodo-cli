@@ -25,8 +25,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --secretstore-id <secretstore-id>',
-        'Secret store id. If specified, -a and -A are ignored.'
-      )
+        'Secret store id. If specified, -a cannot be used.'
+      ).conflicts(['all'])
     )
     .addOption(
       new Option(
@@ -36,7 +36,10 @@ export default function setup() {
     )
     .addOption(new Option('-g, --global', 'Delete global secret stores.'))
     .addOption(
-      new Option('-a, --all', 'Delete all secret stores. Ignored with -i.')
+      new Option(
+        '-a, --all',
+        'Delete all secret stores. Cannot be used with -i.'
+      ).conflicts(['secretstoreId'])
     )
     .action(
       // implement command logic inside action handler

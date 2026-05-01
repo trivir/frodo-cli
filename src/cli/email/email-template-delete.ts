@@ -16,14 +16,14 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --template-id <template-id>',
-        'Email template id/name. If specified, -a and -A are ignored.'
-      )
+        'Email template id/name. If specified, -a cannot be used.'
+      ).conflicts(['all'])
     )
     .addOption(
       new Option(
         '-a, --all',
-        'Delete all policies in a realm. Ignored with -i.'
-      )
+        'Delete all policies in a realm. Cannot be used with -i.'
+      ).conflicts(['templateId'])
     )
     .action(
       // implement command logic inside action handler

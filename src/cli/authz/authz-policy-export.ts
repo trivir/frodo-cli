@@ -19,27 +19,27 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --policy-id <policy-id>',
-        'Policy id. If specified, -a and -A are ignored.'
-      )
+        'Policy id. If specified, -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '--set-id <set-id>',
-        'Export policies in policy set only. Ignored with -i.'
-      )
+        'Export policies in policy set only. Cannot be used with -i.'
+      ).conflicts(['policyId'])
     )
     .addOption(new Option('-f, --file <file>', 'Name of the export file.'))
     .addOption(
       new Option(
         '-a, --all',
-        'Export policies to a single file. Ignored with -i.'
-      )
+        'Export policies to a single file. Cannot be used with -i or -A.'
+      ).conflicts(['policyId', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export policies to separate files (*.policy.authz.json) in the current directory. Ignored with -i or -a.'
-      )
+        'Export policies to separate files (*.policy.authz.json) in the current directory. Cannot be used with -i or -a.'
+      ).conflicts(['policyId', 'all'])
     )
     .addOption(
       new Option(
