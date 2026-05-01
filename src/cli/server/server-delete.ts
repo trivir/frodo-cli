@@ -16,16 +16,21 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --server-id <server-id>',
-        'Server id. If specified, only one server is deleted and the options -u, -a and -A are ignored.'
-      )
+        'Server id. If specified, only one server is deleted and the options -u, -a cannot be used.'
+      ).conflicts(['serverUrl', 'all'])
     )
     .addOption(
       new Option(
         '-u, --server-url <server-url>',
-        'Server url. Can be a unique substring of the full url (if not unique, it will error out). If specified, only one server is deleted and the options -a and -A are ignored.'
-      )
+        'Server url. Can be a unique substring of the full url (if not unique, it will error out). If specified, only one server is deleted and the options -a cannot be used.'
+      ).conflicts(['all'])
     )
-    .addOption(new Option('-a, --all', 'Delete all servers. Ignored with -i.'))
+    .addOption(
+      new Option(
+        '-a, --all',
+        'Delete all servers. Cannot be used with -i.'
+      ).conflicts(['serverId', 'serverUrl'])
+    )
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {

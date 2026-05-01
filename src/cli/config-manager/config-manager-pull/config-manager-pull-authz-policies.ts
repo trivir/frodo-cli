@@ -32,8 +32,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-r, --realm <realm>',
-        'Specifies the realm to export from. Only policy sets from this realm will be exported. Ignored with -f'
-      )
+        'Specifies the realm to export from. Only policy sets from this realm will be exported. Cannot be used with -f'
+      ).conflicts(['file'])
     )
     .addOption(
       new Option(

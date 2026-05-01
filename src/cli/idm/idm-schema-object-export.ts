@@ -30,22 +30,27 @@ export default function setup() {
     .addOption(
       new Option(
         '-a, --all',
-        'Export all IDM configuration managed objects into a single file in directory -D.'
-      )
+        'Export all IDM configuration managed objects into a single file in directory -D. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all IDM configuration managed objects into separate JSON files in directory -D.'
-      )
+        'Export all IDM configuration managed objects into separate JSON files in directory -D. Cannot be used with -a.'
+      ).conflicts(['all'])
     )
     .addOption(
       new Option(
         '-i, --individual-object <name>',
-        'Export an individual managed object by specifying an objects name. E.g. "alpha_user", "bravo_role", etc. If specified, -a and -A are ignored.'
-      )
+        'Export an individual managed object by specifying an objects name. E.g. "alpha_user", "bravo_role", etc. If specified, -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
-    .addOption(new Option('-f, --file [file]', 'Export file. Ignored with -A.'))
+    .addOption(
+      new Option(
+        '-f, --file [file]',
+        'Export file. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(new Option('-e, --env-file [envfile]', 'Name of the env file.'))
     .addOption(
       new Option(

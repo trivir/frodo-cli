@@ -18,21 +18,21 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --agent-id <agent-id>',
-        'Agent id. If specified, only one agent is imported and the options -a and -A are ignored.'
-      )
+        'Agent id. If specified, only one agent is imported and the options -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(new Option('-f, --file <file>', 'Name of the file to import.'))
     .addOption(
       new Option(
         '-a, --all',
-        'Import all agents from single file. Ignored with -i.'
-      )
+        'Import all agents from single file. Cannot be used with -i or -A.'
+      ).conflicts(['agentId', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all agents from separate files (*.identitygatewayagent.json) in the current directory. Ignored with -i or -a.'
-      )
+        'Import all agents from separate files (*.identitygatewayagent.json) in the current directory. Cannot be used with -i or -a.'
+      ).conflicts(['agentId', 'all'])
     )
     .action(
       // implement command logic inside action handler

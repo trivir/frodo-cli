@@ -42,28 +42,33 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --entity-id <id>',
-        'Config entity id/name. E.g. "managed", "sync", "provisioner-<connector-name>", etc. If specified, -a and -A are ignored.'
-      )
+        'Config entity id/name. E.g. "managed", "sync", "provisioner-<connector-name>", etc. If specified, -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
-    .addOption(new Option('-f, --file [file]', 'Import file. Ignored with -A.'))
+    .addOption(
+      new Option(
+        '-f, --file [file]',
+        'Import file. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(
       new Option(
         '-E, --entities-file [entities-file]',
-        'Name of the entity file. Ignored with -i.'
-      )
+        'Name of the entity file. Cannot be used with -i.'
+      ).conflicts(['entityId'])
     )
     .addOption(new Option('-e, --env-file [envfile]', 'Name of the env file.'))
     .addOption(
       new Option(
         '-a, --all',
-        'Import all IDM configuration objects from a single file in directory -D. Ignored with -i.'
-      )
+        'Import all IDM configuration objects from a single file in directory -D. Cannot be used with -i.'
+      ).conflicts(['entityId'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all IDM configuration objects from separate files in directory -D. Ignored with -i, and -a.'
-      )
+        'Import all IDM configuration objects from separate files in directory -D. Cannot be used with -i, and -a.'
+      ).conflicts(['entityId', 'all'])
     )
     .action(
       // implement command logic inside action handler

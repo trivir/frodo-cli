@@ -26,17 +26,20 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --app-id <id>',
-        'Application id. If specified, -n and -a are ignored.'
-      )
+        'Application id. If specified, -n and -a cannot be used.'
+      ).conflicts(['appName', 'all'])
     )
     .addOption(
       new Option(
         '-n, --app-name <name>',
-        'Application name. If specified, -a is ignored.'
-      )
+        'Application name. If specified, -a cannot be used.'
+      ).conflicts(['all'])
     )
     .addOption(
-      new Option('-a, --all', 'Delete all applications. Ignored with -i or -n.')
+      new Option(
+        '-a, --all',
+        'Delete all applications. Cannot be used with -i or -n.'
+      ).conflicts(['appId', 'appName'])
     )
     .addOption(
       new Option(

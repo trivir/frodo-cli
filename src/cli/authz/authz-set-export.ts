@@ -17,21 +17,21 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --set-id <set-id>',
-        'Policy set id/name. If specified, -a and -A are ignored.'
-      )
+        'Policy set id/name. If specified, -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(new Option('-f, --file <file>', 'Name of the export file.'))
     .addOption(
       new Option(
         '-a, --all',
-        'Export all applications/policy sets to a single file. Ignored with -i.'
-      )
+        'Export all applications/policy sets to a single file. Cannot be used with -i or -A.'
+      ).conflicts(['setId', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all applications/policy sets to separate files (*.authz.json) in the current directory. Ignored with -i or -a.'
-      )
+        'Export all applications/policy sets to separate files (*.authz.json) in the current directory. Cannot be used with -i or -a.'
+      ).conflicts(['setId', 'all'])
     )
     .addOption(
       new Option(
