@@ -27,21 +27,21 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --secret-id <secret-id>',
-        'Secret id. If specified, only one secret is imported and the options -a and -A are ignored.'
-      )
+        'Secret id. If specified, only one secret is imported and the options -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(new Option('-f, --file <file>', 'Name of the file to import.'))
     .addOption(
       new Option(
         '-a, --all',
-        'Import all secrets from single file. Ignored with -i.'
-      )
+        'Import all secrets from single file. Cannot be used with -i or -A.'
+      ).conflicts(['secretId', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all secrets from separate files (*.secret.json) in the current directory. Ignored with -i or -a.'
-      )
+        'Import all secrets from separate files (*.secret.json) in the current directory. Cannot be used with -i or -a.'
+      ).conflicts(['secretId', 'all'])
     )
     .addOption(
       new Option(

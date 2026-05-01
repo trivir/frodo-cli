@@ -21,21 +21,21 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --other-id <other-id>',
-        '[Other] id. If specified, -a and -A are ignored.'
-      )
+        '[Other] id. If specified, -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(new Option('-f, --file <file>', 'Name of the export file.'))
     .addOption(
       new Option(
         '-a, --all',
-        'Export all [others] to a single file. Ignored with -i.'
-      )
+        'Export all [others] to a single file. Cannot be used with -i or -A.'
+      ).conflicts(['otherId', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all [others] to separate files (*.[other].json) in the current directory. Ignored with -i or -a.'
-      )
+        'Export all [others] to separate files (*.[other].json) in the current directory. Cannot be used with -i or -a.'
+      ).conflicts(['otherId', 'all'])
     )
     .addOption(
       new Option(

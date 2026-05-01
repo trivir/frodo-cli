@@ -29,7 +29,7 @@ Options:
                                    file extension.
   -p, --prefix <prefix>            Export all scripts that start with a certain
                                    prefix. Repetition of this flag is allowed.
-                                   Ignored with -n (default: [])
+                                   Cannot be used with -n (default: [])
   -h, --help                       Help
   -hh, --help-more                 Help with all options.
   -hhh, --help-all                 Help with all options, environment variables,
