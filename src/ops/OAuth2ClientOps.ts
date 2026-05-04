@@ -29,6 +29,7 @@ const {
 } = frodo.utils;
 const {
   readOAuth2Clients,
+  countOAuth2Clients,
   exportOAuth2Client,
   exportOAuth2Clients,
   deleteOAuth2Client,
@@ -154,9 +155,15 @@ export async function exportOAuth2ClientsToFile(
     deps: true,
   }
 ): Promise<boolean> {
-  debugMessage(`cli.OAuth2ClientOps.exportOAuth2ClientsToFile: begin`);
-  showSpinner(`Exporting all clients...`);
+  let indicatorId: string;
+  const totalClients = await countOAuth2Clients();
   try {
+  debugMessage(`cli.OAuth2ClientOps.exportOAuth2ClientsToFile: begin`);
+  indicatorId = createProgressIndicator(
+    'determinate',
+    totalClients,
+    `Exporting oauth2clients...`
+  );
     let fileName = getTypedFilename(
       `all${titleCase(frodo.utils.getRealmName(state.getRealm()))}Applications`,
       'oauth2.app'
@@ -165,13 +172,26 @@ export async function exportOAuth2ClientsToFile(
       fileName = file;
     }
     const filePath = getFilePath(fileName, true);
-    const exportData = await exportOAuth2Clients(options);
+    const exportData = await exportOAuth2Clients(options, (error, result) => {
+      if (error) {
+        stopProgressIndicator(
+          indicatorId,
+          `Error exporting oauth2client ${result?.application?._id}`,
+          'fail'
+        );
+      } else {
+        updateProgressIndicator(
+          indicatorId,
+          `Exporting oauth2client ${result?.application?._id}...`
+        );
+      }
+    });
     saveJsonToFile(exportData, filePath, includeMeta);
-    succeedSpinner(`Exported all clients to ${filePath}.`);
+    stopProgressIndicator(indicatorId, `Exported all oauth2clients to ${filePath}.`);
     debugMessage(`cli.OAuth2ClientOps.exportOAuth2ClientsToFile: end]`);
     return true;
   } catch (error) {
-    failSpinner(`Error exporting all clients`);
+    stopProgressIndicator(indicatorId, `Error exporting oauth2clients`, 'fail');
     printError(error);
   }
   return false;

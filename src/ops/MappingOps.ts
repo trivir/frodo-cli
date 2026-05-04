@@ -133,16 +133,38 @@ export async function exportMappingsToFile(
     useStringArrays: true,
   }
 ): Promise<boolean> {
+  let indicatorId: string;
+  const totalMappings = await readMappings();
   try {
-    const exportData = await exportMappings(options);
+    indicatorId = createProgressIndicator(
+      'determinate',
+      totalMappings.length,
+      `Exporting mappings...`
+    );
     let fileName = getTypedFilename(`allMappings`, 'mapping');
     if (file) {
       fileName = file;
     }
+    const exportData = await exportMappings(options, (error, result) => {
+      if (error) {
+        stopProgressIndicator(
+          indicatorId,
+          `Error exporting mapping ${result?.mapping?._id}`,
+          'fail'
+        );
+      } else {
+        updateProgressIndicator(
+          indicatorId,
+          `Exporting mapping ${result?.mapping?._id}...`
+        );
+      }
+    });
     saveJsonToFile(exportData, getFilePath(fileName, true), includeMeta);
+    stopProgressIndicator(indicatorId, `Exported all mappings to ${fileName}.`);
     return true;
   } catch (error) {
-    printError(error, `Error exporting mappings to file`);
+    stopProgressIndicator(indicatorId, `Error exporting mappings`, 'fail');
+    printError(error);
   }
   return false;
 }
