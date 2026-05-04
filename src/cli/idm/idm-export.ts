@@ -27,45 +27,45 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --entity-id <id>',
-        'Config entity id/name. E.g. "managed", "sync", "provisioner-<connector-name>", etc. If specified, -a and -A are ignored.'
-      )
+        'Config entity id/name. E.g. "managed", "sync", "provisioner-<connector-name>", etc. If specified, -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-f, --file [file]',
-        'Export file (or directory name if exporting mappings separately). Ignored with -A.'
-      )
+        'Export file (or directory name if exporting mappings separately). Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
     )
     .addOption(
       new Option(
         '-E, --entities-file [entities-file]',
-        'Name of the entity file. Ignored with -i.'
-      )
+        'Name of the entity file. Cannot be used with -i.'
+      ).conflicts(['entityId'])
     )
     .addOption(new Option('-e, --env-file [envfile]', 'Name of the env file.'))
     .addOption(
       new Option(
         '-a, --all',
-        'Export all IDM configuration objects into a single file in directory -D. Ignored with -i.'
-      )
+        'Export all IDM configuration objects into a single file in directory -D. Cannot be used with -i or -A.'
+      ).conflicts(['entityId', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all IDM configuration objects into separate JSON files in directory -D. Ignored with -i, and -a.'
-      )
+        'Export all IDM configuration objects into separate JSON files in directory -D. Cannot be used with -i, and -a.'
+      ).conflicts(['entityId', 'all'])
     )
     .addOption(
       new Option(
         '-s, --separate-mappings',
-        'Export sync.idm.json mappings separately in their own directory. Ignored with -a.'
-      )
+        'Export sync.idm.json mappings separately in their own directory. Cannot be used with -a.'
+      ).conflicts(['all'])
     )
     .addOption(
       new Option(
         '-o, --separate-objects',
-        'Export managed.idm.json objects separately in their own directory. Ignored with -a.'
-      )
+        'Export managed.idm.json objects separately in their own directory. Cannot be used with -a.'
+      ).conflicts(['all'])
     )
     .addOption(
       new Option(

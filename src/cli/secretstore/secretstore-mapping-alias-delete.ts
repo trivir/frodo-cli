@@ -44,7 +44,7 @@ export default function setup() {
     .addOption(
       new Option(
         '--all',
-        'Delete all aliases except for the active one in the mapping. Ignored with -a.'
+        'Delete all aliases except for the active one in the mapping.'
       )
     )
     .addOption(

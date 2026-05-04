@@ -21,14 +21,14 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --journey-id <journey>',
-        'Name of a journey/tree. If specified, -a and -A are ignored.'
-      )
+        'Name of a journey/tree. If specified, -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-f, --file <file>',
-        'Name of the journey export file to describe. Ignored with -A.'
-      )
+        'Name of the journey export file to describe. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
     )
     .addOption(
       new Option(

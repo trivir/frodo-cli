@@ -18,12 +18,12 @@ Arguments:
   password            Password.
 
 Options:
-  -a, --all           Import all the providers from single file. Ignored with -t
-                      or -i.
+  -a, --all           Import all the providers from single file. Cannot be used
+                      with -i and -A.
   -A, --all-separate  Import all the providers from separate files (*.json) in
-                      the current directory. Ignored with -t or -i or -a.
+                      the current directory. Cannot be used with -i or -a.
   -f, --file <file>   Name of the file to import the provider(s) from.
-  -i, --idp-id <id>   Provider id. If specified, -a and -A are ignored.
+  -i, --idp-id <id>   Provider id. If specified, -a and -A cannot be used.
   --no-deps           Do not include any dependencies (scripts).
   -h, --help          Help
   -hh, --help-more    Help with all options.

@@ -20,14 +20,15 @@ Arguments:
   password                       Password.
 
 Options:
-  -a, --all                      Import all mappings from single file. Ignored
-                                 with -i.
+  -a, --all                      Import all mappings from single file. Cannot be
+                                 used with -i and -A.
   -A, --all-separate             Import all mappings from separate files
                                  (*.sync.json or *.mapping.json) in the current
-                                 directory. Ignored with -i and -a.
+                                 directory. Cannot be used with -i and -a.
   -f, --file <file>              Name of the file to import
   -i, --mapping-id <mapping-id>  Mapping id. If specified, only one mapping is
-                                 imported and the options -a and -A are ignored.
+                                 imported and the options -a and -A cannot be
+                                 used.
   --no-deps                      Do not include any dependencies.
   -h, --help                     Help
   -hh, --help-more               Help with all options.

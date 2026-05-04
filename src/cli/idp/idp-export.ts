@@ -18,26 +18,26 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --idp-id <idp-id>',
-        'Id/name of a provider. If specified, -a and -A are ignored.'
-      )
+        'Id/name of a provider. If specified, -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-f, --file [file]',
-        'Name of the file to write the exported provider(s) to. Ignored with -A.'
-      )
+        'Name of the file to write the exported provider(s) to. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
     )
     .addOption(
       new Option(
         '-a, --all',
-        'Export all the providers in a realm to a single file. Ignored with -t and -i.'
-      )
+        'Export all the providers in a realm to a single file. Cannot be used with -i and -A.'
+      ).conflicts(['idpId', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all the providers in a realm as separate files <provider name>.idp.json. Ignored with -t, -i, and -a.'
-      )
+        'Export all the providers in a realm as separate files <provider name>.idp.json. Cannot be used with -i and -a.'
+      ).conflicts(['idpId', 'all'])
     )
     .addOption(
       new Option(

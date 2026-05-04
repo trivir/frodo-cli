@@ -26,20 +26,20 @@ export default function setup() {
     .addOption(
       new Option(
         '-n, --theme-name <name>',
-        'Name of the theme. If specified, -a and -A are ignored.'
-      )
+        'Name of the theme. If specified, -i and -a cannot be used.'
+      ).conflicts(['themeId', 'all'])
     )
     .addOption(
       new Option(
         '-i, --theme-id <uuid>',
-        'Uuid of the theme. If specified, -a and -A are ignored.'
-      )
+        'Uuid of the theme. If specified, -n and -a cannot be used.'
+      ).conflicts(['themeName', 'all'])
     )
     .addOption(
       new Option(
         '-a, --all',
-        'Delete all the themes in the realm. Ignored with -n and -i.'
-      )
+        'Delete all the themes in the realm. Cannot be used with -n and -i.'
+      ).conflicts(['themeId', 'themeName'])
     )
     .action(
       // implement command logic inside action handler

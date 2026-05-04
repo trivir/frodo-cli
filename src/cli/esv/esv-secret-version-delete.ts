@@ -22,12 +22,15 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --secret-id <secret-id>',
-        'Secret id. If specified, -a is ignored.'
-      )
+        'Secret id. If specified, -a cannot be used.'
+      ).conflicts(['all'])
     )
     .addOption(new Option('-v, --version <version>', 'Version of secret.'))
     .addOption(
-      new Option('-a, --all', 'Delete all secrets in a realm. Ignored with -i.')
+      new Option(
+        '-a, --all',
+        'Delete all secrets in a realm. Cannot be used with -i.'
+      ).conflicts(['secretId'])
     )
     .action(
       // implement command logic inside action handler

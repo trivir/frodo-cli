@@ -21,22 +21,22 @@ Arguments:
 
 Options:
   --just-config                      Export only the config .json files, no
-                                     scripts. Ignored with --just-content
-  --just-content                     Export only the script .js files, no config
-                                     files
+                                     scripts. Cannot be used with --just-content
+  --just-content                     Export only the script .js files. Cannot be
+                                     used with --just-config.
   --language <programming language>  Export all scripts written a certain
                                      programming language. ALL, GROOVY, or
-                                     JAVASCRIPT. defaults to JAVASCRIPT. Ignored
-                                     with -n
+                                     JAVASCRIPT. defaults to JAVASCRIPT. Cannot
+                                     be used with -n
   -n, --script-name <script name>    Export specific script using filename. Omit
                                      file extension.
   -p, --prefix <prefix>              Export all scripts that start with a
-                                     certain prefix. Ignored with -n
+                                     certain prefix. Cannot be used with -n
   -r, --realm <realm>                Specifies the realm to export from. Only
                                      the scripts from this realm will be
                                      exported.
   --script-type <script type>        Export all scripts of a certain type.
-                                     Ignored with -n.
+                                     Cannot be used with -n.
   -h, --help                         Help
   -hh, --help-more                   Help with all options.
   -hhh, --help-all                   Help with all options, environment

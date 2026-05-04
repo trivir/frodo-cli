@@ -20,10 +20,12 @@ Arguments:
   password                     Password.
 
 Options:
-  -a, --all                    Delete all resource types in a realm. Ignored
-                               with -i and -n.
-  -i, --type-id <type-id>      Variable id. If specified, -a is ignored.
-  -n, --type-name <type-name>  Resource type name. If specified, -a is ignored.
+  -a, --all                    Delete all resource types in a realm. Cannot be
+                               used with -i and -n.
+  -i, --type-id <type-id>      Variable id. If specified, -n or -a cannot be
+                               used.
+  -n, --type-name <type-name>  Resource type name. If specified, -i and -a
+                               cannot be used.
   -h, --help                   Help
   -hh, --help-more             Help with all options.
   -hhh, --help-all             Help with all options, environment variables, and

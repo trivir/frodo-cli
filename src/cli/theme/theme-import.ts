@@ -28,14 +28,14 @@ export default function setup() {
     .addOption(
       new Option(
         '-n, --theme-name <name>',
-        'Name of the theme. If specified, -a and -A are ignored.'
-      )
+        'Name of the theme. If specified, -i, -a and -A cannot be used.'
+      ).conflicts(['themeId', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-i, --theme-id <uuid>',
-        'Uuid of the theme. If specified, -a and -A are ignored.'
-      )
+        'Uuid of the theme. If specified, -n, -a and -A cannot be used.'
+      ).conflicts(['themeName', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
@@ -46,14 +46,14 @@ export default function setup() {
     .addOption(
       new Option(
         '-a, --all',
-        'Import all the themes from single file. Ignored with -n or -i.'
-      )
+        'Import all the themes from single file. Cannot be used with -n, -i or -A.'
+      ).conflicts(['themeId', 'themeName', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all the themes from separate files (*.json) in the current directory. Ignored with -n or -i or -a.'
-      )
+        'Import all the themes from separate files (*.json) in the current directory. Cannot be used with -n, -i or -a.'
+      ).conflicts(['themeId', 'themeName', 'all'])
     )
     .action(
       // implement command logic inside action handler

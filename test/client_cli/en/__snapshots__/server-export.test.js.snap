@@ -22,22 +22,22 @@ Arguments:
 Deployment: Classic-only
 
 Options:
-  -a, --all                      Export all servers to a single file. Ignored
-                                 with -i.
+  -a, --all                      Export all servers to a single file. Cannot be
+                                 used with -i, -u or -A.
   -A, --all-separate             Export all servers to separate files
                                  (*.server.json) in the current directory.
-                                 Ignored with -i or -a.
+                                 Cannot be used with -i, -u or -a.
   -d, --default                  Export server(s) along with the default server
                                  properties.
   -f, --file <file>              Name of the export file.
   -i, --server-id <server-id>    Server id. If specified, only one server is
-                                 exported and the options -u, -a and -A are
-                                 ignored.
+                                 exported and the options -u, -a and -A cannot
+                                 be used.
   -N, --no-metadata              Does not include metadata in the export file.
   -u, --server-url <server-url>  Server url. Can be a unique substring of the
                                  full url (if not unique, it will error out). If
                                  specified, only one server is exported and the
-                                 options -a and -A are ignored.
+                                 options -a and -A cannot be used.
   -x, --no-extract               Do not extract the server properties from the
                                  exported file to a separate file.
   -h, --help                     Help

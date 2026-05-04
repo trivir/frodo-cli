@@ -23,27 +23,27 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --server-id <server-id>',
-        'Server id. If specified, only one server is imported and the options -u, -a and -A are ignored.'
-      )
+        'Server id. If specified, only one server is imported and the options -u, -a and -A cannot be used.'
+      ).conflicts(['serverUrl', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-u, --server-url <server-url>',
-        'Server url. Can be a unique substring of the full url (if not unique, it will error out). If specified, only one server is imported and the options -a and -A are ignored.'
-      )
+        'Server url. Can be a unique substring of the full url (if not unique, it will error out). If specified, only one server is imported and the options -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(new Option('-f, --file <file>', 'Name of the file to import.'))
     .addOption(
       new Option(
         '-a, --all',
-        'Import all servers from single file. Ignored with -i.'
-      )
+        'Import all servers from single file. Cannot be used with -i, -u or -A.'
+      ).conflicts(['serverId', 'serverUrl', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all servers from separate files (*.server.json) in the current directory. Ignored with -i or -a.'
-      )
+        'Import all servers from separate files (*.server.json) in the current directory. Cannot be used with -i, -u or -a.'
+      ).conflicts(['serverId', 'serverUrl', 'all'])
     )
     .addOption(
       new Option(

@@ -20,10 +20,10 @@ Arguments:
   password                         Password.
 
 Options:
-  -a, --all                        Delete all policies in a realm. Ignored with
-                                   -i.
-  -i, --template-id <template-id>  Email template id/name. If specified, -a and
-                                   -A are ignored.
+  -a, --all                        Delete all policies in a realm. Cannot be
+                                   used with -i.
+  -i, --template-id <template-id>  Email template id/name. If specified, -a
+                                   cannot be used.
   -h, --help                       Help
   -hh, --help-more                 Help with all options.
   -hhh, --help-all                 Help with all options, environment variables,

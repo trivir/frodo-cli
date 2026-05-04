@@ -27,32 +27,32 @@ export default function setup() {
     .addOption(
       new Option(
         '-n, --theme-name <name>',
-        'Name of the theme. If specified, -a and -A are ignored.'
-      )
+        'Name of the theme. If specified, -i, -a and -A cannot be used.'
+      ).conflicts(['themeId', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-i, --theme-id <uuid>',
-        'Uuid of the theme. If specified, -a and -A are ignored.'
-      )
+        'Uuid of the theme. If specified, -n, -a and -A cannot be used.'
+      ).conflicts(['themeName', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-f, --file [file]',
-        'Name of the file to write the exported theme(s) to. Ignored with -A.'
-      )
+        'Name of the file to write the exported theme(s) to. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
     )
     .addOption(
       new Option(
         '-a, --all',
-        'Export all the themes in a realm to a single file. Ignored with -n and -i.'
-      )
+        'Export all the themes in a realm to a single file. Cannot be used with -n, -i and -A.'
+      ).conflicts(['themeId', 'themeName', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all the themes in a realm as separate files <theme name>.theme.json. Ignored with -n, -i, and -a.'
-      )
+        'Export all the themes in a realm as separate files <theme name>.theme.json. Cannot be used with -n, -i, and -a.'
+      ).conflicts(['themeId', 'themeName', 'all'])
     )
     .addOption(
       new Option(

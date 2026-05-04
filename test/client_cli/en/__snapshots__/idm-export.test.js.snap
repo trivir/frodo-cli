@@ -21,26 +21,29 @@ Arguments:
 
 Options:
   -a, --all                            Export all IDM configuration objects into
-                                       a single file in directory -D. Ignored
-                                       with -i.
+                                       a single file in directory -D. Cannot be
+                                       used with -i or -A.
   -A, --all-separate                   Export all IDM configuration objects into
                                        separate JSON files in directory -D.
-                                       Ignored with -i, and -a.
+                                       Cannot be used with -i, and -a.
   -e, --env-file [envfile]             Name of the env file.
-  -E, --entities-file [entities-file]  Name of the entity file. Ignored with -i.
+  -E, --entities-file [entities-file]  Name of the entity file. Cannot be used
+                                       with -i.
   -f, --file [file]                    Export file (or directory name if
-                                       exporting mappings separately). Ignored
-                                       with -A.
+                                       exporting mappings separately). Cannot be
+                                       used with -A.
   -i, --entity-id <id>                 Config entity id/name. E.g. "managed",
                                        "sync", "provisioner-<connector-name>",
-                                       etc. If specified, -a and -A are ignored.
+                                       etc. If specified, -a and -A cannot be
+                                       used.
   -N, --no-metadata                    Does not include metadata in the export
                                        file.
   -o, --separate-objects               Export managed.idm.json objects
-                                       separately in their own directory.
-                                       Ignored with -a.
+                                       separately in their own directory. Cannot
+                                       be used with -a.
   -s, --separate-mappings              Export sync.idm.json mappings separately
-                                       in their own directory. Ignored with -a.
+                                       in their own directory. Cannot be used
+                                       with -a.
   -h, --help                           Help
   -hh, --help-more                     Help with all options.
   -hhh, --help-all                     Help with all options, environment

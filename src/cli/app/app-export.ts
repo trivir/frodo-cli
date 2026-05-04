@@ -27,27 +27,27 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --app-id <id>',
-        'Application id. If specified, -n, -a, and -A are ignored.'
-      )
+        'Application id. If specified, -n, -a, and -A cannot be used.'
+      ).conflicts(['appName', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-n, --app-name <name>',
-        'Application name. If specified, -a and -A are ignored.'
-      )
+        'Application name. If specified, -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(new Option('-f, --file <file>', 'Name of the export file.'))
     .addOption(
       new Option(
         '-a, --all',
-        'Export all applications to a single file. Ignored with -i or -n.'
-      )
+        'Export all applications to a single file. Cannot be used with -i, -n, or -A.'
+      ).conflicts(['appId', 'appName', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all applications to separate files (*.application.json) in the current directory. Ignored with -i, -n, or -a.'
-      )
+        'Export all applications to separate files (*.application.json) in the current directory. Cannot be used with -i, -n, or -a.'
+      ).conflicts(['appId', 'appName', 'all'])
     )
     .addOption(
       new Option(

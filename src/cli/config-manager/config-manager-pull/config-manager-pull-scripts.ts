@@ -44,33 +44,33 @@ export default function setup() {
     .addOption(
       new Option(
         '-p, --prefix <prefix>',
-        'Export all scripts that start with a certain prefix. Ignored with -n'
-      )
+        'Export all scripts that start with a certain prefix. Cannot be used with -n'
+      ).conflicts(['scriptName'])
     )
     .addOption(
       new Option(
         '--just-content',
-        'Export only the script .js files, no config files'
-      )
+        'Export only the script .js files. Cannot be used with --just-config.'
+      ).conflicts(['justConfig'])
     )
     .addOption(
       new Option(
         '--just-config',
-        'Export only the config .json files, no scripts. Ignored with --just-content'
-      )
+        'Export only the config .json files, no scripts. Cannot be used with --just-content'
+      ).conflicts(['justContent'])
     )
     .addOption(
       new Option(
         '--script-type <script type>',
-        'Export all scripts of a certain type. Ignored with -n.'
-      )
+        'Export all scripts of a certain type. Cannot be used with -n.'
+      ).conflicts(['scriptName'])
     )
     .addOption(
       new Option(
         // the two options are groovy and all because the command "fr-config-pull scripts" in fr-config manager with no specified arguements returns only js files
         '--language <programming language>',
-        'Export all scripts written a certain programming language. ALL, GROOVY, or JAVASCRIPT. defaults to JAVASCRIPT. Ignored with -n'
-      )
+        'Export all scripts written a certain programming language. ALL, GROOVY, or JAVASCRIPT. defaults to JAVASCRIPT. Cannot be used with -n'
+      ).conflicts(['scriptName'])
     )
 
     .addHelpText(

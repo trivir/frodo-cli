@@ -11,14 +11,14 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --config-id <config-id>',
-        'Configuration id. If specified, -a and -A are ignored.'
-      )
+        'Configuration id. If specified, -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-a, --all',
-        'Delete full cloud configuration. Ignored with -i.'
-      )
+        'Delete full cloud configuration. Cannot be used with -i.'
+      ).conflicts(['configId'])
     )
     .addOption(
       new Option(

@@ -18,8 +18,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --policy-id <policy-id>',
-        'Policy id. If specified, only one policy is imported and the options -a and -A are ignored.'
-      )
+        'Policy id. If specified, only one policy is imported and the options -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
       new Option('--set-id <set-id>', 'Import policies into this policy set.')
@@ -28,14 +28,14 @@ export default function setup() {
     .addOption(
       new Option(
         '-a, --all',
-        'Import all policies from single file. Ignored with -i.'
-      )
+        'Import all policies from single file. Cannot be used with -i or -A.'
+      ).conflicts(['policyId', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all policies from separate files (*.policy.authz.json) in the current directory. Ignored with -i or -a.'
-      )
+        'Import all policies from separate files (*.policy.authz.json) in the current directory. Cannot be used with -i or -a.'
+      ).conflicts(['policyId', 'all'])
     )
     .addOption(
       new Option(

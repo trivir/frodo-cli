@@ -31,27 +31,27 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --template-id <template-id>',
-        'Email template id/name. If specified, -a and -A are ignored.'
-      )
+        'Email template id/name. If specified, -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(new Option('-f, --file <file>', 'Name of the import file.'))
     .addOption(
       new Option(
         '-a, --all',
-        'Import all email templates from single file. Ignored with -i.'
-      )
+        'Import all email templates from single file. Cannot be used with -i or -A.'
+      ).conflicts(['templateId', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all email templates from separate files (*.template.email.json) in the current directory. Ignored with -i or -a.'
-      )
+        'Import all email templates from separate files (*.template.email.json) in the current directory. Cannot be used with -i or -a.'
+      ).conflicts(['templateId', 'all'])
     )
     .addOption(
       new Option(
         '--raw',
-        "Import raw email template files. Raw templates do not contain the id/name, therefore when using -A or -f without -i, the email template id/name is parsed from the file name; Make sure your template files are named 'emailTemplate-<id/name>.json' or use -f with -i. Ignored with -a."
-      )
+        "Import raw email template files. Raw templates do not contain the id/name, therefore when using -A or -f without -i, the email template id/name is parsed from the file name; Make sure your template files are named 'emailTemplate-<id/name>.json' or use -f with -i. Cannot be used with -a."
+      ).conflicts(['all'])
     )
     .action(
       // implement program logic inside action handler

@@ -49,7 +49,12 @@ export default function setup() {
         'Delete mappings from global secret stores. For classic deployments only.'
       )
     )
-    .addOption(new Option('-a, --all', 'Delete all mappings. Ignored with -s.'))
+    .addOption(
+      new Option(
+        '-a, --all',
+        'Delete all mappings. Cannot be used with -s.'
+      ).conflicts(['secretId'])
+    )
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {

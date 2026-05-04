@@ -16,11 +16,14 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --entity-id <entity-id>',
-        'Entity id. If specified, -a is ignored.'
-      )
+        'Entity id. If specified, -a cannot be used.'
+      ).conflicts(['all'])
     )
     .addOption(
-      new Option('-a, --all', 'Delete all entity providers. Ignored with -i.')
+      new Option(
+        '-a, --all',
+        'Delete all entity providers. Cannot be used with -i.'
+      ).conflicts(['entityId'])
     )
     .action(
       // implement command logic inside action handler

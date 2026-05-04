@@ -22,21 +22,21 @@ Arguments:
 Deployment: Classic-only
 
 Options:
-  -a, --all                      Import all servers from single file. Ignored
-                                 with -i.
+  -a, --all                      Import all servers from single file. Cannot be
+                                 used with -i, -u or -A.
   -A, --all-separate             Import all servers from separate files
                                  (*.server.json) in the current directory.
-                                 Ignored with -i or -a.
+                                 Cannot be used with -i, -u or -a.
   -d, --default                  Import server(s) along with the default server
                                  properties.
   -f, --file <file>              Name of the file to import.
   -i, --server-id <server-id>    Server id. If specified, only one server is
-                                 imported and the options -u, -a and -A are
-                                 ignored.
+                                 imported and the options -u, -a and -A cannot
+                                 be used.
   -u, --server-url <server-url>  Server url. Can be a unique substring of the
                                  full url (if not unique, it will error out). If
                                  specified, only one server is imported and the
-                                 options -a and -A are ignored.
+                                 options -a and -A cannot be used.
   -h, --help                     Help
   -hh, --help-more               Help with all options.
   -hhh, --help-all               Help with all options, environment variables,

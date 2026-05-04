@@ -19,8 +19,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --idp-id <id>',
-        'Provider id. If specified, -a and -A are ignored.'
-      )
+        'Provider id. If specified, -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
       new Option(
@@ -31,14 +31,14 @@ export default function setup() {
     .addOption(
       new Option(
         '-a, --all',
-        'Import all the providers from single file. Ignored with -t or -i.'
-      )
+        'Import all the providers from single file. Cannot be used with -i and -A.'
+      ).conflicts(['idpId', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all the providers from separate files (*.json) in the current directory. Ignored with -t or -i or -a.'
-      )
+        'Import all the providers from separate files (*.json) in the current directory. Cannot be used with -i or -a.'
+      ).conflicts(['idpId', 'all'])
     )
     .addOption(
       new Option('--no-deps', 'Do not include any dependencies (scripts).')
