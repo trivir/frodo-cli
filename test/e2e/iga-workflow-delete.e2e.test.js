@@ -93,18 +93,38 @@ describe(`frodo iga workflow delete`, () => {
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
   });
-
+/**
+ * Delete all and delete published only require a try catch because the workflow 
+ * custom-1-BasicEntitlementGrant has a conflicting instance that makes it impossible to delete.
+ * As far as we know this conflicting instance cannot be removed and will require ping support to resolve
+ */
   test(`"frodo iga workflow delete --published-only -a": should delete all published workflows`, async () => {
     const CMD = `frodo iga workflow delete --published-only -a`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
+    let stdout = ''
+    let stderr = ''
+    try{
+     ({ stdout, stderr } = await exec(CMD, igaEnv));
+    } catch (e){
+      stdout = e.stdout ?? ''
+      stderr = e.stderr ?? e.message
+    }
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
   });
 
   test(`"frodo iga workflow delete -dp --all": should delete all workflows`, async () => {
     const CMD = `frodo iga workflow delete -dp --all`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
-  });
-});
+    let stdout = '';
+    let stderr = '';
+    try{
+      ({ stdout, stderr } = await exec(CMD, igaEnv));
+      }
+      catch (e){
+        stdout = e.stdout ?? ''
+        stderr = e.stderr ?? e.message
+      }
+      expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+      expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+  });}
+  
+);

@@ -52,8 +52,8 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga workflow import -f test/e2e/exports/all/allWorkflows.workflow.json --no-deps
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga workflow import -af test/e2e/exports/all/allWorkflows.workflow.json
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga workflow import --all --file test/e2e/exports/all/allWorkflows.workflow.json --no-deps
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga workflow import -AD test/e2e/exports/all-separate/iga/global/workflow
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga workflow import --all-separate --directory test/e2e/exports/all-separate/iga/global/workflow --no-deps
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga workflow import -AD test/e2e/exports/all-separate/cloud/global/workflow
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga workflow import --all-separate --directory test/e2e/exports/all-separate/cloud/global/workflow --no-deps
  */
 import cp from 'child_process';
 import { promisify } from 'util';

@@ -1,9 +1,55 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`frodo iga workflow delete "frodo iga workflow delete --draft-only -a": should delete all draft workflows 1`] = `""`;
+
+exports[`frodo iga workflow delete "frodo iga workflow delete --draft-only -a": should delete all draft workflows 2`] = `
+"✔ Deleted workflows.
+"
+`;
+
+exports[`frodo iga workflow delete "frodo iga workflow delete --published-only -a": should delete all published workflows 1`] = `""`;
+
+exports[`frodo iga workflow delete "frodo iga workflow delete --published-only -a": should delete all published workflows 2`] = `
+"Error deleting workflow custom1BasicEntitlementGrant
+  Error deleting published workflow custom1BasicEntitlementGrant
+    Network error:
+      URL: https://openam-frodo-dev.forgeblocks.com/auto/orchestration/definition/custom1BasicEntitlementGrant/published
+      Status: 500
+      Code: ERR_BAD_RESPONSE
+✔ Deleted workflows.
+"
+`;
+
+exports[`frodo iga workflow delete "frodo iga workflow delete --workflow-id testWorkflow4": Should delete both draft and published testWorkflow4 1`] = `""`;
+
+exports[`frodo iga workflow delete "frodo iga workflow delete --workflow-id testWorkflow4": Should delete both draft and published testWorkflow4 2`] = `
+"✔ Deleted workflow testWorkflow4.
+"
+`;
+
 exports[`frodo iga workflow delete "frodo iga workflow delete -di testWorkflow1": should delete draft testWorkflow1" 1`] = `""`;
 
 exports[`frodo iga workflow delete "frodo iga workflow delete -di testWorkflow1": should delete draft testWorkflow1" 2`] = `
-"Connected to https://openam-frodo-dev.forgeblocks.com/am [alpha] as service account Frodo-SA-1766159115537 [b672336b-41ef-428d-ae4a-e0c082875377]
-✔ Deleted workflow testWorkflow1.
+"✔ Deleted workflow testWorkflow1.
+"
+`;
+
+exports[`frodo iga workflow delete "frodo iga workflow delete -dp --all": should delete all workflows 1`] = `""`;
+
+exports[`frodo iga workflow delete "frodo iga workflow delete -dp --all": should delete all workflows 2`] = `
+"Error deleting workflow custom1BasicEntitlementGrant
+  Error deleting published workflow custom1BasicEntitlementGrant
+    Network error:
+      URL: https://openam-frodo-dev.forgeblocks.com/auto/orchestration/definition/custom1BasicEntitlementGrant/published
+      Status: 500
+      Code: ERR_BAD_RESPONSE
+✔ Deleted workflows.
+"
+`;
+
+exports[`frodo iga workflow delete "frodo iga workflow delete -pi testWorkflow1": should delete published testWorkflow1 1`] = `""`;
+
+exports[`frodo iga workflow delete "frodo iga workflow delete -pi testWorkflow1": should delete published testWorkflow1 2`] = `
+"✔ Deleted workflow testWorkflow1.
 "
 `;

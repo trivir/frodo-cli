@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CLI help interface for 'iga' should be expected english 1`] = `
+"Usage: frodo iga [options] [command]
+
+Manage IGA configuration.
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+
+Commands:
+  help              display help for command
+  workflow          Manage workflows.
+"
+`;

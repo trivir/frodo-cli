@@ -6,15 +6,20 @@ exports[`CLI help interface for 'iga workflow' should be expected english 1`] = 
 Manage workflows.
 
 Options:
-  -h, --help  Help
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
 
 Commands:
-  delete      Delete workflows.
-  describe    Describe workflow.
-  export      Export workflows.
-  help        display help for command
-  import      Import workflows.
-  list        List workflows.
-  publish     Publish workflow.
+  delete            Delete workflows.
+  describe          Describe workflow.
+  help              display help for command
+  publish           Publish workflow.
+
+  (Cloud-only):
+  export            Export workflows.
+  import            Import workflows.
+  list              List workflows.
 "
 `;
