@@ -46,6 +46,7 @@ const {
   readScript,
   readScriptByName,
   readScripts,
+  countScripts,
   exportScript,
   exportScriptByName,
   exportScripts,
@@ -374,8 +375,15 @@ export async function exportScriptsToFile(
   keepModifiedProperties: boolean = false,
   options: ScriptExportOptions
 ): Promise<boolean> {
-  debugMessage(`Cli.ScriptOps.exportScriptsToFile: start`);
+  let indicatorId: string;
+  const totalScripts = await countScripts();
   try {
+  debugMessage(`Cli.ScriptOps.exportScriptsToFile: start`);
+  indicatorId = createProgressIndicator(
+    'determinate',
+    totalScripts,
+    `Exporting scripts...`
+  );
     let fileName = getTypedFilename(
       `all${titleCase(state.getRealm())}Scripts`,
       'script'
@@ -383,7 +391,16 @@ export async function exportScriptsToFile(
     if (file) {
       fileName = file;
     }
-    const scriptExport = await exportScripts(options, errorHandler);
+    const scriptExport = await exportScripts(options, (error, result) => {
+      if (error) {
+        stopProgressIndicator(indicatorId, `Error exporting script ${result._id}`,
+          'fail'
+        );
+        errorHandler(error);
+      } else {
+        updateProgressIndicator(indicatorId, `Exporting script ${result._id}...`);
+      }
+    });
     saveJsonToFile(
       scriptExport,
       getFilePath(fileName, true),
@@ -391,9 +408,11 @@ export async function exportScriptsToFile(
       false,
       keepModifiedProperties
     );
+    stopProgressIndicator(indicatorId, `Scripts saved to ${fileName}`);
     debugMessage(`Cli.ScriptOps.exportScriptsToFile: end`);
     return true;
   } catch (error) {
+    stopProgressIndicator(indicatorId, `Error exporting scripts`, 'fail');
     printError(error);
   }
   return false;

@@ -22,6 +22,7 @@ const { decodeBase64, saveTextToFile, getFilePath, getWorkingDirectory } =
   frodo.utils;
 const { getTypedFilename, saveJsonToFile, getRealmString } = frodo.utils;
 const {
+  readSaml2EntityIds,
   readSaml2ProviderStubs,
   readSaml2Provider,
   readSaml2ProviderStub,
@@ -257,16 +258,38 @@ export async function exportSaml2ProvidersToFile(
   includeMeta: boolean = true,
   options: Saml2EntitiesExportOptions = { deps: true }
 ): Promise<boolean> {
+  let indicatorId: string;
+  const totalSaml2 = await readSaml2EntityIds();
   debugMessage(`cli.Saml2Ops.exportSaml2ProviderToFile: start [file=${file}]`);
   try {
+    indicatorId = createProgressIndicator(
+      'determinate',
+      totalSaml2.length,
+      `Exporting SAML2 providers...`
+    );
     if (!file) {
       file = getTypedFilename(`all${getRealmString()}Providers`, 'saml');
     }
-    const exportData = await exportSaml2Providers(options);
+    const exportData = await exportSaml2Providers(options, (error, result) => {
+      if (error) {
+        stopProgressIndicator(
+          indicatorId,
+          `Error exporting SAML2 provider ${result?.saml}`,
+          'fail'
+        );
+      } else {
+        updateProgressIndicator(
+          indicatorId,
+          `Exporting SAML2 provider ${result?.saml}...`
+        );
+      }
+    });
     saveJsonToFile(exportData, getFilePath(file, true), includeMeta);
+    stopProgressIndicator(indicatorId, `Exported all SAML2 providers to ${file}.`);
     debugMessage(`cli.Saml2Ops.exportSaml2ProviderToFile: end [file=${file}]`);
     return true;
   } catch (error) {
+    stopProgressIndicator(indicatorId, `Error exporting SAML2 providers`, 'fail')
     printError(error);
   }
   return false;
