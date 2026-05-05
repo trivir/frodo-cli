@@ -23,7 +23,7 @@ const {
   RETRY_STRATEGIES,
   RETRY_NOTHING_KEY,
 } = constants;
-const { convertPrivateKeyToPem } = frodo.utils.crypto;
+const { getPrivateKey } = frodo.utils.crypto;
 
 // Default heading for grouped subcommands.
 const COMMANDS_HEADING = 'Commands:';
@@ -496,7 +496,7 @@ const amsterPrivateKeyPassphraseOption = withHelpGroup(
 const amsterPrivateKeyFileOption = withHelpGroup(
   new Option(
     '--private-key <file>',
-    'File containing the private key for authenticating with Amster. Supported formats include PEM (both PKCS#1 and PKCS#8 variants), OpenSSH, DNSSEC, and JWK.'
+    'File containing the private key for authenticating with Amster. Supported formats include OpenSSH, DNSSEC, and JWK.'
   ),
   AUTHENTICATION_OPTIONS_HEADING
 );
@@ -669,7 +669,7 @@ const stateMap = {
     // This is needed in the case the passphrase is an option, but the private key is an environment variable.
     process.env.FRODO_AMSTER_PASSPHRASE = passphrase;
   },
-  [amsterPrivateKeyFileOption.attributeName()]: (
+  [amsterPrivateKeyFileOption.attributeName()]: async (
     file: string,
     options: Record<string, string | boolean>
   ) => {
@@ -677,16 +677,16 @@ const stateMap = {
       (options[amsterPrivateKeyPassphraseOption.attributeName()] as string) ||
       process.env.FRODO_AMSTER_PASSPHRASE;
     try {
-      // Store as PEM format (PKCS#8 variant specifically) since Jose supports PEM and since PKCS#8 supports more algorithms than PKCS#1
-      state.setAmsterPrivateKey(
-        convertPrivateKeyToPem(
-          fs.readFileSync(file, 'utf8'),
-          passphrase,
-          file
-            .replaceAll('\\', '/')
-            .substring(file.replaceAll('\\', '/').lastIndexOf('/') + 1)
-        )
+      const key = await getPrivateKey(
+        fs.readFileSync(file, 'utf8'),
+        passphrase,
+        file
+          .replaceAll('\\', '/')
+          .substring(file.replaceAll('\\', '/').lastIndexOf('/') + 1)
       );
+
+      // Store as JWK format
+      state.setAmsterPrivateKey(key);
     } catch (error) {
       printMessage(
         `Error parsing private key from file ${file}: ${error.message}`,
@@ -811,7 +811,7 @@ const environmentVariables: EnvironmentVariableDescriptor[] = [
   {
     name: 'FRODO_AMSTER_PRIVATE_KEY',
     description:
-      "Amster private key. Overridden by '--private-key' option but takes the actual private key as a value (i.e. the file contents), not a file name. Supported formats include PEM (both PKCS#1 and PKCS#8 variants), OpenSSH, DNSSEC, and JWK.",
+      "Amster private key. Overridden by '--private-key' option but takes the actual private key as a value (i.e. the file contents), not a file name. Supported formats include OpenSSH, DNSSEC, and JWK.",
     group: AUTHENTICATION_ENVIRONMENT_VARIABLES_HEADING,
     scope: 'classic-only',
     include: (command) =>
