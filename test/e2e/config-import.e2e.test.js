@@ -72,6 +72,9 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config import -AD test/e2e/exports/all-separate/cloud --include-active-values
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config import -gf test/e2e/exports/all-separate/cloud/global/sync/sync.idm.json
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config import --file test/e2e/exports/all-separate/cloud/realm/root-alpha/script/mode.script.json
+// Cloud IGA
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config import -af test/e2e/exports/all/all.iga.json
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config import -AD test/e2e/exports/all-separate/iga
 // Classic
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openam-frodo-dev.classic.com:8080/am frodo config import -adf test/e2e/exports/all/all.classic.json -m classic
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=http://openam-frodo-dev.classic.com:8080/am frodo config import --all --clean --re-uuid-scripts --re-uuid-journeys --include-active-values --file test/e2e/exports/all/all.classic.json --type classic
@@ -87,7 +90,7 @@ import {
   getEnv,
   removeAnsiEscapeCodes
 } from './utils/TestUtils';
-import { connection as c, classic_connection as cc } from './utils/TestConfig';
+import { connection as c, classic_connection as cc, iga_connection as ic } from './utils/TestConfig';
 
 const exec = promisify(cp.exec);
 
@@ -103,8 +106,8 @@ const allClassicExport = `${allDirectory}/${allClassicFileName}`;
 const allSeparateCloudDirectory = `test/e2e/exports/all-separate/cloud`;
 const allSeparateClassicDirectory = `test/e2e/exports/all-separate/classic`;
 
-describe.skip('frodo config import', () => {
-  test(`"frodo config import -adf ${allCloudExport}" Import everything from "${allCloudFileName}", including default scripts.`, async () => {
+describe('frodo config import', () => {
+  test.skip(`"frodo config import -adf ${allCloudExport}" Import everything from "${allCloudFileName}", including default scripts.`, async () => {
     const CMD = `frodo config import -adf ${allCloudExport}`;
     try {
       await exec(CMD, env);
@@ -125,7 +128,7 @@ describe.skip('frodo config import', () => {
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
   });
 
-  test(`"frodo config import -aCf ${allCloudExport}" Import everything from "${allCloudFileName}". Clean old services`, async () => {
+  test.skip(`"frodo config import -aCf ${allCloudExport}" Import everything from "${allCloudFileName}". Clean old services`, async () => {
     const CMD = `frodo config import -aCf ${allCloudExport}`;
     try {
       await exec(CMD, env);
@@ -139,7 +142,7 @@ describe.skip('frodo config import', () => {
     }
   });
 
-  test(`"frodo config import -AD ${allSeparateCloudDirectory}" Import everything from directory "${allSeparateCloudDirectory}"`, async () => {
+  test.skip(`"frodo config import -AD ${allSeparateCloudDirectory}" Import everything from directory "${allSeparateCloudDirectory}"`, async () => {
     const CMD = `frodo config import -AD ${allSeparateCloudDirectory}`;
     try {
       await exec(CMD, env);
@@ -160,7 +163,7 @@ describe.skip('frodo config import', () => {
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
   });
 
-  test(`"frodo config import -CAD ${allSeparateCloudDirectory}" Import everything from directory "${allSeparateCloudDirectory}". Clean old services`, async () => {
+  test.skip(`"frodo config import -CAD ${allSeparateCloudDirectory}" Import everything from directory "${allSeparateCloudDirectory}". Clean old services`, async () => {
     const CMD = `frodo config import -CAD ${allSeparateCloudDirectory}`;
     try {
       await exec(CMD, env);
@@ -174,7 +177,7 @@ describe.skip('frodo config import', () => {
     }
   });
 
-  test(`"frodo config import --default -CAD ${allSeparateCloudDirectory}" Import everything from directory "${allSeparateCloudDirectory}", including default scripts. Clean old services`, async () => {
+  test.skip(`"frodo config import --default -CAD ${allSeparateCloudDirectory}" Import everything from directory "${allSeparateCloudDirectory}", including default scripts. Clean old services`, async () => {
     const CMD = `frodo config import --default -CAD ${allSeparateCloudDirectory}`;
     try {
       await exec(CMD, env);
@@ -188,7 +191,7 @@ describe.skip('frodo config import', () => {
     }
   });
 
-  test(`"frodo config import -AD ${allSeparateCloudDirectory} --include-active-values" Import everything with secret values from directory "${allSeparateCloudDirectory}"`, async () => {
+  test.skip(`"frodo config import -AD ${allSeparateCloudDirectory} --include-active-values" Import everything with secret values from directory "${allSeparateCloudDirectory}"`, async () => {
     const CMD = `frodo config import -AD ${allSeparateCloudDirectory} --include-active-values`;
     try {
       await exec(CMD, env);
@@ -202,16 +205,32 @@ describe.skip('frodo config import', () => {
     }
   });
 
-  test(`"frodo config import -gf test/e2e/exports/all-separate/cloud/global/sync/sync.idm.json" Import sync.idm.json along with extracted mappings and no errors`, async () => {
+  test.skip(`"frodo config import -gf test/e2e/exports/all-separate/cloud/global/sync/sync.idm.json" Import sync.idm.json along with extracted mappings and no errors`, async () => {
     const CMD = `frodo config import -gf test/e2e/exports/all-separate/cloud/global/sync/sync.idm.json`;
     const { stdout } = await exec(CMD, env);
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
   });
 
-  test(`"frodo config import --file test/e2e/exports/all-separate/cloud/realm/root-alpha/script/mode.script.json" Import mode.script.json long with extracted scripts and no errors`, async () => {
+  test.skip(`"frodo config import --file test/e2e/exports/all-separate/cloud/realm/root-alpha/script/mode.script.json" Import mode.script.json long with extracted scripts and no errors`, async () => {
     const CMD = `frodo config import --file test/e2e/exports/all-separate/cloud/realm/root-alpha/script/mode.script.json`;
     const { stdout } = await exec(CMD, env);
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+  });
+
+  // Cloud IGA Tests
+
+  test.skip(`"frodo config import -af test/e2e/exports/all/all.iga.json": Should import all IGA configuration from single file`, async () => {
+    const CMD = `frodo config import -af test/e2e/exports/all/all.iga.json`;
+    const { stdout, stderr } = await exec(CMD, env);
+    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+  });
+
+  test.skip(`"frodo config import -AD test/e2e/exports/all-separate/iga": Should import all IGA configuration from separate files`, async () => {
+    const CMD = `frodo config import -AD test/e2e/exports/all-separate/iga`;
+    const { stdout, stderr } = await exec(CMD, env);
+    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
   });
 
   // Classic Env Tests

@@ -842,6 +842,19 @@ Error Importing Services
 
 exports[`frodo config import "frodo config import -f test/e2e/exports/all-separate/classic/realm/root/webhookService/Cool-Webhook.webhookService.json -m classic" Import the webhook service with no errors 1`] = `""`;
 
+exports[`frodo config import "frodo config import -f test/e2e/exports/all-separate/classic/realm/root/webhookService/Cool-Webhook.webhookService.json -m classic" Import the webhook service with no errors 2`] = `
+"✔ Finished Importing Everything to global!
+✔ Finished Importing Everything to root realm!
+✔ Finished Importing all other AM config entities!
+"
+`;
+
 exports[`frodo config import "frodo config import -gf test/e2e/exports/all-separate/classic/global/server/01.server.json -m classic" Import server 01 along with extracted properties and no errors 1`] = `""`;
+
+exports[`frodo config import "frodo config import -gf test/e2e/exports/all-separate/classic/global/server/01.server.json -m classic" Import server 01 along with extracted properties and no errors 2`] = `
+"✔ Finished Importing Everything to global!
+✔ Finished Importing all other AM config entities!
+"
+`;
 
 exports[`frodo config import "frodo config import -gf test/e2e/exports/all-separate/cloud/global/sync/sync.idm.json" Import sync.idm.json along with extracted mappings and no errors 1`] = `""`;

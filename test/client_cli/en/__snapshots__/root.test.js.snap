@@ -25,6 +25,7 @@ Commands:
   help                              display help for command
   idm                               Manage IDM configuration.
   idp                               Manage (social) identity providers.
+  iga                               Manage IGA configuration.
   info                              Print versions and tokens.
   journey                           Manage journeys/trees.
   mapping                           Manage IDM mappings.
