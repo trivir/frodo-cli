@@ -1,0 +1,34 @@
+{
+  "config": {
+    "undefined": {
+      "config": {
+        "iga_access_request": {
+          "allowSelfApproval": true,
+          "defaultApprover": "managed/role/8b470ae7-d40a-4f6a-87cd-b39c2f144fe7",
+          "maxManualRoleMembers": 1000,
+          "preventRequestWithViolation": false,
+          "requireApproveJustification": false,
+          "requireRejectJustification": false,
+          "requireRequestJustification": false,
+          "requireRequestJustificationWithViolation": false
+        }
+      },
+      "meta": {
+        "exportDate": "2026-05-22T18:26:20.015Z",
+        "exportTool": "frodo",
+        "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+        "exportedBy": "dsevy@trivir.com",
+        "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+        "originAmVersion": "9.0.0"
+      }
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-22T18:26:20.016Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}

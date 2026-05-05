@@ -1,0 +1,574 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga config export "frodo iga config export --all --file testConfigExportFile2.json": should export all iga config 1`] = `0`;
+
+exports[`frodo iga config export "frodo iga config export --all --file testConfigExportFile2.json": should export all iga config 2`] = `""`;
+
+exports[`frodo iga config export "frodo iga config export --all --file testConfigExportFile2.json": should export all iga config 3`] = `
+"✔ Exported 7 IGA config keys
+"
+`;
+
+exports[`frodo iga config export "frodo iga config export --all --file testConfigExportFile2.json": should export all iga config: testConfigExportFile2.json 1`] = `
+{
+  "config": {
+    "feature_recommendation": {
+      "result": [],
+    },
+    "iga-file": {},
+    "iga_access_request": {
+      "allowSelfApproval": false,
+      "defaultApprover": "",
+      "maxManualRoleMembers": 1000,
+      "preventRequestWithViolation": false,
+      "requireApproveJustification": false,
+      "requireRejectJustification": false,
+      "requireRequestJustification": false,
+      "requireRequestJustificationWithViolation": false,
+    },
+    "iga_autoid_integration": {
+      "enableAutoId": false,
+      "enableFeatureRecommendation": true,
+      "featuresToSkipDuringRecommendation": [
+        "_eventMetadata",
+        "_rev",
+        "accountStatus",
+        "assignedDashboard",
+        "cn",
+        "entityType",
+        "fr",
+        "givenName",
+        "id",
+        "mail",
+        "manager",
+        "metadata",
+        "sn",
+        "userId",
+        "userName",
+        "passwordLastChangedTime",
+        "passwordExpirationTime",
+        "scopes",
+        "adminOfOrg",
+        "memberOfOrg",
+        "ownerOfApp",
+        "ownerOfOrg",
+        "roles",
+        "authzRoles",
+        "applications",
+        "assignments",
+        "groups",
+        "reports",
+      ],
+      "highScorePercentThreshold": 80,
+      "lowScorePercentThreshold": 30,
+      "maxRecommendedFeatures": 10,
+      "mediumScorePercentThreshold": 50,
+      "roleMiningConfidenceThreshold": 0.75,
+      "roleMiningEntitlementThreshold": 1,
+      "roleMiningMembershipThreshold": 30,
+      "training_features_filter": [
+        "user.managerId",
+      ],
+    },
+    "iga_global": {
+      "enableScoping": false,
+    },
+    "iga_notification": {
+      "notificationMaxRetries": 3,
+      "notificationPollingBatchSize": 50,
+      "notificationRetryDelay": 60000,
+      "notificationSendDelay": 1000,
+    },
+    "iga_ui_config": {
+      "lcmSettings": {
+        "entitlement": {
+          "enabled": false,
+        },
+        "organization": {
+          "enabled": false,
+        },
+        "role": {
+          "enabled": false,
+        },
+        "user": {
+          "enabled": true,
+        },
+      },
+    },
+  },
+  "meta": Any<Object>,
+}
+`;
+
+exports[`frodo iga config export "frodo iga config export --all-separate -D testConfigExportDir4": should export all iga config separately 1`] = `0`;
+
+exports[`frodo iga config export "frodo iga config export --all-separate -D testConfigExportDir4": should export all iga config separately 2`] = `""`;
+
+exports[`frodo iga config export "frodo iga config export --all-separate -D testConfigExportDir4": should export all iga config separately 3`] = `
+"✔ Exported 7 IGA config keys
+"
+`;
+
+exports[`frodo iga config export "frodo iga config export --all-separate -D testConfigExportDir4": should export all iga config separately: testConfigExportDir4/feature_recommendation.config.json 1`] = `
+{
+  "config": {
+    "feature_recommendation": {},
+  },
+  "meta": Any<Object>,
+}
+`;
+
+exports[`frodo iga config export "frodo iga config export --all-separate -D testConfigExportDir4": should export all iga config separately: testConfigExportDir4/iga_access_request.config.json 1`] = `
+{
+  "config": {
+    "iga_access_request": {
+      "allowSelfApproval": true,
+      "defaultApprover": "managed/role/8b470ae7-d40a-4f6a-87cd-b39c2f144fe7",
+      "maxManualRoleMembers": 1000,
+      "preventRequestWithViolation": false,
+      "requireApproveJustification": false,
+      "requireRejectJustification": false,
+      "requireRequestJustification": false,
+      "requireRequestJustificationWithViolation": false,
+    },
+  },
+  "meta": Any<Object>,
+}
+`;
+
+exports[`frodo iga config export "frodo iga config export --all-separate -D testConfigExportDir4": should export all iga config separately: testConfigExportDir4/iga_autoid_integration.config.json 1`] = `
+{
+  "config": {
+    "iga_autoid_integration": {
+      "enableAutoId": false,
+      "enableFeatureRecommendation": true,
+      "featuresToSkipDuringRecommendation": [
+        "_eventMetadata",
+        "_rev",
+        "accountStatus",
+        "assignedDashboard",
+        "cn",
+        "entityType",
+        "fr",
+        "givenName",
+        "id",
+        "mail",
+        "manager",
+        "metadata",
+        "sn",
+        "userId",
+        "userName",
+        "passwordLastChangedTime",
+        "passwordExpirationTime",
+        "scopes",
+        "adminOfOrg",
+        "memberOfOrg",
+        "ownerOfApp",
+        "ownerOfOrg",
+        "roles",
+        "authzRoles",
+        "applications",
+        "assignments",
+        "groups",
+        "reports",
+      ],
+      "highScorePercentThreshold": 80,
+      "lowScorePercentThreshold": 30,
+      "maxRecommendedFeatures": 10,
+      "mediumScorePercentThreshold": 50,
+      "roleMiningConfidenceThreshold": 0.75,
+      "roleMiningEntitlementThreshold": 1,
+      "roleMiningMembershipThreshold": 30,
+      "training_features_filter": [
+        "user.managerId",
+      ],
+    },
+  },
+  "meta": Any<Object>,
+}
+`;
+
+exports[`frodo iga config export "frodo iga config export --all-separate -D testConfigExportDir4": should export all iga config separately: testConfigExportDir4/iga_global.config.json 1`] = `
+{
+  "config": {
+    "iga_global": {
+      "enableScoping": false,
+    },
+  },
+  "meta": Any<Object>,
+}
+`;
+
+exports[`frodo iga config export "frodo iga config export --all-separate -D testConfigExportDir4": should export all iga config separately: testConfigExportDir4/iga_notification.config.json 1`] = `
+{
+  "config": {
+    "iga_notification": {
+      "notificationMaxRetries": 3,
+      "notificationPollingBatchSize": 50,
+      "notificationRetryDelay": 60000,
+      "notificationSendDelay": 1000,
+    },
+  },
+  "meta": Any<Object>,
+}
+`;
+
+exports[`frodo iga config export "frodo iga config export --all-separate -D testConfigExportDir4": should export all iga config separately: testConfigExportDir4/iga_ui_config.config.json 1`] = `
+{
+  "config": {
+    "iga_ui_config": {
+      "lcmSettings": {
+        "entitlement": {
+          "enabled": false,
+        },
+        "organization": {
+          "enabled": false,
+        },
+        "role": {
+          "enabled": false,
+        },
+        "user": {
+          "enabled": true,
+        },
+      },
+    },
+  },
+  "meta": Any<Object>,
+}
+`;
+
+exports[`frodo iga config export "frodo iga config export --all-separate -D testConfigExportDir4": should export all iga config separately: testConfigExportDir4/iga-file.config.json 1`] = `
+{
+  "config": {
+    "iga-file": {},
+  },
+  "meta": Any<Object>,
+}
+`;
+
+exports[`frodo iga config export "frodo iga config export --config-key iga_access_request -f testConfigExportFile1.json": should export iga config 'iga_access_request' 1`] = `0`;
+
+exports[`frodo iga config export "frodo iga config export --config-key iga_access_request -f testConfigExportFile1.json": should export iga config 'iga_access_request' 2`] = `""`;
+
+exports[`frodo iga config export "frodo iga config export --config-key iga_access_request -f testConfigExportFile1.json": should export iga config 'iga_access_request' 3`] = `
+"✔ Exported config iga_access_request to file
+"
+`;
+
+exports[`frodo iga config export "frodo iga config export --config-key iga_access_request -f testConfigExportFile1.json": should export iga config 'iga_access_request': testConfigExportFile1.json 1`] = `
+{
+  "config": {
+    "iga_access_request": {
+      "allowSelfApproval": false,
+      "defaultApprover": "",
+      "maxManualRoleMembers": 1000,
+      "preventRequestWithViolation": false,
+      "requireApproveJustification": false,
+      "requireRejectJustification": false,
+      "requireRequestJustification": false,
+      "requireRequestJustificationWithViolation": false,
+    },
+  },
+  "meta": Any<Object>,
+}
+`;
+
+exports[`frodo iga config export "frodo iga config export --no-metadata -a --directory testConfigExportDir2": should export all iga config with no metadata 1`] = `0`;
+
+exports[`frodo iga config export "frodo iga config export --no-metadata -a --directory testConfigExportDir2": should export all iga config with no metadata 2`] = `""`;
+
+exports[`frodo iga config export "frodo iga config export --no-metadata -a --directory testConfigExportDir2": should export all iga config with no metadata 3`] = `
+"✔ Exported 7 IGA config keys
+"
+`;
+
+exports[`frodo iga config export "frodo iga config export --no-metadata -a --directory testConfigExportDir2": should export all iga config with no metadata: testConfigExportDir2/allConfig.config.json 1`] = `
+{
+  "config": {
+    "feature_recommendation": {
+      "result": [],
+    },
+    "iga-file": {},
+    "iga_access_request": {
+      "allowSelfApproval": false,
+      "defaultApprover": "",
+      "maxManualRoleMembers": 1000,
+      "preventRequestWithViolation": false,
+      "requireApproveJustification": false,
+      "requireRejectJustification": false,
+      "requireRequestJustification": false,
+      "requireRequestJustificationWithViolation": false,
+    },
+    "iga_autoid_integration": {
+      "enableAutoId": false,
+      "enableFeatureRecommendation": true,
+      "featuresToSkipDuringRecommendation": [
+        "_eventMetadata",
+        "_rev",
+        "accountStatus",
+        "assignedDashboard",
+        "cn",
+        "entityType",
+        "fr",
+        "givenName",
+        "id",
+        "mail",
+        "manager",
+        "metadata",
+        "sn",
+        "userId",
+        "userName",
+        "passwordLastChangedTime",
+        "passwordExpirationTime",
+        "scopes",
+        "adminOfOrg",
+        "memberOfOrg",
+        "ownerOfApp",
+        "ownerOfOrg",
+        "roles",
+        "authzRoles",
+        "applications",
+        "assignments",
+        "groups",
+        "reports",
+      ],
+      "highScorePercentThreshold": 80,
+      "lowScorePercentThreshold": 30,
+      "maxRecommendedFeatures": 10,
+      "mediumScorePercentThreshold": 50,
+      "roleMiningConfidenceThreshold": 0.75,
+      "roleMiningEntitlementThreshold": 1,
+      "roleMiningMembershipThreshold": 30,
+      "training_features_filter": [
+        "user.managerId",
+      ],
+    },
+    "iga_global": {
+      "enableScoping": false,
+    },
+    "iga_notification": {
+      "notificationMaxRetries": 3,
+      "notificationPollingBatchSize": 50,
+      "notificationRetryDelay": 60000,
+      "notificationSendDelay": 1000,
+    },
+    "iga_ui_config": {
+      "lcmSettings": {
+        "entitlement": {
+          "enabled": false,
+        },
+        "organization": {
+          "enabled": false,
+        },
+        "role": {
+          "enabled": false,
+        },
+        "user": {
+          "enabled": true,
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`frodo iga config export "frodo iga config export -NAD testConfigExportDir3": should export all iga config separately with no metadata 1`] = `0`;
+
+exports[`frodo iga config export "frodo iga config export -NAD testConfigExportDir3": should export all iga config separately with no metadata 2`] = `""`;
+
+exports[`frodo iga config export "frodo iga config export -NAD testConfigExportDir3": should export all iga config separately with no metadata 3`] = `
+"✔ Exported 7 IGA config keys
+"
+`;
+
+exports[`frodo iga config export "frodo iga config export -NAD testConfigExportDir3": should export all iga config separately with no metadata: testConfigExportDir3/feature_recommendation.config.json 1`] = `
+{
+  "config": {
+    "feature_recommendation": {
+      "result": [],
+    },
+  },
+}
+`;
+
+exports[`frodo iga config export "frodo iga config export -NAD testConfigExportDir3": should export all iga config separately with no metadata: testConfigExportDir3/iga_access_request.config.json 1`] = `
+{
+  "config": {
+    "iga_access_request": {
+      "allowSelfApproval": false,
+      "defaultApprover": "",
+      "maxManualRoleMembers": 1000,
+      "preventRequestWithViolation": false,
+      "requireApproveJustification": false,
+      "requireRejectJustification": false,
+      "requireRequestJustification": false,
+      "requireRequestJustificationWithViolation": false,
+    },
+  },
+}
+`;
+
+exports[`frodo iga config export "frodo iga config export -NAD testConfigExportDir3": should export all iga config separately with no metadata: testConfigExportDir3/iga_autoid_integration.config.json 1`] = `
+{
+  "config": {
+    "iga_autoid_integration": {
+      "enableAutoId": false,
+      "enableFeatureRecommendation": true,
+      "featuresToSkipDuringRecommendation": [
+        "_eventMetadata",
+        "_rev",
+        "accountStatus",
+        "assignedDashboard",
+        "cn",
+        "entityType",
+        "fr",
+        "givenName",
+        "id",
+        "mail",
+        "manager",
+        "metadata",
+        "sn",
+        "userId",
+        "userName",
+        "passwordLastChangedTime",
+        "passwordExpirationTime",
+        "scopes",
+        "adminOfOrg",
+        "memberOfOrg",
+        "ownerOfApp",
+        "ownerOfOrg",
+        "roles",
+        "authzRoles",
+        "applications",
+        "assignments",
+        "groups",
+        "reports",
+      ],
+      "highScorePercentThreshold": 80,
+      "lowScorePercentThreshold": 30,
+      "maxRecommendedFeatures": 10,
+      "mediumScorePercentThreshold": 50,
+      "roleMiningConfidenceThreshold": 0.75,
+      "roleMiningEntitlementThreshold": 1,
+      "roleMiningMembershipThreshold": 30,
+      "training_features_filter": [
+        "user.managerId",
+      ],
+    },
+  },
+}
+`;
+
+exports[`frodo iga config export "frodo iga config export -NAD testConfigExportDir3": should export all iga config separately with no metadata: testConfigExportDir3/iga_global.config.json 1`] = `
+{
+  "config": {
+    "iga_global": {
+      "enableScoping": false,
+    },
+  },
+}
+`;
+
+exports[`frodo iga config export "frodo iga config export -NAD testConfigExportDir3": should export all iga config separately with no metadata: testConfigExportDir3/iga_notification.config.json 1`] = `
+{
+  "config": {
+    "iga_notification": {
+      "notificationMaxRetries": 3,
+      "notificationPollingBatchSize": 50,
+      "notificationRetryDelay": 60000,
+      "notificationSendDelay": 1000,
+    },
+  },
+}
+`;
+
+exports[`frodo iga config export "frodo iga config export -NAD testConfigExportDir3": should export all iga config separately with no metadata: testConfigExportDir3/iga_ui_config.config.json 1`] = `
+{
+  "config": {
+    "iga_ui_config": {
+      "lcmSettings": {
+        "entitlement": {
+          "enabled": false,
+        },
+        "organization": {
+          "enabled": false,
+        },
+        "role": {
+          "enabled": false,
+        },
+        "user": {
+          "enabled": true,
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`frodo iga config export "frodo iga config export -NAD testConfigExportDir3": should export all iga config separately with no metadata: testConfigExportDir3/iga-file.config.json 1`] = `
+{
+  "config": {
+    "iga-file": {},
+  },
+}
+`;
+
+exports[`frodo iga config export "frodo iga config export -Nn iga_autoid_integration": should export config 'iga_autoid_integration' with no metadata 1`] = `0`;
+
+exports[`frodo iga config export "frodo iga config export -Nn iga_autoid_integration": should export config 'iga_autoid_integration' with no metadata 2`] = `""`;
+
+exports[`frodo iga config export "frodo iga config export -Nn iga_autoid_integration": should export config 'iga_autoid_integration' with no metadata 3`] = `
+"✔ Exported config iga_autoid_integration to file
+"
+`;
+
+exports[`frodo iga config export "frodo iga config export -Nn iga_autoid_integration": should export config 'iga_autoid_integration' with no metadata: testConfigExportDir1/iga_autoid_integration.config.json 1`] = `
+{
+  "config": {
+    "iga_autoid_integration": {
+      "enableAutoId": false,
+      "enableFeatureRecommendation": true,
+      "featuresToSkipDuringRecommendation": [
+        "_eventMetadata",
+        "_rev",
+        "accountStatus",
+        "assignedDashboard",
+        "cn",
+        "entityType",
+        "fr",
+        "givenName",
+        "id",
+        "mail",
+        "manager",
+        "metadata",
+        "sn",
+        "userId",
+        "userName",
+        "passwordLastChangedTime",
+        "passwordExpirationTime",
+        "scopes",
+        "adminOfOrg",
+        "memberOfOrg",
+        "ownerOfApp",
+        "ownerOfOrg",
+        "roles",
+        "authzRoles",
+        "applications",
+        "assignments",
+        "groups",
+        "reports",
+      ],
+      "highScorePercentThreshold": 80,
+      "lowScorePercentThreshold": 30,
+      "maxRecommendedFeatures": 10,
+      "mediumScorePercentThreshold": 50,
+      "roleMiningConfidenceThreshold": 0.75,
+      "roleMiningEntitlementThreshold": 1,
+      "roleMiningMembershipThreshold": 30,
+      "training_features_filter": [
+        "user.managerId",
+      ],
+    },
+  },
+}
+`;

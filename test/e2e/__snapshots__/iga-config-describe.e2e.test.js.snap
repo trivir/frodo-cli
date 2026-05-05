@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga config describe "frodo iga config describe --config-key iga_notification": should describe config 'iga_notification' 1`] = `
+"
+iga_notification
+notificationPollingBatchSize│50   
+notificationSendDelay       │1000 
+notificationRetryDelay      │60000
+notificationMaxRetries      │3    
+
+"
+`;
+
+exports[`frodo iga config describe "frodo iga config describe --file test/e2e/exports/all/allConfig.config.json": should describe first config from file test/e2e/exports/all/allConfig.config.json 1`] = `
+"
+feature_recommendation
+"
+`;
+
+exports[`frodo iga config describe "frodo iga config describe -n iga_global -f test/e2e/exports/all/allConfig.config.json": should describe config 'iga_global' from file test/e2e/exports/all/allConfig.config.json 1`] = `
+"
+iga_global
+enableScoping│false
+
+"
+`;

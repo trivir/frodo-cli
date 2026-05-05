@@ -1,0 +1,68 @@
+{
+  "config": {
+    "undefined": {
+      "config": {
+        "iga_autoid_integration": {
+          "enableAutoId": false,
+          "enableFeatureRecommendation": true,
+          "featuresToSkipDuringRecommendation": [
+            "_eventMetadata",
+            "_rev",
+            "accountStatus",
+            "assignedDashboard",
+            "cn",
+            "entityType",
+            "fr",
+            "givenName",
+            "id",
+            "mail",
+            "manager",
+            "metadata",
+            "sn",
+            "userId",
+            "userName",
+            "passwordLastChangedTime",
+            "passwordExpirationTime",
+            "scopes",
+            "adminOfOrg",
+            "memberOfOrg",
+            "ownerOfApp",
+            "ownerOfOrg",
+            "roles",
+            "authzRoles",
+            "applications",
+            "assignments",
+            "groups",
+            "reports"
+          ],
+          "highScorePercentThreshold": 80,
+          "lowScorePercentThreshold": 30,
+          "maxRecommendedFeatures": 10,
+          "mediumScorePercentThreshold": 50,
+          "roleMiningConfidenceThreshold": 0.75,
+          "roleMiningEntitlementThreshold": 1,
+          "roleMiningMembershipThreshold": 30,
+          "training_features_filter": [
+            "user.managerId"
+          ]
+        }
+      },
+      "meta": {
+        "exportDate": "2026-05-22T18:26:20.406Z",
+        "exportTool": "frodo",
+        "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+        "exportedBy": "dsevy@trivir.com",
+        "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+        "originAmVersion": "9.0.0"
+      }
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-22T18:26:20.406Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}
