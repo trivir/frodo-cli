@@ -2,7 +2,12 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 import fs from 'fs';
 
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 
 const { config } = frodo.idm;
 const { getFilePath, saveJsonToFile } = frodo.utils;
@@ -59,7 +64,13 @@ export async function configManagerExportOrgPrivileges(): Promise<boolean> {
  * @returns True if configuration files were successfully saved
  */
 export async function configManagerExportOrgPrivilegesAllRealms(): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting organization privileges'
+    );
     configManagerExportOrgPrivileges();
     for (const realm of await readRealms()) {
       if (
@@ -70,12 +81,29 @@ export async function configManagerExportOrgPrivilegesAllRealms(): Promise<boole
         continue;
 
       state.setRealm(realm.name);
+      updateProgressIndicator(
+        indicatorId,
+        `Exporting organization privileges (${realm.name})`
+      );
       if (!(await configManagerExportOrgPrivilegesRealm(realm.name))) {
+        stopProgressIndicator(
+          indicatorId,
+          'Error exporting organization privileges',
+          'fail'
+        );
         return false;
       }
     }
+    stopProgressIndicator(indicatorId, 'Exported organization privileges');
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting organization privileges',
+        'fail'
+      );
+    }
     printError(error);
     return false;
   }

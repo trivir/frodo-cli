@@ -2,7 +2,13 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import { ThemeSkeleton } from '@rockcarver/frodo-lib/types/ops/ThemeOps';
 import fs from 'fs';
 
-import { printError, printMessage } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  printMessage,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 import { decodeOrNot } from '../utils/FrConfig';
 
 const { saveJsonToFile, getFilePath } = frodo.utils;
@@ -63,11 +69,18 @@ function extractHtmlFields(theme: ThemeSkeleton, themePath: string): void {
 }
 
 export async function configManagerExportThemes(): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting themes'
+    );
     const realms = await readRealms();
     for (const realm of realms) {
       // fr-config-manager doesn't support root themes
       if (realm.name === '/') continue;
+      updateProgressIndicator(indicatorId, `Exporting themes (${realm.name})`);
       state.setRealm(realm.name);
       const themes = await readThemes();
       const exportDir = getFilePath(`realms/${realm.name}/themes`, true);
@@ -79,8 +92,12 @@ export async function configManagerExportThemes(): Promise<boolean> {
         saveJsonToFile(theme, `${themeDir}/${theme.name}.json`, false);
       }
     }
+    stopProgressIndicator(indicatorId, 'Exported themes');
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(indicatorId, 'Error exporting themes', 'fail');
+    }
     printError(error);
     return false;
   }

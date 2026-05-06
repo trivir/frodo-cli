@@ -1,7 +1,12 @@
 import { frodo } from '@rockcarver/frodo-lib';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { readConfigEntity } = frodo.idm.config;
@@ -46,15 +51,34 @@ function processMappings(mapping, targetDir, name) {
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function configManagerExportMappings(): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     const exportData = await readConfigEntity('sync');
     const fileDir = `sync/mappings`;
-    for (const mapping of Object.values(exportData.mappings)) {
+    const mappings = Object.values(exportData.mappings);
+    indicatorId = createProgressIndicator(
+      'determinate',
+      mappings.length,
+      'Exporting connector mappings'
+    );
+    for (const mapping of mappings) {
+      updateProgressIndicator(
+        indicatorId,
+        `Exporting connector mapping ${mapping.name}`
+      );
       processMappings(mapping, `${fileDir}/${mapping.name}`, mapping.name);
     }
+    stopProgressIndicator(indicatorId, `Exported ${mappings.length} mappings`);
     return true;
   } catch (error) {
-    printError(error, `Error exporting mappings to files`);
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting connector mappings',
+        'fail'
+      );
+    }
+    printError(error, `Error exporting connector mappings`);
   }
   return false;
 }

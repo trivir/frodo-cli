@@ -1,6 +1,11 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 import { realmList } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
@@ -14,19 +19,30 @@ export async function configManagerExportServices(
   realm?,
   name?
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting services'
+    );
     if (realm && realm !== '__default__realm__') {
       const services = await getFullServices(false);
       processServices(services, realm, name);
     } else {
       for (const realm of await realmList()) {
         state.setRealm(realm);
+        updateProgressIndicator(indicatorId, `Exporting services (${realm})`);
         const services = await getFullServices(false);
         processServices(services, realm, name);
       }
     }
+    stopProgressIndicator(indicatorId, 'Exported services');
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(indicatorId, 'Error exporting services', 'fail');
+    }
     printError(error);
   }
   return false;

@@ -2,7 +2,11 @@ import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+} from '../utils/Console';
 
 const { readConfigEntitiesByType, importConfigEntities } = frodo.idm.config;
 const { saveJsonToFile, getFilePath } = frodo.utils;
@@ -15,12 +19,22 @@ const { saveJsonToFile, getFilePath } = frodo.utils;
 export async function configManagerExportEndpoints(
   endpointName?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting endpoints'
+    );
     const exportData = await readConfigEntitiesByType('endpoint');
     processEndpoints(exportData, 'endpoints', endpointName);
+    stopProgressIndicator(indicatorId, 'Exported endpoints');
     return true;
   } catch (error) {
-    printError(error, `Error exporting config entity endpoints`);
+    if (indicatorId) {
+      stopProgressIndicator(indicatorId, 'Error exporting endpoints', 'fail');
+    }
+    printError(error, `Error exporting endpoints`);
   }
   return false;
 }
@@ -90,7 +104,7 @@ export async function configManagerImportEndpoints(
     await importConfigEntities(importEndpointData);
     return true;
   } catch (error) {
-    printError(error, `Error importing config entity endpoints`);
+    printError(error, `Error importing endpoints`);
   }
   return false;
 }

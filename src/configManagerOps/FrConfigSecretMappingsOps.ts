@@ -1,6 +1,11 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 import { realmList } from '../utils/FrConfig';
 
 const { saveJsonToFile, getFilePath } = frodo.utils;
@@ -10,17 +15,31 @@ export async function configManagerExportSecretMappings(
   name?,
   realm?
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting secret mappings'
+    );
     if (realm && realm !== '__default__realm__') {
       const readData = await readSecretStoreMappings(
         'ESV',
         'GoogleSecretManagerSecretStoreProvider',
         false
       );
+      updateProgressIndicator(
+        indicatorId,
+        `Exporting secret mappings (${realm})`
+      );
       processSecretMappings(readData, `realms/${realm}/secret-mappings`, name);
     } else {
       for (const realm of await realmList()) {
         state.setRealm(realm);
+        updateProgressIndicator(
+          indicatorId,
+          `Exporting secret mappings (${realm})`
+        );
         const readData = await readSecretStoreMappings(
           'ESV',
           'GoogleSecretManagerSecretStoreProvider',
@@ -33,9 +52,17 @@ export async function configManagerExportSecretMappings(
         );
       }
     }
+    stopProgressIndicator(indicatorId, 'Exported secret mappings');
     return true;
   } catch (error) {
-    printError(error, `Error exporting config entity endpoints`);
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting secret mappings',
+        'fail'
+      );
+    }
+    printError(error, `Error exporting secret mappings`);
   }
   return false;
 }
