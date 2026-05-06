@@ -66,4 +66,15 @@ describe('frodo config-manager pulls', () => {
     const CMD = `frodo config-manager pull secrets -D ${dirName}`;
     await testExport(CMD, env, undefined, undefined, dirName, false);
   });
+  test('"frodo config-manager pull secrets -n esv-test -D secretTestDir": should export the secret with name esv-test in fr-config-manager style"', async () => {
+    const secretName = 'esv-test';
+    const dirName = 'secretTestDir';
+    const CMD = `frodo config-manager pull secrets -n ${secretName} -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
+  test('"frodo config-manager pull secrets -a -D secretTestDir": should export the secrets in fr-config-manager style without version history"', async () => {
+    const dirName = 'secretTestDir';
+    const CMD = `frodo config-manager pull secrets -a -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
 });
