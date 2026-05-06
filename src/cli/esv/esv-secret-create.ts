@@ -24,13 +24,13 @@ export default function setup() {
     .addOption(
       new Option(
         '-f, --file [file]',
-        'Name of the file to read pem or base64hmac encoded secret from. Ignored if --value is specified'
+        'Name of the file to read jwk or base64hmac encoded secret from. Ignored if --value is specified'
       )
     )
     .option('--description [description]', 'Secret description.')
     .addOption(
       new Option('--encoding [encoding]', 'Secret encoding')
-        .choices(['generic', 'pem', 'base64hmac'])
+        .choices(['generic', 'jwk', 'base64hmac'])
         .default('generic', 'generic')
     )
     .addOption(
