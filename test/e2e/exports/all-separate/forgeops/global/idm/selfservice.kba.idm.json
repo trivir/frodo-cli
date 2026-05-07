@@ -1,0 +1,28 @@
+{
+  "idm": {
+    "selfservice.kba": {
+      "_id": "selfservice.kba",
+      "kbaPropertyName": "kbaInfo",
+      "minimumAnswersToDefine": 2,
+      "minimumAnswersToVerify": 1,
+      "questions": {
+        "1": {
+          "en": "What's your favorite color?",
+          "en_GB": "What is your favourite colour?",
+          "fr": "Quelle est votre couleur préférée?"
+        },
+        "2": {
+          "en": "Who was your first employer?"
+        }
+      }
+    }
+  },
+  "meta": {
+    "exportDate": "2026-03-26T01:24:58.319Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-30 [v24.13.0]",
+    "exportedBy": "amadmin",
+    "origin": "https://platform.dev.trivir.com/am",
+    "originAmVersion": "8.0.1"
+  }
+}

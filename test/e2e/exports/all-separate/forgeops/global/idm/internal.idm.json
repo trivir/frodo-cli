@@ -1,0 +1,42 @@
+{
+  "idm": {
+    "internal": {
+      "_id": "internal",
+      "objects": [
+        {
+          "name": "role",
+          "properties": {
+            "authzMembers": {
+              "items": {
+                "resourceCollection": [
+                  {
+                    "conditionalAssociation": true,
+                    "label": "User",
+                    "notify": true,
+                    "path": "managed/user",
+                    "query": {
+                      "fields": [
+                        "userName",
+                        "givenName",
+                        "sn"
+                      ],
+                      "queryFilter": "true"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "meta": {
+    "exportDate": "2026-03-26T01:24:58.315Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-30 [v24.13.0]",
+    "exportedBy": "amadmin",
+    "origin": "https://platform.dev.trivir.com/am",
+    "originAmVersion": "8.0.1"
+  }
+}

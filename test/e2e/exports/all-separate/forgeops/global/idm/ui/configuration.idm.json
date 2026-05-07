@@ -1,0 +1,47 @@
+{
+  "idm": {
+    "ui/configuration": {
+      "_id": "ui/configuration",
+      "configuration": {
+        "defaultNotificationType": "info",
+        "forgotUsername": false,
+        "lang": "en",
+        "notificationTypes": {
+          "error": {
+            "iconPath": "images/notifications/error.png",
+            "name": "common.notification.types.error"
+          },
+          "info": {
+            "iconPath": "images/notifications/info.png",
+            "name": "common.notification.types.info"
+          },
+          "warning": {
+            "iconPath": "images/notifications/warning.png",
+            "name": "common.notification.types.warning"
+          }
+        },
+        "passwordReset": false,
+        "passwordResetLink": "",
+        "platformSettings": {
+          "adminOauthClient": "idm-admin-ui",
+          "adminOauthClientScopes": "fr:idm:*",
+          "amUrl": "/am",
+          "loginUrl": ""
+        },
+        "roles": {
+          "internal/role/openidm-admin": "ui-admin",
+          "internal/role/openidm-authorized": "ui-user"
+        },
+        "selfRegistration": false
+      }
+    }
+  },
+  "meta": {
+    "exportDate": "2026-03-26T01:24:58.319Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-30 [v24.13.0]",
+    "exportedBy": "amadmin",
+    "origin": "https://platform.dev.trivir.com/am",
+    "originAmVersion": "8.0.1"
+  }
+}

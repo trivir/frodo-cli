@@ -1,0 +1,49 @@
+{
+  "idm": {
+    "router": {
+      "_id": "router",
+      "filters": [
+        {
+          "methods": [
+            "create",
+            "update"
+          ],
+          "onRequest": {
+            "file": "policyFilter.js",
+            "type": "text/javascript"
+          },
+          "pattern": "^(managed|internal)($|(/.+))"
+        },
+        {
+          "methods": [
+            "update"
+          ],
+          "onRequest": {
+            "file": "policyFilter.js",
+            "type": "text/javascript"
+          },
+          "pattern": "^config/managed$"
+        },
+        {
+          "condition": {
+            "source": "file://router.filters.2.condition.js",
+            "type": "text/javascript"
+          },
+          "onResponse": {
+            "source": "file://router.filters.2.onResponse.js",
+            "type": "text/javascript"
+          },
+          "pattern": "^(managed|internal)($|(/.+))"
+        }
+      ]
+    }
+  },
+  "meta": {
+    "exportDate": "2026-03-26T01:24:58.319Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-30 [v24.13.0]",
+    "exportedBy": "amadmin",
+    "origin": "https://platform.dev.trivir.com/am",
+    "originAmVersion": "8.0.1"
+  }
+}
