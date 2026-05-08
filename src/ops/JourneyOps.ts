@@ -13,6 +13,7 @@ import {
 import fs from 'fs';
 
 import {
+  createKeyValueTable,
   createProgressIndicator,
   createTable,
   debugMessage,
@@ -30,6 +31,7 @@ import * as Script from './ScriptOps';
 import * as Theme from './ThemeOps';
 import { cloneDeep, errorHandler } from './utils/OpsUtils';
 import wordwrap from './utils/Wordwrap';
+import { getFullExportConfig } from '../utils/Config';
 
 const {
   getTypedFilename,
@@ -644,7 +646,8 @@ function describeTreeDescendentsMd(
  */
 export async function describeJourney(
   journeyData: SingleTreeExportInterface,
-  resolveTreeExport: TreeExportResolverInterface = onlineTreeExportResolver
+  resolveTreeExport: TreeExportResolverInterface = onlineTreeExportResolver,
+  usage = false
 ): Promise<boolean> {
   const errors: Error[] = [];
   try {
@@ -716,6 +719,34 @@ export async function describeJourney(
         `${JSON.parse(journeyData.tree.uiConfig.categories).join(', ')}`,
         'data'
       );
+    }
+    // Usage
+    if (usage) {
+      try {
+        const journeysExport = await exportJourneys({
+          useStringArrays: true,
+          deps: false,
+          coords: false,
+        });
+        let journey = journeyData as SingleTreeExportInterface & {
+          locations: string[];
+        };
+        const journeyName =
+          typeof journey.tree === 'string' ? journey.tree : journey.tree?._id;
+        journey.locations = getJourneyLocations(journeysExport, journeyName);
+        const table = createKeyValueTable();
+        table.push([
+          `Usage Locations (${journey.locations.length} total)`['brightCyan'],
+          journey.locations.length > 0 ? journey.locations[0] : '',
+        ]);
+        for (let i = 1; i < journey.locations.length; i++) {
+          table.push(['', journey.locations[i]]);
+        }
+        printMessage(table.toString(), 'data');
+        return true;
+      } catch (error) {
+        return false;
+      }
     }
 
     // Dependency Tree
@@ -1172,4 +1203,40 @@ export async function deleteJourneys(
     printError(error);
   }
   return false;
+}
+
+/**
+ * Helper that finds all locations where a journey is being used as an inner journey in another journey
+ * @param journeysExport export data containing journeys
+ * @param journeyName ID of the journey to search for as an inner journey
+ */
+function getJourneyLocations(
+  journeysExport: MultiTreeExportInterface,
+  journeyName: string
+): string[] {
+  const locations: string[] = [];
+  for (const journeyData of Object.values(journeysExport.trees)) {
+    interface InnerTreeNode {
+      _id: string;
+      _type?: { _id?: string };
+      tree?: string | { _id: string };
+    }
+
+    for (const node of Object.values(
+      journeyData.nodes ?? {}
+    ) as InnerTreeNode[]) {
+      const innerTreeName =
+        typeof node.tree === 'string' ? node.tree : node.tree?._id;
+
+      if (
+        node._type?._id === 'InnerTreeEvaluatorNode' &&
+        innerTreeName === journeyName
+      ) {
+        locations.push(
+          `journey.${journeyData.tree?._id ?? journeyData.tree._id}`
+        );
+      }
+    }
+  }
+  return locations;
 }
