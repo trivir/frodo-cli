@@ -1971,6 +1971,147 @@ exports[`frodo mapping export "frodo mapping export -AD mappingExportTestDir4": 
 }
 `;
 
+exports[`frodo mapping export "frodo mapping export -AxD mappingExportTestDir7": should export all mappings to separate files and to extract scripts in the mappingExportTestDir7 directory 1`] = `0`;
+
+exports[`frodo mapping export "frodo mapping export -AxD mappingExportTestDir7": should export all mappings to separate files and to extract scripts in the mappingExportTestDir7 directory 2`] = `""`;
+
+exports[`frodo mapping export "frodo mapping export -AxD mappingExportTestDir7": should export all mappings to separate files and to extract scripts in the mappingExportTestDir7 directory: mappingExportTestDir7/sync/extract_script_test/SOURCE.name.transform.groovy 1`] = `
+"//groovy EXTRACT SCRIPT test UPDATED
+"
+`;
+
+exports[`frodo mapping export "frodo mapping export -AxD mappingExportTestDir7": should export all mappings to separate files and to extract scripts in the mappingExportTestDir7 directory: mappingExportTestDir7/sync/extract_script_test/correlationScript.js 1`] = `
+"//extract script test UPDATED CORRELATION QUERY 
+"
+`;
+
+exports[`frodo mapping export "frodo mapping export -AxD mappingExportTestDir7": should export all mappings to separate files and to extract scripts in the mappingExportTestDir7 directory: mappingExportTestDir7/sync/extract_script_test/extract_script_test.sync.json 1`] = `
+{
+  "_id": "sync/extract_script_test",
+  "consentRequired": false,
+  "correlationScript": {
+    "globals": {},
+    "source": "file://correlationScript.js",
+    "type": "text/javascript",
+  },
+  "displayName": "extract_script_test",
+  "icon": null,
+  "name": "extract_script_test",
+  "onCreate": {
+    "globals": {},
+    "source": "file://onCreate.js",
+    "type": "text/javascript",
+  },
+  "policies": [
+    {
+      "action": "ASYNC",
+      "situation": "ABSENT",
+    },
+    {
+      "action": "ASYNC",
+      "situation": "ALL_GONE",
+    },
+    {
+      "action": "ASYNC",
+      "situation": "AMBIGUOUS",
+    },
+    {
+      "action": "ASYNC",
+      "situation": "CONFIRMED",
+    },
+    {
+      "action": "ASYNC",
+      "situation": "FOUND",
+    },
+    {
+      "action": "ASYNC",
+      "situation": "FOUND_ALREADY_LINKED",
+    },
+    {
+      "action": "ASYNC",
+      "situation": "LINK_ONLY",
+    },
+    {
+      "action": "ASYNC",
+      "situation": "MISSING",
+    },
+    {
+      "action": "ASYNC",
+      "situation": "SOURCE_IGNORED",
+    },
+    {
+      "action": "ASYNC",
+      "situation": "SOURCE_MISSING",
+    },
+    {
+      "action": "ASYNC",
+      "situation": "TARGET_IGNORED",
+    },
+    {
+      "action": "ASYNC",
+      "situation": "UNASSIGNED",
+    },
+    {
+      "action": "ASYNC",
+      "situation": "UNQUALIFIED",
+    },
+  ],
+  "properties": [
+    {
+      "source": "",
+      "target": "name",
+      "transform": {
+        "globals": {},
+        "source": "file://SOURCE.name.transform.groovy",
+        "type": "groovy",
+      },
+    },
+  ],
+  "result": {
+    "globals": {},
+    "source": "file://result.js",
+    "type": "text/javascript",
+  },
+  "source": "managed/alpha_user",
+  "syncAfter": [],
+  "target": "managed/alpha_group",
+  "validSource": {
+    "globals": {},
+    "source": "file://validSource.js",
+    "type": "text/javascript",
+  },
+}
+`;
+
+exports[`frodo mapping export "frodo mapping export -AxD mappingExportTestDir7": should export all mappings to separate files and to extract scripts in the mappingExportTestDir7 directory: mappingExportTestDir7/sync/extract_script_test/onCreate.js 1`] = `
+"//test UPDATED ONCREATED
+"
+`;
+
+exports[`frodo mapping export "frodo mapping export -AxD mappingExportTestDir7": should export all mappings to separate files and to extract scripts in the mappingExportTestDir7 directory: mappingExportTestDir7/sync/extract_script_test/result.js 1`] = `
+"//tests UPDATED RESULT SCRIPT
+"
+`;
+
+exports[`frodo mapping export "frodo mapping export -AxD mappingExportTestDir7": should export all mappings to separate files and to extract scripts in the mappingExportTestDir7 directory: mappingExportTestDir7/sync/extract_script_test/validSource.js 1`] = `
+"//extract script test UPDATED VALIDSOURCE
+"
+`;
+
+exports[`frodo mapping export "frodo mapping export -AxD mappingExportTestDir7": should export all mappings to separate files and to extract scripts in the mappingExportTestDir7 directory: mappingExportTestDir7/sync/sync.idm.json 1`] = `
+{
+  "idm": {
+    "sync": {
+      "_id": "sync",
+      "mappings": [
+        "file://extract_script_test/extract_script_test.sync.json",
+      ],
+    },
+  },
+  "meta": Any<Object>,
+}
+`;
+
 exports[`frodo mapping export "frodo mapping export -Ni mapping/managedBravo_group_managedBravo_group --no-deps --use-string-arrays -D mappingExportTestDir1": should export the mapping with mapping id "mapping/managedBravo_group_managedBravo_group" into the directory named mappingExportTestDir1 1`] = `0`;
 
 exports[`frodo mapping export "frodo mapping export -Ni mapping/managedBravo_group_managedBravo_group --no-deps --use-string-arrays -D mappingExportTestDir1": should export the mapping with mapping id "mapping/managedBravo_group_managedBravo_group" into the directory named mappingExportTestDir1 2`] = `""`;
@@ -2797,6 +2938,207 @@ exports[`frodo mapping export "frodo mapping export -i mapping/managedBravo_grou
   "sync": {
     "_id": "sync",
     "mappings": [],
+  },
+}
+`;
+
+exports[`frodo mapping export "frodo mapping export -i mapping/mappingTest --extract -D mappingExportTestDir9": should export the mapping with mapping id "mapping/mappingTest" with extracted scripts 1`] = `0`;
+
+exports[`frodo mapping export "frodo mapping export -i mapping/mappingTest --extract -D mappingExportTestDir9": should export the mapping with mapping id "mapping/mappingTest" with extracted scripts 2`] = `""`;
+
+exports[`frodo mapping export "frodo mapping export -i mapping/mappingTest --extract -D mappingExportTestDir9": should export the mapping with mapping id "mapping/mappingTest" with extracted scripts: mappingExportTestDir9/mappingTest.mapping.json 1`] = `
+{
+  "mapping": {
+    "mapping/mappingTest": {
+      "_id": "mapping/mappingTest",
+      "consentRequired": false,
+      "displayName": "mappingTest",
+      "icon": null,
+      "name": "mappingTest",
+      "policies": [
+        {
+          "action": "ASYNC",
+          "situation": "ABSENT",
+        },
+        {
+          "action": "ASYNC",
+          "situation": "ALL_GONE",
+        },
+        {
+          "action": "ASYNC",
+          "situation": "AMBIGUOUS",
+        },
+        {
+          "action": "ASYNC",
+          "situation": "CONFIRMED",
+        },
+        {
+          "action": "ASYNC",
+          "situation": "FOUND",
+        },
+        {
+          "action": "ASYNC",
+          "situation": "FOUND_ALREADY_LINKED",
+        },
+        {
+          "action": "ASYNC",
+          "situation": "LINK_ONLY",
+        },
+        {
+          "action": "ASYNC",
+          "situation": "MISSING",
+        },
+        {
+          "action": "ASYNC",
+          "situation": "SOURCE_IGNORED",
+        },
+        {
+          "action": "ASYNC",
+          "situation": "SOURCE_MISSING",
+        },
+        {
+          "action": "ASYNC",
+          "situation": "TARGET_IGNORED",
+        },
+        {
+          "action": "ASYNC",
+          "situation": "UNASSIGNED",
+        },
+        {
+          "action": "ASYNC",
+          "situation": "UNQUALIFIED",
+        },
+      ],
+      "properties": [
+        {
+          "source": "_id",
+          "target": "name",
+          "transform": {
+            "globals": {},
+            "source": "file://_id.name.transform.js",
+            "type": "text/javascript",
+          },
+        },
+      ],
+      "source": "managed/alpha_assignment",
+      "target": "managed/alpha_group",
+    },
+  },
+  "meta": Any<Object>,
+  "sync": {
+    "_id": "sync",
+    "mappings": [],
+  },
+}
+`;
+
+exports[`frodo mapping export "frodo mapping export -xi sync/extract_script_test -D mappingExportTestDir8": should export the mapping with mapping id "sync/extract_script_test" with extracted scripts 1`] = `0`;
+
+exports[`frodo mapping export "frodo mapping export -xi sync/extract_script_test -D mappingExportTestDir8": should export the mapping with mapping id "sync/extract_script_test" with extracted scripts 2`] = `""`;
+
+exports[`frodo mapping export "frodo mapping export -xi sync/extract_script_test -D mappingExportTestDir8": should export the mapping with mapping id "sync/extract_script_test" with extracted scripts: mappingExportTestDir8/extract_script_test.sync.json 1`] = `
+{
+  "mapping": {},
+  "meta": Any<Object>,
+  "sync": {
+    "_id": "sync",
+    "mappings": [
+      {
+        "_id": "sync/extract_script_test",
+        "consentRequired": false,
+        "correlationScript": {
+          "globals": {},
+          "source": "file://correlationScript.js",
+          "type": "text/javascript",
+        },
+        "displayName": "extract_script_test",
+        "icon": null,
+        "name": "extract_script_test",
+        "onCreate": {
+          "globals": {},
+          "source": "file://onCreate.js",
+          "type": "text/javascript",
+        },
+        "policies": [
+          {
+            "action": "ASYNC",
+            "situation": "ABSENT",
+          },
+          {
+            "action": "ASYNC",
+            "situation": "ALL_GONE",
+          },
+          {
+            "action": "ASYNC",
+            "situation": "AMBIGUOUS",
+          },
+          {
+            "action": "ASYNC",
+            "situation": "CONFIRMED",
+          },
+          {
+            "action": "ASYNC",
+            "situation": "FOUND",
+          },
+          {
+            "action": "ASYNC",
+            "situation": "FOUND_ALREADY_LINKED",
+          },
+          {
+            "action": "ASYNC",
+            "situation": "LINK_ONLY",
+          },
+          {
+            "action": "ASYNC",
+            "situation": "MISSING",
+          },
+          {
+            "action": "ASYNC",
+            "situation": "SOURCE_IGNORED",
+          },
+          {
+            "action": "ASYNC",
+            "situation": "SOURCE_MISSING",
+          },
+          {
+            "action": "ASYNC",
+            "situation": "TARGET_IGNORED",
+          },
+          {
+            "action": "ASYNC",
+            "situation": "UNASSIGNED",
+          },
+          {
+            "action": "ASYNC",
+            "situation": "UNQUALIFIED",
+          },
+        ],
+        "properties": [
+          {
+            "source": "_id",
+            "target": "name",
+            "transform": {
+              "globals": {},
+              "source": "file://_id.name.transform.groovy",
+              "type": "groovy",
+            },
+          },
+        ],
+        "result": {
+          "globals": {},
+          "source": "file://result.js",
+          "type": "text/javascript",
+        },
+        "source": "managed/alpha_user",
+        "syncAfter": [],
+        "target": "managed/alpha_group",
+        "validSource": {
+          "globals": {},
+          "source": "file://validSource.js",
+          "type": "text/javascript",
+        },
+      },
+    ],
   },
 }
 `;

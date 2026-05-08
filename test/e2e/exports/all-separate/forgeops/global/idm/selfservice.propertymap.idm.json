@@ -1,0 +1,63 @@
+{
+  "idm": {
+    "selfservice.propertymap": {
+      "_id": "selfservice.propertymap",
+      "properties": [
+        {
+          "source": "givenName",
+          "target": "givenName"
+        },
+        {
+          "source": "familyName",
+          "target": "sn"
+        },
+        {
+          "source": "email",
+          "target": "mail"
+        },
+        {
+          "condition": "/object/postalAddress  pr",
+          "source": "postalAddress",
+          "target": "postalAddress"
+        },
+        {
+          "condition": "/object/addressLocality  pr",
+          "source": "addressLocality",
+          "target": "city"
+        },
+        {
+          "condition": "/object/addressRegion  pr",
+          "source": "addressRegion",
+          "target": "stateProvince"
+        },
+        {
+          "condition": "/object/postalCode  pr",
+          "source": "postalCode",
+          "target": "postalCode"
+        },
+        {
+          "condition": "/object/country  pr",
+          "source": "country",
+          "target": "country"
+        },
+        {
+          "condition": "/object/phone  pr",
+          "source": "phone",
+          "target": "telephoneNumber"
+        },
+        {
+          "source": "username",
+          "target": "userName"
+        }
+      ]
+    }
+  },
+  "meta": {
+    "exportDate": "2026-03-26T01:24:58.319Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-30 [v24.13.0]",
+    "exportedBy": "amadmin",
+    "origin": "https://platform.dev.trivir.com/am",
+    "originAmVersion": "8.0.1"
+  }
+}

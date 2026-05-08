@@ -55,6 +55,9 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo mapping export --no-deps --use-string-arrays -c GoogleApps -t alpha_user -NaD mappingExportTestDir2
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo mapping export -AD mappingExportTestDir4
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo mapping export --no-deps --use-string-arrays --connector-id GoogleApps --managed-object-type alpha_user --all-separate --no-metadata --directory mappingExportTestDir3
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo mapping export -AxD mappingExportTestDir7
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo mapping export -xi sync/extract_script_test -D mappingExportTestDir8
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo mapping export -i mapping/mappingTest --extract -D mappingExportTestDir9
 */
 import { getEnv, testExport } from './utils/TestUtils';
 import { connection as c } from './utils/TestConfig';
@@ -112,5 +115,20 @@ describe('frodo mapping export', () => {
         const exportDirectory = "mappingExportTestDir3";
         const CMD = `frodo mapping export --no-deps --use-string-arrays --connector-id GoogleApps --managed-object-type alpha_user --all-separate --no-metadata --directory ${exportDirectory}`;
         await testExport(CMD, env, undefined, undefined, exportDirectory, false);
+    });
+    test('"frodo mapping export -AxD mappingExportTestDir7": should export all mappings to separate files and to extract scripts in the mappingExportTestDir7 directory', async () => {
+        const exportDirectory = "mappingExportTestDir7";
+        const CMD = `frodo mapping export -AxD ${exportDirectory}`;
+        await testExport(CMD, env, undefined, undefined, exportDirectory, false);
+    });
+    test('"frodo mapping export -xi sync/extract_script_test -D mappingExportTestDir8": should export the mapping with mapping id "sync/extract_script_test" with extracted scripts', async () => {
+        const exportDirectory = "mappingExportTestDir8";
+        const CMD = `frodo mapping export -xi sync/extract_script_test -D ${exportDirectory}`;
+        await testExport(CMD, env, 'sync', undefined, exportDirectory, false);
+    });
+    test('"frodo mapping export -i mapping/mappingTest --extract -D mappingExportTestDir9": should export the mapping with mapping id "mapping/mappingTest" with extracted scripts', async () => {
+        const exportDirectory = "mappingExportTestDir9";
+        const CMD = `frodo mapping export -i mapping/mappingTest --extract -D ${exportDirectory}`;
+        await testExport(CMD, env, mappingType, undefined, exportDirectory, false);
     });
 });

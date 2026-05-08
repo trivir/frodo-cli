@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CLI help interface for 'idm' should be expected english 1`] = `
-"Usage: frodo idm schema object import [options] [host] [realm] [username] [password]
+exports[`CLI help interface for 'idm schema object export' should be expected english 1`] = `
+"Usage: frodo idm schema object export [options] [host] [realm] [username] [password]
 
-Import IDM configuration managed objects.
+Export IDM configuration managed objects.
 
 Arguments:
   host                      AM base URL, e.g.: https://cdk.iam.example.com/am.

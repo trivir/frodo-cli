@@ -53,6 +53,12 @@ export default function setup() {
         'Does not include metadata in the export file.'
       )
     )
+    .addOption(
+      new Option(
+        '-x, --no-extract',
+        'Do not extract and save idm scripts to separate files. Ignored with -a.'
+      ).default(true, 'true')
+    )
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {
@@ -82,7 +88,8 @@ export default function setup() {
           const outcome = await exportManagedObjectToFile(
             options.individualObject,
             options.file,
-            options.envFile
+            options.envFile,
+            options.extract
           );
           if (!outcome) process.exitCode = 1;
         } // -a, --all
@@ -97,9 +104,8 @@ export default function setup() {
             'managed',
             options.file,
             options.envFile,
-            false,
-            false,
-            options.metadata
+            options.metadata,
+            false
           );
           if (!outcome) process.exitCode = 1;
         } // -A, --all-separate
@@ -114,9 +120,8 @@ export default function setup() {
             'managed',
             options.file,
             options.envFile,
-            false,
-            true,
-            options.metadata
+            options.metadata,
+            options.extract
           );
           if (!outcome) process.exitCode = 1;
           await warnAboutOfflineConnectorServers();

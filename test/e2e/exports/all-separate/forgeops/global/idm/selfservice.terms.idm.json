@@ -1,0 +1,25 @@
+{
+  "idm": {
+    "selfservice.terms": {
+      "_id": "selfservice.terms",
+      "active": "0.0",
+      "versions": [
+        {
+          "createDate": "2019-10-28T04:20:11.320Z",
+          "termsTranslations": {
+            "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+          },
+          "version": "0.0"
+        }
+      ]
+    }
+  },
+  "meta": {
+    "exportDate": "2026-03-26T01:24:58.319Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-30 [v24.13.0]",
+    "exportedBy": "amadmin",
+    "origin": "https://platform.dev.trivir.com/am",
+    "originAmVersion": "8.0.1"
+  }
+}
