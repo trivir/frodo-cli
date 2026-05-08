@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga request form list "frodo iga request form list --long": should list the ids, names, mutability, and statuses of the workflows. 1`] = `
+"ID                                  │Name                           │Type              │Description                                       │Operation
+2108a1e1-6be6-41e2-b356-b929114d98f5│phhCustomRequestForm           │request           │                                                  │create   
+542b62fb-d44d-45ac-a546-645036dc44bc│phh-disable-ne-skeleton        │request           │                                                  │create   
+2e0208bb-1ccc-4f02-917f-98a63296f08e│phh-pattern-test               │request           │                                                  │create   
+9c10b680-a790-4f73-95ed-81b345f0f3e9│phh-delegated-user-disable-form│request           │Form for disabling users with delegation authority│create   
+69c4d900-ff3c-400f-8d18-037693ade1fc│pgh-generate-rap               │request           │Form for generating an RAP code for a user        │create   
+82db6f64-5aa7-4b13-b1ce-e87e988b5199│jh-ne-create-test-2            │request           │                                                  │create   
+628f6156-80c9-4d4c-a1a3-be60c35ecebf│pholderness-new-user-approval  │request           │                                                  │create   
+c385b530-b912-4dcd-98c8-931673add9b7│phh-new-user                   │request           │Request new user                                  │create   
+d5299084-b2b2-4d66-ad94-f412f8bac3f5│phh-select-target-ne           │request           │Select Non-Employee to disable                    │create   
+fa1a5e72-d803-4879-bc2a-07a5da3d8ee9│test_workflow_request_form_1   │applicationRequest│This is a test application request form           │create   
+9e3fc668-4e96-4b03-9605-38b830bea26c│test_workflow_request_form_2   │request           │This is a test request form                       │create   
+ddd56024-02ef-4c14-8bce-7b8bf4649b99│phhForm                        │request           │                                                  │create   
+05b1bc14-6406-49a7-933a-97868f9e567c│test                           │request           │                                                  │create   
+"
+`;
+
+exports[`frodo iga request form list "frodo iga request-form list -l": should list the ids, names, mutability, and statuses of the request form. 1`] = `
+"ID                                 │Name                                   │Drafted│Published│Mutable
+basicEntitlementGrantCopy          │BasicEntitlementGrant-copy             │true   │true     │true   
+createNonEmployee                  │CreateNonEmployee                      │true   │true     │true   
+createUserJh                       │CreateUser - JH                        │true   │false    │true   
+phhBasicEntitlementGrant           │phh-BasicEntitlementGrant              │true   │false    │true   
+phhCustomWorkflow                  │phhCustomWorkflow                      │true   │false    │true   
+phhInternalRoleEntitlementGrant    │phh-InternalRoleEntitlementGrant       │true   │false    │true   
+phhNewUserCreate                   │phh-new-user-create                    │true   │true     │true   
+test                               │test                                   │true   │true     │true   
+testWorkflow5                      │test_workflow_5                        │true   │false    │true   
+wfEntitlementExampleIsPrivileged   │wfEntitlementExampleIsPrivileged       │true   │false    │true   
+BasicApplicationGrant              │BasicApplicationGrant                  │false  │true     │false  
+BasicApplicationRemove             │BasicApplicationRemove                 │false  │true     │false  
+BasicEntitlementGrant              │BasicEntitlementGrant                  │false  │true     │false  
+BasicEntitlementRemove             │BasicEntitlementRemove                 │false  │true     │false  
+BasicRoleCreate                    │BasicRoleCreate                        │false  │true     │false  
+BasicRoleDelete                    │BasicRoleDelete                        │false  │true     │false  
+BasicRoleGrant                     │BasicRoleGrant                         │false  │true     │false  
+BasicRoleModify                    │BasicRoleModify                        │false  │true     │false  
+BasicRolePublish                   │BasicRolePublish                       │false  │true     │false  
+BasicRoleRemove                    │BasicRoleRemove                        │false  │true     │false  
+BasicViolationProcess              │BasicViolationProcess                  │false  │true     │false  
+CreateEntitlement                  │CreateEntitlement                      │false  │true     │false  
+CreateUser                         │CreateUser                             │false  │true     │false  
+DeleteUser                         │DeleteUser                             │false  │true     │false  
+ModifyEntitlement                  │ModifyEntitlement                      │false  │true     │false  
+ModifyUser                         │ModifyUser                             │false  │true     │false  
+basicApplicationGrantCopy          │BasicApplicationGrant-copy             │false  │true     │true   
+custom1BasicEntitlementGrant       │custom-1-BasicEntitlementGrant         │false  │true     │true   
+customBasicEntitlementGrant        │custom-BasicEntitlementGrant           │false  │true     │true   
+extendGrantEndDate                 │extendGrantEndDate                     │false  │true     │false  
+jhNeCreateTest2                    │jh-ne-create-test-2                    │false  │true     │true   
+pghGenerateRap                     │pgh-generate-rap                       │false  │true     │true   
+phhBasicApplicationGrant           │phh-BasicApplicationGrant              │false  │true     │true   
+phhBirthrightRolesRequiringApproval│phh-birthright-roles-requiring-approval│false  │true     │true   
+phhDelegatedUserDisableWorkflow    │phh-delegated-user-disable-workflow    │false  │true     │true   
+phhFlow                            │phhFlow                                │false  │true     │true   
+phhNeDisable                       │phh-ne-disable                         │false  │true     │true   
+test1                              │test-1                                 │false  │true     │true   
+testWorkflow1                      │test_workflow_1                        │false  │true     │true   
+testWorkflow4                      │test_workflow_4                        │false  │true     │true   
+testWorkflow6                      │test_workflow_6                        │false  │true     │true   
+testWorkflow7                      │test_workflow_7                        │false  │true     │true   
+testWorkflow8                      │test_workflow_8                        │false  │true     │true   
+testWorkflow9                      │testWorkflow9                          │false  │true     │true   
+"
+`;
+
+exports[`frodo iga request form list "frodo iga request-form list": should list the ids of the request forms 1`] = `
+"phhCustomRequestForm
+phh-disable-ne-skeleton
+phh-pattern-test
+phh-delegated-user-disable-form
+pgh-generate-rap
+jh-ne-create-test-2
+pholderness-new-user-approval
+phh-new-user
+phh-select-target-ne
+test_workflow_request_form_1
+test_workflow_request_form_2
+phhForm
+test
+"
+`;
