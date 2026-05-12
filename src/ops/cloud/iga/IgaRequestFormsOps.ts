@@ -1,39 +1,22 @@
 import { frodo, FrodoError } from '@rockcarver/frodo-lib';
+import { CustomFormField } from '@rockcarver/frodo-lib/types/api/cloud/iga/IgaRequestFormApi';
 import {
-  assignRequestForm,
-  CustomFormField,
-  Field,
-  FieldRow,
-  FieldType,
-  getRequestFormAssignments,
-  RequestFormEvent,
-  RequestFormOperationType,
-  RequestFormType,
-  SelectFieldObjectType,
-} from '@rockcarver/frodo-lib/types/api/cloud/iga/IgaRequestFormApi';
-import {
-  RequestForm,
   RequestFormExportInterface,
   RequestFormExportOptions,
   RequestFormImportOptions,
 } from '@rockcarver/frodo-lib/types/ops/cloud/iga/IgaRequestFormOps';
-import { underline } from 'colors';
 import fs from 'fs';
 
-import { extractDataToFile, getExtractedData } from '../../../utils/Config';
+import { extractDataToFile } from '../../../utils/Config';
 import {
   createKeyValueTable,
   createProgressIndicator,
   createTable,
-  getTableRowsFromArray,
   printError,
   printMessage,
   stopProgressIndicator,
   updateProgressIndicator,
 } from '../../../utils/Console';
-import * as EmailTemplate from '../../EmailTemplateOps';
-import { isScriptExtracted } from '../../ScriptOps';
-import { errorHandler } from '../../utils/OpsUtils';
 
 const {
   getTypedFilename,
@@ -549,6 +532,9 @@ export async function deleteRequestForm(formName: string): Promise<boolean> {
   );
   try {
     const result = await deleteRequestFormByName(formName);
+    if (!result) {
+      throw new FrodoError(`Failed to delete workflow ${formName}`);
+    }
 
     stopProgressIndicator(
       spinnerId,
