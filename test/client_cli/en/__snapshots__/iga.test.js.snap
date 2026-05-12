@@ -13,6 +13,7 @@ Options:
 
 Commands:
   help              display help for command
+  request-type      Manage request types.
   workflow          Manage workflows.
 "
 `;

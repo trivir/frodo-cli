@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga request type delete "frodo iga request type delete --all": should delete all request-type 1`] = `""`;
+
+exports[`frodo iga request type delete "frodo iga request type delete --all": should delete all request-type 2`] = `
+"✔ Deleted request types.
+"
+`;
+
+exports[`frodo iga request type delete "frodo iga request type delete --request-type-name test_custom": Should delete both draft and published test_custom 1`] = `""`;
+
+exports[`frodo iga request type delete "frodo iga request type delete --request-type-name test_custom": Should delete both draft and published test_custom 2`] = `
+"✔ Deleted request type test_custom.
+"
+`;

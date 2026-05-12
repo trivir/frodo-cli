@@ -135,25 +135,25 @@ describe('frodo config export', () => {
 
   // Cloud IGA Tests
 
-  test.todo('"frodo config export -NRag --use-string-arrays --no-coords -f testExportAllIGA1.json": should export all global IGA configuration with no-coords, string arrays, and read only configuration.', async () => {
+  test.skip('"frodo config export -NRag --use-string-arrays --no-coords -f testExportAllIGA1.json": should export all global IGA configuration with no-coords, string arrays, and read only configuration.', async () => {
     const exportFile = 'testExportAllIGA1.json';
     const CMD = `frodo config export -NRag --use-string-arrays --no-coords -f ${exportFile}`;
     await testExport(CMD, env, type, exportFile, undefined, false, true);
   });
 
-  test.todo('"frodo config export --all --global --file testExportAllIGA2.json": should export all global IGA configuration.', async () => {
+  test.skip('"frodo config export --all --global --file testExportAllIGA2.json": should export all global IGA configuration.', async () => {
     const exportFile = 'testExportAllIGA2.json';
     const CMD = `frodo config export --all --global --file ${exportFile}`;
     await testExport(CMD, env, type, exportFile, undefined, true, true);
   });
 
-  test.todo('"frodo config export --no-metadata --read-only --all-separate -g --use-string-arrays --no-coords --extract --directory exportAllTestDir11": should export all global IGA configuration separately with extracted scripts, no-coords, string arrays, and read only configuration.', async () => {
+  test.skip('"frodo config export --no-metadata --read-only --all-separate -g --use-string-arrays --no-coords --extract --directory exportAllTestDir11": should export all global IGA configuration separately with extracted scripts, no-coords, string arrays, and read only configuration.', async () => {
     const exportDirectory = 'exportAllTestDir11';
     const CMD = `frodo config export --no-metadata --read-only --all-separate -g --use-string-arrays --no-coords --extract --directory ${exportDirectory}`;
     await testExport(CMD, env, type, undefined, exportDirectory, false, true);
   });
 
-  test.todo('"frodo config export -AgD exportAllTestDir12": should export all global IGA configuration separately', async () => {
+  test.skip('"frodo config export -AgD exportAllTestDir12": should export all global IGA configuration separately', async () => {
     const exportDirectory = 'exportAllTestDir12';
     const CMD = `frodo config export -AgD ${exportDirectory}`;
     await testExport(CMD, env, type, undefined, exportDirectory, true, true);
