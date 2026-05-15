@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo config-manager push restart "frodo config-manager push restart -c": should check for updates and then apply them to the cloud tenant" 1`] = `""`;
+
+exports[`frodo config-manager push restart "frodo config-manager push restart -s": should check for updates to apply to the cloud tenant" 1`] = `""`;
+
+exports[`frodo config-manager push restart "frodo config-manager push restart -w": should restart the cloud tenant and wait until restart is complete to exit command." 1`] = `""`;
+
+exports[`frodo config-manager push restart "frodo config-manager push restart": should restart the cloud tenant" 1`] = `""`;
