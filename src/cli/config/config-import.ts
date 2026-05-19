@@ -135,7 +135,7 @@ export default function setup() {
             includeDefault: options.default,
             includeActiveValues: options.includeActiveValues,
             source: options.source,
-            onlyCustom: options.onlyCustom
+            onlyCustom: options.onlyCustom,
           });
           if (!outcome) process.exitCode = 1;
         }
@@ -159,7 +159,7 @@ export default function setup() {
             includeDefault: options.default,
             includeActiveValues: options.includeActiveValues,
             source: options.source,
-            onlyCustom: options.onlyCustom
+            onlyCustom: options.onlyCustom,
           });
           if (!outcome) process.exitCode = 1;
         }
@@ -177,7 +177,7 @@ export default function setup() {
               includeDefault: options.default,
               includeActiveValues: options.includeActiveValues,
               source: options.source,
-              onlyCustom: options.onlyCustom
+              onlyCustom: options.onlyCustom,
             }
           );
           if (!outcome) process.exitCode = 1;

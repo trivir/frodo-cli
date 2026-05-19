@@ -1,0 +1,1731 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga scope export "frodo iga scope export --all  --file testScopeExportFile2.json": should export all scopes to file 1`] = `0`;
+
+exports[`frodo iga scope export "frodo iga scope export --all  --file testScopeExportFile2.json": should export all scopes to file 2`] = `""`;
+
+exports[`frodo iga scope export "frodo iga scope export --all  --file testScopeExportFile2.json": should export all scopes to file 3`] = `
+"✔ Exported 11 scopes
+"
+`;
+
+exports[`frodo iga scope export "frodo iga scope export --all  --file testScopeExportFile2.json": should export all scopes to file: testScopeExportFile2.json 1`] = `
+{
+  "meta": Any<Object>,
+  "scope": {
+    "2a61f823-aa13-414a-9724-ad95e9004dd7": {
+      "description": "test scope for does not contain filter",
+      "id": "2a61f823-aa13-414a-9724-ad95e9004dd7",
+      "metadata": {},
+      "name": "does-not-contain-test",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "not_contains": {
+                  "in_string": "user.city",
+                  "search_string": {
+                    "literal": "Utah",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {},
+    },
+    "3f63240d-2027-46fc-b8ee-96745be373a8": {
+      "description": "",
+      "id": "3f63240d-2027-46fc-b8ee-96745be373a8",
+      "metadata": {},
+      "name": "test",
+      "permissions": {
+        "createEntitlement": true,
+        "createRole": true,
+        "createUser": true,
+        "deleteRole": true,
+        "deleteUser": true,
+        "modifyEntitlement": true,
+        "modifyRole": true,
+        "modifyUser": true,
+        "publishRole": true,
+        "viewGrants": true,
+        "viewUserAccess": true,
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "and": [
+              {
+                "not_contains": {
+                  "in_string": "user.stateProvince",
+                  "search_string": {
+                    "literal": "Utah",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {},
+          "version": "v2",
+        },
+        "entitlement": {
+          "filter": {},
+          "version": "v2",
+        },
+        "role": {
+          "filter": {},
+          "version": "v2",
+        },
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "ends_with": {
+                  "suffix": {
+                    "literal": "s",
+                  },
+                  "value": "user.accountStatus",
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+    },
+    "5b7f96f0-7b6d-4c0f-8703-b6a0030e0c81": {
+      "description": "",
+      "id": "5b7f96f0-7b6d-4c0f-8703-b6a0030e0c81",
+      "metadata": {},
+      "name": "equals-test",
+      "permissions": {
+        "createEntitlement": true,
+        "createRole": true,
+        "createUser": true,
+        "deleteRole": true,
+        "deleteUser": true,
+        "modifyEntitlement": true,
+        "modifyRole": true,
+        "modifyUser": true,
+        "publishRole": true,
+        "viewGrants": true,
+        "viewUserAccess": true,
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "user.city",
+                  "right": {
+                    "literal": "Utah",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "catalog.application.name",
+                  "right": {
+                    "literal": "temp",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+        "entitlement": {
+          "filter": {
+            "and": [
+              {
+                "equals": {
+                  "left": "catalog.entitlement.descriptor.displayName",
+                  "right": {
+                    "literal": "temp",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+        "role": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "catalog.role.description",
+                  "right": {
+                    "literal": "temp",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "user._id",
+                  "right": {
+                    "literal": "temp",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+    },
+    "75e1b352-b037-46f1-ba75-47dd388f89c2": {
+      "description": "A test scope for ends with filter",
+      "id": "75e1b352-b037-46f1-ba75-47dd388f89c2",
+      "metadata": {},
+      "name": "ends-with-scope",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "ends_with": {
+                  "suffix": {
+                    "literal": "1",
+                  },
+                  "value": "user._id",
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {},
+    },
+    "7c584440-83da-474b-9473-8a5d7a433947": {
+      "description": "this is a test",
+      "id": "7c584440-83da-474b-9473-8a5d7a433947",
+      "metadata": {},
+      "name": "random-scope",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "not_contains": {
+                  "in_string_array": "user.adminOfOrg",
+                  "search_string": {
+                    "literal": "e74ffe7b-77be-4d6a-9564-3f9d8c4304e0",
+                  },
+                },
+              },
+              {
+                "equals": {
+                  "left": "user.city",
+                  "right": {
+                    "literal": "Salt Lake City",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {},
+          "version": "v2",
+        },
+        "entitlement": {
+          "filter": {},
+          "version": "v2",
+        },
+        "role": {
+          "filter": {},
+          "version": "v2",
+        },
+        "user": {
+          "filter": {},
+          "version": "v2",
+        },
+      },
+    },
+    "8d252337-f031-4960-992a-3d773601d85f": {
+      "description": "Description of the put scope request",
+      "id": "8d252337-f031-4960-992a-3d773601d85f",
+      "metadata": {},
+      "name": "New Scope",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "and": [],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {
+            "and": [],
+          },
+          "version": "v2",
+        },
+      },
+    },
+    "8d8add50-011e-45a3-a268-958597d252ca": {
+      "description": "",
+      "id": "8d8add50-011e-45a3-a268-958597d252ca",
+      "metadata": {},
+      "name": "starts-with-test",
+      "permissions": {
+        "createRole": true,
+        "createUser": true,
+        "deleteRole": true,
+        "deleteUser": true,
+        "modifyRole": true,
+        "modifyUser": true,
+        "publishRole": true,
+        "viewUserAccess": true,
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "1",
+                  },
+                  "value": "user.frIndexedDate1",
+                },
+              },
+              {
+                "or": [
+                  {
+                    "starts_with": {
+                      "prefix": {
+                        "literal": "U",
+                      },
+                      "value": "user.city",
+                    },
+                  },
+                  {
+                    "starts_with": {
+                      "prefix": {
+                        "literal": "A",
+                      },
+                      "value": "user.country",
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "A",
+                  },
+                  "value": "catalog.application._id",
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+        "entitlement": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "A",
+                  },
+                  "value": "catalog.entitlement.descriptor.displayName",
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+        "role": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "A",
+                  },
+                  "value": "catalog.role.description",
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "1",
+                  },
+                  "value": "user._id",
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+    },
+    "98c735ce-6fdc-4a62-800f-6659388e441c": {
+      "description": "",
+      "id": "98c735ce-6fdc-4a62-800f-6659388e441c",
+      "metadata": {},
+      "name": "User LCM Test",
+      "permissions": {
+        "createUser": true,
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "user._id",
+                  "right": {
+                    "literal": "6a2d0e09-a9ac-41ca-af24-8af052c480f2",
+                  },
+                },
+              },
+              {
+                "equals": {
+                  "left": "user.userName",
+                  "right": {
+                    "literal": "phh-parent-org-admin",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {
+        "user": {
+          "filter": {},
+          "version": "v2",
+        },
+      },
+    },
+    "c39062f0-ac60-4f72-ad8a-ef87bb8889b1": {
+      "description": "test scope for contains filter",
+      "id": "c39062f0-ac60-4f72-ad8a-ef87bb8889b1",
+      "metadata": {},
+      "name": "contains-test",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "contains": {
+                  "in_string": "user._id",
+                  "search_string": {
+                    "literal": "",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {},
+    },
+    "c5f6e550-29fb-48ed-87f1-d35c8c9067cd": {
+      "description": "test scope for is no filter
+",
+      "id": "c5f6e550-29fb-48ed-87f1-d35c8c9067cd",
+      "metadata": {},
+      "name": "is-not-test",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "not_equals": {
+                  "left": "user.city",
+                  "right": {
+                    "literal": "Utah",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {},
+    },
+    "c62906d9-7d67-4519-b119-13031bb25896": {
+      "description": "Allows employees (frIndexedInteger1 eq 0) to view other employee objects",
+      "id": "c62906d9-7d67-4519-b119-13031bb25896",
+      "metadata": {},
+      "name": "phh-delegate-visibility",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "and": [
+              {
+                "equals": {
+                  "left": "user.frIndexedInteger1",
+                  "right": {
+                    "literal": 0,
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "inactive",
+      "targetCondition": {
+        "user": {
+          "filter": {
+            "and": [
+              {
+                "equals": {
+                  "left": "user.frIndexedInteger1",
+                  "right": {
+                    "literal": 0,
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`frodo iga scope export "frodo iga scope export --no-metadata -a --directory testScopeExportDir2": should export all scopes with no metadata 1`] = `0`;
+
+exports[`frodo iga scope export "frodo iga scope export --no-metadata -a --directory testScopeExportDir2": should export all scopes with no metadata 2`] = `""`;
+
+exports[`frodo iga scope export "frodo iga scope export --no-metadata -a --directory testScopeExportDir2": should export all scopes with no metadata 3`] = `
+"✔ Exported 11 scopes
+"
+`;
+
+exports[`frodo iga scope export "frodo iga scope export --no-metadata -a --directory testScopeExportDir2": should export all scopes with no metadata: testScopeExportDir2/allScopes.scope.json 1`] = `
+{
+  "scope": {
+    "2a61f823-aa13-414a-9724-ad95e9004dd7": {
+      "description": "test scope for does not contain filter",
+      "id": "2a61f823-aa13-414a-9724-ad95e9004dd7",
+      "metadata": {},
+      "name": "does-not-contain-test",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "not_contains": {
+                  "in_string": "user.city",
+                  "search_string": {
+                    "literal": "Utah",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {},
+    },
+    "3f63240d-2027-46fc-b8ee-96745be373a8": {
+      "description": "",
+      "id": "3f63240d-2027-46fc-b8ee-96745be373a8",
+      "metadata": {},
+      "name": "test",
+      "permissions": {
+        "createEntitlement": true,
+        "createRole": true,
+        "createUser": true,
+        "deleteRole": true,
+        "deleteUser": true,
+        "modifyEntitlement": true,
+        "modifyRole": true,
+        "modifyUser": true,
+        "publishRole": true,
+        "viewGrants": true,
+        "viewUserAccess": true,
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "and": [
+              {
+                "not_contains": {
+                  "in_string": "user.stateProvince",
+                  "search_string": {
+                    "literal": "Utah",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {},
+          "version": "v2",
+        },
+        "entitlement": {
+          "filter": {},
+          "version": "v2",
+        },
+        "role": {
+          "filter": {},
+          "version": "v2",
+        },
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "ends_with": {
+                  "suffix": {
+                    "literal": "s",
+                  },
+                  "value": "user.accountStatus",
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+    },
+    "5b7f96f0-7b6d-4c0f-8703-b6a0030e0c81": {
+      "description": "",
+      "id": "5b7f96f0-7b6d-4c0f-8703-b6a0030e0c81",
+      "metadata": {},
+      "name": "equals-test",
+      "permissions": {
+        "createEntitlement": true,
+        "createRole": true,
+        "createUser": true,
+        "deleteRole": true,
+        "deleteUser": true,
+        "modifyEntitlement": true,
+        "modifyRole": true,
+        "modifyUser": true,
+        "publishRole": true,
+        "viewGrants": true,
+        "viewUserAccess": true,
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "user.city",
+                  "right": {
+                    "literal": "Utah",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "catalog.application.name",
+                  "right": {
+                    "literal": "temp",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+        "entitlement": {
+          "filter": {
+            "and": [
+              {
+                "equals": {
+                  "left": "catalog.entitlement.descriptor.displayName",
+                  "right": {
+                    "literal": "temp",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+        "role": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "catalog.role.description",
+                  "right": {
+                    "literal": "temp",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "user._id",
+                  "right": {
+                    "literal": "temp",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+    },
+    "75e1b352-b037-46f1-ba75-47dd388f89c2": {
+      "description": "A test scope for ends with filter",
+      "id": "75e1b352-b037-46f1-ba75-47dd388f89c2",
+      "metadata": {},
+      "name": "ends-with-scope",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "ends_with": {
+                  "suffix": {
+                    "literal": "1",
+                  },
+                  "value": "user._id",
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {},
+    },
+    "7c584440-83da-474b-9473-8a5d7a433947": {
+      "description": "this is a test",
+      "id": "7c584440-83da-474b-9473-8a5d7a433947",
+      "metadata": {},
+      "name": "random-scope",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "not_contains": {
+                  "in_string_array": "user.adminOfOrg",
+                  "search_string": {
+                    "literal": "e74ffe7b-77be-4d6a-9564-3f9d8c4304e0",
+                  },
+                },
+              },
+              {
+                "equals": {
+                  "left": "user.city",
+                  "right": {
+                    "literal": "Salt Lake City",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {},
+          "version": "v2",
+        },
+        "entitlement": {
+          "filter": {},
+          "version": "v2",
+        },
+        "role": {
+          "filter": {},
+          "version": "v2",
+        },
+        "user": {
+          "filter": {},
+          "version": "v2",
+        },
+      },
+    },
+    "8d252337-f031-4960-992a-3d773601d85f": {
+      "description": "Description of the put scope request",
+      "id": "8d252337-f031-4960-992a-3d773601d85f",
+      "metadata": {},
+      "name": "New Scope",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "and": [],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {
+            "and": [],
+          },
+          "version": "v2",
+        },
+      },
+    },
+    "8d8add50-011e-45a3-a268-958597d252ca": {
+      "description": "",
+      "id": "8d8add50-011e-45a3-a268-958597d252ca",
+      "metadata": {},
+      "name": "starts-with-test",
+      "permissions": {
+        "createRole": true,
+        "createUser": true,
+        "deleteRole": true,
+        "deleteUser": true,
+        "modifyRole": true,
+        "modifyUser": true,
+        "publishRole": true,
+        "viewUserAccess": true,
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "1",
+                  },
+                  "value": "user.frIndexedDate1",
+                },
+              },
+              {
+                "or": [
+                  {
+                    "starts_with": {
+                      "prefix": {
+                        "literal": "U",
+                      },
+                      "value": "user.city",
+                    },
+                  },
+                  {
+                    "starts_with": {
+                      "prefix": {
+                        "literal": "A",
+                      },
+                      "value": "user.country",
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "A",
+                  },
+                  "value": "catalog.application._id",
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+        "entitlement": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "A",
+                  },
+                  "value": "catalog.entitlement.descriptor.displayName",
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+        "role": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "A",
+                  },
+                  "value": "catalog.role.description",
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "1",
+                  },
+                  "value": "user._id",
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+    },
+    "98c735ce-6fdc-4a62-800f-6659388e441c": {
+      "description": "",
+      "id": "98c735ce-6fdc-4a62-800f-6659388e441c",
+      "metadata": {},
+      "name": "User LCM Test",
+      "permissions": {
+        "createUser": true,
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "user._id",
+                  "right": {
+                    "literal": "6a2d0e09-a9ac-41ca-af24-8af052c480f2",
+                  },
+                },
+              },
+              {
+                "equals": {
+                  "left": "user.userName",
+                  "right": {
+                    "literal": "phh-parent-org-admin",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {
+        "user": {
+          "filter": {},
+          "version": "v2",
+        },
+      },
+    },
+    "c39062f0-ac60-4f72-ad8a-ef87bb8889b1": {
+      "description": "test scope for contains filter",
+      "id": "c39062f0-ac60-4f72-ad8a-ef87bb8889b1",
+      "metadata": {},
+      "name": "contains-test",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "contains": {
+                  "in_string": "user._id",
+                  "search_string": {
+                    "literal": "",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {},
+    },
+    "c5f6e550-29fb-48ed-87f1-d35c8c9067cd": {
+      "description": "test scope for is no filter
+",
+      "id": "c5f6e550-29fb-48ed-87f1-d35c8c9067cd",
+      "metadata": {},
+      "name": "is-not-test",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "not_equals": {
+                  "left": "user.city",
+                  "right": {
+                    "literal": "Utah",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {},
+    },
+    "c62906d9-7d67-4519-b119-13031bb25896": {
+      "description": "Allows employees (frIndexedInteger1 eq 0) to view other employee objects",
+      "id": "c62906d9-7d67-4519-b119-13031bb25896",
+      "metadata": {},
+      "name": "phh-delegate-visibility",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "and": [
+              {
+                "equals": {
+                  "left": "user.frIndexedInteger1",
+                  "right": {
+                    "literal": 0,
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "inactive",
+      "targetCondition": {
+        "user": {
+          "filter": {
+            "and": [
+              {
+                "equals": {
+                  "left": "user.frIndexedInteger1",
+                  "right": {
+                    "literal": 0,
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`frodo iga scope export "frodo iga scope export -NAD testScopeExportDir3": should export all scopes separately with no metadata 1`] = `0`;
+
+exports[`frodo iga scope export "frodo iga scope export -NAD testScopeExportDir3": should export all scopes separately with no metadata 2`] = `""`;
+
+exports[`frodo iga scope export "frodo iga scope export -NAD testScopeExportDir3": should export all scopes separately with no metadata 3`] = `
+"✔ Exported 11 scopes
+"
+`;
+
+exports[`frodo iga scope export "frodo iga scope export -NAD testScopeExportDir3": should export all scopes separately with no metadata: testScopeExportDir3/New-Scope.scope.json 1`] = `
+{
+  "scope": {
+    "New Scope": {
+      "description": "Description of the put scope request",
+      "id": "8d252337-f031-4960-992a-3d773601d85f",
+      "metadata": {},
+      "name": "New Scope",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "and": [],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {
+            "and": [],
+          },
+          "version": "v2",
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`frodo iga scope export "frodo iga scope export -NAD testScopeExportDir3": should export all scopes separately with no metadata: testScopeExportDir3/User-LCM-Test.scope.json 1`] = `
+{
+  "scope": {
+    "User LCM Test": {
+      "description": "",
+      "id": "98c735ce-6fdc-4a62-800f-6659388e441c",
+      "metadata": {},
+      "name": "User LCM Test",
+      "permissions": {
+        "createUser": true,
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "user._id",
+                  "right": {
+                    "literal": "6a2d0e09-a9ac-41ca-af24-8af052c480f2",
+                  },
+                },
+              },
+              {
+                "equals": {
+                  "left": "user.userName",
+                  "right": {
+                    "literal": "phh-parent-org-admin",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {
+        "user": {
+          "filter": {},
+          "version": "v2",
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`frodo iga scope export "frodo iga scope export -NAD testScopeExportDir3": should export all scopes separately with no metadata: testScopeExportDir3/contains-test.scope.json 1`] = `
+{
+  "scope": {
+    "contains-test": {
+      "description": "test scope for contains filter",
+      "id": "c39062f0-ac60-4f72-ad8a-ef87bb8889b1",
+      "metadata": {},
+      "name": "contains-test",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "contains": {
+                  "in_string": "user._id",
+                  "search_string": {
+                    "literal": "",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {},
+    },
+  },
+}
+`;
+
+exports[`frodo iga scope export "frodo iga scope export -NAD testScopeExportDir3": should export all scopes separately with no metadata: testScopeExportDir3/does-not-contain-test.scope.json 1`] = `
+{
+  "scope": {
+    "does-not-contain-test": {
+      "description": "test scope for does not contain filter",
+      "id": "2a61f823-aa13-414a-9724-ad95e9004dd7",
+      "metadata": {},
+      "name": "does-not-contain-test",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "not_contains": {
+                  "in_string": "user.city",
+                  "search_string": {
+                    "literal": "Utah",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {},
+    },
+  },
+}
+`;
+
+exports[`frodo iga scope export "frodo iga scope export -NAD testScopeExportDir3": should export all scopes separately with no metadata: testScopeExportDir3/ends-with-scope.scope.json 1`] = `
+{
+  "scope": {
+    "ends-with-scope": {
+      "description": "A test scope for ends with filter",
+      "id": "75e1b352-b037-46f1-ba75-47dd388f89c2",
+      "metadata": {},
+      "name": "ends-with-scope",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "ends_with": {
+                  "suffix": {
+                    "literal": "1",
+                  },
+                  "value": "user._id",
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {},
+    },
+  },
+}
+`;
+
+exports[`frodo iga scope export "frodo iga scope export -NAD testScopeExportDir3": should export all scopes separately with no metadata: testScopeExportDir3/equals-test.scope.json 1`] = `
+{
+  "scope": {
+    "equals-test": {
+      "description": "",
+      "id": "5b7f96f0-7b6d-4c0f-8703-b6a0030e0c81",
+      "metadata": {},
+      "name": "equals-test",
+      "permissions": {
+        "createEntitlement": true,
+        "createRole": true,
+        "createUser": true,
+        "deleteRole": true,
+        "deleteUser": true,
+        "modifyEntitlement": true,
+        "modifyRole": true,
+        "modifyUser": true,
+        "publishRole": true,
+        "viewGrants": true,
+        "viewUserAccess": true,
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "user.city",
+                  "right": {
+                    "literal": "Utah",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "catalog.application.name",
+                  "right": {
+                    "literal": "temp",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+        "entitlement": {
+          "filter": {
+            "and": [
+              {
+                "equals": {
+                  "left": "catalog.entitlement.descriptor.displayName",
+                  "right": {
+                    "literal": "temp",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+        "role": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "catalog.role.description",
+                  "right": {
+                    "literal": "temp",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "user._id",
+                  "right": {
+                    "literal": "temp",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`frodo iga scope export "frodo iga scope export -NAD testScopeExportDir3": should export all scopes separately with no metadata: testScopeExportDir3/is-not-test.scope.json 1`] = `
+{
+  "scope": {
+    "is-not-test": {
+      "description": "test scope for is no filter
+",
+      "id": "c5f6e550-29fb-48ed-87f1-d35c8c9067cd",
+      "metadata": {},
+      "name": "is-not-test",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "not_equals": {
+                  "left": "user.city",
+                  "right": {
+                    "literal": "Utah",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {},
+    },
+  },
+}
+`;
+
+exports[`frodo iga scope export "frodo iga scope export -NAD testScopeExportDir3": should export all scopes separately with no metadata: testScopeExportDir3/phh-delegate-visibility.scope.json 1`] = `
+{
+  "scope": {
+    "phh-delegate-visibility": {
+      "description": "Allows employees (frIndexedInteger1 eq 0) to view other employee objects",
+      "id": "c62906d9-7d67-4519-b119-13031bb25896",
+      "metadata": {},
+      "name": "phh-delegate-visibility",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "and": [
+              {
+                "equals": {
+                  "left": "user.frIndexedInteger1",
+                  "right": {
+                    "literal": 0,
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "inactive",
+      "targetCondition": {
+        "user": {
+          "filter": {
+            "and": [
+              {
+                "equals": {
+                  "left": "user.frIndexedInteger1",
+                  "right": {
+                    "literal": 0,
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`frodo iga scope export "frodo iga scope export -NAD testScopeExportDir3": should export all scopes separately with no metadata: testScopeExportDir3/random-scope.scope.json 1`] = `
+{
+  "scope": {
+    "random-scope": {
+      "description": "this is a test",
+      "id": "7c584440-83da-474b-9473-8a5d7a433947",
+      "metadata": {},
+      "name": "random-scope",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "not_contains": {
+                  "in_string_array": "user.adminOfOrg",
+                  "search_string": {
+                    "literal": "e74ffe7b-77be-4d6a-9564-3f9d8c4304e0",
+                  },
+                },
+              },
+              {
+                "equals": {
+                  "left": "user.city",
+                  "right": {
+                    "literal": "Salt Lake City",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {},
+          "version": "v2",
+        },
+        "entitlement": {
+          "filter": {},
+          "version": "v2",
+        },
+        "role": {
+          "filter": {},
+          "version": "v2",
+        },
+        "user": {
+          "filter": {},
+          "version": "v2",
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`frodo iga scope export "frodo iga scope export -NAD testScopeExportDir3": should export all scopes separately with no metadata: testScopeExportDir3/starts-with-test.scope.json 1`] = `
+{
+  "scope": {
+    "starts-with-test": {
+      "description": "",
+      "id": "8d8add50-011e-45a3-a268-958597d252ca",
+      "metadata": {},
+      "name": "starts-with-test",
+      "permissions": {
+        "createRole": true,
+        "createUser": true,
+        "deleteRole": true,
+        "deleteUser": true,
+        "modifyRole": true,
+        "modifyUser": true,
+        "publishRole": true,
+        "viewUserAccess": true,
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "1",
+                  },
+                  "value": "user.frIndexedDate1",
+                },
+              },
+              {
+                "or": [
+                  {
+                    "starts_with": {
+                      "prefix": {
+                        "literal": "U",
+                      },
+                      "value": "user.city",
+                    },
+                  },
+                  {
+                    "starts_with": {
+                      "prefix": {
+                        "literal": "A",
+                      },
+                      "value": "user.country",
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "A",
+                  },
+                  "value": "catalog.application._id",
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+        "entitlement": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "A",
+                  },
+                  "value": "catalog.entitlement.descriptor.displayName",
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+        "role": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "A",
+                  },
+                  "value": "catalog.role.description",
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "1",
+                  },
+                  "value": "user._id",
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`frodo iga scope export "frodo iga scope export -NAD testScopeExportDir3": should export all scopes separately with no metadata: testScopeExportDir3/test.scope.json 1`] = `
+{
+  "scope": {
+    "test": {
+      "description": "",
+      "id": "3f63240d-2027-46fc-b8ee-96745be373a8",
+      "metadata": {},
+      "name": "test",
+      "permissions": {
+        "createEntitlement": true,
+        "createRole": true,
+        "createUser": true,
+        "deleteRole": true,
+        "deleteUser": true,
+        "modifyEntitlement": true,
+        "modifyRole": true,
+        "modifyUser": true,
+        "publishRole": true,
+        "viewGrants": true,
+        "viewUserAccess": true,
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "and": [
+              {
+                "not_contains": {
+                  "in_string": "user.stateProvince",
+                  "search_string": {
+                    "literal": "Utah",
+                  },
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {},
+          "version": "v2",
+        },
+        "entitlement": {
+          "filter": {},
+          "version": "v2",
+        },
+        "role": {
+          "filter": {},
+          "version": "v2",
+        },
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "ends_with": {
+                  "suffix": {
+                    "literal": "s",
+                  },
+                  "value": "user.accountStatus",
+                },
+              },
+            ],
+          },
+          "version": "v2",
+        },
+      },
+    },
+  },
+}
+`;

@@ -1,0 +1,128 @@
+{
+  "meta": {
+    "exportDate": "2026-05-19T15:24:26.198Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  },
+  "scope": {
+    "de9f6e6d-7b4d-4bb5-8f7e-b56f4b70be95": {
+      "description": "",
+      "id": "de9f6e6d-7b4d-4bb5-8f7e-b56f4b70be95",
+      "metadata": {},
+      "name": "starts-with-test",
+      "permissions": {
+        "createRole": true,
+        "createUser": true,
+        "deleteRole": true,
+        "deleteUser": true,
+        "modifyRole": true,
+        "modifyUser": true,
+        "publishRole": true,
+        "viewUserAccess": true
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "1"
+                  },
+                  "value": "user.frIndexedDate1"
+                }
+              },
+              {
+                "or": [
+                  {
+                    "starts_with": {
+                      "prefix": {
+                        "literal": "U"
+                      },
+                      "value": "user.city"
+                    }
+                  },
+                  {
+                    "starts_with": {
+                      "prefix": {
+                        "literal": "A"
+                      },
+                      "value": "user.country"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "A"
+                  },
+                  "value": "catalog.application._id"
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        },
+        "entitlement": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "A"
+                  },
+                  "value": "catalog.entitlement.descriptor.displayName"
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        },
+        "role": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "A"
+                  },
+                  "value": "catalog.role.description"
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        },
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "1"
+                  },
+                  "value": "user._id"
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      }
+    }
+  }
+}
