@@ -1,0 +1,30 @@
+{
+  "glossarySchema": {
+    "0806c0c5-a6e9-4ec8-8a36-830f217637b3": {
+      "allowedValues": [],
+      "description": "Can the role be requested",
+      "displayName": "Requestable",
+      "id": "0806c0c5-a6e9-4ec8-8a36-830f217637b3",
+      "isIndexed": true,
+      "isInternal": true,
+      "isMultiValue": false,
+      "managedObjectType": null,
+      "metadata": {
+        "createdDate": "2025-10-27T18:26:04.308367768Z",
+        "modifiedDate": "2026-05-15T21:59:36.939Z"
+      },
+      "name": "requestable",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "boolean"
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-22T16:25:58.243Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "bwirick@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}

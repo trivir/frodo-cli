@@ -1,0 +1,29 @@
+{
+  "glossarySchema": {
+    "0e1f922f-c9b9-40f2-964b-740f0ad47afb": {
+      "allowedValues": [],
+      "description": "Risk Score",
+      "displayName": "Risk Score",
+      "enumeratedValues": [],
+      "id": "0e1f922f-c9b9-40f2-964b-740f0ad47afb",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {
+        "createdDate": "2025-10-27T18:13:28.850616006Z",
+        "modifiedDate": "2026-05-15T21:59:38.972Z"
+      },
+      "name": "riskScore",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "float"
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-22T16:25:58.243Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "bwirick@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}

@@ -14,6 +14,7 @@ Options:
                     examples.
 
 Commands:
+  glossary          Manage glossaries.
   help              display help for command
 
   (Cloud-only):

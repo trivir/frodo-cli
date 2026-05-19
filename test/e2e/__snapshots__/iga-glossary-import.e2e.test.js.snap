@@ -1,0 +1,156 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga glossary import "frodo iga glossary import --all --file test/e2e/exports/all/allGlossaries.glossary.json": should import all glossaries from the file "test/e2e/exports/all/allGlossaries.glossary.json with type role" 1`] = `""`;
+
+exports[`frodo iga glossary import "frodo iga glossary import --all --file test/e2e/exports/all/allGlossaries.glossary.json": should import all glossaries from the file "test/e2e/exports/all/allGlossaries.glossary.json with type role" 2`] = `
+"✔ Successfully imported glossaries.
+"
+`;
+
+exports[`frodo iga glossary import "frodo iga glossary import --all-separate -IN --directory test/e2e/exports/all-separate/cloud/iga": should import all glossaries from the directory "test/e2e/exports/all-separate/cloud/iga including internals and no metadata" 1`] = `""`;
+
+exports[`frodo iga glossary import "frodo iga glossary import --all-separate -IN --directory test/e2e/exports/all-separate/cloud/iga": should import all glossaries from the directory "test/e2e/exports/all-separate/cloud/iga including internals and no metadata" 2`] = `
+"✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+"
+`;
+
+exports[`frodo iga glossary import "frodo iga glossary import -AD test/e2e/exports/all-separate/cloud/iga": should import all glossaries from the directory "test/e2e/exports/all-separate/cloud/iga"  1`] = `""`;
+
+exports[`frodo iga glossary import "frodo iga glossary import -AD test/e2e/exports/all-separate/cloud/iga": should import all glossaries from the directory "test/e2e/exports/all-separate/cloud/iga"  2`] = `
+"✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+✔ Successfully imported glossaries.
+"
+`;
+
+exports[`frodo iga glossary import "frodo iga glossary import -at role -f test/e2e/exports/all/allGlossaries.glossary.json": should import all glossaries from the file "test/e2e/exports/all/allGlossaries.glossary.json with type role" 1`] = `""`;
+
+exports[`frodo iga glossary import "frodo iga glossary import -at role -f test/e2e/exports/all/allGlossaries.glossary.json": should import all glossaries from the file "test/e2e/exports/all/allGlossaries.glossary.json with type role" 2`] = `
+"✔ Successfully imported glossaries.
+"
+`;
+
+exports[`frodo iga glossary import "frodo iga glossary import -f test/e2e/exports/all/allGlossaries.glossary.json": should import the first glossary from the file "test/e2e/exports/all/allGlossaries.glossary.json"  1`] = `""`;
+
+exports[`frodo iga glossary import "frodo iga glossary import -f test/e2e/exports/all/allGlossaries.glossary.json": should import the first glossary from the file "test/e2e/exports/all/allGlossaries.glossary.json"  2`] = `
+"✔ Imported glossary from test/e2e/exports/all/allGlossaries.glossary.json
+"
+`;
+
+exports[`frodo iga glossary import "frodo iga glossary import -i b0955a58-1955-40a7-9d9d-29947fe5f8f7 -f test/e2e/exports/all/allGlossaries.glossary.json": should import glossary with id "b0955a58-1955-40a7-9d9d-29947fe5f8f7" from the file "test/e2e/exports/all/allGlossaries.glossary.json" 1`] = `""`;
+
+exports[`frodo iga glossary import "frodo iga glossary import -i b0955a58-1955-40a7-9d9d-29947fe5f8f7 -f test/e2e/exports/all/allGlossaries.glossary.json": should import glossary with id "b0955a58-1955-40a7-9d9d-29947fe5f8f7" from the file "test/e2e/exports/all/allGlossaries.glossary.json" 2`] = `
+"✔ Successfully imported glossary b0955a58-1955-40a7-9d9d-29947fe5f8f7.
+"
+`;
+
+exports[`frodo iga glossary import "frodo iga glossary import -n testUser -f test/e2e/exports/all/allGlossaries.glossary.json": should import the glossary with name testUser from the file "test/e2e/exports/all/allGlossaries.glossary.json" 1`] = `""`;
+
+exports[`frodo iga glossary import "frodo iga glossary import -n testUser -f test/e2e/exports/all/allGlossaries.glossary.json": should import the glossary with name testUser from the file "test/e2e/exports/all/allGlossaries.glossary.json" 2`] = `
+"✔ Successfully imported glossary undefined.
+"
+`;

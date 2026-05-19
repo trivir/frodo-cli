@@ -1,0 +1,50 @@
+{
+  "glossarySchema": {
+    "cfa59305-4e4c-427a-b931-f807daabca56": {
+      "allowedValues": [
+        "sales",
+        "finance",
+        "hr",
+        "null"
+      ],
+      "description": "Application grant workflows example for LOB determines who it should go to",
+      "displayName": "Line Of Business",
+      "enumeratedValues": [
+        {
+          "text": "Sales",
+          "value": "sales"
+        },
+        {
+          "text": "Finance",
+          "value": "finance"
+        },
+        {
+          "text": "Human Resources",
+          "value": "hr"
+        },
+        {
+          "text": "Other",
+          "value": "null"
+        }
+      ],
+      "id": "cfa59305-4e4c-427a-b931-f807daabca56",
+      "isMultiValue": false,
+      "metadata": {
+        "createdDate": "2026-05-22T16:22:11.83705107Z",
+        "modifiedDate": "2026-05-22T16:22:11.837053084Z"
+      },
+      "name": "lineOfBusiness",
+      "objectType": "/openidm/managed/application",
+      "searchable": true,
+      "type": "string"
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-22T16:25:58.246Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "bwirick@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}

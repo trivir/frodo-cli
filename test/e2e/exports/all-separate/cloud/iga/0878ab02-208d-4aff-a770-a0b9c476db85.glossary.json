@@ -1,0 +1,50 @@
+{
+  "glossarySchema": {
+    "0878ab02-208d-4aff-a770-a0b9c476db85": {
+      "allowedValues": [
+        "high",
+        "medium",
+        "low",
+        "null"
+      ],
+      "description": "",
+      "displayName": "Risk Level",
+      "enumeratedValues": [
+        {
+          "text": "High",
+          "value": "high"
+        },
+        {
+          "text": "Medium",
+          "value": "medium"
+        },
+        {
+          "text": "Low",
+          "value": "low"
+        },
+        {
+          "text": "Other",
+          "value": "null"
+        }
+      ],
+      "id": "0878ab02-208d-4aff-a770-a0b9c476db85",
+      "isMultiValue": false,
+      "metadata": {
+        "createdDate": "2026-05-22T16:22:19.938426643Z",
+        "modifiedDate": "2026-05-22T16:22:19.938429Z"
+      },
+      "name": "riskLevel",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "string"
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-22T16:25:58.243Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "bwirick@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "glossarySchema": {
+    "d9d62b7a-9588-4929-87b9-d2222591a630": {
+      "allowedValues": [
+        "Text One",
+        "Text Two",
+        "Text Three"
+      ],
+      "description": "Test String Description",
+      "displayName": "Test String Display Name",
+      "enumeratedValues": [
+        {
+          "text": "text1",
+          "value": "Text One"
+        },
+        {
+          "text": "text2",
+          "value": "Text Two"
+        },
+        {
+          "text": "text3",
+          "value": "Text Three"
+        }
+      ],
+      "id": "d9d62b7a-9588-4929-87b9-d2222591a630",
+      "isMultiValue": true,
+      "metadata": {
+        "createdDate": "2026-05-22T16:22:05.775043397Z",
+        "modifiedDate": "2026-05-22T16:22:05.775045318Z"
+      },
+      "name": "testString",
+      "objectType": "/openidm/managed/application",
+      "searchable": true,
+      "type": "string"
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-22T16:25:58.246Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "bwirick@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}
