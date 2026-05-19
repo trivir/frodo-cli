@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CLI help interface for 'iga events publish' should be expected english 1`] = `
+"Usage: frodo iga events [options] [command]
+
+Manage events.
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+
+Commands:
+  delete            Delete events.
+  describe          Describe event.
+  help              display help for command
+
+  (Cloud-only):
+  export            Export events.
+  import            Import events.
+  list              List events.
+"
+`;

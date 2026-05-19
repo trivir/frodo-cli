@@ -64,14 +64,14 @@ const igaEnv = getEnv(ic);
 const allEventsFile = "test/e2e/exports/all/allEvents.event.json";
 
 describe(`frodo iga events describe`, () => {
-  test(`"frodo iga events describe -i 07736c3e-f879-4024-988b-8a640d5c1bf9 -f ${allEventsFile}": should describe event 'test_events_1' from file ${allEventsFile}`, async () => {
-    const CMD = `frodo iga events describe -i 07736c3e-f879-4024-988b-8a640d5c1bf9 -f ${allEventsFile}`;
+  test(`"frodo iga events describe -i 3e0cddc2-6797-42a1-b95e-aa5201837467 -f ${allEventsFile}": should describe event 'test_events_1' from file ${allEventsFile}`, async () => {
+    const CMD = `frodo iga events describe -i 3e0cddc2-6797-42a1-b95e-aa5201837467 -f ${allEventsFile}`;
     const { stdout } = await exec(CMD, igaEnv);
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
   });
 
-  test(`"frodo iga events describe --event-id 07736c3e-f879-4024-988b-8a640d5c1bf9": should describe event 'test_events_1'`, async () => {
-    const CMD = `frodo iga events describe --event-id 07736c3e-f879-4024-988b-8a640d5c1bf9`;
+  test(`"frodo iga events describe --event-id 3e0cddc2-6797-42a1-b95e-aa5201837467": should describe event 'test_events_1'`, async () => {
+    const CMD = `frodo iga events describe --event-id 3e0cddc2-6797-42a1-b95e-aa5201837467`;
     const { stdout } = await exec(CMD, igaEnv);
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
   });

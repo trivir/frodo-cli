@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo iga events import "frodo iga events import --all --file test/e2e/exports/all/import_events/allEvents.event.json --no-deps": should import all events from the file "test/e2e/exports/all/import_events/allEvents.event.json" 1`] = `""`;
+exports[`frodo iga events import "frodo iga events import --all --file test/e2e/exports/all/allEvents.event.json --no-deps": should import all events from the file "test/e2e/exports/all/allEvents.event.json" 1`] = `""`;
 
-exports[`frodo iga events import "frodo iga events import --all --file test/e2e/exports/all/import_events/allEvents.event.json --no-deps": should import all events from the file "test/e2e/exports/all/import_events/allEvents.event.json" 2`] = `
+exports[`frodo iga events import "frodo iga events import --all --file test/e2e/exports/all/allEvents.event.json --no-deps": should import all events from the file "test/e2e/exports/all/allEvents.event.json" 2`] = `
 "✔ Successfully imported events.
 "
 `;
@@ -21,13 +21,6 @@ exports[`frodo iga events import "frodo iga events import --event-id 2dd3656c-c4
 "
 `;
 
-exports[`frodo iga events import "frodo iga events import --event-id 2dd3656c-c46d-4254-9959-91179227ed3e --file test/e2e/exports/all/import_events/allEvents.event.json --no-deps": should import test_events_1 from the file "test/e2e/exports/all/import_events/allEvents.event.json" 1`] = `""`;
-
-exports[`frodo iga events import "frodo iga events import --event-id 2dd3656c-c46d-4254-9959-91179227ed3e --file test/e2e/exports/all/import_events/allEvents.event.json --no-deps": should import test_events_1 from the file "test/e2e/exports/all/import_events/allEvents.event.json" 2`] = `
-"✔ Successfully imported event 2dd3656c-c46d-4254-9959-91179227ed3e.
-"
-`;
-
 exports[`frodo iga events import "frodo iga events import -AD test/e2e/exports/all-separate/cloud/global/events": should import all events from the directory "test/e2e/exports/all-separate/cloud/global/events" with dependencies 1`] = `""`;
 
 exports[`frodo iga events import "frodo iga events import -AD test/e2e/exports/all-separate/cloud/global/events": should import all events from the directory "test/e2e/exports/all-separate/cloud/global/events" with dependencies 2`] = `
@@ -35,30 +28,23 @@ exports[`frodo iga events import "frodo iga events import -AD test/e2e/exports/a
 "
 `;
 
-exports[`frodo iga events import "frodo iga events import -af test/e2e/exports/all/import_events/allEvents.event.json": should import all events from the file "test/e2e/exports/all/import_events/allEvents.event.json" with dependencies 1`] = `""`;
+exports[`frodo iga events import "frodo iga events import -af test/e2e/exports/all/allEvents.event.json": should import all events from the file "test/e2e/exports/all/allEvents.event.json" with dependencies 1`] = `""`;
 
-exports[`frodo iga events import "frodo iga events import -af test/e2e/exports/all/import_events/allEvents.event.json": should import all events from the file "test/e2e/exports/all/import_events/allEvents.event.json" with dependencies 2`] = `
+exports[`frodo iga events import "frodo iga events import -af test/e2e/exports/all/allEvents.event.json": should import all events from the file "test/e2e/exports/all/allEvents.event.json" with dependencies 2`] = `
 "✔ Successfully imported events.
 "
 `;
 
-exports[`frodo iga events import "frodo iga events import -f test/e2e/exports/all/import_events/allEvents.event.json --no-deps": should import first event from the file "test/e2e/exports/all/import_events/allEvents.event.json" 1`] = `""`;
+exports[`frodo iga events import "frodo iga events import -f test/e2e/exports/all/allEvents.event.json --no-deps": should import first event from the file "test/e2e/exports/all/allEvents.event.json" 1`] = `""`;
 
-exports[`frodo iga events import "frodo iga events import -f test/e2e/exports/all/import_events/allEvents.event.json --no-deps": should import first event from the file "test/e2e/exports/all/import_events/allEvents.event.json" 2`] = `
-"✔ Imported event from test/e2e/exports/all/import_events/allEvents.event.json
+exports[`frodo iga events import "frodo iga events import -f test/e2e/exports/all/allEvents.event.json --no-deps": should import first event from the file "test/e2e/exports/all/allEvents.event.json" 2`] = `
+"✔ Imported event from test/e2e/exports/all/allEvents.event.json
 "
 `;
 
 exports[`frodo iga events import "frodo iga events import -i 2dd3656c-c46d-4254-9959-91179227ed3e -f test/e2e/exports/all/allEvents.event.json": should import test_events_1 from the file "test/e2e/exports/all/allEvents.event.json" with dependencies 1`] = `""`;
 
 exports[`frodo iga events import "frodo iga events import -i 2dd3656c-c46d-4254-9959-91179227ed3e -f test/e2e/exports/all/allEvents.event.json": should import test_events_1 from the file "test/e2e/exports/all/allEvents.event.json" with dependencies 2`] = `
-"✔ Successfully imported event 2dd3656c-c46d-4254-9959-91179227ed3e.
-"
-`;
-
-exports[`frodo iga events import "frodo iga events import -i 2dd3656c-c46d-4254-9959-91179227ed3e -f test/e2e/exports/all/import_events/allEvents.event.json": should import test_events_1 from the file "test/e2e/exports/all/import_events/allEvents.event.json" with dependencies 1`] = `""`;
-
-exports[`frodo iga events import "frodo iga events import -i 2dd3656c-c46d-4254-9959-91179227ed3e -f test/e2e/exports/all/import_events/allEvents.event.json": should import test_events_1 from the file "test/e2e/exports/all/import_events/allEvents.event.json" with dependencies 2`] = `
 "✔ Successfully imported event 2dd3656c-c46d-4254-9959-91179227ed3e.
 "
 `;
