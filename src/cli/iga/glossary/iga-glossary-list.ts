@@ -64,7 +64,7 @@ export default function setup() {
         
         const objectType = options.glossaryType
           ? glossaryTypeMap[options.glossaryType]
-          : null;
+          : undefined;
         if (options.glossaryType && !objectType) {
           printMessage('Please provide a valid Object Type', 'error');
           process.exitCode = 1;

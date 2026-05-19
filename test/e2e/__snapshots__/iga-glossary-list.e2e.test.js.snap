@@ -1,140 +1,201 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo iga glossary list "frodo iga glossary list --long": should list the names, objectTypes, isSearchable, isMulti-value, type, ids and isInternal of the glossaries. 1`] = `
-"Name                          │Object Type                     │Searchable│Multi-Value│Type         │ID                                  │Internal
-Account Subtype               │/iga/governance/account         │true      │false      │string       │5ef5a92e-c2e4-40e4-b232-e33649591b37│true    
-Account Type                  │/iga/governance/account         │true      │false      │string       │c8ed99f7-5442-43d5-8406-f39060c1bd73│true    
-Active                        │/iga/governance/account         │true      │false      │boolean      │71c188ff-ed53-438c-9476-043cba6e850b│true    
-Actors                        │/iga/governance/account         │true      │true       │string       │09c470af-abc5-4733-beaf-3d169b62a234│true    
-Brycen's Test Entitlement     │/openidm/managed/assignment     │true      │true       │string       │d9ee80bf-5150-4fa9-a9a3-6cd61355b365│        
-Confidence Score              │/iga/governance/account         │true      │false      │float        │35094c80-ab3d-4c47-91ae-92175895b264│true    
-Confidence Score              │/iga/governance/entitlementGrant│true      │false      │float        │a65b7633-3dcb-4c83-8458-c14397f70715│true    
-CP Dummy Entitlement          │/openidm/managed/assignment     │true      │false      │string       │11fee6b2-bf06-4560-b2ae-3e27cec169f2│        
-Custom Attribute 1            │/iga/governance/account         │true      │false      │string       │d4cf00ae-f4b3-42b8-b2a6-b960a8d620dc│true    
-Custom Attribute 10           │/iga/governance/account         │true      │false      │string       │a65b7633-3dcb-4c83-8458-c14397f70717│true    
-Custom Attribute 2            │/iga/governance/account         │true      │false      │string       │1683c30a-b149-4bab-8187-5a67b0fe3704│true    
-Custom Attribute 3            │/iga/governance/account         │true      │false      │string       │8994aea6-96d7-4070-bb1b-f8f36576a23e│true    
-Custom Attribute 4            │/iga/governance/account         │true      │false      │string       │b1f1f37a-4134-43cd-8220-957cefbbe44e│true    
-Custom Attribute 5            │/iga/governance/account         │true      │false      │string       │2a9ce603-14d8-4689-8b2e-78829648b5b6│true    
-Custom Attribute 6            │/iga/governance/account         │true      │false      │string       │021ed7cf-116b-4003-9a63-a82431e44c8e│true    
-Custom Attribute 7            │/iga/governance/account         │true      │false      │string       │b42b143f-b33b-4b25-9448-2c9ff88e7ed5│true    
-Custom Attribute 8            │/iga/governance/account         │true      │false      │string       │2a36a687-91c0-4fdc-8c73-b001618c2bc6│true    
-Custom Attribute 9            │/iga/governance/account         │true      │false      │string       │c9647722-5927-4826-9398-5349b56f793a│true    
-Description                   │/openidm/managed/assignment     │true      │false      │string       │0e9d9615-666b-4ae5-b6f3-43c6c1b6708e│true    
-Entitlement Owner             │/openidm/managed/assignment     │true      │false      │managedObject│5807928e-804d-4fed-a887-33fd3d157a8f│true    
-Entitlement Type              │/openidm/managed/assignment     │true      │false      │string       │19e40504-7f0b-4df9-9ceb-bf23c0e3fda3│true    
-Has Policy Violations         │/iga/governance/account         │true      │false      │boolean      │6a1ea40d-d85d-4646-9331-73a048196fbf│true    
-Is Privileged                 │/openidm/managed/assignment     │false     │false      │boolean      │b33896af-2b4f-4f14-8c26-16bcde91fcac│        
-Is Sensitive                  │/openidm/managed/role           │true      │false      │string       │4da5bed6-f690-41a9-af8a-51b505dc2099│        
-Is Sensitive                  │/openidm/managed/application    │true      │false      │string       │598709e1-d16b-4c39-884d-dd9481b14d90│        
-Is Sensitive                  │/openidm/managed/assignment     │true      │false      │string       │a276bf0d-dafa-4302-ad0b-5e260c9239b0│        
-Last Password Change          │/iga/governance/account         │true      │false      │date         │61bf2199-c60a-4383-9457-2fe211d72c85│true    
-Last Successful Login         │/iga/governance/account         │true      │false      │date         │bab632ff-9e7a-4a9d-a91b-c081ce091df7│true    
-Last Sync                     │/iga/governance/account         │true      │false      │date         │de06ffdb-0186-4fff-b1a9-ab26a1aa3fab│true    
-Line Of Business              │/openidm/managed/application    │true      │false      │string       │980b0308-32c8-44a3-86a4-0098d82b33bd│        
-Locked                        │/iga/governance/account         │true      │false      │boolean      │12e51982-56a4-4f3d-9db1-2529276e2a05│true    
-Manually Correlated           │/iga/governance/account         │true      │false      │boolean      │a98091ec-0800-41ec-9ca0-4f5ec4f4a853│true    
-Parent Entitlement            │/openidm/managed/assignment     │true      │false      │string       │b0bee61a-791b-44bf-a3b9-b6fec52df4f7│true    
-Privileged                    │/iga/governance/account         │true      │false      │boolean      │982113c6-3e20-401d-91a8-657cf429f85e│true    
-Requestable                   │/openidm/managed/role           │true      │false      │boolean      │0806c0c5-a6e9-4ec8-8a36-830f217637b3│true    
-Requestable                   │/openidm/managed/assignment     │true      │false      │boolean      │5c5751e7-d0e3-4338-a198-ecfe33175ed6│true    
-Requestable                   │/openidm/managed/application    │true      │false      │boolean      │a7082d02-e673-4935-95d5-22c76c669cb4│true    
-Risk Level                    │/openidm/managed/role           │true      │false      │string       │e307820d-2e53-4889-a9e7-b9ad1232352c│        
-Risk Score                    │/iga/governance/account         │true      │false      │float        │0e1f922f-c9b9-40f2-964b-740f0ad47afb│true    
-Role Owner                    │/openidm/managed/role           │true      │false      │managedObject│f1cc3b53-ef38-4ad7-b268-1ee482a411ef│true    
-Test Boolean                  │/openidm/managed/role           │true      │false      │boolean      │774d2515-6cb4-408d-bdae-63b7534dde39│true    
-Test Boolean Display Name     │/openidm/managed/role           │true      │false      │boolean      │96dd0d59-0e42-4961-bd59-c312e8222252│        
-Test Date                     │/openidm/managed/role           │true      │false      │date         │a1cdab06-b3e9-4321-a80d-6da086110974│        
-Test Double                   │/openidm/managed/role           │true      │true       │integer      │1110ad40-1dc1-42c7-bda7-226cca6e095c│        
-Test Integer                  │/openidm/managed/role           │true      │true       │integer      │14e22ac1-a898-4f23-845e-875e9286c1ea│        
-Test Integer Display Name     │/openidm/managed/assignment     │false     │true       │integer      │9a6dc773-31af-41b3-a5d1-3e129931030e│        
-Test Organization             │/openidm/managed/role           │false     │false      │managedObject│6ec0d7a4-3305-4abe-8aaa-0713cce2907a│        
-Test Organization Display Name│/openidm/managed/assignment     │false     │false      │managedObject│b0955a58-1955-40a7-9d9d-29947fe5f8f7│        
-Test Role                     │/openidm/managed/role           │false     │false      │managedObject│5a7e52ac-377f-4b2f-92ba-336e175f512e│        
-Test String                   │/openidm/managed/role           │true      │true       │string       │b5d7a291-ea6d-41eb-bb7e-e50cfe30e7e5│        
-Test String Display Name      │/openidm/managed/application    │true      │true       │string       │537b31a1-e07c-493b-9956-bdefc18062a9│        
-Test User                     │/openidm/managed/role           │false     │false      │managedObject│acb03cb3-b5b0-41b2-b114-2ac78b21f019│        
-Test User Display Name        │/openidm/managed/assignment     │false     │false      │managedObject│dab7f29a-5e85-4b9a-a3d0-b7a0f039e3bd│        
+exports[`frodo iga glossary list "frodo iga glossary list --long -t account": should list the ids, names, objectTypes, etc. of the glossaries whose objectType matches accounts. 1`] = `
+"ID                                  │Name               │Display Name         │Object Type            │Type   │Internal
+5ef5a92e-c2e4-40e4-b232-e33649591b37│accountSubtype     │Account Subtype      │/iga/governance/account│string │true    
+c8ed99f7-5442-43d5-8406-f39060c1bd73│accountType        │Account Type         │/iga/governance/account│string │true    
+71c188ff-ed53-438c-9476-043cba6e850b│active             │Active               │/iga/governance/account│boolean│true    
+09c470af-abc5-4733-beaf-3d169b62a234│actors             │Actors               │/iga/governance/account│string │true    
+35094c80-ab3d-4c47-91ae-92175895b264│confidenceScore    │Confidence Score     │/iga/governance/account│float  │true    
+d4cf00ae-f4b3-42b8-b2a6-b960a8d620dc│customAttribute1   │Custom Attribute 1   │/iga/governance/account│string │true    
+a65b7633-3dcb-4c83-8458-c14397f70717│customAttribute10  │Custom Attribute 10  │/iga/governance/account│string │true    
+1683c30a-b149-4bab-8187-5a67b0fe3704│customAttribute2   │Custom Attribute 2   │/iga/governance/account│string │true    
+8994aea6-96d7-4070-bb1b-f8f36576a23e│customAttribute3   │Custom Attribute 3   │/iga/governance/account│string │true    
+b1f1f37a-4134-43cd-8220-957cefbbe44e│customAttribute4   │Custom Attribute 4   │/iga/governance/account│string │true    
+2a9ce603-14d8-4689-8b2e-78829648b5b6│customAttribute5   │Custom Attribute 5   │/iga/governance/account│string │true    
+021ed7cf-116b-4003-9a63-a82431e44c8e│customAttribute6   │Custom Attribute 6   │/iga/governance/account│string │true    
+b42b143f-b33b-4b25-9448-2c9ff88e7ed5│customAttribute7   │Custom Attribute 7   │/iga/governance/account│string │true    
+2a36a687-91c0-4fdc-8c73-b001618c2bc6│customAttribute8   │Custom Attribute 8   │/iga/governance/account│string │true    
+c9647722-5927-4826-9398-5349b56f793a│customAttribute9   │Custom Attribute 9   │/iga/governance/account│string │true    
+6a1ea40d-d85d-4646-9331-73a048196fbf│hasPolicyViolations│Has Policy Violations│/iga/governance/account│boolean│true    
+61bf2199-c60a-4383-9457-2fe211d72c85│lastPasswordChange │Last Password Change │/iga/governance/account│date   │true    
+bab632ff-9e7a-4a9d-a91b-c081ce091df7│lastSuccessfulLogin│Last Successful Login│/iga/governance/account│date   │true    
+de06ffdb-0186-4fff-b1a9-ab26a1aa3fab│lastSync           │Last Sync            │/iga/governance/account│date   │true    
+12e51982-56a4-4f3d-9db1-2529276e2a05│locked             │Locked               │/iga/governance/account│boolean│true    
+a98091ec-0800-41ec-9ca0-4f5ec4f4a853│manuallyCorrelated │Manually Correlated  │/iga/governance/account│boolean│true    
+982113c6-3e20-401d-91a8-657cf429f85e│privileged         │Privileged           │/iga/governance/account│boolean│true    
+0e1f922f-c9b9-40f2-964b-740f0ad47afb│riskScore          │Risk Score           │/iga/governance/account│float  │true    
 "
 `;
 
-exports[`frodo iga glossary list "frodo iga glossary list -l": should list the names, objectTypes, isSearchable, isMulti-value, type, ids and isInternal of the glossaries. 1`] = `
-"Name                          │Object Type                     │Searchable│Multi-Value│Type         │ID                                  │Internal
-Account Subtype               │/iga/governance/account         │true      │false      │string       │5ef5a92e-c2e4-40e4-b232-e33649591b37│true    
-Account Type                  │/iga/governance/account         │true      │false      │string       │c8ed99f7-5442-43d5-8406-f39060c1bd73│true    
-Active                        │/iga/governance/account         │true      │false      │boolean      │71c188ff-ed53-438c-9476-043cba6e850b│true    
-Actors                        │/iga/governance/account         │true      │true       │string       │09c470af-abc5-4733-beaf-3d169b62a234│true    
-Brycen's Test Entitlement     │/openidm/managed/assignment     │true      │true       │string       │d9ee80bf-5150-4fa9-a9a3-6cd61355b365│        
-Confidence Score              │/iga/governance/account         │true      │false      │float        │35094c80-ab3d-4c47-91ae-92175895b264│true    
-Confidence Score              │/iga/governance/entitlementGrant│true      │false      │float        │a65b7633-3dcb-4c83-8458-c14397f70715│true    
-CP Dummy Entitlement          │/openidm/managed/assignment     │true      │false      │string       │11fee6b2-bf06-4560-b2ae-3e27cec169f2│        
-Custom Attribute 1            │/iga/governance/account         │true      │false      │string       │d4cf00ae-f4b3-42b8-b2a6-b960a8d620dc│true    
-Custom Attribute 10           │/iga/governance/account         │true      │false      │string       │a65b7633-3dcb-4c83-8458-c14397f70717│true    
-Custom Attribute 2            │/iga/governance/account         │true      │false      │string       │1683c30a-b149-4bab-8187-5a67b0fe3704│true    
-Custom Attribute 3            │/iga/governance/account         │true      │false      │string       │8994aea6-96d7-4070-bb1b-f8f36576a23e│true    
-Custom Attribute 4            │/iga/governance/account         │true      │false      │string       │b1f1f37a-4134-43cd-8220-957cefbbe44e│true    
-Custom Attribute 5            │/iga/governance/account         │true      │false      │string       │2a9ce603-14d8-4689-8b2e-78829648b5b6│true    
-Custom Attribute 6            │/iga/governance/account         │true      │false      │string       │021ed7cf-116b-4003-9a63-a82431e44c8e│true    
-Custom Attribute 7            │/iga/governance/account         │true      │false      │string       │b42b143f-b33b-4b25-9448-2c9ff88e7ed5│true    
-Custom Attribute 8            │/iga/governance/account         │true      │false      │string       │2a36a687-91c0-4fdc-8c73-b001618c2bc6│true    
-Custom Attribute 9            │/iga/governance/account         │true      │false      │string       │c9647722-5927-4826-9398-5349b56f793a│true    
-Description                   │/openidm/managed/assignment     │true      │false      │string       │0e9d9615-666b-4ae5-b6f3-43c6c1b6708e│true    
-Entitlement Owner             │/openidm/managed/assignment     │true      │false      │managedObject│5807928e-804d-4fed-a887-33fd3d157a8f│true    
-Entitlement Type              │/openidm/managed/assignment     │true      │false      │string       │19e40504-7f0b-4df9-9ceb-bf23c0e3fda3│true    
-Has Policy Violations         │/iga/governance/account         │true      │false      │boolean      │6a1ea40d-d85d-4646-9331-73a048196fbf│true    
-Is Privileged                 │/openidm/managed/assignment     │false     │false      │boolean      │b33896af-2b4f-4f14-8c26-16bcde91fcac│        
-Is Sensitive                  │/openidm/managed/role           │true      │false      │string       │4da5bed6-f690-41a9-af8a-51b505dc2099│        
-Is Sensitive                  │/openidm/managed/application    │true      │false      │string       │598709e1-d16b-4c39-884d-dd9481b14d90│        
-Is Sensitive                  │/openidm/managed/assignment     │true      │false      │string       │a276bf0d-dafa-4302-ad0b-5e260c9239b0│        
-Last Password Change          │/iga/governance/account         │true      │false      │date         │61bf2199-c60a-4383-9457-2fe211d72c85│true    
-Last Successful Login         │/iga/governance/account         │true      │false      │date         │bab632ff-9e7a-4a9d-a91b-c081ce091df7│true    
-Last Sync                     │/iga/governance/account         │true      │false      │date         │de06ffdb-0186-4fff-b1a9-ab26a1aa3fab│true    
-Line Of Business              │/openidm/managed/application    │true      │false      │string       │980b0308-32c8-44a3-86a4-0098d82b33bd│        
-Locked                        │/iga/governance/account         │true      │false      │boolean      │12e51982-56a4-4f3d-9db1-2529276e2a05│true    
-Manually Correlated           │/iga/governance/account         │true      │false      │boolean      │a98091ec-0800-41ec-9ca0-4f5ec4f4a853│true    
-Parent Entitlement            │/openidm/managed/assignment     │true      │false      │string       │b0bee61a-791b-44bf-a3b9-b6fec52df4f7│true    
-Privileged                    │/iga/governance/account         │true      │false      │boolean      │982113c6-3e20-401d-91a8-657cf429f85e│true    
-Requestable                   │/openidm/managed/role           │true      │false      │boolean      │0806c0c5-a6e9-4ec8-8a36-830f217637b3│true    
-Requestable                   │/openidm/managed/assignment     │true      │false      │boolean      │5c5751e7-d0e3-4338-a198-ecfe33175ed6│true    
-Requestable                   │/openidm/managed/application    │true      │false      │boolean      │a7082d02-e673-4935-95d5-22c76c669cb4│true    
-Risk Level                    │/openidm/managed/role           │true      │false      │string       │e307820d-2e53-4889-a9e7-b9ad1232352c│        
-Risk Score                    │/iga/governance/account         │true      │false      │float        │0e1f922f-c9b9-40f2-964b-740f0ad47afb│true    
-Role Owner                    │/openidm/managed/role           │true      │false      │managedObject│f1cc3b53-ef38-4ad7-b268-1ee482a411ef│true    
-Test Boolean                  │/openidm/managed/role           │true      │false      │boolean      │774d2515-6cb4-408d-bdae-63b7534dde39│true    
-Test Boolean Display Name     │/openidm/managed/role           │true      │false      │boolean      │96dd0d59-0e42-4961-bd59-c312e8222252│        
-Test Date                     │/openidm/managed/role           │true      │false      │date         │a1cdab06-b3e9-4321-a80d-6da086110974│        
-Test Double                   │/openidm/managed/role           │true      │true       │integer      │1110ad40-1dc1-42c7-bda7-226cca6e095c│        
-Test Integer                  │/openidm/managed/role           │true      │true       │integer      │14e22ac1-a898-4f23-845e-875e9286c1ea│        
-Test Integer Display Name     │/openidm/managed/assignment     │false     │true       │integer      │9a6dc773-31af-41b3-a5d1-3e129931030e│        
-Test Organization             │/openidm/managed/role           │false     │false      │managedObject│6ec0d7a4-3305-4abe-8aaa-0713cce2907a│        
-Test Organization Display Name│/openidm/managed/assignment     │false     │false      │managedObject│b0955a58-1955-40a7-9d9d-29947fe5f8f7│        
-Test Role                     │/openidm/managed/role           │false     │false      │managedObject│5a7e52ac-377f-4b2f-92ba-336e175f512e│        
-Test String                   │/openidm/managed/role           │true      │true       │string       │b5d7a291-ea6d-41eb-bb7e-e50cfe30e7e5│        
-Test String Display Name      │/openidm/managed/application    │true      │true       │string       │537b31a1-e07c-493b-9956-bdefc18062a9│        
-Test User                     │/openidm/managed/role           │false     │false      │managedObject│acb03cb3-b5b0-41b2-b114-2ac78b21f019│        
-Test User Display Name        │/openidm/managed/assignment     │false     │false      │managedObject│dab7f29a-5e85-4b9a-a3d0-b7a0f039e3bd│        
+exports[`frodo iga glossary list "frodo iga glossary list --long -t account": should list the ids, names, objectTypes, etc. of the glossaries whose objectType matches accounts. 2`] = `""`;
+
+exports[`frodo iga glossary list "frodo iga glossary list --long": should list the ids, names, displayNames, objectTypes, type, and isInternal of the glossaries. 1`] = `
+"ID                                  │Name               │Display Name                  │Object Type                     │Type         │Internal
+5ef5a92e-c2e4-40e4-b232-e33649591b37│accountSubtype     │Account Subtype               │/iga/governance/account         │string       │true    
+c8ed99f7-5442-43d5-8406-f39060c1bd73│accountType        │Account Type                  │/iga/governance/account         │string       │true    
+71c188ff-ed53-438c-9476-043cba6e850b│active             │Active                        │/iga/governance/account         │boolean      │true    
+09c470af-abc5-4733-beaf-3d169b62a234│actors             │Actors                        │/iga/governance/account         │string       │true    
+a7802e01-bc27-441c-ba71-6742e98f9118│brycenTestItem     │Brycen's Test Entitlement     │/openidm/managed/assignment     │string       │false   
+35094c80-ab3d-4c47-91ae-92175895b264│confidenceScore    │Confidence Score              │/iga/governance/account         │float        │true    
+a65b7633-3dcb-4c83-8458-c14397f70715│confidenceScore    │Confidence Score              │/iga/governance/entitlementGrant│float        │true    
+11fee6b2-bf06-4560-b2ae-3e27cec169f2│CP-DummyEntitlement│CP Dummy Entitlement          │/openidm/managed/assignment     │string       │false   
+d4cf00ae-f4b3-42b8-b2a6-b960a8d620dc│customAttribute1   │Custom Attribute 1            │/iga/governance/account         │string       │true    
+a65b7633-3dcb-4c83-8458-c14397f70717│customAttribute10  │Custom Attribute 10           │/iga/governance/account         │string       │true    
+1683c30a-b149-4bab-8187-5a67b0fe3704│customAttribute2   │Custom Attribute 2            │/iga/governance/account         │string       │true    
+8994aea6-96d7-4070-bb1b-f8f36576a23e│customAttribute3   │Custom Attribute 3            │/iga/governance/account         │string       │true    
+b1f1f37a-4134-43cd-8220-957cefbbe44e│customAttribute4   │Custom Attribute 4            │/iga/governance/account         │string       │true    
+2a9ce603-14d8-4689-8b2e-78829648b5b6│customAttribute5   │Custom Attribute 5            │/iga/governance/account         │string       │true    
+021ed7cf-116b-4003-9a63-a82431e44c8e│customAttribute6   │Custom Attribute 6            │/iga/governance/account         │string       │true    
+b42b143f-b33b-4b25-9448-2c9ff88e7ed5│customAttribute7   │Custom Attribute 7            │/iga/governance/account         │string       │true    
+2a36a687-91c0-4fdc-8c73-b001618c2bc6│customAttribute8   │Custom Attribute 8            │/iga/governance/account         │string       │true    
+c9647722-5927-4826-9398-5349b56f793a│customAttribute9   │Custom Attribute 9            │/iga/governance/account         │string       │true    
+0e9d9615-666b-4ae5-b6f3-43c6c1b6708e│description        │Description                   │/openidm/managed/assignment     │string       │true    
+5807928e-804d-4fed-a887-33fd3d157a8f│entitlementOwner   │Entitlement Owner             │/openidm/managed/assignment     │managedObject│true    
+19e40504-7f0b-4df9-9ceb-bf23c0e3fda3│entitlementType    │Entitlement Type              │/openidm/managed/assignment     │string       │true    
+6a1ea40d-d85d-4646-9331-73a048196fbf│hasPolicyViolations│Has Policy Violations         │/iga/governance/account         │boolean      │true    
+b33896af-2b4f-4f14-8c26-16bcde91fcac│isPrivileged       │Is Privileged                 │/openidm/managed/assignment     │boolean      │false   
+4da5bed6-f690-41a9-af8a-51b505dc2099│sensitive          │Is Sensitive                  │/openidm/managed/role           │string       │false   
+598709e1-d16b-4c39-884d-dd9481b14d90│sensitive          │Is Sensitive                  │/openidm/managed/application    │string       │false   
+a276bf0d-dafa-4302-ad0b-5e260c9239b0│sensitive          │Is Sensitive                  │/openidm/managed/assignment     │string       │false   
+61bf2199-c60a-4383-9457-2fe211d72c85│lastPasswordChange │Last Password Change          │/iga/governance/account         │date         │true    
+bab632ff-9e7a-4a9d-a91b-c081ce091df7│lastSuccessfulLogin│Last Successful Login         │/iga/governance/account         │date         │true    
+de06ffdb-0186-4fff-b1a9-ab26a1aa3fab│lastSync           │Last Sync                     │/iga/governance/account         │date         │true    
+980b0308-32c8-44a3-86a4-0098d82b33bd│lineOfBusiness     │Line Of Business              │/openidm/managed/application    │string       │false   
+12e51982-56a4-4f3d-9db1-2529276e2a05│locked             │Locked                        │/iga/governance/account         │boolean      │true    
+a98091ec-0800-41ec-9ca0-4f5ec4f4a853│manuallyCorrelated │Manually Correlated           │/iga/governance/account         │boolean      │true    
+b0bee61a-791b-44bf-a3b9-b6fec52df4f7│parentEntitlement  │Parent Entitlement            │/openidm/managed/assignment     │string       │true    
+982113c6-3e20-401d-91a8-657cf429f85e│privileged         │Privileged                    │/iga/governance/account         │boolean      │true    
+0806c0c5-a6e9-4ec8-8a36-830f217637b3│requestable        │Requestable                   │/openidm/managed/role           │boolean      │true    
+5c5751e7-d0e3-4338-a198-ecfe33175ed6│requestable        │Requestable                   │/openidm/managed/assignment     │boolean      │true    
+a7082d02-e673-4935-95d5-22c76c669cb4│requestable        │Requestable                   │/openidm/managed/application    │boolean      │true    
+e307820d-2e53-4889-a9e7-b9ad1232352c│riskLevel          │Risk Level                    │/openidm/managed/role           │string       │false   
+0e1f922f-c9b9-40f2-964b-740f0ad47afb│riskScore          │Risk Score                    │/iga/governance/account         │float        │true    
+f1cc3b53-ef38-4ad7-b268-1ee482a411ef│roleOwner          │Role Owner                    │/openidm/managed/role           │managedObject│true    
+774d2515-6cb4-408d-bdae-63b7534dde39│Test Boolean       │Test Boolean                  │/openidm/managed/role           │boolean      │true    
+96dd0d59-0e42-4961-bd59-c312e8222252│testBoolean        │Test Boolean Display Name     │/openidm/managed/role           │boolean      │false   
+a1cdab06-b3e9-4321-a80d-6da086110974│Test Date          │Test Date                     │/openidm/managed/role           │date         │false   
+1110ad40-1dc1-42c7-bda7-226cca6e095c│Test Double        │Test Double                   │/openidm/managed/role           │integer      │false   
+14e22ac1-a898-4f23-845e-875e9286c1ea│Test Integer       │Test Integer                  │/openidm/managed/role           │integer      │false   
+9a6dc773-31af-41b3-a5d1-3e129931030e│testInteger        │Test Integer Display Name     │/openidm/managed/assignment     │integer      │false   
+6ec0d7a4-3305-4abe-8aaa-0713cce2907a│Test Organization  │Test Organization             │/openidm/managed/role           │managedObject│false   
+b0955a58-1955-40a7-9d9d-29947fe5f8f7│testOrg            │Test Organization Display Name│/openidm/managed/assignment     │managedObject│false   
+5a7e52ac-377f-4b2f-92ba-336e175f512e│Test Role          │Test Role                     │/openidm/managed/role           │managedObject│false   
+b5d7a291-ea6d-41eb-bb7e-e50cfe30e7e5│Test String        │Test String                   │/openidm/managed/role           │string       │false   
+537b31a1-e07c-493b-9956-bdefc18062a9│testString         │Test String Display Name      │/openidm/managed/application    │string       │false   
+acb03cb3-b5b0-41b2-b114-2ac78b21f019│Test User          │Test User                     │/openidm/managed/role           │managedObject│false   
+dab7f29a-5e85-4b9a-a3d0-b7a0f039e3bd│testUser           │Test User Display Name        │/openidm/managed/assignment     │managedObject│false   
 "
 `;
 
-exports[`frodo iga glossary list "frodo iga glossary list -lt role": should list the names, objectTypes, ids, etc of the glossaries that objectType matches roles. 1`] = `
-"Name                     │Object Type          │Searchable│Multi-Value│Type         │ID                                  │Internal
-Is Sensitive             │/openidm/managed/role│true      │false      │string       │4da5bed6-f690-41a9-af8a-51b505dc2099│        
-Requestable              │/openidm/managed/role│true      │false      │boolean      │0806c0c5-a6e9-4ec8-8a36-830f217637b3│true    
-Risk Level               │/openidm/managed/role│true      │false      │string       │e307820d-2e53-4889-a9e7-b9ad1232352c│        
-Role Owner               │/openidm/managed/role│true      │false      │managedObject│f1cc3b53-ef38-4ad7-b268-1ee482a411ef│true    
-Test Boolean             │/openidm/managed/role│true      │false      │boolean      │774d2515-6cb4-408d-bdae-63b7534dde39│true    
-Test Boolean Display Name│/openidm/managed/role│true      │false      │boolean      │96dd0d59-0e42-4961-bd59-c312e8222252│        
-Test Date                │/openidm/managed/role│true      │false      │date         │a1cdab06-b3e9-4321-a80d-6da086110974│        
-Test Double              │/openidm/managed/role│true      │true       │integer      │1110ad40-1dc1-42c7-bda7-226cca6e095c│        
-Test Integer             │/openidm/managed/role│true      │true       │integer      │14e22ac1-a898-4f23-845e-875e9286c1ea│        
-Test Organization        │/openidm/managed/role│false     │false      │managedObject│6ec0d7a4-3305-4abe-8aaa-0713cce2907a│        
-Test Role                │/openidm/managed/role│false     │false      │managedObject│5a7e52ac-377f-4b2f-92ba-336e175f512e│        
-Test String              │/openidm/managed/role│true      │true       │string       │b5d7a291-ea6d-41eb-bb7e-e50cfe30e7e5│        
-Test User                │/openidm/managed/role│false     │false      │managedObject│acb03cb3-b5b0-41b2-b114-2ac78b21f019│        
+exports[`frodo iga glossary list "frodo iga glossary list --long": should list the ids, names, displayNames, objectTypes, type, and isInternal of the glossaries. 2`] = `""`;
+
+exports[`frodo iga glossary list "frodo iga glossary list -l": should list the ids, names, displayNames, objectTypes, type, and isInternal of the glossaries. 1`] = `
+"ID                                  │Name               │Display Name                  │Object Type                     │Type         │Internal
+5ef5a92e-c2e4-40e4-b232-e33649591b37│accountSubtype     │Account Subtype               │/iga/governance/account         │string       │true    
+c8ed99f7-5442-43d5-8406-f39060c1bd73│accountType        │Account Type                  │/iga/governance/account         │string       │true    
+71c188ff-ed53-438c-9476-043cba6e850b│active             │Active                        │/iga/governance/account         │boolean      │true    
+09c470af-abc5-4733-beaf-3d169b62a234│actors             │Actors                        │/iga/governance/account         │string       │true    
+a7802e01-bc27-441c-ba71-6742e98f9118│brycenTestItem     │Brycen's Test Entitlement     │/openidm/managed/assignment     │string       │false   
+35094c80-ab3d-4c47-91ae-92175895b264│confidenceScore    │Confidence Score              │/iga/governance/account         │float        │true    
+a65b7633-3dcb-4c83-8458-c14397f70715│confidenceScore    │Confidence Score              │/iga/governance/entitlementGrant│float        │true    
+11fee6b2-bf06-4560-b2ae-3e27cec169f2│CP-DummyEntitlement│CP Dummy Entitlement          │/openidm/managed/assignment     │string       │false   
+d4cf00ae-f4b3-42b8-b2a6-b960a8d620dc│customAttribute1   │Custom Attribute 1            │/iga/governance/account         │string       │true    
+a65b7633-3dcb-4c83-8458-c14397f70717│customAttribute10  │Custom Attribute 10           │/iga/governance/account         │string       │true    
+1683c30a-b149-4bab-8187-5a67b0fe3704│customAttribute2   │Custom Attribute 2            │/iga/governance/account         │string       │true    
+8994aea6-96d7-4070-bb1b-f8f36576a23e│customAttribute3   │Custom Attribute 3            │/iga/governance/account         │string       │true    
+b1f1f37a-4134-43cd-8220-957cefbbe44e│customAttribute4   │Custom Attribute 4            │/iga/governance/account         │string       │true    
+2a9ce603-14d8-4689-8b2e-78829648b5b6│customAttribute5   │Custom Attribute 5            │/iga/governance/account         │string       │true    
+021ed7cf-116b-4003-9a63-a82431e44c8e│customAttribute6   │Custom Attribute 6            │/iga/governance/account         │string       │true    
+b42b143f-b33b-4b25-9448-2c9ff88e7ed5│customAttribute7   │Custom Attribute 7            │/iga/governance/account         │string       │true    
+2a36a687-91c0-4fdc-8c73-b001618c2bc6│customAttribute8   │Custom Attribute 8            │/iga/governance/account         │string       │true    
+c9647722-5927-4826-9398-5349b56f793a│customAttribute9   │Custom Attribute 9            │/iga/governance/account         │string       │true    
+0e9d9615-666b-4ae5-b6f3-43c6c1b6708e│description        │Description                   │/openidm/managed/assignment     │string       │true    
+5807928e-804d-4fed-a887-33fd3d157a8f│entitlementOwner   │Entitlement Owner             │/openidm/managed/assignment     │managedObject│true    
+19e40504-7f0b-4df9-9ceb-bf23c0e3fda3│entitlementType    │Entitlement Type              │/openidm/managed/assignment     │string       │true    
+6a1ea40d-d85d-4646-9331-73a048196fbf│hasPolicyViolations│Has Policy Violations         │/iga/governance/account         │boolean      │true    
+b33896af-2b4f-4f14-8c26-16bcde91fcac│isPrivileged       │Is Privileged                 │/openidm/managed/assignment     │boolean      │false   
+4da5bed6-f690-41a9-af8a-51b505dc2099│sensitive          │Is Sensitive                  │/openidm/managed/role           │string       │false   
+598709e1-d16b-4c39-884d-dd9481b14d90│sensitive          │Is Sensitive                  │/openidm/managed/application    │string       │false   
+a276bf0d-dafa-4302-ad0b-5e260c9239b0│sensitive          │Is Sensitive                  │/openidm/managed/assignment     │string       │false   
+61bf2199-c60a-4383-9457-2fe211d72c85│lastPasswordChange │Last Password Change          │/iga/governance/account         │date         │true    
+bab632ff-9e7a-4a9d-a91b-c081ce091df7│lastSuccessfulLogin│Last Successful Login         │/iga/governance/account         │date         │true    
+de06ffdb-0186-4fff-b1a9-ab26a1aa3fab│lastSync           │Last Sync                     │/iga/governance/account         │date         │true    
+980b0308-32c8-44a3-86a4-0098d82b33bd│lineOfBusiness     │Line Of Business              │/openidm/managed/application    │string       │false   
+12e51982-56a4-4f3d-9db1-2529276e2a05│locked             │Locked                        │/iga/governance/account         │boolean      │true    
+a98091ec-0800-41ec-9ca0-4f5ec4f4a853│manuallyCorrelated │Manually Correlated           │/iga/governance/account         │boolean      │true    
+b0bee61a-791b-44bf-a3b9-b6fec52df4f7│parentEntitlement  │Parent Entitlement            │/openidm/managed/assignment     │string       │true    
+982113c6-3e20-401d-91a8-657cf429f85e│privileged         │Privileged                    │/iga/governance/account         │boolean      │true    
+0806c0c5-a6e9-4ec8-8a36-830f217637b3│requestable        │Requestable                   │/openidm/managed/role           │boolean      │true    
+5c5751e7-d0e3-4338-a198-ecfe33175ed6│requestable        │Requestable                   │/openidm/managed/assignment     │boolean      │true    
+a7082d02-e673-4935-95d5-22c76c669cb4│requestable        │Requestable                   │/openidm/managed/application    │boolean      │true    
+e307820d-2e53-4889-a9e7-b9ad1232352c│riskLevel          │Risk Level                    │/openidm/managed/role           │string       │false   
+0e1f922f-c9b9-40f2-964b-740f0ad47afb│riskScore          │Risk Score                    │/iga/governance/account         │float        │true    
+f1cc3b53-ef38-4ad7-b268-1ee482a411ef│roleOwner          │Role Owner                    │/openidm/managed/role           │managedObject│true    
+774d2515-6cb4-408d-bdae-63b7534dde39│Test Boolean       │Test Boolean                  │/openidm/managed/role           │boolean      │true    
+96dd0d59-0e42-4961-bd59-c312e8222252│testBoolean        │Test Boolean Display Name     │/openidm/managed/role           │boolean      │false   
+a1cdab06-b3e9-4321-a80d-6da086110974│Test Date          │Test Date                     │/openidm/managed/role           │date         │false   
+1110ad40-1dc1-42c7-bda7-226cca6e095c│Test Double        │Test Double                   │/openidm/managed/role           │integer      │false   
+14e22ac1-a898-4f23-845e-875e9286c1ea│Test Integer       │Test Integer                  │/openidm/managed/role           │integer      │false   
+9a6dc773-31af-41b3-a5d1-3e129931030e│testInteger        │Test Integer Display Name     │/openidm/managed/assignment     │integer      │false   
+6ec0d7a4-3305-4abe-8aaa-0713cce2907a│Test Organization  │Test Organization             │/openidm/managed/role           │managedObject│false   
+b0955a58-1955-40a7-9d9d-29947fe5f8f7│testOrg            │Test Organization Display Name│/openidm/managed/assignment     │managedObject│false   
+5a7e52ac-377f-4b2f-92ba-336e175f512e│Test Role          │Test Role                     │/openidm/managed/role           │managedObject│false   
+b5d7a291-ea6d-41eb-bb7e-e50cfe30e7e5│Test String        │Test String                   │/openidm/managed/role           │string       │false   
+537b31a1-e07c-493b-9956-bdefc18062a9│testString         │Test String Display Name      │/openidm/managed/application    │string       │false   
+acb03cb3-b5b0-41b2-b114-2ac78b21f019│Test User          │Test User                     │/openidm/managed/role           │managedObject│false   
+dab7f29a-5e85-4b9a-a3d0-b7a0f039e3bd│testUser           │Test User Display Name        │/openidm/managed/assignment     │managedObject│false   
 "
 `;
 
-exports[`frodo iga glossary list "frodo iga glossary list": should list the names of the glossaries 1`] = `
+exports[`frodo iga glossary list "frodo iga glossary list -l": should list the ids, names, displayNames, objectTypes, type, and isInternal of the glossaries. 2`] = `""`;
+
+exports[`frodo iga glossary list "frodo iga glossary list -lt broken": should produce an error for invalid objectType. 1`] = `
+"Please provide a valid Object Type
+"
+`;
+
+exports[`frodo iga glossary list "frodo iga glossary list -lt broken": should produce an error for invalid objectType. 2`] = `1`;
+
+exports[`frodo iga glossary list "frodo iga glossary list -lt role": should list the ids, names, objectTypes, etc. of the glossaries whose objectType matches roles. 1`] = `
+"ID                                  │Name             │Display Name             │Object Type          │Type         │Internal
+4da5bed6-f690-41a9-af8a-51b505dc2099│sensitive        │Is Sensitive             │/openidm/managed/role│string       │false   
+0806c0c5-a6e9-4ec8-8a36-830f217637b3│requestable      │Requestable              │/openidm/managed/role│boolean      │true    
+e307820d-2e53-4889-a9e7-b9ad1232352c│riskLevel        │Risk Level               │/openidm/managed/role│string       │false   
+f1cc3b53-ef38-4ad7-b268-1ee482a411ef│roleOwner        │Role Owner               │/openidm/managed/role│managedObject│true    
+774d2515-6cb4-408d-bdae-63b7534dde39│Test Boolean     │Test Boolean             │/openidm/managed/role│boolean      │true    
+96dd0d59-0e42-4961-bd59-c312e8222252│testBoolean      │Test Boolean Display Name│/openidm/managed/role│boolean      │false   
+a1cdab06-b3e9-4321-a80d-6da086110974│Test Date        │Test Date                │/openidm/managed/role│date         │false   
+1110ad40-1dc1-42c7-bda7-226cca6e095c│Test Double      │Test Double              │/openidm/managed/role│integer      │false   
+14e22ac1-a898-4f23-845e-875e9286c1ea│Test Integer     │Test Integer             │/openidm/managed/role│integer      │false   
+6ec0d7a4-3305-4abe-8aaa-0713cce2907a│Test Organization│Test Organization        │/openidm/managed/role│managedObject│false   
+5a7e52ac-377f-4b2f-92ba-336e175f512e│Test Role        │Test Role                │/openidm/managed/role│managedObject│false   
+b5d7a291-ea6d-41eb-bb7e-e50cfe30e7e5│Test String      │Test String              │/openidm/managed/role│string       │false   
+acb03cb3-b5b0-41b2-b114-2ac78b21f019│Test User        │Test User                │/openidm/managed/role│managedObject│false   
+"
+`;
+
+exports[`frodo iga glossary list "frodo iga glossary list -lt role": should list the ids, names, objectTypes, etc. of the glossaries whose objectType matches roles. 2`] = `""`;
+
+exports[`frodo iga glossary list "frodo iga glossary list -t entitlement": should list only the displayNames of the glossaries whose objectType matches entitlements. 1`] = `
+"Brycen's Test Entitlement
+CP Dummy Entitlement
+Description
+Entitlement Owner
+Entitlement Type
+Is Privileged
+Is Sensitive
+Parent Entitlement
+Requestable
+Test Integer Display Name
+Test Organization Display Name
+Test User Display Name
+"
+`;
+
+exports[`frodo iga glossary list "frodo iga glossary list -t entitlement": should list only the displayNames of the glossaries whose objectType matches entitlements. 2`] = `""`;
+
+exports[`frodo iga glossary list "frodo iga glossary list": should list only the displayNames of the glossaries 1`] = `
 "Account Subtype
 Account Type
 Active
@@ -190,3 +251,5 @@ Test User
 Test User Display Name
 "
 `;
+
+exports[`frodo iga glossary list "frodo iga glossary list": should list only the displayNames of the glossaries 2`] = `""`;

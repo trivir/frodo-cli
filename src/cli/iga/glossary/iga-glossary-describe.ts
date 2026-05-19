@@ -19,7 +19,13 @@ export default function setup() {
       new Option(
         '-i, --glossary-id <glossary-id>',
         'glossary id. If not specified, will describe first glossary in the provided export file.'
-      )
+      ).conflicts(['glossaryName'])
+    )
+    .addOption(
+      new Option(
+        '-n, --glossary-name <glossary-name>',
+        'Specify a glossary name. If specified, -i cannot be used.'
+      ).conflicts(['glossaryId'])
     )
     .addOption(
       new Option(

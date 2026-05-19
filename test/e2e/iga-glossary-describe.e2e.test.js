@@ -51,34 +51,28 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary describe --glossary-id 5a7e52ac-377f-4b2f-92ba-336e175f512e
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary describe --file test/e2e/exports/all/allGlossarys.glossary.json
  */
-import cp from 'child_process';
-import { promisify } from 'util';
-import { getEnv, removeAnsiEscapeCodes } from './utils/TestUtils';
-import { iga_connection as ic } from './utils/TestConfig';
 
-const exec = promisify(cp.exec);
+import { getEnv, testSuccess, testFail } from './utils/TestUtils';
+import { iga_connection as ic } from './utils/TestConfig';
 
 process.env['FRODO_MOCK'] = '1';
 const igaEnv = getEnv(ic);
 
-const allGlossarysFile = "test/e2e/exports/all/allGlossarys.glossary.json";
+const allGlossariesFile = "test/e2e/exports/all/allGlossaries.glossary.json";
 
 describe(`frodo iga glossary describe`, () => {
-  test(`"frodo iga glossary describe -i 11fee6b2-bf06-4560-b2ae-3e27cec169f2 -f ${allGlossarysFile}": should describe glossary '11fee6b2-bf06-4560-b2ae-3e27cec169f2' from file ${allGlossarysFile}`, async () => {
-    const CMD = `frodo iga glossary describe -i 11fee6b2-bf06-4560-b2ae-3e27cec169f2 -f ${allGlossarysFile}`;
-    const { stdout } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+  test(`"frodo iga glossary describe -i 11fee6b2-bf06-4560-b2ae-3e27cec169f2 -f ${allGlossariesFile}": should describe glossary '11fee6b2-bf06-4560-b2ae-3e27cec169f2' from file ${allGlossariesFile}`, async () => {
+    const CMD = `frodo iga glossary describe -i 11fee6b2-bf06-4560-b2ae-3e27cec169f2 -f ${allGlossariesFile}`;
+    await testSuccess(CMD, igaEnv)
   });
 
   test(`"frodo iga glossary describe --glossary-id 5a7e52ac-377f-4b2f-92ba-336e175f512e": should describe glossary '5a7e52ac-377f-4b2f-92ba-336e175f512e'`, async () => {
     const CMD = `frodo iga glossary describe --glossary-id 5a7e52ac-377f-4b2f-92ba-336e175f512e`;
-    const { stdout } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv)
   });
 
-  test(`"frodo iga glossary describe --file ${allGlossarysFile}": should describe first glossary from file ${allGlossarysFile}`, async () => {
-    const CMD = `frodo iga glossary describe --file ${allGlossarysFile}`;
-    const { stdout } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+  test(`"frodo iga glossary describe --file ${allGlossariesFile}": should describe first glossary from file ${allGlossariesFile}`, async () => {
+    const CMD = `frodo iga glossary describe --file ${allGlossariesFile}`;
+    await testSuccess(CMD, igaEnv)
   });
 });

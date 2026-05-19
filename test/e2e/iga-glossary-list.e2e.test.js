@@ -50,40 +50,51 @@
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary list
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary list -l
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary list --long
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-trivir-fairfax.forgeblocks.com/am FRODO_MOCK_HOSTS=https://openam-trivir-fairfax.forgeblocks.com frodo iga glossary list -lt role
- */
-import cp from 'child_process';
-import { promisify } from 'util';
-import { getEnv, removeAnsiEscapeCodes } from './utils/TestUtils';
-import { iga_connection as ic } from './utils/TestConfig';
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary list --lt role
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary list -t entitlement
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary list --long -t account
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary list -lt broken
+*/
 
-const exec = promisify(cp.exec);
+import { getEnv, testFail, testSuccess } from './utils/TestUtils';
+import { iga_connection as ic } from './utils/TestConfig';
 
 process.env['FRODO_MOCK'] = '1';
 const igaEnv = getEnv(ic);
 
 describe('frodo iga glossary list', () => {
-  test('"frodo iga glossary list": should list the names of the glossaries', async () => {
+  test('"frodo iga glossary list": should list only the displayNames of the glossaries', async () => {
     const CMD = `frodo iga glossary list`;
-    const { stdout } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv)
   });
 
-  test('"frodo iga glossary list -l": should list the names, objectTypes, isSearchable, isMulti-value, type, ids and isInternal of the glossaries.', async () => {
+  test('"frodo iga glossary list -l": should list the ids, names, displayNames, objectTypes, type, and isInternal of the glossaries.', async () => {
     const CMD = `frodo iga glossary list -l`;
-    const { stdout } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv)
   });
 
-  test('"frodo iga glossary list --long": should list the names, objectTypes, isSearchable, isMulti-value, type, ids and isInternal of the glossaries.', async () => {
+  test('"frodo iga glossary list --long": should list the ids, names, displayNames, objectTypes, type, and isInternal of the glossaries.', async () => {
     const CMD = `frodo iga glossary list --long`;
-    const { stdout } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv)
   });
 
-  test('"frodo iga glossary list -lt role": should list the names, objectTypes, ids, etc of the glossaries that objectType matches roles.', async () => {
+  test('"frodo iga glossary list -lt role": should list the ids, names, objectTypes, etc. of the glossaries whose objectType matches roles.', async () => {
     const CMD = `frodo iga glossary list -lt role`;
-    const { stdout } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv)
+  });
+
+  test('"frodo iga glossary list -t entitlement": should list only the displayNames of the glossaries whose objectType matches entitlements.', async () => {
+    const CMD = `frodo iga glossary list -t entitlement`;
+    await testSuccess(CMD, igaEnv)
+  });
+
+  test('"frodo iga glossary list --long -t account": should list the ids, names, objectTypes, etc. of the glossaries whose objectType matches accounts.', async () => {
+    const CMD = `frodo iga glossary list --long -t account`;
+    await testSuccess(CMD, igaEnv)
+  });
+
+  test('"frodo iga glossary list -lt broken": should produce an error for invalid objectType.', async () => {
+    const CMD = `frodo iga glossary list -lt broken`;
+    await testFail(CMD, igaEnv)
   });
 });

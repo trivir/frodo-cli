@@ -44,13 +44,10 @@ const {
  */
 export async function listGlossary(
   long: boolean = false,
-  objectType: GlossaryObjectType
+  objectType?: GlossaryObjectType
 ): Promise<boolean> {
   try {
     let glossaries = await readGlossarySchemas(objectType);
-    // if (objectType) {
-    //   glossaries = glossaries.filter((g) => g.objectType === objectType);
-    // }
     glossaries.sort((a, b) => a.displayName.localeCompare(b.displayName));
     if (!long) {
       for (const glossary of glossaries) {
@@ -59,25 +56,21 @@ export async function listGlossary(
       return true;
     }
     const table = createTable([
-      'Name',
-      'Object Type',
-      'Searchable',
-      'Multi-Value',
-      'Type',
       'ID',
+      'Name',
+      'Display Name',
+      'Object Type',
+      'Type',
       'Internal'
     ]);
     for (const glossaryItem of glossaries) {
       table.push([
+        glossaryItem.id,
+        glossaryItem.name,
         glossaryItem.displayName,
         glossaryItem.objectType,
-        glossaryItem.searchable ? 'true'['brightGreen'] : 'false'['brightRed'],
-        glossaryItem.isMultiValue
-          ? 'true'['brightGreen']
-          : 'false'['brightRed'],
         glossaryItem.type,
-        glossaryItem.id,
-        glossaryItem.isInternal
+        !!glossaryItem.isInternal ? 'true'['brightGreen'] : 'false'['brightRed']
       ]);
     }
     printMessage(table.toString(), 'data');
@@ -166,7 +159,7 @@ export async function describeGlossary(
         : 'false'['brightRed'],
     ]);
 
-    if (glossary.isInternal !== undefined) {
+    if (!!glossary.isInternal !== undefined) {
       table.push([
         'Internal'['brightCyan'],
         glossary.isInternal
