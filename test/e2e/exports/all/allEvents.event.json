@@ -1,7 +1,296 @@
 {
-  "emailTemplate": {},
+  "emailTemplate": {
+    "certificationAssigned": {
+      "_id": "emailTemplate/certificationAssigned",
+      "defaultLocale": "en",
+      "enabled": true,
+      "from": "",
+      "html": {
+        "en": "<html><div>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was assigned to you.</div><html>"
+      },
+      "message": {
+        "en": "<html><head></head><body>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was assigned to you.</body></html>"
+      },
+      "mimeType": "text/html",
+      "styles": "body {\n\tbackground-color: #324054;\n\tcolor: #455469;\n\tpadding: 60px;\n\ttext-align: center\n}\n\na {\n\ttext-decoration: none;\n\tcolor: #109cf1;\n}\n\n.content {\n\tbackground-color: #fff;\n\tborder-radius: 4px;\n\tmargin: 0 auto;\n\tpadding: 48px;\n\twidth: 235px\n}\n",
+      "subject": {
+        "en": "ATTENTION: Certification Task Assigned"
+      }
+    },
+    "certificationReassigned": {
+      "_id": "emailTemplate/certificationReassigned",
+      "defaultLocale": "en",
+      "enabled": true,
+      "from": "",
+      "html": {
+        "en": "<html><body>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was reassigned to you.</body></html>"
+      },
+      "message": {
+        "en": "<html><body>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was reassigned to you.</body></html>"
+      },
+      "mimeType": "text/html",
+      "styles": "body {\n\tbackground-color: #324054;\n\tcolor: #455469;\n\tpadding: 60px;\n\ttext-align: center\n}\n\na {\n\ttext-decoration: none;\n\tcolor: #109cf1;\n}\n\n.content {\n\tbackground-color: #fff;\n\tborder-radius: 4px;\n\tmargin: 0 auto;\n\tpadding: 48px;\n\twidth: 235px\n}\n",
+      "subject": {
+        "en": "ATTENTION: Certification Task Reassigned"
+      }
+    }
+  },
   "event": {
-    "0065ad98-4a0d-4e5b-af3a-f1191b9f0ff3": {
+    "03cbeec3-a601-4f5c-869e-4e25360a5b8a": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "03cbeec3-a601-4f5c-869e-4e25360a5b8a",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_1",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "0721b7a7-49c7-46c4-a383-4bd79d0371de": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3",
+          "var4": "val4",
+          "var5": "val5"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "sdfsadfasfasfas"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "contains": {
+                "in_string": "user.after.description",
+                "search_string": {
+                  "literal": "asdfasfdasfasfasfd"
+                }
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "adsfasfsadfasdf"
+                },
+                "value": "user.after.frIndexedString11"
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.custom_RAP",
+                "search_string": {
+                  "literal": "asdfasdfsafasfaf"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.after.frUnindexedInteger1",
+                "right": {
+                  "literal": 0
+                }
+              }
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "sdafasfasdfasdfa",
+      "entityType": "user",
+      "id": "0721b7a7-49c7-46c4-a383-4bd79d0371de",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test-events-3",
+      "owners": [
+        {
+          "givenName": "ChildTwo",
+          "id": "managed/user/fe4f7519-329e-4dc3-ab85-4ea023e22c25",
+          "mail": "pholderness+c2admin@trivir.com",
+          "sn": "Admin",
+          "userName": "phh-child2-org-admin"
+        }
+      ],
+      "status": "active"
+    },
+    "07736c3e-f879-4024-988b-8a640d5c1bf9": {
+      "action": {
+        "name": "phhBirthrightRolesRequiringApproval",
+        "parameters": {
+          "roleNames": "phh-role-other-risk"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "and": [
+            {
+              "not_contains": {
+                "in_string": "user.before.description",
+                "search_string": {
+                  "literal": "teacher"
+                }
+              }
+            },
+            {
+              "contains": {
+                "in_string": "user.after.description",
+                "search_string": {
+                  "literal": "teacher"
+                }
+              }
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Teacher birthright role approval",
+      "entityType": "user",
+      "id": "07736c3e-f879-4024-988b-8a640d5c1bf9",
+      "metadata": {},
+      "mutationType": "update",
+      "name": "phh-teacher-birthright-role-approval",
+      "owners": [
+        {
+          "givenName": "Parent",
+          "id": "managed/user/6b21c283-d491-4fd9-8322-898c171c7018",
+          "mail": "pholderness+poadmin@trivir.com",
+          "sn": "Admin",
+          "userName": "phh-parent-org-admin"
+        }
+      ],
+      "status": "active"
+    },
+    "18bdc99a-0ae7-4589-9cd0-eef65b069c76": {
       "action": {
         "name": "phhBasicApplicationGrant",
         "parameters": {},
@@ -40,7 +329,7 @@
       },
       "description": "fasdfasfafsfa",
       "entityType": "user",
-      "id": "0065ad98-4a0d-4e5b-af3a-f1191b9f0ff3",
+      "id": "18bdc99a-0ae7-4589-9cd0-eef65b069c76",
       "metadata": {},
       "mutationType": "create",
       "name": "test-events-4",
@@ -272,201 +561,7 @@
       ],
       "status": "active"
     },
-    "1af4c81d-90da-481a-ba05-31228975f531": {
-      "action": {
-        "name": "testWorkflow4",
-        "parameters": {
-          "var1": "val1",
-          "var2": "val2",
-          "var3": "val3",
-          "var4": "val4",
-          "var5": "val5"
-        },
-        "type": "orchestration"
-      },
-      "condition": {
-        "filter": {
-          "or": [
-            {
-              "starts_with": {
-                "prefix": {
-                  "literal": "sdfsadfasfasfas"
-                },
-                "value": "user.after.city"
-              }
-            },
-            {
-              "contains": {
-                "in_string": "user.after.description",
-                "search_string": {
-                  "literal": "asdfasfdasfasfasfd"
-                }
-              }
-            },
-            {
-              "ends_with": {
-                "suffix": {
-                  "literal": "adsfasfsadfasdf"
-                },
-                "value": "user.after.frIndexedString11"
-              }
-            },
-            {
-              "not_contains": {
-                "in_string": "user.after.custom_RAP",
-                "search_string": {
-                  "literal": "asdfasdfsafasfaf"
-                }
-              }
-            },
-            {
-              "equals": {
-                "left": "user.after.frUnindexedInteger1",
-                "right": {
-                  "literal": 0
-                }
-              }
-            }
-          ]
-        },
-        "version": "v2"
-      },
-      "description": "sdafasfasdfasdfa",
-      "entityType": "user",
-      "id": "1af4c81d-90da-481a-ba05-31228975f531",
-      "metadata": {},
-      "mutationType": "create",
-      "name": "test-events-3",
-      "owners": [
-        {
-          "givenName": "ChildTwo",
-          "id": "managed/user/fe4f7519-329e-4dc3-ab85-4ea023e22c25",
-          "mail": "pholderness+c2admin@trivir.com",
-          "sn": "Admin",
-          "userName": "phh-child2-org-admin"
-        }
-      ],
-      "status": "active"
-    },
-    "6f110ff1-e4d1-4d0e-b681-1a6cecce4aa2": {
-      "action": {
-        "name": "testWorkflow4",
-        "parameters": {
-          "var1": "val1",
-          "var2": "val2",
-          "var3": "val3"
-        },
-        "type": "orchestration"
-      },
-      "condition": {
-        "filter": {
-          "or": [
-            {
-              "contains": {
-                "in_string": "user.after.city",
-                "search_string": {
-                  "literal": "a"
-                }
-              }
-            },
-            {
-              "not_contains": {
-                "in_string": "user.after.city",
-                "search_string": {
-                  "literal": "b"
-                }
-              }
-            },
-            {
-              "equals": {
-                "left": "user.after.city",
-                "right": {
-                  "literal": "c"
-                }
-              }
-            },
-            {
-              "not_equals": {
-                "left": "user.after.city",
-                "right": {
-                  "literal": "d"
-                }
-              }
-            },
-            {
-              "starts_with": {
-                "prefix": {
-                  "literal": "e"
-                },
-                "value": "user.after.city"
-              }
-            },
-            {
-              "ends_with": {
-                "suffix": {
-                  "literal": "f"
-                },
-                "value": "user.after.city"
-              }
-            },
-            {
-              "and": [
-                {
-                  "gte": {
-                    "left": "user.after.frIndexedInteger1",
-                    "right": {
-                      "literal": 1
-                    }
-                  }
-                },
-                {
-                  "gt": {
-                    "left": "user.after.frIndexedInteger1",
-                    "right": {
-                      "literal": 2
-                    }
-                  }
-                },
-                {
-                  "lte": {
-                    "left": "user.after.frIndexedInteger1",
-                    "right": {
-                      "literal": 3
-                    }
-                  }
-                },
-                {
-                  "lt": {
-                    "left": "user.after.frIndexedInteger1",
-                    "right": {
-                      "literal": 4
-                    }
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        "version": "v2"
-      },
-      "description": "",
-      "entityType": "user",
-      "id": "6f110ff1-e4d1-4d0e-b681-1a6cecce4aa2",
-      "metadata": {},
-      "mutationType": "create",
-      "name": "test_events_1",
-      "owners": [
-        {
-          "givenName": "Preston",
-          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
-          "mail": "test@test.com",
-          "sn": "Test",
-          "userName": "PrestonIGATestUser"
-        }
-      ],
-      "status": "active"
-    },
-    "8a5ac3cf-f061-4b8b-bfec-09f0c582f5d4": {
+    "24cbe800-636f-4f8b-be4e-a9972f101cdb": {
       "action": {
         "name": "testWorkflow4",
         "parameters": {
@@ -581,7 +676,538 @@
       },
       "description": "Test event description",
       "entityType": "user",
-      "id": "8a5ac3cf-f061-4b8b-bfec-09f0c582f5d4",
+      "id": "24cbe800-636f-4f8b-be4e-a9972f101cdb",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_3",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "27dc5427-53ae-4958-8391-38a71a310f84": {
+      "action": {
+        "name": "phhBasicApplicationGrant",
+        "parameters": {},
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "sdfasdfafasdff"
+                },
+                "value": "user.after.cn"
+              }
+            },
+            {
+              "contains": {
+                "in_string": "user.after.frIndexedString13",
+                "search_string": {
+                  "literal": "fdasfasfasdfafa"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "asdfasdfasfdasdfasfd"
+                },
+                "value": "user.after.frIndexedString14"
+              }
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "fasdfasfafsfa",
+      "entityType": "user",
+      "id": "27dc5427-53ae-4958-8391-38a71a310f84",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test-events-4",
+      "owners": [
+        {
+          "givenName": "ChildOne",
+          "id": "managed/user/915869ed-dca2-4a4d-81cd-675c55bcbc0e",
+          "mail": "pholderness+c1member2@trivir.com",
+          "sn": "MemberTwo",
+          "userName": "phh-child1-org-member2"
+        },
+        {
+          "givenName": "ChildOne",
+          "id": "managed/user/95f3b8f0-8a3a-4cd8-9347-bc5479437fa2",
+          "mail": "pholderness+c1member3@trivir.com",
+          "sn": "MemberThree",
+          "userName": "phh-child1-org-member3"
+        },
+        {
+          "givenName": "ChildOne",
+          "id": "managed/user/915869ed-dca2-4a4d-81cd-675c55bcbc0e",
+          "mail": "pholderness+c1member2@trivir.com",
+          "sn": "MemberTwo",
+          "userName": "phh-child1-org-member2"
+        },
+        {
+          "givenName": "ChildOne",
+          "id": "managed/user/95f3b8f0-8a3a-4cd8-9347-bc5479437fa2",
+          "mail": "pholderness+c1member3@trivir.com",
+          "sn": "MemberThree",
+          "userName": "phh-child1-org-member3"
+        },
+        {
+          "givenName": "ChildTwo",
+          "id": "managed/user/e6a8a2b0-4d4d-4e0f-81d5-4baec32f92f5",
+          "mail": "pholderness+c2member3@trivir.com",
+          "sn": "MemberThree",
+          "userName": "phh-child2-org-member3"
+        },
+        {
+          "givenName": "ChildTwo",
+          "id": "managed/user/e6a8a2b0-4d4d-4e0f-81d5-4baec32f92f5",
+          "mail": "pholderness+c2member3@trivir.com",
+          "sn": "MemberThree",
+          "userName": "phh-child2-org-member3"
+        },
+        {
+          "givenName": "ChildTwo",
+          "id": "managed/user/fe4f7519-329e-4dc3-ab85-4ea023e22c25",
+          "mail": "pholderness+c2admin@trivir.com",
+          "sn": "Admin",
+          "userName": "phh-child2-org-admin"
+        },
+        {
+          "givenName": "ChildOne",
+          "id": "managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58",
+          "mail": "pholderness+c1admin@trivir.com",
+          "sn": "Admin",
+          "userName": "phh-child1-org-admin"
+        },
+        {
+          "givenName": "ChildOne",
+          "id": "managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58",
+          "mail": "pholderness+c1admin@trivir.com",
+          "sn": "Admin",
+          "userName": "phh-child1-org-admin"
+        },
+        {
+          "givenName": "ChildOne",
+          "id": "managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58",
+          "mail": "pholderness+c1admin@trivir.com",
+          "sn": "Admin",
+          "userName": "phh-child1-org-admin"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "2beb0154-5d73-4bde-81ce-13a4940946fb": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "2beb0154-5d73-4bde-81ce-13a4940946fb",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_3",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "2f2d5f25-adcb-48e8-b91c-f1f0684f3d6c": {
+      "action": {
+        "name": "testWorkflow1",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "2f2d5f25-adcb-48e8-b91c-f1f0684f3d6c",
       "metadata": {},
       "mutationType": "create",
       "name": "test_workflow_event_1",
@@ -596,7 +1222,1703 @@
       ],
       "status": "active"
     },
-    "a89132d2-29b0-4c76-8936-22ec8905a9a3": {
+    "31ab05c9-c4e1-4630-a070-5e718576d42f": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "31ab05c9-c4e1-4630-a070-5e718576d42f",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_3",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "32f817ee-d997-4be8-9d6c-029d65cfc799": {
+      "action": {
+        "name": "testWorkflow1",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "32f817ee-d997-4be8-9d6c-029d65cfc799",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_1",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "39867896-18ca-42cb-82d7-b38f719c31ab": {
+      "action": {
+        "name": "testWorkflow1",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "39867896-18ca-42cb-82d7-b38f719c31ab",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_1",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "55407d98-7438-4a8d-be38-47f7b675cdf2": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3",
+          "var4": "val4",
+          "var5": "val5"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "sdfsadfasfasfas"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "contains": {
+                "in_string": "user.after.description",
+                "search_string": {
+                  "literal": "asdfasfdasfasfasfd"
+                }
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "adsfasfsadfasdf"
+                },
+                "value": "user.after.frIndexedString11"
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.custom_RAP",
+                "search_string": {
+                  "literal": "asdfasdfsafasfaf"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.after.frUnindexedInteger1",
+                "right": {
+                  "literal": 0
+                }
+              }
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "sdafasfasdfasdfa",
+      "entityType": "user",
+      "id": "55407d98-7438-4a8d-be38-47f7b675cdf2",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test-events-3",
+      "owners": [
+        {
+          "givenName": "ChildTwo",
+          "id": "managed/user/fe4f7519-329e-4dc3-ab85-4ea023e22c25",
+          "mail": "pholderness+c2admin@trivir.com",
+          "sn": "Admin",
+          "userName": "phh-child2-org-admin"
+        }
+      ],
+      "status": "active"
+    },
+    "64a45bd7-d844-4bc3-8886-591de901406f": {
+      "action": {
+        "template": {
+          "allowBulkCertify": true,
+          "allowPartialSignoff": true,
+          "allowSelfCertification": false,
+          "assignmentNotification": "emailTemplate/certificationAssigned",
+          "assignmentNotificationIncludeManager": false,
+          "certificationType": "identity",
+          "defaultCertifierId": "managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58",
+          "defaultCertifierInfo": {
+            "givenName": "ChildOne",
+            "id": "0f2b6cba-0124-4846-afc2-f944acf09c58",
+            "mail": "pholderness+c1admin@trivir.com",
+            "sn": "Admin",
+            "userName": "phh-child1-org-admin"
+          },
+          "description": "The user's sunset date has changed. Certify access.",
+          "enableForward": true,
+          "enableReassign": true,
+          "escalationFrequency": null,
+          "escalationNotification": null,
+          "escalationOwner": null,
+          "events": {
+            "assignment": {
+              "notification": "emailTemplate/certificationAssigned"
+            },
+            "reassign": {
+              "notification": "emailTemplate/certificationReassigned"
+            }
+          },
+          "exceptionDuration": 14,
+          "excludeConditionalAccess": true,
+          "excludeRoleBasedAccess": true,
+          "expirationAction": null,
+          "expirationActionDelay": 0,
+          "expirationNotification": null,
+          "expirationReassignee": null,
+          "finalizeRule": "",
+          "id": "0dfbddca-4b24-445b-a431-069b226a4651",
+          "initializeRule": "",
+          "isEventBased": false,
+          "metadata": {},
+          "name": "Sunset date change {{YYYY-MM-DD}} for {{IGA_PARAM_userDisplayName_IGA_PARAM}}",
+          "ownerId": "managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58",
+          "ownerInfo": {
+            "givenName": "ChildOne",
+            "id": "0f2b6cba-0124-4846-afc2-f944acf09c58",
+            "mail": "pholderness+c1admin@trivir.com",
+            "sn": "Admin",
+            "userName": "phh-child1-org-admin"
+          },
+          "parameters": [
+            {
+              "displayName": "ID of user this campaign will target",
+              "id": "userId",
+              "type": "string"
+            },
+            {
+              "displayName": "Name of the event triggering this campaign",
+              "id": "eventName",
+              "type": "string"
+            },
+            {
+              "displayName": "Display friendly name of user this campaign targets",
+              "id": "userDisplayName",
+              "type": "string"
+            }
+          ],
+          "reassignNotification": "emailTemplate/certificationReassigned",
+          "reassignPermissions": {
+            "certify": true,
+            "claim": true,
+            "comment": true,
+            "delegate": true,
+            "exception": true,
+            "forward": true,
+            "reassign": true,
+            "reset": true,
+            "revoke": true,
+            "save": true,
+            "signoff": true
+          },
+          "remediationDelay": 0,
+          "remediationRule": "BasicRevocation",
+          "reminderFrequency": 0,
+          "reminderNotification": null,
+          "requireJustification": {
+            "exceptionAllowed": true,
+            "revoke": true
+          },
+          "selfCertificationRule": "none",
+          "skipInactiveCertifiers": false,
+          "stageDuration": 14,
+          "stages": [
+            {
+              "certifierId": null,
+              "certifierPath": null,
+              "certifierScript": null,
+              "certifierType": "manager"
+            }
+          ],
+          "stagingEnabled": false,
+          "status": "active",
+          "targetFilter": {
+            "account": {
+              "operand": [],
+              "operator": "ALL"
+            },
+            "application": {
+              "operand": {
+                "targetName": "authoritative",
+                "targetValue": false
+              },
+              "operator": "EQUALS"
+            },
+            "decision": {
+              "operand": [],
+              "operator": "ALL"
+            },
+            "entitlement": {
+              "operand": [],
+              "operator": "ALL"
+            },
+            "memberOfOrg": [],
+            "role": {
+              "operand": [],
+              "operator": "ALL"
+            },
+            "type": [
+              "accountGrant",
+              "entitlementGrant",
+              "roleMembership",
+              "AccountGrant",
+              "ResourceGrant"
+            ],
+            "user": {
+              "operand": {
+                "targetName": "id",
+                "targetValue": "{{IGA_PARAM_userId_IGA_PARAM}}"
+              },
+              "operator": "EQUALS"
+            }
+          },
+          "templateEventType": "user",
+          "uiConfig": {
+            "columnConfig": {
+              "accounts": [
+                "user.user",
+                "application.application",
+                "review.flags",
+                "review.comments"
+              ],
+              "entitlements": [
+                "user.user",
+                "application.application",
+                "entitlement.entitlement",
+                "account.account",
+                "review.flags",
+                "review.comments"
+              ],
+              "roles": [
+                "role.role",
+                "user.user",
+                "review.flags",
+                "review.comments"
+              ]
+            }
+          }
+        },
+        "type": "certification"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "not_equals": {
+                "left": "user.before.frIndexedDate4",
+                "right": "user.after.frIndexedDate4"
+              }
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Certify access when a user's sunset date changes",
+      "entityType": "user",
+      "id": "64a45bd7-d844-4bc3-8886-591de901406f",
+      "metadata": {},
+      "mutationType": "update",
+      "name": "phh-sunset-date-change",
+      "owners": [
+        {
+          "givenName": "Parent",
+          "id": "managed/user/6b21c283-d491-4fd9-8322-898c171c7018",
+          "mail": "pholderness+poadmin@trivir.com",
+          "sn": "Admin",
+          "userName": "phh-parent-org-admin"
+        }
+      ],
+      "status": "active"
+    },
+    "6b24426a-6250-4f0c-9f4c-221b90b06a3d": {
+      "action": {
+        "name": "testWorkflow1",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "6b24426a-6250-4f0c-9f4c-221b90b06a3d",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_1",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "85a2617a-2670-4a20-a87d-e4533e7c4682": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "",
+      "entityType": "user",
+      "id": "85a2617a-2670-4a20-a87d-e4533e7c4682",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_events_1",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "87b205e8-774a-411e-becf-f216a1f6418d": {
+      "action": {
+        "name": "testWorkflow1",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "87b205e8-774a-411e-becf-f216a1f6418d",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_1",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "8fbb145c-4c8e-4a85-928b-dfe35a722870": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "8fbb145c-4c8e-4a85-928b-dfe35a722870",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_3",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "94b32c39-c8c2-433d-aec4-9ce654d3357e": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "94b32c39-c8c2-433d-aec4-9ce654d3357e",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_3",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "96eb1e8f-4216-45b6-bbae-905c652e80d6": {
+      "action": {
+        "name": "testWorkflow1",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "96eb1e8f-4216-45b6-bbae-905c652e80d6",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_1",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "9ae5a3c5-c9ea-40f1-9d86-b34ac26c2ec9": {
+      "action": {
+        "name": "testWorkflow1",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "9ae5a3c5-c9ea-40f1-9d86-b34ac26c2ec9",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_1",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "9f068fee-5c3e-46e6-bb64-ef7b6a93c2c9": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "9f068fee-5c3e-46e6-bb64-ef7b6a93c2c9",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_3",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "a701b926-a337-4f98-b4c6-b04ab595e136": {
       "action": {
         "name": "phhBirthrightRolesRequiringApproval",
         "parameters": {
@@ -629,7 +2951,7 @@
       },
       "description": "Teacher birthright role approval",
       "entityType": "user",
-      "id": "a89132d2-29b0-4c76-8936-22ec8905a9a3",
+      "id": "a701b926-a337-4f98-b4c6-b04ab595e136",
       "metadata": {},
       "mutationType": "update",
       "name": "phh-teacher-birthright-role-approval",
@@ -644,7 +2966,397 @@
       ],
       "status": "active"
     },
-    "c3d96178-d042-4271-a8ce-0ba317df66f5": {
+    "a8a8c683-c089-49d8-94bc-0bf2510c0e6e": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "a8a8c683-c089-49d8-94bc-0bf2510c0e6e",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_3",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "a9249394-a49f-4b2a-9543-cf2923bdbe49": {
+      "action": {
+        "name": "testWorkflow1",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "a9249394-a49f-4b2a-9543-cf2923bdbe49",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_1",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "aa73f95f-f589-41ef-9030-1fa8c59f9821": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "aa73f95f-f589-41ef-9030-1fa8c59f9821",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_3",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "af7fc731-6c17-45b7-92ed-4abce514bc8c": {
       "action": {
         "name": "BasicRoleDelete",
         "parameters": {},
@@ -675,7 +3387,7 @@
       },
       "description": "dfsafasdfasfa",
       "entityType": "user",
-      "id": "c3d96178-d042-4271-a8ce-0ba317df66f5",
+      "id": "af7fc731-6c17-45b7-92ed-4abce514bc8c",
       "metadata": {},
       "mutationType": "update",
       "name": "test-events-2",
@@ -686,6 +3398,1766 @@
           "mail": "pholderness+c1admin@trivir.com",
           "sn": "Admin",
           "userName": "phh-child1-org-admin"
+        }
+      ],
+      "status": "active"
+    },
+    "b3b4ccd0-d6d3-4c7c-a688-5fef602f6006": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "b3b4ccd0-d6d3-4c7c-a688-5fef602f6006",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_3",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "b86ae7cc-d73c-44ce-a6c8-6691f0713b53": {
+      "action": {
+        "name": "BasicRoleDelete",
+        "parameters": {},
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "sdfasfasfasfda"
+                }
+              }
+            },
+            {
+              "contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "sdfasdfasfaf"
+                }
+              }
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "dfsafasdfasfa",
+      "entityType": "user",
+      "id": "b86ae7cc-d73c-44ce-a6c8-6691f0713b53",
+      "metadata": {},
+      "mutationType": "update",
+      "name": "test-events-2",
+      "owners": [
+        {
+          "givenName": "ChildOne",
+          "id": "managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58",
+          "mail": "pholderness+c1admin@trivir.com",
+          "sn": "Admin",
+          "userName": "phh-child1-org-admin"
+        }
+      ],
+      "status": "active"
+    },
+    "b8ea4cb1-27c1-4c63-aaf2-b674c603a2ad": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "",
+      "entityType": "user",
+      "id": "b8ea4cb1-27c1-4c63-aaf2-b674c603a2ad",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_events_1",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "ba81aa26-46b0-4e23-a1e9-1dce32339c85": {
+      "action": {
+        "name": "testWorkflow1",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "ba81aa26-46b0-4e23-a1e9-1dce32339c85",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_1",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "be3a1244-29c2-4b0a-b17a-b20302058e4b": {
+      "action": {
+        "name": "testWorkflow1",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "be3a1244-29c2-4b0a-b17a-b20302058e4b",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_1",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "c1b2c2ca-4579-4747-8d80-4529ac64dbc0": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "c1b2c2ca-4579-4747-8d80-4529ac64dbc0",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_3",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "c1c9c6ab-7c0c-42df-9b11-657577deef9d": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "",
+      "entityType": "user",
+      "id": "c1c9c6ab-7c0c-42df-9b11-657577deef9d",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_events_1",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "c27393aa-3f68-43bc-aea7-05b1c86eb44f": {
+      "action": {
+        "name": "testWorkflow1",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "c27393aa-3f68-43bc-aea7-05b1c86eb44f",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_1",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "caae86f5-9363-4f41-a6f3-dc76eac12044": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "caae86f5-9363-4f41-a6f3-dc76eac12044",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_3",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "d12be9af-e35f-44fe-9376-d3f95d61daf8": {
+      "action": {
+        "name": "phhBirthrightRolesRequiringApproval",
+        "parameters": {
+          "roleNames": "phh-role-other-risk"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "and": [
+            {
+              "not_contains": {
+                "in_string": "user.before.description",
+                "search_string": {
+                  "literal": "teacher"
+                }
+              }
+            },
+            {
+              "contains": {
+                "in_string": "user.after.description",
+                "search_string": {
+                  "literal": "teacher"
+                }
+              }
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Teacher birthright role approval",
+      "entityType": "user",
+      "id": "d12be9af-e35f-44fe-9376-d3f95d61daf8",
+      "metadata": {},
+      "mutationType": "update",
+      "name": "phh-teacher-birthright-role-approval",
+      "owners": [
+        {
+          "givenName": "Parent",
+          "id": "managed/user/6b21c283-d491-4fd9-8322-898c171c7018",
+          "mail": "pholderness+poadmin@trivir.com",
+          "sn": "Admin",
+          "userName": "phh-parent-org-admin"
+        }
+      ],
+      "status": "active"
+    },
+    "d2bb44a9-cd8e-435a-be02-24bdeef953f8": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "d2bb44a9-cd8e-435a-be02-24bdeef953f8",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_1",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "e7764117-24c8-4038-982b-d0db8d318b79": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "e7764117-24c8-4038-982b-d0db8d318b79",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_3",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "efcbe203-2e6e-4e43-a074-82a6d3561845": {
+      "action": {
+        "name": "testWorkflow1",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "efcbe203-2e6e-4e43-a074-82a6d3561845",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_1",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "f5d31e98-c763-4f1c-80f8-9453ac3c4462": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "f5d31e98-c763-4f1c-80f8-9453ac3c4462",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_3",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "fd8dd99b-5ab1-4e15-b168-4843fda08d57": {
+      "action": {
+        "name": "testWorkflow1",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "fd8dd99b-5ab1-4e15-b168-4843fda08d57",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_1",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
         }
       ],
       "status": "active"

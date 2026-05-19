@@ -65,7 +65,8 @@ const exec = promisify(cp.exec);
 process.env['FRODO_MOCK'] = '1';
 const igaEnv = getEnv(ic);
 
-const allDirectory = "test/e2e/exports/all";
+// Even though imports succeeds with a large amount of events being imported, the recording fails. This is to test a smaller subset of events
+const allDirectory = "test/e2e/exports/all/import_events";
 const allEventsFileName = "allEvents.event.json";
 const allEventsExport = `${allDirectory}/${allEventsFileName}`;
 const allSeparateEventsDirectory = `test/e2e/exports/all-separate/cloud/global/events`;
