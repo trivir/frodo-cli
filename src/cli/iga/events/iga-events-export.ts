@@ -96,11 +96,7 @@ export default function setup() {
           true,
           deploymentTypes
         );
-        if (!getTokensIsSuccessful) {
-          printMessage('Error getting tokens', 'error');
-          process.exitCode = 1;
-          return;
-        }
+        if (!getTokensIsSuccessful) process.exit(1);
         if (!state.getIsIGA()) {
           printMessage(
             'Command not supported for non-IGA cloud tenants',

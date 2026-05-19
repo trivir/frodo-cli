@@ -60,7 +60,7 @@ import { iga_connection as ic } from './utils/TestConfig';
 process.env['FRODO_MOCK'] = '1';
 const igaEnv = getEnv(ic);
 
-const type = 'events';
+const type = 'event';
 
 describe(`frodo iga events export`, () => {
   test(`"frodo iga events export -i 2dd3656c-c46d-4254-9959-91179227ed3e": should export event 'test_events_1' with extracted scripts and no metadata`, async () => {
