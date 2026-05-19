@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga glossary export "frodo iga glossary export --all -R --no-coords --no-deps --use-string-arrays --file testGlossaryExportFile2.json": should export all glossarys including non-mutable ones with no coordinates and no dependencies 1`] = `1`;
+
+exports[`frodo iga glossary export "frodo iga glossary export --all-separate --use-string-arrays --read-only --no-coords --no-deps -D testGlossaryExportDir4": should export all glossarys separately including non-mutable ones with no coordinates, no dependencies, and using string arrays 1`] = `1`;
+
+exports[`frodo iga glossary export "frodo iga glossary export --glossary-id testGlossary1 --no-coords --no-deps -f testGlossaryExportFile1.json": should export glossary 'testGlossary1' with no coordinates and no dependencies 1`] = `1`;
+
+exports[`frodo iga glossary export "frodo iga glossary export --no-metadata -a --directory testGlossaryExportDir2": should export all glossarys with no metadata 1`] = `1`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -i testGlossary1": should export glossary 'testGlossary1' with extracted scripts and no metadata 1`] = `1`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -xNAD testGlossaryExportDir3": should export all glossarys separately with no metadata 1`] = `1`;
