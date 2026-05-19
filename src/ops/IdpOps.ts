@@ -97,8 +97,8 @@ export async function exportSocialIdentityProviderToFile(
   }
   const filePath = getFilePath(fileName, true);
   const indicatorId = createProgressIndicator(
-    'determinate',
-    1,
+    'indeterminate',
+    0,
     `Exporting ${providerId}`
   );
   try {
@@ -276,27 +276,12 @@ export async function importSocialIdentityProvidersFromFile(
   options: SocialIdentityProviderImportOptions = { deps: true }
 ): Promise<boolean> {
   const filePath = getFilePath(file);
-  const indicatorId = createProgressIndicator(
-    'indeterminate',
-    0,
-    `Importing providers from ${filePath}...`
-  );
   try {
     const data = fs.readFileSync(filePath, 'utf8');
     const fileData = JSON.parse(data);
     await importSocialIdentityProviders(fileData, options);
-    stopProgressIndicator(
-      indicatorId,
-      `Successfully imported providers from ${filePath}.`,
-      'success'
-    );
     return true;
   } catch (error) {
-    stopProgressIndicator(
-      indicatorId,
-      `Error importing providers from ${filePath}.`,
-      'fail'
-    );
     printError(error);
   }
   return false;

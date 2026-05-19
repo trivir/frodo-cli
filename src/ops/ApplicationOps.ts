@@ -214,14 +214,8 @@ export async function exportApplicationsToFile(
   includeMeta: boolean,
   options: ApplicationExportOptions = { useStringArrays: true, deps: true }
 ): Promise<boolean> {
-  let spinnerId: string;
   try {
     debugMessage(`cli.ApplicationOps.exportApplicationsToFile: begin`);
-    spinnerId = createProgressIndicator(
-      'indeterminate',
-      0,
-      `Exporting applications...`
-    );
     let fileName = getTypedFilename(
       `all${titleCase(frodo.utils.getRealmName(state.getRealm()))}Applications`,
       'application'
@@ -232,15 +226,9 @@ export async function exportApplicationsToFile(
     const filePath = getFilePath(fileName, true);
     const exportData = await _exportApplications(options);
     saveJsonToFile(exportData, filePath, includeMeta);
-    stopProgressIndicator(
-      spinnerId,
-      `Exported applications to ${filePath}.`,
-      'success'
-    );
     debugMessage(`cli.ApplicationOps.exportApplicationsToFile: end`);
     return true;
   } catch (error) {
-    stopProgressIndicator(spinnerId, `Error exporting applications`, 'fail');
     printError(error);
   }
   return false;
@@ -407,27 +395,15 @@ export async function importApplicationsFromFile(
   file: string,
   options: ApplicationImportOptions = { deps: true }
 ): Promise<boolean> {
-  let spinnerId: string;
   try {
     debugMessage(`cli.ApplicationOps.importApplicationsFromFile: begin`);
     const filePath = getFilePath(file);
-    spinnerId = createProgressIndicator(
-      'indeterminate',
-      0,
-      `Importing ${filePath}...`
-    );
     const data = fs.readFileSync(filePath, 'utf8');
     const applicationData = JSON.parse(data);
     await _importApplications(applicationData, options);
-    stopProgressIndicator(spinnerId, `Imported ${filePath}`, 'success');
     debugMessage(`cli.ApplicationOps.importApplicationsFromFile: end`);
     return true;
   } catch (error) {
-    stopProgressIndicator(
-      spinnerId,
-      `Error importing first application`,
-      'fail'
-    );
     printError(error);
   }
   return false;

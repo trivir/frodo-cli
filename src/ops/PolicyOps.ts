@@ -358,7 +358,6 @@ export async function exportPoliciesToFile(
   }
 ): Promise<boolean> {
   debugMessage(`cli.PolicyOps.exportPoliciesToFile: begin`);
-  showSpinner(`Exporting all policies...`);
   try {
     let fileName = getTypedFilename(
       `all${titleCase(getRealmName(state.getRealm()))}Policies`,
@@ -376,11 +375,9 @@ export async function exportPoliciesToFile(
       false,
       keepModifiedProperties
     );
-    succeedSpinner(`Exported all policies to ${filePath}.`);
     debugMessage(`cli.PolicyOps.exportPoliciesToFile: end`);
     return true;
   } catch (error) {
-    failSpinner(`Error exporting policies`);
     printError(error);
   }
   return false;
@@ -624,28 +621,13 @@ export async function importPoliciesFromFile(
 ): Promise<boolean> {
   debugMessage(`cli.PolicyOps.importPoliciesFromFile: begin`);
   const filePath = getFilePath(file);
-  showSpinner(`Importing ${filePath}...`);
   try {
     const data = fs.readFileSync(filePath, 'utf8');
     const fileData = JSON.parse(data);
     await importPolicies(fileData, options);
-    succeedSpinner(
-      `Imported ${filePath}${
-        options.policySetName
-          ? ' into policy set ' + options.policySetName
-          : '.'
-      }`
-    );
     debugMessage(`cli.PolicyOps.importPoliciesFromFile: end`);
     return true;
   } catch (error) {
-    failSpinner(
-      `Error importing ${filePath}${
-        options.policySetName
-          ? ' into policy set ' + options.policySetName
-          : '.'
-      }`
-    );
     printError(error);
   }
   return false;

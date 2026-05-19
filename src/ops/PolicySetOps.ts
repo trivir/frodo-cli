@@ -301,11 +301,6 @@ export async function exportPolicySetsToFile(
   }
 ): Promise<boolean> {
   debugMessage(`cli.PolicySetOps.exportPolicySetsToFile: begin`);
-  const indicatorId = createProgressIndicator(
-    'indeterminate',
-    0,
-    `Exporting all policy sets...`
-  );
   try {
     let fileName = getTypedFilename(
       `all${titleCase(getRealmName(state.getRealm()))}PolicySets`,
@@ -323,15 +318,9 @@ export async function exportPolicySetsToFile(
       false,
       keepModifiedProperties
     );
-    stopProgressIndicator(
-      indicatorId,
-      `Exported all policy sets to ${filePath}.`,
-      'success'
-    );
     debugMessage(`cli.PolicySetOps.exportPolicySetsToFile: end`);
     return true;
   } catch (error) {
-    stopProgressIndicator(indicatorId, `Error exporting policy sets`, 'fail');
     printError(error);
   }
   return false;
@@ -486,20 +475,13 @@ export async function importPolicySetsFromFile(
 ): Promise<boolean> {
   debugMessage(`cli.PolicySetOps.importPolicySetsFromFile: begin`);
   const filePath = getFilePath(file);
-  const indicatorId = createProgressIndicator(
-    'indeterminate',
-    0,
-    `Importing ${filePath}...`
-  );
   try {
     const data = fs.readFileSync(filePath, 'utf8');
     const fileData = JSON.parse(data);
     await importPolicySets(fileData, options);
-    stopProgressIndicator(indicatorId, `Imported ${filePath}.`, 'success');
     debugMessage(`cli.PolicySetOps.importPolicySetsFromFile: end`);
     return true;
   } catch (error) {
-    stopProgressIndicator(indicatorId, `Error importing policy sets`, 'fail');
     printError(error);
   }
   return false;

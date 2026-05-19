@@ -155,7 +155,6 @@ export async function exportOAuth2ClientsToFile(
   }
 ): Promise<boolean> {
   debugMessage(`cli.OAuth2ClientOps.exportOAuth2ClientsToFile: begin`);
-  showSpinner(`Exporting all clients...`);
   try {
     let fileName = getTypedFilename(
       `all${titleCase(frodo.utils.getRealmName(state.getRealm()))}Applications`,
@@ -167,11 +166,9 @@ export async function exportOAuth2ClientsToFile(
     const filePath = getFilePath(fileName, true);
     const exportData = await exportOAuth2Clients(options);
     saveJsonToFile(exportData, filePath, includeMeta);
-    succeedSpinner(`Exported all clients to ${filePath}.`);
     debugMessage(`cli.OAuth2ClientOps.exportOAuth2ClientsToFile: end]`);
     return true;
   } catch (error) {
-    failSpinner(`Error exporting all clients`);
     printError(error);
   }
   return false;
@@ -292,16 +289,13 @@ export async function importOAuth2ClientsFromFile(
 ): Promise<boolean> {
   debugMessage(`cli.OAuth2ClientOps.importOAuth2ClientsFromFile: begin`);
   const filePath = getFilePath(file);
-  showSpinner(`Importing ${filePath}...`);
   try {
     const data = fs.readFileSync(filePath, 'utf8');
     const clientData = JSON.parse(data);
     await importOAuth2Clients(clientData, options);
-    succeedSpinner(`Imported ${filePath}.`);
     debugMessage(`cli.OAuth2ClientOps.importOAuth2ClientsFromFile: end`);
     return true;
   } catch (error) {
-    failSpinner(`Error importing ${filePath}.`);
     printError(error);
   }
   return false;
