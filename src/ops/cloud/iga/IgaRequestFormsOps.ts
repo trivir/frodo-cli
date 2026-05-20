@@ -528,17 +528,17 @@ export async function deleteRequestForm(formName: string): Promise<boolean> {
   const spinnerId = createProgressIndicator(
     'indeterminate',
     undefined,
-    `Deleting workflow ${formName}...`
+    `Deleting request form ${formName}...`
   );
   try {
     const result = await deleteRequestFormByName(formName);
     if (!result) {
-      throw new FrodoError(`Failed to delete workflow ${formName}`);
+      throw new FrodoError(`Failed to delete request form ${formName}`);
     }
 
     stopProgressIndicator(
       spinnerId,
-      `Deleted workflow ${formName}.`,
+      `Deleted request form ${formName}.`,
       'success'
     );
     return true;
@@ -557,11 +557,11 @@ export async function deleteAllRequestForms(): Promise<boolean> {
   const spinnerId = createProgressIndicator(
     'indeterminate',
     undefined,
-    `Deleting workflows...`
+    `Deleting request forms...`
   );
   try {
     await deleteRequestForms();
-    stopProgressIndicator(spinnerId, `Deleted workflows.`, 'success');
+    stopProgressIndicator(spinnerId, `Deleted request forms.`, 'success');
     return true;
   } catch (error) {
     stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');

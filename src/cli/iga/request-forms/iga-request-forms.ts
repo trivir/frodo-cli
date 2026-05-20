@@ -1,8 +1,8 @@
 import { FrodoStubCommand } from '../../FrodoCommand';
-import ExportCmd from './iga-request-form.export';
 import ImportCmd from './iga-request-form-import';
 import DeleteCmd from './iga-request-forms-delete';
 import DescribeCmd from './iga-request-forms-describe';
+import ExportCmd from './iga-request-forms-export';
 import ListCmd from './iga-request-forms-list';
 
 export default function setup() {

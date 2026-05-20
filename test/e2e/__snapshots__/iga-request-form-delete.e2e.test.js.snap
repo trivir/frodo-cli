@@ -3,13 +3,13 @@
 exports[`frodo iga request form delete "frodo iga request form delete --all": should delete all request-form 1`] = `""`;
 
 exports[`frodo iga request form delete "frodo iga request form delete --all": should delete all request-form 2`] = `
-"✔ Deleted workflows.
+"✔ Deleted request forms.
 "
 `;
 
 exports[`frodo iga request form delete "frodo iga request form delete --request-form-name test_workflow_request_form_2": Should delete both draft and published test_workflow_request_form_2 1`] = `""`;
 
 exports[`frodo iga request form delete "frodo iga request form delete --request-form-name test_workflow_request_form_2": Should delete both draft and published test_workflow_request_form_2 2`] = `
-"✔ Deleted workflow test_workflow_request_form_2.
+"✔ Deleted request form test_workflow_request_form_2.
 "
 `;

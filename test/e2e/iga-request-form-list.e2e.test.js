@@ -69,12 +69,12 @@ describe('frodo iga request form list', () => {
   });
 
   test('"frodo iga request-form list -l": should list the ids, names, mutability, and statuses of the request form.', async () => {
-    const CMD = `frodo iga workflow list -l`;
+    const CMD = `frodo iga request-form list -l`;
     const { stdout } = await exec(CMD, igaEnv);
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
   });
 
-  test('"frodo iga request form list --long": should list the ids, names, mutability, and statuses of the workflows.', async () => {
+  test('"frodo iga request form list --long": should list the ids, names, mutability, and statuses of the scopes.', async () => {
     const CMD = `frodo iga request-form list --long`;
     const { stdout } = await exec(CMD, igaEnv);
     expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
