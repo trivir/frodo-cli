@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga request-form import "frodo iga request-form import --all --file test/e2e/exports/all/allRequestForms.requestForm.json --no-deps": should import all request form from the file "test/e2e/exports/all/allRequestForms.requestForm.json" 1`] = `""`;
+
+exports[`frodo iga request-form import "frodo iga request-form import --all --file test/e2e/exports/all/allRequestForms.requestForm.json --no-deps": should import all request form from the file "test/e2e/exports/all/allRequestForms.requestForm.json" 2`] = `
+"✔ Successfully imported request forms.
+"
+`;
+
+exports[`frodo iga request-form import "frodo iga request-form import --all-separate --directory test/e2e/exports/all-separate/iga/global/request-form --no-deps": should import all request form from the directory "test/e2e/exports/all-separate/iga/global/request-form" 1`] = `""`;
+
+exports[`frodo iga request-form import "frodo iga request-form import --all-separate --directory test/e2e/exports/all-separate/iga/global/request-form --no-deps": should import all request form from the directory "test/e2e/exports/all-separate/iga/global/request-form" 2`] = `
+"✔ Successfully imported request form.
+"
+`;
+
+exports[`frodo iga request-form import "frodo iga request-form import --request-form-name test_workflow_request_form_2 --file test/e2e/exports/all/allRequestForms.requestForm.json --no-deps": should import test_workflow_request_form_2 from the file "test/e2e/exports/all/allRequestForms.requestForm.json" 1`] = `""`;
+
+exports[`frodo iga request-form import "frodo iga request-form import --request-form-name test_workflow_request_form_2 --file test/e2e/exports/all/allRequestForms.requestForm.json --no-deps": should import test_workflow_request_form_2 from the file "test/e2e/exports/all/allRequestForms.requestForm.json" 2`] = `
+"✔ Successfully imported request forms test_workflow_request_form_2.
+"
+`;
+
+exports[`frodo iga request-form import "frodo iga request-form import -AD test/e2e/exports/all-separate/iga/global/request-form": should import all request forms from the directory "test/e2e/exports/all-separate/iga/global/request-form" with dependencies 1`] = `""`;
+
+exports[`frodo iga request-form import "frodo iga request-form import -AD test/e2e/exports/all-separate/iga/global/request-form": should import all request forms from the directory "test/e2e/exports/all-separate/iga/global/request-form" with dependencies 2`] = `
+"✔ Successfully imported request form.
+"
+`;
+
+exports[`frodo iga request-form import "frodo iga request-form import -af test/e2e/exports/all/allRequestForms.requestForm.json": should import all request-form from the file "test/e2e/exports/all/allRequestForms.requestForm.json" with dependencies 1`] = `""`;
+
+exports[`frodo iga request-form import "frodo iga request-form import -af test/e2e/exports/all/allRequestForms.requestForm.json": should import all request-form from the file "test/e2e/exports/all/allRequestForms.requestForm.json" with dependencies 2`] = `
+"✔ Successfully imported request forms.
+"
+`;
+
+exports[`frodo iga request-form import "frodo iga request-form import -f test/e2e/exports/all/allRequestForms.requestForm.json --no-deps": should import first request form from the file "test/e2e/exports/all/allRequestForms.requestForm.json" 1`] = `""`;
+
+exports[`frodo iga request-form import "frodo iga request-form import -f test/e2e/exports/all/allRequestForms.requestForm.json --no-deps": should import first request form from the file "test/e2e/exports/all/allRequestForms.requestForm.json" 2`] = `
+"✔ Imported request form from test/e2e/exports/all/allRequestForms.requestForm.json
+"
+`;
+
+exports[`frodo iga request-form import "frodo iga request-form import -n test_workflow_request_form_2 -f test/e2e/exports/all/allRequestForms.requestForm.json": should import test_workflow_request_form_2 from the file "test/e2e/exports/all/allRequestForms.requestForm.json" with dependencies 1`] = `""`;
+
+exports[`frodo iga request-form import "frodo iga request-form import -n test_workflow_request_form_2 -f test/e2e/exports/all/allRequestForms.requestForm.json": should import test_workflow_request_form_2 from the file "test/e2e/exports/all/allRequestForms.requestForm.json" with dependencies 2`] = `
+"✔ Successfully imported request forms test_workflow_request_form_2.
+"
+`;
