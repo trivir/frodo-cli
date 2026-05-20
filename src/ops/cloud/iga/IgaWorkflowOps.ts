@@ -246,7 +246,13 @@ export async function exportWorkflowToFile(
       indicatorId,
       `Saving ${workflowId} to ${filePath}...`
     );
-    saveJsonToFile(exportData, filePath, includeMeta, false, keepModifiedProperties);
+    saveJsonToFile(
+      exportData,
+      filePath,
+      includeMeta,
+      false,
+      keepModifiedProperties
+    );
     stopProgressIndicator(
       indicatorId,
       `Exported workflow ${workflowId} to file`,
@@ -288,7 +294,13 @@ export async function exportWorkflowsToFile(
     if (!file) {
       file = getTypedFilename(`allWorkflows`, 'workflow');
     }
-    saveJsonToFile(exportData, getFilePath(file, true), includeMeta, false, keepModifiedProperties);
+    saveJsonToFile(
+      exportData,
+      getFilePath(file, true),
+      includeMeta,
+      false,
+      keepModifiedProperties
+    );
     return true;
   } catch (error) {
     printError(error, `Error exporting workflows to file`);

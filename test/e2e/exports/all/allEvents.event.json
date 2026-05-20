@@ -1,0 +1,1123 @@
+{
+  "emailTemplate": {
+    "certificationAssigned": {
+      "_id": "emailTemplate/certificationAssigned",
+      "defaultLocale": "en",
+      "enabled": true,
+      "from": "",
+      "html": {
+        "en": "<html><div>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was assigned to you.</div><html>"
+      },
+      "message": {
+        "en": "<html><head></head><body>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was assigned to you.</body></html>"
+      },
+      "mimeType": "text/html",
+      "styles": "body {\n\tbackground-color: #324054;\n\tcolor: #455469;\n\tpadding: 60px;\n\ttext-align: center\n}\n\na {\n\ttext-decoration: none;\n\tcolor: #109cf1;\n}\n\n.content {\n\tbackground-color: #fff;\n\tborder-radius: 4px;\n\tmargin: 0 auto;\n\tpadding: 48px;\n\twidth: 235px\n}\n",
+      "subject": {
+        "en": "ATTENTION: Certification Task Assigned"
+      }
+    },
+    "certificationReassigned": {
+      "_id": "emailTemplate/certificationReassigned",
+      "defaultLocale": "en",
+      "enabled": true,
+      "from": "",
+      "html": {
+        "en": "<html><body>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was reassigned to you.</body></html>"
+      },
+      "message": {
+        "en": "<html><body>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was reassigned to you.</body></html>"
+      },
+      "mimeType": "text/html",
+      "styles": "body {\n\tbackground-color: #324054;\n\tcolor: #455469;\n\tpadding: 60px;\n\ttext-align: center\n}\n\na {\n\ttext-decoration: none;\n\tcolor: #109cf1;\n}\n\n.content {\n\tbackground-color: #fff;\n\tborder-radius: 4px;\n\tmargin: 0 auto;\n\tpadding: 48px;\n\twidth: 235px\n}\n",
+      "subject": {
+        "en": "ATTENTION: Certification Task Reassigned"
+      }
+    }
+  },
+  "event": {
+    "042e413a-cd1d-4ad3-a2f8-c05fda2067af": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "",
+      "entityType": "user",
+      "id": "042e413a-cd1d-4ad3-a2f8-c05fda2067af",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_events_1",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "3e0cddc2-6797-42a1-b95e-aa5201837467": {
+      "action": {
+        "template": {
+          "allowBulkCertify": true,
+          "allowPartialSignoff": true,
+          "allowSelfCertification": false,
+          "assignmentNotification": "emailTemplate/certificationAssigned",
+          "assignmentNotificationIncludeManager": false,
+          "certificationType": "identity",
+          "defaultCertifierId": "managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58",
+          "defaultCertifierInfo": {
+            "givenName": "ChildOne",
+            "id": "0f2b6cba-0124-4846-afc2-f944acf09c58",
+            "mail": "pholderness+c1admin@trivir.com",
+            "sn": "Admin",
+            "userName": "phh-child1-org-admin"
+          },
+          "description": "The user's sunset date has changed. Certify access.",
+          "enableForward": true,
+          "enableReassign": true,
+          "escalationFrequency": null,
+          "escalationNotification": null,
+          "escalationOwner": null,
+          "events": {
+            "assignment": {
+              "notification": "emailTemplate/certificationAssigned"
+            },
+            "reassign": {
+              "notification": "emailTemplate/certificationReassigned"
+            }
+          },
+          "exceptionDuration": 14,
+          "excludeConditionalAccess": true,
+          "excludeRoleBasedAccess": true,
+          "expirationAction": null,
+          "expirationActionDelay": 0,
+          "expirationNotification": null,
+          "expirationReassignee": null,
+          "finalizeRule": "",
+          "id": "951e75c6-694f-4aed-8ef5-7c9257466743",
+          "initializeRule": "",
+          "isEventBased": false,
+          "metadata": {},
+          "name": "Sunset date change {{YYYY-MM-DD}} for {{IGA_PARAM_userDisplayName_IGA_PARAM}}",
+          "ownerId": "managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58",
+          "ownerInfo": {
+            "givenName": "ChildOne",
+            "id": "0f2b6cba-0124-4846-afc2-f944acf09c58",
+            "mail": "pholderness+c1admin@trivir.com",
+            "sn": "Admin",
+            "userName": "phh-child1-org-admin"
+          },
+          "parameters": [
+            {
+              "displayName": "ID of user this campaign will target",
+              "id": "userId",
+              "type": "string"
+            },
+            {
+              "displayName": "Name of the event triggering this campaign",
+              "id": "eventName",
+              "type": "string"
+            },
+            {
+              "displayName": "Display friendly name of user this campaign targets",
+              "id": "userDisplayName",
+              "type": "string"
+            }
+          ],
+          "reassignNotification": "emailTemplate/certificationReassigned",
+          "reassignPermissions": {
+            "certify": true,
+            "claim": true,
+            "comment": true,
+            "delegate": true,
+            "exception": true,
+            "forward": true,
+            "reassign": true,
+            "reset": true,
+            "revoke": true,
+            "save": true,
+            "signoff": true
+          },
+          "remediationDelay": 0,
+          "remediationRule": "BasicRevocation",
+          "reminderFrequency": 0,
+          "reminderNotification": null,
+          "requireJustification": {
+            "exceptionAllowed": true,
+            "revoke": true
+          },
+          "selfCertificationRule": "none",
+          "skipInactiveCertifiers": false,
+          "stageDuration": 14,
+          "stages": [
+            {
+              "certifierId": null,
+              "certifierPath": null,
+              "certifierScript": null,
+              "certifierType": "manager"
+            }
+          ],
+          "stagingEnabled": false,
+          "status": "active",
+          "targetFilter": {
+            "account": {
+              "operand": [],
+              "operator": "ALL"
+            },
+            "application": {
+              "operand": {
+                "targetName": "authoritative",
+                "targetValue": false
+              },
+              "operator": "EQUALS"
+            },
+            "decision": {
+              "operand": [],
+              "operator": "ALL"
+            },
+            "entitlement": {
+              "operand": [],
+              "operator": "ALL"
+            },
+            "memberOfOrg": [],
+            "role": {
+              "operand": [],
+              "operator": "ALL"
+            },
+            "type": [
+              "accountGrant",
+              "entitlementGrant",
+              "roleMembership",
+              "AccountGrant",
+              "ResourceGrant"
+            ],
+            "user": {
+              "operand": {
+                "targetName": "id",
+                "targetValue": "{{IGA_PARAM_userId_IGA_PARAM}}"
+              },
+              "operator": "EQUALS"
+            }
+          },
+          "templateEventType": "user",
+          "uiConfig": {
+            "columnConfig": {
+              "accounts": [
+                "user.user",
+                "application.application",
+                "review.flags",
+                "review.comments"
+              ],
+              "entitlements": [
+                "user.user",
+                "application.application",
+                "entitlement.entitlement",
+                "account.account",
+                "review.flags",
+                "review.comments"
+              ],
+              "roles": [
+                "role.role",
+                "user.user",
+                "review.flags",
+                "review.comments"
+              ]
+            }
+          }
+        },
+        "type": "certification"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "not_equals": {
+                "left": "user.before.frIndexedDate4",
+                "right": "user.after.frIndexedDate4"
+              }
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Certify access when a user's sunset date changes",
+      "entityType": "user",
+      "id": "3e0cddc2-6797-42a1-b95e-aa5201837467",
+      "metadata": {},
+      "mutationType": "update",
+      "name": "phh-sunset-date-change",
+      "owners": [
+        {
+          "givenName": "Parent",
+          "id": "managed/user/6b21c283-d491-4fd9-8322-898c171c7018",
+          "mail": "pholderness+poadmin@trivir.com",
+          "sn": "Admin",
+          "userName": "phh-parent-org-admin"
+        }
+      ],
+      "status": "active"
+    },
+    "54785979-d7cc-47a7-8a11-74bd9fe37908": {
+      "action": {
+        "name": "phhBirthrightRolesRequiringApproval",
+        "parameters": {
+          "roleNames": "phh-role-other-risk"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "and": [
+            {
+              "not_contains": {
+                "in_string": "user.before.description",
+                "search_string": {
+                  "literal": "teacher"
+                }
+              }
+            },
+            {
+              "contains": {
+                "in_string": "user.after.description",
+                "search_string": {
+                  "literal": "teacher"
+                }
+              }
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Teacher birthright role approval",
+      "entityType": "user",
+      "id": "54785979-d7cc-47a7-8a11-74bd9fe37908",
+      "metadata": {},
+      "mutationType": "update",
+      "name": "phh-teacher-birthright-role-approval",
+      "owners": [
+        {
+          "givenName": "Parent",
+          "id": "managed/user/6b21c283-d491-4fd9-8322-898c171c7018",
+          "mail": "pholderness+poadmin@trivir.com",
+          "sn": "Admin",
+          "userName": "phh-parent-org-admin"
+        }
+      ],
+      "status": "active"
+    },
+    "58a9c843-1fdc-4013-b737-2a919adeb01c": {
+      "action": {
+        "name": "BasicEntitlementRemove",
+        "parameters": {
+          "var1": "val1"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "a"
+                },
+                "value": "user.after.city"
+              }
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "dsfasdfafsd",
+      "entityType": "user",
+      "id": "58a9c843-1fdc-4013-b737-2a919adeb01c",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_1",
+      "owners": [
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "7a896878-d2b3-49af-94f6-53b2d21cabaf": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "7a896878-d2b3-49af-94f6-53b2d21cabaf",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_3",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "af8c8140-1621-4970-bd61-455f7f4af355": {
+      "action": {
+        "name": "phhBasicApplicationGrant",
+        "parameters": {},
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "sdfasdfafasdff"
+                },
+                "value": "user.after.cn"
+              }
+            },
+            {
+              "contains": {
+                "in_string": "user.after.frIndexedString13",
+                "search_string": {
+                  "literal": "fdasfasfasdfafa"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "asdfasdfasfdasdfasfd"
+                },
+                "value": "user.after.frIndexedString14"
+              }
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "fasdfasfafsfa",
+      "entityType": "user",
+      "id": "af8c8140-1621-4970-bd61-455f7f4af355",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test-events-4",
+      "owners": [
+        {
+          "givenName": "ChildOne",
+          "id": "managed/user/915869ed-dca2-4a4d-81cd-675c55bcbc0e",
+          "mail": "pholderness+c1member2@trivir.com",
+          "sn": "MemberTwo",
+          "userName": "phh-child1-org-member2"
+        },
+        {
+          "givenName": "ChildOne",
+          "id": "managed/user/95f3b8f0-8a3a-4cd8-9347-bc5479437fa2",
+          "mail": "pholderness+c1member3@trivir.com",
+          "sn": "MemberThree",
+          "userName": "phh-child1-org-member3"
+        },
+        {
+          "givenName": "ChildOne",
+          "id": "managed/user/915869ed-dca2-4a4d-81cd-675c55bcbc0e",
+          "mail": "pholderness+c1member2@trivir.com",
+          "sn": "MemberTwo",
+          "userName": "phh-child1-org-member2"
+        },
+        {
+          "givenName": "ChildOne",
+          "id": "managed/user/95f3b8f0-8a3a-4cd8-9347-bc5479437fa2",
+          "mail": "pholderness+c1member3@trivir.com",
+          "sn": "MemberThree",
+          "userName": "phh-child1-org-member3"
+        },
+        {
+          "givenName": "ChildTwo",
+          "id": "managed/user/e6a8a2b0-4d4d-4e0f-81d5-4baec32f92f5",
+          "mail": "pholderness+c2member3@trivir.com",
+          "sn": "MemberThree",
+          "userName": "phh-child2-org-member3"
+        },
+        {
+          "givenName": "ChildTwo",
+          "id": "managed/user/e6a8a2b0-4d4d-4e0f-81d5-4baec32f92f5",
+          "mail": "pholderness+c2member3@trivir.com",
+          "sn": "MemberThree",
+          "userName": "phh-child2-org-member3"
+        },
+        {
+          "givenName": "ChildTwo",
+          "id": "managed/user/fe4f7519-329e-4dc3-ab85-4ea023e22c25",
+          "mail": "pholderness+c2admin@trivir.com",
+          "sn": "Admin",
+          "userName": "phh-child2-org-admin"
+        },
+        {
+          "givenName": "ChildOne",
+          "id": "managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58",
+          "mail": "pholderness+c1admin@trivir.com",
+          "sn": "Admin",
+          "userName": "phh-child1-org-admin"
+        },
+        {
+          "givenName": "ChildOne",
+          "id": "managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58",
+          "mail": "pholderness+c1admin@trivir.com",
+          "sn": "Admin",
+          "userName": "phh-child1-org-admin"
+        },
+        {
+          "givenName": "ChildOne",
+          "id": "managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58",
+          "mail": "pholderness+c1admin@trivir.com",
+          "sn": "Admin",
+          "userName": "phh-child1-org-admin"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        },
+        {
+          "givenName": "Colton",
+          "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+          "mail": "cparry@trivir.com",
+          "sn": "Parry",
+          "userName": "ColtonIGATestUser"
+        }
+      ],
+      "status": "active"
+    },
+    "cb628d1d-3eb6-4c77-9b2a-48e39198f4d7": {
+      "action": {
+        "name": "BasicRoleDelete",
+        "parameters": {},
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "sdfasfasfasfda"
+                }
+              }
+            },
+            {
+              "contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "sdfasdfasfaf"
+                }
+              }
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "dfsafasdfasfa",
+      "entityType": "user",
+      "id": "cb628d1d-3eb6-4c77-9b2a-48e39198f4d7",
+      "metadata": {},
+      "mutationType": "update",
+      "name": "test-events-2",
+      "owners": [
+        {
+          "givenName": "ChildOne",
+          "id": "managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58",
+          "mail": "pholderness+c1admin@trivir.com",
+          "sn": "Admin",
+          "userName": "phh-child1-org-admin"
+        }
+      ],
+      "status": "active"
+    },
+    "cdddbe3e-2d10-4eb4-b54b-f57a3b114ca1": {
+      "action": {
+        "name": "testWorkflow4",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3",
+          "var4": "val4",
+          "var5": "val5"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "sdfsadfasfasfas"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "contains": {
+                "in_string": "user.after.description",
+                "search_string": {
+                  "literal": "asdfasfdasfasfasfd"
+                }
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "adsfasfsadfasdf"
+                },
+                "value": "user.after.frIndexedString11"
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.custom_RAP",
+                "search_string": {
+                  "literal": "asdfasdfsafasfaf"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.after.frUnindexedInteger1",
+                "right": {
+                  "literal": 0
+                }
+              }
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "sdafasfasdfasdfa",
+      "entityType": "user",
+      "id": "cdddbe3e-2d10-4eb4-b54b-f57a3b114ca1",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test-events-3",
+      "owners": [
+        {
+          "givenName": "ChildTwo",
+          "id": "managed/user/fe4f7519-329e-4dc3-ab85-4ea023e22c25",
+          "mail": "pholderness+c2admin@trivir.com",
+          "sn": "Admin",
+          "userName": "phh-child2-org-admin"
+        }
+      ],
+      "status": "active"
+    },
+    "df7147fc-649b-4a82-8f5e-40a0fc4e1394": {
+      "action": {
+        "name": "testWorkflow1",
+        "parameters": {
+          "var1": "val1",
+          "var2": "val2",
+          "var3": "val3"
+        },
+        "type": "orchestration"
+      },
+      "condition": {
+        "filter": {
+          "or": [
+            {
+              "contains": {
+                "in_string": "user.before.city",
+                "search_string": {
+                  "literal": "a"
+                }
+              }
+            },
+            {
+              "not_contains": {
+                "in_string": "user.after.city",
+                "search_string": {
+                  "literal": "b"
+                }
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": {
+                  "literal": "c"
+                }
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.after.city",
+                "right": {
+                  "literal": "d"
+                }
+              }
+            },
+            {
+              "starts_with": {
+                "prefix": {
+                  "literal": "e"
+                },
+                "value": "user.before.city"
+              }
+            },
+            {
+              "ends_with": {
+                "suffix": {
+                  "literal": "f"
+                },
+                "value": "user.after.city"
+              }
+            },
+            {
+              "not_equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "equals": {
+                "left": "user.before.city",
+                "right": "user.after.city"
+              }
+            },
+            {
+              "and": [
+                {
+                  "gte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 1
+                    }
+                  }
+                },
+                {
+                  "gt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 2
+                    }
+                  }
+                },
+                {
+                  "lte": {
+                    "left": "user.before.frIndexedInteger1",
+                    "right": {
+                      "literal": 3
+                    }
+                  }
+                },
+                {
+                  "lt": {
+                    "left": "user.after.frIndexedInteger1",
+                    "right": {
+                      "literal": 4
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "version": "v2"
+      },
+      "description": "Test event description",
+      "entityType": "user",
+      "id": "df7147fc-649b-4a82-8f5e-40a0fc4e1394",
+      "metadata": {},
+      "mutationType": "create",
+      "name": "test_workflow_event_1",
+      "owners": [
+        {
+          "givenName": "Preston",
+          "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+          "mail": "test@test.com",
+          "sn": "Test",
+          "userName": "PrestonIGATestUser"
+        }
+      ],
+      "status": "active"
+    }
+  },
+  "variable": {}
+}

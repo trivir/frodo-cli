@@ -1,0 +1,2460 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga events delete "frodo iga events delete --all": should delete all events 1`] = `""`;
+
+exports[`frodo iga events delete "frodo iga events delete --all": should delete all events 2`] = `
+"Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/4a57456b-4a26-41b2-8003-1c5d0cef6b4e _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/4a57456b-4a26-41b2-8003-1c5d0cef6b4e",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "fe346a8f0f26dc8c3697eea20d0c1fdc",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/4a57456b-4a26-41b2-8003-1c5d0cef6b4e"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event 4a57456b-4a26-41b2-8003-1c5d0cef6b4e
+  Error deleting event 4a57456b-4a26-41b2-8003-1c5d0cef6b4e
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/4a57456b-4a26-41b2-8003-1c5d0cef6b4e",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "fe346a8f0f26dc8c3697eea20d0c1fdc",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/4a57456b-4a26-41b2-8003-1c5d0cef6b4e"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/5411d48e-b0c6-44a9-89d7-6d7c0c6b3d23 _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/5411d48e-b0c6-44a9-89d7-6d7c0c6b3d23",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "c7527530dde9f77c5c93cc69f4032156",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/5411d48e-b0c6-44a9-89d7-6d7c0c6b3d23"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event 5411d48e-b0c6-44a9-89d7-6d7c0c6b3d23
+  Error deleting event 5411d48e-b0c6-44a9-89d7-6d7c0c6b3d23
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/5411d48e-b0c6-44a9-89d7-6d7c0c6b3d23",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "c7527530dde9f77c5c93cc69f4032156",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/5411d48e-b0c6-44a9-89d7-6d7c0c6b3d23"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/5603bec3-fce0-4b17-a7a5-06728f857d51 _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/5603bec3-fce0-4b17-a7a5-06728f857d51",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "a8dbfe97e0756d218cfd56c71683adae",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/5603bec3-fce0-4b17-a7a5-06728f857d51"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event 5603bec3-fce0-4b17-a7a5-06728f857d51
+  Error deleting event 5603bec3-fce0-4b17-a7a5-06728f857d51
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/5603bec3-fce0-4b17-a7a5-06728f857d51",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "a8dbfe97e0756d218cfd56c71683adae",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/5603bec3-fce0-4b17-a7a5-06728f857d51"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/5e3c8820-fccd-4ab9-9be3-7a76efc115c4 _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/5e3c8820-fccd-4ab9-9be3-7a76efc115c4",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "7062fea6d7bf3b8186db6228a9a7a28c",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/5e3c8820-fccd-4ab9-9be3-7a76efc115c4"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event 5e3c8820-fccd-4ab9-9be3-7a76efc115c4
+  Error deleting event 5e3c8820-fccd-4ab9-9be3-7a76efc115c4
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/5e3c8820-fccd-4ab9-9be3-7a76efc115c4",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "7062fea6d7bf3b8186db6228a9a7a28c",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/5e3c8820-fccd-4ab9-9be3-7a76efc115c4"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/6731fca9-592f-45cb-bd48-f0046b1efb92 _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/6731fca9-592f-45cb-bd48-f0046b1efb92",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "b894e0a0a2bdea3484893120d595ffb9",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/6731fca9-592f-45cb-bd48-f0046b1efb92"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event 6731fca9-592f-45cb-bd48-f0046b1efb92
+  Error deleting event 6731fca9-592f-45cb-bd48-f0046b1efb92
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/6731fca9-592f-45cb-bd48-f0046b1efb92",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "b894e0a0a2bdea3484893120d595ffb9",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/6731fca9-592f-45cb-bd48-f0046b1efb92"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/71a1d51a-972f-4b28-8f76-9fd20663eb77 _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/71a1d51a-972f-4b28-8f76-9fd20663eb77",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "872c4754cbbdeea77190cfa1383c8e62",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/71a1d51a-972f-4b28-8f76-9fd20663eb77"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event 71a1d51a-972f-4b28-8f76-9fd20663eb77
+  Error deleting event 71a1d51a-972f-4b28-8f76-9fd20663eb77
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/71a1d51a-972f-4b28-8f76-9fd20663eb77",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "872c4754cbbdeea77190cfa1383c8e62",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/71a1d51a-972f-4b28-8f76-9fd20663eb77"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/7821eeeb-b434-4ab0-998f-cfdbb0752688 _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/7821eeeb-b434-4ab0-998f-cfdbb0752688",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "8a6b8565aa2200b0f128b26870fc8657",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/7821eeeb-b434-4ab0-998f-cfdbb0752688"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event 7821eeeb-b434-4ab0-998f-cfdbb0752688
+  Error deleting event 7821eeeb-b434-4ab0-998f-cfdbb0752688
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/7821eeeb-b434-4ab0-998f-cfdbb0752688",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "8a6b8565aa2200b0f128b26870fc8657",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/7821eeeb-b434-4ab0-998f-cfdbb0752688"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/85a49f19-fddf-4e1f-b757-9843abd0e6cc _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/85a49f19-fddf-4e1f-b757-9843abd0e6cc",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "1d7892e9d6cf3cfdf8a51c8186032899",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/85a49f19-fddf-4e1f-b757-9843abd0e6cc"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event 85a49f19-fddf-4e1f-b757-9843abd0e6cc
+  Error deleting event 85a49f19-fddf-4e1f-b757-9843abd0e6cc
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/85a49f19-fddf-4e1f-b757-9843abd0e6cc",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "1d7892e9d6cf3cfdf8a51c8186032899",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/85a49f19-fddf-4e1f-b757-9843abd0e6cc"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/9cd99b84-2f8c-4d4a-9bb4-b46577b47c85 _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/9cd99b84-2f8c-4d4a-9bb4-b46577b47c85",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "d6643b01c2cbdbfa488b2d66c120199c",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/9cd99b84-2f8c-4d4a-9bb4-b46577b47c85"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event 9cd99b84-2f8c-4d4a-9bb4-b46577b47c85
+  Error deleting event 9cd99b84-2f8c-4d4a-9bb4-b46577b47c85
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/9cd99b84-2f8c-4d4a-9bb4-b46577b47c85",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "d6643b01c2cbdbfa488b2d66c120199c",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/9cd99b84-2f8c-4d4a-9bb4-b46577b47c85"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/aabd8117-8e11-4288-b46f-f498edd0bd05 _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/aabd8117-8e11-4288-b46f-f498edd0bd05",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "e2ebd405ae2be92d037fed3d682c6dbd",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/aabd8117-8e11-4288-b46f-f498edd0bd05"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event aabd8117-8e11-4288-b46f-f498edd0bd05
+  Error deleting event aabd8117-8e11-4288-b46f-f498edd0bd05
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/aabd8117-8e11-4288-b46f-f498edd0bd05",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "e2ebd405ae2be92d037fed3d682c6dbd",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/aabd8117-8e11-4288-b46f-f498edd0bd05"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/ae93c915-11e9-4b36-8756-77beef1c6229 _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/ae93c915-11e9-4b36-8756-77beef1c6229",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "adcb844ecee1f27e12b4aecf432759c7",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/ae93c915-11e9-4b36-8756-77beef1c6229"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event ae93c915-11e9-4b36-8756-77beef1c6229
+  Error deleting event ae93c915-11e9-4b36-8756-77beef1c6229
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/ae93c915-11e9-4b36-8756-77beef1c6229",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "adcb844ecee1f27e12b4aecf432759c7",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/ae93c915-11e9-4b36-8756-77beef1c6229"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/b4ce4d75-2ce1-4001-a264-fe3f890c0038 _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/b4ce4d75-2ce1-4001-a264-fe3f890c0038",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "470b465b1bb88cd260aac3e1799bb7ea",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/b4ce4d75-2ce1-4001-a264-fe3f890c0038"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event b4ce4d75-2ce1-4001-a264-fe3f890c0038
+  Error deleting event b4ce4d75-2ce1-4001-a264-fe3f890c0038
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/b4ce4d75-2ce1-4001-a264-fe3f890c0038",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "470b465b1bb88cd260aac3e1799bb7ea",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/b4ce4d75-2ce1-4001-a264-fe3f890c0038"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/c87b0605-03f6-4372-9ba6-e0f43e0b3bcf _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/c87b0605-03f6-4372-9ba6-e0f43e0b3bcf",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "87511d427c8279d1f1e9d760e778f0e4",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/c87b0605-03f6-4372-9ba6-e0f43e0b3bcf"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event c87b0605-03f6-4372-9ba6-e0f43e0b3bcf
+  Error deleting event c87b0605-03f6-4372-9ba6-e0f43e0b3bcf
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/c87b0605-03f6-4372-9ba6-e0f43e0b3bcf",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "87511d427c8279d1f1e9d760e778f0e4",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/c87b0605-03f6-4372-9ba6-e0f43e0b3bcf"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/cbdd2df3-d996-471f-b85e-3fcaf8842f01 _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/cbdd2df3-d996-471f-b85e-3fcaf8842f01",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "9c95a7c231402fa59b64bc2dec61ca54",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/cbdd2df3-d996-471f-b85e-3fcaf8842f01"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event cbdd2df3-d996-471f-b85e-3fcaf8842f01
+  Error deleting event cbdd2df3-d996-471f-b85e-3fcaf8842f01
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/cbdd2df3-d996-471f-b85e-3fcaf8842f01",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "9c95a7c231402fa59b64bc2dec61ca54",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/cbdd2df3-d996-471f-b85e-3fcaf8842f01"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/ce41461a-719d-4a02-b593-38dc6d694d6d _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/ce41461a-719d-4a02-b593-38dc6d694d6d",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "d553c8a3575f487e6e7c485157ad15e0",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/ce41461a-719d-4a02-b593-38dc6d694d6d"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event ce41461a-719d-4a02-b593-38dc6d694d6d
+  Error deleting event ce41461a-719d-4a02-b593-38dc6d694d6d
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/ce41461a-719d-4a02-b593-38dc6d694d6d",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "d553c8a3575f487e6e7c485157ad15e0",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/ce41461a-719d-4a02-b593-38dc6d694d6d"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/da7e8938-670f-4924-944b-94c984795a08 _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/da7e8938-670f-4924-944b-94c984795a08",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "5797f3ace6a9e6366435d41d55c6f5f2",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/da7e8938-670f-4924-944b-94c984795a08"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event da7e8938-670f-4924-944b-94c984795a08
+  Error deleting event da7e8938-670f-4924-944b-94c984795a08
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/da7e8938-670f-4924-944b-94c984795a08",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "5797f3ace6a9e6366435d41d55c6f5f2",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/da7e8938-670f-4924-944b-94c984795a08"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/dae897fc-cb33-4807-a01c-9e1bb2ade4b4 _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/dae897fc-cb33-4807-a01c-9e1bb2ade4b4",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "9fb056cd51f12635d4a3420c13304c9f",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/dae897fc-cb33-4807-a01c-9e1bb2ade4b4"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event dae897fc-cb33-4807-a01c-9e1bb2ade4b4
+  Error deleting event dae897fc-cb33-4807-a01c-9e1bb2ade4b4
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/dae897fc-cb33-4807-a01c-9e1bb2ade4b4",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "9fb056cd51f12635d4a3420c13304c9f",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/dae897fc-cb33-4807-a01c-9e1bb2ade4b4"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/dbf9dd12-605b-4103-b426-283bbfec3962 _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/dbf9dd12-605b-4103-b426-283bbfec3962",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "f342353401f4038dc92a781f8b4b7e10",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/dbf9dd12-605b-4103-b426-283bbfec3962"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event dbf9dd12-605b-4103-b426-283bbfec3962
+  Error deleting event dbf9dd12-605b-4103-b426-283bbfec3962
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/dbf9dd12-605b-4103-b426-283bbfec3962",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "f342353401f4038dc92a781f8b4b7e10",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/dbf9dd12-605b-4103-b426-283bbfec3962"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/dee83a9d-f467-4222-b6b9-668d81bd7408 _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/dee83a9d-f467-4222-b6b9-668d81bd7408",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "af4b3baf5a9030a80e92fda4a164ce07",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/dee83a9d-f467-4222-b6b9-668d81bd7408"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event dee83a9d-f467-4222-b6b9-668d81bd7408
+  Error deleting event dee83a9d-f467-4222-b6b9-668d81bd7408
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/dee83a9d-f467-4222-b6b9-668d81bd7408",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "af4b3baf5a9030a80e92fda4a164ce07",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/dee83a9d-f467-4222-b6b9-668d81bd7408"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/e0445371-b621-4d5d-b750-5b82a6a7fb57 _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/e0445371-b621-4d5d-b750-5b82a6a7fb57",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "39bee1cc55b0c06be5de250544e48cde",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/e0445371-b621-4d5d-b750-5b82a6a7fb57"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event e0445371-b621-4d5d-b750-5b82a6a7fb57
+  Error deleting event e0445371-b621-4d5d-b750-5b82a6a7fb57
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/e0445371-b621-4d5d-b750-5b82a6a7fb57",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "39bee1cc55b0c06be5de250544e48cde",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/e0445371-b621-4d5d-b750-5b82a6a7fb57"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/e406451b-4727-4800-8980-19737036f405 _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/e406451b-4727-4800-8980-19737036f405",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "c3c9b5057d43a339aabf2bd0c7910a7b",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/e406451b-4727-4800-8980-19737036f405"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event e406451b-4727-4800-8980-19737036f405
+  Error deleting event e406451b-4727-4800-8980-19737036f405
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/e406451b-4727-4800-8980-19737036f405",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "c3c9b5057d43a339aabf2bd0c7910a7b",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/e406451b-4727-4800-8980-19737036f405"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/f2c4b9de-b6b1-4221-82b8-9fc567a8ed91 _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/f2c4b9de-b6b1-4221-82b8-9fc567a8ed91",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "ff41e02c18aac5992f46210b7915a633",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/f2c4b9de-b6b1-4221-82b8-9fc567a8ed91"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event f2c4b9de-b6b1-4221-82b8-9fc567a8ed91
+  Error deleting event f2c4b9de-b6b1-4221-82b8-9fc567a8ed91
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/f2c4b9de-b6b1-4221-82b8-9fc567a8ed91",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "ff41e02c18aac5992f46210b7915a633",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/f2c4b9de-b6b1-4221-82b8-9fc567a8ed91"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+Errored ➞ DELETE https://openam-frodo-dev.forgeblocks.com/iga/governance/event/fb3b26c2-ce57-4fe7-8a47-52e87432876b _PollyError: [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/fb3b26c2-ce57-4fe7-8a47-52e87432876b",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "997617afa309e65bd31dd8ad516e8a8b",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/fb3b26c2-ce57-4fe7-8a47-52e87432876b"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+    at assert (/snapshot/dist/app.cjs:156213:11)
+    at FrodoNodeHttpAdapter.assert (/snapshot/dist/app.cjs:169994:5)
+    at FrodoNodeHttpAdapter.replay (/snapshot/dist/app.cjs:169983:10)
+    at async FrodoNodeHttpAdapter.handleRequest (/snapshot/dist/app.cjs:169867:7)
+Error deleting event fb3b26c2-ce57-4fe7-8a47-52e87432876b
+  Error deleting event fb3b26c2-ce57-4fe7-8a47-52e87432876b
+    [Polly] [adapter:node-http] Recording for the following request is not found and \`recordIfMissing\` is \`false\`.
+{
+  "url": "https://openam-frodo-dev.forgeblocks.com/iga/governance/event/fb3b26c2-ce57-4fe7-8a47-52e87432876b",
+  "method": "DELETE",
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "content-type": "application/json",
+    "user-agent": "@rockcarver/frodo-lib/4.0.0-39",
+    "accept-api-version": "protocol=2.1,resource=1.0",
+    "authorization": "Bearer <access token>",
+    "accept-encoding": "gzip, compress, deflate, br",
+    "host": "openam-frodo-dev.forgeblocks.com"
+  },
+  "body": "",
+  "recordingName": "iga/events-delete/0_all/iga",
+  "id": "997617afa309e65bd31dd8ad516e8a8b",
+  "order": 0,
+  "identifiers": {
+    "method": "DELETE",
+    "url": "/iga/governance/event/fb3b26c2-ce57-4fe7-8a47-52e87432876b"
+  },
+  "config": {
+    "mode": "replay",
+    "adapters": [
+      "node-http"
+    ],
+    "logLevel": "warn",
+    "flushRequestsOnStop": true,
+    "recordIfMissing": false,
+    "recordFailedRequests": true,
+    "expiresIn": null,
+    "expiryStrategy": "warn",
+    "matchRequestsBy": {
+      "method": true,
+      "headers": false,
+      "body": true,
+      "order": false,
+      "url": {
+        "protocol": false,
+        "username": false,
+        "password": false,
+        "hostname": false,
+        "port": false,
+        "pathname": true,
+        "query": true,
+        "hash": true
+      }
+    }
+  }
+}
+✔ Deleted events.
+"
+`;
+
+exports[`frodo iga events delete "frodo iga events delete --event-id 0cd9b6d7-2826-4764-92fc-be6a0b2f61b8": Should delete testEvent4 1`] = `""`;
+
+exports[`frodo iga events delete "frodo iga events delete --event-id 0cd9b6d7-2826-4764-92fc-be6a0b2f61b8": Should delete testEvent4 2`] = `
+"✔ Deleted event 0cd9b6d7-2826-4764-92fc-be6a0b2f61b8.
+"
+`;
+
+exports[`frodo iga events delete "frodo iga events delete -i 2dd3656c-c46d-4254-9959-91179227ed3e": should delete test_events_1 1`] = `""`;
+
+exports[`frodo iga events delete "frodo iga events delete -i 2dd3656c-c46d-4254-9959-91179227ed3e": should delete test_events_1 2`] = `
+"✔ Deleted event 2dd3656c-c46d-4254-9959-91179227ed3e.
+"
+`;

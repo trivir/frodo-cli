@@ -1,0 +1,259 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga events describe "frodo iga events describe --event-id 3e0cddc2-6797-42a1-b95e-aa5201837467": should describe event 'test_events_1' 1`] = `
+"{
+  action: {
+    template: {
+      allowBulkCertify: true,
+      allowPartialSignoff: true,
+      allowSelfCertification: false,
+      assignmentNotification: 'emailTemplate/certificationAssigned',
+      assignmentNotificationIncludeManager: false,
+      certificationType: 'identity',
+      defaultCertifierId: 'managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58',
+      defaultCertifierInfo: [Object],
+      description: "The user's sunset date has changed. Certify access.",
+      enableForward: true,
+      enableReassign: true,
+      escalationFrequency: null,
+      escalationNotification: null,
+      escalationOwner: null,
+      events: [Object],
+      exceptionDuration: 14,
+      excludeConditionalAccess: true,
+      excludeRoleBasedAccess: true,
+      expirationAction: null,
+      expirationActionDelay: 0,
+      expirationNotification: null,
+      expirationReassignee: null,
+      finalizeRule: '',
+      id: '951e75c6-694f-4aed-8ef5-7c9257466743',
+      initializeRule: '',
+      isEventBased: false,
+      name: 'Sunset date change {{YYYY-MM-DD}} for {{IGA_PARAM_userDisplayName_IGA_PARAM}}',
+      ownerId: 'managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58',
+      ownerInfo: [Object],
+      parameters: [Array],
+      reassignNotification: 'emailTemplate/certificationReassigned',
+      reassignPermissions: [Object],
+      remediationDelay: 0,
+      remediationRule: 'BasicRevocation',
+      reminderFrequency: 0,
+      reminderNotification: null,
+      requireJustification: [Object],
+      selfCertificationRule: 'none',
+      skipInactiveCertifiers: false,
+      stageDuration: 14,
+      stages: [Array],
+      stagingEnabled: false,
+      status: 'active',
+      targetFilter: [Object],
+      templateEventType: 'user',
+      uiConfig: [Object],
+      metadata: [Object]
+    },
+    type: 'certification'
+  },
+  condition: { filter: { or: [Array] }, version: 'v2' },
+  description: "Certify access when a user's sunset date changes",
+  entityType: 'user',
+  id: '3e0cddc2-6797-42a1-b95e-aa5201837467',
+  mutationType: 'update',
+  name: 'phh-sunset-date-change',
+  owners: [
+    {
+      givenName: 'Parent',
+      id: 'managed/user/6b21c283-d491-4fd9-8322-898c171c7018',
+      mail: 'pholderness+poadmin@trivir.com',
+      sn: 'Admin',
+      userName: 'phh-parent-org-admin'
+    }
+  ],
+  status: 'active',
+  _rev: 1,
+  metadata: {
+    modifiedDate: '2026-05-19T19:35:52.999902633Z',
+    createdDate: '2026-05-19T19:35:52.999901174Z'
+  }
+}
+Active Event
+Id          │3e0cddc2-6797-42a1-b95e-aa5201837467            
+Name        │phh-sunset-date-change                          
+Description │Certify access when a user's sunset date changes
+Owners (1)  │Parent                                          
+EntityType  │user                                            
+MutationType│update                                          
+Version     │v2                                              
+Filter      │                                                
+Status      │active                                          
+CreatedDate │2026-05-19T19:35:52.999901174Z                  
+ModifiedDate│2026-05-19T19:35:52.999902633Z                  
+
+
+Email Templates (2):
+- [certificationAssigned]  - ATTENTION: Certification Task Assigned
+- [certificationReassigned]  - ATTENTION: Certification Task Reassigned
+
+Events (1):
+- [3e0cddc2-6797-42a1-b95e-aa5201837467] phh-sunset-date-change
+"
+`;
+
+exports[`frodo iga events describe "frodo iga events describe --file test/e2e/exports/all/allEvents.event.json": should describe first events from file test/e2e/exports/all/allEvents.event.json 1`] = `
+"{
+  action: {
+    name: 'testWorkflow4',
+    parameters: { var1: 'val1', var2: 'val2', var3: 'val3' },
+    type: 'orchestration'
+  },
+  condition: { filter: { or: [Array] }, version: 'v2' },
+  description: '',
+  entityType: 'user',
+  id: '042e413a-cd1d-4ad3-a2f8-c05fda2067af',
+  metadata: {},
+  mutationType: 'create',
+  name: 'test_events_1',
+  owners: [
+    {
+      givenName: 'Preston',
+      id: 'managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6',
+      mail: 'test@test.com',
+      sn: 'Test',
+      userName: 'PrestonIGATestUser'
+    }
+  ],
+  status: 'active'
+}
+Active Event
+Id          │042e413a-cd1d-4ad3-a2f8-c05fda2067af
+Name        │test_events_1                       
+Description │                                    
+Owners (1)  │Preston                             
+EntityType  │user                                
+MutationType│create                              
+Version     │v2                                  
+Filter      │                                    
+Status      │active                              
+CreatedDate │                                    
+ModifiedDate│                                    
+
+
+Email Templates (2):
+- [certificationAssigned]  - ATTENTION: Certification Task Assigned
+- [certificationReassigned]  - ATTENTION: Certification Task Reassigned
+
+Events (9):
+- [042e413a-cd1d-4ad3-a2f8-c05fda2067af] test_events_1
+- [3e0cddc2-6797-42a1-b95e-aa5201837467] phh-sunset-date-change
+- [54785979-d7cc-47a7-8a11-74bd9fe37908] phh-teacher-birthright-role-approval
+- [58a9c843-1fdc-4013-b737-2a919adeb01c] test_workflow_event_1
+- [7a896878-d2b3-49af-94f6-53b2d21cabaf] test_workflow_event_3
+- [af8c8140-1621-4970-bd61-455f7f4af355] test-events-4
+- [cb628d1d-3eb6-4c77-9b2a-48e39198f4d7] test-events-2
+- [cdddbe3e-2d10-4eb4-b54b-f57a3b114ca1] test-events-3
+- [df7147fc-649b-4a82-8f5e-40a0fc4e1394] test_workflow_event_1
+"
+`;
+
+exports[`frodo iga events describe "frodo iga events describe -i 3e0cddc2-6797-42a1-b95e-aa5201837467 -f test/e2e/exports/all/allEvents.event.json": should describe event 'test_events_1' from file test/e2e/exports/all/allEvents.event.json 1`] = `
+"{
+  action: {
+    template: {
+      allowBulkCertify: true,
+      allowPartialSignoff: true,
+      allowSelfCertification: false,
+      assignmentNotification: 'emailTemplate/certificationAssigned',
+      assignmentNotificationIncludeManager: false,
+      certificationType: 'identity',
+      defaultCertifierId: 'managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58',
+      defaultCertifierInfo: [Object],
+      description: "The user's sunset date has changed. Certify access.",
+      enableForward: true,
+      enableReassign: true,
+      escalationFrequency: null,
+      escalationNotification: null,
+      escalationOwner: null,
+      events: [Object],
+      exceptionDuration: 14,
+      excludeConditionalAccess: true,
+      excludeRoleBasedAccess: true,
+      expirationAction: null,
+      expirationActionDelay: 0,
+      expirationNotification: null,
+      expirationReassignee: null,
+      finalizeRule: '',
+      id: '951e75c6-694f-4aed-8ef5-7c9257466743',
+      initializeRule: '',
+      isEventBased: false,
+      metadata: {},
+      name: 'Sunset date change {{YYYY-MM-DD}} for {{IGA_PARAM_userDisplayName_IGA_PARAM}}',
+      ownerId: 'managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58',
+      ownerInfo: [Object],
+      parameters: [Array],
+      reassignNotification: 'emailTemplate/certificationReassigned',
+      reassignPermissions: [Object],
+      remediationDelay: 0,
+      remediationRule: 'BasicRevocation',
+      reminderFrequency: 0,
+      reminderNotification: null,
+      requireJustification: [Object],
+      selfCertificationRule: 'none',
+      skipInactiveCertifiers: false,
+      stageDuration: 14,
+      stages: [Array],
+      stagingEnabled: false,
+      status: 'active',
+      targetFilter: [Object],
+      templateEventType: 'user',
+      uiConfig: [Object]
+    },
+    type: 'certification'
+  },
+  condition: { filter: { or: [Array] }, version: 'v2' },
+  description: "Certify access when a user's sunset date changes",
+  entityType: 'user',
+  id: '3e0cddc2-6797-42a1-b95e-aa5201837467',
+  metadata: {},
+  mutationType: 'update',
+  name: 'phh-sunset-date-change',
+  owners: [
+    {
+      givenName: 'Parent',
+      id: 'managed/user/6b21c283-d491-4fd9-8322-898c171c7018',
+      mail: 'pholderness+poadmin@trivir.com',
+      sn: 'Admin',
+      userName: 'phh-parent-org-admin'
+    }
+  ],
+  status: 'active'
+}
+Active Event
+Id          │3e0cddc2-6797-42a1-b95e-aa5201837467            
+Name        │phh-sunset-date-change                          
+Description │Certify access when a user's sunset date changes
+Owners (1)  │Parent                                          
+EntityType  │user                                            
+MutationType│update                                          
+Version     │v2                                              
+Filter      │                                                
+Status      │active                                          
+CreatedDate │                                                
+ModifiedDate│                                                
+
+
+Email Templates (2):
+- [certificationAssigned]  - ATTENTION: Certification Task Assigned
+- [certificationReassigned]  - ATTENTION: Certification Task Reassigned
+
+Events (9):
+- [042e413a-cd1d-4ad3-a2f8-c05fda2067af] test_events_1
+- [3e0cddc2-6797-42a1-b95e-aa5201837467] phh-sunset-date-change
+- [54785979-d7cc-47a7-8a11-74bd9fe37908] phh-teacher-birthright-role-approval
+- [58a9c843-1fdc-4013-b737-2a919adeb01c] test_workflow_event_1
+- [7a896878-d2b3-49af-94f6-53b2d21cabaf] test_workflow_event_3
+- [af8c8140-1621-4970-bd61-455f7f4af355] test-events-4
+- [cb628d1d-3eb6-4c77-9b2a-48e39198f4d7] test-events-2
+- [cdddbe3e-2d10-4eb4-b54b-f57a3b114ca1] test-events-3
+- [df7147fc-649b-4a82-8f5e-40a0fc4e1394] test_workflow_event_1
+"
+`;

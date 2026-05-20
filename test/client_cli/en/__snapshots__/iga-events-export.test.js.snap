@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CLI help interface for 'iga events export' should be expected english 1`] = `
+"Usage: frodo iga events export [options] [host] [realm] [username] [password]
+
+Export events.
+
+Arguments:
+  host                       AM base URL, e.g.: https://cdk.iam.example.com/am.
+                             To use a connection profile, just specify a unique
+                             substring or alias.
+  realm                      Realm. Specify realm as '/' for the root realm or
+                             'realm' or '/parent/child' otherwise. (default:
+                             "alpha" for Identity Cloud tenants, "/" otherwise.)
+  username                   Username to login with. Must be an admin user with
+                             appropriate rights to manage authentication
+                             journeys/trees.
+  password                   Password.
+
+Deployment: Cloud-only
+
+Options:
+  -a, --all                  Export all events to a single file. Ignored with
+                             -i.
+  -A, --all-separate         Export all events as separate files
+                             <event-id>.event.json. Ignored with -i, and -a.
+  -f, --file [file]          Name of the export file. Ignored with -A. Defaults
+                             to <event-id>.event.json.
+  -i, --event-id <event-id>  event id. If specified, -a and -A are ignored.
+  -M, --modified-properties  Include modified properties in export (e.g.
+                             lastModifiedDate, lastModifiedBy, createdBy,
+                             creationDate, etc.) (default: false)
+  -N, --no-metadata          Do not include metadata in the export file.
+  --no-deps                  Do not include any dependencies (email templates,
+                             request forms, events, etc.).
+  -x, --no-extract           Do not extract the scripts from the exported file
+                             and save them to separate files. Ignored with -a.
+  -h, --help                 Help
+  -hh, --help-more           Help with all options.
+  -hhh, --help-all           Help with all options, environment variables, and
+                             usage examples.
+"
+`;

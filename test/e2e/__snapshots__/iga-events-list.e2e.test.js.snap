@@ -1,0 +1,202 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga events list "frodo iga events list --long": should list the ids, names, mutability, and statuses of the events. 1`] = `
+"ID                                  │Name                                │MutationType│Status
+042d5b0f-f6fd-4dd8-9ae7-1dcb4e807cfc│test_workflow_event_1               │create      │active
+0cd9b6d7-2826-4764-92fc-be6a0b2f61b8│test_workflow_event_3               │create      │active
+0dce945d-d434-42f4-ad5d-aa323218b817│test_workflow_event_3               │create      │active
+2dd3656c-c46d-4254-9959-91179227ed3e│test_events_1                       │create      │active
+33b6699d-80f9-487c-8f29-5ea3d092e277│phh-sunset-date-change              │update      │active
+4a57456b-4a26-41b2-8003-1c5d0cef6b4e│test_workflow_event_3               │create      │active
+4dad7e5d-6872-4b4b-9ea5-a3655d1ba8c4│test_workflow_event_1               │create      │active
+5411d48e-b0c6-44a9-89d7-6d7c0c6b3d23│test_workflow_event_3               │create      │active
+5603bec3-fce0-4b17-a7a5-06728f857d51│test_workflow_event_1               │create      │active
+5e3c8820-fccd-4ab9-9be3-7a76efc115c4│test_workflow_event_3               │create      │active
+6731fca9-592f-45cb-bd48-f0046b1efb92│test_workflow_event_1               │create      │active
+71a1d51a-972f-4b28-8f76-9fd20663eb77│test_workflow_event_1               │create      │active
+7821eeeb-b434-4ab0-998f-cfdbb0752688│test_workflow_event_3               │create      │active
+85a49f19-fddf-4e1f-b757-9843abd0e6cc│test_workflow_event_3               │create      │active
+9cd99b84-2f8c-4d4a-9bb4-b46577b47c85│test_workflow_event_3               │create      │active
+aabd8117-8e11-4288-b46f-f498edd0bd05│test_workflow_event_1               │create      │active
+ae93c915-11e9-4b36-8756-77beef1c6229│test_workflow_event_3               │create      │active
+b4ce4d75-2ce1-4001-a264-fe3f890c0038│test_workflow_event_1               │create      │active
+c87b0605-03f6-4372-9ba6-e0f43e0b3bcf│phh-teacher-birthright-role-approval│update      │active
+cbdd2df3-d996-471f-b85e-3fcaf8842f01│test_workflow_event_1               │create      │active
+ce41461a-719d-4a02-b593-38dc6d694d6d│test_workflow_event_1               │create      │active
+da7e8938-670f-4924-944b-94c984795a08│test_workflow_event_1               │create      │active
+dae897fc-cb33-4807-a01c-9e1bb2ade4b4│test_workflow_event_1               │create      │active
+dbf9dd12-605b-4103-b426-283bbfec3962│test_workflow_event_3               │create      │active
+dee83a9d-f467-4222-b6b9-668d81bd7408│test_workflow_event_3               │create      │active
+e0445371-b621-4d5d-b750-5b82a6a7fb57│test_workflow_event_1               │create      │active
+e406451b-4727-4800-8980-19737036f405│test_workflow_event_1               │create      │active
+f2c4b9de-b6b1-4221-82b8-9fc567a8ed91│test_workflow_event_3               │create      │active
+fb3b26c2-ce57-4fe7-8a47-52e87432876b│test_workflow_event_3               │create      │active
+"
+`;
+
+exports[`frodo iga events list "frodo iga events list -i": should list the ids of the events. 1`] = `
+"042d5b0f-f6fd-4dd8-9ae7-1dcb4e807cfc
+0cd9b6d7-2826-4764-92fc-be6a0b2f61b8
+0dce945d-d434-42f4-ad5d-aa323218b817
+2dd3656c-c46d-4254-9959-91179227ed3e
+33b6699d-80f9-487c-8f29-5ea3d092e277
+4a57456b-4a26-41b2-8003-1c5d0cef6b4e
+4dad7e5d-6872-4b4b-9ea5-a3655d1ba8c4
+5411d48e-b0c6-44a9-89d7-6d7c0c6b3d23
+5603bec3-fce0-4b17-a7a5-06728f857d51
+5e3c8820-fccd-4ab9-9be3-7a76efc115c4
+6731fca9-592f-45cb-bd48-f0046b1efb92
+71a1d51a-972f-4b28-8f76-9fd20663eb77
+7821eeeb-b434-4ab0-998f-cfdbb0752688
+85a49f19-fddf-4e1f-b757-9843abd0e6cc
+9cd99b84-2f8c-4d4a-9bb4-b46577b47c85
+aabd8117-8e11-4288-b46f-f498edd0bd05
+ae93c915-11e9-4b36-8756-77beef1c6229
+b4ce4d75-2ce1-4001-a264-fe3f890c0038
+c87b0605-03f6-4372-9ba6-e0f43e0b3bcf
+cbdd2df3-d996-471f-b85e-3fcaf8842f01
+ce41461a-719d-4a02-b593-38dc6d694d6d
+da7e8938-670f-4924-944b-94c984795a08
+dae897fc-cb33-4807-a01c-9e1bb2ade4b4
+dbf9dd12-605b-4103-b426-283bbfec3962
+dee83a9d-f467-4222-b6b9-668d81bd7408
+e0445371-b621-4d5d-b750-5b82a6a7fb57
+e406451b-4727-4800-8980-19737036f405
+f2c4b9de-b6b1-4221-82b8-9fc567a8ed91
+fb3b26c2-ce57-4fe7-8a47-52e87432876b
+"
+`;
+
+exports[`frodo iga events list "frodo iga events list -in": should list the names and ids of the events. 1`] = `
+"ID                                  │Name                                
+042d5b0f-f6fd-4dd8-9ae7-1dcb4e807cfc│test_workflow_event_1               
+0cd9b6d7-2826-4764-92fc-be6a0b2f61b8│test_workflow_event_3               
+0dce945d-d434-42f4-ad5d-aa323218b817│test_workflow_event_3               
+2dd3656c-c46d-4254-9959-91179227ed3e│test_events_1                       
+33b6699d-80f9-487c-8f29-5ea3d092e277│phh-sunset-date-change              
+4a57456b-4a26-41b2-8003-1c5d0cef6b4e│test_workflow_event_3               
+4dad7e5d-6872-4b4b-9ea5-a3655d1ba8c4│test_workflow_event_1               
+5411d48e-b0c6-44a9-89d7-6d7c0c6b3d23│test_workflow_event_3               
+5603bec3-fce0-4b17-a7a5-06728f857d51│test_workflow_event_1               
+5e3c8820-fccd-4ab9-9be3-7a76efc115c4│test_workflow_event_3               
+6731fca9-592f-45cb-bd48-f0046b1efb92│test_workflow_event_1               
+71a1d51a-972f-4b28-8f76-9fd20663eb77│test_workflow_event_1               
+7821eeeb-b434-4ab0-998f-cfdbb0752688│test_workflow_event_3               
+85a49f19-fddf-4e1f-b757-9843abd0e6cc│test_workflow_event_3               
+9cd99b84-2f8c-4d4a-9bb4-b46577b47c85│test_workflow_event_3               
+aabd8117-8e11-4288-b46f-f498edd0bd05│test_workflow_event_1               
+ae93c915-11e9-4b36-8756-77beef1c6229│test_workflow_event_3               
+b4ce4d75-2ce1-4001-a264-fe3f890c0038│test_workflow_event_1               
+c87b0605-03f6-4372-9ba6-e0f43e0b3bcf│phh-teacher-birthright-role-approval
+cbdd2df3-d996-471f-b85e-3fcaf8842f01│test_workflow_event_1               
+ce41461a-719d-4a02-b593-38dc6d694d6d│test_workflow_event_1               
+da7e8938-670f-4924-944b-94c984795a08│test_workflow_event_1               
+dae897fc-cb33-4807-a01c-9e1bb2ade4b4│test_workflow_event_1               
+dbf9dd12-605b-4103-b426-283bbfec3962│test_workflow_event_3               
+dee83a9d-f467-4222-b6b9-668d81bd7408│test_workflow_event_3               
+e0445371-b621-4d5d-b750-5b82a6a7fb57│test_workflow_event_1               
+e406451b-4727-4800-8980-19737036f405│test_workflow_event_1               
+f2c4b9de-b6b1-4221-82b8-9fc567a8ed91│test_workflow_event_3               
+fb3b26c2-ce57-4fe7-8a47-52e87432876b│test_workflow_event_3               
+"
+`;
+
+exports[`frodo iga events list "frodo iga events list -l": should list the ids, names, mutability, and statuses of the events. 1`] = `
+"ID                                  │Name                                │MutationType│Status
+042d5b0f-f6fd-4dd8-9ae7-1dcb4e807cfc│test_workflow_event_1               │create      │active
+0cd9b6d7-2826-4764-92fc-be6a0b2f61b8│test_workflow_event_3               │create      │active
+0dce945d-d434-42f4-ad5d-aa323218b817│test_workflow_event_3               │create      │active
+2dd3656c-c46d-4254-9959-91179227ed3e│test_events_1                       │create      │active
+33b6699d-80f9-487c-8f29-5ea3d092e277│phh-sunset-date-change              │update      │active
+4a57456b-4a26-41b2-8003-1c5d0cef6b4e│test_workflow_event_3               │create      │active
+4dad7e5d-6872-4b4b-9ea5-a3655d1ba8c4│test_workflow_event_1               │create      │active
+5411d48e-b0c6-44a9-89d7-6d7c0c6b3d23│test_workflow_event_3               │create      │active
+5603bec3-fce0-4b17-a7a5-06728f857d51│test_workflow_event_1               │create      │active
+5e3c8820-fccd-4ab9-9be3-7a76efc115c4│test_workflow_event_3               │create      │active
+6731fca9-592f-45cb-bd48-f0046b1efb92│test_workflow_event_1               │create      │active
+71a1d51a-972f-4b28-8f76-9fd20663eb77│test_workflow_event_1               │create      │active
+7821eeeb-b434-4ab0-998f-cfdbb0752688│test_workflow_event_3               │create      │active
+85a49f19-fddf-4e1f-b757-9843abd0e6cc│test_workflow_event_3               │create      │active
+9cd99b84-2f8c-4d4a-9bb4-b46577b47c85│test_workflow_event_3               │create      │active
+aabd8117-8e11-4288-b46f-f498edd0bd05│test_workflow_event_1               │create      │active
+ae93c915-11e9-4b36-8756-77beef1c6229│test_workflow_event_3               │create      │active
+b4ce4d75-2ce1-4001-a264-fe3f890c0038│test_workflow_event_1               │create      │active
+c87b0605-03f6-4372-9ba6-e0f43e0b3bcf│phh-teacher-birthright-role-approval│update      │active
+cbdd2df3-d996-471f-b85e-3fcaf8842f01│test_workflow_event_1               │create      │active
+ce41461a-719d-4a02-b593-38dc6d694d6d│test_workflow_event_1               │create      │active
+da7e8938-670f-4924-944b-94c984795a08│test_workflow_event_1               │create      │active
+dae897fc-cb33-4807-a01c-9e1bb2ade4b4│test_workflow_event_1               │create      │active
+dbf9dd12-605b-4103-b426-283bbfec3962│test_workflow_event_3               │create      │active
+dee83a9d-f467-4222-b6b9-668d81bd7408│test_workflow_event_3               │create      │active
+e0445371-b621-4d5d-b750-5b82a6a7fb57│test_workflow_event_1               │create      │active
+e406451b-4727-4800-8980-19737036f405│test_workflow_event_1               │create      │active
+f2c4b9de-b6b1-4221-82b8-9fc567a8ed91│test_workflow_event_3               │create      │active
+fb3b26c2-ce57-4fe7-8a47-52e87432876b│test_workflow_event_3               │create      │active
+"
+`;
+
+exports[`frodo iga events list "frodo iga events list -n": should list the names of the events. 1`] = `
+"test_workflow_event_1
+test_workflow_event_3
+test_workflow_event_3
+test_events_1
+phh-sunset-date-change
+test_workflow_event_3
+test_workflow_event_1
+test_workflow_event_3
+test_workflow_event_1
+test_workflow_event_3
+test_workflow_event_1
+test_workflow_event_1
+test_workflow_event_3
+test_workflow_event_3
+test_workflow_event_3
+test_workflow_event_1
+test_workflow_event_3
+test_workflow_event_1
+phh-teacher-birthright-role-approval
+test_workflow_event_1
+test_workflow_event_1
+test_workflow_event_1
+test_workflow_event_1
+test_workflow_event_3
+test_workflow_event_3
+test_workflow_event_1
+test_workflow_event_1
+test_workflow_event_3
+test_workflow_event_3
+"
+`;
+
+exports[`frodo iga events list "frodo iga events list": should list the ids of the events 1`] = `
+"042d5b0f-f6fd-4dd8-9ae7-1dcb4e807cfc
+0cd9b6d7-2826-4764-92fc-be6a0b2f61b8
+0dce945d-d434-42f4-ad5d-aa323218b817
+2dd3656c-c46d-4254-9959-91179227ed3e
+33b6699d-80f9-487c-8f29-5ea3d092e277
+4a57456b-4a26-41b2-8003-1c5d0cef6b4e
+4dad7e5d-6872-4b4b-9ea5-a3655d1ba8c4
+5411d48e-b0c6-44a9-89d7-6d7c0c6b3d23
+5603bec3-fce0-4b17-a7a5-06728f857d51
+5e3c8820-fccd-4ab9-9be3-7a76efc115c4
+6731fca9-592f-45cb-bd48-f0046b1efb92
+71a1d51a-972f-4b28-8f76-9fd20663eb77
+7821eeeb-b434-4ab0-998f-cfdbb0752688
+85a49f19-fddf-4e1f-b757-9843abd0e6cc
+9cd99b84-2f8c-4d4a-9bb4-b46577b47c85
+aabd8117-8e11-4288-b46f-f498edd0bd05
+ae93c915-11e9-4b36-8756-77beef1c6229
+b4ce4d75-2ce1-4001-a264-fe3f890c0038
+c87b0605-03f6-4372-9ba6-e0f43e0b3bcf
+cbdd2df3-d996-471f-b85e-3fcaf8842f01
+ce41461a-719d-4a02-b593-38dc6d694d6d
+da7e8938-670f-4924-944b-94c984795a08
+dae897fc-cb33-4807-a01c-9e1bb2ade4b4
+dbf9dd12-605b-4103-b426-283bbfec3962
+dee83a9d-f467-4222-b6b9-668d81bd7408
+e0445371-b621-4d5d-b750-5b82a6a7fb57
+e406451b-4727-4800-8980-19737036f405
+f2c4b9de-b6b1-4221-82b8-9fc567a8ed91
+fb3b26c2-ce57-4fe7-8a47-52e87432876b
+"
+`;
