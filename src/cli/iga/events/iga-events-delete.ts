@@ -19,14 +19,14 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --event-id <event-id>',
-        'Event id. If specified, -a is ignored.'
-      )
+        'Event id. If specified, -a cannot be used.'
+      ).conflicts(['all'])
     )
     .addOption(
       new Option(
         '-a, --all',
-        'Delete all events.'
-      )
+        'Delete all events. If specified, -i cannot be used.'
+      ).conflicts(['eventId'])
     )
     .action(
       // implement command logic inside action handler

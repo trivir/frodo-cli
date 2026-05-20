@@ -388,15 +388,10 @@ function decorateDescriptionWithStability(
  */
 function cloneOption(option: Option): Option {
   const cloned = Object.assign(new Option(option.flags, option.description), {
-    defaultValue: option.defaultValue,
-    defaultValueDescription: option.defaultValueDescription,
-    presetArg: option.presetArg,
-    envVar: option.envVar,
-    parseArg: option.parseArg,
-    hidden: option.hidden,
-    mandatory: option.mandatory,
+    ...option,
+    // @ts-expect-error: CommanderJS Typings needs an update for node_modules to recognize conflictsWith
+    conflictsWith: option.conflictsWith ? [...option.conflictsWith] : option.conflictsWith,
     argChoices: option.argChoices ? [...option.argChoices] : option.argChoices,
-    helpGroupHeading: option.helpGroupHeading,
   });
 
   setStabilityMetadata(cloned, getStabilityMetadata(option));

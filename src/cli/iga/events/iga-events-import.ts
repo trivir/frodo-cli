@@ -27,21 +27,21 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --event-id <event-id>',
-        'event id. If specified, -a and -A are ignored.'
-      )
+        'event id. If specified, -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(new Option('-f, --file <file>', 'Name of the import file.'))
     .addOption(
       new Option(
         '-a, --all',
-        'Import all events from single file. Ignored with -i.'
-      )
+        'Import all events from single file. If specified, -i cannot be used.'
+      ).conflicts(['eventId'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all events from separate files (*.event.json) in the current directory. Ignored with -i or -a.'
-      )
+        'Import all events from separate files (*.event.json) in the current directory. Cannot be used with -i or -a.'
+      ).conflicts(['eventId', 'all'])
     )
     .addOption(
       new Option(

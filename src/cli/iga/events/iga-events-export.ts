@@ -26,26 +26,26 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --event-id <event-id>',
-        'event id. If specified, -a and -A are ignored.'
-      )
+        'event id. If specified, -a and -A cannot be used.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-f, --file [file]',
-        'Name of the export file. Ignored with -A. Defaults to <event-id>.event.json.'
-      )
+        'Name of the export file. Cannot be used with -A. Defaults to <event-id>.event.json.'
+      ).conflicts(['allSeparate'])
     )
     .addOption(
       new Option(
         '-a, --all',
-        'Export all events to a single file. Ignored with -i.'
-      )
+        'Export all events to a single file. Cannot be used with -i.'
+      ).conflicts(['eventId'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all events as separate files <event-id>.event.json. Ignored with -i, and -a.'
-      )
+        'Export all events as separate files <event-id>.event.json. Cannot be used with -i and -a.'
+      ).conflicts(['eventId', 'all'])
     )
     .addOption(
       new Option(
@@ -62,8 +62,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-x, --no-extract',
-        'Do not extract the scripts from the exported file and save them to separate files. Ignored with -a.'
-      ).default(true, 'true')
+        'Do not extract the scripts from the exported file and save them to separate files. Cannot be used with -a.'
+      ).default(true, 'true').conflicts(['all'])
     )
     .addOption(
       new Option(
