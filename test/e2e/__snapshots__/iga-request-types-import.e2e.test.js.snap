@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga request-type import "frodo iga request-type import --all --file test/e2e/exports/all/allRequestTypes.requestType.json --no-deps": should import all request type from the file "test/e2e/exports/all/allRequestTypes.requestType.json" 1`] = `""`;
+
+exports[`frodo iga request-type import "frodo iga request-type import --all --file test/e2e/exports/all/allRequestTypes.requestType.json --no-deps": should import all request type from the file "test/e2e/exports/all/allRequestTypes.requestType.json" 2`] = `
+"✔ Successfully imported request types.
+"
+`;
+
+exports[`frodo iga request-type import "frodo iga request-type import --all-separate --directory test/e2e/exports/all-separate/iga/global/request-type --no-deps": should import all request type from the directory "test/e2e/exports/all-separate/iga/global/request-type" 1`] = `""`;
+
+exports[`frodo iga request-type import "frodo iga request-type import --all-separate --directory test/e2e/exports/all-separate/iga/global/request-type --no-deps": should import all request type from the directory "test/e2e/exports/all-separate/iga/global/request-type" 2`] = `
+"✔ Successfully imported request type.
+"
+`;
+
+exports[`frodo iga request-type import "frodo iga request-type import --request-type-name test_workflow_request_type_1 --file test/e2e/exports/all/allRequestTypes.requestType.json --no-deps": should import test_workflow_request_type_1 from the file "test/e2e/exports/all/allRequestTypes.requestType.json" 1`] = `""`;
+
+exports[`frodo iga request-type import "frodo iga request-type import --request-type-name test_workflow_request_type_1 --file test/e2e/exports/all/allRequestTypes.requestType.json --no-deps": should import test_workflow_request_type_1 from the file "test/e2e/exports/all/allRequestTypes.requestType.json" 2`] = `
+"✔ Successfully imported request types test_workflow_request_type_1.
+"
+`;
+
+exports[`frodo iga request-type import "frodo iga request-type import -AD test/e2e/exports/all-separate/iga/global/request-type": should import all request types from the directory "test/e2e/exports/all-separate/iga/global/request-type" with dependencies 1`] = `""`;
+
+exports[`frodo iga request-type import "frodo iga request-type import -AD test/e2e/exports/all-separate/iga/global/request-type": should import all request types from the directory "test/e2e/exports/all-separate/iga/global/request-type" with dependencies 2`] = `
+"✔ Successfully imported request type.
+"
+`;
+
+exports[`frodo iga request-type import "frodo iga request-type import -af test/e2e/exports/all/allRequestTypes.requestType.json": should import all request-type from the file "test/e2e/exports/all/allRequestTypes.requestType.json" with dependencies 1`] = `""`;
+
+exports[`frodo iga request-type import "frodo iga request-type import -af test/e2e/exports/all/allRequestTypes.requestType.json": should import all request-type from the file "test/e2e/exports/all/allRequestTypes.requestType.json" with dependencies 2`] = `
+"✔ Successfully imported request types.
+"
+`;
+
+exports[`frodo iga request-type import "frodo iga request-type import -f test/e2e/exports/all/allRequestTypes.requestType.json --no-deps": should import first request type from the file "test/e2e/exports/all/allRequestTypes.requestType.json" 1`] = `""`;
+
+exports[`frodo iga request-type import "frodo iga request-type import -f test/e2e/exports/all/allRequestTypes.requestType.json --no-deps": should import first request type from the file "test/e2e/exports/all/allRequestTypes.requestType.json" 2`] = `
+"✔ Imported request type from test/e2e/exports/all/allRequestTypes.requestType.json
+"
+`;
+
+exports[`frodo iga request-type import "frodo iga request-type import -n test_workflow_request_type_1 -f test/e2e/exports/all/allRequestTypes.requestType.json": should import test_workflow_request_type_1 from the file "test/e2e/exports/all/allRequestTypes.requestType.json" with dependencies 1`] = `""`;
+
+exports[`frodo iga request-type import "frodo iga request-type import -n test_workflow_request_type_1 -f test/e2e/exports/all/allRequestTypes.requestType.json": should import test_workflow_request_type_1 from the file "test/e2e/exports/all/allRequestTypes.requestType.json" with dependencies 2`] = `
+"✔ Successfully imported request types test_workflow_request_type_1.
+"
+`;

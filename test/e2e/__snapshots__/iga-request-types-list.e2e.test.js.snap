@@ -1,0 +1,121 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga request type list "frodo iga request type list --long": should list the ids, names, and statuses of the request types. 1`] = `
+"ID                                  │Name                          │Type│Description                
+3eb082e7-68f2-409f-9423-26e771259dc8│test_workflow_request_type_4  │    │                           
+35daadd6-bc63-47b5-a0e5-7756dfbdf229│pgh-generate-rap              │    │                           
+47b0e373-a9df-477d-986f-4aa64317ebed│tmp                           │    │                           
+0ece99b4-5039-4bd6-b31c-de14bcf45f11│phhType                       │    │                           
+16356e2b-b98c-474c-98e3-e69d49cde401│test_request_type_4           │    │This is a test request type
+createEntitlement                   │Create Entitlement            │bpmn│                           
+applicationRemove                   │Remove Application            │bpmn│                           
+applicationGrant                    │Grant Application             │bpmn│                           
+createRole                          │Create Role                   │bpmn│                           
+822e832b-865a-4b9a-9b35-8c9765c6a515│phhCustomRequestType          │    │                           
+bd6e10ab-e0b8-4fe4-95a5-fe72da2d42b5│jh-ne-create-test             │    │                           
+8d0055b3-155f-4885-a415-4f1c536098e8│phh-create-user               │    │                           
+af4a6f84-f9a9-4f8d-82ae-649639debabc│test_workflow_request_type_5  │    │                           
+97dc909a-55f1-41df-8840-d6c774ca6dac│test_workflow_request_type_3  │    │                           
+deleteUser                          │Delete User                   │bpmn│                           
+entitlementRemove                   │Remove Entitlement            │bpmn│                           
+entitlementGrant                    │Grant Entitlement             │bpmn│                           
+deleteRole                          │Delete Role                   │bpmn│                           
+createUser                          │Create User                   │bpmn│                           
+entityMutation                      │Entity Mutation               │    │                           
+e58d2089-3e92-4a0b-b0fa-3ac6d4251877│jh-ne-create-test-2           │    │                           
+e9dcd66e-1388-4872-9790-66df2f44deef│test_workflow_request_type_1  │    │                           
+e77b5ad2-50c8-4f8f-9aea-e565d667d058│test_workflow_request_type_2  │    │                           
+5f80166a-d551-47f2-8110-8bc0e093d2cc│test_request_type_1           │    │                           
+fdf9e9a1-b5cf-496a-821b-e7b3d5841252│phh-delegate-user-disable-type│    │                           
+modifyEntitlement                   │Modify Entitlement            │bpmn│                           
+modifyRole                          │Modify Role                   │bpmn│                           
+modifyUser                          │Modify User                   │bpmn│                           
+publishRole                         │Publish Role                  │bpmn│                           
+roleGrant                           │Grant Role                    │bpmn│                           
+roleRemove                          │Remove Role                   │bpmn│                           
+"
+`;
+
+exports[`frodo iga request type list "frodo iga request-type list -l": should list the ids, names, mutability, and statuses of the request type. 1`] = `
+"ID                                 │Name                                   │Drafted│Published│Mutable
+basicEntitlementGrantCopy          │BasicEntitlementGrant-copy             │true   │true     │true   
+createNonEmployee                  │CreateNonEmployee                      │true   │true     │true   
+createUserJh                       │CreateUser - JH                        │true   │false    │true   
+phhBasicEntitlementGrant           │phh-BasicEntitlementGrant              │true   │false    │true   
+phhCustomWorkflow                  │phhCustomWorkflow                      │true   │false    │true   
+phhInternalRoleEntitlementGrant    │phh-InternalRoleEntitlementGrant       │true   │false    │true   
+phhNewUserCreate                   │phh-new-user-create                    │true   │true     │true   
+test                               │test                                   │true   │true     │true   
+testWorkflow5                      │test_workflow_5                        │true   │false    │true   
+wfEntitlementExampleIsPrivileged   │wfEntitlementExampleIsPrivileged       │true   │false    │true   
+BasicApplicationGrant              │BasicApplicationGrant                  │false  │true     │false  
+BasicApplicationRemove             │BasicApplicationRemove                 │false  │true     │false  
+BasicEntitlementGrant              │BasicEntitlementGrant                  │false  │true     │false  
+BasicEntitlementRemove             │BasicEntitlementRemove                 │false  │true     │false  
+BasicRoleCreate                    │BasicRoleCreate                        │false  │true     │false  
+BasicRoleDelete                    │BasicRoleDelete                        │false  │true     │false  
+BasicRoleGrant                     │BasicRoleGrant                         │false  │true     │false  
+BasicRoleModify                    │BasicRoleModify                        │false  │true     │false  
+BasicRolePublish                   │BasicRolePublish                       │false  │true     │false  
+BasicRoleRemove                    │BasicRoleRemove                        │false  │true     │false  
+BasicViolationProcess              │BasicViolationProcess                  │false  │true     │false  
+CreateEntitlement                  │CreateEntitlement                      │false  │true     │false  
+CreateUser                         │CreateUser                             │false  │true     │false  
+DeleteUser                         │DeleteUser                             │false  │true     │false  
+ModifyEntitlement                  │ModifyEntitlement                      │false  │true     │false  
+ModifyUser                         │ModifyUser                             │false  │true     │false  
+basicApplicationGrantCopy          │BasicApplicationGrant-copy             │false  │true     │true   
+custom1BasicEntitlementGrant       │custom-1-BasicEntitlementGrant         │false  │true     │true   
+customBasicEntitlementGrant        │custom-BasicEntitlementGrant           │false  │true     │true   
+extendGrantEndDate                 │extendGrantEndDate                     │false  │true     │false  
+jhNeCreateTest2                    │jh-ne-create-test-2                    │false  │true     │true   
+pghGenerateRap                     │pgh-generate-rap                       │false  │true     │true   
+phhBasicApplicationGrant           │phh-BasicApplicationGrant              │false  │true     │true   
+phhBirthrightRolesRequiringApproval│phh-birthright-roles-requiring-approval│false  │true     │true   
+phhDelegatedUserDisableWorkflow    │phh-delegated-user-disable-workflow    │false  │true     │true   
+phhFlow                            │phhFlow                                │false  │true     │true   
+phhNeDisable                       │phh-ne-disable                         │false  │true     │true   
+test1                              │test-1                                 │false  │true     │true   
+testWorkflow1                      │test_workflow_1                        │false  │true     │true   
+testWorkflow4                      │test_workflow_4                        │false  │true     │true   
+testWorkflow6                      │test_workflow_6                        │false  │true     │true   
+testWorkflow7                      │test_workflow_7                        │false  │true     │true   
+testWorkflow8                      │test_workflow_8                        │false  │true     │true   
+testWorkflow9                      │testWorkflow9                          │false  │true     │true   
+"
+`;
+
+exports[`frodo iga request type list "frodo iga request-type list": should list the ids of the request types 1`] = `
+"test_workflow_request_type_4
+pgh-generate-rap
+tmp
+phhType
+test_request_type_4
+Create Entitlement
+Remove Application
+Grant Application
+Create Role
+phhCustomRequestType
+jh-ne-create-test
+phh-create-user
+test_workflow_request_type_5
+test_workflow_request_type_3
+Delete User
+Remove Entitlement
+Grant Entitlement
+Delete Role
+Create User
+Entity Mutation
+jh-ne-create-test-2
+test_workflow_request_type_1
+test_workflow_request_type_2
+test_request_type_1
+phh-delegate-user-disable-type
+Modify Entitlement
+Modify Role
+Modify User
+Publish Role
+Grant Role
+Remove Role
+"
+`;
