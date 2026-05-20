@@ -390,7 +390,9 @@ function cloneOption(option: Option): Option {
   const cloned = Object.assign(new Option(option.flags, option.description), {
     ...option,
     // @ts-expect-error: CommanderJS Typings needs an update for node_modules to recognize conflictsWith
-    conflictsWith: option.conflictsWith ? [...option.conflictsWith] : option.conflictsWith,
+    conflictsWith: option.conflictsWith
+      ? [...option.conflictsWith]
+      : option.conflictsWith,
     argChoices: option.argChoices ? [...option.argChoices] : option.argChoices,
   });
 

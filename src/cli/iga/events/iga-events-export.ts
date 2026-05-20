@@ -63,7 +63,9 @@ export default function setup() {
       new Option(
         '-x, --no-extract',
         'Do not extract the scripts from the exported file and save them to separate files. Cannot be used with -a.'
-      ).default(true, 'true').conflicts(['all'])
+      )
+        .default(true, 'true')
+        .conflicts(['all'])
     )
     .addOption(
       new Option(

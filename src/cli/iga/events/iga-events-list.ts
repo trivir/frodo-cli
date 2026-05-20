@@ -26,7 +26,10 @@ export default function setup() {
       new Option('-i, --list-id', 'List events by id.').default(false, 'false')
     )
     .addOption(
-      new Option('-n, --list-name', 'List events by name.').default(false, 'false')
+      new Option('-n, --list-name', 'List events by name.').default(
+        false,
+        'false'
+      )
     )
     .action(
       // implement command logic inside action handler
@@ -53,7 +56,11 @@ export default function setup() {
           process.exit(1);
         }
         verboseMessage(`Listing events ...`);
-        const outcome = await listEvents(options.long, options.listId, options.listName);
+        const outcome = await listEvents(
+          options.long,
+          options.listId,
+          options.listName
+        );
         if (!outcome) process.exit(1);
       }
       // end command logic inside action handler

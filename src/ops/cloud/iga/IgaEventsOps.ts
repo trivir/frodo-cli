@@ -34,55 +34,45 @@ const {
   exportEvent,
   exportEvents,
   deleteEvent: _deleteEvent,
-  deleteEvents: _deleteEvents
+  deleteEvents: _deleteEvents,
 } = frodo.cloud.iga.event;
 /**
  * List all the events
  * @param {boolean} long Long version, all the fields
  * @returns {Promise<boolean>} a promise resolving to true if successful, false otherwise
  */
-export async function listEvents(long: boolean = false, listId: boolean = false, listName: boolean = false): Promise<boolean> {
+export async function listEvents(
+  long: boolean = false,
+  listId: boolean = false,
+  listName: boolean = false
+): Promise<boolean> {
   let events: EventSkeleton[] = [];
   try {
     events = await readEvents();
     if (!long) {
       if (listId && listName) {
-        const table = createTable([
-          'ID',
-          'Name'
-        ]);
+        const table = createTable(['ID', 'Name']);
         for (const event of events) {
-          table.push([
-            `${event.id}`,
-            event.name
-          ]);
+          table.push([`${event.id}`, event.name]);
         }
         printMessage(table.toString(), 'data');
       } else {
         for (const event of events) {
           const defaultId = listId === false && listName === false;
-          let display = listId || defaultId ? event.id : event.name;
+          const display = listId || defaultId ? event.id : event.name;
 
-          printMessage(
-            display,
-            'data'
-          );
+          printMessage(display, 'data');
         }
       }
       return true;
     }
-    const table = createTable([
-      'ID',
-      'Name',
-      'MutationType',
-      'Status'
-    ]);
+    const table = createTable(['ID', 'Name', 'MutationType', 'Status']);
     for (const event of events) {
       table.push([
         `${event.id}`,
         event.name,
         event.mutationType,
-        event.status ? 'active'['brightGreen'] : 'inactive'['brightRed']
+        event.status ? 'active'['brightGreen'] : 'inactive'['brightRed'],
       ]);
     }
     printMessage(table.toString(), 'data');
@@ -131,8 +121,10 @@ export async function describeEvent(
     );
     table.push(['EntityType'['brightCyan'], event.entityType]);
     table.push(['MutationType'['brightCyan'], event.mutationType]);
-    if (event.condition.version) table.push(['Version'['brightCyan'], event.condition.version]);
-    if (event.condition.filter) table.push(['Filter'['brightCyan'], event.condition.filter]);
+    if (event.condition.version)
+      table.push(['Version'['brightCyan'], event.condition.version]);
+    if (event.condition.filter)
+      table.push(['Filter'['brightCyan'], event.condition.filter]);
     table.push(['Status'['brightCyan'], event.status]);
     if (event.metadata) {
       table.push(['CreatedDate'['brightCyan'], event.metadata.createdDate]);
@@ -205,11 +197,14 @@ export async function exportEventToFile(
     }
     const filePath = getFilePath(file, true);
     if (extract) extractEventToFiles(exportData);
-    updateProgressIndicator(
-      indicatorId,
-      `Saving ${eventId} to ${filePath}...`
+    updateProgressIndicator(indicatorId, `Saving ${eventId} to ${filePath}...`);
+    saveJsonToFile(
+      exportData,
+      filePath,
+      includeMeta,
+      false,
+      keepModifiedProperties
     );
-    saveJsonToFile(exportData, filePath, includeMeta, false, keepModifiedProperties);
     stopProgressIndicator(
       indicatorId,
       `Exported event ${eventId} to file`,
@@ -246,7 +241,13 @@ export async function exportEventsToFile(
     if (!file) {
       file = getTypedFilename(`allEvents`, 'event');
     }
-    saveJsonToFile(exportData, getFilePath(file, true), includeMeta, false, keepModifiedProperties);
+    saveJsonToFile(
+      exportData,
+      getFilePath(file, true),
+      includeMeta,
+      false,
+      keepModifiedProperties
+    );
     return true;
   } catch (error) {
     printError(error, `Error exporting events to file`);
@@ -271,9 +272,7 @@ export async function exportEventsToFiles(
   try {
     const exportData = await exportEvents(options, errorHandler);
     if (extract) extractEventToFiles(exportData);
-    for (const [eventId, eventGroup] of Object.entries(
-      exportData.event
-    )) {
+    for (const [eventId, eventGroup] of Object.entries(exportData.event)) {
       saveToFile(
         'event',
         eventGroup,
@@ -471,11 +470,7 @@ export async function deleteEvent(eventId: string): Promise<boolean> {
   );
   try {
     await _deleteEvent(eventId);
-    stopProgressIndicator(
-      spinnerId,
-      `Deleted event ${eventId}.`,
-      'success'
-    );
+    stopProgressIndicator(spinnerId, `Deleted event ${eventId}.`, 'success');
     return true;
   } catch (error) {
     stopProgressIndicator(spinnerId, `Error: ${error.message}`, 'fail');
@@ -511,9 +506,7 @@ export async function deleteEvents(): Promise<boolean> {
  * @param file The path to the event export file
  * @returns The event export
  */
-export function getEventExportFromFile(
-  file: string
-): EventExportInterface {
+export function getEventExportFromFile(file: string): EventExportInterface {
   const exportData = JSON.parse(
     fs.readFileSync(file, 'utf8')
   ) as EventExportInterface;

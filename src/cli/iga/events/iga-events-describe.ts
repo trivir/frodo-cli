@@ -2,9 +2,9 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import { getTokens } from '../../../ops/AuthenticateOps';
+import { describeEvent } from '../../../ops/cloud/iga/IgaEventsOps';
 import { printMessage, verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
-import { describeEvent } from '../../../ops/cloud/iga/IgaEventsOps';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 

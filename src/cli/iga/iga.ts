@@ -1,6 +1,6 @@
 import { FrodoStubCommand } from '../FrodoCommand';
-import WorkflowCmd from './workflow/iga-workflow';
 import EventsCmd from './events/iga-events';
+import WorkflowCmd from './workflow/iga-workflow';
 
 export default function setup() {
   const program = new FrodoStubCommand('iga').description(

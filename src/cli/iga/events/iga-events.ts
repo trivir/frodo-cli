@@ -10,19 +10,13 @@ export default function setup() {
 
   program.description('Manage events.');
 
-  program.addCommand(
-    DeleteCmd().name('delete').description('Delete events.')
-  );
+  program.addCommand(DeleteCmd().name('delete').description('Delete events.'));
 
   program.addCommand(ListCmd().name('list').description('List events.'));
 
-  program.addCommand(
-    ExportCmd().name('export').description('Export events.')
-  );
+  program.addCommand(ExportCmd().name('export').description('Export events.'));
 
-  program.addCommand(
-    ImportCmd().name('import').description('Import events.')
-  );
+  program.addCommand(ImportCmd().name('import').description('Import events.'));
 
   program.addCommand(
     DescribeCmd().name('describe').description('Describe event.')

@@ -3,10 +3,10 @@ import { Option } from 'commander';
 
 import { getTokens } from '../../../ops/AuthenticateOps';
 import {
-  importFirstEventFromFile,
   importEventFromFile,
   importEventsFromFile,
   importEventsFromFiles,
+  importFirstEventFromFile,
 } from '../../../ops/cloud/iga/IgaEventsOps';
 import { printMessage, verboseMessage } from '../../../utils/Console.js';
 import { FrodoCommand } from '../../FrodoCommand';
