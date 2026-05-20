@@ -176,7 +176,7 @@ export default function setup() {
               includeReadOnly: options.readOnly,
               onlyRealm: options.realmOnly,
               onlyGlobal: options.globalOnly,
-              onlyCustom: options.onlyCustom
+              onlyCustom: options.onlyCustom,
             }
           );
           if (!outcome) process.exitCode = 1;
@@ -209,7 +209,7 @@ export default function setup() {
               includeReadOnly: options.readOnly,
               onlyRealm: options.realmOnly,
               onlyGlobal: options.globalOnly,
-              onlyCustom: options.onlyCustom
+              onlyCustom: options.onlyCustom,
             }
           );
           if (!outcome) process.exitCode = 1;

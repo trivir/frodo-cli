@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "exportDate": "2026-05-15T18:53:54.982Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  },
+  "scope": {
+    "ends-with-scope": {
+      "description": "A test scope for ends with filter",
+      "id": "9a189189-73d3-4e87-a7ad-2c218e4cff93",
+      "metadata": {},
+      "name": "ends-with-scope",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "ends_with": {
+                  "suffix": {
+                    "literal": "1"
+                  },
+                  "value": "user._id"
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      },
+      "status": "active",
+      "targetCondition": {}
+    }
+  }
+}

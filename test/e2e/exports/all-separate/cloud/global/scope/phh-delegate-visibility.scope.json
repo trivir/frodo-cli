@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "exportDate": "2026-05-15T18:53:54.982Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  },
+  "scope": {
+    "phh-delegate-visibility": {
+      "description": "Allows employees (frIndexedInteger1 eq 0) to view other employee objects",
+      "id": "8203ecdd-d9b6-4103-aac5-1c4ad99e1b24",
+      "metadata": {},
+      "name": "phh-delegate-visibility",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "and": [
+              {
+                "equals": {
+                  "left": "user.frIndexedInteger1",
+                  "right": {
+                    "literal": 0
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      },
+      "status": "inactive",
+      "targetCondition": {
+        "user": {
+          "filter": {
+            "and": [
+              {
+                "equals": {
+                  "left": "user.frIndexedInteger1",
+                  "right": {
+                    "literal": 0
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      }
+    }
+  }
+}

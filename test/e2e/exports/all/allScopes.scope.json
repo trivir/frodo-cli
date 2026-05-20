@@ -1,0 +1,548 @@
+{
+  "meta": {
+    "exportDate": "2026-05-15T18:53:48.400Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  },
+  "scope": {
+    "34153ec1-adde-472b-a1b3-65f9b0119df6": {
+      "description": "",
+      "id": "34153ec1-adde-472b-a1b3-65f9b0119df6",
+      "metadata": {},
+      "name": "equals-test",
+      "permissions": {
+        "createEntitlement": true,
+        "createRole": true,
+        "createUser": true,
+        "deleteRole": true,
+        "deleteUser": true,
+        "modifyEntitlement": true,
+        "modifyRole": true,
+        "modifyUser": true,
+        "publishRole": true,
+        "viewGrants": true,
+        "viewUserAccess": true
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "user.city",
+                  "right": {
+                    "literal": "Utah"
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "catalog.application.name",
+                  "right": {
+                    "literal": "temp"
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        },
+        "entitlement": {
+          "filter": {
+            "and": [
+              {
+                "equals": {
+                  "left": "catalog.entitlement.descriptor.displayName",
+                  "right": {
+                    "literal": "temp"
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        },
+        "role": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "catalog.role.description",
+                  "right": {
+                    "literal": "temp"
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        },
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "user._id",
+                  "right": {
+                    "literal": "temp"
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      }
+    },
+    "57441e24-6310-49d7-984c-3692ba87bbab": {
+      "description": "this is a test",
+      "id": "57441e24-6310-49d7-984c-3692ba87bbab",
+      "metadata": {},
+      "name": "random-scope",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "not_contains": {
+                  "in_string_array": "user.adminOfOrg",
+                  "search_string": {
+                    "literal": "e74ffe7b-77be-4d6a-9564-3f9d8c4304e0"
+                  }
+                }
+              },
+              {
+                "equals": {
+                  "left": "user.city",
+                  "right": {
+                    "literal": "Salt Lake City"
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {},
+          "version": "v2"
+        },
+        "entitlement": {
+          "filter": {},
+          "version": "v2"
+        },
+        "role": {
+          "filter": {},
+          "version": "v2"
+        },
+        "user": {
+          "filter": {},
+          "version": "v2"
+        }
+      }
+    },
+    "8203ecdd-d9b6-4103-aac5-1c4ad99e1b24": {
+      "description": "Allows employees (frIndexedInteger1 eq 0) to view other employee objects",
+      "id": "8203ecdd-d9b6-4103-aac5-1c4ad99e1b24",
+      "metadata": {},
+      "name": "phh-delegate-visibility",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "and": [
+              {
+                "equals": {
+                  "left": "user.frIndexedInteger1",
+                  "right": {
+                    "literal": 0
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      },
+      "status": "inactive",
+      "targetCondition": {
+        "user": {
+          "filter": {
+            "and": [
+              {
+                "equals": {
+                  "left": "user.frIndexedInteger1",
+                  "right": {
+                    "literal": 0
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      }
+    },
+    "8e08b64c-2333-49d5-a31f-43fd2fc6ba6d": {
+      "description": "",
+      "id": "8e08b64c-2333-49d5-a31f-43fd2fc6ba6d",
+      "metadata": {},
+      "name": "test",
+      "permissions": {
+        "createEntitlement": true,
+        "createRole": true,
+        "createUser": true,
+        "deleteRole": true,
+        "deleteUser": true,
+        "modifyEntitlement": true,
+        "modifyRole": true,
+        "modifyUser": true,
+        "publishRole": true,
+        "viewGrants": true,
+        "viewUserAccess": true
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "and": [
+              {
+                "not_contains": {
+                  "in_string": "user.stateProvince",
+                  "search_string": {
+                    "literal": "Utah"
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {},
+          "version": "v2"
+        },
+        "entitlement": {
+          "filter": {},
+          "version": "v2"
+        },
+        "role": {
+          "filter": {},
+          "version": "v2"
+        },
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "ends_with": {
+                  "suffix": {
+                    "literal": "s"
+                  },
+                  "value": "user.accountStatus"
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      }
+    },
+    "9a189189-73d3-4e87-a7ad-2c218e4cff93": {
+      "description": "A test scope for ends with filter",
+      "id": "9a189189-73d3-4e87-a7ad-2c218e4cff93",
+      "metadata": {},
+      "name": "ends-with-scope",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "ends_with": {
+                  "suffix": {
+                    "literal": "1"
+                  },
+                  "value": "user._id"
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      },
+      "status": "active",
+      "targetCondition": {}
+    },
+    "9ea91a47-1be1-4a70-8925-d25898a3c8d5": {
+      "description": "test scope for contains filter",
+      "id": "9ea91a47-1be1-4a70-8925-d25898a3c8d5",
+      "metadata": {},
+      "name": "contains-test",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "contains": {
+                  "in_string": "user._id",
+                  "search_string": {
+                    "literal": ""
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      },
+      "status": "active",
+      "targetCondition": {}
+    },
+    "ad0c0ba2-9283-43e8-8d61-0a6bb2546141": {
+      "description": "test scope for is no filter\n",
+      "id": "ad0c0ba2-9283-43e8-8d61-0a6bb2546141",
+      "metadata": {},
+      "name": "is-not-test",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "not_equals": {
+                  "left": "user.city",
+                  "right": {
+                    "literal": "Utah"
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      },
+      "status": "active",
+      "targetCondition": {}
+    },
+    "c03d12b5-179e-4dac-aa7e-b2d9eb253fb3": {
+      "description": "",
+      "id": "c03d12b5-179e-4dac-aa7e-b2d9eb253fb3",
+      "metadata": {},
+      "name": "starts-with-test",
+      "permissions": {
+        "createRole": true,
+        "createUser": true,
+        "deleteRole": true,
+        "deleteUser": true,
+        "modifyRole": true,
+        "modifyUser": true,
+        "publishRole": true,
+        "viewUserAccess": true
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "1"
+                  },
+                  "value": "user.frIndexedDate1"
+                }
+              },
+              {
+                "or": [
+                  {
+                    "starts_with": {
+                      "prefix": {
+                        "literal": "U"
+                      },
+                      "value": "user.city"
+                    }
+                  },
+                  {
+                    "starts_with": {
+                      "prefix": {
+                        "literal": "A"
+                      },
+                      "value": "user.country"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "A"
+                  },
+                  "value": "catalog.application._id"
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        },
+        "entitlement": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "A"
+                  },
+                  "value": "catalog.entitlement.descriptor.displayName"
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        },
+        "role": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "A"
+                  },
+                  "value": "catalog.role.description"
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        },
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "starts_with": {
+                  "prefix": {
+                    "literal": "1"
+                  },
+                  "value": "user._id"
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      }
+    },
+    "e9bc6e7e-ab6b-45f2-a5e4-af976d8a0c24": {
+      "description": "",
+      "id": "e9bc6e7e-ab6b-45f2-a5e4-af976d8a0c24",
+      "metadata": {},
+      "name": "User LCM Test",
+      "permissions": {
+        "createUser": true
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "user._id",
+                  "right": {
+                    "literal": "6a2d0e09-a9ac-41ca-af24-8af052c480f2"
+                  }
+                }
+              },
+              {
+                "equals": {
+                  "left": "user.userName",
+                  "right": {
+                    "literal": "phh-parent-org-admin"
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      },
+      "status": "active",
+      "targetCondition": {
+        "user": {
+          "filter": {},
+          "version": "v2"
+        }
+      }
+    },
+    "edca1abc-7381-46c4-87a8-948790737c68": {
+      "description": "Description of the put scope request",
+      "id": "edca1abc-7381-46c4-87a8-948790737c68",
+      "metadata": {},
+      "name": "New Scope",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "and": []
+          },
+          "version": "v2"
+        }
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {
+            "and": []
+          },
+          "version": "v2"
+        }
+      }
+    },
+    "fcbccf06-1683-4209-9293-ba5be3ee2443": {
+      "description": "test scope for does not contain filter",
+      "id": "fcbccf06-1683-4209-9293-ba5be3ee2443",
+      "metadata": {},
+      "name": "does-not-contain-test",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "not_contains": {
+                  "in_string": "user.city",
+                  "search_string": {
+                    "literal": "Utah"
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      },
+      "status": "active",
+      "targetCondition": {}
+    }
+  }
+}

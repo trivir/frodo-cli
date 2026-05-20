@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "exportDate": "2026-05-15T18:53:54.983Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  },
+  "scope": {
+    "User LCM Test": {
+      "description": "",
+      "id": "e9bc6e7e-ab6b-45f2-a5e4-af976d8a0c24",
+      "metadata": {},
+      "name": "User LCM Test",
+      "permissions": {
+        "createUser": true
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "user._id",
+                  "right": {
+                    "literal": "6a2d0e09-a9ac-41ca-af24-8af052c480f2"
+                  }
+                }
+              },
+              {
+                "equals": {
+                  "left": "user.userName",
+                  "right": {
+                    "literal": "phh-parent-org-admin"
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      },
+      "status": "active",
+      "targetCondition": {
+        "user": {
+          "filter": {},
+          "version": "v2"
+        }
+      }
+    }
+  }
+}
