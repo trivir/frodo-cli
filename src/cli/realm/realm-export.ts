@@ -57,8 +57,24 @@ export default function setup() {
           options,
           command
         );
+        if (
+          !options.realmId &&
+          !options.realmName &&
+          !options.all &&
+          !options.allSeparate
+        ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
         // export by id
-        if (options.realmId && (await getTokens())) {
+        if (options.realmId) {
           verboseMessage('Exporting realm...');
           const outcome = await exportRealmById(
             options.realmId,
@@ -68,7 +84,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // export by name
-        else if (options.realmName && (await getTokens())) {
+        else if (options.realmName) {
           verboseMessage('Exporting realm...');
           const outcome = await exportRealmByName(
             options.realmName,
@@ -78,7 +94,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // -a / --all
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Exporting all realms to a single file...');
           const outcome = await exportRealmsToFile(
             options.file,
@@ -87,22 +103,12 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // -A / --all-separate
-        else if (options.allSeparate && (await getTokens())) {
+        else if (options.allSeparate) {
           verboseMessage('Exporting all realms to separate files...');
           const outcome = await exportRealmsToFiles(options.metadata);
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

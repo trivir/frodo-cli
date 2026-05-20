@@ -48,10 +48,21 @@ export default function setup() {
           options,
           command
         );
-        if (
-          options.secretId &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        if (!options.secretId) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+        if (options.secretId) {
           verboseMessage(`Describing secret ${options.secretId}...`);
           const outcome = await describeSecret(
             options.secretId,
@@ -61,17 +72,7 @@ export default function setup() {
           );
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

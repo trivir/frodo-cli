@@ -121,95 +121,89 @@ export default function setup() {
         options.justContent ||
         options.prefix;
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        let outcome: boolean;
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      let outcome: boolean;
 
-        // -n/--script-name
-        if (options.scriptName) {
-          // try and find script in current realm
-          printMessage(
-            `Exporting script ${options.scriptName} from the ${state.getRealm()} realm.`
-          );
-          const originalRealm: string = state.getRealm();
-          outcome = await configManagerExportScript(
-            {
-              scriptName: options.scriptName,
-            },
-            options.justContent,
-            options.justConfig
-          );
+      // -n/--script-name
+      if (options.scriptName) {
+        // try and find script in current realm
+        printMessage(
+          `Exporting script ${options.scriptName} from the ${state.getRealm()} realm.`
+        );
+        const originalRealm: string = state.getRealm();
+        outcome = await configManagerExportScript(
+          {
+            scriptName: options.scriptName,
+          },
+          options.justContent,
+          options.justConfig
+        );
 
-          // check other realms for the script
-          if (!outcome) {
-            for (const realm of await readRealms()) {
-              if (outcome) {
-                break;
-              }
-              if (realm.name !== originalRealm) {
-                printMessage(
-                  `Exporting script ${options.scriptName} from the ${state.getRealm()} realm failed.`
-                );
-                state.setRealm(realm.name);
-                printMessage(
-                  `Looking for the ${options.scriptName} script in the ${state.getRealm()} realm now.`
-                );
-                outcome = await configManagerExportScript(
-                  {
-                    scriptName: options.scriptName,
-                  },
-                  options.justContent,
-                  options.justConfig
-                );
-              }
+        // check other realms for the script
+        if (!outcome) {
+          for (const realm of await readRealms()) {
+            if (outcome) {
+              break;
             }
-            if (!outcome) {
+            if (realm.name !== originalRealm) {
               printMessage(
-                `Did not find the script "${options.scriptName}" anywhere.`
+                `Exporting script ${options.scriptName} from the ${state.getRealm()} realm failed.`
+              );
+              state.setRealm(realm.name);
+              printMessage(
+                `Looking for the ${options.scriptName} script in the ${state.getRealm()} realm now.`
+              );
+              outcome = await configManagerExportScript(
+                {
+                  scriptName: options.scriptName,
+                },
+                options.justContent,
+                options.justConfig
               );
             }
           }
-        }
-
-        // -r/--realm
-        else if (realm !== constants.DEFAULT_REALM_KEY) {
-          printMessage(
-            `Exporting scripts from the ${state.getRealm()} realm${hasOptions ? ' with custom options.' : '.'}`
-          );
-          outcome = await configManagerExportScriptsRealms(
-            options.prefix,
-            options.justContent,
-            options.justConfig,
-            options.scriptType,
-            options.language
-          );
-        }
-
-        // export all, the default
-        else {
-          printMessage(
-            `Exporting scripts from entire tenant${hasOptions ? ' with custom options.' : '.'}`
-          );
-          outcome = await configManagerExportScriptsAll(
-            options.prefix,
-            options.justContent,
-            options.justConfig,
-            options.scriptType,
-            options.language
-          );
-        }
-
-        if (!outcome) {
-          process.exitCode = 1;
+          if (!outcome) {
+            printMessage(
+              `Did not find the script "${options.scriptName}" anywhere.`
+            );
+          }
         }
       }
 
-      // unrecognized combination of options or no options
+      // -r/--realm
+      else if (realm !== constants.DEFAULT_REALM_KEY) {
+        printMessage(
+          `Exporting scripts from the ${state.getRealm()} realm${hasOptions ? ' with custom options.' : '.'}`
+        );
+        outcome = await configManagerExportScriptsRealms(
+          options.prefix,
+          options.justContent,
+          options.justConfig,
+          options.scriptType,
+          options.language
+        );
+      }
+
+      // export all, the default
       else {
         printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
+          `Exporting scripts from entire tenant${hasOptions ? ' with custom options.' : '.'}`
         );
-        program.help();
+        outcome = await configManagerExportScriptsAll(
+          options.prefix,
+          options.justContent,
+          options.justConfig,
+          options.scriptType,
+          options.language
+        );
+      }
+
+      if (!outcome) {
         process.exitCode = 1;
       }
     });

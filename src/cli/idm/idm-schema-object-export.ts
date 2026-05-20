@@ -64,6 +64,21 @@ export default function setup() {
           options,
           command
         );
+        if (!options.individualObject && !options.all && !options.allSeparate) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
         const envMessage = options.envFile
           ? ` using ${options.envFile} for variable replacement`
           : '';
@@ -72,10 +87,7 @@ export default function setup() {
           ? ` into separate files in ${state.getDirectory()}`
           : '';
         // -i, --individual-object <name>
-        if (
-          options.individualObject &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        if (options.individualObject) {
           verboseMessage(
             `Exporting managed object "${options.individualObject}"${envMessage}${fileMessage}...`
           );
@@ -86,10 +98,7 @@ export default function setup() {
           );
           if (!outcome) process.exitCode = 1;
         } // -a, --all
-        else if (
-          options.all &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.all) {
           verboseMessage(
             `Exporting managed objects ${envMessage}${fileMessage}...`
           );
@@ -103,10 +112,7 @@ export default function setup() {
           );
           if (!outcome) process.exitCode = 1;
         } // -A, --all-separate
-        else if (
-          options.allSeparate &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.allSeparate) {
           verboseMessage(
             `Exporting managed objects ${envMessage}${directoryMessage}...`
           );
@@ -120,17 +126,8 @@ export default function setup() {
           );
           if (!outcome) process.exitCode = 1;
           await warnAboutOfflineConnectorServers();
-        } // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
         }
       }
-      // end command logic inside action handler
     );
 
   return program;

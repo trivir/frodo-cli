@@ -35,11 +35,12 @@ export default function setup() {
           options,
           command
         );
-        if (options.appId && (await getTokens())) {
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        if (options.appId && getTokensIsSuccessful) {
           const outcome = deleteOauth2ClientById(options.appId);
           if (!outcome) process.exitCode = 1;
-        } else {
-          process.exitCode = 1;
         }
       }
       // end command logic inside action handler

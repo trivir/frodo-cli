@@ -25,13 +25,11 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens()) {
-          verboseMessage(`Listing journeys in realm "${state.getRealm()}"...`);
-          const outcome = await listJourneys(options.long);
-          if (!outcome) process.exitCode = 1;
-        } else {
-          process.exitCode = 1;
-        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+        verboseMessage(`Listing journeys in realm "${state.getRealm()}"...`);
+        const outcome = await listJourneys(options.long);
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

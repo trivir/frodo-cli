@@ -24,6 +24,14 @@ const tsConfigs = compat
       'no-console': 'warn',
       'no-underscore-dangle': 'off',
       'no-restricted-syntax': ['error', 'LabeledStatement', 'WithStatement'],
+      'no-restricted-properties': [2,
+        {
+          object: 'program',
+          property: 'outputHelp',
+          message:
+            'Use program.help() instead of program.outputHelp() for consistency. program.help() exits immediately, so no code should follow it.',
+        },
+      ],
       'no-multi-str': 'off',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',

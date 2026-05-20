@@ -3,7 +3,7 @@ import { Option } from 'commander';
 
 import { configManagerImportPasswordPolicy } from '../../../configManagerOps/FrConfigPasswordPolicyOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
-import { printMessage, verboseMessage } from '../../../utils/Console';
+import { verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
@@ -41,20 +41,15 @@ export default function setup() {
       if (options.realm) {
         realm = options.realm;
       }
-      if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Importing config entity password-policy');
-        const outcome = await configManagerImportPasswordPolicy(realm);
-        if (!outcome) process.exitCode = 1;
-      }
-      // unrecognized combination of options or no options
-      else {
-        printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
-        );
-        program.help();
-        process.exitCode = 1;
-      }
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      verboseMessage('Importing config entity password-policy');
+      const outcome = await configManagerImportPasswordPolicy(realm);
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;

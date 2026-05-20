@@ -24,12 +24,10 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens()) {
-          verboseMessage('Listing all realms...');
-          await listRealms(options.long);
-        } else {
-          process.exitCode = 1;
-        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+        verboseMessage('Listing all realms...');
+        await listRealms(options.long);
       }
       // end command logic inside action handler
     );

@@ -59,12 +59,29 @@ export default function setup() {
           options,
           command
         );
-        // import by id or name
         if (
-          (options.roleId || options.roleName) &&
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
+          !options.roleId &&
+          !options.roleName &&
+          !options.file &&
+          !options.all &&
+          !options.allSeparate
         ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        // import by id or name
+        if ((options.roleId || options.roleName) && options.file) {
           verboseMessage(
             `Importing internal role ${options.roleId || options.roleName}...`
           );
@@ -76,11 +93,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.all && options.file) {
           verboseMessage(
             `Importing all internal roles from a single file (${options.file})...`
           );
@@ -88,34 +101,18 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (
-          options.allSeparate &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.allSeparate) {
           verboseMessage('Importing all internal roles from separate files...');
           const outcome = await importInternalRolesFromFiles();
           if (!outcome) process.exitCode = 1;
         }
         // import first role in file
-        else if (
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.file) {
           verboseMessage('Importing first internal role in file...');
           const outcome = await importFirstInternalRoleFromFile(options.file);
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
   return program;
 }

@@ -46,31 +46,32 @@ export default function setup() {
           options,
           command
         );
-        if (
-          options.secretstoreId &&
-          (await getTokens(
-            false,
-            true,
-            options.global ? globalDeploymentTypes : deploymentTypes
-          ))
-        ) {
-          verboseMessage(`Describing secret store ${options.secretstoreId}`);
-          const outcome = await describeSecretStore(
-            options.secretstoreId,
-            options.secretstoreType,
-            options.global
-          );
-          if (!outcome) process.exitCode = 1;
-        } else {
+        if (!options.secretstoreId) {
           printMessage(
             'Unrecognized combination of options or no options...',
             'error'
           );
-          program.outputHelp();
           process.exitCode = 1;
+          program.help();
         }
+        const getTokensIsSucessful = await getTokens(
+          false,
+          true,
+          options.global ? globalDeploymentTypes : deploymentTypes
+        );
+        if (!getTokensIsSucessful) process.exit(1);
+        let outcome: boolean;
+
+        if (options.secretstoreId) {
+          verboseMessage(`Describing secret store ${options.secretstoreId}`);
+          outcome = await describeSecretStore(
+            options.secretstoreId,
+            options.secretstoreType,
+            options.global
+          );
+        }
+        if (!outcome) process.exitCode = 1;
       }
-      // end command logic inside action handler
     );
   return program;
 }

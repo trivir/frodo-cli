@@ -8,7 +8,7 @@ import {
   exportPoliciesToFiles,
   exportPolicyToFile,
 } from '../../ops/PolicyOps';
-import { verboseMessage } from '../../utils/Console';
+import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
 export default function setup() {
@@ -73,10 +73,30 @@ export default function setup() {
           options,
           command
         );
+
+        if (
+          !options.policyId &&
+          !options.setId &&
+          !options.all &&
+          !options.allSeparate
+        ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        let outcome: boolean;
+
         // export
-        if (options.policyId && (await getTokens())) {
+        if (options.policyId) {
           verboseMessage('Exporting authorization policy to file...');
-          const outcome = await exportPolicyToFile(
+          outcome = await exportPolicyToFile(
             options.policyId,
             options.file,
             options.metadata,
@@ -87,14 +107,13 @@ export default function setup() {
               useStringArrays: true,
             }
           );
-          if (!outcome) process.exitCode = 1;
         }
         // -a/--all by policy set
-        else if (options.setId && options.all && (await getTokens())) {
+        else if (options.setId && options.all) {
           verboseMessage(
             `Exporting all authorization policies in policy set ${options.setId} to file...`
           );
-          const outcome = await exportPoliciesByPolicySetToFile(
+          outcome = await exportPoliciesByPolicySetToFile(
             options.setId,
             options.file,
             options.metadata,
@@ -105,12 +124,11 @@ export default function setup() {
               useStringArrays: true,
             }
           );
-          if (!outcome) process.exitCode = 1;
         }
         // -a/--all
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Exporting all authorization policies to file...');
-          const outcome = await exportPoliciesToFile(
+          outcome = await exportPoliciesToFile(
             options.file,
             options.metadata,
             options.modifiedProperties,
@@ -120,14 +138,13 @@ export default function setup() {
               useStringArrays: true,
             }
           );
-          if (!outcome) process.exitCode = 1;
         }
         // -A/--all-separate by policy set
-        else if (options.setId && options.allSeparate && (await getTokens())) {
+        else if (options.setId && options.allSeparate) {
           verboseMessage(
             `Exporting all authorization policies in policy set ${options.setId} to separate files...`
           );
-          const outcome = await exportPoliciesByPolicySetToFiles(
+          outcome = await exportPoliciesByPolicySetToFiles(
             options.setId,
             options.metadata,
             options.modifiedProperties,
@@ -137,14 +154,13 @@ export default function setup() {
               useStringArrays: true,
             }
           );
-          if (!outcome) process.exitCode = 1;
         }
         // -A/--all-separate
-        else if (options.allSeparate && (await getTokens())) {
+        else if (options.allSeparate) {
           verboseMessage(
             'Exporting all authorization policies to separate files...'
           );
-          const outcome = await exportPoliciesToFiles(
+          outcome = await exportPoliciesToFiles(
             options.metadata,
             options.modifiedProperties,
             {
@@ -153,16 +169,8 @@ export default function setup() {
               useStringArrays: true,
             }
           );
-          if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          verboseMessage(
-            'Unrecognized combination of options or no options...'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

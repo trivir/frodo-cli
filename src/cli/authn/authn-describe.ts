@@ -29,28 +29,19 @@ export default function setup() {
           options,
           command
         );
-        if (
-          await getTokens(
-            false,
-            true,
-            options.global ? globalDeploymentTypes : undefined
-          )
-        ) {
-          verboseMessage(`Describing authentication settings...`);
-          const outcome = await describeAuthenticationSettings(
-            options.json,
-            options.global
-          );
-          if (!outcome) process.exitCode = 1;
-        }
-        // unrecognized combination of options or no options
-        else {
-          verboseMessage(
-            'Unrecognized combination of options or no options...'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          options.global ? globalDeploymentTypes : undefined
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        verboseMessage(`Describing authentication settings...`);
+        const outcome = await describeAuthenticationSettings(
+          options.json,
+          options.global
+        );
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

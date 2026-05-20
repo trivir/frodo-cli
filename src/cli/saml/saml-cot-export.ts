@@ -56,8 +56,19 @@ export default function setup() {
           options,
           command
         );
+        if (!options.cotId && !options.all && !options.allSeparate) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
         // export by id/name
-        if (options.cotId && (await getTokens())) {
+        if (options.cotId) {
           verboseMessage(
             `Exporting circle of trust "${
               options.cotId
@@ -71,7 +82,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Exporting all circles of trust to a single file...');
           const outcome = await exportCirclesOfTrustToFile(
             options.file,
@@ -80,22 +91,12 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (options.allSeparate && (await getTokens())) {
+        else if (options.allSeparate) {
           verboseMessage('Exporting all circles of trust to separate files...');
           const outcome = await exportCirclesOfTrustToFiles(options.metadata);
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

@@ -87,73 +87,72 @@ export default function setup() {
           options,
           command
         );
-        // import
+
         if (
-          options.secretId &&
-          (await getTokens(false, true, deploymentTypes))
+          !options.secretId &&
+          !options.all &&
+          !options.allSeparate &&
+          !options.file
         ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+        let outcome: boolean;
+
+        // import
+        if (options.secretId) {
           printMessage(`Importing secret ${options.secretId}...`);
-          const outcome = await importSecretFromFile(
+          outcome = await importSecretFromFile(
             options.secretId,
             options.file,
             options.includeActiveValues,
             options.source
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.all && options.file) {
           printMessage(
             `Importing all secrets from a single file (${options.file})...`
           );
-          const outcome = await importSecretsFromFile(
+          outcome = await importSecretsFromFile(
             options.file,
             options.includeActiveValues,
             options.source
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (
-          options.allSeparate &&
-          !options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.allSeparate && !options.file) {
           printMessage(
             'Importing all secrets from separate files in working directory...'
           );
-          const outcome = await importSecretsFromFiles(
+          outcome = await importSecretsFromFiles(
             options.includeActiveValues,
             options.source
           );
-          if (!outcome) process.exitCode = 1;
         }
         // import first
-        else if (
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.file) {
           printMessage('Importing first secret in file...');
-          const outcome = await importSecretFromFile(
+          outcome = await importSecretFromFile(
             null,
             options.file,
             options.includeActiveValues,
             options.source
           );
-          if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage('Unrecognized combination of options or no options...');
-          program.help();
-          process.exitCode = 1;
-        }
+        if (!outcome) process.exitCode = 1;
       }
-      // end command logic inside action handler
     );
 
   return program;

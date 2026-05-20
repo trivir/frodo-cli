@@ -84,6 +84,21 @@ export default function setup() {
           options,
           command
         );
+        if (!options.entityId && !options.all && !options.allSeparate) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
         const entitiesMessage = options.entitiesFile
           ? ` specified in ${options.entitiesFile}`
           : '';
@@ -95,10 +110,7 @@ export default function setup() {
           ? ` into separate files in ${state.getDirectory()}`
           : '';
         // export by id/name
-        if (
-          options.entityId &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        if (options.entityId) {
           verboseMessage(
             `Exporting object "${options.entityId}"${envMessage}${fileMessage}...`
           );
@@ -112,10 +124,7 @@ export default function setup() {
           );
           if (!outcome) process.exitCode = 1;
           // --all -a
-        } else if (
-          options.all &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        } else if (options.all) {
           verboseMessage(
             `Exporting IDM configuration objects${entitiesMessage}${envMessage}${fileMessage}...`
           );
@@ -134,14 +143,11 @@ export default function setup() {
             '-D or --directory required when using -A or --all-separate',
             'error'
           );
-          program.help();
           process.exitCode = 1;
+          program.help();
         }
         // --all-separate -A
-        else if (
-          options.allSeparate &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.allSeparate) {
           verboseMessage(
             `Exporting IDM configuration objects${entitiesMessage}${envMessage}${directoryMessage}...`
           );
@@ -155,17 +161,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
           await warnAboutOfflineConnectorServers();
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

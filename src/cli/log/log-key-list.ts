@@ -33,13 +33,15 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens(true, true, deploymentTypes)) {
-          verboseMessage(`Listing log API keys...`);
-          const outcome = await listLogApiKeys(options.long);
-          if (!outcome) process.exitCode = 1;
-        } else {
-          process.exitCode = 1;
-        }
+        const getTokensIsSuccessful = await getTokens(
+          true,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+        verboseMessage(`Listing log API keys...`);
+        const outcome = await listLogApiKeys(options.long);
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

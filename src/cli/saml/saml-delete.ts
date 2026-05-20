@@ -33,27 +33,28 @@ export default function setup() {
           options,
           command
         );
-        // -i / --entity-id
-        if (options.entityId && (await getTokens())) {
-          verboseMessage(`Deleting entity provider '${options.entityId}'...`);
-          await deleteSaml2Provider(options.entityId);
-        }
-        // -a / --all
-        else if (options.all && (await getTokens())) {
-          verboseMessage(`Deleting all entity providers...`);
-          await deleteSaml2Providers();
-        }
-        // unrecognized combination of options or no options
-        else {
+        if (!options.entityId && !options.all) {
           printMessage(
             'Unrecognized combination of options or no options...',
             'error'
           );
-          program.help();
           process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        // -i / --entity-id
+        if (options.entityId) {
+          verboseMessage(`Deleting entity provider '${options.entityId}'...`);
+          await deleteSaml2Provider(options.entityId);
+        }
+        // -a / --all
+        else if (options.all) {
+          verboseMessage(`Deleting all entity providers...`);
+          await deleteSaml2Providers();
         }
       }
-      // end command logic inside action handler
     );
 
   return program;

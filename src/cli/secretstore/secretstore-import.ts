@@ -67,83 +67,64 @@ export default function setup() {
           options,
           command
         );
+
         if (
-          options.secretstoreId &&
-          options.file &&
-          (await getTokens(
-            false,
-            true,
-            options.global ? globalDeploymentTypes : deploymentTypes
-          ))
+          !options.secretstoreId &&
+          !options.all &&
+          !options.allSeparate &&
+          !options.file
         ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSucessful = await getTokens(
+          false,
+          true,
+          options.global ? globalDeploymentTypes : deploymentTypes
+        );
+        if (!getTokensIsSucessful) process.exit(1);
+        let outcome: boolean;
+
+        if (options.secretstoreId && options.file) {
           verboseMessage(`Importing secret store ${options.secretstoreId}...`);
-          const outcome = await importSecretStoreFromFile(
+          outcome = await importSecretStoreFromFile(
             options.secretstoreId,
             options.secretstoreType,
             options.file,
             options.global
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          options.file &&
-          (await getTokens(
-            false,
-            true,
-            options.global ? globalDeploymentTypes : deploymentTypes
-          ))
-        ) {
+        else if (options.all && options.file) {
           verboseMessage(
             `Importing all${options.global ? ' global' : ''} secret stores from a single file (${options.file})...`
           );
-          const outcome = await importSecretStoresFromFile(
+          outcome = await importSecretStoresFromFile(
             options.file,
             options.global
           );
-          if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (
-          options.allSeparate &&
-          (await getTokens(
-            false,
-            true,
-            options.global ? globalDeploymentTypes : deploymentTypes
-          ))
-        ) {
+        else if (options.allSeparate) {
           verboseMessage(
             `Importing all${options.global ? ' global' : ''} secret stores from separate files...`
           );
-          const outcome = await importSecretStoresFromFiles(options.global);
-          if (!outcome) process.exitCode = 1;
+          outcome = await importSecretStoresFromFiles(options.global);
         }
         // import first secret store from file
-        else if (
-          options.file &&
-          (await getTokens(
-            false,
-            true,
-            options.global ? globalDeploymentTypes : deploymentTypes
-          ))
-        ) {
+        else if (options.file) {
           verboseMessage('Importing first secret store in file...');
-          const outcome = await importFirstSecretStoreFromFile(
+          outcome = await importFirstSecretStoreFromFile(
             options.file,
             options.global
           );
-          if (!outcome) process.exitCode = 1;
-        } else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.outputHelp();
-          process.exitCode = 1;
         }
+        if (!outcome) process.exitCode = 1;
       }
-      // end command logic inside action handler
     );
   return program;
 }

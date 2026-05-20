@@ -7,7 +7,7 @@ import {
   exportResourceTypesToFiles,
   exportResourceTypeToFile,
 } from '../../ops/ResourceTypeOps';
-import { verboseMessage } from '../../utils/Console';
+import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
 export default function setup() {
@@ -63,59 +63,67 @@ export default function setup() {
           options,
           command
         );
+
+        if (
+          !options.typeId &&
+          !options.typeName &&
+          !options.all &&
+          !options.allSeparate
+        ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+        let outcome: boolean;
+
         // export by uuid
-        if (options.typeId && (await getTokens())) {
+        if (options.typeId) {
           verboseMessage('Exporting authorization resource type to file...');
-          const outcome = await exportResourceTypeToFile(
+          outcome = await exportResourceTypeToFile(
             options.typeId,
             options.file,
             options.metadata,
             options.modifiedProperties
           );
-          if (!outcome) process.exitCode = 1;
         }
         // export by name
-        else if (options.typeName && (await getTokens())) {
+        else if (options.typeName) {
           verboseMessage('Exporting authorization resource type to file...');
-          const outcome = await exportResourceTypeByNameToFile(
+          outcome = await exportResourceTypeByNameToFile(
             options.typeName,
             options.file,
             options.metadata,
             options.modifiedProperties
           );
-          if (!outcome) process.exitCode = 1;
         }
         // -a/--all
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage(
             'Exporting all authorization resource types to file...'
           );
-          const outcome = await exportResourceTypesToFile(
+          outcome = await exportResourceTypesToFile(
             options.file,
             options.metadata,
             options.modifiedProperties
           );
-          if (!outcome) process.exitCode = 1;
         }
         // -A/--all-separate
-        else if (options.allSeparate && (await getTokens())) {
+        else if (options.allSeparate) {
           verboseMessage(
             'Exporting all authorization resource types to separate files...'
           );
-          const outcome = await exportResourceTypesToFiles(
+          outcome = await exportResourceTypesToFiles(
             options.metadata,
             options.modifiedProperties
           );
-          if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          verboseMessage(
-            'Unrecognized combination of options or no options...'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

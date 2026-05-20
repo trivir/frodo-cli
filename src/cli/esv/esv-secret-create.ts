@@ -49,32 +49,35 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens(false, true, deploymentTypes)) {
-          verboseMessage('Creating secret...');
-          let outcome = null;
-          if (options.value) {
-            outcome = await createSecret(
-              options.secretId,
-              options.value,
-              options.description,
-              options.encoding,
-              options.useInPlaceholders
-            );
-          } else {
-            outcome = await createSecretFromFile(
-              options.secretId,
-              options.file,
-              options.description,
-              options.encoding,
-              options.useInPlaceholders
-            );
-          }
-          if (!outcome) process.exitCode = 1;
+
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        verboseMessage('Creating secret...');
+        let outcome = null;
+        if (options.value) {
+          outcome = await createSecret(
+            options.secretId,
+            options.value,
+            options.description,
+            options.encoding,
+            options.useInPlaceholders
+          );
         } else {
-          process.exitCode = 1;
+          outcome = await createSecretFromFile(
+            options.secretId,
+            options.file,
+            options.description,
+            options.encoding,
+            options.useInPlaceholders
+          );
         }
+        if (!outcome) process.exitCode = 1;
       }
-      // end command logic inside action handler
     );
 
   return program;

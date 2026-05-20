@@ -36,26 +36,27 @@ export default function setup() {
           options,
           command
         );
+
+        if (!options.templateId && !options.all) {
+          printMessage('Unrecognized combination of options or no options...');
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+        let outcome: boolean;
         // delete by id
-        if (options.templateId && (await getTokens())) {
+        if (options.templateId) {
           verboseMessage('Deleting email template...');
-          const outcome = await deleteEmailTemplateById(options.templateId);
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteEmailTemplateById(options.templateId);
         }
         // --all -a
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Deleting all email templates...');
-          const outcome = await deleteAllEmailTemplates();
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteAllEmailTemplates();
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage('Unrecognized combination of options or no options...');
-          program.help();
-          process.exitCode = 1;
-        }
+        if (!outcome) process.exitCode = 1;
       }
-      // end command logic inside action handler
     );
 
   return program;

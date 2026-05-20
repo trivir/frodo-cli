@@ -71,11 +71,28 @@ export default function setup() {
           options,
           command
         );
-        // export by name
         if (
-          options.themeName &&
-          (await getTokens(false, true, deploymentTypes))
+          !options.themeName &&
+          !options.themeId &&
+          !options.all &&
+          !options.allSeparate
         ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        // export by name
+        if (options.themeName) {
           verboseMessage(
             `Exporting theme "${
               options.themeName
@@ -89,10 +106,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // export by id
-        else if (
-          options.themeId &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.themeId) {
           verboseMessage(
             `Exporting theme "${
               options.themeId
@@ -106,10 +120,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.all) {
           verboseMessage('Exporting all themes to a single file...');
           const outcome = await exportThemesToFile(
             options.file,
@@ -118,25 +129,12 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (
-          options.allSeparate &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.allSeparate) {
           verboseMessage('Exporting all themes to separate files...');
           const outcome = await exportThemesToFiles(options.metadata);
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

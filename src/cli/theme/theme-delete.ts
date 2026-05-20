@@ -52,11 +52,23 @@ export default function setup() {
           options,
           command
         );
+        if (!options.themeName && !options.themeId && !options.all) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
         // delete by name
-        if (
-          options.themeName &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        if (options.themeName) {
           verboseMessage(
             `Deleting theme with name "${
               options.themeName
@@ -66,10 +78,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // delete by id
-        else if (
-          options.themeId &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.themeId) {
           verboseMessage(
             `Deleting theme with id "${
               options.themeId
@@ -79,27 +88,14 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.all) {
           verboseMessage(
             `Deleting all themes from realm "${state.getRealm()}"...`
           );
           const outcome = await deleteThemes();
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

@@ -112,16 +112,30 @@ export default function setup() {
           options,
           command
         );
+
+        if (!options.all && !options.allSeparate) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+        let outcome: boolean;
+
         // Require --file -f for all function
         if (options.all && !options.file) {
           printMessage('-f or --file required when using -a or --all', 'error');
-          program.help();
           process.exitCode = 1;
+          program.help();
         }
         // --all -a
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Exporting everything from a single file...');
-          const outcome = await importEverythingFromFile(options.file, {
+          outcome = await importEverythingFromFile(options.file, {
             reUuidJourneys: options.reUuidJourneys,
             reUuidScripts: options.reUuidScripts,
             reUuidCustomNodes: options.reUuidCustomNodes,
@@ -130,7 +144,6 @@ export default function setup() {
             includeActiveValues: options.includeActiveValues,
             source: options.source,
           });
-          if (!outcome) process.exitCode = 1;
         }
         // require --directory -D for all-separate function
         else if (options.allSeparate && !state.getDirectory()) {
@@ -138,13 +151,13 @@ export default function setup() {
             '-D or --directory required when using -A or --all-separate',
             'error'
           );
-          program.help();
           process.exitCode = 1;
+          program.help();
         }
         // --all-separate -A
-        else if (options.allSeparate && (await getTokens())) {
+        else if (options.allSeparate) {
           verboseMessage('Importing everything from separate files...');
-          const outcome = await importEverythingFromFiles({
+          outcome = await importEverythingFromFiles({
             reUuidJourneys: options.reUuidJourneys,
             reUuidScripts: options.reUuidScripts,
             reUuidCustomNodes: options.reUuidCustomNodes,
@@ -153,34 +166,21 @@ export default function setup() {
             includeActiveValues: options.includeActiveValues,
             source: options.source,
           });
-          if (!outcome) process.exitCode = 1;
         }
         // Import entity from file
-        else if (options.file && (await getTokens())) {
+        else if (options.file) {
           verboseMessage('Importing config entity from file...');
-          const outcome = await importEntityfromFile(
-            options.file,
-            options.global,
-            {
-              reUuidJourneys: options.reUuidJourneys,
-              reUuidScripts: options.reUuidScripts,
-              reUuidCustomNodes: options.reUuidCustomNodes,
-              cleanServices: options.clean,
-              includeDefault: options.default,
-              includeActiveValues: options.includeActiveValues,
-              source: options.source,
-            }
-          );
-          if (!outcome) process.exitCode = 1;
+          outcome = await importEntityfromFile(options.file, options.global, {
+            reUuidJourneys: options.reUuidJourneys,
+            reUuidScripts: options.reUuidScripts,
+            reUuidCustomNodes: options.reUuidCustomNodes,
+            cleanServices: options.clean,
+            includeDefault: options.default,
+            includeActiveValues: options.includeActiveValues,
+            source: options.source,
+          });
         }
-        // unrecognized combination of options or no options
-        else {
-          verboseMessage(
-            'Unrecognized combination of options or no options...'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

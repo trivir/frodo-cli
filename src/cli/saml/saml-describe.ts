@@ -23,17 +23,15 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens()) {
-          verboseMessage(
-            `Describing SAML entity provider ${
-              options.entityId
-            } in realm "${state.getRealm()}"...`
-          );
-          const outcome = await describeSaml2Provider(options.entityId);
-          if (!outcome) process.exitCode = 1;
-        } else {
-          process.exitCode = 1;
-        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+        verboseMessage(
+          `Describing SAML entity provider ${
+            options.entityId
+          } in realm "${state.getRealm()}"...`
+        );
+        const outcome = await describeSaml2Provider(options.entityId);
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );

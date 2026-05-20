@@ -35,14 +35,16 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens(false, true, deploymentTypes)) {
-          verboseMessage('Listing all IDM configuration objects...');
-          const outcome = await listAllConfigEntities();
-          if (!outcome) process.exitCode = 1;
-          await warnAboutOfflineConnectorServers();
-        } else {
-          process.exitCode = 1;
-        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+        verboseMessage('Listing all IDM configuration objects...');
+        const outcome = await listAllConfigEntities();
+        if (!outcome) process.exitCode = 1;
+        await warnAboutOfflineConnectorServers();
       }
       // end command logic inside action handler
     );

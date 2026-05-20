@@ -61,25 +61,27 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens(false, true, deploymentTypes)) {
-          printMessage(
-            `Training Auto Access model in realm "${state.getRealm()}"...`
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+        printMessage(
+          `Training Auto Access model in realm "${state.getRealm()}"...`
+        );
+        try {
+          await trainAA(
+            options.apiKey,
+            options.apiSecret,
+            options.usernames.split(','),
+            options.userAgents.split(','),
+            options.ipAddresses.split(','),
+            100
           );
-          try {
-            await trainAA(
-              options.apiKey,
-              options.apiSecret,
-              options.usernames.split(','),
-              options.userAgents.split(','),
-              options.ipAddresses.split(','),
-              100
-            );
-            printMessage(`Done.`);
-          } catch (error) {
-            printMessage(error, 'error');
-            process.exitCode = 1;
-          }
-        } else {
+          printMessage(`Done.`);
+        } catch (error) {
+          printMessage(error, 'error');
           process.exitCode = 1;
         }
       }

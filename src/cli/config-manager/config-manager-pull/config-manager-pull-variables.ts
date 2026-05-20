@@ -2,7 +2,7 @@ import { frodo } from '@rockcarver/frodo-lib';
 
 import { configManagerExportVariables } from '../../../configManagerOps/FrConfigVariableOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
-import { printMessage, verboseMessage } from '../../../utils/Console';
+import { verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
@@ -26,21 +26,15 @@ export default function setup() {
         options,
         command
       );
-
-      if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Exporting variables');
-        const outcome = await configManagerExportVariables();
-        if (!outcome) process.exitCode = 1;
-      }
-      // unrecognized combination of options or no options
-      else {
-        printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
-        );
-        program.help();
-        process.exitCode = 1;
-      }
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      verboseMessage('Exporting variables');
+      const outcome = await configManagerExportVariables();
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;

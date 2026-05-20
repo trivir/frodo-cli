@@ -55,11 +55,28 @@ export default function setup() {
           options,
           command
         );
-        // import by id/name
         if (
-          options.mappingId &&
-          (await getTokens(false, true, deploymentTypes))
+          !options.mappingId &&
+          !options.file &&
+          !options.all &&
+          !options.allSeparate
         ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        // import by id/name
+        if (options.mappingId) {
           verboseMessage(`Importing mapping ${options.mappingId}...`);
           const outcome = await importMappingFromFile(
             options.mappingId,
@@ -71,11 +88,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.all && options.file) {
           verboseMessage(
             `Importing all mappings from a single file (${options.file})...`
           );
@@ -85,10 +98,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (
-          options.allSeparate &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.allSeparate) {
           verboseMessage('Importing all mappings from separate files...');
           const outcome = await importMappingsFromFiles({
             deps: options.deps,
@@ -96,27 +106,14 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // import first mapping in file
-        else if (
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.file) {
           verboseMessage('Importing first mapping in file...');
           const outcome = await importFirstMappingFromFile(options.file, {
             deps: options.deps,
           });
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

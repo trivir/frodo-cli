@@ -25,13 +25,13 @@ export default function setup() {
           options,
           command
         );
-        if (
-          await getTokens(
-            false,
-            true,
-            options.global ? globalDeploymentTypes : undefined
-          )
-        ) {
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          globalDeploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+        if (options) {
           // code goes here
         } else {
           process.exitCode = 1;

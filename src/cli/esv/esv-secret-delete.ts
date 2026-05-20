@@ -38,31 +38,34 @@ export default function setup() {
           options,
           command
         );
+        if (!options.secretId && !options.all) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+        let outcome: boolean;
+
         // delete by id
-        if (
-          options.secretId &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        if (options.secretId) {
           verboseMessage('Deleting secret...');
-          const outcome = await deleteSecret(options.secretId);
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteSecret(options.secretId);
         }
         // --all -a
-        else if (
-          options.all &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.all) {
           verboseMessage('Deleting all secrets...');
-          const outcome = await deleteSecrets();
-          if (!outcome) process.exitCode = 1;
+          outcome = await deleteSecrets();
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage('Unrecognized combination of options or no options...');
-          process.exitCode = 1;
-        }
+        if (!outcome) process.exitCode = 1;
       }
-      // end command logic inside action handler
     );
 
   return program;

@@ -2,6 +2,7 @@ import { Option } from 'commander';
 
 import { getTokens } from '../../ops/AuthenticateOps';
 import { deleteConfigEntityById } from '../../ops/IdmOps';
+import { printMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
 export default function setup() {
@@ -40,13 +41,20 @@ export default function setup() {
         );
 
         // const globalConfig = options.global ?? false;
+        if (!options.id) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
 
-        if (options.id && (await getTokens())) {
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+        if (options.id) {
           const outcome = await deleteConfigEntityById(options.id);
           if (!outcome) process.exitCode = 1;
-        } else {
-          program.help();
-          process.exitCode = 1;
         }
       }
     );

@@ -88,8 +88,24 @@ export default function setup() {
           options,
           command
         );
+        if (
+          !options.scriptId &&
+          !options.scriptName &&
+          !options.all &&
+          !options.allSeparate
+        ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
         // export by id
-        if (options.scriptId && (await getTokens())) {
+        if (options.scriptId) {
           verboseMessage('Exporting script...');
           const outcome = await exportScriptToFile(
             options.scriptId,
@@ -106,10 +122,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // export by name
-        else if (
-          (options.scriptName || options.script) &&
-          (await getTokens())
-        ) {
+        else if (options.scriptName || options.script) {
           verboseMessage('Exporting script...');
           const outcome = await exportScriptByNameToFile(
             options.scriptName || options.script,
@@ -126,7 +139,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // -a / --all
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Exporting all scripts to a single file...');
           const outcome = await exportScriptsToFile(
             options.file,
@@ -141,7 +154,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // -A / --all-separate
-        else if (options.allSeparate && (await getTokens())) {
+        else if (options.allSeparate) {
           verboseMessage('Exporting all scripts to separate files...');
           const outcome = await exportScriptsToFiles(
             options.extract,
@@ -155,18 +168,7 @@ export default function setup() {
           );
           if (!outcome) process.exitCode = 1;
         }
-
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

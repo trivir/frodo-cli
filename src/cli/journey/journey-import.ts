@@ -62,8 +62,24 @@ export default function setup() {
           options,
           command
         );
+        if (
+          !options.journeyId &&
+          !options.all &&
+          !options.file &&
+          !options.allSeparate
+        ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
         // import
-        if (options.journeyId && (await getTokens())) {
+        if (options.journeyId) {
           printMessage(`Importing journey ${options.journeyId}...`);
           const outcome = await importJourneyFromFile(
             options.journeyId,
@@ -76,7 +92,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (options.all && options.file && (await getTokens())) {
+        else if (options.all && options.file) {
           printMessage(
             `Importing all journeys from a single file (${options.file})...`
           );
@@ -87,7 +103,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (options.allSeparate && !options.file && (await getTokens())) {
+        else if (options.allSeparate && !options.file) {
           printMessage(
             'Importing all journeys from separate files in current directory...'
           );
@@ -98,7 +114,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // import first journey in file
-        else if (options.file && (await getTokens())) {
+        else if (options.file) {
           printMessage('Importing first journey in file...');
           const outcome = await importFirstJourneyFromFile(options.file, {
             reUuid: options.reUuid,
@@ -106,14 +122,7 @@ export default function setup() {
           });
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage('Unrecognized combination of options or no options...');
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

@@ -69,8 +69,19 @@ export default function setup() {
 
         const globalConfig = options.global ?? false;
 
+        if (!options.serviceId && !options.all && !options.allSeparate) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
         // export by name
-        if (options.serviceId && (await getTokens())) {
+        if (options.serviceId) {
           verboseMessage('Exporting service...');
           const outcome = await exportServiceToFile(
             options.serviceId,
@@ -81,7 +92,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // -a / --all
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Exporting all services to a single file...');
           const outcome = await exportServicesToFile(
             options.file,
@@ -91,7 +102,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // -A / --all-separate
-        else if (options.allSeparate && (await getTokens())) {
+        else if (options.allSeparate) {
           verboseMessage('Exporting all services to separate files...');
           const outcome = await exportServicesToFiles(
             globalConfig,
@@ -99,17 +110,7 @@ export default function setup() {
           );
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

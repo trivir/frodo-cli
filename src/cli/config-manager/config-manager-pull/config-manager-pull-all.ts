@@ -51,10 +51,14 @@ export default function setup() {
         command
       );
 
-      if (
-        options.configFolder &&
-        (await getTokens(false, true, deploymentTypes))
-      ) {
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+
+      if (options.configFolder) {
         verboseMessage(
           'Exporting config files that fr-config-manager supports.'
         );
@@ -70,8 +74,8 @@ export default function setup() {
             'Please refer to the help message for more information.',
           'error'
         );
-        program.help();
         process.exitCode = 1;
+        program.help();
       }
     });
 

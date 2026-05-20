@@ -23,22 +23,23 @@ export default function setup() {
           options,
           command
         );
-        if ((await getTokens()) && options.idpId) {
-          verboseMessage(
-            `Deleting idp ${options.idpId} in realm "${state.getRealm()}"...`
-          );
-          const outcome = await deleteSocialIdentityProviderById(options.idpId);
-          if (!outcome) process.exitCode = 1;
-        } else {
+        if (!options.idpId) {
           printMessage(
             'Unrecognized combination of options or no options...',
             'error'
           );
-          program.help();
           process.exitCode = 1;
+          program.help();
         }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
+        verboseMessage(
+          `Deleting idp ${options.idpId} in realm "${state.getRealm()}"...`
+        );
+        const outcome = await deleteSocialIdentityProviderById(options.idpId);
+        if (!outcome) process.exitCode = 1;
       }
-      // end command logic inside action handler
     );
 
   return program;

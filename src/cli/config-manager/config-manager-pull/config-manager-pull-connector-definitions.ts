@@ -42,30 +42,26 @@ export default function setup() {
         command
       );
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        let outcome: boolean;
-        if (options.name) {
-          printMessage(
-            `Exporting connector definition for connector: "${options.name}"`
-          );
-          outcome = await configManagerExportConnectorDefinition({
-            connectorName: options.name,
-          });
-        } else {
-          printMessage('Exporting all connector defitions.');
-          outcome = await configManagerExportConnectorDefinitionsAll();
-        }
-        if (!outcome) process.exitCode = 1;
-      }
-      // unrecognized combination of options or no options
-      else {
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+
+      let outcome: boolean;
+      if (options.name) {
         printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
+          `Exporting connector definition for connector: "${options.name}"`
         );
-        program.help();
-        process.exitCode = 1;
+        outcome = await configManagerExportConnectorDefinition({
+          connectorName: options.name,
+        });
+      } else {
+        printMessage('Exporting all connector defitions.');
+        outcome = await configManagerExportConnectorDefinitionsAll();
       }
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;

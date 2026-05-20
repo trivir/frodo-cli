@@ -62,12 +62,28 @@ export default function setup() {
           options,
           command
         );
-        // import by id or url
         if (
-          (options.serverId || options.serverUrl) &&
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
+          !options.serverId &&
+          !options.serverUrl &&
+          !options.all &&
+          !options.allSeparate &&
+          !options.file
         ) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+        // import by id or url
+        if ((options.serverId || options.serverUrl) && options.file) {
           verboseMessage(
             `Importing server ${options.serverId || options.serverUrl}...`
           );
@@ -82,11 +98,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.all && options.file) {
           verboseMessage(
             `Importing all servers from a single file (${options.file})...`
           );
@@ -96,10 +108,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (
-          options.allSeparate &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.allSeparate) {
           verboseMessage('Importing all servers from separate files...');
           const outcome = await importServersFromFiles({
             includeDefault: options.default,
@@ -107,27 +116,14 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // import first server in file
-        else if (
-          options.file &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        else if (options.file) {
           verboseMessage('Importing first server in file...');
           const outcome = await importFirstServerFromFile(options.file, {
             includeDefault: options.default,
           });
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

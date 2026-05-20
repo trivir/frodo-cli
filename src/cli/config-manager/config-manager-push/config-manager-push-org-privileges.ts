@@ -42,30 +42,23 @@ export default function setup() {
         command
       );
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        let outcome: boolean;
-        if (options.name) {
-          printMessage(
-            `Importing organization privileges config for "${options.name}"`
-          );
-          outcome = await configManagerImportOrgPrivilegesByName(options.name);
-        } else {
-          printMessage(
-            'Importing organization privileges config to all realms'
-          );
-          outcome = await configManagerImportOrgPrivilegesAllRealms();
-        }
-        if (!outcome) process.exitCode = 1;
-      }
-      // unrecognized combination of options or no options
-      else {
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      let outcome: boolean;
+      if (options.name) {
         printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
+          `Importing organization privileges config for "${options.name}"`
         );
-        program.help();
-        process.exitCode = 1;
+        outcome = await configManagerImportOrgPrivilegesByName(options.name);
+      } else {
+        printMessage('Importing organization privileges config to all realms');
+        outcome = await configManagerImportOrgPrivilegesAllRealms();
       }
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;

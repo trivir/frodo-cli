@@ -82,8 +82,20 @@ export default function setup() {
           options,
           command
         );
+
+        if (!options.journeyId && !options.all && !options.allSeparate) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+
         // export
-        if (options.journeyId && (await getTokens())) {
+        if (options.journeyId) {
           verboseMessage('Exporting journey...');
           const outcome = await exportJourneyToFile(
             options.journeyId,
@@ -98,7 +110,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (options.all && (await getTokens())) {
+        else if (options.all) {
           verboseMessage('Exporting all journeys to a single file...');
           const outcome = await exportJourneysToFile(
             options.file,
@@ -112,7 +124,7 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
-        else if (options.allSeparate && (await getTokens())) {
+        else if (options.allSeparate) {
           verboseMessage('Exporting all journeys to separate files...');
           const outcome = await exportJourneysToFiles(options.metadata, {
             useStringArrays: options.useStringArrays,
@@ -121,17 +133,7 @@ export default function setup() {
           });
           if (!outcome) process.exitCode = 1;
         }
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

@@ -70,16 +70,29 @@ export default function setup() {
           options,
           command
         );
-        if (
-          options.variableId &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        if (!options.variableId && !options.all && !options.allSeparate) {
+          printMessage(
+            'Unrecognized combination of options or no options...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens(
+          false,
+          true,
+          deploymentTypes
+        );
+        if (!getTokensIsSuccessful) process.exit(1);
+        let outcome: boolean;
+
+        if (options.variableId) {
           verboseMessage(
             `Exporting variable "${
               options.variableId
             }" from realm "${state.getRealm()}"...`
           );
-          const outcome = await exportVariableToFile(
+          outcome = await exportVariableToFile(
             options.variableId,
             options.file,
             options.decode,
@@ -87,39 +100,25 @@ export default function setup() {
             options.modifiedProperties
           );
           if (!outcome) process.exitCode = 1;
-        } else if (
-          options.all &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        } else if (options.all) {
           verboseMessage('Exporting all variables to a single file...');
-          const outcome = await exportVariablesToFile(
+          outcome = await exportVariablesToFile(
             options.file,
             options.decode,
             options.metadata,
             options.modifiedProperties
           );
           if (!outcome) process.exitCode = 1;
-        } else if (
-          options.allSeparate &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
+        } else if (options.allSeparate) {
           verboseMessage('Exporting all variables to separate files...');
-          const outcome = await exportVariablesToFiles(
+          outcome = await exportVariablesToFiles(
             options.decode,
             options.metadata,
             options.modifiedProperties
           );
-          if (!outcome) process.exitCode = 1;
-        } else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
         }
+        if (!outcome) process.exitCode = 1;
       }
-      // end command logic inside action handler
     );
 
   return program;

@@ -75,8 +75,18 @@ export default function setup() {
           options,
           command
         );
+        if (!options.file && !options.allSeparate) {
+          printMessage(
+            'Unrecognized combination of options or no option...',
+            'error'
+          );
+          process.exitCode = 1;
+          program.help();
+        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
 
-        if (options.file && (await getTokens())) {
+        if (options.file) {
           verboseMessage(
             `Importing script(s) into realm "${state.getRealm()}"...`
           );
@@ -91,7 +101,7 @@ export default function setup() {
             }
           );
           if (!outcome) process.exitCode = 1;
-        } else if (options.allSeparate && (await getTokens())) {
+        } else if (options.allSeparate) {
           verboseMessage(
             `Importing all script files into realm "${state.getRealm()}"...`
           );
@@ -109,18 +119,7 @@ export default function setup() {
             process.exitCode = 1;
           }
         }
-
-        // unrecognized combination of options or no options
-        else {
-          printMessage(
-            'Unrecognized combination of options or no options...',
-            'error'
-          );
-          program.help();
-          process.exitCode = 1;
-        }
       }
-      // end command logic inside action handler
     );
 
   return program;

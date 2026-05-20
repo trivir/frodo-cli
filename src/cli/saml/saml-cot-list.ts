@@ -25,15 +25,13 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens()) {
-          verboseMessage(
-            `Listing SAML circles of trust in realm "${state.getRealm()}"...`
-          );
-          const outcome = await listCirclesOfTrust(options.long);
-          if (!outcome) process.exitCode = 1;
-        } else {
-          process.exitCode = 1;
-        }
+        const getTokensIsSuccessful = await getTokens();
+        if (!getTokensIsSuccessful) process.exit(1);
+        verboseMessage(
+          `Listing SAML circles of trust in realm "${state.getRealm()}"...`
+        );
+        const outcome = await listCirclesOfTrust(options.long);
+        if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler
     );
