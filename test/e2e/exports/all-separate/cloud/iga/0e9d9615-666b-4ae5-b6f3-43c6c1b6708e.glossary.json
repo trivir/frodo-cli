@@ -1,0 +1,30 @@
+{
+  "glossarySchema": {
+    "0e9d9615-666b-4ae5-b6f3-43c6c1b6708e": {
+      "allowedValues": [],
+      "description": "Description of entitlement",
+      "displayName": "Description",
+      "id": "0e9d9615-666b-4ae5-b6f3-43c6c1b6708e",
+      "isIndexed": true,
+      "isInternal": true,
+      "isMultiValue": false,
+      "managedObjectType": null,
+      "metadata": {
+        "createdDate": "2025-10-27T18:26:00.277228797Z",
+        "modifiedDate": "2026-05-15T21:59:40.372Z"
+      },
+      "name": "description",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": true,
+      "type": "string"
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-22T16:25:58.243Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "bwirick@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}

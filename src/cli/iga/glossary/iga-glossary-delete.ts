@@ -8,10 +8,19 @@ import {
 } from '../../../ops/cloud/iga/IgaGlossaryOps';
 import { printMessage, verboseMessage } from '../../../utils/Console.js';
 import { FrodoCommand } from '../../FrodoCommand';
+import { GlossaryObjectType } from '@rockcarver/frodo-lib/types/api/cloud/iga/IgaGlossaryApi';
+import { object } from 'zod';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
 const deploymentTypes = [CLOUD_DEPLOYMENT_TYPE_KEY];
+
+const glossaryTypeMap: Record<string, GlossaryObjectType> = {
+  role: '/openidm/managed/role',
+  entitlement: '/openidm/managed/assignment',
+  application: '/openidm/managed/application',
+  account: '/iga/governance/account',
+};
 
 export default function setup() {
   const program = new FrodoCommand('frodo iga glossary delete');
@@ -21,13 +30,24 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --glossary-id <glossary-id>',
-        'glossary id. If specified, -a is ignored. '
-      )
+        'glossary id. If specified, -n and -a cannot be used. '
+      ).conflicts(['glossaryName', 'all'])
+    ).addOption(
+      new Option(
+        '-n, --glossary-name <glossary-name>',
+        'Specify a glossary name. If specified, -i cannot be used.'
+      ).conflicts(['glossaryId'])
     )
     .addOption(
       new Option(
         '-a, --all',
-        'Delete all glossaries. Ignored with -i.'
+        'Delete all glossaries. Cannot be used with -a and -i.'
+      ).conflicts(['glossaryName', 'glossaryId'])
+    )
+    .addOption(
+      new Option(
+        '-t, --glossary-type <type>',
+        'Filter glossary schema by type: role, entitlement, application, or account'
       )
     )
     .action(
@@ -41,7 +61,7 @@ export default function setup() {
           options,
           command
         );
-        if (!options.glossaryId && !options.all) {
+        if (!options.glossaryId && !options.glossaryName && !options.all) {
           printMessage(
             'Unrecognized combination of options or no options...',
             'error'
@@ -62,18 +82,31 @@ export default function setup() {
           );
           process.exit(1);
         }
+        const objectType = options.glossaryType
+          ? glossaryTypeMap[options.glossaryType]
+          : null;
+
+        if (options.glossaryType && !objectType) {
+          printMessage('Please provide a valid Object Type', 'error');
+          process.exitCode = 1;
+          program.help();
+        }
+
         // delete by id
-        if (options.glossaryId) {
+        if (options.glossaryId || options.glossaryName) {
           verboseMessage('Deleting glossary...');
+          console.log("CLI: NAME", options.glossaryName)
           const outcome = await deleteGlossarySchema(
             options.glossaryId,
+            options.glossaryName,
+            objectType
           );
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
         else if (options.all) {
           verboseMessage('Deleting all glossaries...');
-          const outcome = await deleteGlossarySchemas();
+          const outcome = await deleteGlossarySchemas(objectType);
           if (!outcome) process.exitCode = 1;
         }
       }

@@ -1,0 +1,45 @@
+{
+  "glossarySchema": {
+    "216c69b1-d635-4471-b983-5bdb169c5e6a": {
+      "allowedValues": [
+        0,
+        1,
+        2
+      ],
+      "description": "Test Integer Description",
+      "displayName": "Test Integer Display Name",
+      "enumeratedValues": [
+        {
+          "text": 1,
+          "value": 0
+        },
+        {
+          "text": 2,
+          "value": 1
+        },
+        {
+          "text": 3,
+          "value": 2
+        }
+      ],
+      "id": "216c69b1-d635-4471-b983-5bdb169c5e6a",
+      "isMultiValue": true,
+      "metadata": {
+        "createdDate": "2026-05-22T16:22:12.871382381Z",
+        "modifiedDate": "2026-05-22T16:22:12.871384427Z"
+      },
+      "name": "testInteger",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": false,
+      "type": "integer"
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-22T16:25:58.244Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "bwirick@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "glossarySchema": {
+    "12e51982-56a4-4f3d-9db1-2529276e2a05": {
+      "allowedValues": [],
+      "description": "Is this account locked?",
+      "displayName": "Locked",
+      "enumeratedValues": [],
+      "id": "12e51982-56a4-4f3d-9db1-2529276e2a05",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {
+        "createdDate": "2025-10-27T18:13:21.772411471Z",
+        "modifiedDate": "2026-05-15T21:59:40.988Z"
+      },
+      "name": "locked",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "boolean"
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-22T16:25:58.244Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "bwirick@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}

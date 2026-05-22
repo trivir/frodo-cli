@@ -1,5 +1,5 @@
 import { frodo, FrodoError } from '@rockcarver/frodo-lib';
-import { GlossaryObjectType } from '@rockcarver/frodo-lib/types/api/cloud/iga/IgaGlossaryApi';
+import { GlossaryObjectType, GlossarySchemaItemSkeleton } from '@rockcarver/frodo-lib/types/api/cloud/iga/IgaGlossaryApi';
 import {
   GlossarySchemaExportInterface,
   GlossarySchemaExportOptions,
@@ -18,6 +18,7 @@ import {
   updateProgressIndicator,
   debugMessage,
 } from '../../../utils/Console';
+import { object } from 'zod';
 
 const {
   getTypedFilename,
@@ -29,10 +30,11 @@ const {
 const {
   readGlossarySchemas,
   exportGlossarySchemas,
-  exportGlossarySchemaByNameAndObjectType,
+  exportGlossarySchemaByName,
   exportGlossarySchema,
   importGlossarySchemas,
   deleteGlossarySchema: _deleteGlossary,
+  deleteGlossarySchemaByName: _deleteGlossaryByName,
   deleteGlossarySchemas: _deleteGlossarys,
 } = frodo.cloud.iga.glossary;
 
@@ -84,24 +86,77 @@ export async function listGlossary(
 /**
  * Describe a glossary
  * @param {string} glossaryId glossary id
+ * @param {string} glossaryName glossary name
+ * @param {GlossaryObjectType} objectType Filters glossary schemas by type: role, entitlement, application, or account
  * @param {string} file the glossary export file
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function describeGlossary(
   glossaryId?: string,
+  glossaryName?: string,
+  objectType?: GlossaryObjectType,
   file?: string,
 ): Promise<boolean> {
   try {
-    const schemaData = file
-      ? getGlossarySchemaExportFromFile(getFilePath(file))
-      : await exportGlossarySchema(glossaryId)
-    if (!glossaryId) {
+    let schemaData;
+
+    if (file) {
+      schemaData = getGlossarySchemaExportFromFile(getFilePath(file));
+
+      // If no id/name provided, default to first glossary in file
+      if (!glossaryId && !glossaryName) {
+        const ids = Object.keys(schemaData.glossarySchema);
+
+        if (ids.length === 0) {
+          throw new FrodoError(
+            `No glossary schemas found in export file ${file}`
+          );
+        }
+
+        glossaryId = ids[0];
+      }
+
+      // If glossary name provided, resolve ID from file contents
+      if (glossaryName && !glossaryId) {
+        const glossaryEntries = Object.entries(
+          schemaData.glossarySchema
+        ) as [string, GlossarySchemaItemSkeleton<any>][];
+        
+        const foundEntry = glossaryEntries.find(
+          ([, glossary]) =>
+            glossary.name === glossaryName &&
+            (!objectType || glossary.objectType === objectType)
+        );
+
+        if (!foundEntry) {
+          throw new FrodoError(
+            `Glossary schema named "${glossaryName}" not found in file ${file}`
+          );
+        }
+
+        glossaryId = foundEntry[0];
+      }
+    } else {
+      if (glossaryId) {
+        schemaData = await exportGlossarySchema(glossaryId);
+      } else if (glossaryName) {
+        schemaData = await exportGlossarySchemaByName(glossaryName, objectType);
+      } else {
+        throw new FrodoError(
+          'Either glossary id, glossary name, or file must be provided.'
+        );
+      }
+
+      // Recover exported ID
       const ids = Object.keys(schemaData.glossarySchema);
-      if (ids.length === 0)
-        throw new FrodoError(`No glossary schemas found in export file ${file}`);
+
+      if (ids.length === 0) {
+        throw new FrodoError('No glossary schemas returned.');
+      }
+
       glossaryId = ids[0];
     }
-    // Glossary Schema Details
+
     const glossary = schemaData.glossarySchema[glossaryId];
     if (!glossary) {
       throw new FrodoError(`Glossary schema ${glossaryId} not found.`);
@@ -159,7 +214,7 @@ export async function describeGlossary(
         : 'false'['brightRed'],
     ]);
 
-    if (!!glossary.isInternal !== undefined) {
+    if (!!glossary.isInternal) {
       table.push([
         'Internal'['brightCyan'],
         glossary.isInternal
@@ -229,7 +284,7 @@ export async function exportGlossarySchemaToFile(
         file = getTypedFilename(glossaryId, 'glossary');
       }
     } else {
-      exportData = await exportGlossarySchemaByNameAndObjectType(glossaryName, objectType);
+      exportData = await exportGlossarySchemaByName(glossaryName, objectType);
       if (!file) {
         file = getTypedFilename(glossaryName, 'glossary');
       }
@@ -269,6 +324,7 @@ export async function exportGlossarySchemaToFile(
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
  * @param {boolean} keepModifiedProperties true to keep modified properties, otherwise delete them. Default: false
  * @param {glossaryExportOptions} options export internal schemas
+ * @param {GlossaryObjectType} objectType Filters glossary schemas by type: role, entitlement, application, or account
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportGlossarySchemasToFile(
@@ -322,6 +378,7 @@ export async function exportGlossarySchemasToFile(
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
  * @param {boolean} keepModifiedProperties true to keep modified properties, otherwise delete them. Default: false
  * @param {GlossarySchemaExportOptions} options export options
+ * @param {GlossaryObjectType} objectType Filters glossary schemas by type: role, entitlement, application, or account
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function exportGlossarySchemasToFiles(
@@ -334,24 +391,6 @@ export async function exportGlossarySchemasToFiles(
 ): Promise<boolean> {
   try {
     const exportData = await exportGlossarySchemas(options, objectType);
-    // if (objectType) {
-    //   const filteredGlossaries = Object.fromEntries(
-    //     Object.entries(exportData.glossarySchema).filter(
-    //       ([_, glossary]) => {
-    //         const matches = glossary.objectType === objectType;
-
-    //         return matches;
-    //       }
-    //     )
-    //   );
-
-    //   console.log(
-    //     'FILTERED COUNT',
-    //     Object.keys(filteredGlossaries).length
-    //   );
-
-    //   exportData.glossarySchema = filteredGlossaries;
-    // }
     for (const [glossaryName, GlossaryObjectType] of Object.entries(
       exportData.glossarySchema
     )) {
@@ -374,12 +413,16 @@ export async function exportGlossarySchemasToFiles(
 /**
  * Import a glossary from file
  * @param {string} glossaryId glossary id
+ * @param {string} glossaryName glossary name
+ * @param {GlossaryObjectType} objectType Filters glossary schemas by type: role, entitlement, application, or account
  * @param {string} file import file name
  * @param {glossaryImportOptions} options import options
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function importGlossarySchemaFromFile(
   glossaryId: string,
+  glossaryName: string,
+  objectType: GlossaryObjectType,
   file: string,
   options: GlossarySchemaImportOptions = {
     includeInternal: false,
@@ -394,7 +437,11 @@ export async function importGlossarySchemaFromFile(
     );
     const importData = getGlossarySchemaExportFromFile(getFilePath(file))
     updateProgressIndicator(indicatorId, 'Importing glossary...');
-    await importGlossarySchemas(importData, glossaryId, undefined, undefined, options);
+    if (glossaryId) {
+      await importGlossarySchemas(importData, glossaryId, undefined, undefined, options);
+    } else if (glossaryName) {
+      await importGlossarySchemas(importData, undefined, glossaryName, objectType, options);
+    }
     stopProgressIndicator(
       indicatorId,
       `Successfully imported glossary ${glossaryId}.`,
@@ -404,7 +451,7 @@ export async function importGlossarySchemaFromFile(
   } catch (error) {
     stopProgressIndicator(
       indicatorId,
-      `Error importing glossary ${glossaryId}`,
+      `Error importing glossary ${glossaryId ? glossaryId : glossaryName}`,
       'fail'
     );
     printError(error);
@@ -415,11 +462,13 @@ export async function importGlossarySchemaFromFile(
 /**
  * Import glossaries from file
  * @param {String} file file name
+ * @param {GlossaryObjectType} objectType Filters glossary schemas by type: role, entitlement, application, or account
  * @param {glossaryImportOptions} options import options
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function importGlossarySchemasFromFile(
   file: string,
+  objectType: GlossaryObjectType,
   options: GlossarySchemaImportOptions = {
     includeInternal: false,
   }
@@ -434,7 +483,7 @@ export async function importGlossarySchemasFromFile(
     debugMessage(`importGlossarySchemasFromFile: importing ${file}`);
     const importData = getGlossarySchemaExportFromFile(getFilePath(file))
     updateProgressIndicator(indicatorId, 'Importing glossaries...');
-    await importGlossarySchemas(importData, undefined, undefined, undefined, options);
+    await importGlossarySchemas(importData, undefined, undefined, objectType, options);
     stopProgressIndicator(
       indicatorId,
       `Successfully imported glossaries.`,
@@ -451,10 +500,12 @@ export async function importGlossarySchemasFromFile(
 
 /**
  * Import all glossaries from separate files
+ * @param {GlossaryObjectType} objectType Filters glossary schemas by type: role, entitlement, application, or account
  * @param {glossaryImportOptions} options import options
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function importGlossarySchemasFromFiles(
+  objectType: GlossaryObjectType,
   options: GlossarySchemaImportOptions = {
     includeInternal: false,
   }
@@ -478,7 +529,7 @@ export async function importGlossarySchemasFromFiles(
           `Importing glossaries from file ${file}...`
         );
         
-        await importGlossarySchemasFromFile(file, options);
+        await importGlossarySchemasFromFile(file, objectType, options);
       } catch (error) {
         errors.push(
           new FrodoError(`Error importing glossaries from ${file}`, error)
@@ -545,26 +596,36 @@ export async function importFirstGlossaryFromFile(
 /**
  * Delete glossary.
  * @param {string} glossaryId glossary id
+ * @param {string} glossaryName glossary name
+ * @param {GlossaryObjectType} objectType Filters glossary schemas by type: role, entitlement, application, or account
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function deleteGlossarySchema(
   glossaryId: string,
+  glossaryName: string,
+  objectType?: GlossaryObjectType,
 ): Promise<boolean> {
+  const glossary = glossaryId ? glossaryId : glossaryName;
   const spinnerId = createProgressIndicator(
     'indeterminate',
     undefined,
-    `Deleting glossary ${glossaryId}...`
+    `Deleting glossary ${glossary}...`
   );
   try {
-    const result = await _deleteGlossary(
-      glossaryId,
-    );
-    if (!result.id) {
-      throw new FrodoError(`Failed to delete glossary ${glossaryId}`);
+    let result;
+    if (glossaryId) {
+      result = await _deleteGlossary(glossaryId);
+    } else if (glossaryName) {
+      result = await _deleteGlossaryByName(glossaryName, objectType);
     }
+
+    if (!result) {
+      throw new FrodoError(`Failed to delete glossary ${glossary}`);
+    }
+
     stopProgressIndicator(
       spinnerId,
-      `Deleted glossary ${glossaryId}.`,
+      `Deleted glossary ${glossary}.`,
       'success'
     );
     return true;
@@ -577,9 +638,11 @@ export async function deleteGlossarySchema(
 
 /**
  * Delete glossaries.
+ * @param {GlossaryObjectType} objectType Filters glossary schemas by type: role, entitlement, application, or account
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function deleteGlossarySchemas(
+  objectType?: GlossaryObjectType
 ): Promise<boolean> {
   const spinnerId = createProgressIndicator(
     'indeterminate',
@@ -587,7 +650,7 @@ export async function deleteGlossarySchemas(
     `Deleting glossaries...`
   );
   try {
-    await _deleteGlossarys();
+    await _deleteGlossarys(objectType);
     stopProgressIndicator(spinnerId, `Deleted glossaries.`, 'success');
     return true;
   } catch (error) {
@@ -606,5 +669,7 @@ export async function deleteGlossarySchemas(
 export function getGlossarySchemaExportFromFile(
   file: string
 ): GlossarySchemaExportInterface {
-  return JSON.parse(fs.readFileSync(file, 'utf8'));
+  return JSON.parse(
+    fs.readFileSync(file, 'utf8')
+  ) as GlossarySchemaExportInterface;
 }

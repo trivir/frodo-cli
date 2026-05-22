@@ -9,7 +9,6 @@ import {
 import { printMessage, verboseMessage } from '../../../utils/Console.js';
 import { FrodoCommand } from '../../FrodoCommand';
 import { GlossaryObjectType } from '@rockcarver/frodo-lib/types/api/cloud/iga/IgaGlossaryApi';
-import { on } from 'node:cluster';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
@@ -133,7 +132,7 @@ export default function setup() {
         
         // --glossary-id -i || --glossary-name -n
         if (options.glossaryId || options.glossaryName) {
-          verboseMessage(`Exporting glossary "${options.glossaryId}"...`);
+          verboseMessage(`Exporting glossary "${options.glossaryId ? options.glossaryId : options.glossaryName}"...`);
           const outcome = await exportGlossarySchemaToFile(
             options.glossaryId,
             options.glossaryName,
@@ -153,7 +152,7 @@ export default function setup() {
             options.modifiedProperties,
             {includeInternal: options.internal},
             objectType,
-          );
+          )
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A

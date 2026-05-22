@@ -10,10 +10,19 @@ import {
 } from '../../../ops/cloud/iga/IgaGlossaryOps';
 import { printMessage, verboseMessage } from '../../../utils/Console.js';
 import { FrodoCommand } from '../../FrodoCommand';
+import { GlossaryObjectType } from '@rockcarver/frodo-lib/types/api/cloud/iga/IgaGlossaryApi';
+import { object } from 'zod';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
 const deploymentTypes = [CLOUD_DEPLOYMENT_TYPE_KEY];
+
+const glossaryTypeMap: Record<string, GlossaryObjectType> = {
+  role: '/openidm/managed/role',
+  entitlement: '/openidm/managed/assignment',
+  application: '/openidm/managed/application',
+  account: '/iga/governance/account',
+};
 
 export default function setup() {
   const program = new FrodoCommand(
@@ -30,6 +39,12 @@ export default function setup() {
         'glossary id. If specified, -a and -A are ignored.'
       )
     )
+    .addOption(
+      new Option(
+        '-n, --glossary-name <glossary-name>',
+        'Specify a glossary name. If specified, -i, -a and -A cannot be used.'
+      ).conflicts(['glossaryId', 'all', 'allSeparate'])
+    )
     .addOption(new Option('-f, --file <file>', 'Name of the import file.'))
     .addOption(
       new Option(
@@ -45,8 +60,20 @@ export default function setup() {
     )
     .addOption(
       new Option(
-        '-o, --internal',
+        '-N, --no-metadata',
+        'Do not include metadata in the export file.'
+      )
+    )
+    .addOption(
+      new Option(
+        '-I, --internal',
         'Include internal glossary schema in import if true.'
+      )
+    )
+    .addOption(
+      new Option(
+        '-t, --glossary-type <type>',
+        'Filter glossary schema by type: role, entitlement, application, or account'
       )
     )
     .action(
@@ -61,11 +88,13 @@ export default function setup() {
           command
         );
         const isImportById = options.glossaryId && options.file;
+        const isImportByName = options.glossaryName && options.file;
         const isImportAll = options.all && options.file;
         const isImportAllSeparate = options.allSeparate && !options.file;
         const isImportFirst = !!options.file;
         if (
           !isImportById &&
+          !isImportByName &&
           !isImportAll &&
           !isImportAllSeparate &&
           !isImportFirst
@@ -90,11 +119,23 @@ export default function setup() {
           );
           process.exit(1);
         }
+
+        const objectType = options.glossaryType
+          ? glossaryTypeMap[options.glossaryType]
+          : undefined;
+        if (options.glossaryType && !objectType) {
+          printMessage('Please provide a valid Object Type', 'error');
+          process.exitCode = 1;
+          program.help();
+        }
+
         // import by id
-        if (isImportById) {
-          verboseMessage(`Importing glossary "${options.glossaryId}"...`);
+        if (isImportById || isImportByName) {
+          verboseMessage(`Importing glossary "${options.glossaryId ? options.glossaryId : options.glossaryName}"...`);
           const outcome = await importGlossarySchemaFromFile(
             options.glossaryId,
+            options.glossaryName,
+            objectType,
             options.file,
             {
               includeInternal: options.internal
@@ -107,7 +148,7 @@ export default function setup() {
           verboseMessage(
             `Importing all glossaries from a single file (${options.file})...`
           );
-          const outcome = await importGlossarySchemasFromFile(options.file, {
+          const outcome = await importGlossarySchemasFromFile(options.file, objectType, {
             includeInternal: options.internal
           });
           if (!outcome) process.exitCode = 1;
@@ -117,7 +158,7 @@ export default function setup() {
           verboseMessage(
             'Importing all glossaries from separate files (*.glossary.json) in current directory...'
           );
-          const outcome = await importGlossarySchemasFromFiles({
+          const outcome = await importGlossarySchemasFromFiles(objectType, {
             includeInternal: options.internal
           });
           if (!outcome) process.exitCode = 1;

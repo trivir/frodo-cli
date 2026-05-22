@@ -1,0 +1,135 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga glossary describe "frodo iga glossary describe -i 11fee6b2-bf06-4560-b2ae-3e27cec169f2": should describe the glossary with id: '11fee6b2-bf06-4560-b2ae-3e27cec169f2' 1`] = `
+"Glossary Schema
+Id          │11fee6b2-bf06-4560-b2ae-3e27cec169f2
+Name        │CP-DummyEntitlement                 
+Display Name│CP Dummy Entitlement                
+Description │Testing                             
+Type        │string                              
+Object Type │/openidm/managed/assignment         
+Multi Value │false                               
+Searchable  │true                                
+
+"
+`;
+
+exports[`frodo iga glossary describe "frodo iga glossary describe -i 11fee6b2-bf06-4560-b2ae-3e27cec169f2": should describe the glossary with id: '11fee6b2-bf06-4560-b2ae-3e27cec169f2' 2`] = `""`;
+
+exports[`frodo iga glossary describe "frodo iga glossary describe -n riskScore": should describe the glossary named riskScore 1`] = `
+"Glossary Schema
+Id          │0e1f922f-c9b9-40f2-964b-740f0ad47afb
+Name        │riskScore                           
+Display Name│Risk Score                          
+Description │Risk Score                          
+Type        │float                               
+Object Type │/iga/governance/account             
+Multi Value │false                               
+Searchable  │true                                
+Internal    │true                                
+
+"
+`;
+
+exports[`frodo iga glossary describe "frodo iga glossary describe -n riskScore": should describe the glossary named riskScore 2`] = `""`;
+
+exports[`frodo iga glossary describe "frodo iga glossary describe frodo iga glossary describe --glossary-name riskLevel": should describe the glossary named riskLevel 1`] = `
+"Glossary Schema
+Id                   │e307820d-2e53-4889-a9e7-b9ad1232352c
+Name                 │riskLevel                           
+Display Name         │Risk Level                          
+Description          │                                    
+Type                 │string                              
+Object Type          │/openidm/managed/role               
+Multi Value          │false                               
+Searchable           │true                                
+Allowed Values (4)   │high                                
+                     │medium                              
+                     │low                                 
+                     │null                                
+Enumerated Values (4)│High => high                        
+                     │Medium => medium                    
+                     │Low => low                          
+                     │Other => null                       
+
+"
+`;
+
+exports[`frodo iga glossary describe "frodo iga glossary describe frodo iga glossary describe --glossary-name riskLevel": should describe the glossary named riskLevel 2`] = `""`;
+
+exports[`frodo iga glossary describe "frodo iga glossary describe frodo iga glossary describe --glossary-name sensitive --glossary-type application": should describe the glossary named sensitive with objectType application 1`] = `
+"Glossary Schema
+Id                   │598709e1-d16b-4c39-884d-dd9481b14d90
+Name                 │sensitive                           
+Display Name         │Is Sensitive                        
+Description          │                                    
+Type                 │string                              
+Object Type          │/openidm/managed/application        
+Multi Value          │false                               
+Searchable           │true                                
+Allowed Values (2)   │yes                                 
+                     │no                                  
+Enumerated Values (2)│Yes => yes                          
+                     │No => no                            
+
+"
+`;
+
+exports[`frodo iga glossary describe "frodo iga glossary describe frodo iga glossary describe --glossary-name sensitive --glossary-type application": should describe the glossary named sensitive with objectType application 2`] = `""`;
+
+exports[`frodo iga glossary describe "frodo iga glossary describe frodo iga glossary describe --glossary-name sensitive --glossary-type entitlement --file test/e2e/exports/all/allGlossaries.glossary.json": should describe the glossary named sensitive with objectType entitlement from test/e2e/exports/all/allGlossaries.glossary.json 1`] = `
+"Glossary Schema
+Id                   │13a88c47-5846-4e5a-b9b5-759ac7ff89fe
+Name                 │sensitive                           
+Display Name         │Is Sensitive                        
+Description          │                                    
+Type                 │string                              
+Object Type          │/openidm/managed/assignment         
+Multi Value          │false                               
+Searchable           │true                                
+Allowed Values (2)   │yes                                 
+                     │no                                  
+Enumerated Values (2)│Yes => yes                          
+                     │No => no                            
+
+"
+`;
+
+exports[`frodo iga glossary describe "frodo iga glossary describe frodo iga glossary describe --glossary-name sensitive --glossary-type entitlement --file test/e2e/exports/all/allGlossaries.glossary.json": should describe the glossary named sensitive with objectType entitlement from test/e2e/exports/all/allGlossaries.glossary.json 2`] = `""`;
+
+exports[`frodo iga glossary describe "frodo iga glossary describe frodo iga glossary describe -f test/e2e/exports/all/allGlossaries.glossary.json": should describe the first glossary of the provided file test/e2e/exports/all/allGlossaries.glossary.json without id or name provided 1`] = `
+"Glossary Schema
+Id          │021ed7cf-116b-4003-9a63-a82431e44c8e
+Name        │customAttribute6                    
+Display Name│Custom Attribute 6                  
+Description │custom attribute 1                  
+Type        │string                              
+Object Type │/iga/governance/account             
+Multi Value │false                               
+Searchable  │true                                
+Internal    │true                                
+
+"
+`;
+
+exports[`frodo iga glossary describe "frodo iga glossary describe frodo iga glossary describe -f test/e2e/exports/all/allGlossaries.glossary.json": should describe the first glossary of the provided file test/e2e/exports/all/allGlossaries.glossary.json without id or name provided 2`] = `""`;
+
+exports[`frodo iga glossary describe "frodo iga glossary describe frodo iga glossary describe -n sensitive -t role": should describe the glossary named sensitive with objectType role 1`] = `
+"Glossary Schema
+Id                   │4da5bed6-f690-41a9-af8a-51b505dc2099
+Name                 │sensitive                           
+Display Name         │Is Sensitive                        
+Description          │                                    
+Type                 │string                              
+Object Type          │/openidm/managed/role               
+Multi Value          │false                               
+Searchable           │true                                
+Allowed Values (2)   │yes                                 
+                     │no                                  
+Enumerated Values (2)│Yes => yes                          
+                     │No => no                            
+
+"
+`;
+
+exports[`frodo iga glossary describe "frodo iga glossary describe frodo iga glossary describe -n sensitive -t role": should describe the glossary named sensitive with objectType role 2`] = `""`;

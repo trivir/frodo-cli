@@ -47,9 +47,13 @@
  */
 
 /*
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary describe -i 11fee6b2-bf06-4560-b2ae-3e27cec169f2 -f test/e2e/exports/all/allGlossarys.glossary.json
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary describe --glossary-id 5a7e52ac-377f-4b2f-92ba-336e175f512e
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary describe --file test/e2e/exports/all/allGlossarys.glossary.json
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary describe -i 11fee6b2-bf06-4560-b2ae-3e27cec169f2
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary describe -n riskScore
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary describe --glossary-name riskLevel
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary describe -n sensitive -t role
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary describe --glossary-name sensitive --glossary-type application
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary describe -f test/e2e/exports/all/allGlossaries.glossary.json
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary describe --glossary-name sensitive --glossary-type entitlement --file test/e2e/exports/all/allGlossaries.glossary.json
  */
 
 import { getEnv, testSuccess, testFail } from './utils/TestUtils';
@@ -61,18 +65,39 @@ const igaEnv = getEnv(ic);
 const allGlossariesFile = "test/e2e/exports/all/allGlossaries.glossary.json";
 
 describe(`frodo iga glossary describe`, () => {
-  test(`"frodo iga glossary describe -i 11fee6b2-bf06-4560-b2ae-3e27cec169f2 -f ${allGlossariesFile}": should describe glossary '11fee6b2-bf06-4560-b2ae-3e27cec169f2' from file ${allGlossariesFile}`, async () => {
-    const CMD = `frodo iga glossary describe -i 11fee6b2-bf06-4560-b2ae-3e27cec169f2 -f ${allGlossariesFile}`;
+  test(`"frodo iga glossary describe -i 11fee6b2-bf06-4560-b2ae-3e27cec169f2": should describe the glossary with id: '11fee6b2-bf06-4560-b2ae-3e27cec169f2'`, async () => {
+    const CMD = `frodo iga glossary describe -i 11fee6b2-bf06-4560-b2ae-3e27cec169f2`;
     await testSuccess(CMD, igaEnv)
   });
 
-  test(`"frodo iga glossary describe --glossary-id 5a7e52ac-377f-4b2f-92ba-336e175f512e": should describe glossary '5a7e52ac-377f-4b2f-92ba-336e175f512e'`, async () => {
-    const CMD = `frodo iga glossary describe --glossary-id 5a7e52ac-377f-4b2f-92ba-336e175f512e`;
+  test(`"frodo iga glossary describe -n riskScore": should describe the glossary named riskScore`, async () => {
+    const CMD = `frodo iga glossary describe -n riskScore`;
     await testSuccess(CMD, igaEnv)
   });
 
-  test(`"frodo iga glossary describe --file ${allGlossariesFile}": should describe first glossary from file ${allGlossariesFile}`, async () => {
-    const CMD = `frodo iga glossary describe --file ${allGlossariesFile}`;
+  test(`"frodo iga glossary describe frodo iga glossary describe --glossary-name riskLevel": should describe the glossary named riskLevel`, async () => {
+    const CMD = `frodo iga glossary describe --glossary-name riskLevel`;
     await testSuccess(CMD, igaEnv)
   });
+
+  test(`"frodo iga glossary describe frodo iga glossary describe -n sensitive -t role": should describe the glossary named sensitive with objectType role`, async () => {
+    const CMD = `frodo iga glossary describe -n sensitive -t role`;
+    await testSuccess(CMD, igaEnv)
+  });
+
+  test(`"frodo iga glossary describe frodo iga glossary describe --glossary-name sensitive --glossary-type application": should describe the glossary named sensitive with objectType application`, async () => {
+    const CMD = `frodo iga glossary describe --glossary-name sensitive --glossary-type application`;
+    await testSuccess(CMD, igaEnv)
+  });
+
+  test(`"frodo iga glossary describe frodo iga glossary describe -f ${allGlossariesFile}": should describe the first glossary of the provided file ${allGlossariesFile} without id or name provided`, async () => {
+    const CMD = `frodo iga glossary describe -f ${allGlossariesFile}`;
+    await testSuccess(CMD, igaEnv)
+  });
+
+  test(`"frodo iga glossary describe frodo iga glossary describe --glossary-name sensitive --glossary-type entitlement --file ${allGlossariesFile}": should describe the glossary named sensitive with objectType entitlement from ${allGlossariesFile}`, async () => {
+    const CMD = `frodo iga glossary describe --glossary-name sensitive --glossary-type entitlement --file ${allGlossariesFile}`;
+    await testSuccess(CMD, igaEnv)
+  });
+
 });

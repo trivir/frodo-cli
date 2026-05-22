@@ -47,12 +47,13 @@
  */
 
 /*
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary export -Nxi testGlossary1 -D testGlossaryExportDir1
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary export --glossary-id testGlossary1 --no-coords --no-deps -f testGlossaryExportFile1.json
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary export --no-metadata -a --directory testGlossaryExportDir2
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary export --all -R --no-coords --no-deps --use-string-arrays --file testGlossaryExportFile2.json 
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary export -xNAD testGlossaryExportDir3
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary export --all-separate --use-string-arrays --read-only --no-coords --no-deps -D testGlossaryExportDir4
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary export -af test/e2e/exports/all-iga/allGlossaries.glossary.json
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary export --all -If test/e2e/exports/all-iga/allGlossariesInternal.glossary.json
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary export --glossary-id 980b0308-32c8-44a3-86a4-0098d82b33bd
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary export -Nn sensitive -t entitlement
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary export -aIMNt role -f test/e2e/exports/all-iga/allRoleTypeGlossaries.glossary.json
  */
 import { getEnv, testExport } from './utils/TestUtils';
 import { iga_connection as ic } from './utils/TestConfig';
@@ -63,40 +64,47 @@ const igaEnv = getEnv(ic);
 const type = 'glossary';
 
 describe(`frodo iga glossary export`, () => {
-  test(`"frodo iga glossary export -i testGlossary1": should export glossary 'testGlossary1' with extracted scripts and no metadata`, async () => {
-    const exportDirectory = "testGlossaryExportDir1";
-    const CMD = `frodo iga glossary export -Nxi testGlossary1 -D ${exportDirectory}`;
+  test(`"frodo iga glossary export -af test/e2e/exports/all-iga/allGlossaries.glossary.json": should export all glossaries to file test/e2e/exports/all/allGlossaries.glossary.json`, async () => {
+    const exportFile = "allGlossaries.glossary.json";
+    const exportDirectory = "test/e2e/exports/all-iga/";
+    const CMD = `frodo iga glossary export -af ${exportDirectory}${exportFile}`;
+    await testExport(CMD, igaEnv, type, exportFile, exportDirectory, true, true);
+  });
+
+  test(`"frodo iga glossary export --all -If test/e2e/exports/all-iga/allGlossariesInternal.glossary.json": should export all glossaries including internals to file test/e2e/exports/all/allGlossariesInternal.glossary.json`, async () => {
+    const exportFile = "allGlossariesInternal.glossary.json";
+    const exportDirectory = "test/e2e/exports/all-iga/";
+    const CMD = `frodo iga glossary export --all -If ${exportDirectory}${exportFile}`;
+    await testExport(CMD, igaEnv, type, exportFile, exportDirectory, true, true);
+  });
+
+  test(`"frodo iga glossary export --glossary-id 980b0308-32c8-44a3-86a4-0098d82b33bd": should export the glossary with id "980b0308-32c8-44a3-86a4-0098d82b33bd"`, async () => {
+    const CMD = `frodo iga glossary export --glossary-id 980b0308-32c8-44a3-86a4-0098d82b33bd`;
+    await testExport(CMD, igaEnv, type, undefined, undefined, true, true);
+  });
+
+  test(`"frodo iga glossary export -Nn sensitive -t entitlement": should export the glossary named sensitive from the type entitlement without metadata`, async () => {
+    const exportFile = "sensitive.glossary.json"
+    const CMD = `frodo iga glossary export -Nn sensitive -t entitlement`;
+    await testExport(CMD, igaEnv, type, exportFile, undefined, false, true);
+  });
+
+  test(`"frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type`, async () => {
+    const exportDirectory = "test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/";
+    const CMD = `frodo iga glossary export -NAID ${exportDirectory} -t account`;
     await testExport(CMD, igaEnv, type, undefined, exportDirectory, false, true);
   });
 
-  test(`"frodo iga glossary export --glossary-id testGlossary1 --no-coords --no-deps -f testGlossaryExportFile1.json": should export glossary 'testGlossary1' with no coordinates and no dependencies`, async () => {
-    const exportFile = 'testGlossaryExportFile1.json';
-    const CMD = `frodo iga glossary export --glossary-id testGlossary1 --no-coords --no-deps -f ${exportFile}`;
-    await testExport(CMD, igaEnv, type, exportFile, undefined, true, true);
+  test(`"frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata`, async () => {
+    const exportDirectory = "test/e2e/exports/all-separate/cloud/iga/glossary/";
+    const CMD = `frodo iga glossary export -NAD ${exportDirectory}`;
+    await testExport(CMD, igaEnv, type, undefined, exportDirectory, false, true);
   });
 
-  test(`"frodo iga glossary export --no-metadata -a --directory testGlossaryExportDir2": should export all glossarys with no metadata`, async () => {
-    const exportFile = 'allGlossarys.glossary.json';
-    const exportDirectory = "testGlossaryExportDir2";
-    const CMD = `frodo iga glossary export --no-metadata -a --directory ${exportDirectory}`;
+  test(`"frodo iga glossary export -aIMNt role -f test/e2e/exports/all-iga/allRoleTypeGlossaries.glossary.json": should export all the glossaries including internals, modified properities and no metadata from the type role and save to file allRoleTypeGlossaries.glossary.json`, async () => {
+    const exportFile = "allRoleTypeGlossaries.glossary.json";
+    const exportDirectory = "test/e2e/exports/all-iga/"
+    const CMD = `frodo iga glossary export -aIMNt role -f ${exportDirectory}${exportFile}`;
     await testExport(CMD, igaEnv, type, exportFile, exportDirectory, false, true);
-  });
-
-  test(`"frodo iga glossary export --all -R --no-coords --no-deps --use-string-arrays --file testGlossaryExportFile2.json": should export all glossarys including non-mutable ones with no coordinates and no dependencies`, async () => {
-    const exportFile = 'testGlossaryExportFile2.json';
-    const CMD = `frodo iga glossary export --all -R --no-coords --no-deps --use-string-arrays --file ${exportFile}`;
-    await testExport(CMD, igaEnv, type, exportFile, undefined, true, true);
-  });
-
-  test(`"frodo iga glossary export -xNAD testGlossaryExportDir3": should export all glossarys separately with no metadata`, async () => {
-    const exportDirectory = "testGlossaryExportDir3";
-    const CMD = `frodo iga glossary export -xNAD ${exportDirectory}`;
-    await testExport(CMD, igaEnv, type, undefined, exportDirectory, false, true);
-  });
-
-  test(`"frodo iga glossary export --all-separate --use-string-arrays --read-only --no-coords --no-deps -D testGlossaryExportDir4": should export all glossarys separately including non-mutable ones with no coordinates, no dependencies, and using string arrays`, async () => {
-    const exportDirectory = "testGlossaryExportDir4";
-    const CMD = `frodo iga glossary export --all-separate --use-string-arrays --read-only --no-coords --no-deps -D ${exportDirectory}`;
-    await testExport(CMD, igaEnv, type, undefined, exportDirectory, true, true);
   });
 });

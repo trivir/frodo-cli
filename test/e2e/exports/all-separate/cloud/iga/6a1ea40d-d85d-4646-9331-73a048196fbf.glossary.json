@@ -1,0 +1,29 @@
+{
+  "glossarySchema": {
+    "6a1ea40d-d85d-4646-9331-73a048196fbf": {
+      "allowedValues": [],
+      "description": "Does the account have any SoD violations?",
+      "displayName": "Has Policy Violations",
+      "enumeratedValues": [],
+      "id": "6a1ea40d-d85d-4646-9331-73a048196fbf",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {
+        "createdDate": "2025-10-27T18:13:25.811651105Z",
+        "modifiedDate": "2026-05-15T21:59:53.007Z"
+      },
+      "name": "hasPolicyViolations",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "boolean"
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-22T16:25:58.244Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "bwirick@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}
