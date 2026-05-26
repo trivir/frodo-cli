@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga certification delete "frodo iga certification delete --all": Should delete all certifications 1`] = `""`;
+
+exports[`frodo iga certification delete "frodo iga certification delete --all": Should delete all certifications 2`] = `
+"✔ Deleted certifications.
+"
+`;
+
+exports[`frodo iga certification delete "frodo iga certification delete --certification-name phh-entitlement-assignment-certification": should delete certification named "phh-entitlement-assignment-certification" 1`] = `""`;
+
+exports[`frodo iga certification delete "frodo iga certification delete --certification-name phh-entitlement-assignment-certification": should delete certification named "phh-entitlement-assignment-certification" 2`] = `
+"✔ Deleted certification phh-entitlement-assignment-certification.
+"
+`;
+
+exports[`frodo iga certification delete "frodo iga certification delete -i 96fb89d5-970e-47aa-94f2-8a4be03e1d33": should delete certification "96fb89d5-970e-47aa-94f2-8a4be03e1d33" 1`] = `""`;
+
+exports[`frodo iga certification delete "frodo iga certification delete -i 96fb89d5-970e-47aa-94f2-8a4be03e1d33": should delete certification "96fb89d5-970e-47aa-94f2-8a4be03e1d33" 2`] = `
+"✔ Deleted certification 96fb89d5-970e-47aa-94f2-8a4be03e1d33.
+"
+`;

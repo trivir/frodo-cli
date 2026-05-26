@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga certification list "frodo iga certification list --include-events": should list the names of the certifications including Event Templates. 1`] = `
+"Sunset date change {{YYYY-MM-DD}} for {{IGA_PARAM_userDisplayName_IGA_PARAM}}
+Sample Access Review (copy)
+phh-entitlement-assignment-certification
+Sample Access Review
+"
+`;
+
+exports[`frodo iga certification list "frodo iga certification list --include-events": should list the names of the certifications including Event Templates. 2`] = `""`;
+
+exports[`frodo iga certification list "frodo iga certification list --long": should list the ids, names, statuses, isStagingEnabled, certificationTypes, isEventBased and descriptions of the certifications. 1`] = `
+"ID                                  │Name                                    │Status │StagingEnabled│CertificationType│isEventBased│Description              
+f2284c72-ca2d-4eab-988e-93acf552b7eb│Sample Access Review                    │active │true          │entitlement      │false       │Jim's test to see if a   
+                                    │                                        │       │              │                 │            │resulting artifact of the
+                                    │                                        │       │              │                 │            │review decisions can be  
+                                    │                                        │       │              │                 │            │created.                 
+a855a858-3139-4470-b9f0-1eeb25a1bfae│Sample Access Review (copy)             │pending│true          │entitlement      │false       │Jim's test to see if a   
+                                    │                                        │       │              │                 │            │resulting artifact of the
+                                    │                                        │       │              │                 │            │review decisions can be  
+                                    │                                        │       │              │                 │            │created.                 
+ae1381d5-cfad-4374-b3dc-075605b1036d│phh-entitlement-assignment-certification│active │true          │entitlement      │false       │Entitlements Review - All
+                                    │                                        │       │              │                 │            │Applications             
+"
+`;
+
+exports[`frodo iga certification list "frodo iga certification list --long": should list the ids, names, statuses, isStagingEnabled, certificationTypes, isEventBased and descriptions of the certifications. 2`] = `""`;
+
+exports[`frodo iga certification list "frodo iga certification list -l": should list the ids, names, statuses, isStagingEnabled, certificationTypes, isEventBased and descriptions of the certifications. 1`] = `
+"ID                                  │Name                                    │Status │StagingEnabled│CertificationType│isEventBased│Description              
+f2284c72-ca2d-4eab-988e-93acf552b7eb│Sample Access Review                    │active │true          │entitlement      │false       │Jim's test to see if a   
+                                    │                                        │       │              │                 │            │resulting artifact of the
+                                    │                                        │       │              │                 │            │review decisions can be  
+                                    │                                        │       │              │                 │            │created.                 
+a855a858-3139-4470-b9f0-1eeb25a1bfae│Sample Access Review (copy)             │pending│true          │entitlement      │false       │Jim's test to see if a   
+                                    │                                        │       │              │                 │            │resulting artifact of the
+                                    │                                        │       │              │                 │            │review decisions can be  
+                                    │                                        │       │              │                 │            │created.                 
+ae1381d5-cfad-4374-b3dc-075605b1036d│phh-entitlement-assignment-certification│active │true          │entitlement      │false       │Entitlements Review - All
+                                    │                                        │       │              │                 │            │Applications             
+"
+`;
+
+exports[`frodo iga certification list "frodo iga certification list -l": should list the ids, names, statuses, isStagingEnabled, certificationTypes, isEventBased and descriptions of the certifications. 2`] = `""`;
+
+exports[`frodo iga certification list "frodo iga certification list -lE": should list the ids, names, statuses, isStagingEnabled, certificationTypes, isEventBased and descriptions of the certifications, including Event Templates. 1`] = `
+"ID                                  │Name                                    │Status │StagingEnabled│CertificationType│isEventBased│Description               
+055dfbc9-367e-441e-8b12-199b9dd5ce19│Sunset date change {{YYYY-MM-DD}} for   │active │false         │identity         │false       │The user's sunset date has
+                                    │{{IGA_PARAM_userDisplayName_IGA_PARAM}} │       │              │                 │            │changed. Certify access.  
+a855a858-3139-4470-b9f0-1eeb25a1bfae│Sample Access Review (copy)             │pending│true          │entitlement      │false       │Jim's test to see if a    
+                                    │                                        │       │              │                 │            │resulting artifact of the 
+                                    │                                        │       │              │                 │            │review decisions can be   
+                                    │                                        │       │              │                 │            │created.                  
+ae1381d5-cfad-4374-b3dc-075605b1036d│phh-entitlement-assignment-certification│active │true          │entitlement      │false       │Entitlements Review - All 
+                                    │                                        │       │              │                 │            │Applications              
+f2284c72-ca2d-4eab-988e-93acf552b7eb│Sample Access Review                    │active │true          │entitlement      │false       │Jim's test to see if a    
+                                    │                                        │       │              │                 │            │resulting artifact of the 
+                                    │                                        │       │              │                 │            │review decisions can be   
+                                    │                                        │       │              │                 │            │created.                  
+"
+`;
+
+exports[`frodo iga certification list "frodo iga certification list -lE": should list the ids, names, statuses, isStagingEnabled, certificationTypes, isEventBased and descriptions of the certifications, including Event Templates. 2`] = `""`;
+
+exports[`frodo iga certification list "frodo iga certification list": should list the names of the certifications 1`] = `
+"Sample Access Review
+Sample Access Review (copy)
+phh-entitlement-assignment-certification
+"
+`;
+
+exports[`frodo iga certification list "frodo iga certification list": should list the names of the certifications 2`] = `""`;
