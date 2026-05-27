@@ -1,0 +1,2377 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga certification export "frodo iga certification export --all --no-deps -MN --file testCertsExportFile2.json": should export all certifications including modified properties with no dependencies or metadata to a file 1`] = `0`;
+
+exports[`frodo iga certification export "frodo iga certification export --all --no-deps -MN --file testCertsExportFile2.json": should export all certifications including modified properties with no dependencies or metadata to a file 2`] = `""`;
+
+exports[`frodo iga certification export "frodo iga certification export --all --no-deps -MN --file testCertsExportFile2.json": should export all certifications including modified properties with no dependencies or metadata to a file 3`] = `
+"✔ Exported 3 certification templates
+"
+`;
+
+exports[`frodo iga certification export "frodo iga certification export --all --no-deps -MN --file testCertsExportFile2.json": should export all certifications including modified properties with no dependencies or metadata to a file: testCertsExportFile2.json 1`] = `
+{
+  "certificationTemplate": {
+    "a855a858-3139-4470-b9f0-1eeb25a1bfae": {
+      "allowBulkCertify": false,
+      "allowPartialSignoff": false,
+      "allowSelfCertification": true,
+      "assignmentNotification": null,
+      "assignmentNotificationIncludeManager": false,
+      "certificationType": "entitlement",
+      "defaultCertifierId": null,
+      "description": "Jim's test to see if a resulting artifact of the review decisions can be created.",
+      "enableForward": true,
+      "enableReassign": true,
+      "escalationFrequency": null,
+      "escalationNotification": null,
+      "escalationOwner": null,
+      "events": {},
+      "exceptionDuration": 0,
+      "excludeConditionalAccess": true,
+      "excludeRoleBasedAccess": true,
+      "expirationAction": "certify",
+      "expirationActionDelay": 0,
+      "expirationNotification": null,
+      "expirationReassignee": null,
+      "finalizeRule": "",
+      "id": "a855a858-3139-4470-b9f0-1eeb25a1bfae",
+      "initializeRule": "",
+      "isEventBased": false,
+      "metadata": {
+        "createdDate": "2026-05-27T15:22:34.649176806Z",
+        "modifiedDate": "2026-05-27T15:22:34.649180702Z",
+      },
+      "name": "Sample Access Review (copy)",
+      "ownerId": "managed/user/9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+      "ownerInfo": {
+        "givenName": "csv",
+        "id": "9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+        "mail": "1csv@example.com",
+        "sn": "one",
+        "userName": "1csv",
+      },
+      "reassignNotification": null,
+      "reassignPermissions": {
+        "certify": true,
+        "claim": true,
+        "comment": true,
+        "delegate": true,
+        "exception": true,
+        "forward": true,
+        "reassign": true,
+        "reset": true,
+        "revoke": true,
+        "save": true,
+        "signoff": true,
+      },
+      "remediationDelay": 0,
+      "remediationRule": null,
+      "reminderFrequency": 0,
+      "reminderNotification": null,
+      "requireJustification": {
+        "exceptionAllowed": false,
+        "revoke": false,
+      },
+      "schedule": "",
+      "selfCertificationRule": "all",
+      "skipInactiveCertifiers": false,
+      "stageDuration": 14,
+      "stages": [
+        {
+          "certifierId": "managed/user/dadb619a-897c-4333-8edc-383b73b25b24",
+          "certifierInfo": {
+            "givenName": "Jim",
+            "id": "dadb619a-897c-4333-8edc-383b73b25b24",
+            "mail": "jmontgomery@example.com",
+            "sn": "Montgomery",
+            "userName": "Jmontgom",
+          },
+          "certifierPath": null,
+          "certifierScript": null,
+          "certifierType": "user",
+        },
+      ],
+      "stagingEnabled": true,
+      "status": "pending",
+      "targetFilter": {
+        "application": {
+          "operand": [
+            {
+              "operand": {
+                "targetName": "id",
+                "targetValue": "23b1fbc6-432e-4b8a-bb4e-bbb629f30157",
+              },
+              "operator": "EQUALS",
+            },
+          ],
+          "operator": "OR",
+        },
+        "decision": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "entitlement": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "memberOfOrg": [],
+        "type": [
+          "entitlementGrant",
+          "ResourceGrant",
+        ],
+        "user": {
+          "operand": [],
+          "operator": "ALL",
+        },
+      },
+      "uiConfig": {
+        "columnConfig": {
+          "entitlements": [
+            "user.user",
+            "application.application",
+            "entitlement.entitlement",
+            "account.account",
+            "review.flags",
+            "review.comments",
+          ],
+        },
+      },
+    },
+    "ae1381d5-cfad-4374-b3dc-075605b1036d": {
+      "allowBulkCertify": false,
+      "allowPartialSignoff": true,
+      "allowSelfCertification": false,
+      "assignmentNotification": "emailTemplate/certificationAssigned",
+      "assignmentNotificationIncludeManager": false,
+      "certificationType": "entitlement",
+      "defaultCertifierId": "managed/user/6b21c283-d491-4fd9-8322-898c171c7018",
+      "defaultCertifierInfo": {
+        "givenName": "Parent",
+        "id": "6b21c283-d491-4fd9-8322-898c171c7018",
+        "mail": "pholderness+poadmin@trivir.com",
+        "sn": "Admin",
+        "userName": "phh-parent-org-admin",
+      },
+      "description": "Entitlements Review - All Applications",
+      "enableForward": true,
+      "enableReassign": true,
+      "escalationFrequency": null,
+      "escalationNotification": null,
+      "escalationOwner": null,
+      "events": {
+        "assignment": {
+          "notification": "emailTemplate/certificationAssigned",
+        },
+        "reassign": {
+          "notification": "emailTemplate/certificationReassigned",
+        },
+      },
+      "exceptionDuration": 14,
+      "excludeConditionalAccess": true,
+      "excludeRoleBasedAccess": true,
+      "expirationAction": null,
+      "expirationActionDelay": 0,
+      "expirationNotification": null,
+      "expirationReassignee": null,
+      "finalizeRule": "",
+      "id": "ae1381d5-cfad-4374-b3dc-075605b1036d",
+      "initializeRule": "",
+      "isEventBased": false,
+      "metadata": {
+        "createdDate": "2025-12-18T18:46:21.120859941Z",
+        "modifiedDate": "2025-12-19T22:30:24.617Z",
+      },
+      "name": "phh-entitlement-assignment-certification",
+      "ownerId": "managed/user/6b21c283-d491-4fd9-8322-898c171c7018",
+      "ownerInfo": {
+        "givenName": "Parent",
+        "id": "6b21c283-d491-4fd9-8322-898c171c7018",
+        "mail": "pholderness+poadmin@trivir.com",
+        "sn": "Admin",
+        "userName": "phh-parent-org-admin",
+      },
+      "reassignNotification": "emailTemplate/certificationReassigned",
+      "reassignPermissions": {
+        "certify": true,
+        "claim": true,
+        "comment": true,
+        "delegate": true,
+        "exception": true,
+        "forward": true,
+        "reassign": true,
+        "reset": true,
+        "revoke": true,
+        "save": true,
+        "signoff": true,
+      },
+      "remediationDelay": 0,
+      "remediationRule": "BasicRevocation",
+      "reminderFrequency": 0,
+      "reminderNotification": null,
+      "requireJustification": {
+        "exceptionAllowed": true,
+        "revoke": true,
+      },
+      "scheduleId": "templateScheduleae1381d5cfad4374b3dc075605b1036d",
+      "selfCertificationRule": "none",
+      "skipInactiveCertifiers": false,
+      "stageDuration": 14,
+      "stages": [
+        {
+          "certifierId": null,
+          "certifierPath": null,
+          "certifierScript": null,
+          "certifierType": "entitlementOwner",
+        },
+      ],
+      "stagingEnabled": true,
+      "status": "active",
+      "targetFilter": {
+        "application": {
+          "operand": {
+            "targetName": "authoritative",
+            "targetValue": false,
+          },
+          "operator": "EQUALS",
+        },
+        "decision": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "entitlement": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "memberOfOrg": [],
+        "type": [
+          "entitlementGrant",
+          "ResourceGrant",
+        ],
+        "user": {
+          "operand": [],
+          "operator": "ALL",
+        },
+      },
+      "uiConfig": {
+        "columnConfig": {
+          "entitlements": [
+            "user.user",
+            "application.application",
+            "entitlement.entitlement",
+            "account.account",
+            "review.flags",
+            "review.comments",
+          ],
+        },
+      },
+    },
+    "f2284c72-ca2d-4eab-988e-93acf552b7eb": {
+      "allowBulkCertify": false,
+      "allowPartialSignoff": false,
+      "allowSelfCertification": true,
+      "assignmentNotification": null,
+      "assignmentNotificationIncludeManager": false,
+      "certificationType": "entitlement",
+      "defaultCertifierId": null,
+      "description": "Jim's test to see if a resulting artifact of the review decisions can be created.",
+      "enableForward": true,
+      "enableReassign": true,
+      "escalationFrequency": null,
+      "escalationNotification": null,
+      "escalationOwner": null,
+      "events": {},
+      "exceptionDuration": 0,
+      "excludeConditionalAccess": true,
+      "excludeRoleBasedAccess": true,
+      "expirationAction": "certify",
+      "expirationActionDelay": 0,
+      "expirationNotification": null,
+      "expirationReassignee": null,
+      "finalizeRule": "",
+      "id": "f2284c72-ca2d-4eab-988e-93acf552b7eb",
+      "initializeRule": "",
+      "isEventBased": false,
+      "metadata": {
+        "createdDate": "2026-03-10T17:01:21.499001182Z",
+        "modifiedDate": "2026-03-10T17:04:52.825Z",
+      },
+      "name": "Sample Access Review",
+      "ownerId": "managed/user/9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+      "ownerInfo": {
+        "givenName": "csv",
+        "id": "9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+        "mail": "1csv@example.com",
+        "sn": "one",
+        "userName": "1csv",
+      },
+      "reassignNotification": null,
+      "reassignPermissions": {
+        "certify": true,
+        "claim": true,
+        "comment": true,
+        "delegate": true,
+        "exception": true,
+        "forward": true,
+        "reassign": true,
+        "reset": true,
+        "revoke": true,
+        "save": true,
+        "signoff": true,
+      },
+      "remediationDelay": 0,
+      "remediationRule": null,
+      "reminderFrequency": 0,
+      "reminderNotification": null,
+      "requireJustification": {
+        "exceptionAllowed": false,
+        "revoke": false,
+      },
+      "schedule": null,
+      "scheduleId": null,
+      "selfCertificationRule": "all",
+      "skipInactiveCertifiers": false,
+      "stageDuration": 14,
+      "stages": [
+        {
+          "certifierId": "managed/user/dadb619a-897c-4333-8edc-383b73b25b24",
+          "certifierInfo": {
+            "givenName": "Jim",
+            "id": "dadb619a-897c-4333-8edc-383b73b25b24",
+            "mail": "jmontgomery@trivir.com",
+            "sn": "Montgomery",
+            "userName": "Jmontgom",
+          },
+          "certifierPath": null,
+          "certifierScript": null,
+          "certifierType": "user",
+        },
+      ],
+      "stagingEnabled": true,
+      "status": "active",
+      "targetFilter": {
+        "application": {
+          "operand": [
+            {
+              "operand": {
+                "targetName": "id",
+                "targetValue": "23b1fbc6-432e-4b8a-bb4e-bbb629f30157",
+              },
+              "operator": "EQUALS",
+            },
+          ],
+          "operator": "OR",
+        },
+        "decision": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "entitlement": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "memberOfOrg": [],
+        "type": [
+          "entitlementGrant",
+          "ResourceGrant",
+        ],
+        "user": {
+          "operand": [],
+          "operator": "ALL",
+        },
+      },
+      "uiConfig": {
+        "columnConfig": {
+          "entitlements": [
+            "user.user",
+            "application.application",
+            "entitlement.entitlement",
+            "account.account",
+            "review.flags",
+            "review.comments",
+          ],
+        },
+      },
+    },
+  },
+  "emailTemplate": {},
+  "variable": {},
+}
+`;
+
+exports[`frodo iga certification export "frodo iga certification export --all-separate --no-deps -D testCertsExportDir4": should export all certifications separately with no dependencies to a directory 1`] = `0`;
+
+exports[`frodo iga certification export "frodo iga certification export --all-separate --no-deps -D testCertsExportDir4": should export all certifications separately with no dependencies to a directory 2`] = `""`;
+
+exports[`frodo iga certification export "frodo iga certification export --all-separate --no-deps -D testCertsExportDir4": should export all certifications separately with no dependencies to a directory 3`] = `
+"✔ Exported 3 certification templates
+"
+`;
+
+exports[`frodo iga certification export "frodo iga certification export --all-separate --no-deps -D testCertsExportDir4": should export all certifications separately with no dependencies to a directory: testCertsExportDir4/a855a858-3139-4470-b9f0-1eeb25a1bfae.certification.json 1`] = `
+{
+  "certificationTemplate": {
+    "a855a858-3139-4470-b9f0-1eeb25a1bfae": {
+      "allowBulkCertify": false,
+      "allowPartialSignoff": false,
+      "allowSelfCertification": true,
+      "assignmentNotification": null,
+      "assignmentNotificationIncludeManager": false,
+      "certificationType": "entitlement",
+      "defaultCertifierId": null,
+      "description": "Jim's test to see if a resulting artifact of the review decisions can be created.",
+      "enableForward": true,
+      "enableReassign": true,
+      "escalationFrequency": null,
+      "escalationNotification": null,
+      "escalationOwner": null,
+      "events": {},
+      "exceptionDuration": 0,
+      "excludeConditionalAccess": true,
+      "excludeRoleBasedAccess": true,
+      "expirationAction": "certify",
+      "expirationActionDelay": 0,
+      "expirationNotification": null,
+      "expirationReassignee": null,
+      "finalizeRule": "",
+      "id": "a855a858-3139-4470-b9f0-1eeb25a1bfae",
+      "initializeRule": "",
+      "isEventBased": false,
+      "metadata": {},
+      "name": "Sample Access Review (copy)",
+      "ownerId": "managed/user/9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+      "ownerInfo": {
+        "givenName": "csv",
+        "id": "9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+        "mail": "1csv@example.com",
+        "sn": "one",
+        "userName": "1csv",
+      },
+      "reassignNotification": null,
+      "reassignPermissions": {
+        "certify": true,
+        "claim": true,
+        "comment": true,
+        "delegate": true,
+        "exception": true,
+        "forward": true,
+        "reassign": true,
+        "reset": true,
+        "revoke": true,
+        "save": true,
+        "signoff": true,
+      },
+      "remediationDelay": 0,
+      "remediationRule": null,
+      "reminderFrequency": 0,
+      "reminderNotification": null,
+      "requireJustification": {
+        "exceptionAllowed": false,
+        "revoke": false,
+      },
+      "schedule": "",
+      "selfCertificationRule": "all",
+      "skipInactiveCertifiers": false,
+      "stageDuration": 14,
+      "stages": [
+        {
+          "certifierId": "managed/user/dadb619a-897c-4333-8edc-383b73b25b24",
+          "certifierInfo": {
+            "givenName": "Jim",
+            "id": "dadb619a-897c-4333-8edc-383b73b25b24",
+            "mail": "jmontgomery@example.com",
+            "sn": "Montgomery",
+            "userName": "Jmontgom",
+          },
+          "certifierPath": null,
+          "certifierScript": null,
+          "certifierType": "user",
+        },
+      ],
+      "stagingEnabled": true,
+      "status": "pending",
+      "targetFilter": {
+        "application": {
+          "operand": [
+            {
+              "operand": {
+                "targetName": "id",
+                "targetValue": "23b1fbc6-432e-4b8a-bb4e-bbb629f30157",
+              },
+              "operator": "EQUALS",
+            },
+          ],
+          "operator": "OR",
+        },
+        "decision": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "entitlement": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "memberOfOrg": [],
+        "type": [
+          "entitlementGrant",
+          "ResourceGrant",
+        ],
+        "user": {
+          "operand": [],
+          "operator": "ALL",
+        },
+      },
+      "uiConfig": {
+        "columnConfig": {
+          "entitlements": [
+            "user.user",
+            "application.application",
+            "entitlement.entitlement",
+            "account.account",
+            "review.flags",
+            "review.comments",
+          ],
+        },
+      },
+    },
+  },
+  "meta": Any<Object>,
+}
+`;
+
+exports[`frodo iga certification export "frodo iga certification export --all-separate --no-deps -D testCertsExportDir4": should export all certifications separately with no dependencies to a directory: testCertsExportDir4/ae1381d5-cfad-4374-b3dc-075605b1036d.certification.json 1`] = `
+{
+  "certificationTemplate": {
+    "ae1381d5-cfad-4374-b3dc-075605b1036d": {
+      "allowBulkCertify": false,
+      "allowPartialSignoff": true,
+      "allowSelfCertification": false,
+      "assignmentNotification": "emailTemplate/certificationAssigned",
+      "assignmentNotificationIncludeManager": false,
+      "certificationType": "entitlement",
+      "defaultCertifierId": "managed/user/6b21c283-d491-4fd9-8322-898c171c7018",
+      "defaultCertifierInfo": {
+        "givenName": "Parent",
+        "id": "6b21c283-d491-4fd9-8322-898c171c7018",
+        "mail": "pholderness+poadmin@trivir.com",
+        "sn": "Admin",
+        "userName": "phh-parent-org-admin",
+      },
+      "description": "Entitlements Review - All Applications",
+      "enableForward": true,
+      "enableReassign": true,
+      "escalationFrequency": null,
+      "escalationNotification": null,
+      "escalationOwner": null,
+      "events": {
+        "assignment": {
+          "notification": "emailTemplate/certificationAssigned",
+        },
+        "reassign": {
+          "notification": "emailTemplate/certificationReassigned",
+        },
+      },
+      "exceptionDuration": 14,
+      "excludeConditionalAccess": true,
+      "excludeRoleBasedAccess": true,
+      "expirationAction": null,
+      "expirationActionDelay": 0,
+      "expirationNotification": null,
+      "expirationReassignee": null,
+      "finalizeRule": "",
+      "id": "ae1381d5-cfad-4374-b3dc-075605b1036d",
+      "initializeRule": "",
+      "isEventBased": false,
+      "metadata": {},
+      "name": "phh-entitlement-assignment-certification",
+      "ownerId": "managed/user/6b21c283-d491-4fd9-8322-898c171c7018",
+      "ownerInfo": {
+        "givenName": "Parent",
+        "id": "6b21c283-d491-4fd9-8322-898c171c7018",
+        "mail": "pholderness+poadmin@trivir.com",
+        "sn": "Admin",
+        "userName": "phh-parent-org-admin",
+      },
+      "reassignNotification": "emailTemplate/certificationReassigned",
+      "reassignPermissions": {
+        "certify": true,
+        "claim": true,
+        "comment": true,
+        "delegate": true,
+        "exception": true,
+        "forward": true,
+        "reassign": true,
+        "reset": true,
+        "revoke": true,
+        "save": true,
+        "signoff": true,
+      },
+      "remediationDelay": 0,
+      "remediationRule": "BasicRevocation",
+      "reminderFrequency": 0,
+      "reminderNotification": null,
+      "requireJustification": {
+        "exceptionAllowed": true,
+        "revoke": true,
+      },
+      "scheduleId": "templateScheduleae1381d5cfad4374b3dc075605b1036d",
+      "selfCertificationRule": "none",
+      "skipInactiveCertifiers": false,
+      "stageDuration": 14,
+      "stages": [
+        {
+          "certifierId": null,
+          "certifierPath": null,
+          "certifierScript": null,
+          "certifierType": "entitlementOwner",
+        },
+      ],
+      "stagingEnabled": true,
+      "status": "active",
+      "targetFilter": {
+        "application": {
+          "operand": {
+            "targetName": "authoritative",
+            "targetValue": false,
+          },
+          "operator": "EQUALS",
+        },
+        "decision": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "entitlement": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "memberOfOrg": [],
+        "type": [
+          "entitlementGrant",
+          "ResourceGrant",
+        ],
+        "user": {
+          "operand": [],
+          "operator": "ALL",
+        },
+      },
+      "uiConfig": {
+        "columnConfig": {
+          "entitlements": [
+            "user.user",
+            "application.application",
+            "entitlement.entitlement",
+            "account.account",
+            "review.flags",
+            "review.comments",
+          ],
+        },
+      },
+    },
+  },
+  "meta": Any<Object>,
+}
+`;
+
+exports[`frodo iga certification export "frodo iga certification export --all-separate --no-deps -D testCertsExportDir4": should export all certifications separately with no dependencies to a directory: testCertsExportDir4/f2284c72-ca2d-4eab-988e-93acf552b7eb.certification.json 1`] = `
+{
+  "certificationTemplate": {
+    "f2284c72-ca2d-4eab-988e-93acf552b7eb": {
+      "allowBulkCertify": false,
+      "allowPartialSignoff": false,
+      "allowSelfCertification": true,
+      "assignmentNotification": null,
+      "assignmentNotificationIncludeManager": false,
+      "certificationType": "entitlement",
+      "defaultCertifierId": null,
+      "description": "Jim's test to see if a resulting artifact of the review decisions can be created.",
+      "enableForward": true,
+      "enableReassign": true,
+      "escalationFrequency": null,
+      "escalationNotification": null,
+      "escalationOwner": null,
+      "events": {},
+      "exceptionDuration": 0,
+      "excludeConditionalAccess": true,
+      "excludeRoleBasedAccess": true,
+      "expirationAction": "certify",
+      "expirationActionDelay": 0,
+      "expirationNotification": null,
+      "expirationReassignee": null,
+      "finalizeRule": "",
+      "id": "f2284c72-ca2d-4eab-988e-93acf552b7eb",
+      "initializeRule": "",
+      "isEventBased": false,
+      "metadata": {},
+      "name": "Sample Access Review",
+      "ownerId": "managed/user/9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+      "ownerInfo": {
+        "givenName": "csv",
+        "id": "9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+        "mail": "1csv@example.com",
+        "sn": "one",
+        "userName": "1csv",
+      },
+      "reassignNotification": null,
+      "reassignPermissions": {
+        "certify": true,
+        "claim": true,
+        "comment": true,
+        "delegate": true,
+        "exception": true,
+        "forward": true,
+        "reassign": true,
+        "reset": true,
+        "revoke": true,
+        "save": true,
+        "signoff": true,
+      },
+      "remediationDelay": 0,
+      "remediationRule": null,
+      "reminderFrequency": 0,
+      "reminderNotification": null,
+      "requireJustification": {
+        "exceptionAllowed": false,
+        "revoke": false,
+      },
+      "schedule": null,
+      "scheduleId": null,
+      "selfCertificationRule": "all",
+      "skipInactiveCertifiers": false,
+      "stageDuration": 14,
+      "stages": [
+        {
+          "certifierId": "managed/user/dadb619a-897c-4333-8edc-383b73b25b24",
+          "certifierInfo": {
+            "givenName": "Jim",
+            "id": "dadb619a-897c-4333-8edc-383b73b25b24",
+            "mail": "jmontgomery@trivir.com",
+            "sn": "Montgomery",
+            "userName": "Jmontgom",
+          },
+          "certifierPath": null,
+          "certifierScript": null,
+          "certifierType": "user",
+        },
+      ],
+      "stagingEnabled": true,
+      "status": "active",
+      "targetFilter": {
+        "application": {
+          "operand": [
+            {
+              "operand": {
+                "targetName": "id",
+                "targetValue": "23b1fbc6-432e-4b8a-bb4e-bbb629f30157",
+              },
+              "operator": "EQUALS",
+            },
+          ],
+          "operator": "OR",
+        },
+        "decision": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "entitlement": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "memberOfOrg": [],
+        "type": [
+          "entitlementGrant",
+          "ResourceGrant",
+        ],
+        "user": {
+          "operand": [],
+          "operator": "ALL",
+        },
+      },
+      "uiConfig": {
+        "columnConfig": {
+          "entitlements": [
+            "user.user",
+            "application.application",
+            "entitlement.entitlement",
+            "account.account",
+            "review.flags",
+            "review.comments",
+          ],
+        },
+      },
+    },
+  },
+  "meta": Any<Object>,
+}
+`;
+
+exports[`frodo iga certification export "frodo iga certification export --certification-id f2284c72-ca2d-4eab-988e-93acf552b7eb --no-deps -Mf testCertsExportFile1.json": should export certification 'f2284c72-ca2d-4eab-988e-93acf552b7eb' with modified properties and no dependencies to a file 1`] = `0`;
+
+exports[`frodo iga certification export "frodo iga certification export --certification-id f2284c72-ca2d-4eab-988e-93acf552b7eb --no-deps -Mf testCertsExportFile1.json": should export certification 'f2284c72-ca2d-4eab-988e-93acf552b7eb' with modified properties and no dependencies to a file 2`] = `""`;
+
+exports[`frodo iga certification export "frodo iga certification export --certification-id f2284c72-ca2d-4eab-988e-93acf552b7eb --no-deps -Mf testCertsExportFile1.json": should export certification 'f2284c72-ca2d-4eab-988e-93acf552b7eb' with modified properties and no dependencies to a file 3`] = `
+"✔ Exported certification f2284c72-ca2d-4eab-988e-93acf552b7eb to file
+"
+`;
+
+exports[`frodo iga certification export "frodo iga certification export --certification-id f2284c72-ca2d-4eab-988e-93acf552b7eb --no-deps -Mf testCertsExportFile1.json": should export certification 'f2284c72-ca2d-4eab-988e-93acf552b7eb' with modified properties and no dependencies to a file: testCertsExportFile1.json 1`] = `
+{
+  "certificationTemplate": {
+    "f2284c72-ca2d-4eab-988e-93acf552b7eb": {
+      "allowBulkCertify": false,
+      "allowPartialSignoff": false,
+      "allowSelfCertification": true,
+      "assignmentNotification": null,
+      "assignmentNotificationIncludeManager": false,
+      "certificationType": "entitlement",
+      "defaultCertifierId": null,
+      "description": "Jim's test to see if a resulting artifact of the review decisions can be created.",
+      "enableForward": true,
+      "enableReassign": true,
+      "escalationFrequency": null,
+      "escalationNotification": null,
+      "escalationOwner": null,
+      "events": {},
+      "exceptionDuration": 0,
+      "excludeConditionalAccess": true,
+      "excludeRoleBasedAccess": true,
+      "expirationAction": "certify",
+      "expirationActionDelay": 0,
+      "expirationNotification": null,
+      "expirationReassignee": null,
+      "finalizeRule": "",
+      "id": "f2284c72-ca2d-4eab-988e-93acf552b7eb",
+      "initializeRule": "",
+      "isEventBased": false,
+      "metadata": {
+        "createdDate": "2026-03-10T17:01:21.499001182Z",
+        "modifiedDate": "2026-03-10T17:04:52.825Z",
+      },
+      "name": "Sample Access Review",
+      "ownerId": "managed/user/9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+      "ownerInfo": {
+        "givenName": "csv",
+        "id": "9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+        "mail": "1csv@example.com",
+        "sn": "one",
+        "userName": "1csv",
+      },
+      "reassignNotification": null,
+      "reassignPermissions": {
+        "certify": true,
+        "claim": true,
+        "comment": true,
+        "delegate": true,
+        "exception": true,
+        "forward": true,
+        "reassign": true,
+        "reset": true,
+        "revoke": true,
+        "save": true,
+        "signoff": true,
+      },
+      "remediationDelay": 0,
+      "remediationRule": null,
+      "reminderFrequency": 0,
+      "reminderNotification": null,
+      "requireJustification": {
+        "exceptionAllowed": false,
+        "revoke": false,
+      },
+      "schedule": null,
+      "scheduleId": null,
+      "selfCertificationRule": "all",
+      "skipInactiveCertifiers": false,
+      "stageDuration": 14,
+      "stages": [
+        {
+          "certifierId": "managed/user/dadb619a-897c-4333-8edc-383b73b25b24",
+          "certifierInfo": {
+            "givenName": "Jim",
+            "id": "dadb619a-897c-4333-8edc-383b73b25b24",
+            "mail": "jmontgomery@trivir.com",
+            "sn": "Montgomery",
+            "userName": "Jmontgom",
+          },
+          "certifierPath": null,
+          "certifierScript": null,
+          "certifierType": "user",
+        },
+      ],
+      "stagingEnabled": true,
+      "status": "active",
+      "targetFilter": {
+        "application": {
+          "operand": [
+            {
+              "operand": {
+                "targetName": "id",
+                "targetValue": "23b1fbc6-432e-4b8a-bb4e-bbb629f30157",
+              },
+              "operator": "EQUALS",
+            },
+          ],
+          "operator": "OR",
+        },
+        "decision": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "entitlement": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "memberOfOrg": [],
+        "type": [
+          "entitlementGrant",
+          "ResourceGrant",
+        ],
+        "user": {
+          "operand": [],
+          "operator": "ALL",
+        },
+      },
+      "uiConfig": {
+        "columnConfig": {
+          "entitlements": [
+            "user.user",
+            "application.application",
+            "entitlement.entitlement",
+            "account.account",
+            "review.flags",
+            "review.comments",
+          ],
+        },
+      },
+    },
+  },
+  "emailTemplate": {},
+  "meta": Any<Object>,
+  "variable": {},
+}
+`;
+
+exports[`frodo iga certification export "frodo iga certification export --no-metadata -a --directory testCertsExportDir2": should export all certifications with no metadata to a directory 1`] = `0`;
+
+exports[`frodo iga certification export "frodo iga certification export --no-metadata -a --directory testCertsExportDir2": should export all certifications with no metadata to a directory 2`] = `""`;
+
+exports[`frodo iga certification export "frodo iga certification export --no-metadata -a --directory testCertsExportDir2": should export all certifications with no metadata to a directory 3`] = `
+"✔ Exported 4 certification templates
+"
+`;
+
+exports[`frodo iga certification export "frodo iga certification export --no-metadata -a --directory testCertsExportDir2": should export all certifications with no metadata to a directory: testCertsExportDir2/allCertifications.certification.json 1`] = `
+{
+  "certificationTemplate": {
+    "055dfbc9-367e-441e-8b12-199b9dd5ce19": {
+      "allowBulkCertify": true,
+      "allowPartialSignoff": true,
+      "allowSelfCertification": false,
+      "assignmentNotification": "emailTemplate/certificationAssigned",
+      "assignmentNotificationIncludeManager": false,
+      "certificationType": "identity",
+      "defaultCertifierId": "managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58",
+      "defaultCertifierInfo": {
+        "givenName": "ChildOne",
+        "id": "0f2b6cba-0124-4846-afc2-f944acf09c58",
+        "mail": "pholderness+c1admin@trivir.com",
+        "sn": "Admin",
+        "userName": "phh-child1-org-admin",
+      },
+      "description": "The user's sunset date has changed. Certify access.",
+      "enableForward": true,
+      "enableReassign": true,
+      "escalationFrequency": null,
+      "escalationNotification": null,
+      "escalationOwner": null,
+      "events": {
+        "assignment": {
+          "notification": "emailTemplate/certificationAssigned",
+        },
+        "reassign": {
+          "notification": "emailTemplate/certificationReassigned",
+        },
+      },
+      "exceptionDuration": 14,
+      "excludeConditionalAccess": true,
+      "excludeRoleBasedAccess": true,
+      "expirationAction": null,
+      "expirationActionDelay": 0,
+      "expirationNotification": null,
+      "expirationReassignee": null,
+      "finalizeRule": "",
+      "id": "055dfbc9-367e-441e-8b12-199b9dd5ce19",
+      "initializeRule": "",
+      "isEventBased": false,
+      "metadata": {},
+      "name": "Sunset date change {{YYYY-MM-DD}} for {{IGA_PARAM_userDisplayName_IGA_PARAM}}",
+      "ownerId": "managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58",
+      "ownerInfo": {
+        "givenName": "ChildOne",
+        "id": "0f2b6cba-0124-4846-afc2-f944acf09c58",
+        "mail": "pholderness+c1admin@trivir.com",
+        "sn": "Admin",
+        "userName": "phh-child1-org-admin",
+      },
+      "parameters": [
+        {
+          "displayName": "ID of user this campaign will target",
+          "id": "userId",
+          "type": "string",
+        },
+        {
+          "displayName": "Name of the event triggering this campaign",
+          "id": "eventName",
+          "type": "string",
+        },
+        {
+          "displayName": "Display friendly name of user this campaign targets",
+          "id": "userDisplayName",
+          "type": "string",
+        },
+      ],
+      "reassignNotification": "emailTemplate/certificationReassigned",
+      "reassignPermissions": {
+        "certify": true,
+        "claim": true,
+        "comment": true,
+        "delegate": true,
+        "exception": true,
+        "forward": true,
+        "reassign": true,
+        "reset": true,
+        "revoke": true,
+        "save": true,
+        "signoff": true,
+      },
+      "remediationDelay": 0,
+      "remediationRule": "BasicRevocation",
+      "reminderFrequency": 0,
+      "reminderNotification": null,
+      "requireJustification": {
+        "exceptionAllowed": true,
+        "revoke": true,
+      },
+      "selfCertificationRule": "none",
+      "skipInactiveCertifiers": false,
+      "stageDuration": 14,
+      "stages": [
+        {
+          "certifierId": null,
+          "certifierPath": null,
+          "certifierScript": null,
+          "certifierType": "manager",
+        },
+      ],
+      "stagingEnabled": false,
+      "status": "active",
+      "targetFilter": {
+        "account": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "application": {
+          "operand": {
+            "targetName": "authoritative",
+            "targetValue": false,
+          },
+          "operator": "EQUALS",
+        },
+        "decision": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "entitlement": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "memberOfOrg": [],
+        "role": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "type": [
+          "accountGrant",
+          "entitlementGrant",
+          "roleMembership",
+          "AccountGrant",
+          "ResourceGrant",
+        ],
+        "user": {
+          "operand": {
+            "targetName": "id",
+            "targetValue": "{{IGA_PARAM_userId_IGA_PARAM}}",
+          },
+          "operator": "EQUALS",
+        },
+      },
+      "templateEventType": "user",
+      "uiConfig": {
+        "columnConfig": {
+          "accounts": [
+            "user.user",
+            "application.application",
+            "review.flags",
+            "review.comments",
+          ],
+          "entitlements": [
+            "user.user",
+            "application.application",
+            "entitlement.entitlement",
+            "account.account",
+            "review.flags",
+            "review.comments",
+          ],
+          "roles": [
+            "role.role",
+            "user.user",
+            "review.flags",
+            "review.comments",
+          ],
+        },
+      },
+    },
+    "a855a858-3139-4470-b9f0-1eeb25a1bfae": {
+      "allowBulkCertify": false,
+      "allowPartialSignoff": false,
+      "allowSelfCertification": true,
+      "assignmentNotification": null,
+      "assignmentNotificationIncludeManager": false,
+      "certificationType": "entitlement",
+      "defaultCertifierId": null,
+      "description": "Jim's test to see if a resulting artifact of the review decisions can be created.",
+      "enableForward": true,
+      "enableReassign": true,
+      "escalationFrequency": null,
+      "escalationNotification": null,
+      "escalationOwner": null,
+      "events": {},
+      "exceptionDuration": 0,
+      "excludeConditionalAccess": true,
+      "excludeRoleBasedAccess": true,
+      "expirationAction": "certify",
+      "expirationActionDelay": 0,
+      "expirationNotification": null,
+      "expirationReassignee": null,
+      "finalizeRule": "",
+      "id": "a855a858-3139-4470-b9f0-1eeb25a1bfae",
+      "initializeRule": "",
+      "isEventBased": false,
+      "metadata": {},
+      "name": "Sample Access Review (copy)",
+      "ownerId": "managed/user/9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+      "ownerInfo": {
+        "givenName": "csv",
+        "id": "9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+        "mail": "1csv@example.com",
+        "sn": "one",
+        "userName": "1csv",
+      },
+      "reassignNotification": null,
+      "reassignPermissions": {
+        "certify": true,
+        "claim": true,
+        "comment": true,
+        "delegate": true,
+        "exception": true,
+        "forward": true,
+        "reassign": true,
+        "reset": true,
+        "revoke": true,
+        "save": true,
+        "signoff": true,
+      },
+      "remediationDelay": 0,
+      "remediationRule": null,
+      "reminderFrequency": 0,
+      "reminderNotification": null,
+      "requireJustification": {
+        "exceptionAllowed": false,
+        "revoke": false,
+      },
+      "schedule": "",
+      "selfCertificationRule": "all",
+      "skipInactiveCertifiers": false,
+      "stageDuration": 14,
+      "stages": [
+        {
+          "certifierId": "managed/user/dadb619a-897c-4333-8edc-383b73b25b24",
+          "certifierInfo": {
+            "givenName": "Jim",
+            "id": "dadb619a-897c-4333-8edc-383b73b25b24",
+            "mail": "jmontgomery@example.com",
+            "sn": "Montgomery",
+            "userName": "Jmontgom",
+          },
+          "certifierPath": null,
+          "certifierScript": null,
+          "certifierType": "user",
+        },
+      ],
+      "stagingEnabled": true,
+      "status": "pending",
+      "targetFilter": {
+        "application": {
+          "operand": [
+            {
+              "operand": {
+                "targetName": "id",
+                "targetValue": "23b1fbc6-432e-4b8a-bb4e-bbb629f30157",
+              },
+              "operator": "EQUALS",
+            },
+          ],
+          "operator": "OR",
+        },
+        "decision": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "entitlement": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "memberOfOrg": [],
+        "type": [
+          "entitlementGrant",
+          "ResourceGrant",
+        ],
+        "user": {
+          "operand": [],
+          "operator": "ALL",
+        },
+      },
+      "uiConfig": {
+        "columnConfig": {
+          "entitlements": [
+            "user.user",
+            "application.application",
+            "entitlement.entitlement",
+            "account.account",
+            "review.flags",
+            "review.comments",
+          ],
+        },
+      },
+    },
+    "ae1381d5-cfad-4374-b3dc-075605b1036d": {
+      "allowBulkCertify": false,
+      "allowPartialSignoff": true,
+      "allowSelfCertification": false,
+      "assignmentNotification": "emailTemplate/certificationAssigned",
+      "assignmentNotificationIncludeManager": false,
+      "certificationType": "entitlement",
+      "defaultCertifierId": "managed/user/6b21c283-d491-4fd9-8322-898c171c7018",
+      "defaultCertifierInfo": {
+        "givenName": "Parent",
+        "id": "6b21c283-d491-4fd9-8322-898c171c7018",
+        "mail": "pholderness+poadmin@trivir.com",
+        "sn": "Admin",
+        "userName": "phh-parent-org-admin",
+      },
+      "description": "Entitlements Review - All Applications",
+      "enableForward": true,
+      "enableReassign": true,
+      "escalationFrequency": null,
+      "escalationNotification": null,
+      "escalationOwner": null,
+      "events": {
+        "assignment": {
+          "notification": "emailTemplate/certificationAssigned",
+        },
+        "reassign": {
+          "notification": "emailTemplate/certificationReassigned",
+        },
+      },
+      "exceptionDuration": 14,
+      "excludeConditionalAccess": true,
+      "excludeRoleBasedAccess": true,
+      "expirationAction": null,
+      "expirationActionDelay": 0,
+      "expirationNotification": null,
+      "expirationReassignee": null,
+      "finalizeRule": "",
+      "id": "ae1381d5-cfad-4374-b3dc-075605b1036d",
+      "initializeRule": "",
+      "isEventBased": false,
+      "metadata": {},
+      "name": "phh-entitlement-assignment-certification",
+      "ownerId": "managed/user/6b21c283-d491-4fd9-8322-898c171c7018",
+      "ownerInfo": {
+        "givenName": "Parent",
+        "id": "6b21c283-d491-4fd9-8322-898c171c7018",
+        "mail": "pholderness+poadmin@trivir.com",
+        "sn": "Admin",
+        "userName": "phh-parent-org-admin",
+      },
+      "reassignNotification": "emailTemplate/certificationReassigned",
+      "reassignPermissions": {
+        "certify": true,
+        "claim": true,
+        "comment": true,
+        "delegate": true,
+        "exception": true,
+        "forward": true,
+        "reassign": true,
+        "reset": true,
+        "revoke": true,
+        "save": true,
+        "signoff": true,
+      },
+      "remediationDelay": 0,
+      "remediationRule": "BasicRevocation",
+      "reminderFrequency": 0,
+      "reminderNotification": null,
+      "requireJustification": {
+        "exceptionAllowed": true,
+        "revoke": true,
+      },
+      "schedule": null,
+      "scheduleId": "templateScheduleae1381d5cfad4374b3dc075605b1036d",
+      "selfCertificationRule": "none",
+      "skipInactiveCertifiers": false,
+      "stageDuration": 14,
+      "stages": [
+        {
+          "certifierId": null,
+          "certifierPath": null,
+          "certifierScript": null,
+          "certifierType": "entitlementOwner",
+        },
+      ],
+      "stagingEnabled": true,
+      "status": "active",
+      "targetFilter": {
+        "application": {
+          "operand": {
+            "targetName": "authoritative",
+            "targetValue": false,
+          },
+          "operator": "EQUALS",
+        },
+        "decision": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "entitlement": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "memberOfOrg": [],
+        "type": [
+          "entitlementGrant",
+          "ResourceGrant",
+        ],
+        "user": {
+          "operand": [],
+          "operator": "ALL",
+        },
+      },
+      "uiConfig": {
+        "columnConfig": {
+          "entitlements": [
+            "user.user",
+            "application.application",
+            "entitlement.entitlement",
+            "account.account",
+            "review.flags",
+            "review.comments",
+          ],
+        },
+      },
+    },
+    "f2284c72-ca2d-4eab-988e-93acf552b7eb": {
+      "allowBulkCertify": false,
+      "allowPartialSignoff": false,
+      "allowSelfCertification": true,
+      "assignmentNotification": null,
+      "assignmentNotificationIncludeManager": false,
+      "certificationType": "entitlement",
+      "defaultCertifierId": null,
+      "description": "Jim's test to see if a resulting artifact of the review decisions can be created.",
+      "enableForward": true,
+      "enableReassign": true,
+      "escalationFrequency": null,
+      "escalationNotification": null,
+      "escalationOwner": null,
+      "events": {},
+      "exceptionDuration": 0,
+      "excludeConditionalAccess": true,
+      "excludeRoleBasedAccess": true,
+      "expirationAction": "certify",
+      "expirationActionDelay": 0,
+      "expirationNotification": null,
+      "expirationReassignee": null,
+      "finalizeRule": "",
+      "id": "f2284c72-ca2d-4eab-988e-93acf552b7eb",
+      "initializeRule": "",
+      "isEventBased": false,
+      "metadata": {},
+      "name": "Sample Access Review",
+      "ownerId": "managed/user/9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+      "ownerInfo": {
+        "givenName": "csv",
+        "id": "9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+        "mail": "1csv@example.com",
+        "sn": "one",
+        "userName": "1csv",
+      },
+      "reassignNotification": null,
+      "reassignPermissions": {
+        "certify": true,
+        "claim": true,
+        "comment": true,
+        "delegate": true,
+        "exception": true,
+        "forward": true,
+        "reassign": true,
+        "reset": true,
+        "revoke": true,
+        "save": true,
+        "signoff": true,
+      },
+      "remediationDelay": 0,
+      "remediationRule": null,
+      "reminderFrequency": 0,
+      "reminderNotification": null,
+      "requireJustification": {
+        "exceptionAllowed": false,
+        "revoke": false,
+      },
+      "schedule": null,
+      "scheduleId": null,
+      "selfCertificationRule": "all",
+      "skipInactiveCertifiers": false,
+      "stageDuration": 14,
+      "stages": [
+        {
+          "certifierId": "managed/user/dadb619a-897c-4333-8edc-383b73b25b24",
+          "certifierInfo": {
+            "givenName": "Jim",
+            "id": "dadb619a-897c-4333-8edc-383b73b25b24",
+            "mail": "jmontgomery@trivir.com",
+            "sn": "Montgomery",
+            "userName": "Jmontgom",
+          },
+          "certifierPath": null,
+          "certifierScript": null,
+          "certifierType": "user",
+        },
+      ],
+      "stagingEnabled": true,
+      "status": "active",
+      "targetFilter": {
+        "application": {
+          "operand": [
+            {
+              "operand": {
+                "targetName": "id",
+                "targetValue": "23b1fbc6-432e-4b8a-bb4e-bbb629f30157",
+              },
+              "operator": "EQUALS",
+            },
+          ],
+          "operator": "OR",
+        },
+        "decision": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "entitlement": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "memberOfOrg": [],
+        "type": [
+          "entitlementGrant",
+          "ResourceGrant",
+        ],
+        "user": {
+          "operand": [],
+          "operator": "ALL",
+        },
+      },
+      "uiConfig": {
+        "columnConfig": {
+          "entitlements": [
+            "user.user",
+            "application.application",
+            "entitlement.entitlement",
+            "account.account",
+            "review.flags",
+            "review.comments",
+          ],
+        },
+      },
+    },
+  },
+  "emailTemplate": {
+    "certificationAssigned": {
+      "_id": "emailTemplate/certificationAssigned",
+      "defaultLocale": "en",
+      "enabled": true,
+      "from": "",
+      "html": {
+        "en": "<html><div>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was assigned to you.</div><html>",
+      },
+      "message": {
+        "en": "<html><head></head><body>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was assigned to you.</body></html>",
+      },
+      "mimeType": "text/html",
+      "styles": "body {
+	background-color: #324054;
+	color: #455469;
+	padding: 60px;
+	text-align: center
+}
+
+a {
+	text-decoration: none;
+	color: #109cf1;
+}
+
+.content {
+	background-color: #fff;
+	border-radius: 4px;
+	margin: 0 auto;
+	padding: 48px;
+	width: 235px
+}
+",
+      "subject": {
+        "en": "ATTENTION: Certification Task Assigned",
+      },
+    },
+    "certificationReassigned": {
+      "_id": "emailTemplate/certificationReassigned",
+      "defaultLocale": "en",
+      "enabled": true,
+      "from": "",
+      "html": {
+        "en": "<html><body>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was reassigned to you.</body></html>",
+      },
+      "message": {
+        "en": "<html><body>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was reassigned to you.</body></html>",
+      },
+      "mimeType": "text/html",
+      "styles": "body {
+	background-color: #324054;
+	color: #455469;
+	padding: 60px;
+	text-align: center
+}
+
+a {
+	text-decoration: none;
+	color: #109cf1;
+}
+
+.content {
+	background-color: #fff;
+	border-radius: 4px;
+	margin: 0 auto;
+	padding: 48px;
+	width: 235px
+}
+",
+      "subject": {
+        "en": "ATTENTION: Certification Task Reassigned",
+      },
+    },
+  },
+  "variable": {},
+}
+`;
+
+exports[`frodo iga certification export "frodo iga certification export -NAD testCertsExportDir3": should export all certifications separately with no metadata to a directory 1`] = `0`;
+
+exports[`frodo iga certification export "frodo iga certification export -NAD testCertsExportDir3": should export all certifications separately with no metadata to a directory 2`] = `""`;
+
+exports[`frodo iga certification export "frodo iga certification export -NAD testCertsExportDir3": should export all certifications separately with no metadata to a directory 3`] = `
+"✔ Exported 4 certification templates
+"
+`;
+
+exports[`frodo iga certification export "frodo iga certification export -NAD testCertsExportDir3": should export all certifications separately with no metadata to a directory: testCertsExportDir3/055dfbc9-367e-441e-8b12-199b9dd5ce19.certification.json 1`] = `
+{
+  "certificationTemplate": {
+    "055dfbc9-367e-441e-8b12-199b9dd5ce19": {
+      "allowBulkCertify": true,
+      "allowPartialSignoff": true,
+      "allowSelfCertification": false,
+      "assignmentNotification": "emailTemplate/certificationAssigned",
+      "assignmentNotificationIncludeManager": false,
+      "certificationType": "identity",
+      "defaultCertifierId": "managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58",
+      "defaultCertifierInfo": {
+        "givenName": "ChildOne",
+        "id": "0f2b6cba-0124-4846-afc2-f944acf09c58",
+        "mail": "pholderness+c1admin@trivir.com",
+        "sn": "Admin",
+        "userName": "phh-child1-org-admin",
+      },
+      "description": "The user's sunset date has changed. Certify access.",
+      "enableForward": true,
+      "enableReassign": true,
+      "escalationFrequency": null,
+      "escalationNotification": null,
+      "escalationOwner": null,
+      "events": {
+        "assignment": {
+          "notification": "emailTemplate/certificationAssigned",
+        },
+        "reassign": {
+          "notification": "emailTemplate/certificationReassigned",
+        },
+      },
+      "exceptionDuration": 14,
+      "excludeConditionalAccess": true,
+      "excludeRoleBasedAccess": true,
+      "expirationAction": null,
+      "expirationActionDelay": 0,
+      "expirationNotification": null,
+      "expirationReassignee": null,
+      "finalizeRule": "",
+      "id": "055dfbc9-367e-441e-8b12-199b9dd5ce19",
+      "initializeRule": "",
+      "isEventBased": false,
+      "metadata": {},
+      "name": "Sunset date change {{YYYY-MM-DD}} for {{IGA_PARAM_userDisplayName_IGA_PARAM}}",
+      "ownerId": "managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58",
+      "ownerInfo": {
+        "givenName": "ChildOne",
+        "id": "0f2b6cba-0124-4846-afc2-f944acf09c58",
+        "mail": "pholderness+c1admin@trivir.com",
+        "sn": "Admin",
+        "userName": "phh-child1-org-admin",
+      },
+      "parameters": [
+        {
+          "displayName": "ID of user this campaign will target",
+          "id": "userId",
+          "type": "string",
+        },
+        {
+          "displayName": "Name of the event triggering this campaign",
+          "id": "eventName",
+          "type": "string",
+        },
+        {
+          "displayName": "Display friendly name of user this campaign targets",
+          "id": "userDisplayName",
+          "type": "string",
+        },
+      ],
+      "reassignNotification": "emailTemplate/certificationReassigned",
+      "reassignPermissions": {
+        "certify": true,
+        "claim": true,
+        "comment": true,
+        "delegate": true,
+        "exception": true,
+        "forward": true,
+        "reassign": true,
+        "reset": true,
+        "revoke": true,
+        "save": true,
+        "signoff": true,
+      },
+      "remediationDelay": 0,
+      "remediationRule": "BasicRevocation",
+      "reminderFrequency": 0,
+      "reminderNotification": null,
+      "requireJustification": {
+        "exceptionAllowed": true,
+        "revoke": true,
+      },
+      "selfCertificationRule": "none",
+      "skipInactiveCertifiers": false,
+      "stageDuration": 14,
+      "stages": [
+        {
+          "certifierId": null,
+          "certifierPath": null,
+          "certifierScript": null,
+          "certifierType": "manager",
+        },
+      ],
+      "stagingEnabled": false,
+      "status": "active",
+      "targetFilter": {
+        "account": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "application": {
+          "operand": {
+            "targetName": "authoritative",
+            "targetValue": false,
+          },
+          "operator": "EQUALS",
+        },
+        "decision": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "entitlement": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "memberOfOrg": [],
+        "role": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "type": [
+          "accountGrant",
+          "entitlementGrant",
+          "roleMembership",
+          "AccountGrant",
+          "ResourceGrant",
+        ],
+        "user": {
+          "operand": {
+            "targetName": "id",
+            "targetValue": "{{IGA_PARAM_userId_IGA_PARAM}}",
+          },
+          "operator": "EQUALS",
+        },
+      },
+      "templateEventType": "user",
+      "uiConfig": {
+        "columnConfig": {
+          "accounts": [
+            "user.user",
+            "application.application",
+            "review.flags",
+            "review.comments",
+          ],
+          "entitlements": [
+            "user.user",
+            "application.application",
+            "entitlement.entitlement",
+            "account.account",
+            "review.flags",
+            "review.comments",
+          ],
+          "roles": [
+            "role.role",
+            "user.user",
+            "review.flags",
+            "review.comments",
+          ],
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`frodo iga certification export "frodo iga certification export -NAD testCertsExportDir3": should export all certifications separately with no metadata to a directory: testCertsExportDir3/a855a858-3139-4470-b9f0-1eeb25a1bfae.certification.json 1`] = `
+{
+  "certificationTemplate": {
+    "a855a858-3139-4470-b9f0-1eeb25a1bfae": {
+      "allowBulkCertify": false,
+      "allowPartialSignoff": false,
+      "allowSelfCertification": true,
+      "assignmentNotification": null,
+      "assignmentNotificationIncludeManager": false,
+      "certificationType": "entitlement",
+      "defaultCertifierId": null,
+      "description": "Jim's test to see if a resulting artifact of the review decisions can be created.",
+      "enableForward": true,
+      "enableReassign": true,
+      "escalationFrequency": null,
+      "escalationNotification": null,
+      "escalationOwner": null,
+      "events": {},
+      "exceptionDuration": 0,
+      "excludeConditionalAccess": true,
+      "excludeRoleBasedAccess": true,
+      "expirationAction": "certify",
+      "expirationActionDelay": 0,
+      "expirationNotification": null,
+      "expirationReassignee": null,
+      "finalizeRule": "",
+      "id": "a855a858-3139-4470-b9f0-1eeb25a1bfae",
+      "initializeRule": "",
+      "isEventBased": false,
+      "metadata": {},
+      "name": "Sample Access Review (copy)",
+      "ownerId": "managed/user/9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+      "ownerInfo": {
+        "givenName": "csv",
+        "id": "9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+        "mail": "1csv@example.com",
+        "sn": "one",
+        "userName": "1csv",
+      },
+      "reassignNotification": null,
+      "reassignPermissions": {
+        "certify": true,
+        "claim": true,
+        "comment": true,
+        "delegate": true,
+        "exception": true,
+        "forward": true,
+        "reassign": true,
+        "reset": true,
+        "revoke": true,
+        "save": true,
+        "signoff": true,
+      },
+      "remediationDelay": 0,
+      "remediationRule": null,
+      "reminderFrequency": 0,
+      "reminderNotification": null,
+      "requireJustification": {
+        "exceptionAllowed": false,
+        "revoke": false,
+      },
+      "schedule": "",
+      "selfCertificationRule": "all",
+      "skipInactiveCertifiers": false,
+      "stageDuration": 14,
+      "stages": [
+        {
+          "certifierId": "managed/user/dadb619a-897c-4333-8edc-383b73b25b24",
+          "certifierInfo": {
+            "givenName": "Jim",
+            "id": "dadb619a-897c-4333-8edc-383b73b25b24",
+            "mail": "jmontgomery@example.com",
+            "sn": "Montgomery",
+            "userName": "Jmontgom",
+          },
+          "certifierPath": null,
+          "certifierScript": null,
+          "certifierType": "user",
+        },
+      ],
+      "stagingEnabled": true,
+      "status": "pending",
+      "targetFilter": {
+        "application": {
+          "operand": [
+            {
+              "operand": {
+                "targetName": "id",
+                "targetValue": "23b1fbc6-432e-4b8a-bb4e-bbb629f30157",
+              },
+              "operator": "EQUALS",
+            },
+          ],
+          "operator": "OR",
+        },
+        "decision": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "entitlement": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "memberOfOrg": [],
+        "type": [
+          "entitlementGrant",
+          "ResourceGrant",
+        ],
+        "user": {
+          "operand": [],
+          "operator": "ALL",
+        },
+      },
+      "uiConfig": {
+        "columnConfig": {
+          "entitlements": [
+            "user.user",
+            "application.application",
+            "entitlement.entitlement",
+            "account.account",
+            "review.flags",
+            "review.comments",
+          ],
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`frodo iga certification export "frodo iga certification export -NAD testCertsExportDir3": should export all certifications separately with no metadata to a directory: testCertsExportDir3/ae1381d5-cfad-4374-b3dc-075605b1036d.certification.json 1`] = `
+{
+  "certificationTemplate": {
+    "ae1381d5-cfad-4374-b3dc-075605b1036d": {
+      "allowBulkCertify": false,
+      "allowPartialSignoff": true,
+      "allowSelfCertification": false,
+      "assignmentNotification": "emailTemplate/certificationAssigned",
+      "assignmentNotificationIncludeManager": false,
+      "certificationType": "entitlement",
+      "defaultCertifierId": "managed/user/6b21c283-d491-4fd9-8322-898c171c7018",
+      "defaultCertifierInfo": {
+        "givenName": "Parent",
+        "id": "6b21c283-d491-4fd9-8322-898c171c7018",
+        "mail": "pholderness+poadmin@trivir.com",
+        "sn": "Admin",
+        "userName": "phh-parent-org-admin",
+      },
+      "description": "Entitlements Review - All Applications",
+      "enableForward": true,
+      "enableReassign": true,
+      "escalationFrequency": null,
+      "escalationNotification": null,
+      "escalationOwner": null,
+      "events": {
+        "assignment": {
+          "notification": "emailTemplate/certificationAssigned",
+        },
+        "reassign": {
+          "notification": "emailTemplate/certificationReassigned",
+        },
+      },
+      "exceptionDuration": 14,
+      "excludeConditionalAccess": true,
+      "excludeRoleBasedAccess": true,
+      "expirationAction": null,
+      "expirationActionDelay": 0,
+      "expirationNotification": null,
+      "expirationReassignee": null,
+      "finalizeRule": "",
+      "id": "ae1381d5-cfad-4374-b3dc-075605b1036d",
+      "initializeRule": "",
+      "isEventBased": false,
+      "metadata": {},
+      "name": "phh-entitlement-assignment-certification",
+      "ownerId": "managed/user/6b21c283-d491-4fd9-8322-898c171c7018",
+      "ownerInfo": {
+        "givenName": "Parent",
+        "id": "6b21c283-d491-4fd9-8322-898c171c7018",
+        "mail": "pholderness+poadmin@trivir.com",
+        "sn": "Admin",
+        "userName": "phh-parent-org-admin",
+      },
+      "reassignNotification": "emailTemplate/certificationReassigned",
+      "reassignPermissions": {
+        "certify": true,
+        "claim": true,
+        "comment": true,
+        "delegate": true,
+        "exception": true,
+        "forward": true,
+        "reassign": true,
+        "reset": true,
+        "revoke": true,
+        "save": true,
+        "signoff": true,
+      },
+      "remediationDelay": 0,
+      "remediationRule": "BasicRevocation",
+      "reminderFrequency": 0,
+      "reminderNotification": null,
+      "requireJustification": {
+        "exceptionAllowed": true,
+        "revoke": true,
+      },
+      "schedule": null,
+      "scheduleId": "templateScheduleae1381d5cfad4374b3dc075605b1036d",
+      "selfCertificationRule": "none",
+      "skipInactiveCertifiers": false,
+      "stageDuration": 14,
+      "stages": [
+        {
+          "certifierId": null,
+          "certifierPath": null,
+          "certifierScript": null,
+          "certifierType": "entitlementOwner",
+        },
+      ],
+      "stagingEnabled": true,
+      "status": "active",
+      "targetFilter": {
+        "application": {
+          "operand": {
+            "targetName": "authoritative",
+            "targetValue": false,
+          },
+          "operator": "EQUALS",
+        },
+        "decision": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "entitlement": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "memberOfOrg": [],
+        "type": [
+          "entitlementGrant",
+          "ResourceGrant",
+        ],
+        "user": {
+          "operand": [],
+          "operator": "ALL",
+        },
+      },
+      "uiConfig": {
+        "columnConfig": {
+          "entitlements": [
+            "user.user",
+            "application.application",
+            "entitlement.entitlement",
+            "account.account",
+            "review.flags",
+            "review.comments",
+          ],
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`frodo iga certification export "frodo iga certification export -NAD testCertsExportDir3": should export all certifications separately with no metadata to a directory: testCertsExportDir3/f2284c72-ca2d-4eab-988e-93acf552b7eb.certification.json 1`] = `
+{
+  "certificationTemplate": {
+    "f2284c72-ca2d-4eab-988e-93acf552b7eb": {
+      "allowBulkCertify": false,
+      "allowPartialSignoff": false,
+      "allowSelfCertification": true,
+      "assignmentNotification": null,
+      "assignmentNotificationIncludeManager": false,
+      "certificationType": "entitlement",
+      "defaultCertifierId": null,
+      "description": "Jim's test to see if a resulting artifact of the review decisions can be created.",
+      "enableForward": true,
+      "enableReassign": true,
+      "escalationFrequency": null,
+      "escalationNotification": null,
+      "escalationOwner": null,
+      "events": {},
+      "exceptionDuration": 0,
+      "excludeConditionalAccess": true,
+      "excludeRoleBasedAccess": true,
+      "expirationAction": "certify",
+      "expirationActionDelay": 0,
+      "expirationNotification": null,
+      "expirationReassignee": null,
+      "finalizeRule": "",
+      "id": "f2284c72-ca2d-4eab-988e-93acf552b7eb",
+      "initializeRule": "",
+      "isEventBased": false,
+      "metadata": {},
+      "name": "Sample Access Review",
+      "ownerId": "managed/user/9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+      "ownerInfo": {
+        "givenName": "csv",
+        "id": "9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+        "mail": "1csv@example.com",
+        "sn": "one",
+        "userName": "1csv",
+      },
+      "reassignNotification": null,
+      "reassignPermissions": {
+        "certify": true,
+        "claim": true,
+        "comment": true,
+        "delegate": true,
+        "exception": true,
+        "forward": true,
+        "reassign": true,
+        "reset": true,
+        "revoke": true,
+        "save": true,
+        "signoff": true,
+      },
+      "remediationDelay": 0,
+      "remediationRule": null,
+      "reminderFrequency": 0,
+      "reminderNotification": null,
+      "requireJustification": {
+        "exceptionAllowed": false,
+        "revoke": false,
+      },
+      "schedule": null,
+      "scheduleId": null,
+      "selfCertificationRule": "all",
+      "skipInactiveCertifiers": false,
+      "stageDuration": 14,
+      "stages": [
+        {
+          "certifierId": "managed/user/dadb619a-897c-4333-8edc-383b73b25b24",
+          "certifierInfo": {
+            "givenName": "Jim",
+            "id": "dadb619a-897c-4333-8edc-383b73b25b24",
+            "mail": "jmontgomery@trivir.com",
+            "sn": "Montgomery",
+            "userName": "Jmontgom",
+          },
+          "certifierPath": null,
+          "certifierScript": null,
+          "certifierType": "user",
+        },
+      ],
+      "stagingEnabled": true,
+      "status": "active",
+      "targetFilter": {
+        "application": {
+          "operand": [
+            {
+              "operand": {
+                "targetName": "id",
+                "targetValue": "23b1fbc6-432e-4b8a-bb4e-bbb629f30157",
+              },
+              "operator": "EQUALS",
+            },
+          ],
+          "operator": "OR",
+        },
+        "decision": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "entitlement": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "memberOfOrg": [],
+        "type": [
+          "entitlementGrant",
+          "ResourceGrant",
+        ],
+        "user": {
+          "operand": [],
+          "operator": "ALL",
+        },
+      },
+      "uiConfig": {
+        "columnConfig": {
+          "entitlements": [
+            "user.user",
+            "application.application",
+            "entitlement.entitlement",
+            "account.account",
+            "review.flags",
+            "review.comments",
+          ],
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`frodo iga certification export "frodo iga certification export -Ni ae1381d5-cfad-4374-b3dc-075605b1036d -f testAllCerts.certifications.json": should export certification 'ae1381d5-cfad-4374-b3dc-075605b1036d' with no metadata to a file 1`] = `0`;
+
+exports[`frodo iga certification export "frodo iga certification export -Ni ae1381d5-cfad-4374-b3dc-075605b1036d -f testAllCerts.certifications.json": should export certification 'ae1381d5-cfad-4374-b3dc-075605b1036d' with no metadata to a file 2`] = `""`;
+
+exports[`frodo iga certification export "frodo iga certification export -Ni ae1381d5-cfad-4374-b3dc-075605b1036d -f testAllCerts.certifications.json": should export certification 'ae1381d5-cfad-4374-b3dc-075605b1036d' with no metadata to a file 3`] = `
+"✔ Exported certification ae1381d5-cfad-4374-b3dc-075605b1036d to file
+"
+`;
+
+exports[`frodo iga certification export "frodo iga certification export -Ni ae1381d5-cfad-4374-b3dc-075605b1036d -f testAllCerts.certifications.json": should export certification 'ae1381d5-cfad-4374-b3dc-075605b1036d' with no metadata to a file: testAllCerts.certifications.json 1`] = `
+{
+  "certificationTemplate": {
+    "ae1381d5-cfad-4374-b3dc-075605b1036d": {
+      "allowBulkCertify": false,
+      "allowPartialSignoff": true,
+      "allowSelfCertification": false,
+      "assignmentNotification": "emailTemplate/certificationAssigned",
+      "assignmentNotificationIncludeManager": false,
+      "certificationType": "entitlement",
+      "defaultCertifierId": "managed/user/6b21c283-d491-4fd9-8322-898c171c7018",
+      "defaultCertifierInfo": {
+        "givenName": "Parent",
+        "id": "6b21c283-d491-4fd9-8322-898c171c7018",
+        "mail": "pholderness+poadmin@trivir.com",
+        "sn": "Admin",
+        "userName": "phh-parent-org-admin",
+      },
+      "description": "Entitlements Review - All Applications",
+      "enableForward": true,
+      "enableReassign": true,
+      "escalationFrequency": null,
+      "escalationNotification": null,
+      "escalationOwner": null,
+      "events": {
+        "assignment": {
+          "notification": "emailTemplate/certificationAssigned",
+        },
+        "reassign": {
+          "notification": "emailTemplate/certificationReassigned",
+        },
+      },
+      "exceptionDuration": 14,
+      "excludeConditionalAccess": true,
+      "excludeRoleBasedAccess": true,
+      "expirationAction": null,
+      "expirationActionDelay": 0,
+      "expirationNotification": null,
+      "expirationReassignee": null,
+      "finalizeRule": "",
+      "id": "ae1381d5-cfad-4374-b3dc-075605b1036d",
+      "initializeRule": "",
+      "isEventBased": false,
+      "metadata": {},
+      "name": "phh-entitlement-assignment-certification",
+      "ownerId": "managed/user/6b21c283-d491-4fd9-8322-898c171c7018",
+      "ownerInfo": {
+        "givenName": "Parent",
+        "id": "6b21c283-d491-4fd9-8322-898c171c7018",
+        "mail": "pholderness+poadmin@trivir.com",
+        "sn": "Admin",
+        "userName": "phh-parent-org-admin",
+      },
+      "reassignNotification": "emailTemplate/certificationReassigned",
+      "reassignPermissions": {
+        "certify": true,
+        "claim": true,
+        "comment": true,
+        "delegate": true,
+        "exception": true,
+        "forward": true,
+        "reassign": true,
+        "reset": true,
+        "revoke": true,
+        "save": true,
+        "signoff": true,
+      },
+      "remediationDelay": 0,
+      "remediationRule": "BasicRevocation",
+      "reminderFrequency": 0,
+      "reminderNotification": null,
+      "requireJustification": {
+        "exceptionAllowed": true,
+        "revoke": true,
+      },
+      "scheduleId": "templateScheduleae1381d5cfad4374b3dc075605b1036d",
+      "selfCertificationRule": "none",
+      "skipInactiveCertifiers": false,
+      "stageDuration": 14,
+      "stages": [
+        {
+          "certifierId": null,
+          "certifierPath": null,
+          "certifierScript": null,
+          "certifierType": "entitlementOwner",
+        },
+      ],
+      "stagingEnabled": true,
+      "status": "active",
+      "targetFilter": {
+        "application": {
+          "operand": {
+            "targetName": "authoritative",
+            "targetValue": false,
+          },
+          "operator": "EQUALS",
+        },
+        "decision": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "entitlement": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "memberOfOrg": [],
+        "type": [
+          "entitlementGrant",
+          "ResourceGrant",
+        ],
+        "user": {
+          "operand": [],
+          "operator": "ALL",
+        },
+      },
+      "uiConfig": {
+        "columnConfig": {
+          "entitlements": [
+            "user.user",
+            "application.application",
+            "entitlement.entitlement",
+            "account.account",
+            "review.flags",
+            "review.comments",
+          ],
+        },
+      },
+    },
+  },
+  "emailTemplate": {
+    "certificationAssigned": {
+      "_id": "emailTemplate/certificationAssigned",
+      "defaultLocale": "en",
+      "enabled": true,
+      "from": "",
+      "html": {
+        "en": "<html><div>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was assigned to you.</div><html>",
+      },
+      "message": {
+        "en": "<html><head></head><body>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was assigned to you.</body></html>",
+      },
+      "mimeType": "text/html",
+      "styles": "body {
+	background-color: #324054;
+	color: #455469;
+	padding: 60px;
+	text-align: center
+}
+
+a {
+	text-decoration: none;
+	color: #109cf1;
+}
+
+.content {
+	background-color: #fff;
+	border-radius: 4px;
+	margin: 0 auto;
+	padding: 48px;
+	width: 235px
+}
+",
+      "subject": {
+        "en": "ATTENTION: Certification Task Assigned",
+      },
+    },
+    "certificationReassigned": {
+      "_id": "emailTemplate/certificationReassigned",
+      "defaultLocale": "en",
+      "enabled": true,
+      "from": "",
+      "html": {
+        "en": "<html><body>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was reassigned to you.</body></html>",
+      },
+      "message": {
+        "en": "<html><body>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was reassigned to you.</body></html>",
+      },
+      "mimeType": "text/html",
+      "styles": "body {
+	background-color: #324054;
+	color: #455469;
+	padding: 60px;
+	text-align: center
+}
+
+a {
+	text-decoration: none;
+	color: #109cf1;
+}
+
+.content {
+	background-color: #fff;
+	border-radius: 4px;
+	margin: 0 auto;
+	padding: 48px;
+	width: 235px
+}
+",
+      "subject": {
+        "en": "ATTENTION: Certification Task Reassigned",
+      },
+    },
+  },
+  "variable": {},
+}
+`;

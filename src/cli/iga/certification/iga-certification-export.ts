@@ -21,6 +21,10 @@ export default function setup() {
     deploymentTypes
   );
 
+  //
+  // EXPORT BY NAME DOES NOT WORK CURRENTLY
+  //
+
   program
     .description('Export certifications.')
     .addOption(
@@ -113,7 +117,7 @@ export default function setup() {
         let outcome;
 
         // --certification-id -i || --certification-name -n
-        if (options.certificationId || options.glossaryName) {
+        if (options.certificationId || options.certificationName) {
           verboseMessage(
             `Exporting certification "${options.certificationId ? options.certificationId : options.certificationName}"...`
           );

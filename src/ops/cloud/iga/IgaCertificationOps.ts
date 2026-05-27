@@ -243,7 +243,7 @@ export async function exportCertificationToFile(
   keepModifiedProperties: boolean = false,
   options: CertificationTemplateExportOptions = {
     deps: true,
-    includeEventTemplates: true,
+    includeEventTemplates: false,
   }
 ): Promise<boolean> {
   const name = certificationName ? certificationName : certificationId;
@@ -251,7 +251,7 @@ export async function exportCertificationToFile(
   const indicatorId = createProgressIndicator(
     'determinate',
     1,
-    `Exporting ${certificationId}...`
+    `Exporting ${name}...`
   );
   try {
     if (certificationId) {
@@ -309,7 +309,7 @@ export async function exportCertificationsToFile(
   keepModifiedProperties: boolean = false,
   options: CertificationTemplateExportOptions = {
     deps: true,
-    includeEventTemplates: true,
+    includeEventTemplates: false,
   }
 ): Promise<boolean> {
   try {
@@ -346,7 +346,7 @@ export async function exportCertificationsToFiles(
   keepModifiedProperties: boolean = false,
   options: CertificationTemplateExportOptions = {
     deps: true,
-    includeEventTemplates: true,
+    includeEventTemplates: false,
   }
 ): Promise<boolean> {
   try {
@@ -623,7 +623,7 @@ export async function deleteCertification(
  */
 export async function deleteCertifications(
   options: CertificationTemplateDeleteOptions = {
-    includeEventTemplates: true,
+    includeEventTemplates: false,
   }
 ): Promise<boolean> {
   const spinnerId = createProgressIndicator(

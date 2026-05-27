@@ -1,0 +1,181 @@
+{
+  "certificationTemplate": {
+    "055dfbc9-367e-441e-8b12-199b9dd5ce19": {
+      "allowBulkCertify": true,
+      "allowPartialSignoff": true,
+      "allowSelfCertification": false,
+      "assignmentNotification": "emailTemplate/certificationAssigned",
+      "assignmentNotificationIncludeManager": false,
+      "certificationType": "identity",
+      "defaultCertifierId": "managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58",
+      "defaultCertifierInfo": {
+        "givenName": "ChildOne",
+        "id": "0f2b6cba-0124-4846-afc2-f944acf09c58",
+        "mail": "pholderness+c1admin@trivir.com",
+        "sn": "Admin",
+        "userName": "phh-child1-org-admin"
+      },
+      "description": "The user's sunset date has changed. Certify access.",
+      "enableForward": true,
+      "enableReassign": true,
+      "escalationFrequency": null,
+      "escalationNotification": null,
+      "escalationOwner": null,
+      "events": {
+        "assignment": {
+          "notification": "emailTemplate/certificationAssigned"
+        },
+        "reassign": {
+          "notification": "emailTemplate/certificationReassigned"
+        }
+      },
+      "exceptionDuration": 14,
+      "excludeConditionalAccess": true,
+      "excludeRoleBasedAccess": true,
+      "expirationAction": null,
+      "expirationActionDelay": 0,
+      "expirationNotification": null,
+      "expirationReassignee": null,
+      "finalizeRule": "",
+      "id": "055dfbc9-367e-441e-8b12-199b9dd5ce19",
+      "initializeRule": "",
+      "isEventBased": false,
+      "metadata": {},
+      "name": "Sunset date change {{YYYY-MM-DD}} for {{IGA_PARAM_userDisplayName_IGA_PARAM}}",
+      "ownerId": "managed/user/0f2b6cba-0124-4846-afc2-f944acf09c58",
+      "ownerInfo": {
+        "givenName": "ChildOne",
+        "id": "0f2b6cba-0124-4846-afc2-f944acf09c58",
+        "mail": "pholderness+c1admin@trivir.com",
+        "sn": "Admin",
+        "userName": "phh-child1-org-admin"
+      },
+      "parameters": [
+        {
+          "displayName": "ID of user this campaign will target",
+          "id": "userId",
+          "type": "string"
+        },
+        {
+          "displayName": "Name of the event triggering this campaign",
+          "id": "eventName",
+          "type": "string"
+        },
+        {
+          "displayName": "Display friendly name of user this campaign targets",
+          "id": "userDisplayName",
+          "type": "string"
+        }
+      ],
+      "reassignNotification": "emailTemplate/certificationReassigned",
+      "reassignPermissions": {
+        "certify": true,
+        "claim": true,
+        "comment": true,
+        "delegate": true,
+        "exception": true,
+        "forward": true,
+        "reassign": true,
+        "reset": true,
+        "revoke": true,
+        "save": true,
+        "signoff": true
+      },
+      "remediationDelay": 0,
+      "remediationRule": "BasicRevocation",
+      "reminderFrequency": 0,
+      "reminderNotification": null,
+      "requireJustification": {
+        "exceptionAllowed": true,
+        "revoke": true
+      },
+      "scheduleId": null,
+      "selfCertificationRule": "none",
+      "skipInactiveCertifiers": false,
+      "stageDuration": 14,
+      "stages": [
+        {
+          "certifierId": null,
+          "certifierPath": null,
+          "certifierScript": null,
+          "certifierType": "manager"
+        }
+      ],
+      "stagingEnabled": false,
+      "status": "active",
+      "targetFilter": {
+        "account": {
+          "operand": [],
+          "operator": "ALL"
+        },
+        "application": {
+          "operand": {
+            "targetName": "authoritative",
+            "targetValue": false
+          },
+          "operator": "EQUALS"
+        },
+        "decision": {
+          "operand": [],
+          "operator": "ALL"
+        },
+        "entitlement": {
+          "operand": [],
+          "operator": "ALL"
+        },
+        "memberOfOrg": [],
+        "role": {
+          "operand": [],
+          "operator": "ALL"
+        },
+        "type": [
+          "accountGrant",
+          "entitlementGrant",
+          "roleMembership",
+          "AccountGrant",
+          "ResourceGrant"
+        ],
+        "user": {
+          "operand": {
+            "targetName": "id",
+            "targetValue": "{{IGA_PARAM_userId_IGA_PARAM}}"
+          },
+          "operator": "EQUALS"
+        }
+      },
+      "templateEventType": "user",
+      "uiConfig": {
+        "columnConfig": {
+          "accounts": [
+            "user.user",
+            "application.application",
+            "review.flags",
+            "review.comments"
+          ],
+          "entitlements": [
+            "user.user",
+            "application.application",
+            "entitlement.entitlement",
+            "account.account",
+            "review.flags",
+            "review.comments"
+          ],
+          "roles": [
+            "role.role",
+            "user.user",
+            "review.flags",
+            "review.comments"
+          ]
+        }
+      }
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-27T20:22:40.549Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "bwirick@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}

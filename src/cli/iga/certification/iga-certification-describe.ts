@@ -24,7 +24,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-n, --certification-name <certification-name>',
-        'Certification name. If not specified, will describe first certification in the provided export file.'
+        'Certification name. If not specified, will describe first certification in the provided export file. (Use "\\" after each word if word is followed by a space)'
       ).conflicts(['certificationId'])
     )
     .addOption(

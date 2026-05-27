@@ -77,7 +77,7 @@ export default function setup() {
         let outcome;
 
         // delete by id
-        if (options.certificationId) {
+        if (options.certificationId || options.certificationName) {
           verboseMessage('Deleting certification...');
           outcome = await deleteCertification(
             options.certificationId,
