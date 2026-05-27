@@ -42,7 +42,11 @@ export default function setup() {
         options,
         command
       );
-      if (!options.certificationId && !options.certificationName && !options.file) {
+      if (
+        !options.certificationId &&
+        !options.certificationName &&
+        !options.file
+      ) {
         printMessage(
           'Unrecognized combination of options or no options...',
           'error'
@@ -65,7 +69,9 @@ export default function setup() {
         process.exit(1);
       }
 
-      verboseMessage(`Describing certification ${options.certificationId ? options.certificateId : options.certficationName}...`);
+      verboseMessage(
+        `Describing certification ${options.certificationId ? options.certificateId : options.certficationName}...`
+      );
       const outcome = await describeCertification(
         options.certificationId,
         options.certificationName,

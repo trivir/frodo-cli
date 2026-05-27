@@ -3,10 +3,10 @@ import { Option } from 'commander';
 
 import { getTokens } from '../../../ops/AuthenticateOps';
 import {
-  importFirstCertificationFromFile,
   importCertificationFromFile,
   importCertificationsFromFile,
   importCertificationsFromFiles,
+  importFirstCertificationFromFile,
 } from '../../../ops/cloud/iga/IgaCertificationOps';
 import { printMessage, verboseMessage } from '../../../utils/Console.js';
 import { FrodoCommand } from '../../FrodoCommand';
@@ -27,26 +27,37 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --certification-id <certification-id>',
-        'Certification id. If specified, -a and -A are ignored.'
-      )
+        'Certification id. If specified, -n, -a, and -A cannot be used.'
+      ).conflicts(['certificationName', 'all', 'allSeparate'])
     )
-    .addOption(new Option('-f, --file <file>', 'Name of the import file.'))
+    .addOption(
+      new Option(
+        '-n, --certification-name <certification-name>',
+        'Certification name. If specified, -i, -a and -A cannot be used.'
+      ).conflicts(['certificationId', 'all', 'allSeparate'])
+    )
+    .addOption(
+      new Option(
+        '-f, --file <file>',
+        'Name of the import file. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(
       new Option(
         '-a, --all',
-        'Import all certifications from single file. Ignored with -i.'
-      )
+        'Import all certifications from single file. Cannot be used with -i, -n, and -A.'
+      ).conflicts(['certificationId', 'certificationName', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all certifications from separate files (*.certification.json) in the current directory. Ignored with -i or -a.'
-      )
+        'Import all certifications from separate files (*.certification.json) in the current directory. Cannot be used with -i, -n, -a and -f.'
+      ).conflicts(['certificationId', 'all', 'allSeparate', 'file'])
     )
     .addOption(
       new Option(
         '--no-deps',
-        'Do not import any dependencies (email templates, request forms, events, etc.).'
+        'Do not import any dependencies (email templates).'
       )
     )
     .action(
@@ -61,11 +72,13 @@ export default function setup() {
           command
         );
         const isImportById = options.certificationId && options.file;
+        const isImportByName = options.certificationName && options.file;
         const isImportAll = options.all && options.file;
         const isImportAllSeparate = options.allSeparate && !options.file;
         const isImportFirst = !!options.file;
         if (
           !isImportById &&
+          !isImportByName &&
           !isImportAll &&
           !isImportAllSeparate &&
           !isImportFirst
@@ -74,37 +87,34 @@ export default function setup() {
             'Unrecognized combination of options or no options...',
             'error'
           );
-          program.help();
           process.exitCode = 1;
-          return;
+          program.help();
         }
         const getTokensIsSuccessful = await getTokens(
           false,
           true,
           deploymentTypes
         );
-        if (!getTokensIsSuccessful) {
-          printMessage('Error getting tokens', 'error');
-          process.exitCode = 1;
-          return;
-        }
+        if (!getTokensIsSuccessful) process.exit(1);
+
         if (!state.getIsIGA()) {
           printMessage(
             'Command not supported for non-IGA cloud tenants',
             'error'
           );
-          process.exitCode = 1;
-          return;
+          process.exit(1);
         }
-        // import by id
-        if (isImportById) {
-          verboseMessage(`Importing certification "${options.certificationId}"...`);
+
+        // import by id || import by name
+        if (isImportById || isImportByName) {
+          verboseMessage(
+            `Importing certification "${options.certificationId ? options.certificationId : options.certificationName}"...`
+          );
           const outcome = await importCertificationFromFile(
-            // options.certificationId,
-            // options.file,
-            // {
-            //   deps: options.deps,
-            // }
+            options.certificationId,
+            options.certificationName,
+            options.file,
+            { deps: options.deps }
           );
           if (!outcome) process.exitCode = 1;
         }
@@ -113,11 +123,9 @@ export default function setup() {
           verboseMessage(
             `Importing all certifications from a single file (${options.file})...`
           );
-          const outcome = await importCertificationsFromFile(
-          //   options.file, {
-          //   deps: options.deps,
-          // }
-        );
+          const outcome = await importCertificationsFromFile(options.file, {
+            deps: options.deps,
+          });
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
@@ -125,11 +133,9 @@ export default function setup() {
           verboseMessage(
             'Importing all certifications from separate files (*.certification.json) in current directory...'
           );
-          const outcome = await importCertificationsFromFiles(
-          //   {
-          //   deps: options.deps,
-          // }
-        );
+          const outcome = await importCertificationsFromFiles({
+            deps: options.deps,
+          });
           if (!outcome) process.exitCode = 1;
         }
         // import first certification from file
@@ -137,11 +143,9 @@ export default function setup() {
           verboseMessage(
             `Importing first certification from file "${options.file}"...`
           );
-          const outcome = await importFirstCertificationFromFile(
-          //   options.file, {
-          //   deps: options.deps,
-          // }
-        );
+          const outcome = await importFirstCertificationFromFile(options.file, {
+            deps: options.deps,
+          });
           if (!outcome) process.exitCode = 1;
         }
       }

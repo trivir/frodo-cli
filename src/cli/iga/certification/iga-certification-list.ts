@@ -22,6 +22,12 @@ export default function setup() {
     .addOption(
       new Option('-l, --long', 'Long with all fields.').default(false, 'false')
     )
+    .addOption(
+      new Option(
+        '-E, --include-events',
+        'Includes certification templates used in IGA events'
+      ).default(false, 'false')
+    )
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {
@@ -47,9 +53,12 @@ export default function setup() {
           );
           process.exit(1);
         }
-        
+
         verboseMessage(`Listing certifications ...`);
-        const outcome = await listCertifications(options.long);
+        const outcome = await listCertifications(
+          options.long,
+          options.includeEvents
+        );
         if (!outcome) process.exitCode = 1;
       }
       // end command logic inside action handler

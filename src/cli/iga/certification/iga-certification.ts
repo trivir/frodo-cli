@@ -14,7 +14,9 @@ export default function setup() {
     DeleteCmd().name('delete').description('Delete certifications.')
   );
 
-  program.addCommand(ListCmd().name('list').description('List certifications.'));
+  program.addCommand(
+    ListCmd().name('list').description('List certifications.')
+  );
 
   program.addCommand(
     ExportCmd().name('export').description('Export certifications.')

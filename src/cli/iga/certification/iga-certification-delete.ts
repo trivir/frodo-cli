@@ -47,7 +47,11 @@ export default function setup() {
           options,
           command
         );
-        if (!options.certificationId && !options.certificationName && !options.all) {
+        if (
+          !options.certificationId &&
+          !options.certificationName &&
+          !options.all
+        ) {
           printMessage(
             'Unrecognized combination of options or no options...',
             'error'
@@ -67,7 +71,7 @@ export default function setup() {
             'Command not supported for non-IGA cloud tenants',
             'error'
           );
-          process.exit(1)
+          process.exit(1);
         }
 
         let outcome;
@@ -77,7 +81,7 @@ export default function setup() {
           verboseMessage('Deleting certification...');
           outcome = await deleteCertification(
             options.certificationId,
-            options.certificationName,
+            options.certificationName
           );
           if (!outcome) process.exitCode = 1;
         }

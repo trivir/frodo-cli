@@ -82,7 +82,12 @@ export default function setup() {
           options,
           command
         );
-        if (!options.certificationId && !options.certificationName && !options.all && !options.allSeparate) {
+        if (
+          !options.certificationId &&
+          !options.certificationName &&
+          !options.all &&
+          !options.allSeparate
+        ) {
           printMessage(
             'Unrecognized combination of options or no options...',
             'error'
@@ -96,7 +101,7 @@ export default function setup() {
           deploymentTypes
         );
         if (!getTokensIsSuccessful) process.exit(1);
-        
+
         if (!state.getIsIGA()) {
           printMessage(
             'Command not supported for non-IGA cloud tenants',
@@ -109,7 +114,9 @@ export default function setup() {
 
         // --certification-id -i || --certification-name -n
         if (options.certificationId || options.glossaryName) {
-          verboseMessage(`Exporting certification "${options.certificationId ? options.certificationId : options.certificationName}"...`);
+          verboseMessage(
+            `Exporting certification "${options.certificationId ? options.certificationId : options.certificationName}"...`
+          );
           outcome = await exportCertificationToFile(
             options.certificationId,
             options.certficationName,
@@ -118,7 +125,7 @@ export default function setup() {
             options.modifiedProperties,
             {
               deps: options.deps,
-              includeEventTemplates: options.deps
+              includeEventTemplates: options.deps,
             }
           );
           if (!outcome) process.exitCode = 1;
@@ -132,7 +139,7 @@ export default function setup() {
             options.modifiedProperties,
             {
               deps: options.deps,
-              includeEventTemplates: options.deps
+              includeEventTemplates: options.deps,
             }
           );
           if (!outcome) process.exitCode = 1;
@@ -145,7 +152,7 @@ export default function setup() {
             options.modifiedProperties,
             {
               deps: options.deps,
-              includeEventTemplates: options.deps
+              includeEventTemplates: options.deps,
             }
           );
           if (!outcome) process.exitCode = 1;
