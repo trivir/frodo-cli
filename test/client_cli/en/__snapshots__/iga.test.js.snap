@@ -12,6 +12,7 @@ Options:
                     examples.
 
 Commands:
+  config            Manage configs.
   help              display help for command
   workflow          Manage workflows.
 "

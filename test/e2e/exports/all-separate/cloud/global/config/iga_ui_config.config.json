@@ -1,0 +1,40 @@
+{
+  "config": {
+    "undefined": {
+      "config": {
+        "iga_ui_config": {
+          "lcmSettings": {
+            "entitlement": {
+              "enabled": false
+            },
+            "organization": {
+              "enabled": false
+            },
+            "role": {
+              "enabled": false
+            },
+            "user": {
+              "enabled": true
+            }
+          }
+        }
+      },
+      "meta": {
+        "exportDate": "2026-05-22T18:26:20.801Z",
+        "exportTool": "frodo",
+        "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+        "exportedBy": "dsevy@trivir.com",
+        "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+        "originAmVersion": "9.0.0"
+      }
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-22T18:26:20.802Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}
