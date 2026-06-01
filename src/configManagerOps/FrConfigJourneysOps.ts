@@ -9,8 +9,6 @@ import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError, verboseMessage } from '../utils/Console';
 import { existScript, realmList, safeFileName } from '../utils/FrConfig';
 
-const { readRealms } = frodo.realm;
-
 const { saveJsonToFile, getFilePath } = frodo.utils;
 const { exportJourneys, importJourneys } = frodo.authn.journey;
 
@@ -27,7 +25,7 @@ export async function configManagerExportJourneys(
   };
 
   try {
-    if (realm && realm !== '__default__realm__') {
+    if (realm && realm !== '/') {
       const exportData = (await exportJourneys(
         options
       )) as MultiTreeExportInterface;
@@ -313,7 +311,10 @@ export async function configManagerImportJourneys(
   dependencies?: boolean
 ): Promise<boolean> {
   try {
-    if (realm === '/' || realm === '__default__realm__') {
+    if (
+      realm === '/' &&
+      state.getDeploymentType() === frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY)
+     {
       return true;
     }
 
@@ -353,17 +354,16 @@ export async function configManagerImportJourneys(
         await importJourneys({ trees }, options);
       }
     } else if (name) {
-      const readRealmNames = await readRealms();
-      for (const realmName of readRealmNames) {
-        if (realmName.name === '/' || realmName.name === '__default__realm__')
-          continue;
-        state.setRealm(realmName.name);
+      const realmsDir = getFilePath('realms');
+      if (!fs.existsSync(realmsDir)) return true;
+      const realmDirs = fs
+        .readdirSync(realmsDir, { withFileTypes: true })
+        .filter((dirent) => dirent.isDirectory())
+        .map((dirent) => dirent.name);
 
-        const journeysDir = getFilePath(
-          `realms${realmName.parentPath + realmName.name}/journeys`
-        );
-        if (!fs.existsSync(journeysDir)) continue;
-
+      for (const realmDir of realmDirs) {
+        state.setRealm(realmDir);
+        const journeysDir = `${realmsDir}/${realmDir}/journeys`;
         const journeyDir = `${journeysDir}/${name}`;
         if (!fs.existsSync(journeyDir)) continue;
 
@@ -376,15 +376,16 @@ export async function configManagerImportJourneys(
         await importJourneys({ trees }, options);
       }
     } else {
-      const readRealmNames = await readRealms();
-      for (const realmName of readRealmNames) {
-        if (realmName.name === '/' || realmName.name === '__default__realm__')
-          continue;
-        state.setRealm(realmName.name);
+      const realmsDir = getFilePath('realms');
+      if (!fs.existsSync(realmsDir)) return true;
+      const realmDirs = fs
+        .readdirSync(realmsDir, { withFileTypes: true })
+        .filter((dirent) => dirent.isDirectory())
+        .map((dirent) => dirent.name);
 
-        const journeysDir = getFilePath(
-          `realms${realmName.parentPath + realmName.name}/journeys`
-        );
+      for (const realmDir of realmDirs) {
+        state.setRealm(realmDir);
+        const journeysDir = `${realmsDir}/${realmDir}/journeys`;
         if (!fs.existsSync(journeysDir)) continue;
 
         const journeyDirs = fs

@@ -72,7 +72,7 @@ describe('frodo config-manager push journeys', () => {
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     });
     test(`"frodo config-manager push journeys -n testJourney -D ${allDirectory} -m forgeops": should import a specific journey by name into forgeops"`, async () => {
-        const CMD = `frodo config-manager push journeys -n fr -D ${allDirectory} -m forgeops`;
+        const CMD = `frodo config-manager push journeys -n testJourney -D ${allDirectory} -m forgeops`;
         const { stdout } = await exec(CMD, forgeopsEnv);
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     });
