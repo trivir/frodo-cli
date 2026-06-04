@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga policy-rule list "frodo iga policy-rule list --long": should list the ids, names, mutability, and statuses of the policy rules. 1`] = `
+"ID                                  │Name         │Description               │Active│Owner               │Risk Score
+0434dcaa-7950-4f7a-b869-7a3d33c82396│Test Policy  │Test policy (delete me)   │active│PrestonIGATestUser  │5         
+2e4bc849-67b5-4c8a-9894-341cf2fa1192│describe-test│this is a description test│active│ColtonIGATestUser   │100       
+c03aaa17-ce22-4981-b0ac-c8bb3bc2dbf8│test-rule    │this is a test rule       │active│phh-child2-org-admin│15        
+df95d487-a251-458d-8299-14f2b131264c│test rule    │this is a test rule       │active│Dallin              │0         
+"
+`;
+
+exports[`frodo iga policy-rule list "frodo iga policy-rule list -l": should list the ids, names, mutability, and statuses of the policy rules. 1`] = `
+"ID                                  │Name         │Description               │Active│Owner               │Risk Score
+0434dcaa-7950-4f7a-b869-7a3d33c82396│Test Policy  │Test policy (delete me)   │active│PrestonIGATestUser  │5         
+2e4bc849-67b5-4c8a-9894-341cf2fa1192│describe-test│this is a description test│active│ColtonIGATestUser   │100       
+c03aaa17-ce22-4981-b0ac-c8bb3bc2dbf8│test-rule    │this is a test rule       │active│phh-child2-org-admin│15        
+df95d487-a251-458d-8299-14f2b131264c│test rule    │this is a test rule       │active│Dallin              │0         
+"
+`;
+
+exports[`frodo iga policy-rule list "frodo iga policy-rule list": should list the ids of the policy rules 1`] = `
+"Test Policy
+describe-test
+test-rule
+test rule
+"
+`;

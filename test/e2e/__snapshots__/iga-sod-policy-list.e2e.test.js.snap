@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga policy list "frodo iga policy list --long": should list the ids, names, descriptions, status and owner of the policies\`. 1`] = `
+"ID                                  │Name       │Description          │Active│Policy Owner│Policy Rules
+39e53582-d85d-4f4d-91a8-54def507b993│test       │test                 │active│1csv        │2           
+df18c346-68bb-48ce-8840-ead1688f2a60│testing    │                     │active│Dallin      │1           
+e5b6a80d-a1ae-455f-830d-dc1bcc61b7cf│test policy│this is a test policy│active│Dallin      │1           
+"
+`;
+
+exports[`frodo iga policy list "frodo iga policy list -l": should list the ids, names, descriptions, status and owner of the policies. 1`] = `
+"ID                                  │Name       │Description          │Active│Policy Owner│Policy Rules
+39e53582-d85d-4f4d-91a8-54def507b993│test       │test                 │active│1csv        │2           
+df18c346-68bb-48ce-8840-ead1688f2a60│testing    │                     │active│Dallin      │1           
+e5b6a80d-a1ae-455f-830d-dc1bcc61b7cf│test policy│this is a test policy│active│Dallin      │1           
+"
+`;
+
+exports[`frodo iga policy list "frodo iga policy list": should list the ids of the policies 1`] = `
+"test
+testing
+test policy
+"
+`;
