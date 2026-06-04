@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga policy-rule delete "frodo iga policy-rule delete -n delete-test": Should delete policy rule delete-test by name 1`] = `""`;
+
+exports[`frodo iga policy-rule delete "frodo iga policy-rule delete -n delete-test": Should delete policy rule delete-test by name 2`] = `
+"✔ Deleted policy rule delete-test.
+"
+`;

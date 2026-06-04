@@ -13,6 +13,8 @@ Options:
 
 Commands:
   help              display help for command
+  policy            Manage iga sod policies.
+  policy-rule       Manage iga sod policy rules.
   workflow          Manage workflows.
 "
 `;

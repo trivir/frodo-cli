@@ -1,0 +1,106 @@
+{
+  "meta": {
+    "exportDate": "2026-06-04T18:55:46.208Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  },
+  "rule": {
+    "test rule": {
+      "active": true,
+      "correctionAdvice": "",
+      "decisionOptions": {
+        "allow": true,
+        "exception": true,
+        "remediate": true
+      },
+      "description": "this is a test rule",
+      "documentationUrl": "",
+      "id": "df95d487-a251-458d-8299-14f2b131264c",
+      "maxExceptionDuration": 90,
+      "metadata": {},
+      "mitigatingControl": "",
+      "name": "test rule",
+      "policyRuleOwner": {
+        "givenName": "Dallin",
+        "id": "managed/user/5068da35-7971-4f11-becf-ba716b6aadb9",
+        "mail": "test@mail.com",
+        "sn": "sevy",
+        "userName": "Dallin"
+      },
+      "remediation": {
+        "schemas": [
+          "grantRemoval"
+        ]
+      },
+      "riskScore": 0,
+      "ruleDefinition": [
+        {
+          "operand": [
+            {
+              "operand": {
+                "targetName": "entitlement.displayName",
+                "targetValue": "aicGroup1"
+              },
+              "operator": "EQUALS"
+            }
+          ],
+          "operator": "OR",
+          "type": [
+            "entitlementGrant"
+          ]
+        },
+        {
+          "operand": [
+            {
+              "operand": {
+                "targetName": "entitlement.displayName",
+                "targetValue": "aicGroup2"
+              },
+              "operator": "EQUALS"
+            }
+          ],
+          "operator": "AND",
+          "type": [
+            "entitlementGrant"
+          ]
+        }
+      ],
+      "ruleDefinitionTags": [
+        "targetName=entitlement.displayName&targetValue=aicGroup1",
+        "targetValue=aicGroup1&targetName=entitlement.displayName",
+        "targetName=entitlement.displayName&targetValue=aicGroup2",
+        "targetValue=aicGroup2&targetName=entitlement.displayName"
+      ],
+      "scanTypes": {
+        "detective": true,
+        "preventative": true
+      },
+      "userFilter": {
+        "operand": [],
+        "operator": "ALL"
+      },
+      "violationLifecycle": {
+        "exception": {
+          "justificationCheck": true
+        },
+        "expiration": {
+          "expires": false
+        },
+        "workflow": {
+          "action": "do_nothing"
+        }
+      },
+      "violationOwner": {
+        "givenName": "Dallin",
+        "id": "managed/user/5068da35-7971-4f11-becf-ba716b6aadb9",
+        "mail": "test@mail.com",
+        "sn": "sevy",
+        "userName": "Dallin"
+      },
+      "violationOwnerType": "user"
+    }
+  }
+}

@@ -1,0 +1,256 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga policy export "frodo iga policy export --all  --file testPolicyExportFile2.json": should export all policy to file 1`] = `0`;
+
+exports[`frodo iga policy export "frodo iga policy export --all  --file testPolicyExportFile2.json": should export all policy to file 2`] = `""`;
+
+exports[`frodo iga policy export "frodo iga policy export --all  --file testPolicyExportFile2.json": should export all policy to file 3`] = `
+"✔ Exported 3 policies
+"
+`;
+
+exports[`frodo iga policy export "frodo iga policy export --all  --file testPolicyExportFile2.json": should export all policy to file: testPolicyExportFile2.json 1`] = `
+{
+  "meta": Any<Object>,
+  "policy": {
+    "39e53582-d85d-4f4d-91a8-54def507b993": {
+      "active": true,
+      "description": "test",
+      "id": "39e53582-d85d-4f4d-91a8-54def507b993",
+      "metadata": {},
+      "name": "test",
+      "policyOwner": {
+        "givenName": "csv",
+        "id": "managed/user/9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+        "mail": "1csv@example.com",
+        "sn": "one",
+        "userName": "1csv",
+      },
+      "policyRuleIds": [
+        "0434dcaa-7950-4f7a-b869-7a3d33c82396",
+        "df95d487-a251-458d-8299-14f2b131264c",
+      ],
+      "policyRuleNames": [
+        "Test Policy",
+        "test rule",
+      ],
+      "schedule": null,
+    },
+    "df18c346-68bb-48ce-8840-ead1688f2a60": {
+      "active": true,
+      "description": "",
+      "id": "df18c346-68bb-48ce-8840-ead1688f2a60",
+      "metadata": {},
+      "name": "testing",
+      "policyOwner": {
+        "givenName": "Dallin",
+        "id": "managed/user/5068da35-7971-4f11-becf-ba716b6aadb9",
+        "mail": "test@mail.com",
+        "sn": "sevy",
+        "userName": "Dallin",
+      },
+      "policyRuleIds": [
+        "df95d487-a251-458d-8299-14f2b131264c",
+      ],
+      "policyRuleNames": [
+        "test rule",
+      ],
+    },
+    "e5b6a80d-a1ae-455f-830d-dc1bcc61b7cf": {
+      "active": true,
+      "description": "this is a test policy",
+      "id": "e5b6a80d-a1ae-455f-830d-dc1bcc61b7cf",
+      "metadata": {},
+      "name": "test policy",
+      "policyOwner": {
+        "givenName": "Dallin",
+        "id": "managed/user/5068da35-7971-4f11-becf-ba716b6aadb9",
+        "mail": "test@mail.com",
+        "sn": "sevy",
+        "userName": "Dallin",
+      },
+      "policyRuleIds": [
+        "df95d487-a251-458d-8299-14f2b131264c",
+      ],
+      "policyRuleNames": [
+        "test rule",
+      ],
+      "scheduleId": "policySchedulee5b6a80da1ae455f830ddc1bcc61b7cf",
+    },
+  },
+}
+`;
+
+exports[`frodo iga policy export "frodo iga policy export --no-metadata -a --directory testPolicyExportDir2": should export all policies with no metadata 1`] = `0`;
+
+exports[`frodo iga policy export "frodo iga policy export --no-metadata -a --directory testPolicyExportDir2": should export all policies with no metadata 2`] = `""`;
+
+exports[`frodo iga policy export "frodo iga policy export --no-metadata -a --directory testPolicyExportDir2": should export all policies with no metadata 3`] = `
+"✔ Exported 3 policies
+"
+`;
+
+exports[`frodo iga policy export "frodo iga policy export --no-metadata -a --directory testPolicyExportDir2": should export all policies with no metadata: testPolicyExportDir2/allPolicies.policy.json 1`] = `
+{
+  "policy": {
+    "39e53582-d85d-4f4d-91a8-54def507b993": {
+      "active": true,
+      "description": "test",
+      "id": "39e53582-d85d-4f4d-91a8-54def507b993",
+      "metadata": {},
+      "name": "test",
+      "policyOwner": {
+        "givenName": "csv",
+        "id": "managed/user/9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+        "mail": "1csv@example.com",
+        "sn": "one",
+        "userName": "1csv",
+      },
+      "policyRuleIds": [
+        "0434dcaa-7950-4f7a-b869-7a3d33c82396",
+        "df95d487-a251-458d-8299-14f2b131264c",
+      ],
+      "policyRuleNames": [
+        "Test Policy",
+        "test rule",
+      ],
+      "schedule": null,
+    },
+    "df18c346-68bb-48ce-8840-ead1688f2a60": {
+      "active": true,
+      "description": "",
+      "id": "df18c346-68bb-48ce-8840-ead1688f2a60",
+      "metadata": {},
+      "name": "testing",
+      "policyOwner": {
+        "givenName": "Dallin",
+        "id": "managed/user/5068da35-7971-4f11-becf-ba716b6aadb9",
+        "mail": "test@mail.com",
+        "sn": "sevy",
+        "userName": "Dallin",
+      },
+      "policyRuleIds": [
+        "df95d487-a251-458d-8299-14f2b131264c",
+      ],
+      "policyRuleNames": [
+        "test rule",
+      ],
+    },
+    "e5b6a80d-a1ae-455f-830d-dc1bcc61b7cf": {
+      "active": true,
+      "description": "this is a test policy",
+      "id": "e5b6a80d-a1ae-455f-830d-dc1bcc61b7cf",
+      "metadata": {},
+      "name": "test policy",
+      "policyOwner": {
+        "givenName": "Dallin",
+        "id": "managed/user/5068da35-7971-4f11-becf-ba716b6aadb9",
+        "mail": "test@mail.com",
+        "sn": "sevy",
+        "userName": "Dallin",
+      },
+      "policyRuleIds": [
+        "df95d487-a251-458d-8299-14f2b131264c",
+      ],
+      "policyRuleNames": [
+        "test rule",
+      ],
+      "scheduleId": "policySchedulee5b6a80da1ae455f830ddc1bcc61b7cf",
+    },
+  },
+}
+`;
+
+exports[`frodo iga policy export "frodo iga policy export -NAD testPolicyExportDir3": should export all policies separately with no metadata 1`] = `0`;
+
+exports[`frodo iga policy export "frodo iga policy export -NAD testPolicyExportDir3": should export all policies separately with no metadata 2`] = `""`;
+
+exports[`frodo iga policy export "frodo iga policy export -NAD testPolicyExportDir3": should export all policies separately with no metadata 3`] = `
+"✔ Exported 3 policies
+"
+`;
+
+exports[`frodo iga policy export "frodo iga policy export -NAD testPolicyExportDir3": should export all policies separately with no metadata: testPolicyExportDir3/test.policy.json 1`] = `
+{
+  "policy": {
+    "39e53582-d85d-4f4d-91a8-54def507b993": {
+      "active": true,
+      "description": "test",
+      "id": "39e53582-d85d-4f4d-91a8-54def507b993",
+      "metadata": {},
+      "name": "test",
+      "policyOwner": {
+        "givenName": "csv",
+        "id": "managed/user/9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+        "mail": "1csv@example.com",
+        "sn": "one",
+        "userName": "1csv",
+      },
+      "policyRuleIds": [
+        "0434dcaa-7950-4f7a-b869-7a3d33c82396",
+        "df95d487-a251-458d-8299-14f2b131264c",
+      ],
+      "policyRuleNames": [
+        "Test Policy",
+        "test rule",
+      ],
+      "schedule": null,
+    },
+  },
+}
+`;
+
+exports[`frodo iga policy export "frodo iga policy export -NAD testPolicyExportDir3": should export all policies separately with no metadata: testPolicyExportDir3/test-policy.policy.json 1`] = `
+{
+  "policy": {
+    "e5b6a80d-a1ae-455f-830d-dc1bcc61b7cf": {
+      "active": true,
+      "description": "this is a test policy",
+      "id": "e5b6a80d-a1ae-455f-830d-dc1bcc61b7cf",
+      "metadata": {},
+      "name": "test policy",
+      "policyOwner": {
+        "givenName": "Dallin",
+        "id": "managed/user/5068da35-7971-4f11-becf-ba716b6aadb9",
+        "mail": "test@mail.com",
+        "sn": "sevy",
+        "userName": "Dallin",
+      },
+      "policyRuleIds": [
+        "df95d487-a251-458d-8299-14f2b131264c",
+      ],
+      "policyRuleNames": [
+        "test rule",
+      ],
+      "scheduleId": "policySchedulee5b6a80da1ae455f830ddc1bcc61b7cf",
+    },
+  },
+}
+`;
+
+exports[`frodo iga policy export "frodo iga policy export -NAD testPolicyExportDir3": should export all policies separately with no metadata: testPolicyExportDir3/testing.policy.json 1`] = `
+{
+  "policy": {
+    "df18c346-68bb-48ce-8840-ead1688f2a60": {
+      "active": true,
+      "description": "",
+      "id": "df18c346-68bb-48ce-8840-ead1688f2a60",
+      "metadata": {},
+      "name": "testing",
+      "policyOwner": {
+        "givenName": "Dallin",
+        "id": "managed/user/5068da35-7971-4f11-becf-ba716b6aadb9",
+        "mail": "test@mail.com",
+        "sn": "sevy",
+        "userName": "Dallin",
+      },
+      "policyRuleIds": [
+        "df95d487-a251-458d-8299-14f2b131264c",
+      ],
+      "policyRuleNames": [
+        "test rule",
+      ],
+    },
+  },
+}
+`;
