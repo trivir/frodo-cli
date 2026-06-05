@@ -6,7 +6,7 @@ import {
 import fs from 'fs';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
-import { printError, verboseMessage } from '../utils/Console';
+import { printError, printMessage, verboseMessage } from '../utils/Console';
 import { existScript, realmList, safeFileName } from '../utils/FrConfig';
 
 const { saveJsonToFile, getFilePath } = frodo.utils;
@@ -320,6 +320,8 @@ export async function configManagerImportJourneys(
 
     const options = { deps: dependencies ?? false, reUuid: false };
 
+    let imported = false;
+
     if (realm) {
       const journeysBaseDir = getFilePath(`realms/${realm}/journeys`);
 
@@ -331,7 +333,10 @@ export async function configManagerImportJourneys(
           dependencies ?? false,
           journeysBaseDir
         );
-        await importJourneys({ trees }, options);
+        if (Object.keys(trees).length) {
+          await importJourneys({ trees }, options);
+          imported = true;
+        }
       } else {
         const journeyDirs = fs
           .readdirSync(journeysBaseDir, { withFileTypes: true })
@@ -351,11 +356,17 @@ export async function configManagerImportJourneys(
           );
           Object.assign(trees, journeyTrees);
         }
-        await importJourneys({ trees }, options);
+        if (Object.keys(trees).length) {
+          await importJourneys({ trees }, options);
+          imported = true;
+        }
       }
     } else if (name) {
       const realmsDir = getFilePath('realms');
-      if (!fs.existsSync(realmsDir)) return true;
+      if (!fs.existsSync(realmsDir)) {
+        printMessage('No journey files found to import.', 'error');
+        return false;
+      }
       const realmDirs = fs
         .readdirSync(realmsDir, { withFileTypes: true })
         .filter((dirent) => dirent.isDirectory())
@@ -373,11 +384,17 @@ export async function configManagerImportJourneys(
           dependencies ?? false,
           journeysDir
         );
-        await importJourneys({ trees }, options);
+        if (Object.keys(trees).length) {
+          await importJourneys({ trees }, options);
+          imported = true;
+        }
       }
     } else {
       const realmsDir = getFilePath('realms');
-      if (!fs.existsSync(realmsDir)) return true;
+      if (!fs.existsSync(realmsDir)) {
+        printMessage('No journey files found to import.', 'error');
+        return false;
+      }
       const realmDirs = fs
         .readdirSync(realmsDir, { withFileTypes: true })
         .filter((dirent) => dirent.isDirectory())
@@ -406,8 +423,15 @@ export async function configManagerImportJourneys(
           );
           Object.assign(trees, journeyTrees);
         }
-        await importJourneys({ trees }, options);
+        if (Object.keys(trees).length) {
+          await importJourneys({ trees }, options);
+          imported = true;
+        }
       }
+    }
+    if (!imported) {
+      printMessage('No journey files found to import.', 'error');
+      return false;
     }
 
     return true;
