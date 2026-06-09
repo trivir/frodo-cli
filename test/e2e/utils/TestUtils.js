@@ -90,6 +90,7 @@ export async function testExport(
       if (checkForMetadata || exportData.meta) {
         expect(exportData).toMatchSnapshot(
           {
+            ...exportData,
             meta: expect.any(Object),
           },
           path

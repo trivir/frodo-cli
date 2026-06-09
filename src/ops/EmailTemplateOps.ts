@@ -42,8 +42,14 @@ const regexEmailTemplateType = new RegExp(`${EMAIL_TEMPLATE_TYPE}/`, 'g');
 // use a function vs a template variable to avoid problems in loops
 function getFileDataTemplate() {
   return {
-    meta: {},
     emailTemplate: {},
+  };
+}
+
+function getFileDataHTMLTemplate() {
+  return {
+    html: {},
+    css: {},
   };
 }
 
@@ -167,6 +173,7 @@ export async function listEmailTemplates(
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function exportEmailTemplateToFile(
+  extract: boolean = false,
   templateId: string,
   file: string,
   includeMeta: boolean = true
@@ -187,6 +194,26 @@ export async function exportEmailTemplateToFile(
     updateProgressIndicator(indicatorId, `Writing file ${filePath}`);
     const fileData = getFileDataTemplate();
     fileData.emailTemplate[templateId] = templateData;
+
+    if (extract && (templateData.html || templateData.styles)) {
+      const fileThemeName = file ? file.replace('.json', '') + '.theme.json' : getTypedFilename(
+        templateId,
+        EMAIL_TEMPLATE_FILE_TYPE + '.theme'
+      );
+      const fileHTMLData = getFileDataHTMLTemplate();
+      fileHTMLData.html[templateId] = templateData.html ?? {};
+      fileHTMLData.css[templateId] = templateData.styles ?? {};
+
+      saveJsonToFile(fileHTMLData, getFilePath(fileThemeName, true), includeMeta);
+
+      const formattedTemplate = templateData;
+
+      if (formattedTemplate.html) delete formattedTemplate.html;
+      if (formattedTemplate.styles) delete formattedTemplate.styles;
+        
+      fileData.emailTemplate[templateId] = formattedTemplate;
+    }
+
     saveJsonToFile(fileData, filePath, includeMeta);
     stopProgressIndicator(
       indicatorId,
@@ -207,6 +234,7 @@ export async function exportEmailTemplateToFile(
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function exportEmailTemplatesToFile(
+  extract: boolean = false,
   file: string,
   includeMeta: boolean = true
 ): Promise<boolean> {
@@ -220,6 +248,33 @@ export async function exportEmailTemplatesToFile(
     }
     const filePath = getFilePath(fileName, true);
     const exportData = await exportEmailTemplates(true);
+
+    if (extract) {
+      const fileHTMLData = getFileDataHTMLTemplate();
+      const fileThemeName = file ? file.replace('.json', '') + '.theme.json' : getTypedFilename(
+        `allEmailTemplates`,
+        EMAIL_TEMPLATE_FILE_TYPE + '.theme'
+      );
+
+      Object.keys(exportData.emailTemplate).forEach((templateId) => {
+        const templateData = exportData.emailTemplate[templateId];
+
+        if (templateData.html || templateData.styles) {
+          fileHTMLData.html[templateId] = templateData.html ?? {};
+          fileHTMLData.css[templateId] = templateData.styles ?? {};
+    
+          const formattedTemplate = templateData;
+    
+          if (formattedTemplate.html) delete formattedTemplate.html;
+          if (formattedTemplate.styles) delete formattedTemplate.styles;
+            
+          exportData.emailTemplate[templateId] = formattedTemplate;
+        }
+      });
+
+      saveJsonToFile(fileHTMLData, getFilePath(fileThemeName, true), includeMeta);
+    }
+
     saveJsonToFile(exportData, filePath, includeMeta);
     return true;
   } catch (error) {
@@ -234,6 +289,7 @@ export async function exportEmailTemplatesToFile(
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function exportEmailTemplatesToFiles(
+  extract: boolean = false,
   includeMeta: boolean = true
 ): Promise<boolean> {
   let indicatorId;
@@ -251,6 +307,27 @@ export async function exportEmailTemplatesToFiles(
       const fileData = getFileDataTemplate();
       updateProgressIndicator(indicatorId, `Exporting ${templateId}`);
       fileData.emailTemplate[templateId] = template;
+
+      // Separate html and styles into a different file by default
+      if (extract && (template.html || template.styles)) {
+        const fileThemeName = getTypedFilename(
+          templateId,
+          EMAIL_TEMPLATE_FILE_TYPE + '.theme'
+        );
+        const fileHTMLData = getFileDataHTMLTemplate();
+        fileHTMLData.html[templateId] = template.html ?? {};
+        fileHTMLData.css[templateId] = template.styles ?? {};
+
+        saveJsonToFile(fileHTMLData, getFilePath(fileThemeName, true), includeMeta);
+
+        const formattedTemplate = template;
+
+        if (formattedTemplate.html) delete formattedTemplate.html;
+        if (formattedTemplate.styles) delete formattedTemplate.styles;
+          
+        fileData.emailTemplate[templateId] = formattedTemplate;
+      }
+
       saveJsonToFile(fileData, getFilePath(fileName, true), includeMeta);
     }
     stopProgressIndicator(

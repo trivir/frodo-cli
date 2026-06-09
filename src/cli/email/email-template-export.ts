@@ -57,6 +57,12 @@ export default function setup() {
         'Does not include metadata in the export file.'
       )
     )
+    .addOption(
+      new Option(
+        '-x, --no-extract',
+        'Do not extract HTML and CSS to a separate file'
+      )
+    )
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {
@@ -79,6 +85,7 @@ export default function setup() {
             }" from realm "${state.getRealm()}"...`
           );
           const outcome = await exportEmailTemplateToFile(
+            options.extract,
             options.templateId,
             options.file,
             options.metadata
@@ -92,6 +99,7 @@ export default function setup() {
         ) {
           verboseMessage('Exporting all email templates to a single file...');
           const outcome = await exportEmailTemplatesToFile(
+            options.extract,
             options.file,
             options.metadata
           );
@@ -103,7 +111,10 @@ export default function setup() {
           (await getTokens(false, true, deploymentTypes))
         ) {
           verboseMessage('Exporting all email templates to separate files...');
-          const outcome = await exportEmailTemplatesToFiles(options.metadata);
+          const outcome = await exportEmailTemplatesToFiles(
+            options.extract,
+            options.metadata
+          );
           if (!outcome) process.exitCode = 1;
         }
         // unrecognized combination of options or no options

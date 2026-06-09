@@ -31,6 +31,8 @@ Options:
   -i, --template-id <template-id>  Email template id/name. If specified, -a and
                                    -A are ignored.
   -N, --no-metadata                Does not include metadata in the export file.
+  -x, --no-extract                 Do not extract HTML and CSS to a separate
+                                   file
   -h, --help                       Help
   -hh, --help-more                 Help with all options.
   -hhh, --help-all                 Help with all options, environment variables,
