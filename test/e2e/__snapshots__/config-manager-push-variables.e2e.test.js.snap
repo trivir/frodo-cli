@@ -1,5 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo config-manager push variables "frodo config-manager push variables -D test/e2e/exports/fr-config-manager/forgeops -m forgeops": should import the variables into cloud" 1`] = `""`;
+exports[`frodo config-manager push variables "frodo config-manager push variables -D test/e2e/exports/fr-config-manager/cloud ": should import variables into cloud" 1`] = `""`;
 
-exports[`frodo config-manager push variables "frodo config-manager push variables -D test/e2e/exports/fr-config-manager/forgeops -m forgeops": should import the variables into cloud" 2`] = `""`;
+exports[`frodo config-manager push variables "frodo config-manager push variables -D test/e2e/exports/fr-config-manager/cloud ": should import variables into cloud" 2`] = `
+"Experimental feature in use: 'frodo config-manager push variables'. This feature may change without notice.
+✔ Successfully read 2 variables.
+• 2 variables imported.
+"
+`;
+
+exports[`frodo config-manager push variables "frodo config-manager push variables -n esv-email-welcome -e "this is a test" -D test/e2e/exports/fr-config-manager/cloud ": should import the specified variable into cloud" 1`] = `""`;
+
+exports[`frodo config-manager push variables "frodo config-manager push variables -n esv-email-welcome -e "this is a test" -D test/e2e/exports/fr-config-manager/cloud ": should import the specified variable into cloud" 2`] = `
+"Experimental feature in use: 'frodo config-manager push variables'. This feature may change without notice.
+✔ Successfully read 2 variables.
+• 2 variables imported.
+"
+`;

@@ -48,7 +48,8 @@
 
 /*
 // ForgeOps
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push variables -D test/e2e/exports/fr-config-manager/forgeops -m cloud
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push variables -D test/e2e/exports/fr-config-manager/cloud
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push variables -n esv-email-welcome -e "this is a test" -D test/e2e/exports/fr-config-manager/cloud  
 */
 
 import cp from 'child_process';
@@ -61,11 +62,17 @@ const exec = promisify(cp.exec);
 process.env['FRODO_MOCK'] = '1';
 const cloudEnv = getEnv(c);
 
-const allDirectory = "test/e2e/exports/fr-config-manager/forgeops";
+const allDirectory = "test/e2e/exports/fr-config-manager/cloud";
 
 describe('frodo config-manager push variables', () => {
-    test(`"frodo config-manager push variables -D ${allDirectory} -m forgeops": should import the variables into cloud"`, async () => {
-        const CMD = `frodo config-manager push variables -D ${allDirectory} -m cloud`;
+    test(`"frodo config-manager push variables -D ${allDirectory} ": should import variables into cloud"`, async () => {
+        const CMD = `frodo config-manager push variables -D ${allDirectory} `;
+        const { stdout, stderr } = await exec(CMD, cloudEnv);
+        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    });
+    test(`"frodo config-manager push variables -n esv-email-welcome -e "this is a test" -D ${allDirectory} ": should import the specified variable into cloud"`, async () => {
+        const CMD = `frodo config-manager push variables -D ${allDirectory} `;
         const { stdout, stderr } = await exec(CMD, cloudEnv);
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
         expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
