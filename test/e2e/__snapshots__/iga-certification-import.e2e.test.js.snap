@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga certification import "frodo iga certification import --all --file test/e2e/exports/all/allCertifications.certification.json": should import all certifications from the file "test/e2e/exports/all/allCertifications.certification.json with dependencies" 1`] = `""`;
+
+exports[`frodo iga certification import "frodo iga certification import --all --file test/e2e/exports/all/allCertifications.certification.json": should import all certifications from the file "test/e2e/exports/all/allCertifications.certification.json with dependencies" 2`] = `
+"✔ Successfully imported certifications.
+"
+`;
+
+exports[`frodo iga certification import "frodo iga certification import --all-separate --directory test/e2e/exports/all-separate/cloud/iga/certifications --no-deps": should import all certifications from the directory "test/e2e/exports/all-separate/cloud/iga/certifications" 1`] = `""`;
+
+exports[`frodo iga certification import "frodo iga certification import --all-separate --directory test/e2e/exports/all-separate/cloud/iga/certifications --no-deps": should import all certifications from the directory "test/e2e/exports/all-separate/cloud/iga/certifications" 2`] = `
+"✔ Successfully imported certifications.
+✔ Successfully imported certifications.
+✔ Successfully imported certifications.
+✔ Successfully imported certifications.
+✔ Successfully imported certifications.
+"
+`;
+
+exports[`frodo iga certification import "frodo iga certification import --certification-id 855918e4-06c4-4393-b1da-61a20e23e29a --file test/e2e/exports/all/allCertifications.certification.json --no-deps": should import 855918e4-06c4-4393-b1da-61a20e23e29a from the file "test/e2e/exports/all/allCertifications.certification.json" 1`] = `""`;
+
+exports[`frodo iga certification import "frodo iga certification import --certification-id 855918e4-06c4-4393-b1da-61a20e23e29a --file test/e2e/exports/all/allCertifications.certification.json --no-deps": should import 855918e4-06c4-4393-b1da-61a20e23e29a from the file "test/e2e/exports/all/allCertifications.certification.json" 2`] = `
+"✔ Successfully imported certification 855918e4-06c4-4393-b1da-61a20e23e29a.
+"
+`;
+
+exports[`frodo iga certification import "frodo iga certification import --certification-name phh-entitlement-assignment-certification --file test/e2e/exports/all/allCertifications.certification.json --no-deps": should import certification named "phh-entitlement-assignment-certification" from the file "test/e2e/exports/all/allCertifications.certification.json" 1`] = `""`;
+
+exports[`frodo iga certification import "frodo iga certification import --certification-name phh-entitlement-assignment-certification --file test/e2e/exports/all/allCertifications.certification.json --no-deps": should import certification named "phh-entitlement-assignment-certification" from the file "test/e2e/exports/all/allCertifications.certification.json" 2`] = `
+"✔ Successfully imported certification undefined.
+"
+`;
+
+exports[`frodo iga certification import "frodo iga certification import -AD test/e2e/exports/all-separate/cloud/iga/certifications": should import all certifications from the directory "test/e2e/exports/all-separate/cloud/iga/certifications" with dependencies 1`] = `""`;
+
+exports[`frodo iga certification import "frodo iga certification import -AD test/e2e/exports/all-separate/cloud/iga/certifications": should import all certifications from the directory "test/e2e/exports/all-separate/cloud/iga/certifications" with dependencies 2`] = `
+"✔ Successfully imported certifications.
+✔ Successfully imported certifications.
+✔ Successfully imported certifications.
+✔ Successfully imported certifications.
+✔ Successfully imported certifications.
+"
+`;
+
+exports[`frodo iga certification import "frodo iga certification import -af test/e2e/exports/all/allCertifications.certification.json": should import all certifications from the file "test/e2e/exports/all/allCertifications.certification.json" with dependencies 1`] = `""`;
+
+exports[`frodo iga certification import "frodo iga certification import -af test/e2e/exports/all/allCertifications.certification.json": should import all certifications from the file "test/e2e/exports/all/allCertifications.certification.json" with dependencies 2`] = `
+"✔ Successfully imported certifications.
+"
+`;
+
+exports[`frodo iga certification import "frodo iga certification import -f test/e2e/exports/all/allCertifications.certification.json --no-deps": should import first certification from the file "test/e2e/exports/all/allCertifications.certification.json" 1`] = `""`;
+
+exports[`frodo iga certification import "frodo iga certification import -f test/e2e/exports/all/allCertifications.certification.json --no-deps": should import first certification from the file "test/e2e/exports/all/allCertifications.certification.json" 2`] = `
+"✔ Imported certification from test/e2e/exports/all/allCertifications.certification.json
+"
+`;
+
+exports[`frodo iga certification import "frodo iga certification import -i 855918e4-06c4-4393-b1da-61a20e23e29a -f test/e2e/exports/all/allCertifications.certification.json": should import 855918e4-06c4-4393-b1da-61a20e23e29a from the file "test/e2e/exports/all/allCertifications.certification.json" with dependencies 1`] = `""`;
+
+exports[`frodo iga certification import "frodo iga certification import -i 855918e4-06c4-4393-b1da-61a20e23e29a -f test/e2e/exports/all/allCertifications.certification.json": should import 855918e4-06c4-4393-b1da-61a20e23e29a from the file "test/e2e/exports/all/allCertifications.certification.json" with dependencies 2`] = `
+"✔ Successfully imported certification 855918e4-06c4-4393-b1da-61a20e23e29a.
+"
+`;
+
+exports[`frodo iga certification import "frodo iga certification import -n Sample\\ Access\\ Review -f test/e2e/exports/all/allCertifications.certification.json": should import Sample Access Review from the file "test/e2e/exports/all/allCertifications.certification.json" with dependencies 1`] = `""`;
+
+exports[`frodo iga certification import "frodo iga certification import -n Sample\\ Access\\ Review -f test/e2e/exports/all/allCertifications.certification.json": should import Sample Access Review from the file "test/e2e/exports/all/allCertifications.certification.json" with dependencies 2`] = `
+"✔ Successfully imported certification undefined.
+"
+`;

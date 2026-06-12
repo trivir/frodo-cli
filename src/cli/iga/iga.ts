@@ -1,4 +1,5 @@
 import { FrodoStubCommand } from '../FrodoCommand';
+import CertificationCmd from './certification/iga-certification';
 import WorkflowCmd from './workflow/iga-workflow';
 
 export default function setup() {
@@ -7,6 +8,10 @@ export default function setup() {
   );
 
   program.addCommand(WorkflowCmd().name('workflow').showHelpAfterError());
+
+  program.addCommand(
+    CertificationCmd().name('certification').showHelpAfterError()
+  );
 
   program.showHelpAfterError();
   return program;

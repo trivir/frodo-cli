@@ -12,6 +12,7 @@ Options:
                     examples.
 
 Commands:
+  certification     Manage certifications.
   help              display help for command
   workflow          Manage workflows.
 "
