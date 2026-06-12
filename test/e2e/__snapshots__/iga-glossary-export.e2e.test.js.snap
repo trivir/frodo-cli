@@ -1,0 +1,2820 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga glossary export "frodo iga glossary export --all -If test/e2e/exports/all-iga/allGlossariesInternal.glossary.json": should export all glossaries including internals to file test/e2e/exports/all/allGlossariesInternal.glossary.json 1`] = `0`;
+
+exports[`frodo iga glossary export "frodo iga glossary export --all -If test/e2e/exports/all-iga/allGlossariesInternal.glossary.json": should export all glossaries including internals to file test/e2e/exports/all/allGlossariesInternal.glossary.json 2`] = `""`;
+
+exports[`frodo iga glossary export "frodo iga glossary export --all -If test/e2e/exports/all-iga/allGlossariesInternal.glossary.json": should export all glossaries including internals to file test/e2e/exports/all/allGlossariesInternal.glossary.json 3`] = `
+"✔ Exported 53 glossary schemas
+"
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export --all -If test/e2e/exports/all-iga/allGlossariesInternal.glossary.json": should export all glossaries including internals to file test/e2e/exports/all/allGlossariesInternal.glossary.json: test/e2e/exports/all-iga/allGlossariesInternal.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "021ed7cf-116b-4003-9a63-a82431e44c8e": {
+      "allowedValues": [],
+      "description": "custom attribute 1",
+      "displayName": "Custom Attribute 6",
+      "enumeratedValues": [],
+      "id": "021ed7cf-116b-4003-9a63-a82431e44c8e",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute6",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+    "0806c0c5-a6e9-4ec8-8a36-830f217637b3": {
+      "allowedValues": [],
+      "description": "Can the role be requested",
+      "displayName": "Requestable",
+      "id": "0806c0c5-a6e9-4ec8-8a36-830f217637b3",
+      "isIndexed": true,
+      "isInternal": true,
+      "isMultiValue": false,
+      "managedObjectType": null,
+      "metadata": {},
+      "name": "requestable",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "boolean",
+    },
+    "09c470af-abc5-4733-beaf-3d169b62a234": {
+      "allowedValues": [],
+      "description": "Actors for the account",
+      "displayName": "Actors",
+      "enumeratedValues": [],
+      "id": "09c470af-abc5-4733-beaf-3d169b62a234",
+      "isInternal": true,
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "actors",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+    "0e1f922f-c9b9-40f2-964b-740f0ad47afb": {
+      "allowedValues": [],
+      "description": "Risk Score",
+      "displayName": "Risk Score",
+      "enumeratedValues": [],
+      "id": "0e1f922f-c9b9-40f2-964b-740f0ad47afb",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "riskScore",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "float",
+    },
+    "0e9d9615-666b-4ae5-b6f3-43c6c1b6708e": {
+      "allowedValues": [],
+      "description": "Description of entitlement",
+      "displayName": "Description",
+      "id": "0e9d9615-666b-4ae5-b6f3-43c6c1b6708e",
+      "isIndexed": true,
+      "isInternal": true,
+      "isMultiValue": false,
+      "managedObjectType": null,
+      "metadata": {},
+      "name": "description",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": true,
+      "type": "string",
+    },
+    "1110ad40-1dc1-42c7-bda7-226cca6e095c": {
+      "allowedValues": [
+        1.5,
+        3.5,
+      ],
+      "description": "Test Double",
+      "displayName": "Test Double",
+      "enumeratedValues": [
+        {
+          "text": 0.5,
+          "value": 1.5,
+        },
+        {
+          "text": 2.5,
+          "value": 3.5,
+        },
+      ],
+      "id": "1110ad40-1dc1-42c7-bda7-226cca6e095c",
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "Test Double",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "integer",
+    },
+    "11fee6b2-bf06-4560-b2ae-3e27cec169f2": {
+      "allowedValues": [],
+      "description": "Testing",
+      "displayName": "CP Dummy Entitlement",
+      "enumeratedValues": [],
+      "id": "11fee6b2-bf06-4560-b2ae-3e27cec169f2",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "CP-DummyEntitlement",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": true,
+      "type": "string",
+    },
+    "12e51982-56a4-4f3d-9db1-2529276e2a05": {
+      "allowedValues": [],
+      "description": "Is this account locked?",
+      "displayName": "Locked",
+      "enumeratedValues": [],
+      "id": "12e51982-56a4-4f3d-9db1-2529276e2a05",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "locked",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "boolean",
+    },
+    "14e22ac1-a898-4f23-845e-875e9286c1ea": {
+      "allowedValues": [
+        1,
+        2,
+      ],
+      "description": "Test Integers",
+      "displayName": "Test Integer",
+      "enumeratedValues": [
+        {
+          "text": 0,
+          "value": 1,
+        },
+        {
+          "text": 1,
+          "value": 2,
+        },
+      ],
+      "id": "14e22ac1-a898-4f23-845e-875e9286c1ea",
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "Test Integer",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "integer",
+    },
+    "1683c30a-b149-4bab-8187-5a67b0fe3704": {
+      "allowedValues": [],
+      "description": "custom attribute 1",
+      "displayName": "Custom Attribute 2",
+      "enumeratedValues": [],
+      "id": "1683c30a-b149-4bab-8187-5a67b0fe3704",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute2",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+    "19e40504-7f0b-4df9-9ceb-bf23c0e3fda3": {
+      "allowedValues": [],
+      "description": "Type of entitlement",
+      "displayName": "Entitlement Type",
+      "enumeratedValues": [],
+      "id": "19e40504-7f0b-4df9-9ceb-bf23c0e3fda3",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "entitlementType",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": true,
+      "type": "string",
+    },
+    "2a36a687-91c0-4fdc-8c73-b001618c2bc6": {
+      "allowedValues": [],
+      "description": "custom attribute 8",
+      "displayName": "Custom Attribute 8",
+      "enumeratedValues": [],
+      "id": "2a36a687-91c0-4fdc-8c73-b001618c2bc6",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute8",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+    "2a9ce603-14d8-4689-8b2e-78829648b5b6": {
+      "allowedValues": [],
+      "description": "custom attribute 5",
+      "displayName": "Custom Attribute 5",
+      "enumeratedValues": [],
+      "id": "2a9ce603-14d8-4689-8b2e-78829648b5b6",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute5",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+    "35094c80-ab3d-4c47-91ae-92175895b264": {
+      "allowedValues": [],
+      "description": "Confidence Score",
+      "displayName": "Confidence Score",
+      "enumeratedValues": [],
+      "id": "35094c80-ab3d-4c47-91ae-92175895b264",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "confidenceScore",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "float",
+    },
+    "4da5bed6-f690-41a9-af8a-51b505dc2099": {
+      "allowedValues": [
+        "yes",
+        "no",
+      ],
+      "description": "",
+      "displayName": "Is Sensitive",
+      "enumeratedValues": [
+        {
+          "text": "Yes",
+          "value": "yes",
+        },
+        {
+          "text": "No",
+          "value": "no",
+        },
+      ],
+      "id": "4da5bed6-f690-41a9-af8a-51b505dc2099",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "sensitive",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "string",
+    },
+    "537b31a1-e07c-493b-9956-bdefc18062a9": {
+      "allowedValues": [
+        "Text One",
+        "Text Two",
+        "Text Three",
+      ],
+      "description": "Test String Description",
+      "displayName": "Test String Display Name",
+      "enumeratedValues": [
+        {
+          "text": "text1",
+          "value": "Text One",
+        },
+        {
+          "text": "text2",
+          "value": "Text Two",
+        },
+        {
+          "text": "text3",
+          "value": "Text Three",
+        },
+      ],
+      "id": "537b31a1-e07c-493b-9956-bdefc18062a9",
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "testString",
+      "objectType": "/openidm/managed/application",
+      "searchable": true,
+      "type": "string",
+    },
+    "5807928e-804d-4fed-a887-33fd3d157a8f": {
+      "allowedValues": [],
+      "description": "Entitlement Owner of Object",
+      "displayName": "Entitlement Owner",
+      "id": "5807928e-804d-4fed-a887-33fd3d157a8f",
+      "isIndexed": true,
+      "isInternal": true,
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/user",
+      "metadata": {},
+      "name": "entitlementOwner",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": true,
+      "type": "managedObject",
+    },
+    "598709e1-d16b-4c39-884d-dd9481b14d90": {
+      "allowedValues": [
+        "yes",
+        "no",
+      ],
+      "description": "",
+      "displayName": "Is Sensitive",
+      "enumeratedValues": [
+        {
+          "text": "Yes",
+          "value": "yes",
+        },
+        {
+          "text": "No",
+          "value": "no",
+        },
+      ],
+      "id": "598709e1-d16b-4c39-884d-dd9481b14d90",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "sensitive",
+      "objectType": "/openidm/managed/application",
+      "searchable": true,
+      "type": "string",
+    },
+    "5a7e52ac-377f-4b2f-92ba-336e175f512e": {
+      "allowedValues": [],
+      "description": "Test Role",
+      "displayName": "Test Role",
+      "enumeratedValues": [],
+      "id": "5a7e52ac-377f-4b2f-92ba-336e175f512e",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/role",
+      "metadata": {},
+      "name": "Test Role",
+      "objectType": "/openidm/managed/role",
+      "searchable": false,
+      "type": "managedObject",
+    },
+    "5c5751e7-d0e3-4338-a198-ecfe33175ed6": {
+      "allowedValues": [],
+      "description": "Can the entitlement be requested",
+      "displayName": "Requestable",
+      "id": "5c5751e7-d0e3-4338-a198-ecfe33175ed6",
+      "isIndexed": true,
+      "isInternal": true,
+      "isMultiValue": false,
+      "managedObjectType": null,
+      "metadata": {},
+      "name": "requestable",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": true,
+      "type": "boolean",
+    },
+    "5ef5a92e-c2e4-40e4-b232-e33649591b37": {
+      "allowedValues": [],
+      "description": "The subtype of the account",
+      "displayName": "Account Subtype",
+      "enumeratedValues": [],
+      "id": "5ef5a92e-c2e4-40e4-b232-e33649591b37",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "accountSubtype",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+    "61bf2199-c60a-4383-9457-2fe211d72c85": {
+      "allowedValues": [],
+      "description": "Last password change date",
+      "displayName": "Last Password Change",
+      "enumeratedValues": [],
+      "id": "61bf2199-c60a-4383-9457-2fe211d72c85",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "lastPasswordChange",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "date",
+    },
+    "6a1ea40d-d85d-4646-9331-73a048196fbf": {
+      "allowedValues": [],
+      "description": "Does the account have any SoD violations?",
+      "displayName": "Has Policy Violations",
+      "enumeratedValues": [],
+      "id": "6a1ea40d-d85d-4646-9331-73a048196fbf",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "hasPolicyViolations",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "boolean",
+    },
+    "6ec0d7a4-3305-4abe-8aaa-0713cce2907a": {
+      "allowedValues": [],
+      "description": "Test Organization",
+      "displayName": "Test Organization",
+      "enumeratedValues": [],
+      "id": "6ec0d7a4-3305-4abe-8aaa-0713cce2907a",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/organization",
+      "metadata": {},
+      "name": "Test Organization",
+      "objectType": "/openidm/managed/role",
+      "searchable": false,
+      "type": "managedObject",
+    },
+    "71c188ff-ed53-438c-9476-043cba6e850b": {
+      "allowedValues": [],
+      "description": "Is this account an active account",
+      "displayName": "Active",
+      "enumeratedValues": [],
+      "id": "71c188ff-ed53-438c-9476-043cba6e850b",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "active",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "boolean",
+    },
+    "774d2515-6cb4-408d-bdae-63b7534dde39": {
+      "allowedValues": [],
+      "description": "Test Boolean",
+      "displayName": "Test Boolean",
+      "enumeratedValues": [],
+      "id": "774d2515-6cb4-408d-bdae-63b7534dde39",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "Test Boolean",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "boolean",
+    },
+    "8994aea6-96d7-4070-bb1b-f8f36576a23e": {
+      "allowedValues": [],
+      "description": "custom attribute 1",
+      "displayName": "Custom Attribute 3",
+      "enumeratedValues": [],
+      "id": "8994aea6-96d7-4070-bb1b-f8f36576a23e",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute3",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+    "8e5b1e2f-a0d7-4c03-978b-834494c2beb3": {
+      "allowedValues": [
+        "3",
+        "4",
+      ],
+      "description": "This is a test entitlement for frodo import/export functions.",
+      "displayName": "Brycen's Test Entitlement",
+      "enumeratedValues": [
+        {
+          "text": "Testing",
+          "value": "3",
+        },
+        {
+          "text": "TestingChange",
+          "value": "4",
+        },
+      ],
+      "id": "8e5b1e2f-a0d7-4c03-978b-834494c2beb3",
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "brycenTestItem",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": true,
+      "type": "string",
+    },
+    "96dd0d59-0e42-4961-bd59-c312e8222252": {
+      "allowedValues": [],
+      "description": "Test Boolean Description",
+      "displayName": "Test Boolean Display Name",
+      "enumeratedValues": [],
+      "id": "96dd0d59-0e42-4961-bd59-c312e8222252",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "testBoolean",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "boolean",
+    },
+    "980b0308-32c8-44a3-86a4-0098d82b33bd": {
+      "allowedValues": [
+        "sales",
+        "finance",
+        "hr",
+        "null",
+      ],
+      "description": "Application grant workflows example for LOB determines who it should go to",
+      "displayName": "Line Of Business",
+      "enumeratedValues": [
+        {
+          "text": "Sales",
+          "value": "sales",
+        },
+        {
+          "text": "Finance",
+          "value": "finance",
+        },
+        {
+          "text": "Human Resources",
+          "value": "hr",
+        },
+        {
+          "text": "Other",
+          "value": "null",
+        },
+      ],
+      "id": "980b0308-32c8-44a3-86a4-0098d82b33bd",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "lineOfBusiness",
+      "objectType": "/openidm/managed/application",
+      "searchable": true,
+      "type": "string",
+    },
+    "982113c6-3e20-401d-91a8-657cf429f85e": {
+      "allowedValues": [],
+      "description": "Is this account a privileged account",
+      "displayName": "Privileged",
+      "enumeratedValues": [],
+      "id": "982113c6-3e20-401d-91a8-657cf429f85e",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "privileged",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "boolean",
+    },
+    "9a6dc773-31af-41b3-a5d1-3e129931030e": {
+      "allowedValues": [
+        0,
+        1,
+        2,
+      ],
+      "description": "Test Integer Description",
+      "displayName": "Test Integer Display Name",
+      "enumeratedValues": [
+        {
+          "text": 1,
+          "value": 0,
+        },
+        {
+          "text": 2,
+          "value": 1,
+        },
+        {
+          "text": 3,
+          "value": 2,
+        },
+      ],
+      "id": "9a6dc773-31af-41b3-a5d1-3e129931030e",
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "testInteger",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": false,
+      "type": "integer",
+    },
+    "a1cdab06-b3e9-4321-a80d-6da086110974": {
+      "allowedValues": [],
+      "description": "Test Date",
+      "displayName": "Test Date",
+      "enumeratedValues": [],
+      "id": "a1cdab06-b3e9-4321-a80d-6da086110974",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "Test Date",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "date",
+    },
+    "a276bf0d-dafa-4302-ad0b-5e260c9239b0": {
+      "allowedValues": [
+        "yes",
+        "no",
+      ],
+      "description": "",
+      "displayName": "Is Sensitive",
+      "enumeratedValues": [
+        {
+          "text": "Yes",
+          "value": "yes",
+        },
+        {
+          "text": "No",
+          "value": "no",
+        },
+      ],
+      "id": "a276bf0d-dafa-4302-ad0b-5e260c9239b0",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "sensitive",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": true,
+      "type": "string",
+    },
+    "a65b7633-3dcb-4c83-8458-c14397f70715": {
+      "allowedValues": [],
+      "description": "Confidence Score",
+      "displayName": "Confidence Score",
+      "enumeratedValues": [],
+      "id": "a65b7633-3dcb-4c83-8458-c14397f70715",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "confidenceScore",
+      "objectType": "/iga/governance/entitlementGrant",
+      "searchable": true,
+      "type": "float",
+    },
+    "a65b7633-3dcb-4c83-8458-c14397f70717": {
+      "allowedValues": [],
+      "description": "custom attribute 10",
+      "displayName": "Custom Attribute 10",
+      "enumeratedValues": [],
+      "id": "a65b7633-3dcb-4c83-8458-c14397f70717",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute10",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+    "a7082d02-e673-4935-95d5-22c76c669cb4": {
+      "allowedValues": [],
+      "description": "Can the application be requested",
+      "displayName": "Requestable",
+      "id": "a7082d02-e673-4935-95d5-22c76c669cb4",
+      "isIndexed": true,
+      "isInternal": true,
+      "isMultiValue": false,
+      "managedObjectType": null,
+      "metadata": {},
+      "name": "requestable",
+      "objectType": "/openidm/managed/application",
+      "searchable": true,
+      "type": "boolean",
+    },
+    "a98091ec-0800-41ec-9ca0-4f5ec4f4a853": {
+      "allowedValues": [],
+      "description": "Is this account manuallyCorrelated",
+      "displayName": "Manually Correlated",
+      "enumeratedValues": [],
+      "id": "a98091ec-0800-41ec-9ca0-4f5ec4f4a853",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "manuallyCorrelated",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "boolean",
+    },
+    "acb03cb3-b5b0-41b2-b114-2ac78b21f019": {
+      "allowedValues": [],
+      "description": "Test User",
+      "displayName": "Test User",
+      "enumeratedValues": [],
+      "id": "acb03cb3-b5b0-41b2-b114-2ac78b21f019",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/user",
+      "metadata": {},
+      "name": "Test User",
+      "objectType": "/openidm/managed/role",
+      "searchable": false,
+      "type": "managedObject",
+    },
+    "b0955a58-1955-40a7-9d9d-29947fe5f8f7": {
+      "allowedValues": [],
+      "description": "Test Organization Description",
+      "displayName": "Test Organization Display Name",
+      "enumeratedValues": [],
+      "id": "b0955a58-1955-40a7-9d9d-29947fe5f8f7",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/organization",
+      "metadata": {},
+      "name": "testOrg",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": false,
+      "type": "managedObject",
+    },
+    "b0bee61a-791b-44bf-a3b9-b6fec52df4f7": {
+      "allowedValues": [],
+      "description": "Entitlement that is the direct parent of this entitlement",
+      "displayName": "Parent Entitlement",
+      "enumeratedValues": [],
+      "id": "b0bee61a-791b-44bf-a3b9-b6fec52df4f7",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "parentEntitlement",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": true,
+      "type": "string",
+    },
+    "b1f1f37a-4134-43cd-8220-957cefbbe44e": {
+      "allowedValues": [],
+      "description": "custom attribute 4",
+      "displayName": "Custom Attribute 4",
+      "enumeratedValues": [],
+      "id": "b1f1f37a-4134-43cd-8220-957cefbbe44e",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute4",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+    "b33896af-2b4f-4f14-8c26-16bcde91fcac": {
+      "allowedValues": [],
+      "description": "",
+      "displayName": "Is Privileged",
+      "enumeratedValues": [],
+      "id": "b33896af-2b4f-4f14-8c26-16bcde91fcac",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "isPrivileged",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": false,
+      "type": "boolean",
+    },
+    "b42b143f-b33b-4b25-9448-2c9ff88e7ed5": {
+      "allowedValues": [],
+      "description": "custom attribute 7",
+      "displayName": "Custom Attribute 7",
+      "enumeratedValues": [],
+      "id": "b42b143f-b33b-4b25-9448-2c9ff88e7ed5",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute7",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+    "b5d7a291-ea6d-41eb-bb7e-e50cfe30e7e5": {
+      "allowedValues": [
+        "Value 1",
+        "Value 2",
+      ],
+      "description": "Test String",
+      "displayName": "Test String",
+      "enumeratedValues": [
+        {
+          "text": "Text 1",
+          "value": "Value 1",
+        },
+        {
+          "text": "Text 2",
+          "value": "Value 2",
+        },
+      ],
+      "id": "b5d7a291-ea6d-41eb-bb7e-e50cfe30e7e5",
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "Test String",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "string",
+    },
+    "bab632ff-9e7a-4a9d-a91b-c081ce091df7": {
+      "allowedValues": [],
+      "description": "Show last successful Login",
+      "displayName": "Last Successful Login",
+      "enumeratedValues": [],
+      "id": "bab632ff-9e7a-4a9d-a91b-c081ce091df7",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "lastSuccessfulLogin",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "date",
+    },
+    "c735842a-f695-493a-addc-8500d3babc57": {
+      "allowedValues": [],
+      "description": "Test User Description",
+      "displayName": "Test User Display Name",
+      "enumeratedValues": [],
+      "id": "c735842a-f695-493a-addc-8500d3babc57",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/user",
+      "metadata": {},
+      "name": "testUser",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": false,
+      "type": "managedObject",
+    },
+    "c8ed99f7-5442-43d5-8406-f39060c1bd73": {
+      "allowedValues": [],
+      "description": "The type of account",
+      "displayName": "Account Type",
+      "enumeratedValues": [],
+      "id": "c8ed99f7-5442-43d5-8406-f39060c1bd73",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "accountType",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+    "c9647722-5927-4826-9398-5349b56f793a": {
+      "allowedValues": [],
+      "description": "custom attribute 9",
+      "displayName": "Custom Attribute 9",
+      "enumeratedValues": [],
+      "id": "c9647722-5927-4826-9398-5349b56f793a",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute9",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+    "d4cf00ae-f4b3-42b8-b2a6-b960a8d620dc": {
+      "allowedValues": [],
+      "description": "custom attribute 1",
+      "displayName": "Custom Attribute 1",
+      "enumeratedValues": [],
+      "id": "d4cf00ae-f4b3-42b8-b2a6-b960a8d620dc",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute1",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+    "de06ffdb-0186-4fff-b1a9-ab26a1aa3fab": {
+      "allowedValues": [],
+      "description": "When was account reconciled successfully",
+      "displayName": "Last Sync",
+      "enumeratedValues": [],
+      "id": "de06ffdb-0186-4fff-b1a9-ab26a1aa3fab",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "lastSync",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "date",
+    },
+    "e307820d-2e53-4889-a9e7-b9ad1232352c": {
+      "allowedValues": [
+        "high",
+        "medium",
+        "low",
+        "null",
+      ],
+      "description": "",
+      "displayName": "Risk Level",
+      "enumeratedValues": [
+        {
+          "text": "High",
+          "value": "high",
+        },
+        {
+          "text": "Medium",
+          "value": "medium",
+        },
+        {
+          "text": "Low",
+          "value": "low",
+        },
+        {
+          "text": "Other",
+          "value": "null",
+        },
+      ],
+      "id": "e307820d-2e53-4889-a9e7-b9ad1232352c",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "riskLevel",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "string",
+    },
+    "f1cc3b53-ef38-4ad7-b268-1ee482a411ef": {
+      "allowedValues": [],
+      "description": "Role Owner of Object",
+      "displayName": "Role Owner",
+      "id": "f1cc3b53-ef38-4ad7-b268-1ee482a411ef",
+      "isIndexed": true,
+      "isInternal": true,
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/user",
+      "metadata": {},
+      "name": "roleOwner",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "managedObject",
+    },
+  },
+  "meta": Any<Object>,
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export --glossary-id 980b0308-32c8-44a3-86a4-0098d82b33bd": should export the glossary with id "980b0308-32c8-44a3-86a4-0098d82b33bd" 1`] = `0`;
+
+exports[`frodo iga glossary export "frodo iga glossary export --glossary-id 980b0308-32c8-44a3-86a4-0098d82b33bd": should export the glossary with id "980b0308-32c8-44a3-86a4-0098d82b33bd" 2`] = `""`;
+
+exports[`frodo iga glossary export "frodo iga glossary export --glossary-id 980b0308-32c8-44a3-86a4-0098d82b33bd": should export the glossary with id "980b0308-32c8-44a3-86a4-0098d82b33bd" 3`] = `
+"✔ Exported glossary 980b0308-32c8-44a3-86a4-0098d82b33bd to file
+"
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export --glossary-id 980b0308-32c8-44a3-86a4-0098d82b33bd": should export the glossary with id "980b0308-32c8-44a3-86a4-0098d82b33bd": 980b0308-32c8-44a3-86a4-0098d82b33bd.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "980b0308-32c8-44a3-86a4-0098d82b33bd": {
+      "allowedValues": [
+        "sales",
+        "finance",
+        "hr",
+        "null",
+      ],
+      "description": "Application grant workflows example for LOB determines who it should go to",
+      "displayName": "Line Of Business",
+      "enumeratedValues": [
+        {
+          "text": "Sales",
+          "value": "sales",
+        },
+        {
+          "text": "Finance",
+          "value": "finance",
+        },
+        {
+          "text": "Human Resources",
+          "value": "hr",
+        },
+        {
+          "text": "Other",
+          "value": "null",
+        },
+      ],
+      "id": "980b0308-32c8-44a3-86a4-0098d82b33bd",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "lineOfBusiness",
+      "objectType": "/openidm/managed/application",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+  "meta": Any<Object>,
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata 1`] = `0`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata 2`] = `""`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata 3`] = `
+"✔ Exported 20 glossary schemas
+"
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/4da5bed6-f690-41a9-af8a-51b505dc2099.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "4da5bed6-f690-41a9-af8a-51b505dc2099": {
+      "allowedValues": [
+        "yes",
+        "no",
+      ],
+      "description": "",
+      "displayName": "Is Sensitive",
+      "enumeratedValues": [
+        {
+          "text": "Yes",
+          "value": "yes",
+        },
+        {
+          "text": "No",
+          "value": "no",
+        },
+      ],
+      "id": "4da5bed6-f690-41a9-af8a-51b505dc2099",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "sensitive",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/5a7e52ac-377f-4b2f-92ba-336e175f512e.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "5a7e52ac-377f-4b2f-92ba-336e175f512e": {
+      "allowedValues": [],
+      "description": "Test Role",
+      "displayName": "Test Role",
+      "enumeratedValues": [],
+      "id": "5a7e52ac-377f-4b2f-92ba-336e175f512e",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/role",
+      "metadata": {},
+      "name": "Test Role",
+      "objectType": "/openidm/managed/role",
+      "searchable": false,
+      "type": "managedObject",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/6ec0d7a4-3305-4abe-8aaa-0713cce2907a.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "6ec0d7a4-3305-4abe-8aaa-0713cce2907a": {
+      "allowedValues": [],
+      "description": "Test Organization",
+      "displayName": "Test Organization",
+      "enumeratedValues": [],
+      "id": "6ec0d7a4-3305-4abe-8aaa-0713cce2907a",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/organization",
+      "metadata": {},
+      "name": "Test Organization",
+      "objectType": "/openidm/managed/role",
+      "searchable": false,
+      "type": "managedObject",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/8e5b1e2f-a0d7-4c03-978b-834494c2beb3.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "8e5b1e2f-a0d7-4c03-978b-834494c2beb3": {
+      "allowedValues": [
+        "3",
+        "4",
+      ],
+      "description": "This is a test entitlement for frodo import/export functions.",
+      "displayName": "Brycen's Test Entitlement",
+      "enumeratedValues": [
+        {
+          "text": "Testing",
+          "value": "3",
+        },
+        {
+          "text": "TestingChange",
+          "value": "4",
+        },
+      ],
+      "id": "8e5b1e2f-a0d7-4c03-978b-834494c2beb3",
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "brycenTestItem",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/9a6dc773-31af-41b3-a5d1-3e129931030e.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "9a6dc773-31af-41b3-a5d1-3e129931030e": {
+      "allowedValues": [
+        0,
+        1,
+        2,
+      ],
+      "description": "Test Integer Description",
+      "displayName": "Test Integer Display Name",
+      "enumeratedValues": [
+        {
+          "text": 1,
+          "value": 0,
+        },
+        {
+          "text": 2,
+          "value": 1,
+        },
+        {
+          "text": 3,
+          "value": 2,
+        },
+      ],
+      "id": "9a6dc773-31af-41b3-a5d1-3e129931030e",
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "testInteger",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": false,
+      "type": "integer",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/11fee6b2-bf06-4560-b2ae-3e27cec169f2.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "11fee6b2-bf06-4560-b2ae-3e27cec169f2": {
+      "allowedValues": [],
+      "description": "Testing",
+      "displayName": "CP Dummy Entitlement",
+      "enumeratedValues": [],
+      "id": "11fee6b2-bf06-4560-b2ae-3e27cec169f2",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "CP-DummyEntitlement",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/14e22ac1-a898-4f23-845e-875e9286c1ea.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "14e22ac1-a898-4f23-845e-875e9286c1ea": {
+      "allowedValues": [
+        1,
+        2,
+      ],
+      "description": "Test Integers",
+      "displayName": "Test Integer",
+      "enumeratedValues": [
+        {
+          "text": 0,
+          "value": 1,
+        },
+        {
+          "text": 1,
+          "value": 2,
+        },
+      ],
+      "id": "14e22ac1-a898-4f23-845e-875e9286c1ea",
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "Test Integer",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "integer",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/96dd0d59-0e42-4961-bd59-c312e8222252.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "96dd0d59-0e42-4961-bd59-c312e8222252": {
+      "allowedValues": [],
+      "description": "Test Boolean Description",
+      "displayName": "Test Boolean Display Name",
+      "enumeratedValues": [],
+      "id": "96dd0d59-0e42-4961-bd59-c312e8222252",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "testBoolean",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "boolean",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/537b31a1-e07c-493b-9956-bdefc18062a9.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "537b31a1-e07c-493b-9956-bdefc18062a9": {
+      "allowedValues": [
+        "Text One",
+        "Text Two",
+        "Text Three",
+      ],
+      "description": "Test String Description",
+      "displayName": "Test String Display Name",
+      "enumeratedValues": [
+        {
+          "text": "text1",
+          "value": "Text One",
+        },
+        {
+          "text": "text2",
+          "value": "Text Two",
+        },
+        {
+          "text": "text3",
+          "value": "Text Three",
+        },
+      ],
+      "id": "537b31a1-e07c-493b-9956-bdefc18062a9",
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "testString",
+      "objectType": "/openidm/managed/application",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/980b0308-32c8-44a3-86a4-0098d82b33bd.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "980b0308-32c8-44a3-86a4-0098d82b33bd": {
+      "allowedValues": [
+        "sales",
+        "finance",
+        "hr",
+        "null",
+      ],
+      "description": "Application grant workflows example for LOB determines who it should go to",
+      "displayName": "Line Of Business",
+      "enumeratedValues": [
+        {
+          "text": "Sales",
+          "value": "sales",
+        },
+        {
+          "text": "Finance",
+          "value": "finance",
+        },
+        {
+          "text": "Human Resources",
+          "value": "hr",
+        },
+        {
+          "text": "Other",
+          "value": "null",
+        },
+      ],
+      "id": "980b0308-32c8-44a3-86a4-0098d82b33bd",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "lineOfBusiness",
+      "objectType": "/openidm/managed/application",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/1110ad40-1dc1-42c7-bda7-226cca6e095c.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "1110ad40-1dc1-42c7-bda7-226cca6e095c": {
+      "allowedValues": [
+        1.5,
+        3.5,
+      ],
+      "description": "Test Double",
+      "displayName": "Test Double",
+      "enumeratedValues": [
+        {
+          "text": 0.5,
+          "value": 1.5,
+        },
+        {
+          "text": 2.5,
+          "value": 3.5,
+        },
+      ],
+      "id": "1110ad40-1dc1-42c7-bda7-226cca6e095c",
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "Test Double",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "integer",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/598709e1-d16b-4c39-884d-dd9481b14d90.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "598709e1-d16b-4c39-884d-dd9481b14d90": {
+      "allowedValues": [
+        "yes",
+        "no",
+      ],
+      "description": "",
+      "displayName": "Is Sensitive",
+      "enumeratedValues": [
+        {
+          "text": "Yes",
+          "value": "yes",
+        },
+        {
+          "text": "No",
+          "value": "no",
+        },
+      ],
+      "id": "598709e1-d16b-4c39-884d-dd9481b14d90",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "sensitive",
+      "objectType": "/openidm/managed/application",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/a1cdab06-b3e9-4321-a80d-6da086110974.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "a1cdab06-b3e9-4321-a80d-6da086110974": {
+      "allowedValues": [],
+      "description": "Test Date",
+      "displayName": "Test Date",
+      "enumeratedValues": [],
+      "id": "a1cdab06-b3e9-4321-a80d-6da086110974",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "Test Date",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "date",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/a276bf0d-dafa-4302-ad0b-5e260c9239b0.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "a276bf0d-dafa-4302-ad0b-5e260c9239b0": {
+      "allowedValues": [
+        "yes",
+        "no",
+      ],
+      "description": "",
+      "displayName": "Is Sensitive",
+      "enumeratedValues": [
+        {
+          "text": "Yes",
+          "value": "yes",
+        },
+        {
+          "text": "No",
+          "value": "no",
+        },
+      ],
+      "id": "a276bf0d-dafa-4302-ad0b-5e260c9239b0",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "sensitive",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/acb03cb3-b5b0-41b2-b114-2ac78b21f019.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "acb03cb3-b5b0-41b2-b114-2ac78b21f019": {
+      "allowedValues": [],
+      "description": "Test User",
+      "displayName": "Test User",
+      "enumeratedValues": [],
+      "id": "acb03cb3-b5b0-41b2-b114-2ac78b21f019",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/user",
+      "metadata": {},
+      "name": "Test User",
+      "objectType": "/openidm/managed/role",
+      "searchable": false,
+      "type": "managedObject",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/b0955a58-1955-40a7-9d9d-29947fe5f8f7.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "b0955a58-1955-40a7-9d9d-29947fe5f8f7": {
+      "allowedValues": [],
+      "description": "Test Organization Description",
+      "displayName": "Test Organization Display Name",
+      "enumeratedValues": [],
+      "id": "b0955a58-1955-40a7-9d9d-29947fe5f8f7",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/organization",
+      "metadata": {},
+      "name": "testOrg",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": false,
+      "type": "managedObject",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/b5d7a291-ea6d-41eb-bb7e-e50cfe30e7e5.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "b5d7a291-ea6d-41eb-bb7e-e50cfe30e7e5": {
+      "allowedValues": [
+        "Value 1",
+        "Value 2",
+      ],
+      "description": "Test String",
+      "displayName": "Test String",
+      "enumeratedValues": [
+        {
+          "text": "Text 1",
+          "value": "Value 1",
+        },
+        {
+          "text": "Text 2",
+          "value": "Value 2",
+        },
+      ],
+      "id": "b5d7a291-ea6d-41eb-bb7e-e50cfe30e7e5",
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "Test String",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/b33896af-2b4f-4f14-8c26-16bcde91fcac.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "b33896af-2b4f-4f14-8c26-16bcde91fcac": {
+      "allowedValues": [],
+      "description": "",
+      "displayName": "Is Privileged",
+      "enumeratedValues": [],
+      "id": "b33896af-2b4f-4f14-8c26-16bcde91fcac",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "isPrivileged",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": false,
+      "type": "boolean",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/c735842a-f695-493a-addc-8500d3babc57.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "c735842a-f695-493a-addc-8500d3babc57": {
+      "allowedValues": [],
+      "description": "Test User Description",
+      "displayName": "Test User Display Name",
+      "enumeratedValues": [],
+      "id": "c735842a-f695-493a-addc-8500d3babc57",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/user",
+      "metadata": {},
+      "name": "testUser",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": false,
+      "type": "managedObject",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAD test/e2e/exports/all-separate/cloud/iga/glossary/": should export all the glossaries separately with no metadata: test/e2e/exports/all-separate/cloud/iga/glossary/e307820d-2e53-4889-a9e7-b9ad1232352c.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "e307820d-2e53-4889-a9e7-b9ad1232352c": {
+      "allowedValues": [
+        "high",
+        "medium",
+        "low",
+        "null",
+      ],
+      "description": "",
+      "displayName": "Risk Level",
+      "enumeratedValues": [
+        {
+          "text": "High",
+          "value": "high",
+        },
+        {
+          "text": "Medium",
+          "value": "medium",
+        },
+        {
+          "text": "Low",
+          "value": "low",
+        },
+        {
+          "text": "Other",
+          "value": "null",
+        },
+      ],
+      "id": "e307820d-2e53-4889-a9e7-b9ad1232352c",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "riskLevel",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type 1`] = `0`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type 2`] = `""`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type 3`] = `
+"✔ Exported 23 glossary schemas
+"
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/09c470af-abc5-4733-beaf-3d169b62a234.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "09c470af-abc5-4733-beaf-3d169b62a234": {
+      "allowedValues": [],
+      "description": "Actors for the account",
+      "displayName": "Actors",
+      "enumeratedValues": [],
+      "id": "09c470af-abc5-4733-beaf-3d169b62a234",
+      "isInternal": true,
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "actors",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/021ed7cf-116b-4003-9a63-a82431e44c8e.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "021ed7cf-116b-4003-9a63-a82431e44c8e": {
+      "allowedValues": [],
+      "description": "custom attribute 1",
+      "displayName": "Custom Attribute 6",
+      "enumeratedValues": [],
+      "id": "021ed7cf-116b-4003-9a63-a82431e44c8e",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute6",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/0e1f922f-c9b9-40f2-964b-740f0ad47afb.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "0e1f922f-c9b9-40f2-964b-740f0ad47afb": {
+      "allowedValues": [],
+      "description": "Risk Score",
+      "displayName": "Risk Score",
+      "enumeratedValues": [],
+      "id": "0e1f922f-c9b9-40f2-964b-740f0ad47afb",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "riskScore",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "float",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/2a9ce603-14d8-4689-8b2e-78829648b5b6.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "2a9ce603-14d8-4689-8b2e-78829648b5b6": {
+      "allowedValues": [],
+      "description": "custom attribute 5",
+      "displayName": "Custom Attribute 5",
+      "enumeratedValues": [],
+      "id": "2a9ce603-14d8-4689-8b2e-78829648b5b6",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute5",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/2a36a687-91c0-4fdc-8c73-b001618c2bc6.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "2a36a687-91c0-4fdc-8c73-b001618c2bc6": {
+      "allowedValues": [],
+      "description": "custom attribute 8",
+      "displayName": "Custom Attribute 8",
+      "enumeratedValues": [],
+      "id": "2a36a687-91c0-4fdc-8c73-b001618c2bc6",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute8",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/5ef5a92e-c2e4-40e4-b232-e33649591b37.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "5ef5a92e-c2e4-40e4-b232-e33649591b37": {
+      "allowedValues": [],
+      "description": "The subtype of the account",
+      "displayName": "Account Subtype",
+      "enumeratedValues": [],
+      "id": "5ef5a92e-c2e4-40e4-b232-e33649591b37",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "accountSubtype",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/6a1ea40d-d85d-4646-9331-73a048196fbf.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "6a1ea40d-d85d-4646-9331-73a048196fbf": {
+      "allowedValues": [],
+      "description": "Does the account have any SoD violations?",
+      "displayName": "Has Policy Violations",
+      "enumeratedValues": [],
+      "id": "6a1ea40d-d85d-4646-9331-73a048196fbf",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "hasPolicyViolations",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "boolean",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/12e51982-56a4-4f3d-9db1-2529276e2a05.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "12e51982-56a4-4f3d-9db1-2529276e2a05": {
+      "allowedValues": [],
+      "description": "Is this account locked?",
+      "displayName": "Locked",
+      "enumeratedValues": [],
+      "id": "12e51982-56a4-4f3d-9db1-2529276e2a05",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "locked",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "boolean",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/61bf2199-c60a-4383-9457-2fe211d72c85.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "61bf2199-c60a-4383-9457-2fe211d72c85": {
+      "allowedValues": [],
+      "description": "Last password change date",
+      "displayName": "Last Password Change",
+      "enumeratedValues": [],
+      "id": "61bf2199-c60a-4383-9457-2fe211d72c85",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "lastPasswordChange",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "date",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/71c188ff-ed53-438c-9476-043cba6e850b.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "71c188ff-ed53-438c-9476-043cba6e850b": {
+      "allowedValues": [],
+      "description": "Is this account an active account",
+      "displayName": "Active",
+      "enumeratedValues": [],
+      "id": "71c188ff-ed53-438c-9476-043cba6e850b",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "active",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "boolean",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/1683c30a-b149-4bab-8187-5a67b0fe3704.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "1683c30a-b149-4bab-8187-5a67b0fe3704": {
+      "allowedValues": [],
+      "description": "custom attribute 1",
+      "displayName": "Custom Attribute 2",
+      "enumeratedValues": [],
+      "id": "1683c30a-b149-4bab-8187-5a67b0fe3704",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute2",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/8994aea6-96d7-4070-bb1b-f8f36576a23e.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "8994aea6-96d7-4070-bb1b-f8f36576a23e": {
+      "allowedValues": [],
+      "description": "custom attribute 1",
+      "displayName": "Custom Attribute 3",
+      "enumeratedValues": [],
+      "id": "8994aea6-96d7-4070-bb1b-f8f36576a23e",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute3",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/35094c80-ab3d-4c47-91ae-92175895b264.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "35094c80-ab3d-4c47-91ae-92175895b264": {
+      "allowedValues": [],
+      "description": "Confidence Score",
+      "displayName": "Confidence Score",
+      "enumeratedValues": [],
+      "id": "35094c80-ab3d-4c47-91ae-92175895b264",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "confidenceScore",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "float",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/982113c6-3e20-401d-91a8-657cf429f85e.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "982113c6-3e20-401d-91a8-657cf429f85e": {
+      "allowedValues": [],
+      "description": "Is this account a privileged account",
+      "displayName": "Privileged",
+      "enumeratedValues": [],
+      "id": "982113c6-3e20-401d-91a8-657cf429f85e",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "privileged",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "boolean",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/a65b7633-3dcb-4c83-8458-c14397f70717.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "a65b7633-3dcb-4c83-8458-c14397f70717": {
+      "allowedValues": [],
+      "description": "custom attribute 10",
+      "displayName": "Custom Attribute 10",
+      "enumeratedValues": [],
+      "id": "a65b7633-3dcb-4c83-8458-c14397f70717",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute10",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/a98091ec-0800-41ec-9ca0-4f5ec4f4a853.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "a98091ec-0800-41ec-9ca0-4f5ec4f4a853": {
+      "allowedValues": [],
+      "description": "Is this account manuallyCorrelated",
+      "displayName": "Manually Correlated",
+      "enumeratedValues": [],
+      "id": "a98091ec-0800-41ec-9ca0-4f5ec4f4a853",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "manuallyCorrelated",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "boolean",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/b1f1f37a-4134-43cd-8220-957cefbbe44e.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "b1f1f37a-4134-43cd-8220-957cefbbe44e": {
+      "allowedValues": [],
+      "description": "custom attribute 4",
+      "displayName": "Custom Attribute 4",
+      "enumeratedValues": [],
+      "id": "b1f1f37a-4134-43cd-8220-957cefbbe44e",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute4",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/b42b143f-b33b-4b25-9448-2c9ff88e7ed5.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "b42b143f-b33b-4b25-9448-2c9ff88e7ed5": {
+      "allowedValues": [],
+      "description": "custom attribute 7",
+      "displayName": "Custom Attribute 7",
+      "enumeratedValues": [],
+      "id": "b42b143f-b33b-4b25-9448-2c9ff88e7ed5",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute7",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/bab632ff-9e7a-4a9d-a91b-c081ce091df7.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "bab632ff-9e7a-4a9d-a91b-c081ce091df7": {
+      "allowedValues": [],
+      "description": "Show last successful Login",
+      "displayName": "Last Successful Login",
+      "enumeratedValues": [],
+      "id": "bab632ff-9e7a-4a9d-a91b-c081ce091df7",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "lastSuccessfulLogin",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "date",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/c8ed99f7-5442-43d5-8406-f39060c1bd73.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "c8ed99f7-5442-43d5-8406-f39060c1bd73": {
+      "allowedValues": [],
+      "description": "The type of account",
+      "displayName": "Account Type",
+      "enumeratedValues": [],
+      "id": "c8ed99f7-5442-43d5-8406-f39060c1bd73",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "accountType",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/c9647722-5927-4826-9398-5349b56f793a.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "c9647722-5927-4826-9398-5349b56f793a": {
+      "allowedValues": [],
+      "description": "custom attribute 9",
+      "displayName": "Custom Attribute 9",
+      "enumeratedValues": [],
+      "id": "c9647722-5927-4826-9398-5349b56f793a",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute9",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/d4cf00ae-f4b3-42b8-b2a6-b960a8d620dc.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "d4cf00ae-f4b3-42b8-b2a6-b960a8d620dc": {
+      "allowedValues": [],
+      "description": "custom attribute 1",
+      "displayName": "Custom Attribute 1",
+      "enumeratedValues": [],
+      "id": "d4cf00ae-f4b3-42b8-b2a6-b960a8d620dc",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "customAttribute1",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -NAID test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/ -t account": should export all the glossaries including internals, separately with no metadata within the account type: test/e2e/exports/all-separate/cloud/iga/glossaryByAccountType/de06ffdb-0186-4fff-b1a9-ab26a1aa3fab.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "de06ffdb-0186-4fff-b1a9-ab26a1aa3fab": {
+      "allowedValues": [],
+      "description": "When was account reconciled successfully",
+      "displayName": "Last Sync",
+      "enumeratedValues": [],
+      "id": "de06ffdb-0186-4fff-b1a9-ab26a1aa3fab",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "lastSync",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "date",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -Nn sensitive -t entitlement": should export the glossary named sensitive from the type entitlement without metadata 1`] = `0`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -Nn sensitive -t entitlement": should export the glossary named sensitive from the type entitlement without metadata 2`] = `""`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -Nn sensitive -t entitlement": should export the glossary named sensitive from the type entitlement without metadata 3`] = `
+"✔ Exported glossary sensitive to file
+"
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -Nn sensitive -t entitlement": should export the glossary named sensitive from the type entitlement without metadata: sensitive.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "a276bf0d-dafa-4302-ad0b-5e260c9239b0": {
+      "allowedValues": [
+        "yes",
+        "no",
+      ],
+      "description": "",
+      "displayName": "Is Sensitive",
+      "enumeratedValues": [
+        {
+          "text": "Yes",
+          "value": "yes",
+        },
+        {
+          "text": "No",
+          "value": "no",
+        },
+      ],
+      "id": "a276bf0d-dafa-4302-ad0b-5e260c9239b0",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "sensitive",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -aIMNt role -f test/e2e/exports/all-iga/allRoleTypeGlossaries.glossary.json": should export all the glossaries including internals, modified properities and no metadata from the type role and save to file allRoleTypeGlossaries.glossary.json 1`] = `0`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -aIMNt role -f test/e2e/exports/all-iga/allRoleTypeGlossaries.glossary.json": should export all the glossaries including internals, modified properities and no metadata from the type role and save to file allRoleTypeGlossaries.glossary.json 2`] = `""`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -aIMNt role -f test/e2e/exports/all-iga/allRoleTypeGlossaries.glossary.json": should export all the glossaries including internals, modified properities and no metadata from the type role and save to file allRoleTypeGlossaries.glossary.json 3`] = `
+"✔ Exported 13 glossary schemas
+"
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -aIMNt role -f test/e2e/exports/all-iga/allRoleTypeGlossaries.glossary.json": should export all the glossaries including internals, modified properities and no metadata from the type role and save to file allRoleTypeGlossaries.glossary.json: test/e2e/exports/all-iga/allRoleTypeGlossaries.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "0806c0c5-a6e9-4ec8-8a36-830f217637b3": {
+      "allowedValues": [],
+      "description": "Can the role be requested",
+      "displayName": "Requestable",
+      "id": "0806c0c5-a6e9-4ec8-8a36-830f217637b3",
+      "isIndexed": true,
+      "isInternal": true,
+      "isMultiValue": false,
+      "managedObjectType": null,
+      "metadata": {
+        "createdDate": "2025-10-27T18:26:04.308367768Z",
+        "modifiedDate": "2026-05-15T21:59:36.939Z",
+      },
+      "name": "requestable",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "boolean",
+    },
+    "1110ad40-1dc1-42c7-bda7-226cca6e095c": {
+      "allowedValues": [
+        1.5,
+        3.5,
+      ],
+      "description": "Test Double",
+      "displayName": "Test Double",
+      "enumeratedValues": [
+        {
+          "text": 0.5,
+          "value": 1.5,
+        },
+        {
+          "text": 2.5,
+          "value": 3.5,
+        },
+      ],
+      "id": "1110ad40-1dc1-42c7-bda7-226cca6e095c",
+      "isMultiValue": true,
+      "metadata": {
+        "createdDate": "2026-05-15T21:58:34.918067149Z",
+        "modifiedDate": "2026-05-21T20:35:22.955Z",
+      },
+      "name": "Test Double",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "integer",
+    },
+    "14e22ac1-a898-4f23-845e-875e9286c1ea": {
+      "allowedValues": [
+        1,
+        2,
+      ],
+      "description": "Test Integers",
+      "displayName": "Test Integer",
+      "enumeratedValues": [
+        {
+          "text": 0,
+          "value": 1,
+        },
+        {
+          "text": 1,
+          "value": 2,
+        },
+      ],
+      "id": "14e22ac1-a898-4f23-845e-875e9286c1ea",
+      "isMultiValue": true,
+      "metadata": {
+        "createdDate": "2026-05-15T21:58:46.047540447Z",
+        "modifiedDate": "2026-05-21T20:35:24.433Z",
+      },
+      "name": "Test Integer",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "integer",
+    },
+    "4da5bed6-f690-41a9-af8a-51b505dc2099": {
+      "allowedValues": [
+        "yes",
+        "no",
+      ],
+      "description": "",
+      "displayName": "Is Sensitive",
+      "enumeratedValues": [
+        {
+          "text": "Yes",
+          "value": "yes",
+        },
+        {
+          "text": "No",
+          "value": "no",
+        },
+      ],
+      "id": "4da5bed6-f690-41a9-af8a-51b505dc2099",
+      "isMultiValue": false,
+      "metadata": {
+        "createdDate": "2026-05-15T21:58:36.94464055Z",
+        "modifiedDate": "2026-05-21T20:35:25.471Z",
+      },
+      "name": "sensitive",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "string",
+    },
+    "5a7e52ac-377f-4b2f-92ba-336e175f512e": {
+      "allowedValues": [],
+      "description": "Test Role",
+      "displayName": "Test Role",
+      "enumeratedValues": [],
+      "id": "5a7e52ac-377f-4b2f-92ba-336e175f512e",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/role",
+      "metadata": {
+        "createdDate": "2026-05-15T21:58:37.979674441Z",
+        "modifiedDate": "2026-05-21T20:35:28.528Z",
+      },
+      "name": "Test Role",
+      "objectType": "/openidm/managed/role",
+      "searchable": false,
+      "type": "managedObject",
+    },
+    "6ec0d7a4-3305-4abe-8aaa-0713cce2907a": {
+      "allowedValues": [],
+      "description": "Test Organization",
+      "displayName": "Test Organization",
+      "enumeratedValues": [],
+      "id": "6ec0d7a4-3305-4abe-8aaa-0713cce2907a",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/organization",
+      "metadata": {
+        "createdDate": "2026-05-15T21:58:43.01379417Z",
+        "modifiedDate": "2026-05-21T20:35:29.529Z",
+      },
+      "name": "Test Organization",
+      "objectType": "/openidm/managed/role",
+      "searchable": false,
+      "type": "managedObject",
+    },
+    "774d2515-6cb4-408d-bdae-63b7534dde39": {
+      "allowedValues": [],
+      "description": "Test Boolean",
+      "displayName": "Test Boolean",
+      "enumeratedValues": [],
+      "id": "774d2515-6cb4-408d-bdae-63b7534dde39",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {
+        "createdDate": "2026-01-05T23:57:19.037709455Z",
+        "modifiedDate": "2026-05-15T21:59:55.735Z",
+      },
+      "name": "Test Boolean",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "boolean",
+    },
+    "96dd0d59-0e42-4961-bd59-c312e8222252": {
+      "allowedValues": [],
+      "description": "Test Boolean Description",
+      "displayName": "Test Boolean Display Name",
+      "enumeratedValues": [],
+      "id": "96dd0d59-0e42-4961-bd59-c312e8222252",
+      "isMultiValue": false,
+      "metadata": {
+        "createdDate": "2026-05-15T21:58:28.874225084Z",
+        "modifiedDate": "2026-05-21T20:35:30.534Z",
+      },
+      "name": "testBoolean",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "boolean",
+    },
+    "a1cdab06-b3e9-4321-a80d-6da086110974": {
+      "allowedValues": [],
+      "description": "Test Date",
+      "displayName": "Test Date",
+      "enumeratedValues": [],
+      "id": "a1cdab06-b3e9-4321-a80d-6da086110974",
+      "isMultiValue": false,
+      "metadata": {
+        "createdDate": "2026-05-15T21:58:35.930846031Z",
+        "modifiedDate": "2026-05-21T20:35:33.693Z",
+      },
+      "name": "Test Date",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "date",
+    },
+    "acb03cb3-b5b0-41b2-b114-2ac78b21f019": {
+      "allowedValues": [],
+      "description": "Test User",
+      "displayName": "Test User",
+      "enumeratedValues": [],
+      "id": "acb03cb3-b5b0-41b2-b114-2ac78b21f019",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/user",
+      "metadata": {
+        "createdDate": "2026-05-15T21:58:32.901174176Z",
+        "modifiedDate": "2026-05-15T21:58:32.901174819Z",
+      },
+      "name": "Test User",
+      "objectType": "/openidm/managed/role",
+      "searchable": false,
+      "type": "managedObject",
+    },
+    "b5d7a291-ea6d-41eb-bb7e-e50cfe30e7e5": {
+      "allowedValues": [
+        "Value 1",
+        "Value 2",
+      ],
+      "description": "Test String",
+      "displayName": "Test String",
+      "enumeratedValues": [
+        {
+          "text": "Text 1",
+          "value": "Value 1",
+        },
+        {
+          "text": "Text 2",
+          "value": "Value 2",
+        },
+      ],
+      "id": "b5d7a291-ea6d-41eb-bb7e-e50cfe30e7e5",
+      "isMultiValue": true,
+      "metadata": {
+        "createdDate": "2026-05-15T21:58:38.943994884Z",
+        "modifiedDate": "2026-05-15T21:58:38.943995824Z",
+      },
+      "name": "Test String",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "string",
+    },
+    "e307820d-2e53-4889-a9e7-b9ad1232352c": {
+      "allowedValues": [
+        "high",
+        "medium",
+        "low",
+        "null",
+      ],
+      "description": "",
+      "displayName": "Risk Level",
+      "enumeratedValues": [
+        {
+          "text": "High",
+          "value": "high",
+        },
+        {
+          "text": "Medium",
+          "value": "medium",
+        },
+        {
+          "text": "Low",
+          "value": "low",
+        },
+        {
+          "text": "Other",
+          "value": "null",
+        },
+      ],
+      "id": "e307820d-2e53-4889-a9e7-b9ad1232352c",
+      "isMultiValue": false,
+      "metadata": {
+        "createdDate": "2026-05-15T21:58:39.971098613Z",
+        "modifiedDate": "2026-05-15T21:58:39.971100893Z",
+      },
+      "name": "riskLevel",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "string",
+    },
+    "f1cc3b53-ef38-4ad7-b268-1ee482a411ef": {
+      "allowedValues": [],
+      "description": "Role Owner of Object",
+      "displayName": "Role Owner",
+      "id": "f1cc3b53-ef38-4ad7-b268-1ee482a411ef",
+      "isIndexed": true,
+      "isInternal": true,
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/user",
+      "metadata": {
+        "createdDate": "2025-10-27T18:13:17.537439106Z",
+        "modifiedDate": "2026-05-15T22:00:14.821Z",
+      },
+      "name": "roleOwner",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "managedObject",
+    },
+  },
+}
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -af test/e2e/exports/all-iga/allGlossaries.glossary.json": should export all glossaries to file test/e2e/exports/all/allGlossaries.glossary.json 1`] = `0`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -af test/e2e/exports/all-iga/allGlossaries.glossary.json": should export all glossaries to file test/e2e/exports/all/allGlossaries.glossary.json 2`] = `""`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -af test/e2e/exports/all-iga/allGlossaries.glossary.json": should export all glossaries to file test/e2e/exports/all/allGlossaries.glossary.json 3`] = `
+"✔ Exported 20 glossary schemas
+"
+`;
+
+exports[`frodo iga glossary export "frodo iga glossary export -af test/e2e/exports/all-iga/allGlossaries.glossary.json": should export all glossaries to file test/e2e/exports/all/allGlossaries.glossary.json: test/e2e/exports/all-iga/allGlossaries.glossary.json 1`] = `
+{
+  "glossarySchema": {
+    "1110ad40-1dc1-42c7-bda7-226cca6e095c": {
+      "allowedValues": [
+        1.5,
+        3.5,
+      ],
+      "description": "Test Double",
+      "displayName": "Test Double",
+      "enumeratedValues": [
+        {
+          "text": 0.5,
+          "value": 1.5,
+        },
+        {
+          "text": 2.5,
+          "value": 3.5,
+        },
+      ],
+      "id": "1110ad40-1dc1-42c7-bda7-226cca6e095c",
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "Test Double",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "integer",
+    },
+    "11fee6b2-bf06-4560-b2ae-3e27cec169f2": {
+      "allowedValues": [],
+      "description": "Testing",
+      "displayName": "CP Dummy Entitlement",
+      "enumeratedValues": [],
+      "id": "11fee6b2-bf06-4560-b2ae-3e27cec169f2",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "CP-DummyEntitlement",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": true,
+      "type": "string",
+    },
+    "14e22ac1-a898-4f23-845e-875e9286c1ea": {
+      "allowedValues": [
+        1,
+        2,
+      ],
+      "description": "Test Integers",
+      "displayName": "Test Integer",
+      "enumeratedValues": [
+        {
+          "text": 0,
+          "value": 1,
+        },
+        {
+          "text": 1,
+          "value": 2,
+        },
+      ],
+      "id": "14e22ac1-a898-4f23-845e-875e9286c1ea",
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "Test Integer",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "integer",
+    },
+    "4da5bed6-f690-41a9-af8a-51b505dc2099": {
+      "allowedValues": [
+        "yes",
+        "no",
+      ],
+      "description": "",
+      "displayName": "Is Sensitive",
+      "enumeratedValues": [
+        {
+          "text": "Yes",
+          "value": "yes",
+        },
+        {
+          "text": "No",
+          "value": "no",
+        },
+      ],
+      "id": "4da5bed6-f690-41a9-af8a-51b505dc2099",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "sensitive",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "string",
+    },
+    "537b31a1-e07c-493b-9956-bdefc18062a9": {
+      "allowedValues": [
+        "Text One",
+        "Text Two",
+        "Text Three",
+      ],
+      "description": "Test String Description",
+      "displayName": "Test String Display Name",
+      "enumeratedValues": [
+        {
+          "text": "text1",
+          "value": "Text One",
+        },
+        {
+          "text": "text2",
+          "value": "Text Two",
+        },
+        {
+          "text": "text3",
+          "value": "Text Three",
+        },
+      ],
+      "id": "537b31a1-e07c-493b-9956-bdefc18062a9",
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "testString",
+      "objectType": "/openidm/managed/application",
+      "searchable": true,
+      "type": "string",
+    },
+    "598709e1-d16b-4c39-884d-dd9481b14d90": {
+      "allowedValues": [
+        "yes",
+        "no",
+      ],
+      "description": "",
+      "displayName": "Is Sensitive",
+      "enumeratedValues": [
+        {
+          "text": "Yes",
+          "value": "yes",
+        },
+        {
+          "text": "No",
+          "value": "no",
+        },
+      ],
+      "id": "598709e1-d16b-4c39-884d-dd9481b14d90",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "sensitive",
+      "objectType": "/openidm/managed/application",
+      "searchable": true,
+      "type": "string",
+    },
+    "5a7e52ac-377f-4b2f-92ba-336e175f512e": {
+      "allowedValues": [],
+      "description": "Test Role",
+      "displayName": "Test Role",
+      "enumeratedValues": [],
+      "id": "5a7e52ac-377f-4b2f-92ba-336e175f512e",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/role",
+      "metadata": {},
+      "name": "Test Role",
+      "objectType": "/openidm/managed/role",
+      "searchable": false,
+      "type": "managedObject",
+    },
+    "6ec0d7a4-3305-4abe-8aaa-0713cce2907a": {
+      "allowedValues": [],
+      "description": "Test Organization",
+      "displayName": "Test Organization",
+      "enumeratedValues": [],
+      "id": "6ec0d7a4-3305-4abe-8aaa-0713cce2907a",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/organization",
+      "metadata": {},
+      "name": "Test Organization",
+      "objectType": "/openidm/managed/role",
+      "searchable": false,
+      "type": "managedObject",
+    },
+    "8e5b1e2f-a0d7-4c03-978b-834494c2beb3": {
+      "allowedValues": [
+        "3",
+        "4",
+      ],
+      "description": "This is a test entitlement for frodo import/export functions.",
+      "displayName": "Brycen's Test Entitlement",
+      "enumeratedValues": [
+        {
+          "text": "Testing",
+          "value": "3",
+        },
+        {
+          "text": "TestingChange",
+          "value": "4",
+        },
+      ],
+      "id": "8e5b1e2f-a0d7-4c03-978b-834494c2beb3",
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "brycenTestItem",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": true,
+      "type": "string",
+    },
+    "96dd0d59-0e42-4961-bd59-c312e8222252": {
+      "allowedValues": [],
+      "description": "Test Boolean Description",
+      "displayName": "Test Boolean Display Name",
+      "enumeratedValues": [],
+      "id": "96dd0d59-0e42-4961-bd59-c312e8222252",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "testBoolean",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "boolean",
+    },
+    "980b0308-32c8-44a3-86a4-0098d82b33bd": {
+      "allowedValues": [
+        "sales",
+        "finance",
+        "hr",
+        "null",
+      ],
+      "description": "Application grant workflows example for LOB determines who it should go to",
+      "displayName": "Line Of Business",
+      "enumeratedValues": [
+        {
+          "text": "Sales",
+          "value": "sales",
+        },
+        {
+          "text": "Finance",
+          "value": "finance",
+        },
+        {
+          "text": "Human Resources",
+          "value": "hr",
+        },
+        {
+          "text": "Other",
+          "value": "null",
+        },
+      ],
+      "id": "980b0308-32c8-44a3-86a4-0098d82b33bd",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "lineOfBusiness",
+      "objectType": "/openidm/managed/application",
+      "searchable": true,
+      "type": "string",
+    },
+    "9a6dc773-31af-41b3-a5d1-3e129931030e": {
+      "allowedValues": [
+        0,
+        1,
+        2,
+      ],
+      "description": "Test Integer Description",
+      "displayName": "Test Integer Display Name",
+      "enumeratedValues": [
+        {
+          "text": 1,
+          "value": 0,
+        },
+        {
+          "text": 2,
+          "value": 1,
+        },
+        {
+          "text": 3,
+          "value": 2,
+        },
+      ],
+      "id": "9a6dc773-31af-41b3-a5d1-3e129931030e",
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "testInteger",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": false,
+      "type": "integer",
+    },
+    "a1cdab06-b3e9-4321-a80d-6da086110974": {
+      "allowedValues": [],
+      "description": "Test Date",
+      "displayName": "Test Date",
+      "enumeratedValues": [],
+      "id": "a1cdab06-b3e9-4321-a80d-6da086110974",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "Test Date",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "date",
+    },
+    "a276bf0d-dafa-4302-ad0b-5e260c9239b0": {
+      "allowedValues": [
+        "yes",
+        "no",
+      ],
+      "description": "",
+      "displayName": "Is Sensitive",
+      "enumeratedValues": [
+        {
+          "text": "Yes",
+          "value": "yes",
+        },
+        {
+          "text": "No",
+          "value": "no",
+        },
+      ],
+      "id": "a276bf0d-dafa-4302-ad0b-5e260c9239b0",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "sensitive",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": true,
+      "type": "string",
+    },
+    "acb03cb3-b5b0-41b2-b114-2ac78b21f019": {
+      "allowedValues": [],
+      "description": "Test User",
+      "displayName": "Test User",
+      "enumeratedValues": [],
+      "id": "acb03cb3-b5b0-41b2-b114-2ac78b21f019",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/user",
+      "metadata": {},
+      "name": "Test User",
+      "objectType": "/openidm/managed/role",
+      "searchable": false,
+      "type": "managedObject",
+    },
+    "b0955a58-1955-40a7-9d9d-29947fe5f8f7": {
+      "allowedValues": [],
+      "description": "Test Organization Description",
+      "displayName": "Test Organization Display Name",
+      "enumeratedValues": [],
+      "id": "b0955a58-1955-40a7-9d9d-29947fe5f8f7",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/organization",
+      "metadata": {},
+      "name": "testOrg",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": false,
+      "type": "managedObject",
+    },
+    "b33896af-2b4f-4f14-8c26-16bcde91fcac": {
+      "allowedValues": [],
+      "description": "",
+      "displayName": "Is Privileged",
+      "enumeratedValues": [],
+      "id": "b33896af-2b4f-4f14-8c26-16bcde91fcac",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "isPrivileged",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": false,
+      "type": "boolean",
+    },
+    "b5d7a291-ea6d-41eb-bb7e-e50cfe30e7e5": {
+      "allowedValues": [
+        "Value 1",
+        "Value 2",
+      ],
+      "description": "Test String",
+      "displayName": "Test String",
+      "enumeratedValues": [
+        {
+          "text": "Text 1",
+          "value": "Value 1",
+        },
+        {
+          "text": "Text 2",
+          "value": "Value 2",
+        },
+      ],
+      "id": "b5d7a291-ea6d-41eb-bb7e-e50cfe30e7e5",
+      "isMultiValue": true,
+      "metadata": {},
+      "name": "Test String",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "string",
+    },
+    "c735842a-f695-493a-addc-8500d3babc57": {
+      "allowedValues": [],
+      "description": "Test User Description",
+      "displayName": "Test User Display Name",
+      "enumeratedValues": [],
+      "id": "c735842a-f695-493a-addc-8500d3babc57",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/user",
+      "metadata": {},
+      "name": "testUser",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": false,
+      "type": "managedObject",
+    },
+    "e307820d-2e53-4889-a9e7-b9ad1232352c": {
+      "allowedValues": [
+        "high",
+        "medium",
+        "low",
+        "null",
+      ],
+      "description": "",
+      "displayName": "Risk Level",
+      "enumeratedValues": [
+        {
+          "text": "High",
+          "value": "high",
+        },
+        {
+          "text": "Medium",
+          "value": "medium",
+        },
+        {
+          "text": "Low",
+          "value": "low",
+        },
+        {
+          "text": "Other",
+          "value": "null",
+        },
+      ],
+      "id": "e307820d-2e53-4889-a9e7-b9ad1232352c",
+      "isMultiValue": false,
+      "metadata": {},
+      "name": "riskLevel",
+      "objectType": "/openidm/managed/role",
+      "searchable": true,
+      "type": "string",
+    },
+  },
+  "meta": Any<Object>,
+}
+`;

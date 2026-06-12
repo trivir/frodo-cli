@@ -1,0 +1,29 @@
+{
+  "glossarySchema": {
+    "9d15de7d-58ce-4520-b9a0-7e9bb4236bbd": {
+      "allowedValues": [],
+      "description": "Test Organization Description",
+      "displayName": "Test Organization Display Name",
+      "enumeratedValues": [],
+      "id": "9d15de7d-58ce-4520-b9a0-7e9bb4236bbd",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/organization",
+      "metadata": {
+        "createdDate": "2026-05-22T16:22:16.900499377Z",
+        "modifiedDate": "2026-05-22T16:22:16.900501449Z"
+      },
+      "name": "testOrg",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": false,
+      "type": "managedObject"
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-22T16:25:58.246Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "bwirick@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}

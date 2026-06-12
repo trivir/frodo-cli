@@ -1,0 +1,29 @@
+{
+  "glossarySchema": {
+    "c8ed99f7-5442-43d5-8406-f39060c1bd73": {
+      "allowedValues": [],
+      "description": "The type of account",
+      "displayName": "Account Type",
+      "enumeratedValues": [],
+      "id": "c8ed99f7-5442-43d5-8406-f39060c1bd73",
+      "isInternal": true,
+      "isMultiValue": false,
+      "metadata": {
+        "createdDate": "2025-10-27T18:13:39.982168872Z",
+        "modifiedDate": "2026-05-15T22:00:08.602Z"
+      },
+      "name": "accountType",
+      "objectType": "/iga/governance/account",
+      "searchable": true,
+      "type": "string"
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-22T16:25:58.246Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "bwirick@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}

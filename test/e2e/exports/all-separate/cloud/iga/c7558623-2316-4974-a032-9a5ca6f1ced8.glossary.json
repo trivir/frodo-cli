@@ -1,0 +1,40 @@
+{
+  "glossarySchema": {
+    "c7558623-2316-4974-a032-9a5ca6f1ced8": {
+      "allowedValues": [
+        "3",
+        "4"
+      ],
+      "description": "This is a test entitlement for frodo import/export functions.",
+      "displayName": "Brycen's Test Entitlement",
+      "enumeratedValues": [
+        {
+          "text": "Testing",
+          "value": "3"
+        },
+        {
+          "text": "TestingChange",
+          "value": "4"
+        }
+      ],
+      "id": "c7558623-2316-4974-a032-9a5ca6f1ced8",
+      "isMultiValue": true,
+      "metadata": {
+        "createdDate": "2026-05-22T16:22:09.817131108Z",
+        "modifiedDate": "2026-05-22T16:22:09.817152364Z"
+      },
+      "name": "brycenTestItem",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": true,
+      "type": "string"
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-22T16:25:58.246Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "bwirick@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}

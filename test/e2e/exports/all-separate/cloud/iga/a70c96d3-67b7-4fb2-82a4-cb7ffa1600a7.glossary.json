@@ -1,0 +1,29 @@
+{
+  "glossarySchema": {
+    "a70c96d3-67b7-4fb2-82a4-cb7ffa1600a7": {
+      "allowedValues": [],
+      "description": "Test Role",
+      "displayName": "Test Role",
+      "enumeratedValues": [],
+      "id": "a70c96d3-67b7-4fb2-82a4-cb7ffa1600a7",
+      "isMultiValue": false,
+      "managedObjectType": "/openidm/managed/role",
+      "metadata": {
+        "createdDate": "2026-05-22T16:22:07.830137021Z",
+        "modifiedDate": "2026-05-22T16:22:07.830139258Z"
+      },
+      "name": "Test Role",
+      "objectType": "/openidm/managed/role",
+      "searchable": false,
+      "type": "managedObject"
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-22T16:25:58.246Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "bwirick@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}
