@@ -70,7 +70,6 @@ export async function listCertifications(
       'Description',
     ]);
     for (const certification of certifications) {
-      // const certification = based on status?
       table.push([
         certification.id,
         wordwrap(certification.name, 40),

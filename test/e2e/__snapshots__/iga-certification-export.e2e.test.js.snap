@@ -1582,6 +1582,227 @@ a {
 }
 `;
 
+exports[`frodo iga certification export "frodo iga certification export -Mn phh-entitlement-assignment-certification -f testCertsExportFile3.json": should export the certification named 'phh-entitlement-assignment-certification' including modified properties, and no metadata. 1`] = `0`;
+
+exports[`frodo iga certification export "frodo iga certification export -Mn phh-entitlement-assignment-certification -f testCertsExportFile3.json": should export the certification named 'phh-entitlement-assignment-certification' including modified properties, and no metadata. 2`] = `""`;
+
+exports[`frodo iga certification export "frodo iga certification export -Mn phh-entitlement-assignment-certification -f testCertsExportFile3.json": should export the certification named 'phh-entitlement-assignment-certification' including modified properties, and no metadata. 3`] = `
+"✔ Exported certification phh-entitlement-assignment-certification to file
+"
+`;
+
+exports[`frodo iga certification export "frodo iga certification export -Mn phh-entitlement-assignment-certification -f testCertsExportFile3.json": should export the certification named 'phh-entitlement-assignment-certification' including modified properties, and no metadata.: testCertsExportFile3.json 1`] = `
+{
+  "certificationTemplate": {
+    "965c4548-1f53-4947-ba06-dfa821da42a6": {
+      "allowBulkCertify": false,
+      "allowPartialSignoff": true,
+      "allowSelfCertification": false,
+      "assignmentNotification": "emailTemplate/certificationAssigned",
+      "assignmentNotificationIncludeManager": false,
+      "certificationType": "entitlement",
+      "defaultCertifierId": "managed/user/6b21c283-d491-4fd9-8322-898c171c7018",
+      "defaultCertifierInfo": {
+        "givenName": "Parent",
+        "id": "6b21c283-d491-4fd9-8322-898c171c7018",
+        "mail": "pholderness+poadmin@trivir.com",
+        "sn": "Admin",
+        "userName": "phh-parent-org-admin",
+      },
+      "description": "Entitlements Review - All Applications",
+      "enableForward": true,
+      "enableReassign": true,
+      "escalationFrequency": null,
+      "escalationNotification": null,
+      "escalationOwner": null,
+      "events": {
+        "assignment": {
+          "notification": "emailTemplate/certificationAssigned",
+        },
+        "reassign": {
+          "notification": "emailTemplate/certificationReassigned",
+        },
+      },
+      "exceptionDuration": 14,
+      "excludeConditionalAccess": true,
+      "excludeRoleBasedAccess": true,
+      "expirationAction": null,
+      "expirationActionDelay": 0,
+      "expirationNotification": null,
+      "expirationReassignee": null,
+      "finalizeRule": "",
+      "id": "965c4548-1f53-4947-ba06-dfa821da42a6",
+      "initializeRule": "",
+      "isEventBased": false,
+      "metadata": {
+        "createdDate": "2026-05-27T20:38:49.354121868Z",
+        "modifiedDate": "2026-05-27T20:38:49.354146776Z",
+      },
+      "name": "phh-entitlement-assignment-certification",
+      "ownerId": "managed/user/6b21c283-d491-4fd9-8322-898c171c7018",
+      "ownerInfo": {
+        "givenName": "Parent",
+        "id": "6b21c283-d491-4fd9-8322-898c171c7018",
+        "mail": "pholderness+poadmin@trivir.com",
+        "sn": "Admin",
+        "userName": "phh-parent-org-admin",
+      },
+      "reassignNotification": "emailTemplate/certificationReassigned",
+      "reassignPermissions": {
+        "certify": true,
+        "claim": true,
+        "comment": true,
+        "delegate": true,
+        "exception": true,
+        "forward": true,
+        "reassign": true,
+        "reset": true,
+        "revoke": true,
+        "save": true,
+        "signoff": true,
+      },
+      "remediationDelay": 0,
+      "remediationRule": "BasicRevocation",
+      "reminderFrequency": 0,
+      "reminderNotification": null,
+      "requireJustification": {
+        "exceptionAllowed": true,
+        "revoke": true,
+      },
+      "schedule": null,
+      "scheduleId": "templateScheduleae1381d5cfad4374b3dc075605b1036d",
+      "selfCertificationRule": "none",
+      "skipInactiveCertifiers": false,
+      "stageDuration": 14,
+      "stages": [
+        {
+          "certifierId": null,
+          "certifierPath": null,
+          "certifierScript": null,
+          "certifierType": "entitlementOwner",
+        },
+      ],
+      "stagingEnabled": true,
+      "status": "active",
+      "targetFilter": {
+        "application": {
+          "operand": {
+            "targetName": "authoritative",
+            "targetValue": false,
+          },
+          "operator": "EQUALS",
+        },
+        "decision": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "entitlement": {
+          "operand": [],
+          "operator": "ALL",
+        },
+        "memberOfOrg": [],
+        "type": [
+          "entitlementGrant",
+          "ResourceGrant",
+        ],
+        "user": {
+          "operand": [],
+          "operator": "ALL",
+        },
+      },
+      "uiConfig": {
+        "columnConfig": {
+          "entitlements": [
+            "user.user",
+            "application.application",
+            "entitlement.entitlement",
+            "account.account",
+            "review.flags",
+            "review.comments",
+          ],
+        },
+      },
+    },
+  },
+  "emailTemplate": {
+    "certificationAssigned": {
+      "_id": "emailTemplate/certificationAssigned",
+      "defaultLocale": "en",
+      "enabled": true,
+      "from": "",
+      "html": {
+        "en": "<html><div>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was assigned to you.</div><html>",
+      },
+      "message": {
+        "en": "<html><head></head><body>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was assigned to you.</body></html>",
+      },
+      "mimeType": "text/html",
+      "styles": "body {
+	background-color: #324054;
+	color: #455469;
+	padding: 60px;
+	text-align: center
+}
+
+a {
+	text-decoration: none;
+	color: #109cf1;
+}
+
+.content {
+	background-color: #fff;
+	border-radius: 4px;
+	margin: 0 auto;
+	padding: 48px;
+	width: 235px
+}
+",
+      "subject": {
+        "en": "ATTENTION: Certification Task Assigned",
+      },
+    },
+    "certificationReassigned": {
+      "_id": "emailTemplate/certificationReassigned",
+      "defaultLocale": "en",
+      "enabled": true,
+      "from": "",
+      "html": {
+        "en": "<html><body>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was reassigned to you.</body></html>",
+      },
+      "message": {
+        "en": "<html><body>Hello, {{object.user.givenName}} {{object.user.sn}}! <br> A certification task for the campaign {{object.campaign.name}} was reassigned to you.</body></html>",
+      },
+      "mimeType": "text/html",
+      "styles": "body {
+	background-color: #324054;
+	color: #455469;
+	padding: 60px;
+	text-align: center
+}
+
+a {
+	text-decoration: none;
+	color: #109cf1;
+}
+
+.content {
+	background-color: #fff;
+	border-radius: 4px;
+	margin: 0 auto;
+	padding: 48px;
+	width: 235px
+}
+",
+      "subject": {
+        "en": "ATTENTION: Certification Task Reassigned",
+      },
+    },
+  },
+  "meta": Any<Object>,
+  "variable": {},
+}
+`;
+
 exports[`frodo iga certification export "frodo iga certification export -NAD testCertsExportDir3": should export all certifications separately with no metadata to a directory 1`] = `0`;
 
 exports[`frodo iga certification export "frodo iga certification export -NAD testCertsExportDir3": should export all certifications separately with no metadata to a directory 2`] = `""`;

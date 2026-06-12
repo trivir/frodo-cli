@@ -100,9 +100,9 @@ describe(`frodo iga certification export`, () => {
     await testExport(CMD, igaEnv, type, undefined, exportDirectory, true, true);
   });
 
-  // test(`"frodo iga certification export -Mn phh-entitlement-assignment-certification -f testCertsExportFile3.json": should export the certification named 'phh-entitlement-assignment-certification' including modified properties, and no metadata.`, async () => {
-  //   const exportFile = "testCertsExportFile3.json";
-  //   const CMD = `frodo iga certification export -Mn phh-entitlement-assignment-certification -f ${exportFile}`;
-  //   await testExport(CMD, igaEnv, type, exportFile, undefined, true, true);
-  // });
+  test(`"frodo iga certification export -Mn phh-entitlement-assignment-certification -f testCertsExportFile3.json": should export the certification named 'phh-entitlement-assignment-certification' including modified properties, and no metadata.`, async () => {
+    const exportFile = "testCertsExportFile3.json";
+    const CMD = `frodo iga certification export -Mn phh-entitlement-assignment-certification -f ${exportFile}`;
+    await testExport(CMD, igaEnv, type, exportFile, undefined, true, true);
+  });
 });

@@ -21,10 +21,6 @@ export default function setup() {
     deploymentTypes
   );
 
-  //
-  // EXPORT BY NAME DOES NOT WORK CURRENTLY
-  //
-
   program
     .description('Export certifications.')
     .addOption(
@@ -42,8 +38,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-f, --file [file]',
-        'Name of the export file. Ignored with -A. Defaults to <certification-name>.certification.json.'
-      )
+        'Name of the export file. Cannot be used with -A. Defaults to <certification-name>.certification.json.'
+      ).conflicts(['allSeparate'])
     )
     .addOption(
       new Option(
@@ -123,7 +119,7 @@ export default function setup() {
           );
           outcome = await exportCertificationToFile(
             options.certificationId,
-            options.certficationName,
+            options.certificationName,
             options.file,
             options.metadata,
             options.modifiedProperties,
