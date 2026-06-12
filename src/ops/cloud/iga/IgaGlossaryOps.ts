@@ -1,5 +1,8 @@
 import { frodo, FrodoError } from '@rockcarver/frodo-lib';
-import { GlossaryObjectType, GlossarySchemaItemSkeleton } from '@rockcarver/frodo-lib/types/api/cloud/iga/IgaGlossaryApi';
+import {
+  GlossaryObjectType,
+  GlossarySchemaItemSkeleton,
+} from '@rockcarver/frodo-lib/types/api/cloud/iga/IgaGlossaryApi';
 import {
   GlossarySchemaExportInterface,
   GlossarySchemaExportOptions,
@@ -11,14 +14,13 @@ import {
   createKeyValueTable,
   createProgressIndicator,
   createTable,
+  debugMessage,
   getTableRowsFromArray,
   printError,
   printMessage,
   stopProgressIndicator,
   updateProgressIndicator,
-  debugMessage,
 } from '../../../utils/Console';
-import { object } from 'zod';
 
 const {
   getTypedFilename,
@@ -49,7 +51,7 @@ export async function listGlossary(
   objectType?: GlossaryObjectType
 ): Promise<boolean> {
   try {
-    let glossaries = await readGlossarySchemas(objectType);
+    const glossaries = await readGlossarySchemas(objectType);
     glossaries.sort((a, b) => a.displayName.localeCompare(b.displayName));
     if (!long) {
       for (const glossary of glossaries) {
@@ -63,7 +65,7 @@ export async function listGlossary(
       'Display Name',
       'Object Type',
       'Type',
-      'Internal'
+      'Internal',
     ]);
     for (const glossaryItem of glossaries) {
       table.push([
@@ -72,7 +74,7 @@ export async function listGlossary(
         glossaryItem.displayName,
         glossaryItem.objectType,
         glossaryItem.type,
-        !!glossaryItem.isInternal ? 'true'['brightGreen'] : 'false'['brightRed']
+        glossaryItem.isInternal ? 'true'['brightGreen'] : 'false'['brightRed'],
       ]);
     }
     printMessage(table.toString(), 'data');
@@ -95,15 +97,13 @@ export async function describeGlossary(
   glossaryId?: string,
   glossaryName?: string,
   objectType?: GlossaryObjectType,
-  file?: string,
+  file?: string
 ): Promise<boolean> {
   try {
     let schemaData;
 
     if (file) {
       schemaData = getGlossarySchemaExportFromFile(getFilePath(file));
-
-      // If no id/name provided, default to first glossary in file
       if (!glossaryId && !glossaryName) {
         const ids = Object.keys(schemaData.glossarySchema);
 
@@ -116,12 +116,12 @@ export async function describeGlossary(
         glossaryId = ids[0];
       }
 
-      // If glossary name provided, resolve ID from file contents
       if (glossaryName && !glossaryId) {
-        const glossaryEntries = Object.entries(
-          schemaData.glossarySchema
-        ) as [string, GlossarySchemaItemSkeleton<any>][];
-        
+        const glossaryEntries = Object.entries(schemaData.glossarySchema) as [
+          string,
+          GlossarySchemaItemSkeleton<any>,
+        ][];
+
         const foundEntry = glossaryEntries.find(
           ([, glossary]) =>
             glossary.name === glossaryName &&
@@ -147,7 +147,6 @@ export async function describeGlossary(
         );
       }
 
-      // Recover exported ID
       const ids = Object.keys(schemaData.glossarySchema);
 
       if (ids.length === 0) {
@@ -162,10 +161,7 @@ export async function describeGlossary(
       throw new FrodoError(`Glossary schema ${glossaryId} not found.`);
     }
 
-    printMessage(
-      'Glossary Schema',
-      'data'
-    )
+    printMessage('Glossary Schema', 'data');
 
     const table = createKeyValueTable();
 
@@ -173,25 +169,13 @@ export async function describeGlossary(
 
     table.push(['Name'['brightCyan'], glossary.name]);
 
-    table.push([
-      'Display Name'['brightCyan'],
-      glossary.displayName,
-    ]);
+    table.push(['Display Name'['brightCyan'], glossary.displayName]);
 
-    table.push([
-      'Description'['brightCyan'],
-      glossary.description,
-    ]);
+    table.push(['Description'['brightCyan'], glossary.description]);
 
-    table.push([
-      'Type'['brightCyan'],
-      glossary.type,
-    ]);
+    table.push(['Type'['brightCyan'], glossary.type]);
 
-    table.push([
-      'Object Type'['brightCyan'],
-      glossary.objectType,
-    ]);
+    table.push(['Object Type'['brightCyan'], glossary.objectType]);
 
     if (glossary.managedObjectType) {
       table.push([
@@ -202,24 +186,18 @@ export async function describeGlossary(
 
     table.push([
       'Multi Value'['brightCyan'],
-      glossary.isMultiValue
-        ? 'true'['brightGreen']
-        : 'false'['brightRed'],
+      glossary.isMultiValue ? 'true'['brightGreen'] : 'false'['brightRed'],
     ]);
 
     table.push([
       'Searchable'['brightCyan'],
-      glossary.searchable
-        ? 'true'['brightGreen']
-        : 'false'['brightRed'],
+      glossary.searchable ? 'true'['brightGreen'] : 'false'['brightRed'],
     ]);
 
-    if (!!glossary.isInternal) {
+    if (glossary.isInternal) {
       table.push([
         'Internal'['brightCyan'],
-        glossary.isInternal
-          ? 'true'['brightGreen']
-          : 'false'['brightRed'],
+        glossary.isInternal ? 'true'['brightGreen'] : 'false'['brightRed'],
       ]);
     }
 
@@ -230,21 +208,16 @@ export async function describeGlossary(
         glossary.allowedValues.map((v) => String(v))
       );
     }
-    
+
     if (glossary.enumeratedValues?.length) {
       getTableRowsFromArray(
         table,
         `Enumerated Values (${glossary.enumeratedValues.length})`,
-        glossary.enumeratedValues.map(
-          (v) => `${v.text} => ${v.value}`
-        )
+        glossary.enumeratedValues.map((v) => `${v.text} => ${v.value}`)
       );
     }
 
-    printMessage(
-      table.toString() + '\n',
-      'data'
-    );
+    printMessage(table.toString() + '\n', 'data');
 
     return true;
   } catch (error) {
@@ -268,7 +241,7 @@ export async function exportGlossarySchemaToFile(
   file: string,
   includeMeta: boolean = true,
   keepModifiedProperties: boolean = false,
-  objectType: GlossaryObjectType,
+  objectType: GlossaryObjectType
 ): Promise<boolean> {
   const name = glossaryName ? glossaryName : glossaryId;
   let exportData: GlossarySchemaExportInterface;
@@ -290,10 +263,7 @@ export async function exportGlossarySchemaToFile(
       }
     }
     const filePath = getFilePath(file, true);
-    updateProgressIndicator(
-      indicatorId,
-      `Saving ${name} to ${filePath}...`
-    );
+    updateProgressIndicator(indicatorId, `Saving ${name} to ${filePath}...`);
     saveJsonToFile(
       exportData,
       filePath,
@@ -338,24 +308,6 @@ export async function exportGlossarySchemasToFile(
 ): Promise<boolean> {
   try {
     const exportData = await exportGlossarySchemas(options, objectType);
-    // if (objectType) {
-    //   const filteredGlossaries = Object.fromEntries(
-    //     Object.entries(exportData.glossarySchema).filter(
-    //       ([_, glossary]) => {
-    //         const matches = glossary.objectType === objectType;
-
-    //         return matches;
-    //       }
-    //     )
-    //   );
-
-    //   console.log(
-    //     'FILTERED COUNT',
-    //     Object.keys(filteredGlossaries).length
-    //   );
-
-    //   exportData.glossarySchema = filteredGlossaries;
-    // }
     if (!file) {
       file = getTypedFilename(`allGlossaries`, 'glossary');
     }
@@ -385,7 +337,7 @@ export async function exportGlossarySchemasToFiles(
   includeMeta: boolean = true,
   keepModifiedProperties: boolean = false,
   options: GlossarySchemaExportOptions = {
-    includeInternal: false
+    includeInternal: false,
   },
   objectType: GlossaryObjectType
 ): Promise<boolean> {
@@ -435,12 +387,24 @@ export async function importGlossarySchemaFromFile(
       0,
       'Importing glossary...'
     );
-    const importData = getGlossarySchemaExportFromFile(getFilePath(file))
+    const importData = getGlossarySchemaExportFromFile(getFilePath(file));
     updateProgressIndicator(indicatorId, 'Importing glossary...');
     if (glossaryId) {
-      await importGlossarySchemas(importData, glossaryId, undefined, undefined, options);
+      await importGlossarySchemas(
+        importData,
+        glossaryId,
+        undefined,
+        undefined,
+        options
+      );
     } else if (glossaryName) {
-      await importGlossarySchemas(importData, undefined, glossaryName, objectType, options);
+      await importGlossarySchemas(
+        importData,
+        undefined,
+        glossaryName,
+        objectType,
+        options
+      );
     }
     stopProgressIndicator(
       indicatorId,
@@ -481,9 +445,15 @@ export async function importGlossarySchemasFromFile(
       'Importing glossaries...'
     );
     debugMessage(`importGlossarySchemasFromFile: importing ${file}`);
-    const importData = getGlossarySchemaExportFromFile(getFilePath(file))
+    const importData = getGlossarySchemaExportFromFile(getFilePath(file));
     updateProgressIndicator(indicatorId, 'Importing glossaries...');
-    await importGlossarySchemas(importData, undefined, undefined, objectType, options);
+    await importGlossarySchemas(
+      importData,
+      undefined,
+      undefined,
+      objectType,
+      options
+    );
     stopProgressIndicator(
       indicatorId,
       `Successfully imported glossaries.`,
@@ -492,7 +462,11 @@ export async function importGlossarySchemasFromFile(
     debugMessage(`importGlossarySchemasFromFile: end`);
     return true;
   } catch (error) {
-    stopProgressIndicator(indicatorId, `Error importing glossaries inside SchemasFromFile.`, 'fail');
+    stopProgressIndicator(
+      indicatorId,
+      `Error importing glossaries inside SchemasFromFile.`,
+      'fail'
+    );
     printError(error, `Error importing glossaries from file`);
   }
   return false;
@@ -528,7 +502,7 @@ export async function importGlossarySchemasFromFiles(
           indicatorId,
           `Importing glossaries from file ${file}...`
         );
-        
+
         await importGlossarySchemasFromFile(file, objectType, options);
       } catch (error) {
         errors.push(
@@ -546,7 +520,11 @@ export async function importGlossarySchemasFromFiles(
     );
     return true;
   } catch (error) {
-    stopProgressIndicator(indicatorId, `Error(s) importing glossaries.`, 'fail');
+    stopProgressIndicator(
+      indicatorId,
+      `Error(s) importing glossaries.`,
+      'fail'
+    );
     printError(error, `Error importing glossaries from files`);
   }
   return false;
@@ -575,7 +553,13 @@ export async function importFirstGlossaryFromFile(
     const ids = Object.keys(importData.glossarySchema);
     if (ids.length === 0)
       throw new FrodoError(`No glossaries found in import data`);
-    await importGlossarySchemas(importData, ids[0], undefined, undefined, options);
+    await importGlossarySchemas(
+      importData,
+      ids[0],
+      undefined,
+      undefined,
+      options
+    );
     stopProgressIndicator(
       indicatorId,
       `Imported glossary from ${file}`,
@@ -603,7 +587,7 @@ export async function importFirstGlossaryFromFile(
 export async function deleteGlossarySchema(
   glossaryId: string,
   glossaryName: string,
-  objectType?: GlossaryObjectType,
+  objectType?: GlossaryObjectType
 ): Promise<boolean> {
   const glossary = glossaryId ? glossaryId : glossaryName;
   const spinnerId = createProgressIndicator(

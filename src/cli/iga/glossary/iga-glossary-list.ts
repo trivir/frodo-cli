@@ -1,6 +1,7 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import { GlossaryObjectType } from '@rockcarver/frodo-lib/types/api/cloud/iga/IgaGlossaryApi';
 import { Option } from 'commander';
+
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { listGlossary } from '../../../ops/cloud/iga/IgaGlossaryOps';
 import { printMessage, verboseMessage } from '../../../utils/Console.js';
@@ -52,19 +53,19 @@ export default function setup() {
           true,
           deploymentTypes
         );
-        if (!getTokensIsSuccessful) process.exit(1)
-        
+        if (!getTokensIsSuccessful) process.exit(1);
+
         if (!state.getIsIGA()) {
           printMessage(
             'Command not supported for non-IGA cloud tenants',
             'error'
           );
-          process.exit(1)
+          process.exit(1);
         }
-        
+
         const objectType = options.glossaryType
           ? glossaryTypeMap[options.glossaryType]
-          : undefined;
+          : null;
         if (options.glossaryType && !objectType) {
           printMessage('Please provide a valid Object Type', 'error');
           process.exitCode = 1;

@@ -1,5 +1,7 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
+import { GlossaryObjectType } from '@rockcarver/frodo-lib/types/api/cloud/iga/IgaGlossaryApi';
 import { Option } from 'commander';
+
 import { getTokens } from '../../../ops/AuthenticateOps';
 import {
   exportGlossarySchemasToFile,
@@ -8,7 +10,6 @@ import {
 } from '../../../ops/cloud/iga/IgaGlossaryOps';
 import { printMessage, verboseMessage } from '../../../utils/Console.js';
 import { FrodoCommand } from '../../FrodoCommand';
-import { GlossaryObjectType } from '@rockcarver/frodo-lib/types/api/cloud/iga/IgaGlossaryApi';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
@@ -27,7 +28,7 @@ export default function setup() {
     [],
     deploymentTypes
   );
-  
+
   program
     .description('Export glossaries.')
     .addOption(
@@ -46,7 +47,7 @@ export default function setup() {
       new Option(
         '-f, --file [file]',
         'Name of the export file. Cannot be used with -A. Defaults to <glossary-id>.glossary.json.'
-      )
+      ).conflicts(['allSeparate'])
     )
     .addOption(
       new Option(
@@ -76,7 +77,9 @@ export default function setup() {
       new Option(
         '-I, --internal',
         'Include internal glossary schemas in export if true. Cannot be used with -i or -n.'
-      ).default(false, 'false').conflicts(['glossaryId', 'glossaryName'])
+      )
+        .default(false, 'false')
+        .conflicts(['glossaryId', 'glossaryName'])
     )
     .addOption(
       new Option(
@@ -95,8 +98,13 @@ export default function setup() {
           options,
           command
         );
-        
-        if (!options.glossaryId && !options.glossaryName && !options.all && !options.allSeparate) {
+
+        if (
+          !options.glossaryId &&
+          !options.glossaryName &&
+          !options.all &&
+          !options.allSeparate
+        ) {
           printMessage(
             'Unrecognized combination of options or no options...',
             'error'
@@ -129,10 +137,12 @@ export default function setup() {
           process.exitCode = 1;
           program.help();
         }
-        
+
         // --glossary-id -i || --glossary-name -n
         if (options.glossaryId || options.glossaryName) {
-          verboseMessage(`Exporting glossary "${options.glossaryId ? options.glossaryId : options.glossaryName}"...`);
+          verboseMessage(
+            `Exporting glossary "${options.glossaryId ? options.glossaryId : options.glossaryName}"...`
+          );
           const outcome = await exportGlossarySchemaToFile(
             options.glossaryId,
             options.glossaryName,
@@ -150,9 +160,9 @@ export default function setup() {
             options.file,
             options.metadata,
             options.modifiedProperties,
-            {includeInternal: options.internal},
-            objectType,
-          )
+            { includeInternal: options.internal },
+            objectType
+          );
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
@@ -161,8 +171,8 @@ export default function setup() {
           const outcome = await exportGlossarySchemasToFiles(
             options.metadata,
             options.modifiedProperties,
-            {includeInternal: options.internal},
-            objectType,
+            { includeInternal: options.internal },
+            objectType
           );
           if (!outcome) process.exitCode = 1;
         }

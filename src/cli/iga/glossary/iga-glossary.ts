@@ -14,9 +14,7 @@ export default function setup() {
     DeleteCmd().name('delete').description('Delete glossaries.')
   );
 
-  program.addCommand(
-    ListCmd().name('list').description('List glossaries.')
-  );
+  program.addCommand(ListCmd().name('list').description('List glossaries.'));
 
   program.addCommand(
     ExportCmd().name('export').description('Export glossaries.')

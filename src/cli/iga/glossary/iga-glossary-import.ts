@@ -1,4 +1,5 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
+import { GlossaryObjectType } from '@rockcarver/frodo-lib/types/api/cloud/iga/IgaGlossaryApi';
 import { Option } from 'commander';
 
 import { getTokens } from '../../../ops/AuthenticateOps';
@@ -10,8 +11,6 @@ import {
 } from '../../../ops/cloud/iga/IgaGlossaryOps';
 import { printMessage, verboseMessage } from '../../../utils/Console.js';
 import { FrodoCommand } from '../../FrodoCommand';
-import { GlossaryObjectType } from '@rockcarver/frodo-lib/types/api/cloud/iga/IgaGlossaryApi';
-import { object } from 'zod';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
@@ -36,8 +35,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --glossary-id <glossary-id>',
-        'glossary id. If specified, -a and -A are ignored.'
-      )
+        'glossary id. If specified, -n, -a, and -A cannot be used.'
+      ).conflicts(['glossaryName', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
@@ -49,14 +48,14 @@ export default function setup() {
     .addOption(
       new Option(
         '-a, --all',
-        'Import all glossaries from single file. Ignored with -i.'
-      )
+        'Import all glossaries from single file. Cannot be used with -i, -n, or -A.'
+      ).conflicts(['glossaryId', 'glossaryName', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all glossaries from separate files (*.glossary.json) in the current directory. Ignored with -i or -a.'
-      )
+        'Import all glossaries from separate files (*.glossary.json) in the current directory. Cannot be used with -i, -n, or -a.'
+      ).conflicts(['glossaryId', 'glossaryName', 'all'])
     )
     .addOption(
       new Option(
@@ -111,7 +110,7 @@ export default function setup() {
           true,
           deploymentTypes
         );
-        if (!getTokensIsSuccessful) process.exit(1)
+        if (!getTokensIsSuccessful) process.exit(1);
         if (!state.getIsIGA()) {
           printMessage(
             'Command not supported for non-IGA cloud tenants',
@@ -122,7 +121,7 @@ export default function setup() {
 
         const objectType = options.glossaryType
           ? glossaryTypeMap[options.glossaryType]
-          : undefined;
+          : null;
         if (options.glossaryType && !objectType) {
           printMessage('Please provide a valid Object Type', 'error');
           process.exitCode = 1;
@@ -131,14 +130,16 @@ export default function setup() {
 
         // import by id
         if (isImportById || isImportByName) {
-          verboseMessage(`Importing glossary "${options.glossaryId ? options.glossaryId : options.glossaryName}"...`);
+          verboseMessage(
+            `Importing glossary "${options.glossaryId ? options.glossaryId : options.glossaryName}"...`
+          );
           const outcome = await importGlossarySchemaFromFile(
             options.glossaryId,
             options.glossaryName,
             objectType,
             options.file,
             {
-              includeInternal: options.internal
+              includeInternal: options.internal,
             }
           );
           if (!outcome) process.exitCode = 1;
@@ -148,9 +149,13 @@ export default function setup() {
           verboseMessage(
             `Importing all glossaries from a single file (${options.file})...`
           );
-          const outcome = await importGlossarySchemasFromFile(options.file, objectType, {
-            includeInternal: options.internal
-          });
+          const outcome = await importGlossarySchemasFromFile(
+            options.file,
+            objectType,
+            {
+              includeInternal: options.internal,
+            }
+          );
           if (!outcome) process.exitCode = 1;
         }
         // --all-separate -A
@@ -159,16 +164,15 @@ export default function setup() {
             'Importing all glossaries from separate files (*.glossary.json) in current directory...'
           );
           const outcome = await importGlossarySchemasFromFiles(objectType, {
-            includeInternal: options.internal
+            includeInternal: options.internal,
           });
           if (!outcome) process.exitCode = 1;
-        }
-        else if (isImportFirst) {
+        } else if (isImportFirst) {
           verboseMessage(
             `Importing first glossary from file "${options.file}"...`
           );
           const outcome = await importFirstGlossaryFromFile(options.file, {
-            includeInternal: options.internal
+            includeInternal: options.internal,
           });
           if (!outcome) process.exitCode = 1;
         }

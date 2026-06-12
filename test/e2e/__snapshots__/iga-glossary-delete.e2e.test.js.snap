@@ -14,30 +14,21 @@ exports[`frodo iga glossary delete "frodo iga glossary delete -at role": should 
 "
 `;
 
-exports[`frodo iga glossary delete "frodo iga glossary delete -i c735842a-f695-493a-addc-8500d3babc57": should delete the glossary with id "c735842a-f695-493a-addc-8500d3babc57" 1`] = `
-"CLI: NAME undefined
-"
-`;
+exports[`frodo iga glossary delete "frodo iga glossary delete -i c735842a-f695-493a-addc-8500d3babc57": should delete the glossary with id "c735842a-f695-493a-addc-8500d3babc57" 1`] = `""`;
 
 exports[`frodo iga glossary delete "frodo iga glossary delete -i c735842a-f695-493a-addc-8500d3babc57": should delete the glossary with id "c735842a-f695-493a-addc-8500d3babc57" 2`] = `
 "✔ Deleted glossary c735842a-f695-493a-addc-8500d3babc57.
 "
 `;
 
-exports[`frodo iga glossary delete "frodo iga glossary delete -n sensitive -t entitlement": should delete the glossary name sensitive from type entitlement 1`] = `
-"CLI: NAME sensitive
-"
-`;
+exports[`frodo iga glossary delete "frodo iga glossary delete -n sensitive -t entitlement": should delete the glossary name sensitive from type entitlement 1`] = `""`;
 
 exports[`frodo iga glossary delete "frodo iga glossary delete -n sensitive -t entitlement": should delete the glossary name sensitive from type entitlement 2`] = `
 "✔ Deleted glossary sensitive.
 "
 `;
 
-exports[`frodo iga glossary delete "frodo iga glossary delete -n testOrg": should delete the glossary with name testOrg 1`] = `
-"CLI: NAME testOrg
-"
-`;
+exports[`frodo iga glossary delete "frodo iga glossary delete -n testOrg": should delete the glossary with name testOrg 1`] = `""`;
 
 exports[`frodo iga glossary delete "frodo iga glossary delete -n testOrg": should delete the glossary with name testOrg 2`] = `
 "✔ Deleted glossary testOrg.

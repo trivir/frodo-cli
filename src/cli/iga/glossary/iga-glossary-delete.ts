@@ -1,4 +1,5 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
+import { GlossaryObjectType } from '@rockcarver/frodo-lib/types/api/cloud/iga/IgaGlossaryApi';
 import { Option } from 'commander';
 
 import { getTokens } from '../../../ops/AuthenticateOps';
@@ -8,8 +9,6 @@ import {
 } from '../../../ops/cloud/iga/IgaGlossaryOps';
 import { printMessage, verboseMessage } from '../../../utils/Console.js';
 import { FrodoCommand } from '../../FrodoCommand';
-import { GlossaryObjectType } from '@rockcarver/frodo-lib/types/api/cloud/iga/IgaGlossaryApi';
-import { object } from 'zod';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
@@ -32,7 +31,8 @@ export default function setup() {
         '-i, --glossary-id <glossary-id>',
         'glossary id. If specified, -n and -a cannot be used. '
       ).conflicts(['glossaryName', 'all'])
-    ).addOption(
+    )
+    .addOption(
       new Option(
         '-n, --glossary-name <glossary-name>',
         'Specify a glossary name. If specified, -i cannot be used.'
@@ -95,7 +95,6 @@ export default function setup() {
         // delete by id
         if (options.glossaryId || options.glossaryName) {
           verboseMessage('Deleting glossary...');
-          console.log("CLI: NAME", options.glossaryName)
           const outcome = await deleteGlossarySchema(
             options.glossaryId,
             options.glossaryName,

@@ -1,11 +1,11 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
+import { GlossaryObjectType } from '@rockcarver/frodo-lib/types/api/cloud/iga/IgaGlossaryApi';
 import { Option } from 'commander';
 
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { describeGlossary } from '../../../ops/cloud/iga/IgaGlossaryOps';
 import { printMessage, verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
-import { GlossaryObjectType } from '@rockcarver/frodo-lib/types/api/cloud/iga/IgaGlossaryApi';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
@@ -80,14 +80,21 @@ export default function setup() {
       }
       const objectType = options.glossaryType
         ? glossaryTypeMap[options.glossaryType]
-        : undefined;
+        : null;
       if (options.glossaryType && !objectType) {
         printMessage('Please provide a valid Object Type', 'error');
         process.exitCode = 1;
         program.help();
       }
-      verboseMessage(`Describing glossary ${options.glossaryName ? options.glossaryId : options.glossaryName}...`);
-      const outcome = await describeGlossary(options.glossaryId, options.glossaryName, objectType, options.file);
+      verboseMessage(
+        `Describing glossary ${options.glossaryName ? options.glossaryId : options.glossaryName}...`
+      );
+      const outcome = await describeGlossary(
+        options.glossaryId,
+        options.glossaryName,
+        objectType,
+        options.file
+      );
       if (!outcome) process.exitCode = 1;
     });
 
