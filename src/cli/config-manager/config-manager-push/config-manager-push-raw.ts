@@ -3,7 +3,6 @@ import { Option } from 'commander';
 
 import { configManagerImportRaw } from '../../../configManagerOps/FrConfigRawOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
-import { printMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
@@ -25,31 +24,11 @@ export default function setup() {
     .description('Import raw configurations to the tenant.')
     .addOption(
       new Option(
-        '-f, --config-file <file>',
-        'The file path of the service object config file. '
+        '-p, --config-path <path>',
+        'The path of the service object config file. '
       )
     )
-    .addHelpText(
-      'after',
-      'HELP MESSAGE:\n' +
-        'Make sure to create an import config file: raw.json to run this command.\n' +
-        'Example command: frodo config-manager pull raw -f raw.json -D ../testDir frodo-dev\n\n' +
-        `Config file example:\n` +
-        '------------  Example Oauth2 agents import config for oauth2-agents.json file -----------\n' +
-        '[\n' +
-        '  { "path": "/openidm/config/authentication" },\n' +
-        '  {\n' +
-        '    "path": "/am/json/realms/root/realms/alpha/realm-config/webhooks/test-webhook",\n' +
-        '    "overrides": { "url": "${TEST_WEBHOOK_URL}" },\n' +
-        '    "pushApiVersion": {\n' +
-        '      "protocol": "2.0",\n' +
-        '      "resource": "1.0"\n' +
-        '    }\n' +
-        '  },\n' +
-        '  {"path": "/environment/release"}\n' +
-        ']  \n' +
-        '* -------------------------------------------------------------------------------------------- \n'
-    )
+
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -61,26 +40,11 @@ export default function setup() {
       );
 
       if (await getTokens(false, true, deploymentTypes)) {
-        const outcome: boolean = await configManagerImportRaw(
-          options.configFile
-        );
+        const outcome: boolean = await configManagerImportRaw(options.path);
 
         if (!outcome) {
-          printMessage(
-            `Failed to export one or more config files. ${options.verbose ? '' : 'Check --verbose for me details.'}`
-          );
           process.exitCode = 1;
         }
-      }
-
-      // unrecognized combination of options or no options
-      else {
-        printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
-        );
-        program.help();
-        process.exitCode = 1;
       }
     });
 

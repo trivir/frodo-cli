@@ -1,0 +1,30 @@
+{
+  "pagedResultsCookie": null,
+  "remainingPagedResults": -1,
+  "result": [
+    {
+      "_id": "esv-frodo-test-variable-1",
+      "description": "description1",
+      "expressionType": "string",
+      "loaded": true,
+      "valueBase64": "dmFsdWUx"
+    },
+    {
+      "_id": "esv-frodo-test-variable-2",
+      "description": "description2",
+      "expressionType": "int",
+      "loaded": true,
+      "valueBase64": "NDI="
+    },
+    {
+      "_id": "esv-test-variable",
+      "description": "test",
+      "expressionType": "string",
+      "loaded": true,
+      "valueBase64": "dGVzdA=="
+    }
+  ],
+  "resultCount": 3,
+  "totalPagedResults": -1,
+  "totalPagedResultsPolicy": "NONE"
+}
