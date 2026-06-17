@@ -42,6 +42,7 @@ import shell from './cli/shell/shell';
 import theme from './cli/theme/theme';
 import {
   debugMessage,
+  frodoPrompt,
   printError,
   printMessage,
   verboseMessage,
@@ -59,6 +60,7 @@ process.argv = normalizeExpandedHelpArgv(process.argv);
   try {
     // override default library output handlers with our own
     state.setPrintHandler(printMessage);
+    state.setPromptHandler(frodoPrompt);
     state.setErrorHandler(printError);
     state.setDebugHandler(debugMessage);
     state.setVerboseHandler(verboseMessage);
