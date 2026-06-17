@@ -9,6 +9,7 @@ import Color from 'colors';
 import { stderr as logUpdateStderr } from 'log-update';
 import c from 'tinyrainbow';
 import { v4 as uuidv4 } from 'uuid';
+import readlineSync from 'readline-sync';
 
 Color.enable();
 const arcSpinner = {
@@ -613,4 +614,8 @@ export function createObjectTable(object, keyMap = {}) {
   });
   addRows(object, depth, level + 1, table, keyMap);
   return table;
+}
+
+export function frodoPrompt(query: string, masked = false): string {
+  return readlineSync.question(query, masked ? { hideEchoBack: true } : {});
 }
