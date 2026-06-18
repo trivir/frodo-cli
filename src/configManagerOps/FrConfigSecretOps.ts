@@ -1,6 +1,7 @@
-import { frodo } from '@rockcarver/frodo-lib';
+import { frodo, FrodoError } from '@rockcarver/frodo-lib';
 import { SecretSkeleton } from '@rockcarver/frodo-lib/types/api/cloud/SecretsApi';
 import { SecretsExportInterface } from '@rockcarver/frodo-lib/types/ops/cloud/SecretsOps';
+import fs from 'fs';
 
 import {
   createProgressIndicator,
@@ -9,8 +10,14 @@ import {
   updateProgressIndicator,
 } from '../utils/Console';
 
-const { getFilePath, saveJsonToFile } = frodo.utils;
-const { readSecrets, exportSecret } = frodo.cloud.secret;
+const { getFilePath, saveJsonToFile, readToJson, loadEnvFile } = frodo.utils;
+const {
+  readSecrets,
+  exportSecret,
+  createSecret,
+  createVersionOfSecret,
+  readSecret,
+} = frodo.cloud.secret;
 
 /**
  * Export all secrets to individual files in fr-config-manager format
@@ -86,4 +93,124 @@ export async function configManagerExportSecrets(
     printError(error);
   }
   return false;
+}
+
+export function resolvePlaceholder(
+  placeholder: string,
+  envFile: Record<string, string> = {}
+): string {
+  const match = placeholder.match(/^\$\{(BASE64:)?(.+)\}$/);
+  if (!match) {
+    throw new FrodoError(`Invalid placeholder format: ${placeholder}`);
+  }
+  const isBase64 = !!match[1];
+  const name = match[2];
+
+  let value: string;
+  if (name in envFile) {
+    value = envFile[name];
+  } else if (name in process.env) {
+    value = process.env[name];
+  } else {
+    throw new FrodoError(`No value found for ${name}`);
+  }
+  return isBase64 ? value : Buffer.from(value).toString('base64');
+}
+
+export async function configManagerImportSecrets(
+  secretName?: string,
+  value?: string
+): Promise<boolean> {
+  const errors = [];
+  const spinnerId = createProgressIndicator(
+    'indeterminate',
+    0,
+    `Reading secrets...`
+  );
+  let indicatorId: string;
+  try {
+    const secretsDir = getFilePath(`esvs/secrets/`);
+    if (!fs.existsSync(secretsDir)) {
+      stopProgressIndicator(spinnerId, `No secrets found`, 'fail');
+      return true;
+    }
+
+    const fileNames = fs
+      .readdirSync(secretsDir)
+      .filter((name) => name.toLowerCase().endsWith('.json'))
+      .filter((name) => !secretName || name === secretName);
+
+    if (fileNames.length === 0) {
+      stopProgressIndicator(
+        spinnerId,
+        secretName
+          ? `No matching secret found for ${secretName}`
+          : 'No secrets found to import',
+        'fail'
+      );
+      return true;
+    }
+
+    stopProgressIndicator(
+      spinnerId,
+      `Successfully read ${fileNames.length} secrets.`,
+      'success'
+    );
+
+    const envFile = loadEnvFile();
+
+    indicatorId = createProgressIndicator(
+      'determinate',
+      fileNames.length,
+      'Importing secrets'
+    );
+
+    for (const fileName of fileNames) {
+      try {
+        const importData = readToJson(`${secretsDir}/${fileName}`, {overrideValue: value, envFile, base64Encode: false})
+        const secretValue = importData.valueBase64
+        
+        if (!secretValue){
+          throw new FrodoError(
+            `No value provided for secret ${importData._id}`
+          )
+        }
+
+        let exists = true;
+        try {
+          await readSecret(importData._id);
+        } catch {
+          exists = false;
+        }
+
+        if (exists) {
+          await createVersionOfSecret(importData._id, secretValue);
+        } else {
+          await createSecret(
+            importData._id,
+            secretValue,
+            importData.description,
+            importData.encoding,
+            importData.useInPlaceholders
+          );
+        }
+        updateProgressIndicator(
+          indicatorId,
+          `Imported secret ${importData._id}`
+        );
+      } catch (error) {
+        errors.push(error);
+      }
+    }
+    
+    if (errors.length > 0) {
+      throw new FrodoError(`Error importing secrets`, errors);
+    }
+    stopProgressIndicator(indicatorId, `${fileNames.length} secrets imported.`);
+    return true;
+  } catch (error) {
+    stopProgressIndicator(indicatorId, `Error importing secrets`, 'fail');
+    printError(error);
+    return false;
+  }
 }
