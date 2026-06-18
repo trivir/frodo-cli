@@ -5,7 +5,7 @@ import { readFile } from 'fs/promises';
 
 import { printError, verboseMessage } from '../utils/Console';
 
-const { getFilePath, saveJsonToFile } = frodo.utils;
+const { getFilePath, saveJsonToFile, readToJson, loadEnvFile } = frodo.utils;
 const { exportRawConfig, importRawConfig } = frodo.rawConfig;
 
 /**
@@ -43,6 +43,7 @@ export async function configManagerExportRaw(file: string): Promise<boolean> {
 export async function configManagerImportRaw(path?: string): Promise<boolean> {
   try {
     const rawDir = getFilePath('raw/');
+    const envFile = loadEnvFile()
     const files = getJsonFiles(rawDir);
     for (const filePath of files) {
       const rawPath = filePath
@@ -52,7 +53,7 @@ export async function configManagerImportRaw(path?: string): Promise<boolean> {
       if (path && !rawPath.startsWith(path)) {
         continue;
       }
-      const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+      const data = readToJson(filePath, { envFile, base64Encode: false})
       if (data.result && Array.isArray(data.result)) {
         for (const item of data.result) {
           delete item._rev;
