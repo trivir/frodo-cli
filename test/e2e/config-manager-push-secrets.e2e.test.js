@@ -69,7 +69,13 @@ const allDirectory = "test/e2e/exports/fr-config-manager/cloud";
 describe('frodo config-manager push secrets', () => {
     test(`"frodo config-manager push secrets -D ${allDirectory} ": should import the secrets into cloud"`, async () => {
         const CMD = `frodo config-manager push secrets -D ${allDirectory} `;
-        const { stdout } = await exec(CMD, cloudEnv);
+        const { stdout, stderr } = await exec(CMD, {
+            env: {
+                ...cloudEnv.env,
+                ESV_FR_TEST_SECRET: "my-fr-test-secret-value",
+                ESV_TEST_SECRET: "my-test-secret-value"
+            }
+        });
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     });
     test(`"frodo config-manager push secrets -n esv-fr-test-secret -e my-test-value ${allDirectory}": should import the specified secret into cloud`, async () => {

@@ -10,7 +10,7 @@ import {
   updateProgressIndicator,
 } from '../utils/Console';
 
-const { getFilePath, saveJsonToFile } = frodo.utils;
+const { getFilePath, saveJsonToFile, readToJson } = frodo.utils;
 const {
   readSecrets,
   exportSecret,
@@ -166,15 +166,12 @@ export async function configManagerImportSecrets(
       return true;
     }
 
-    const files = fs
+    const fileNames = fs
       .readdirSync(secretsDir)
       .filter((name) => name.toLowerCase().endsWith('.json'))
-      .map((name) =>
-        JSON.parse(fs.readFileSync(`${secretsDir}/${name}`, 'utf8'))
-      )
-      .filter((data) => !secretName || data._id === secretName);
+      .filter((name) => !secretName || name === secretName);
 
-    if (files.length === 0) {
+    if (fileNames.length === 0) {
       stopProgressIndicator(
         spinnerId,
         secretName
@@ -187,7 +184,7 @@ export async function configManagerImportSecrets(
 
     stopProgressIndicator(
       spinnerId,
-      `Successfully read ${files.length} secrets.`,
+      `Successfully read ${fileNames.length} secrets.`,
       'success'
     );
 
@@ -195,21 +192,19 @@ export async function configManagerImportSecrets(
 
     indicatorId = createProgressIndicator(
       'determinate',
-      files.length,
+      fileNames.length,
       'Importing secrets'
     );
 
-    for (const importData of files) {
+    for (const fileName of fileNames) {
       try {
-        let secretValue: string;
-        if (value) {
-          secretValue = value;
-        } else if (importData.valueBase64) {
-          secretValue = resolvePlaceholder(importData.valueBase64, envFile);
-        } else {
+        const importData = readToJson(`${secretsDir}/${fileName}`, {overrideValue: value, envFile, base64Encode: false})
+        const secretValue = importData.valueBase64
+        
+        if (!secretValue){
           throw new FrodoError(
             `No value provided for secret ${importData._id}`
-          );
+          )
         }
 
         let exists = true;
@@ -242,7 +237,7 @@ export async function configManagerImportSecrets(
     if (errors.length > 0) {
       throw new FrodoError(`Error importing secrets`, errors);
     }
-    stopProgressIndicator(indicatorId, `${files.length} secrets imported.`);
+    stopProgressIndicator(indicatorId, `${fileNames.length} secrets imported.`);
     return true;
   } catch (error) {
     stopProgressIndicator(indicatorId, `Error importing secrets`, 'fail');
