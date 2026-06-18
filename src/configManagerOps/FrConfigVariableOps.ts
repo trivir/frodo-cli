@@ -11,7 +11,7 @@ import {
 } from '../utils/Console';
 import { escapePlaceholders, esvToEnv } from '../utils/FrConfig';
 
-const { getFilePath, saveJsonToFile } = frodo.utils;
+const { getFilePath, saveJsonToFile, readToJson  } = frodo.utils;
 const { readVariables, importVariable } = frodo.cloud.variable;
 
 /**
@@ -160,15 +160,14 @@ export async function configManagerImportVariables(
       return true;
     }
 
-    const files = fs
+    const envFile = loadEnvFile();
+
+    const fileNames = fs
       .readdirSync(variablesDir)
       .filter((name) => name.toLowerCase().endsWith('.json'))
-      .map((name) =>
-        JSON.parse(fs.readFileSync(`${variablesDir}/${name}`, 'utf8'))
-      )
-      .filter((data) => !variableName || data._id === variableName);
+      .filter((name) => !variableName || name === `${variableName}.json`);
 
-    if (files.length === 0) {
+    if (fileNames.length === 0) {
       stopProgressIndicator(
         spinnerId,
         variableName
@@ -181,33 +180,21 @@ export async function configManagerImportVariables(
 
     stopProgressIndicator(
       spinnerId,
-      `Successfully read ${files.length} variables.`,
+      `Successfully read ${fileNames.length} variables.`,
       'success'
     );
 
-    const envFile = loadEnvFile();
 
     indicatorId = createProgressIndicator(
       'determinate',
-      files.length,
+      fileNames.length,
       'Importing variables'
     );
 
-    for (const importData of files) {
+    for (const fileName of fileNames) {
       try {
-        if (value) {
-          importData.valueBase64 = Buffer.from(value).toString('base64');
-        } else if (importData.valueBase64) {
-          importData.valueBase64 = resolvePlaceholder(
-            importData.valueBase64,
-            envFile
-          );
-        } else {
-          throw new FrodoError(
-            `No value provided for variable ${importData._id}`
-          );
-        }
-
+        const importData = readToJson(`${variablesDir}/${fileName}`, {overrideValue: value, envFile, base64Encode: true})
+       
         if (!importData.expressionType) {
           importData.expressionType = 'string';
         }
@@ -228,7 +215,7 @@ export async function configManagerImportVariables(
     if (errors.length > 0) {
       throw new FrodoError(`Error importing variables`, errors);
     }
-    stopProgressIndicator(indicatorId, `${files.length} variables imported.`);
+    stopProgressIndicator(indicatorId, `${fileNames.length} variables imported.`);
     return true;
   } catch (error) {
     stopProgressIndicator(indicatorId, `Error importing variables`, 'fail');
