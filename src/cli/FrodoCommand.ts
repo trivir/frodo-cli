@@ -523,6 +523,14 @@ const directoryOption = withHelpGroup(
   RUNTIME_OPTIONS_HEADING
 );
 
+const environmentOption = withHelpGroup(
+  new Option(
+    '-V, --env <value>',
+    'Value to use for the placeholder. Overrides .env files and environment variables'
+  ).default(undefined, 'undefined'),
+  RUNTIME_OPTIONS_HEADING
+);
+
 const insecureOption = withHelpGroup(
   new Option(
     '-k, --insecure',
@@ -623,6 +631,7 @@ const defaultOpts = [
   amsterPrivateKeyFileOption,
   deploymentOption,
   directoryOption,
+  environmentOption,
   insecureOption,
   verboseOption,
   debugOption,
