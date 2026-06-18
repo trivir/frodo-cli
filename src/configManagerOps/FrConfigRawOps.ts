@@ -1,11 +1,12 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
+import fs from 'fs';
 import { readFile } from 'fs/promises';
 
 import { printError, verboseMessage } from '../utils/Console';
 
-const { getFilePath, saveJsonToFile } = frodo.utils;
-const { exportRawConfig } = frodo.rawConfig;
+const { getFilePath, saveJsonToFile, readToJson, loadEnvFile } = frodo.utils;
+const { exportRawConfig, importRawConfig } = frodo.rawConfig;
 
 /**
  * Export every item from the list in the provided json file
@@ -32,4 +33,60 @@ export async function configManagerExportRaw(file: string): Promise<boolean> {
     printError(error);
     return false;
   }
+}
+
+/**
+ * Import all raw configuration exported in fr-config-manager format
+ * @param path optional flag to provide path to service config file
+ * @returns {Promise<boolean>} true if each file was successfully imported
+ */
+export async function configManagerImportRaw(path?: string): Promise<boolean> {
+  try {
+    const rawDir = getFilePath('raw/');
+    const envFile = loadEnvFile()
+    const files = getJsonFiles(rawDir);
+    for (const filePath of files) {
+      const rawPath = filePath
+        .replace(rawDir, '')
+        .replace(/^\//, '')
+        .replace(/\.json$/, '');
+      if (path && !rawPath.startsWith(path)) {
+        continue;
+      }
+      const data = readToJson(filePath, { envFile, base64Encode: false})
+      if (data.result && Array.isArray(data.result)) {
+        for (const item of data.result) {
+          delete item._rev;
+          delete item._type;
+          await importRawConfig({ path: `${rawPath}/${item._id}` }, item);
+        }
+      } else {
+        delete data._rev;
+        delete data._type;
+        await importRawConfig({ path: rawPath }, data);
+      }
+    }
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+/**
+ * Recursively walks a directory tree and returns the full paths of all .json files found.
+ * @param dir root directory to search
+ * @returns full paths of all .json files found
+ */
+function getJsonFiles(dir: string): string[] {
+  const results: string[] = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = `${dir}/${entry.name}`;
+    if (entry.isDirectory()) {
+      results.push(...getJsonFiles(full));
+    } else if (entry.name.endsWith('.json')) {
+      results.push(full);
+    }
+  }
+  return results;
 }
