@@ -10,7 +10,7 @@ import {
   updateProgressIndicator,
 } from '../utils/Console';
 
-const { getFilePath, saveJsonToFile, readToJson } = frodo.utils;
+const { getFilePath, saveJsonToFile, readToJson, loadEnvFile } = frodo.utils;
 const {
   readSecrets,
   exportSecret,
@@ -93,37 +93,6 @@ export async function configManagerExportSecrets(
     printError(error);
   }
   return false;
-}
-
-export function loadEnvFile(): Record<string, string> {
-  const envPath = getFilePath('.env');
-  if (!fs.existsSync(envPath)) {
-    return {};
-  }
-  const out: Record<string, string> = {};
-  const contents = fs.readFileSync(envPath, 'utf8');
-  for (const rawLine of contents.split('\n')) {
-    const line = rawLine.trim();
-    if (!line || line.startsWith('#')) {
-      continue;
-    }
-    const eq = line.indexOf('=');
-    if (eq === -1) {
-      continue;
-    }
-    const key = line.slice(0, eq).trim();
-    let value = line.slice(eq + 1).trim();
-    if (
-      (value.startsWith('"') && value.endsWith('"')) ||
-      (value.startsWith("'") && value.endsWith("'"))
-    ) {
-      value = value.slice(1, -1);
-    }
-    if (key) {
-      out[key] = value;
-    }
-  }
-  return out;
 }
 
 export function resolvePlaceholder(
