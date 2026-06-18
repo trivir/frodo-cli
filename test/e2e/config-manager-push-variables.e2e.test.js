@@ -47,9 +47,9 @@
  */
 
 /*
-// ForgeOps
+// Cloud
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push variables -D test/e2e/exports/fr-config-manager/cloud
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push variables -n esv-email-welcome -e "this is a test" -D test/e2e/exports/fr-config-manager/cloud  
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push variables -n esv-email-welcome -e "this is a third test" -D test/e2e/exports/fr-config-manager/cloud  
 */
 
 import cp from 'child_process';
@@ -67,12 +67,18 @@ const allDirectory = "test/e2e/exports/fr-config-manager/cloud";
 describe('frodo config-manager push variables', () => {
     test(`"frodo config-manager push variables -D ${allDirectory} ": should import variables into cloud"`, async () => {
         const CMD = `frodo config-manager push variables -D ${allDirectory} `;
-        const { stdout, stderr } = await exec(CMD, cloudEnv);
+        const { stdout, stderr } = await exec(CMD, {
+            env: {
+                ...cloudEnv.env,
+                ESV_EMAIL_WELCOME: "value",
+                ESV_CONNECTOR_TIMEOUT_RESET_COUNTER: "15"
+            }
+        });
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
         expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
     });
-    test(`"frodo config-manager push variables -n esv-email-welcome -e "this is a test" -D ${allDirectory} ": should import the specified variable into cloud"`, async () => {
-        const CMD = `frodo config-manager push variables -D ${allDirectory} `;
+    test(`"frodo config-manager push variables -n esv-email-welcome -e "this is a third test" -D ${allDirectory} ": should import the specified variable into cloud"`, async () => {
+        const CMD = `frodo config-manager push variables -n esv-email-welcome -e "this is a third test" -D ${allDirectory} `;
         const { stdout, stderr } = await exec(CMD, cloudEnv);
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
         expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
