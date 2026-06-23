@@ -52,7 +52,7 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 
 // Forgeops
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_REALM=alpha FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager pull services --directory serviceTestDir1 -m forgeops
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_REALM=alpha FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager pull services -D serviceTestDir2 -n SocialIdentityProvider -m forgeops
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_REALM=alpha FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager pull services -D serviceTestDir2 -n SocialIdentityProviders -m forgeops
 
 */
 
@@ -77,9 +77,9 @@ describe('frodo config-manager pulls', () => {
       const CMD = `frodo config-manager pull services -D ${dirName} -m forgeops`;
       await testExport(CMD, { env: {...forgeopsEnv.env, FRODO_REALM: 'alpha' } }, undefined, undefined, dirName, false);
     });
-    // test('"frodo config-manager pull services -n SocialIdentityProvider -D serviceTestDir2 -m forgeops": should export the services with name: SocialIdentityProviders in fr-config-manager style"', async () => {
-    //   const dirName = 'serviceTestDir2';
-    //   const CMD = `frodo config-manager pull services -n SocialIdentityProvider -D ${dirName} -m forgeops`;
-    //   await testExport(CMD, { env: {...forgeopsEnv.env, FRODO_REALM: 'alpha' } }, undefined, undefined, dirName, false);
-    // });
+    test('"frodo config-manager pull services -D serviceTestDir2 -n SocialIdentityProviders -m forgeops": should export the services with name: SocialIdentityProviders in fr-config-manager style"', async () => {
+      const dirName = 'serviceTestDir2';
+      const CMD = `frodo config-manager pull services -D ${dirName} -n SocialIdentityProviders -m forgeops`;
+      await testExport(CMD, { env: {...forgeopsEnv.env, FRODO_REALM: 'alpha' } }, undefined, undefined, dirName, false);
+    });
 });
