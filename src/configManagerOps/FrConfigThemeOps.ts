@@ -6,7 +6,7 @@ import { printError, printMessage } from '../utils/Console';
 import { decodeOrNot } from '../utils/FrConfig';
 
 const { saveJsonToFile, getFilePath } = frodo.utils;
-const { readRealms } = frodo.realm;
+const { readRealms, readRealmByName } = frodo.realm;
 const { readThemes, importThemes } = frodo.theme;
 
 const THEME_HTML_FIELDS = [
@@ -62,9 +62,14 @@ function extractHtmlFields(theme: ThemeSkeleton, themePath: string): void {
   }
 }
 
-export async function configManagerExportThemes(): Promise<boolean> {
+export async function configManagerExportThemes(
+  realm?: string
+): Promise<boolean> {
   try {
-    const realms = await readRealms();
+    const realms =
+      realm && realm !== '__default__realm__'
+        ? [await readRealmByName(realm)]
+        : await readRealms();
     for (const realm of realms) {
       // fr-config-manager doesn't support root themes
       if (realm.name === '/') continue;
@@ -86,9 +91,14 @@ export async function configManagerExportThemes(): Promise<boolean> {
   }
 }
 
-export async function configManagerImportThemes(): Promise<boolean> {
+export async function configManagerImportThemes(
+  realm?: string
+): Promise<boolean> {
   try {
-    const realms = await readRealms();
+    const realms =
+      realm && realm !== '__default__realm__'
+        ? [await readRealmByName(realm)]
+        : await readRealms();
     for (const realm of realms) {
       // fr-config-manager doesn't support root themes
       if (realm.name === '/') continue;

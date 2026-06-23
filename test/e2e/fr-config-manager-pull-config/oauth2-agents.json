@@ -1,8 +1,5 @@
 {
   "alpha": {
-    "2.2_Agent": [
-      {"id": "my-policy-agent"}
-    ],
     "RemoteConsentAgent": [
       {"id": "test"}
     ],
@@ -25,5 +22,9 @@
     ]
   },
   "bravo": {
+    "WebAgent": [
+      {"id": "frodo-test-web-agent"},
+      {"id": "frodo-test-web-agent2"}
+    ]
   }
 }
