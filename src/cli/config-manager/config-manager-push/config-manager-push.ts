@@ -43,6 +43,5 @@ export default function setup() {
   program.addCommand(UiConfig().name('ui-config'));
   program.addCommand(Authentication().name('authentication'));
   program.addCommand(ConnectorDefinitions().name('connector-definitions'));
-  program.addCommand(ServiceObjects().name('service-objects'));
   return program;
 }

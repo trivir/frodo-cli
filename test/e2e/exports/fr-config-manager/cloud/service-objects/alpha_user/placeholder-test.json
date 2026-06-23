@@ -1,0 +1,9 @@
+{
+  "_id": "258b7522-5751-44d5-8efb-a324bb1eedbf",
+  "_rev": "afd74da3-f7ca-423d-8f7d-6e9613f4bf6c-15479",
+  "givenName": "placeholder",
+  "mail": "placeholder@test.com",
+  "password": "${SERVICE_ACCOUNT_TEST_PASSWORD}",
+  "sn": "test",
+  "userName": "placeholder-test"
+}

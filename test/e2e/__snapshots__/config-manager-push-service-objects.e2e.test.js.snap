@@ -1,3 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo config-manager push service-objects "frodo config-manager push service-objects -D test/e2e/exports/fr-config-manager/forgeops -m forgeops": should import the service objects into forgeops" 1`] = `""`;
+exports[`frodo config-manager push service-objects "frodo config-manager push service-objects -D test/e2e/exports/fr-config-manager/cloud": should resolve placeholders from an .env file 1`] = `""`;
+
+exports[`frodo config-manager push service-objects "frodo config-manager push service-objects -D test/e2e/exports/fr-config-manager/forgeops -m forgeops": should resolve placeholders from process.env 1`] = `""`;

@@ -3,7 +3,8 @@ import fs from 'fs';
 
 import { printError } from '../utils/Console';
 
-const { getFilePath, saveJsonToFile } = frodo.utils;
+
+const { getFilePath, saveJsonToFile, loadEnvFile, readToJson } = frodo.utils;
 const { queryManagedObjects, updateManagedObject } = frodo.idm.managed;
 /**
  * Export an IDM configuration object in the fr-config-manager format.
@@ -127,15 +128,17 @@ export async function configManagerImportServiceObjects(): Promise<boolean> {
   try {
     const objectsDir = getFilePath('service-objects/');
     const objectTypes = fs.readdirSync(objectsDir);
+    const envFile = loadEnvFile()
 
     for (const objectType of objectTypes) {
       const objectPath = `${objectsDir}/${objectType}`;
-      const objectFiles = fs.readdirSync(objectPath);
+      const objectFiles = fs
+        .readdirSync(objectPath)
+        .filter((name)=> name.endsWith('.json'))
 
       for (const objectFile of objectFiles) {
         const fullPath = `${objectPath}/${objectFile}`;
-        const readFiles = fs.readFileSync(fullPath, 'utf8');
-        const importData = JSON.parse(readFiles);
+        const importData = readToJson(fullPath, {envFile, base64Encode: false})
         delete importData._rev;
         delete importData._refProperties;
 
