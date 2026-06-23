@@ -18,11 +18,18 @@ export async function configManagerExportOrgPrivilegesRealm(
   realm: string
 ): Promise<boolean> {
   try {
-    const realmPrivileges: IdObjectSkeletonInterface =
-      await config.readConfigEntity(`${realm}OrgPrivileges`);
+    let realmPrivileges: IdObjectSkeletonInterface
+    let realmFileName: string
+    if (realm === '/') {
+      realmPrivileges = await config.readConfigEntity(`privileges`);
+      realmFileName = 'privileges'
+    } else {
+      realmPrivileges = await config.readConfigEntity(`${realm}OrgPrivileges`);
+      realmFileName = `${realm}OrgPrivileges`
+    }
     saveJsonToFile(
       realmPrivileges,
-      getFilePath(`org-privileges/${realm}OrgPrivileges.json`, true),
+      getFilePath(`org-privileges/${realmFileName}.json`, true),
       false,
       true
     );
