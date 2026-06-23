@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`frodo config-manager pulls "frodo config-manager pull journeys -D ConfigJourneytestDir1": should export the journeys in fr-config-manager style" 1`] = `0`;
 
@@ -20094,15 +20094,15 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha
   "_rev": "388671950",
   "description": "Platform Registration Tree",
   "enabled": true,
-  "entryNodeId": "0c091c49-f3af-48fb-ac6f-07fba0499dd6",
-  "identityResource": "managed/alpha_user",
+  "entryNodeId": "0997e6d1-7836-4519-95fa-0b1321d2eee9",
+  "identityResource": "managed/user",
   "innerTreeOnly": false,
   "mustRun": false,
   "noSession": false,
   "nodes": {
-    "0c091c49-f3af-48fb-ac6f-07fba0499dd6": {
+    "0997e6d1-7836-4519-95fa-0b1321d2eee9": {
       "connections": {
-        "outcome": "466f8b54-07fb-4e31-a11d-a6842618cc37",
+        "outcome": "fe18620d-ba32-47a6-acff-2b86d79a2dd1",
       },
       "displayName": "Page Node",
       "nodeType": "PageNode",
@@ -20130,9 +20130,9 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha
       "x": 861,
       "y": 221,
     },
-    "ad5dcbb3-7335-49b7-b3e7-7d850bb88237": {
+    "fe18620d-ba32-47a6-acff-2b86d79a2dd1": {
       "connections": {
-        "CREATED": "97a15eb2-a015-4b6d-81a0-be78c3aa1a3b",
+        "CREATED": "5149f84b-bcb8-458a-8cdc-87f96abb82a5",
         "FAILURE": "e301438c-0bd0-429c-ab0c-66126501069a",
       },
       "displayName": "Create Object",
@@ -20144,12 +20144,12 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha
   },
   "staticNodes": {
     "70e691a5-1e33-4ac3-a356-e7b6d60d92e0": {
-      "x": 1085,
-      "y": 248,
+      "x": 905,
+      "y": 171,
     },
     "e301438c-0bd0-429c-ab0c-66126501069a": {
-      "x": 921,
-      "y": 370,
+      "x": 741,
+      "y": 293,
     },
     "startNode": {
       "x": 50,
@@ -20165,7 +20165,7 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha
 
 exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D ConfigJourneytestDir2": should export the journeys in alpha realm in fr-config-manager style": ConfigJourneytestDir2/realms/alpha/journeys/Registration/nodes/Create Object - ad5dcbb3-7335-49b7-b3e7-7d850bb88237.json 1`] = `
 {
-  "_id": "ad5dcbb3-7335-49b7-b3e7-7d850bb88237",
+  "_id": "fe18620d-ba32-47a6-acff-2b86d79a2dd1",
   "_outcomes": [
     {
       "displayName": "Created",
@@ -20183,13 +20183,13 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha
     "name": "Create Object",
     "version": "1.0",
   },
-  "identityResource": "managed/alpha_user",
+  "identityResource": "managed/user",
 }
 `;
 
 exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D ConfigJourneytestDir2": should export the journeys in alpha realm in fr-config-manager style": ConfigJourneytestDir2/realms/alpha/journeys/Registration/nodes/Email Suspend Node - 466f8b54-07fb-4e31-a11d-a6842618cc37.json 1`] = `
 {
-  "_id": "466f8b54-07fb-4e31-a11d-a6842618cc37",
+  "_id": "5149f84b-bcb8-458a-8cdc-87f96abb82a5",
   "_outcomes": [
     {
       "displayName": "Outcome",
@@ -20235,7 +20235,7 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha
 
 exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D ConfigJourneytestDir2": should export the journeys in alpha realm in fr-config-manager style": ConfigJourneytestDir2/realms/alpha/journeys/Registration/nodes/Page Node - 0c091c49-f3af-48fb-ac6f-07fba0499dd6.json 1`] = `
 {
-  "_id": "0c091c49-f3af-48fb-ac6f-07fba0499dd6",
+  "_id": "0997e6d1-7836-4519-95fa-0b1321d2eee9",
   "_outcomes": [
     {
       "displayName": "Outcome",
@@ -20251,31 +20251,31 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha
   },
   "nodes": [
     {
-      "_id": "7fcaf48e-a754-4959-858b-05b2933b825f",
+      "_id": "90be4f5e-573b-4695-978a-d0cd88464431",
       "displayName": "Platform Username",
       "nodeType": "ValidatedUsernameNode",
       "nodeVersion": "1.0",
     },
     {
-      "_id": "d3ce2036-1523-4ce8-b1a2-895a2a036667",
+      "_id": "84a4c586-1dcc-4620-8232-8269dc0b108f",
       "displayName": "Attribute Collector",
       "nodeType": "AttributeCollectorNode",
       "nodeVersion": "1.0",
     },
     {
-      "_id": "3d8709a1-f09f-4d1f-8094-2850e472c1db",
+      "_id": "d83b7cef-ac0f-4a8c-80fe-ed29b616ec2d",
       "displayName": "Platform Password",
       "nodeType": "ValidatedPasswordNode",
       "nodeVersion": "1.0",
     },
     {
-      "_id": "120c69d3-90b4-4ad4-b7af-380e8b119340",
+      "_id": "93463dab-b6b1-4f3c-91f4-fd69ff399ba4",
       "displayName": "KBA Definition",
       "nodeType": "KbaCreateNode",
       "nodeVersion": "1.0",
     },
     {
-      "_id": "b4a0e915-c15d-4b83-9c9d-18347d645976",
+      "_id": "c0434fd3-46fd-4a5d-a432-d4cc02463691",
       "displayName": "Accept Terms and Conditions",
       "nodeType": "AcceptTermsAndConditionsNode",
       "nodeVersion": "1.0",
@@ -20287,13 +20287,12 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha
   "pageHeader": {
     "en": "Sign Up",
   },
-  "stage": "{"ValidatedCreatePasswordCallback":[{"id":"3d8709a1-f09f-4d1f-8094-2850e472c1db","confirmPassword":true,"policyDisplayCheckmark":true}]}",
 }
 `;
 
 exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D ConfigJourneytestDir2": should export the journeys in alpha realm in fr-config-manager style": ConfigJourneytestDir2/realms/alpha/journeys/Registration/nodes/Page Node - 0c091c49-f3af-48fb-ac6f-07fba0499dd6/Accept Terms and Conditions - b4a0e915-c15d-4b83-9c9d-18347d645976.json 1`] = `
 {
-  "_id": "b4a0e915-c15d-4b83-9c9d-18347d645976",
+  "_id": "c0434fd3-46fd-4a5d-a432-d4cc02463691",
   "_outcomes": [
     {
       "displayName": "Outcome",
@@ -20312,7 +20311,7 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha
 
 exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D ConfigJourneytestDir2": should export the journeys in alpha realm in fr-config-manager style": ConfigJourneytestDir2/realms/alpha/journeys/Registration/nodes/Page Node - 0c091c49-f3af-48fb-ac6f-07fba0499dd6/Attribute Collector - d3ce2036-1523-4ce8-b1a2-895a2a036667.json 1`] = `
 {
-  "_id": "d3ce2036-1523-4ce8-b1a2-895a2a036667",
+  "_id": "84a4c586-1dcc-4620-8232-8269dc0b108f",
   "_outcomes": [
     {
       "displayName": "Outcome",
@@ -20341,7 +20340,7 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha
 
 exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D ConfigJourneytestDir2": should export the journeys in alpha realm in fr-config-manager style": ConfigJourneytestDir2/realms/alpha/journeys/Registration/nodes/Page Node - 0c091c49-f3af-48fb-ac6f-07fba0499dd6/KBA Definition - 120c69d3-90b4-4ad4-b7af-380e8b119340.json 1`] = `
 {
-  "_id": "120c69d3-90b4-4ad4-b7af-380e8b119340",
+  "_id": "93463dab-b6b1-4f3c-91f4-fd69ff399ba4",
   "_outcomes": [
     {
       "displayName": "Outcome",
@@ -20364,7 +20363,7 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha
 
 exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D ConfigJourneytestDir2": should export the journeys in alpha realm in fr-config-manager style": ConfigJourneytestDir2/realms/alpha/journeys/Registration/nodes/Page Node - 0c091c49-f3af-48fb-ac6f-07fba0499dd6/Platform Password - 3d8709a1-f09f-4d1f-8094-2850e472c1db.json 1`] = `
 {
-  "_id": "3d8709a1-f09f-4d1f-8094-2850e472c1db",
+  "_id": "d83b7cef-ac0f-4a8c-80fe-ed29b616ec2d",
   "_outcomes": [
     {
       "displayName": "Outcome",
@@ -20385,7 +20384,7 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha
 
 exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D ConfigJourneytestDir2": should export the journeys in alpha realm in fr-config-manager style": ConfigJourneytestDir2/realms/alpha/journeys/Registration/nodes/Page Node - 0c091c49-f3af-48fb-ac6f-07fba0499dd6/Platform Username - 7fcaf48e-a754-4959-858b-05b2933b825f.json 1`] = `
 {
-  "_id": "7fcaf48e-a754-4959-858b-05b2933b825f",
+  "_id": "90be4f5e-573b-4695-978a-d0cd88464431",
   "_outcomes": [
     {
       "displayName": "Outcome",
