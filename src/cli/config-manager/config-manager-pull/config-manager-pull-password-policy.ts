@@ -1,5 +1,4 @@
 import { frodo } from '@rockcarver/frodo-lib';
-import { Option } from 'commander';
 
 import { configManagerExportPasswordPolicy } from '../../../configManagerOps/FrConfigPasswordPolicyOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
@@ -23,12 +22,6 @@ export default function setup() {
 
   program
     .description('Export password-policy objects.')
-    .addOption(
-      new Option(
-        '-r, --realm <realm>',
-        'Specifies the realm to export from. Only the entity object from this realm will be exported.'
-      )
-    )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -38,9 +31,6 @@ export default function setup() {
         options,
         command
       );
-      if (options.realm) {
-        realm = options.realm;
-      }
       if (await getTokens(false, true, deploymentTypes)) {
         verboseMessage('Exporting config entity password-policy');
         const outcome = await configManagerExportPasswordPolicy(realm);
