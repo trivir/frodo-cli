@@ -2,7 +2,7 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 import fs from 'fs';
 
-import { printMessage } from '../../utils/Console';
+import { printError, printMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
@@ -65,72 +65,77 @@ export default function setup() {
     .action(async (host, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(host, user, password, options, command);
 
-      await loadConnectionProfileByHost(host);
+      try {
+        await loadConnectionProfileByHost(host);
 
-      const interactive = !options.skipPrompts;
-      const updated = {
-        serviceAccount: false,
-        userAccount: false,
-        logApi: false,
-      };
+        const interactive = !options.skipPrompts;
+        const updated = {
+          serviceAccount: false,
+          userAccount: false,
+          logApi: false,
+        };
 
-      if (!interactive) {
-        if (
-          options.saId &&
-          state.getDeploymentType() === CLOUD_DEPLOYMENT_TYPE_KEY &&
-          isServiceAccountsFeatureAvailable
-        ) {
-          if (options.saJwkFile) {
-            const jwk = JSON.parse(
-              fs.readFileSync(options.saJwkFile).toString()
-            );
-            state.setServiceAccountId(options.saId);
-            state.setServiceAccountJwk(jwk);
-            updated.serviceAccount = true;
-          } else {
-            printMessage('JWK required to add service account.', 'error');
+        if (!interactive) {
+          if (
+            options.saId &&
+            state.getDeploymentType() === CLOUD_DEPLOYMENT_TYPE_KEY &&
+            isServiceAccountsFeatureAvailable
+          ) {
+            if (options.saJwkFile) {
+              const jwk = JSON.parse(
+                fs.readFileSync(options.saJwkFile).toString()
+              );
+              state.setServiceAccountId(options.saId);
+              state.setServiceAccountJwk(jwk);
+              updated.serviceAccount = true;
+            } else {
+              printMessage('JWK required to add service account.', 'error');
+            }
           }
+
+          if (options.username) {
+            if (options.password) {
+              state.setUsername(options.username);
+              state.setPassword(options.password);
+              updated.userAccount = true;
+            } else {
+              printMessage('Password required to add a user account.', 'error');
+            }
+          }
+
+          if (
+            options.logApiKey &&
+            state.getDeploymentType() === CLOUD_DEPLOYMENT_TYPE_KEY
+          ) {
+            if (options.logApiSecret) {
+              state.setLogApiKey(options.logApiKey);
+              state.setLogApiSecret(options.logApiSecret);
+              updated.logApi = true;
+            } else {
+              printMessage('Secret required to add a log API key.', 'error');
+            }
+          }
+        } else {
+          updated.serviceAccount = !!(
+            options.serviceAccount && isServiceAccountsFeatureAvailable
+          );
+          updated.userAccount = !!options.userAccount;
+          updated.logApi = !!options.logApi;
         }
 
-        if (options.username) {
-          if (options.password) {
-            state.setUsername(options.username);
-            state.setPassword(options.password);
-            updated.userAccount = true;
-          } else {
-            printMessage('Password required to add a user account.', 'error');
-          }
+        if (updated.serviceAccount || updated.userAccount || updated.logApi) {
+          await updateConnectionProfile(
+            updated.serviceAccount,
+            updated.userAccount,
+            updated.logApi,
+            interactive
+          );
+        } else {
+          printMessage('No changes made to connection profile.', 'warn');
         }
-
-        if (
-          options.logApiKey &&
-          state.getDeploymentType() === CLOUD_DEPLOYMENT_TYPE_KEY
-        ) {
-          if (options.logApiSecret) {
-            state.setLogApiKey(options.logApiKey);
-            state.setLogApiSecret(options.logApiSecret);
-            updated.logApi = true;
-          } else {
-            printMessage('Secret required to add a log API key.', 'error');
-          }
-        }
-      } else {
-        updated.serviceAccount = !!(
-          options.serviceAccount && isServiceAccountsFeatureAvailable
-        );
-        updated.userAccount = !!options.userAccount;
-        updated.logApi = !!options.logApi;
-      }
-
-      if (updated.serviceAccount || updated.userAccount || updated.logApi) {
-        await updateConnectionProfile(
-          updated.serviceAccount,
-          updated.userAccount,
-          updated.logApi,
-          interactive
-        );
-      } else {
-        printMessage('No changes made to connection profile.', 'warn');
+      } catch (error) {
+        printError(error);
+        process.exitCode = 1;
       }
     });
 

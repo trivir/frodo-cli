@@ -2,15 +2,15 @@ import cp from 'child_process';
 import { promisify } from 'util';
 import { getEnv, removeAnsiEscapeCodes, testif } from './utils/TestUtils';
 import { connection as c } from './utils/TestConfig';
-import { writeFileSync, rmSync } from 'fs';
+import { readFileSync, rmSync, writeFileSync } from 'fs';
 
 const exec = promisify(cp.exec);
 
+const connectionsFile = './test/e2e/env/Connections.json';
 const connectionsUpdateFile = './test/e2e/env/ConnectionsUpdate.json';
 
 process.env['FRODO_MOCK'] = '1';
-process.env['FRODO_CONNECTION_PROFILES_PATH'] =
-  './test/e2e/env/ConnectionsUpdate.json';
+process.env['FRODO_CONNECTION_PROFILES_PATH'] = connectionsUpdateFile;
 process.env['FRODO_MASTER_KEY_PATH'] =
   './test/e2e/env/masterkey.key';
 const env = getEnv(c);
@@ -19,7 +19,10 @@ const jwkFile = 'test/fs_tmp/conn-update-jwk.json';
 
 beforeAll(() => {
   writeFileSync(jwkFile, c.saJwk);
-  writeFileSync(connectionsUpdateFile, '{}');
+});
+
+beforeEach(() => {
+  writeFileSync(connectionsUpdateFile, readFileSync(connectionsFile));
 });
 
 afterAll(() => {
