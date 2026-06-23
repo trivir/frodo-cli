@@ -1,5 +1,4 @@
 import { frodo } from '@rockcarver/frodo-lib';
-import { Option } from 'commander';
 
 import {
   configManagerExportOrgPrivileges,
@@ -46,7 +45,7 @@ export default function setup() {
           );
           outcome =
             (await configManagerExportOrgPrivileges()) &&
-            (await configManagerExportOrgPrivilegesRealm(realm));
+            (await configManagerExportOrgPrivilegesRealm(realm)); 
         } else {
           printMessage(
             'Exporting oranization privileges config from all realms'
