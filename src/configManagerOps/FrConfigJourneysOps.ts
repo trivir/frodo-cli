@@ -3,6 +3,7 @@ import {
   MultiTreeExportInterface,
   TreeExportOptions,
 } from '@rockcarver/frodo-lib/types/ops/JourneyOps';
+import fs from 'fs';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError, verboseMessage } from '../utils/Console';
@@ -11,11 +12,19 @@ import { existScript, realmList, safeFileName } from '../utils/FrConfig';
 const { saveJsonToFile, getFilePath } = frodo.utils;
 const { exportJourneys } = frodo.authn.journey;
 
+/**
+ * Export journeys in fr-config-manager format
+ * @param {string} name exports only the specifically named journey
+ * @param {string} realm exports journeys only in specified realm
+ * @param {boolean} pullDependency include journey dependencies
+ * @param {boolean} clean if true clear existing configuration, otherwise false
+ * @returns {Promise<boolean>} A promise that resolves to true if successful, false otherwise
+ */
 export async function configManagerExportJourneys(
-  name?,
-  realm?,
-  pullDependency?
-  // TO DO: clean?
+  name?: string,
+  realm?: string,
+  pullDependency?: boolean,
+  clean?: boolean
 ): Promise<boolean> {
   const options: TreeExportOptions = {
     deps: pullDependency,
@@ -28,7 +37,14 @@ export async function configManagerExportJourneys(
       const exportData = (await exportJourneys(
         options
       )) as MultiTreeExportInterface;
-      processJourneys(exportData.trees, realm, name, pullDependency, 'realms');
+      await processJourneys(
+        exportData.trees,
+        realm,
+        name,
+        pullDependency,
+        'realms',
+        clean
+      );
     } else {
       for (const realm of await realmList()) {
         if (
@@ -47,7 +63,8 @@ export async function configManagerExportJourneys(
           realm,
           name,
           pullDependency,
-          'realms'
+          'realms',
+          clean
         );
       }
     }
@@ -71,7 +88,8 @@ async function processJourneys(
   realm,
   name,
   pullDependencies,
-  exportDir
+  exportDir,
+  clean
 ) {
   const fileDir = `${exportDir}/${realm}/journeys`;
   try {
@@ -82,6 +100,14 @@ async function processJourneys(
       const journeyDir = `${fileDir}/${journey.tree._id}`;
       const nodeDir = `${journeyDir}/nodes`;
       const scriptJsonDir = `realms/${realm}/scripts/scripts-config`;
+
+      if (clean) {
+        fs.rmSync(nodeDir, { recursive: true, force: true });
+      }
+
+      if (!fs.existsSync(nodeDir)) {
+        fs.mkdirSync(nodeDir, { recursive: true });
+      }
 
       for (const [nodeId, node] of Object.entries(journey.nodes) as [
         string,
@@ -168,10 +194,10 @@ async function processJourneys(
             realm,
             node.tree,
             pullDependencies,
-            exportDir
+            exportDir,
+            clean
           );
         }
-
         saveJsonToFile(
           node,
           getFilePath(`${nodeFileNameRoot}.json`, true),
@@ -180,7 +206,6 @@ async function processJourneys(
           true
         );
       }
-
       const fileName = `${journeyDir}/${journey.tree._id}.json`;
       saveJsonToFile(
         journey.tree,

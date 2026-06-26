@@ -18,6 +18,7 @@ Arguments:
   password                 Password.
 
 Options:
+  -c, --clean              Clear existing configuration before pull.
   -d, --pull-dependencies  Pull dependencies.
   -n, --name <name>        Journey name, It only export the journey with the
                            name.
