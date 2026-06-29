@@ -21,10 +21,10 @@ export default function setup() {
       )
     )
 
-    .addOption(new Option('--username [username]').hideHelp())
-    .addOption(new Option('--password [password]').hideHelp())
-    .addOption(new Option('--log-api-key [key]').hideHelp())
-    .addOption(new Option('--log-api-secret [secret]').hideHelp())
+    .addOption(new Option('--username <username>').hideHelp())
+    .addOption(new Option('--password <password>').hideHelp())
+    .addOption(new Option('--log-api-key <key>').hideHelp())
+    .addOption(new Option('--log-api-secret <secret>').hideHelp())
 
     .addOption(
       new Option(
@@ -52,12 +52,12 @@ export default function setup() {
       ) {
         printMessage(`
           Skip-Prompts Mode Options (required when --skip-prompts is set):
-            --sa-id [id]                    Service account ID
-            --sa-jwk-file [file]            Path to service account JWK file
-            --username [username]           User account username
-            --password [password]           User account password
-            --log-api-key [key]             Log API Key
-            --log-api-secret [secret]       Log API secret
+            --sa-id <id>                    Service account ID
+            --sa-jwk-file <file>            Path to service account JWK file
+            --username <username>           User account username
+            --password <password>           User account password
+            --log-api-key <key>             Log API Key
+            --log-api-secret <secret>       Log API secret
       `);
       }
     })
