@@ -16,7 +16,7 @@ import { configManagerExportKbaConfig } from './FrConfigKbaOps';
 import { configManagerExportLocales } from './FrConfigLocalesOps';
 import { configManagerExportManagedObjects } from './FrConfigManagedObjectsOps';
 import { configManagerExportConfigAgents } from './FrConfigOauth2AgentOps';
-import { configManagerExportOrgPrivilegesAllRealms } from './FrConfigOrgPrivilegesOps';
+import { configManagerExportOrgPrivileges } from './FrConfigOrgPrivilegesOps';
 import { configManagerExportPasswordPolicy } from './FrConfigPasswordPolicyOps';
 import { configManagerExportRemoteServers } from './FrConfigRemoteServersOps';
 import { configManagerExportSaml } from './FrConfigSamlOps';
@@ -80,7 +80,7 @@ export async function configManagerExportAllWithConfigFolder(
       );
     }
 
-    await configManagerExportOrgPrivilegesAllRealms();
+    await configManagerExportOrgPrivileges();
     await configManagerExportPasswordPolicy();
     await configManagerExportRemoteServers();
     await configManagerExportSchedules();
@@ -138,7 +138,7 @@ export async function configManagerExportAllStatic(): Promise<boolean> {
     await configManagerExportKbaConfig();
     await configManagerExportLocales();
     await configManagerExportManagedObjects();
-    await configManagerExportOrgPrivilegesAllRealms();
+    await configManagerExportOrgPrivileges();
     await configManagerExportPasswordPolicy();
 
     await configManagerExportRemoteServers();

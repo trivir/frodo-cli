@@ -10,13 +10,16 @@ import {
 import { escapePlaceholders, esvToEnv } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
-const { readVariables } = frodo.cloud.variable;
+const { readVariables, readVariable } = frodo.cloud.variable;
 
 /**
- * Export all variables to seperate files
+ * Export all variables to seperate files. If named param include, export only the one named variable.
+ * @param {string} name variable name
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
-export async function configManagerExportVariables(): Promise<boolean> {
+export async function configManagerExportVariables(
+  name?: string
+): Promise<boolean> {
   let spinnerId: string;
   let indicatorId: string;
   let variableList: VariableSkeleton[] = [];
@@ -26,10 +29,12 @@ export async function configManagerExportVariables(): Promise<boolean> {
       0,
       `Retrieving variables...`
     );
-    variableList = await readVariables();
+    variableList = name ? [await readVariable(name)] : await readVariables();
     stopProgressIndicator(
       spinnerId,
-      `Successfully retrieved ${variableList.length} variables`,
+      name
+        ? `Successfully retrieved variable "${name}"`
+        : `Successfully retrieved ${variableList.length} variables`,
       'success'
     );
   } catch (error) {
@@ -38,7 +43,7 @@ export async function configManagerExportVariables(): Promise<boolean> {
     return false;
   }
   try {
-    const indicatorId = createProgressIndicator(
+    indicatorId = createProgressIndicator(
       'determinate',
       variableList.length,
       'Exporting variables'
@@ -62,7 +67,9 @@ export async function configManagerExportVariables(): Promise<boolean> {
     }
     stopProgressIndicator(
       indicatorId,
-      `${variableList.length} variables exported`
+      name
+        ? `Variable "${name}" exported`
+        : `${variableList.length} variables exported`
     );
     return true;
   } catch (error) {

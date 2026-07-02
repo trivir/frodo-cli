@@ -43,13 +43,17 @@ function processMappings(mapping, targetDir, name) {
 /**
  * Export all mappings to separate files in fr-config-manager format
  * @param {MappingExportOptions} options export options
+ * @param {string} name connector mapping name
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
-export async function configManagerExportMappings(): Promise<boolean> {
+export async function configManagerExportMappings(
+  name?: string
+): Promise<boolean> {
   try {
     const exportData = await readConfigEntity('sync');
     const fileDir = `sync/mappings`;
     for (const mapping of Object.values(exportData.mappings)) {
+      if (name && mapping.name != name) continue;
       processMappings(mapping, `${fileDir}/${mapping.name}`, mapping.name);
     }
     return true;

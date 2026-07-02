@@ -55,3 +55,25 @@ exports[`frodo config-manager pull csp "frodo config-manager pull csp -D configM
   },
 }
 `;
+
+exports[`frodo config-manager pull csp "frodo config-manager pull csp -D configManagerExportCspDir2 -n report-only": should export the content security policy named report-only in fr-config manager style. 1`] = `0`;
+
+exports[`frodo config-manager pull csp "frodo config-manager pull csp -D configManagerExportCspDir2 -n report-only": should export the content security policy named report-only in fr-config manager style. 2`] = `""`;
+
+exports[`frodo config-manager pull csp "frodo config-manager pull csp -D configManagerExportCspDir2 -n report-only": should export the content security policy named report-only in fr-config manager style.: configManagerExportCspDir2/csp/csp.json 1`] = `
+{
+  "report-only": {
+    "active": true,
+    "directives": {
+      "frame-ancestors": [
+        "'self'",
+      ],
+      "script-src": [
+        "'self'",
+        "'unsafe-eval'",
+        "'unsafe-inline'",
+      ],
+    },
+  },
+}
+`;

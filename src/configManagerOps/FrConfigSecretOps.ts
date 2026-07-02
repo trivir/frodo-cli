@@ -10,15 +10,8 @@ import {
 } from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
-const { readSecrets, exportSecret } = frodo.cloud.secret;
+const { readSecrets, exportSecret, readSecret } = frodo.cloud.secret;
 
-/**
- * Export all secrets to individual files in fr-config-manager format
- * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
- * @param {boolean} includeActiveValues include active value of secret (default: false)
- * @param {string} target Host URL of target environment to encrypt secret value for
- * @returns {Promise<boolean>} true if successful, false otherwise
- */
 type FrConfigSecret = SecretSkeleton & {
   valueBase64: string;
 };
@@ -31,8 +24,25 @@ async function getFrConfigSecrets(): Promise<FrConfigSecret[]> {
   }));
 }
 
+async function getFrConfigSecret(name: string): Promise<FrConfigSecret> {
+  const secret = await readSecret(name);
+  return {
+    ...secret,
+    valueBase64: `\${${secret._id.toUpperCase().replace(/-/g, '_')}}`,
+  };
+}
+
+/**
+ * Export all secrets or single secret by id/name to individual files in fr-config-manager format
+ * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} includeActiveValues include active value of secret (default: false)
+ * @param {string} target Host URL of target environment to encrypt secret value for
+ * @param {string} name secret name
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
 export async function configManagerExportSecrets(
-  target?: string
+  target?: string,
+  name?: string
 ): Promise<boolean> {
   let secrets: FrConfigSecret[] = [];
   const spinnerId = createProgressIndicator(
@@ -41,11 +51,17 @@ export async function configManagerExportSecrets(
     `Reading secrets...`
   );
   try {
-    secrets = await getFrConfigSecrets();
-    secrets.sort((a, b) => a._id.localeCompare(b._id));
+    secrets = name
+      ? [await getFrConfigSecret(name)]
+      : await getFrConfigSecrets();
+    if (!name) {
+      secrets.sort((a, b) => a._id.localeCompare(b._id));
+    }
     stopProgressIndicator(
       spinnerId,
-      `Successfully read ${secrets.length} secrets.`,
+      name
+        ? `Successfully read secret "${name}".`
+        : `Successfully read ${secrets.length} secrets.`,
       'success'
     );
     const indicatorId = createProgressIndicator(
@@ -75,7 +91,12 @@ export async function configManagerExportSecrets(
       );
       updateProgressIndicator(indicatorId, `Exported secret ${secret._id}`);
     }
-    stopProgressIndicator(indicatorId, `${secrets.length} secrets exported.`);
+    stopProgressIndicator(
+      indicatorId,
+      name
+        ? `Secret "${name}" exported.`
+        : `${secrets.length} secrets exported.`
+    );
     return true;
   } catch (error) {
     stopProgressIndicator(

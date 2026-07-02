@@ -29,6 +29,7 @@ export default function setup() {
         'The CSP_OVERRIDES json file. ex: "/home/trivir/Documents/csp-overrides.json", or "csp-overrides.json"'
       )
     )
+    .addOption(new Option('-n, --name <name>', 'Export by name of csp.'))
     .addHelpText(
       'after',
       'There is an option to overrides the export file.\n' +
@@ -57,8 +58,14 @@ export default function setup() {
       );
 
       if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Exporting content security policy');
-        const outcome = await configManagerExportCsp(options.file);
+        let outcome: boolean;
+        if (options.name) {
+          verboseMessage(`Exporting ${options.name}`);
+          outcome = await configManagerExportCsp(options.file, options.name);
+        } else {
+          verboseMessage('Exporting content security policy');
+          outcome = await configManagerExportCsp(options.file);
+        }
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options

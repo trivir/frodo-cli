@@ -73,4 +73,10 @@ describe('frodo config-manager pull csp', () => {
         const CMD = `frodo config-manager pull csp --directory ${dirName} -f ${configFile}`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
     });
+    test('"frodo config-manager pull csp -D configManagerExportCspDir2 -n report-only": should export the content security policy named report-only in fr-config manager style.', async () => {
+        const dirName = 'configManagerExportCspDir2';
+        const cspName = 'report-only';
+        const CMD = `frodo config-manager pull csp -D ${dirName} -n ${cspName}`;
+        await testExport(CMD, env, undefined, undefined, dirName, false);
+    });
 });
