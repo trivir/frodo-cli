@@ -2,23 +2,13 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import * as s from '../../help/SampleData';
-import { getTokens } from '../../ops/AuthenticateOps';
-import {
-  addExistingServiceAccount,
-  addNewServiceAccount,
-} from '../../ops/ConnectionProfileOps.js';
-import { provisionCreds } from '../../ops/LogOps';
+import fs from 'fs';
 import { printError, printMessage, verboseMessage } from '../../utils/Console';
-import {
-  promptForLogApiCredentials,
-  promptForServiceAccountCredentials,
-  promptForUserAccountCredentials,
-} from '../../ops/SaveConnectionOps';
 import { FrodoCommand } from '../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 const { isServiceAccountsFeatureAvailable } = frodo.cloud.serviceAccount;
-const { saveConnectionProfile } = frodo.conn;
+const { saveNewConnectionProfile } = frodo.conn;
 
 export default function setup() {
   const program = new FrodoCommand('frodo conn save', ['realm']);
@@ -162,9 +152,36 @@ export default function setup() {
         return;
       }
 
-      if (options.saId && options.saJwkFile) options.serviceAccount = true;
-      if (options.username && options.password) options.userAccount = true;
-      if (options.logApiKey && options.logApiSecret) options.logApi = true;
+      if (
+        options.saId &&
+        options.saJwkFile &&
+        isServiceAccountsFeatureAvailable &&
+        state.getDeploymentType() === CLOUD_DEPLOYMENT_TYPE_KEY
+      ) {
+        options.serviceAccount = true;
+        state.setServiceAccountId(options.saId);
+        state.setServiceAccountJwk(
+          JSON.parse(fs.readFileSync(options.saJwkFile).toString())
+        );
+      }
+
+      if (options.username && options.password) {
+        options.userAccount = true;
+        state.setUsername(options.username);
+        state.setPassword(options.password);
+      }
+
+      if (
+        options.logApiKey &&
+        options.logApiSecret &&
+        state.getDeploymentType() === CLOUD_DEPLOYMENT_TYPE_KEY
+      ) {
+        options.logApi = true;
+        state.setLogApiKey(options.logApi);
+        state.setLogApiSecret(options.logApiSecret);
+      }
+
+      const interactive = !options.skipPrompts;
 
       if (options.serviceAccount && options.userAccount) {
         printMessage(
@@ -184,11 +201,8 @@ export default function setup() {
         return;
       }
 
-      const interactive = !options.skipPrompts;
-
       try {
         await saveNewConnectionProfile(
-          host,
           options.serviceAccount,
           options.userAccount,
           options.logApi,
