@@ -1,6 +1,8 @@
 
 import { frodo, FrodoError } from '@rockcarver/frodo-lib';
+
 import { TelemetryExporterCategory } from '@rockcarver/frodo-lib/types/api/cloud/TelemetryApi';
+
 import {
   createProgressIndicator,
   printError,
@@ -8,10 +10,10 @@ import {
   updateProgressIndicator,
 } from '../utils/Console';
 
+
 import fs from 'fs'
 
-
-const { saveJsonToFile, getFilePath } = frodo.utils;
+const { saveJsonToFile, getFilePath, readJsonFile } = frodo.utils;
 const { exportTelemetry, importTelemetry } = frodo.cloud.telemetry;
 
 /**
@@ -131,9 +133,12 @@ export async function configManagerImportTelemetry(
     );
     return true;
   } catch (error) {
-    stopProgressIndicator(indicatorId, `Error importing telemetry exporters`, 'fail');
+    stopProgressIndicator(
+      indicatorId,
+      `Error importing telemetry exporters`,
+      'fail'
+    );
     printError(error);
     return false;
   }
 }
-
