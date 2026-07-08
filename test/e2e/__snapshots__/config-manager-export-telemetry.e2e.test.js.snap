@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -c otlp -N datadog": should export a single named exporter 1`] = `0`;
+
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -c otlp -N datadog": should export a single named exporter 2`] = `""`;
+
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -c otlp -N datadog": should export a single named exporter: telemetryTestDir3/telemetry/otlp/datadog.json 1`] = `
+{
+  "encoding": "PROTO",
+  "endpoint": "https://otlp.us5.datadoghq.com/v1/logs",
+  "headers": {
+    "dd-api-key": "\${TELEMETRY_HEADER_OTLP_DATADOG_DD_API_KEY}",
+  },
+  "id": "datadog",
+  "sources": [
+    "am-activity",
+    "idm-activity",
+  ],
+  "type": "HTTP",
+}
+`;
+
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -c otlp": should export only otlp exporters 1`] = `0`;
+
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -c otlp": should export only otlp exporters 2`] = `""`;
+
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -c otlp": should export only otlp exporters: telemetryTestDir2/telemetry/otlp/datadog.json 1`] = `
+{
+  "encoding": "PROTO",
+  "endpoint": "https://otlp.us5.datadoghq.com/v1/logs",
+  "headers": {
+    "dd-api-key": "\${TELEMETRY_HEADER_OTLP_DATADOG_DD_API_KEY}",
+  },
+  "id": "datadog",
+  "sources": [
+    "am-activity",
+    "idm-activity",
+  ],
+  "type": "HTTP",
+}
+`;
+
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry": should export the secrets in fr-config-manager style" 1`] = `0`;
+
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry": should export the secrets in fr-config-manager style" 2`] = `""`;
+
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry": should export the secrets in fr-config-manager style": telemetryTestDir/telemetry/otlp/datadog.json 1`] = `
+{
+  "encoding": "PROTO",
+  "endpoint": "https://otlp.us5.datadoghq.com/v1/logs",
+  "headers": {
+    "dd-api-key": "\${TELEMETRY_HEADER_OTLP_DATADOG_DD_API_KEY}",
+  },
+  "id": "datadog",
+  "sources": [
+    "am-activity",
+    "idm-activity",
+  ],
+  "type": "HTTP",
+}
+`;
