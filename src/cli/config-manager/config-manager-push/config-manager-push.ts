@@ -26,6 +26,7 @@ import SecretMappings from './config-manager-push-secret-mappings';
 import ServiceObjects from './config-manager-push-service-objects';
 import TermsAndConditions from './config-manager-push-terms-and-conditions';
 import Themes from './config-manager-push-themes';
+import Telemetry  from './config-manager-push-telemetry';
 import UiConfig from './config-manager-push-ui-config';
 import Variables from './config-manager-push-variables';
 
@@ -50,6 +51,7 @@ export default function setup() {
   program.addCommand(Audit().name('audit'));
   program.addCommand(CookieDomains().name('cookie-domains'));
   program.addCommand(ServiceObjects().name('service-objects'));
+  program.addCommand(Telemetry().name('telemery'))
   program.addCommand(UiConfig().name('ui-config'));
   program.addCommand(Authentication().name('authentication'));
   program.addCommand(ConnectorDefinitions().name('connector-definitions'));
