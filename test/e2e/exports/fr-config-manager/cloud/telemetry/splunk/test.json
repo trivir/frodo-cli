@@ -1,0 +1,9 @@
+{
+"endpoint": "https://example.com:8088'",
+"id": "frodo-test-splunk-1",
+"index": "test",
+"sources": [
+"am-access"
+],
+"token": "test"
+}
