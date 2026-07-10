@@ -48,6 +48,7 @@
 
 /*
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull secrets -D secretTestDir
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull secrets -D secretTestDir2 -n esv-test-secret
 
 */
 
@@ -64,6 +65,12 @@ describe('frodo config-manager pulls', () => {
   test('"frodo config-manager pull secrets -D secretTestDir": should export the secrets in fr-config-manager style"', async () => {
     const dirName = 'secretTestDir';
     const CMD = `frodo config-manager pull secrets -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
+  test('"frodo config-manager pull secrets -D secretTestDir2 -n esv-test-secret": should export the secret named: esv-test-secret in fr-config-manager style"', async () => {
+    const dirName = 'secretTestDir2';
+    const secretName = 'esv-test-secret';
+    const CMD = `frodo config-manager pull secrets -D ${dirName} -n ${secretName}`;
     await testExport(CMD, env, undefined, undefined, dirName, false);
   });
 });

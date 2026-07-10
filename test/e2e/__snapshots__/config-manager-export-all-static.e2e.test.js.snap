@@ -2,7 +2,25 @@
 
 exports[`frodo config-manager pulls "frodo config-manager pull all-static -D allStaticDir1": should export the all-static in fr-config-manager style" 1`] = `0`;
 
-exports[`frodo config-manager pulls "frodo config-manager pull all-static -D allStaticDir1": should export the all-static in fr-config-manager style" 2`] = `""`;
+exports[`frodo config-manager pulls "frodo config-manager pull all-static -D allStaticDir1": should export the all-static in fr-config-manager style" 2`] = `
+"REALM {
+  _id: 'L2FscGhh',
+  _rev: '362268810',
+  parentPath: '/',
+  active: true,
+  name: 'alpha',
+  aliases: []
+}
+REALM {
+  _id: 'L2JyYXZv',
+  _rev: '480875699',
+  parentPath: '/',
+  active: true,
+  name: 'bravo',
+  aliases: []
+}
+"
+`;
 
 exports[`frodo config-manager pulls "frodo config-manager pull all-static -D allStaticDir1": should export the all-static in fr-config-manager style": allStaticDir1/access-config/access.json 1`] = `
 {

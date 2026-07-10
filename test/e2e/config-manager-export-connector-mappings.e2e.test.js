@@ -49,6 +49,7 @@
 
 /*
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull connector-mappings -D configManagerExportConnectorMappingsDir0
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull connector-mappings -D configManagerExportConnectorMappingsDir1 -n test_mapping
 */
 import { getEnv, testExport } from './utils/TestUtils';
 import { connection as c } from './utils/TestConfig';
@@ -62,6 +63,12 @@ describe('frodo config-manager pull connector mappings', () => {
     test('"frodo config-manager pull connector-mappings -D configManagerExportConnectorMappingsDir0": should export all connector mappings in fr-config manager style.', async () => {
         const dirName = 'configManagerExportConnectorMappingsDir0';
         const CMD = `frodo config-manager pull connector-mappings -D ${dirName}`;
+        await testExport(CMD, env, undefined, undefined, dirName, false);
+    });
+    test('"frodo config-manager pull connector-mappings -D configManagerExportConnectorMappingsDir1 -n test_mapping": should export connector mapping named test_mapping in fr-config manager style.', async () => {
+        const dirName = 'configManagerExportConnectorMappingsDir1';
+        const mappingName= "test_mapping";
+        const CMD = `frodo config-manager pull connector-mappings -D ${dirName} -n ${mappingName}`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
     });
 });

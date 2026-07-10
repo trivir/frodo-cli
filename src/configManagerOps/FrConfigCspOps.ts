@@ -10,17 +10,33 @@ const { getFilePath, saveJsonToFile } = frodo.utils;
 
 /**
  * Export the content security policy in fr-config manager format
+ * @param {string} file file for csp override
+ * @param {string} name csp name
  * @returns True if file was successfully saved
  */
 export async function configManagerExportCsp(
-  file: string = null
+  file: string = null,
+  name?: string
 ): Promise<boolean> {
   try {
-    const cspEnforced: ContentSecurityPolicy =
-      await env.readEnforcedContentSecurityPolicy();
-    const cspReport: ContentSecurityPolicy =
-      await env.readReportOnlyContentSecurityPolicy();
-    const csp = { enforced: cspEnforced, 'report-only': cspReport };
+    let csp: Record<string, ContentSecurityPolicy>;
+    if (name && name !== 'enforced' && name !== 'report-only') {
+      throw new Error(`Unknown CSP: ${name}`);
+    }
+    if (name === 'enforced') {
+      csp = {
+        enforced: await env.readEnforcedContentSecurityPolicy(),
+      };
+    } else if (name === 'report-only') {
+      csp = {
+        'report-only': await env.readReportOnlyContentSecurityPolicy(),
+      };
+    } else {
+      csp = {
+        enforced: await env.readEnforcedContentSecurityPolicy(),
+        'report-only': await env.readReportOnlyContentSecurityPolicy(),
+      };
+    }
 
     if (file) {
       const configFileData = JSON.parse(

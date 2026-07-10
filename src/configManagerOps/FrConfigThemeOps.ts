@@ -7,7 +7,7 @@ import { decodeOrNot } from '../utils/FrConfig';
 
 const { saveJsonToFile, getFilePath } = frodo.utils;
 const { readRealms } = frodo.realm;
-const { readThemes, importThemes } = frodo.theme;
+const { readThemes, readThemeByName, importThemes } = frodo.theme;
 
 const THEME_HTML_FIELDS = [
   { name: 'accountFooter', encoded: false },
@@ -18,6 +18,11 @@ const THEME_HTML_FIELDS = [
   { name: 'accountFooterScriptTag', encoded: true },
 ];
 
+/**
+ * Extract the html fields from the theme config
+ * @param theme theme
+ * @param themePath theme path
+ */
 function extractHtmlFields(theme: ThemeSkeleton, themePath: string): void {
   for (const field of THEME_HTML_FIELDS) {
     if (!theme[field.name]) continue;
@@ -62,14 +67,21 @@ function extractHtmlFields(theme: ThemeSkeleton, themePath: string): void {
   }
 }
 
-export async function configManagerExportThemes(): Promise<boolean> {
+/**
+ * Exports all themes or via name / id
+ * @param {string} name theme name
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
+export async function configManagerExportThemes(
+  name?: string
+): Promise<boolean> {
   try {
     const realms = await readRealms();
     for (const realm of realms) {
       // fr-config-manager doesn't support root themes
       if (realm.name === '/') continue;
       state.setRealm(realm.name);
-      const themes = await readThemes();
+      const themes = name ? [await readThemeByName(name)] : await readThemes();
       const exportDir = getFilePath(`realms/${realm.name}/themes`, true);
       fs.mkdirSync(exportDir, { recursive: true });
       for (const theme of themes) {
