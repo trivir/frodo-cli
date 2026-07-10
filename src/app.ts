@@ -47,6 +47,10 @@ import {
 } from './utils/Console';
 import { getVersions } from './utils/Version';
 
+import dotenv from "dotenv";
+
+dotenv.config();
+
 const { initConnectionProfiles } = frodo.conn;
 const { initTokenCache } = frodo.cache;
 
