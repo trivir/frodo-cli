@@ -4,6 +4,7 @@ import { configManagerExportSecrets } from '../../../configManagerOps/FrConfigSe
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
+import { Option } from 'commander';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
   frodo.utils.constants;
@@ -22,6 +23,12 @@ export default function setup() {
 
   program
     .description('Export secrets.')
+    .addOption(
+      new Option(
+        '-a, --active-only',
+        'Exports only active secrets, otherwise exports all secrets and their versions.'
+      )
+    )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -34,7 +41,7 @@ export default function setup() {
 
       if (await getTokens(false, true, deploymentTypes)) {
         verboseMessage('Exporting secrets');
-        const outcome = await configManagerExportSecrets(options);
+        const outcome = await configManagerExportSecrets(options.activeOnly);
         if (!outcome) process.exitCode = 1;
       }
       // unrecognized combination of options or no options
