@@ -13,18 +13,17 @@ import { esvToEnv } from '../utils/FrConfig';
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { readSecrets, exportSecret, readVersionsOfSecret } = frodo.cloud.secret;
 
-
 type FrConfigSecret = SecretSkeleton & {
   valueBase64: string;
 };
 
 /**
  * Export all secrets to individual files in fr-config-manager format
- * @param {boolean} activeOnly true to export only active secrets, false will export all active or not 
+ * @param {boolean} activeOnly true to export only active secrets, false will export all active or not
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function configManagerExportSecrets(
-  activeOnly?: boolean,
+  activeOnly?: boolean
 ): Promise<boolean> {
   let secrets: FrConfigSecret[] = [];
   const spinnerId = createProgressIndicator(
@@ -33,8 +32,7 @@ export async function configManagerExportSecrets(
     `Reading secrets...`
   );
   try {
-    console.log('active', activeOnly)
-    secrets = await readSecrets() as FrConfigSecret[];
+    secrets = (await readSecrets()) as FrConfigSecret[];
     secrets.sort((a, b) => a._id.localeCompare(b._id));
     stopProgressIndicator(
       spinnerId,
@@ -53,32 +51,27 @@ export async function configManagerExportSecrets(
       );
       const [secretKey] = Object.keys(exportData.secret);
       const fullSecret = exportData.secret[secretKey] as FrConfigSecret;
-      let cleanSecret: any;
+      const cleanSecret: Partial<SecretSkeleton> = {
+        _id: fullSecret._id,
+        description: fullSecret.description,
+        encoding: fullSecret.encoding,
+        useInPlaceholders: fullSecret.useInPlaceholders,
+      };
       if (activeOnly) {
-        cleanSecret = {
-          _id: fullSecret._id,
-          description: fullSecret.description,
-          encoding: fullSecret.encoding,
-          useInPlaceholders: fullSecret.useInPlaceholders,
-          valueBase64: `\${${esvToEnv(secret._id)}}`,
-        };
+        cleanSecret.valueBase64 = `\${${esvToEnv(secret._id)}}`;
       } else {
         const versionsResponse = await readVersionsOfSecret(fullSecret._id);
-        const versions = versionsResponse.filter(version => version.status !== "DESTROYED");
-        const versionInfo = versions.map(version => ({
+        const versions = versionsResponse.filter(
+          (version) => version.status !== 'DESTROYED'
+        );
+        const versionInfo = versions.map((version) => ({
           version: version.version,
           status: version.status,
           valueBase64: `\${${esvToEnv(`${secret._id}_${version.version}`)}}`,
         }));
-        cleanSecret = {
-          _id: fullSecret._id,
-          description: fullSecret.description,
-          encoding: fullSecret.encoding,
-          useInPlaceholders: fullSecret.useInPlaceholders,
-          versions: versionInfo,
-        };
+        cleanSecret.versions = versionInfo;
       }
-      
+
       saveJsonToFile(
         cleanSecret,
         getFilePath(`esvs/secrets/${secret._id}.json`, true),
