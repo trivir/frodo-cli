@@ -1,10 +1,10 @@
 import { frodo } from '@rockcarver/frodo-lib';
+import { Option } from 'commander';
 
 import { configManagerExportSecrets } from '../../../configManagerOps/FrConfigSecretOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
-import { Option } from 'commander';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
   frodo.utils.constants;
