@@ -49,8 +49,8 @@
 /*
 // ForgeOps
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push authz-policies -D test/e2e/exports/fr-config-manager/forgeops -m forgeops
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push authz-policies -n test_id -r alpha -D test/e2e/exports/fr-config-manager/forgeops -m forgeops
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push authz-policies -r alpha -D test/e2e/exports/fr-config-manager/forgeops -m forgeops
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push authz-policies -n test_id -D test/e2e/exports/fr-config-manager/forgeops -m forgeops
+
 */
 
 import cp from 'child_process';
@@ -71,18 +71,8 @@ describe('frodo config-manager push authz-policies', () => {
         const { stdout } = await exec(CMD, forgeopsEnv);
         expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
     });
-    test(`"frodo config-manager push authz-policies -r alpha -D ${allDirectory} -m forgeops": should import a specific authz policy by name into forgeops"`, async () => {
-        const CMD = `frodo config-manager push authz-policies -r alpha -D ${allDirectory} -m forgeops`;
-        const { stdout } = await exec(CMD, {
-            env: {
-                ...forgeopsEnv.env,
-                FRODO_REALM: 'alpha'
-            }
-        });
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    });
-    test(`"frodo config-manager push authz-policies -n test_id -r alpha-D ${allDirectory} -m forgeops": should import a specific auth policy by name into forgeops"`, async () => {
-        const CMD = `frodo config-manager push authz-policies -n test_id -r alpha -D ${allDirectory} -m forgeops`;
+    test(`"frodo config-manager push authz-policies -n test_id-D ${allDirectory} -m forgeops": should import a specific auth policy by name into forgeops"`, async () => {
+        const CMD = `frodo config-manager push authz-policies -n test_id -D ${allDirectory} -m forgeops`;
         const { stdout } = await exec(CMD, {
             env: {
                 ...forgeopsEnv.env,

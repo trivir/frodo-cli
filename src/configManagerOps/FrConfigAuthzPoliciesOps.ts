@@ -10,7 +10,7 @@ import { printError, verboseMessage } from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { policySet, policy, resourceType } = frodo.authz;
-const { importPolicySet, importPolicySets } = frodo.authz.policySet;
+const { importPolicySets } = frodo.authz.policySet;
 const { readRealms } = frodo.realm;
 
 type ByName = { policySetName: string };
@@ -23,11 +23,13 @@ type BySkeleton = { ps: PolicySetSkeleton };
  */
 async function exportPolicy(p: PolicySkeleton) {
   verboseMessage(`    Exporting the policy "${p.name}".`);
+  // root realm's actual name is '/', stored on disk as 'root'
+  const realmDir = state.getRealm() === '/' ? 'root' : state.getRealm();
   // save to that policy-set's policy folder
   saveJsonToFile(
     p,
     getFilePath(
-      `realms/${state.getRealm()}/authorization/policy-sets/${p.applicationName}/policies/${p.name}.json`,
+      `realms/${realmDir}/authorization/policy-sets/${p.applicationName}/policies/${p.name}.json`,
       true
     ),
     false,
@@ -48,7 +50,7 @@ async function exportPolicy(p: PolicySkeleton) {
   saveJsonToFile(
     r,
     getFilePath(
-      `realms/${state.getRealm()}/authorization/resource-types/${r.name}.json`,
+      `realms/${realmDir}/authorization/resource-types/${r.name}.json`,
       true
     ),
     false,
@@ -104,6 +106,8 @@ export async function configManagerExportAuthzPolicySet(
     }
     verboseMessage(`  Exporting the policy set "${ps.name}"`);
 
+    const realmDir = state.getRealm() === '/' ? 'root' : state.getRealm();
+
     // these two fields aren't automatically provided in PolicySetSkeleton
     ps._id = ps.name;
     ps._rev = ps.lastModifiedDate.toString();
@@ -112,7 +116,7 @@ export async function configManagerExportAuthzPolicySet(
     saveJsonToFile(
       ps,
       getFilePath(
-        `realms/${state.getRealm()}/authorization/policy-sets/${ps.name}/${ps.name}.json`,
+        `realms/${realmDir}/authorization/policy-sets/${ps.name}/${ps.name}.json`,
         true
       ),
       false,
@@ -122,7 +126,7 @@ export async function configManagerExportAuthzPolicySet(
 
     // create policies directory if it doesnt exist even if there are no policies, thats what fr-config-manager does
     getFilePath(
-      `realms/${state.getRealm()}/authorization/policy-sets/${ps.name}/policies/`,
+      `realms/${realmDir}/authorization/policy-sets/${ps.name}/policies/`,
       true
     );
 
@@ -222,7 +226,9 @@ export async function configManagerExportAuthzPoliciesAll(): Promise<boolean> {
       // set realm of state because policySet.readPolicySets() uses state to check realm
       state.setRealm(realm.name);
       if (!(await configManagerExportAuthzPolicySetsRealm())) {
-        return false;
+        if (state.getRealm() === '/') {
+          continue;
+        }
       }
     }
     return true;
@@ -234,30 +240,24 @@ export async function configManagerExportAuthzPoliciesAll(): Promise<boolean> {
 
 /**
  * Import authz policy sets
- * @param realm optional realm to import to
  * @param name optional name to import
  * @returns {Promise<boolean>} true if all imports were successful
  */
-export async function configManagerImportAuthzPolicy(
-  realm: string,
+export async function configManagerImportAuthzPolicies(
   name: string
 ): Promise<boolean> {
   try {
-    let realmsToProcess: string[];
-    if (realm) {
-      realmsToProcess = [realm];
-    } else {
-      const realmsDir = getFilePath('realms/');
-      realmsToProcess = fs
-        .readdirSync(realmsDir, { withFileTypes: true })
-        .filter((entry) => entry.isDirectory())
-        .map((entry) => entry.name);
-    }
+    const realmsDir = getFilePath('realms/');
+    const realmDirs = fs
+      .readdirSync(realmsDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name);
 
-    for (const realmName of realmsToProcess) {
-      state.setRealm(realmName);
+    for (const realmDir of realmDirs) {
+      // 'root' on disk maps to the actual root realm name '/'
+      state.setRealm(realmDir === 'root' ? '/' : realmDir);
 
-      const realmAuthzDir = `realms/${realmName}/authorization`;
+      const realmAuthzDir = `realms/${realmDir}/authorization`;
 
       const policySetsDir = getFilePath(`${realmAuthzDir}/policy-sets`);
       const psDirs = name
@@ -311,11 +311,7 @@ export async function configManagerImportAuthzPolicy(
         policyset,
       };
 
-      if (name) {
-        await importPolicySet(name, importData);
-      } else {
-        await importPolicySets(importData);
-      }
+      await importPolicySets(importData);
     }
 
     return true;
