@@ -1,12 +1,16 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import { AgentSkeleton } from '@rockcarver/frodo-lib/types/api/AgentApi';
 import { readFile } from 'fs/promises';
+import fs from 'fs'
+import path from 'path'
+import dotenv from 'dotenv'
 
 import { printError, verboseMessage } from '../utils/Console';
 
-const { getFilePath, saveJsonToFile } = frodo.utils;
+
+const { getFilePath, saveJsonToFile, escapePlaceholders, readJsonFile } = frodo.utils;
 const { readRealms } = frodo.realm;
-const { readAgents, readAgent } = frodo.agent;
+const { readAgents, readAgent, importAgent } = frodo.agent;
 
 type idAndOverrids = { id: string; overrides: object };
 
@@ -96,8 +100,9 @@ export async function configManagerExportAgent(
     }
     verboseMessage(`  Exporting ${a._id} agent`);
 
+    const escaped = escapePlaceholders(a);
     saveJsonToFile(
-      overrides ? { ...a, ...overrides } : a,
+      overrides ? { ...escaped, ...overrides } : escaped,
       getFilePath(
         `realms/${state.getRealm()}/realm-config/agents/${a._type._id}/${a._id}.json`,
         true
@@ -192,6 +197,53 @@ export async function configManagerExportAgentsAll(): Promise<boolean> {
       state.setRealm(realm.name);
       if (!(await configManagerExportAgentsRealm())) {
         return false;
+      }
+    }
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+export async function configManagerImportAgents(
+  agentName?: string,
+  overrideValue?:string
+): Promise<boolean> {
+  try {
+
+    const envPath = getFilePath('.env')
+    const envFileValues = fs.existsSync(envPath)
+      ? dotenv.parse(fs.readFileSync(envPath))
+      : {};
+
+    for (const realm of fs.readdirSync(getFilePath('realms'))) {
+
+      state.setRealm(realm);
+      const agentDir = getFilePath(`realms/${realm}/realm-config/agents`);
+      
+      if (!fs.existsSync(agentDir)) continue;
+      
+      for (const agentType of fs.readdirSync(agentDir)) {
+        const agentTypeDir = path.join(agentDir, agentType);
+        
+        for (const file of fs
+          .readdirSync(agentTypeDir)
+          .filter((f) => path.extname(f) === '.json')) {
+        
+          if (agentName && path.basename(file, '.json') !== agentName) continue;
+        
+          const agent = readJsonFile(path.join(agentTypeDir, file), {
+            overrideValue,
+            envFileValues,
+          });
+        
+          delete agent._rev;
+        
+          verboseMessage(`  Importing ${agent._id} agent`);
+        
+          await importAgent(agent._id, { agent: { [agent._id]: agent } }, false);
+        }
       }
     }
     return true;
