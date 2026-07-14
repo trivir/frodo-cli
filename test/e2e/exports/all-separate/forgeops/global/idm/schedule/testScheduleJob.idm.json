@@ -1,0 +1,23 @@
+{
+  "idm": {
+    "schedule/testScheduleJob": {
+      "_id": "schedule/testScheduleJob",
+      "concurrentExecution": false,
+      "enabled": false,
+      "endTime": null,
+      "invokeContext": {
+        "action": "reconcile",
+        "mapping": "managedUser_managedGroup"
+      },
+      "invokeLogLevel": "info",
+      "invokeService": "sync",
+      "isCron": true,
+      "misfirePolicy": "fireAndProceed",
+      "persisted": true,
+      "schedule": "0 0 * * * ?",
+      "startTime": null,
+      "timeZone": null,
+      "type": "cron"
+    }
+  }
+}

@@ -244,10 +244,7 @@ export async function getConfig(
     (exportConfig as FullGlobalExportInterface).idm.managed = managed;
   }
   // Handle saml files
-  if (
-    samlFiles.length > 0 &&
-    !(exportConfig as FullRealmExportInterface).saml
-  ) {
+  if (!(exportConfig as FullRealmExportInterface).saml) {
     (exportConfig as FullRealmExportInterface).saml = {
       hosted: {},
       remote: {},
@@ -283,10 +280,7 @@ export async function getConfig(
   (exportConfig as FullGlobalExportInterface).server =
     readServersFromFiles(serverFiles);
   // Handle extracted scripts
-  if (
-    scriptFiles.length > 0 &&
-    !(exportConfig as FullRealmExportInterface).script
-  ) {
+  if (!(exportConfig as FullRealmExportInterface).script) {
     (exportConfig as FullRealmExportInterface).script = {};
   }
   for (const f of scriptFiles) {
