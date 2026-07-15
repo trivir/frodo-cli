@@ -1,4 +1,8 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
+import {
+  AmServiceSkeleton,
+  FullService,
+} from '@rockcarver/frodo-lib/types/api/ServiceApi';
 import fs from 'fs';
 
 import { printError } from '../utils/Console';
@@ -6,6 +10,7 @@ import { realmList } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { getFullServices, importService } = frodo.service;
+const { DEFAULT_REALM_KEY } = frodo.utils.constants;
 
 /**
  * Export all services to separate files in fr-config-manager format
@@ -16,7 +21,7 @@ export async function configManagerExportServices(
   name?
 ): Promise<boolean> {
   try {
-    if (realm && realm !== '__default__realm__') {
+    if (realm && realm !== DEFAULT_REALM_KEY) {
       const services = await getFullServices(false);
       processServices(services, realm, name);
     } else {
@@ -63,86 +68,96 @@ async function processServices(services, realm, name) {
   }
 }
 
-async function processImportServices(realm: string, dir?: string) {
-  if (
-    realm === '/' &&
-    state.getDeploymentType() ===
-      frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY
-  ) {
+async function processImportServices(realmDir: string): Promise<FullService[]> {
+  const dir = getFilePath(`realms/${realmDir}/services/`);
+  if (!fs.existsSync(dir)) {
     return [];
   }
 
-  const getDir = dir ?? getFilePath(`realms/${realm}/services/`);
+  const results: FullService[] = [];
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
 
-  if (!fs.existsSync(getDir)) {
-    return [];
-  }
-
-  const entries = fs.readdirSync(getDir, { withFileTypes: true });
-
-  const results = [];
   for (const entry of entries) {
-    const fullPath = `${getDir}/${entry.name}`;
-
-    if (entry.name.endsWith('.json')) {
-      const serviceData = JSON.parse(fs.readFileSync(fullPath, 'utf8'));
-      const baseName = entry.name.replace('.json', '');
-      const subDirPath = `${getDir}${baseName}`;
-
-      let descendants = [];
-      if (fs.existsSync(subDirPath) && fs.statSync(subDirPath).isDirectory()) {
-        const subEntries = fs.readdirSync(subDirPath, { withFileTypes: true });
-        descendants = subEntries
-          .filter((e) => e.name.endsWith('.json'))
-          .map((e) => ({
-            id: e.name.replace('.json', ''),
-            data: JSON.parse(
-              fs.readFileSync(`${subDirPath}/${e.name}`, 'utf8')
-            ),
-          }));
-      }
-      results.push({ filePath: fullPath, serviceData, descendants });
+    if (!entry.name.endsWith('.json')) {
+      continue;
     }
+
+    const service = JSON.parse(
+      fs.readFileSync(`${dir}${entry.name}`, 'utf8')
+    ) as FullService;
+
+    const baseName = entry.name.replace('.json', '');
+    const subDirPath = `${dir}${baseName}`;
+
+    const descendants: AmServiceSkeleton[] = [];
+    if (fs.existsSync(subDirPath) && fs.statSync(subDirPath).isDirectory()) {
+      for (const subEntry of fs.readdirSync(subDirPath, {
+        withFileTypes: true,
+      })) {
+        if (!subEntry.name.endsWith('.json')) {
+          continue;
+        }
+        descendants.push(
+          JSON.parse(
+            fs.readFileSync(`${subDirPath}/${subEntry.name}`, 'utf8')
+          ) as AmServiceSkeleton
+        );
+      }
+    }
+    service.nextDescendents = descendants;
+
+    results.push(service);
   }
 
   return results;
 }
-
-export async function configManagerImportServices(realm?): Promise<boolean> {
+/**
+ * Import all services from disk in fr-config-manager format. Iterates every realm
+ * directory under realms/, mapping the 'root' directory to the '/' realm, and skips
+ * the root realm on cloud deployments.
+ * @param {string} name optional service name to import, imports all services if omitted
+ * @returns {Promise<boolean>} true if all imports were successful, false otherwise
+ */
+export async function configManagerImportServices(
+  name?: string
+): Promise<boolean> {
   try {
-    let realms: string[] = [];
-
-    if (realm === '__default__realm__' || !realm) {
-      const realmsDir = getFilePath('realms/');
-      if (fs.existsSync(realmsDir)) {
-        realms = fs
-          .readdirSync(realmsDir, { withFileTypes: true })
-          .filter((e) => e.isDirectory())
-          .map((e) => e.name);
-      }
-    } else {
-      realms = [realm];
+    const realmsDir = getFilePath('realms/');
+    if (!fs.existsSync(realmsDir)) {
+      return true;
     }
 
-    for (const realmName of realms) {
-      state.setRealm(`/${realmName}`);
+    const realmDirs = fs
+      .readdirSync(realmsDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name);
 
-      const services = await processImportServices(realmName);
+    for (const realmDir of realmDirs) {
+      state.setRealm(realmDir === 'root' ? '/' : realmDir);
 
-      for (const { serviceData, descendants = [] } of services) {
-        const serviceId = serviceData._type._id;
+      if (
+        state.getRealm() === '/' &&
+        state.getDeploymentType() ===
+          frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY
+      ) {
+        continue;
+      }
 
-        if (descendants.length > 0) {
-          serviceData.nextDescendents = descendants.map(({ data }) => data);
+      for (const service of await processImportServices(realmDir)) {
+        const serviceId = service._type._id;
+        if (name && name !== serviceId) {
+          continue;
         }
 
-        const importData = { service: { [serviceId]: serviceData } };
-
-        await importService(serviceId, importData, {
-          clean: false,
-          global: false,
-          realm: true,
-        });
+        await importService(
+          serviceId,
+          { service: { [serviceId]: service } },
+          {
+            clean: false,
+            global: false,
+            realm: true,
+          }
+        );
       }
     }
     return true;

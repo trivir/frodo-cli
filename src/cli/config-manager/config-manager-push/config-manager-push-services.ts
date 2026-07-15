@@ -3,7 +3,7 @@ import { Option } from 'commander';
 
 import { configManagerImportServices } from '../../../configManagerOps/FrConfigServiceOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
-import { printMessage, verboseMessage } from '../../../utils/Console';
+import { verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
@@ -22,17 +22,9 @@ export default function setup() {
   );
 
   program
-    .description('Import authentication services.')
     .addOption(
-      new Option(
-        '-n, --name <name>',
-        'Service name, It only Import the specified service name.'
-      )
+      new Option('-n, --name <name>', 'Name of the service to import.')
     )
-    .addOption(
-      new Option('-r, --realm <realm>', 'Specific realm to import services to')
-    )
-
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -43,24 +35,15 @@ export default function setup() {
         command
       );
 
-      if (options.realm) {
-        realm = options.realm;
-      }
-
-      if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Importing services');
-        const outcome = await configManagerImportServices(realm);
-        if (!outcome) process.exitCode = 1;
-      }
-      // unrecognized combination of options or no options
-      else {
-        printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
-        );
-        program.help();
-        process.exitCode = 1;
-      }
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      verboseMessage('Importing email provider configuration.');
+      const outcome = await configManagerImportServices(options.name);
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;
