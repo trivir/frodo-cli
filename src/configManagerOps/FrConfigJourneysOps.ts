@@ -6,11 +6,12 @@ import {
 import fs from 'fs';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
-import { printError, printMessage, verboseMessage } from '../utils/Console';
+import { printError, printMessage } from '../utils/Console';
 import { existScript, realmList, safeFileName } from '../utils/FrConfig';
 
 const { saveJsonToFile, getFilePath } = frodo.utils;
 const { exportJourneys, importJourneys } = frodo.authn.journey;
+const { DEFAULT_REALM_KEY } = frodo.utils.constants;
 
 export async function configManagerExportJourneys(
   name?,
@@ -25,32 +26,28 @@ export async function configManagerExportJourneys(
   };
 
   try {
-    if (realm && realm !== '/') {
+    const realmNames =
+      realm && realm !== DEFAULT_REALM_KEY ? [realm] : await realmList();
+
+    for (const realmName of realmNames) {
+      if (
+        realmName === '/ ' &&
+        state.getDeploymentType() ===
+          frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY
+      )
+        continue;
+
+      state.setRealm(realmName);
+
       const exportData = (await exportJourneys(
         options
       )) as MultiTreeExportInterface;
-      processJourneys(exportData.trees, realm, name, pullDependency, 'realms');
-    } else {
-      for (const realm of await realmList()) {
-        if (
-          realm === '/' &&
-          state.getDeploymentType() ===
-            frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY
-        )
-          continue;
-
-        state.setRealm(realm);
-        const exportData = (await exportJourneys(
-          options
-        )) as MultiTreeExportInterface;
-        await processJourneys(
-          exportData.trees,
-          realm,
-          name,
-          pullDependency,
-          'realms'
-        );
-      }
+      await processJourneysExport(
+        exportData.trees,
+        name,
+        pullDependency,
+        'realms'
+      );
     }
     return true;
   } catch (error) {
@@ -67,22 +64,23 @@ function fileNameFromNode(displayName, id) {
   return safeFileName(`${displayName} - ${id}`);
 }
 
-async function processJourneys(
+async function processJourneysExport(
   journeys,
-  realm,
   name,
   pullDependencies,
   exportDir
 ) {
-  const fileDir = `${exportDir}/${realm}/journeys`;
+  const realmDir = state.getRealm() === '/' ? 'root' : state.getRealm();
+  const fileDir = `${exportDir}/${realmDir}/journeys`;
   try {
     for (const [, journey] of Object.entries(journeys) as [string, any]) {
       if (name && !matchJourneyName(journey, name)) {
         continue;
       }
+
       const journeyDir = `${fileDir}/${journey.tree._id}`;
       const nodeDir = `${journeyDir}/nodes`;
-      const scriptJsonDir = `realms/${realm}/scripts/scripts-config`;
+      const scriptJsonDir = `realms/${realmDir}/scripts/scripts-config`;
 
       for (const [nodeId, node] of Object.entries(journey.nodes) as [
         string,
@@ -105,14 +103,14 @@ async function processJourneys(
             if (
               pullDependencies &&
               journeyNodeNeedsScript(subNodeSpec) &&
-              !(await existScript(subNodeSpec.script, realm))
+              !(await existScript(subNodeSpec.script, realmDir))
             ) {
               const script = journey.scripts[subNodeSpec.script];
 
               const scriptText = Array.isArray(script.script)
                 ? script.script.join('\n')
                 : script.script;
-              const scriptExtractDir = `realms/${realm}/scripts/`;
+              const scriptExtractDir = `realms/${realmDir}/scripts/`;
               const scriptExtractName = `scripts-content/${script.context}/${script.name}.js`;
               extractFrConfigDataToFile(
                 scriptText,
@@ -133,17 +131,13 @@ async function processJourneys(
         } else if (
           pullDependencies &&
           journeyNodeNeedsScript(node) &&
-          !(await existScript(node.script, realm))
+          !(await existScript(node.script, realmDir))
         ) {
-          verboseMessage('Trying to save the script on the node');
-          verboseMessage(nodeId);
-          verboseMessage(node.script);
-
           const script = journey.scripts[node.script];
           const scriptText = Array.isArray(script.script)
             ? script.script.join('\n')
             : script.script;
-          const scriptExtractDir = `realms/${realm}/scripts`;
+          const scriptExtractDir = `realms/${realmDir}/scripts`;
           const scriptExtractName = `scripts-content/${script.context}/${script.name}.js`;
           extractFrConfigDataToFile(
             scriptText,
@@ -164,9 +158,8 @@ async function processJourneys(
           pullDependencies &&
           node._type._id === 'InnerTreeEvaluatorNode'
         ) {
-          await processJourneys(
+          await processJourneysExport(
             journeys,
-            realm,
             node.tree,
             pullDependencies,
             exportDir
@@ -206,24 +199,63 @@ function journeyNodeNeedsScript(node) {
 }
 
 /**
- * Process a journey directory for configManagerImportJourneys 
- * @param journeyDir path to the journey directory
- * @param journeyName name of the journey
- * @param dependencies if true, recursively include inner tree dependencies
- * @param journeysBaseDir base directory containing all journeys for the realm
- * @param processedJourneys set of already-processed journey names to prevent circular references
+ * Read a script by id from the fr-config-manager scripts directory, inlining its content
+ * @param {string} scriptId the script _id referenced by a node
+ * @param {string} realmDir on-disk realm directory name
+ * @returns the script object, or null if not found
+ */
+function readScriptById(scriptId: string, realmDir: string): any | null {
+  const baseDir = getFilePath(`realms/${realmDir}/scripts`);
+  const scriptConfigFile = `${baseDir}/scripts-config/${scriptId}.json`;
+  if (!fs.existsSync(scriptConfigFile)) {
+    printMessage(`Script config not found: ${scriptConfigFile}`, 'error');
+    return null;
+  }
+
+  const script = JSON.parse(fs.readFileSync(scriptConfigFile, 'utf8'));
+
+  // export replaces content with a { file: ... } reference relative to baseDir
+  if (script.script?.file) {
+    const contentFile = `${baseDir}/${script.script.file}`;
+    if (!fs.existsSync(contentFile)) {
+      printMessage(`Script content not found: ${contentFile}`, 'error');
+      return null;
+    }
+    script.script = fs.readFileSync(contentFile, 'utf8').split('\n');
+  }
+
+  return script;
+}
+
+/**
+ * Process a journey directory for configManagerImportJourneys
+ * @param {string} journeyDir path to the journey directory
+ * @param {string} journeyName name of the journey
+ * @param {boolean} dependencies if true, recursively include inner tree dependencies
+ * @param {string} journeysBaseDir base directory containing all journeys for the realm
+ * @param {string} processedJourneys set of already-processed journey names to prevent circular references
  * @returns map of journey names to their import data
  */
-function processJourney(
+function processJourneyImport(
   journeyDir: string,
   journeyName: string,
+  pushInnerJourneys: boolean,
+  pushScripts: boolean,
   dependencies: boolean,
   journeysBaseDir: string,
+  realmDir: string,
   processedJourneys: Set<string> = new Set()
 ): Record<string, any> {
   if (processedJourneys.has(journeyName)) {
     return {};
   }
+  const addScript = (node: any) => {
+    if (!dependencies || !journeyNodeNeedsScript(node)) return;
+    if (!node.script || node.script === '[Empty]') return;
+    if (journeyData.scripts[node.script]) return;
+    const script = readScriptById(node.script, realmDir);
+    if (script) journeyData.scripts[script._id] = script;
+  };
   processedJourneys.add(journeyName);
 
   const treeJsonPath = `${journeyDir}/${journeyName}.json`;
@@ -251,12 +283,15 @@ function processJourney(
 
     for (const entry of entries) {
       if (entry.isFile() && entry.name.endsWith('.json')) {
-        const nodeData = fs.readFileSync(`${nodesDir}/${entry.name}`, 'utf8');
-        const node = JSON.parse(nodeData);
+        const node = JSON.parse(
+          fs.readFileSync(`${nodesDir}/${entry.name}`, 'utf8')
+        );
         journeyData.nodes[node._id] = node;
 
         if (dependencies && node._type?._id === 'InnerTreeEvaluatorNode') {
           innerTreeNames.push(node.tree);
+        } else {
+          addScript(node);
         }
       }
 
@@ -271,6 +306,7 @@ function processJourney(
           );
           const innerNode = JSON.parse(innerData);
           journeyData.innerNodes[innerNode._id] = innerNode;
+          addScript(innerNode);
         }
       }
     }
@@ -284,11 +320,14 @@ function processJourney(
     for (const innerTreeName of innerTreeNames) {
       const innerJourneyDir = `${journeysBaseDir}/${innerTreeName}`;
 
-      const innerTrees = processJourney(
+      const innerTrees = processJourneyImport(
         innerJourneyDir,
         innerTreeName,
+        pushInnerJourneys,
+        pushScripts,
         dependencies,
         journeysBaseDir,
+        realmDir,
         processedJourneys
       );
       Object.assign(trees, innerTrees);
@@ -311,124 +350,72 @@ export async function configManagerImportJourneys(
   dependencies?: boolean
 ): Promise<boolean> {
   try {
-    if (
-      realm === '/' &&
-      state.getDeploymentType() === frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY)
-     {
-      return true;
+    const pushInnerJourneys = !name || (dependencies ?? false);
+    const pushScripts = dependencies ?? false;
+    const options = { deps: dependencies ?? false, reUuid: false };
+
+    const realmsDir = getFilePath('realms');
+    if (!fs.existsSync(realmsDir)) {
+      printMessage('No journey files found to import.', 'error');
+      return false;
     }
 
-    const options = { deps: dependencies ?? false, reUuid: false };
+    const realmDirs = fs
+      .readdirSync(realmsDir, { withFileTypes: true })
+      .filter((dirent) => dirent.isDirectory())
+      .map((dirent) => dirent.name);
 
     let imported = false;
 
-    if (realm) {
-      const journeysBaseDir = getFilePath(`realms/${realm}/journeys`);
+    for (const realmDir of realmDirs) {
+      state.setRealm(realmDir === 'root' ? '/' : realmDir);
 
-      if (name) {
-        const journeyDir = `${journeysBaseDir}/${name}`;
-        const trees = processJourney(
-          journeyDir,
-          name,
-          dependencies ?? false,
-          journeysBaseDir
-        );
-        if (Object.keys(trees).length) {
-          await importJourneys({ trees }, options);
-          imported = true;
-        }
-      } else {
-        const journeyDirs = fs
-          .readdirSync(journeysBaseDir, { withFileTypes: true })
-          .filter((dirent) => dirent.isDirectory())
-          .map((dirent) => dirent.name);
+      if (
+        (state.getRealm() === '/' &&
+          state.getDeploymentType() ===
+            frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY) ||
+        (realm !== DEFAULT_REALM_KEY && state.getRealm() !== realm)
+      )
+        continue;
 
-        const trees: Record<string, any> = {};
-        const processed = new Set<string>();
-        for (const journeyName of journeyDirs) {
-          const journeyDir = `${journeysBaseDir}/${journeyName}`;
-          const journeyTrees = processJourney(
-            journeyDir,
-            journeyName,
-            dependencies ?? false,
-            journeysBaseDir,
-            processed
-          );
-          Object.assign(trees, journeyTrees);
-        }
-        if (Object.keys(trees).length) {
-          await importJourneys({ trees }, options);
-          imported = true;
-        }
-      }
-    } else if (name) {
-      const realmsDir = getFilePath('realms');
-      if (!fs.existsSync(realmsDir)) {
-        printMessage('No journey files found to import.', 'error');
-        return false;
-      }
-      const realmDirs = fs
-        .readdirSync(realmsDir, { withFileTypes: true })
-        .filter((dirent) => dirent.isDirectory())
-        .map((dirent) => dirent.name);
+      const journeysBaseDir = `${realmsDir}/${realmDir}/journeys`;
+      if (!fs.existsSync(journeysBaseDir)) continue;
 
-      for (const realmDir of realmDirs) {
-        state.setRealm(realmDir);
-        const journeysDir = `${realmsDir}/${realmDir}/journeys`;
-        const journeyDir = `${journeysDir}/${name}`;
+      const journeyNames = name
+        ? [name]
+        : fs
+            .readdirSync(journeysBaseDir, { withFileTypes: true })
+            .filter((dirent) => dirent.isDirectory())
+            .map((dirent) => dirent.name);
+
+      const trees: Record<string, any> = {};
+      const processed = new Set<string>();
+
+      for (const journeyName of journeyNames) {
+        const journeyDir = `${journeysBaseDir}/${journeyName}`;
         if (!fs.existsSync(journeyDir)) continue;
 
-        const trees = processJourney(
-          journeyDir,
-          name,
-          dependencies ?? false,
-          journeysDir
-        );
-        if (Object.keys(trees).length) {
-          await importJourneys({ trees }, options);
-          imported = true;
-        }
-      }
-    } else {
-      const realmsDir = getFilePath('realms');
-      if (!fs.existsSync(realmsDir)) {
-        printMessage('No journey files found to import.', 'error');
-        return false;
-      }
-      const realmDirs = fs
-        .readdirSync(realmsDir, { withFileTypes: true })
-        .filter((dirent) => dirent.isDirectory())
-        .map((dirent) => dirent.name);
-
-      for (const realmDir of realmDirs) {
-        state.setRealm(realmDir);
-        const journeysDir = `${realmsDir}/${realmDir}/journeys`;
-        if (!fs.existsSync(journeysDir)) continue;
-
-        const journeyDirs = fs
-          .readdirSync(journeysDir, { withFileTypes: true })
-          .filter((dirent) => dirent.isDirectory())
-          .map((dirent) => dirent.name);
-
-        const trees: Record<string, any> = {};
-        const processed = new Set<string>();
-        for (const journeyName of journeyDirs) {
-          const journeyDir = `${journeysDir}/${journeyName}`;
-          const journeyTrees = processJourney(
+        Object.assign(
+          trees,
+          processJourneyImport(
             journeyDir,
             journeyName,
+            pushInnerJourneys,
+            pushScripts,
             dependencies ?? false,
-            journeysDir,
+            journeysBaseDir,
+            realmDir,
             processed
-          );
-          Object.assign(trees, journeyTrees);
-        }
-        if (Object.keys(trees).length) {
-          await importJourneys({ trees }, options);
-          imported = true;
-        }
+          )
+        );
+      }
+
+      if (Object.keys(trees).length) {
+        await importJourneys({ trees }, options);
+        imported = true;
       }
     }
+
     if (!imported) {
       printMessage('No journey files found to import.', 'error');
       return false;
