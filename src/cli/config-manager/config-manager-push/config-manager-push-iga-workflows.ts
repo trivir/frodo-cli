@@ -1,9 +1,9 @@
-import { frodo } from '@rockcarver/frodo-lib';
+import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import { configManagerImportIgaWorkflows } from '../../../configManagerOps/FrConfigIgaWorkflowsOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
-import { verboseMessage } from '../../../utils/Console';
+import { printMessage, verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
@@ -15,7 +15,7 @@ const deploymentTypes = [
 
 export default function setup() {
   const program = new FrodoCommand(
-    'frodo config-manager pull iga-workflows',
+    'frodo config-manager push iga-workflows',
     [],
     deploymentTypes
   );
@@ -28,7 +28,7 @@ export default function setup() {
       )
     )
     .addOption(
-      new Option('--draft', 'Push as draft version instead of publishing.')
+      new Option('-d, --draft', 'Push as draft version instead of publishing.')
     )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
@@ -40,14 +40,27 @@ export default function setup() {
         command
       );
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Importing config entity iga-workflows');
-        const outcome = await configManagerImportIgaWorkflows(
-          options.name,
-          options.draft
-        );
-        if (!outcome) process.exitCode = 1;
+      if (!state.getIsIGA()) { 
+        printMessage( 
+          'Command not supported for non-IGA cloud tenants', 
+          'error' 
+        ); 
+        process.exitCode = 1; 
+        return; 
       }
+
+      const getTokensIsSuccessful = await getTokens( 
+        false, 
+        true, 
+        deploymentTypes 
+      ); 
+      if (!getTokensIsSuccessful) process.exit(1); 
+      verboseMessage('Importing config entity iga-workflows'); 
+      const outcome = await configManagerImportIgaWorkflows(
+                  options.name,
+                  options.draft
+                ); 
+      if (!outcome) process.exitCode = 1; 
     });
   return program;
 }
