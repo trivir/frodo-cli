@@ -1,7 +1,7 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import {
-  AmServiceSkeleton,
   FullService,
+  ServiceNextDescendent,
 } from '@rockcarver/frodo-lib/types/api/ServiceApi';
 import fs from 'fs';
 
@@ -39,7 +39,8 @@ export async function configManagerExportServices(
 }
 
 async function processServices(services, realm, name) {
-  const fileDir = `realms/${realm}/services`;
+  const realmDir = realm === '/' ? 'root' : realm;
+  const fileDir = `realms/${realmDir}/services`;
   for (const service of services) {
     if (name && name !== service._type._id) {
       continue;
@@ -68,6 +69,11 @@ async function processServices(services, realm, name) {
   }
 }
 
+/**
+ * Process services for a realm in fr-config-manager format.
+ * @param {string} realmDir realm directory name
+ * @returns {Promise<FullService[]>} services with descendants attached, or [] if the directory doesn't exist
+ */
 async function processImportServices(realmDir: string): Promise<FullService[]> {
   const dir = getFilePath(`realms/${realmDir}/services/`);
   if (!fs.existsSync(dir)) {
@@ -89,7 +95,7 @@ async function processImportServices(realmDir: string): Promise<FullService[]> {
     const baseName = entry.name.replace('.json', '');
     const subDirPath = `${dir}${baseName}`;
 
-    const descendants: AmServiceSkeleton[] = [];
+    const descendants: ServiceNextDescendent[] = [];
     if (fs.existsSync(subDirPath) && fs.statSync(subDirPath).isDirectory()) {
       for (const subEntry of fs.readdirSync(subDirPath, {
         withFileTypes: true,
@@ -100,7 +106,7 @@ async function processImportServices(realmDir: string): Promise<FullService[]> {
         descendants.push(
           JSON.parse(
             fs.readFileSync(`${subDirPath}/${subEntry.name}`, 'utf8')
-          ) as AmServiceSkeleton
+          ) as ServiceNextDescendent
         );
       }
     }

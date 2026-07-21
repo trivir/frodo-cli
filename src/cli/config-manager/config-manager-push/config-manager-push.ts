@@ -47,6 +47,6 @@ export default function setup() {
   program.addCommand(ConnectorDefinitions().name('connector-definitions'));
   program.addCommand(ConnectorMappings().name('connector-mappings'));
   program.addCommand(Services().name('services'));
-  
+
   return program;
 }
