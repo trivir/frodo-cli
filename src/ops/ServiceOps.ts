@@ -351,3 +351,15 @@ export async function deleteServices(globalConfig = false): Promise<boolean> {
   }
   return false;
 }
+export async function deleteServiceNextDescendents(
+  serviceId: string,
+  globalConfig = false
+): Promise<boolean> {
+  try {
+    await deleteFullService(serviceId, globalConfig);
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}

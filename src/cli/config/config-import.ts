@@ -4,22 +4,25 @@ import { Option } from 'commander';
 import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import {
+  compareDeploymentAndSyncWithMasterDirectory,
+  compareDeploymentAndSyncWithMasterFile,
   importEntityfromFile,
   importEverythingFromFile,
   importEverythingFromFiles,
 } from '../../ops/ConfigOps';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
+import {  FullExportOptions} from '@rockcarver/frodo-lib/types/ops/ConfigOps';
 
 export default function setup() {
   const program = new FrodoCommand('frodo config import');
 
   program
-    .description('Import full cloud configuration.')
+    .description('Import full Deployment configuration.')
     .addOption(
       new Option(
         '-f, --file <file>',
-        'Name of the file to import. Ignored with -A. If included without -a, it will import the single entity within the file.'
+        'Name of the file to import. Ignored with -A. If included without -a, it will import the single entity within the file. With -a and --dry-run or --compare-and-delete flags, this file will act as the master config file.'
       )
     )
     .addOption(
@@ -79,6 +82,25 @@ export default function setup() {
         'Import global entity. Ignored with -a and -A.'
       )
     )
+    .addOption(
+      new Option(
+        '--compare-and-delete',
+        'Import master config directory to the deployement. It will override the master config and delete the added config in the deployment. Assign master config with -f or -D flag. It is highly recommended to simulate this feature first, by using --dry-run flag to see the differences between the master config and the current config from the tenant.\n' 
+         +'Ignored with --dry-run'
+      )
+    )
+    .addOption(
+      new Option(
+        '--dry-run',
+        'Compares changes between the config in the master file/directory (specified with -f or -D) and the current config from the deployment'
+      )
+    )
+    .addOption(
+      new Option(
+        '--show-detail',
+        'Show or save detailed result for differences detected after comparison. Use --show-detail --verbose to print the detail result on terminal. Ignored without --dry-run or --compare-and-delete.'
+      )
+    )
     .addHelpText(
       'after',
       `How Frodo handles secrets:\n`['brightGreen'] +
@@ -119,7 +141,7 @@ export default function setup() {
           process.exitCode = 1;
         }
         // --all -a
-        else if (options.all && (await getTokens())) {
+        else if (options.all && !options.compareAndDelete && !options.dryRun && (await getTokens())) {
           verboseMessage('Exporting everything from a single file...');
           const outcome = await importEverythingFromFile(options.file, {
             reUuidJourneys: options.reUuidJourneys,
@@ -132,6 +154,35 @@ export default function setup() {
           });
           if (!outcome) process.exitCode = 1;
         }
+        else if (options.all && (options.compareAndDelete || options.dryRun) && (await getTokens())) {
+          verboseMessage('compare option in ');
+          const outcome = await compareDeploymentAndSyncWithMasterFile(
+            options.file, // Master File
+            options.dryRun, //what if
+            options.showDetail,
+            {
+              useStringArrays: false,
+              noDecode: undefined,
+              coords: false, 
+              includeDefault: undefined,
+              includeActiveValues: false, 
+              target: undefined,
+              includeReadOnly: undefined,
+              onlyRealm: undefined,
+              onlyGlobal: undefined,
+            },
+            {
+              reUuidCustomNodes: options.reUuidCustomNodes,
+              reUuidJourneys: options.reUuidJourneys,
+              reUuidScripts: options.reUuidScripts,
+              cleanServices: options.cleanServices,
+              includeDefault: options.default,
+              includeActiveValues: options.includeActiveValues,
+              source: options.source,
+            }
+          );
+          if (!outcome) process.exitCode = 1;
+        }
         // require --directory -D for all-separate function
         else if (options.allSeparate && !state.getDirectory()) {
           printMessage(
@@ -142,7 +193,11 @@ export default function setup() {
           process.exitCode = 1;
         }
         // --all-separate -A
-        else if (options.allSeparate && (await getTokens())) {
+        else if (
+          options.allSeparate &&
+          !options.compareAndDelete && !options.dryRun &&
+          (await getTokens())
+        ) {
           verboseMessage('Importing everything from separate files...');
           const outcome = await importEverythingFromFiles({
             reUuidJourneys: options.reUuidJourneys,
@@ -153,6 +208,42 @@ export default function setup() {
             includeActiveValues: options.includeActiveValues,
             source: options.source,
           });
+          if (!outcome) process.exitCode = 1;
+        } else if (
+          options.allSeparate &&
+          (options.compareAndDelete || options.dryRun) &&
+          (await getTokens())
+        ) {
+          verboseMessage(
+            `Comparing current deployment with the master directory ${state.getDirectory()}, --dry-run flag is ${options.dryRun}.`
+          );
+          const outcome =
+            await compareDeploymentAndSyncWithMasterDirectory(
+              options.dryRun, //what-if
+              options.showDetail,
+              {
+                // export options
+                useStringArrays: false,
+                noDecode: false,
+                coords: false, // we are not going to get coords value in case master does not have coord values.
+                includeDefault: undefined,
+                includeActiveValues: false, //we are not going to get active values from tenant in comparison  to be safe.
+                target: undefined,
+                includeReadOnly: undefined,
+                onlyRealm: undefined,
+                onlyGlobal: undefined,
+              },
+              {
+                //import options
+              reUuidCustomNodes: options.reUuidCustomNodes,
+                reUuidJourneys: options.reUuidJourneys,
+                reUuidScripts: options.reUuidScripts,
+                cleanServices: options.cleanServices,
+                includeDefault: options.default,
+                includeActiveValues: options.includeActiveValues,
+                source: options.source,
+              }
+            );
           if (!outcome) process.exitCode = 1;
         }
         // Import entity from file
