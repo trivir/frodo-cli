@@ -1,7 +1,11 @@
 import { frodo } from '@rockcarver/frodo-lib';
 
 import { getIdmImportExportOptions } from '../ops/IdmOps';
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+} from '../utils/Console';
 
 const { exportConfigEntity } = frodo.idm.config;
 const { getFilePath, saveJsonToFile } = frodo.utils;
@@ -14,8 +18,14 @@ const { getFilePath, saveJsonToFile } = frodo.utils;
 export async function configManagerExportRemoteServers(
   envFile?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     const options = getIdmImportExportOptions(undefined, envFile);
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting remote servers'
+    );
     const exportData = (
       await exportConfigEntity('provisioner.openicf.connectorinfoprovider', {
         envReplaceParams: options.envReplaceParams,
@@ -31,8 +41,16 @@ export async function configManagerExportRemoteServers(
       ),
       false
     );
+    stopProgressIndicator(indicatorId, 'Exported remote servers');
     return true;
   } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting remote servers',
+        'fail'
+      );
+    }
     printError(
       error,
       `Error exporting config entity RCS: provisioner.openicf.connectorinfoprovider`

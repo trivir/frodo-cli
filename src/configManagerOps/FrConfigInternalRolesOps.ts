@@ -1,7 +1,11 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+} from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { readInternalRoles, importInternalRoles } = frodo.role;
@@ -12,7 +16,13 @@ const { readInternalRoles, importInternalRoles } = frodo.role;
 export async function configManagerExportInternalRoles(
   name?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting internal roles'
+    );
     const exportData = await readInternalRoles();
     for (const role of Object.values(exportData)) {
       if (name && name !== role.name) {
@@ -23,9 +33,17 @@ export async function configManagerExportInternalRoles(
         saveJsonToFile(role, getFilePath(fileName, true), false, true);
       }
     }
+    stopProgressIndicator(indicatorId, 'Exported internal roles');
     return true;
   } catch (error) {
-    printError(error, `Error exporting internal roles to files`);
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        'Error exporting internal roles',
+        'fail'
+      );
+    }
+    printError(error, `Error exporting internal roles`);
   }
   return false;
 }
@@ -49,7 +67,7 @@ export async function configManagerImportInternalRoles(
     await importInternalRoles(importData);
     return true;
   } catch (error) {
-    printError(error, `Error importing internal roles to files`);
+    printError(error, `Error importing internal roles`);
   }
   return false;
 }

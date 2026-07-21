@@ -1,7 +1,12 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  updateProgressIndicator,
+} from '../utils/Console';
 import {
   escapePlaceholders,
   replaceAllInJson,
@@ -17,10 +22,13 @@ const { exportCircleOfTrust } = frodo.saml2.circlesOfTrust;
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function configManagerExportSaml(file): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator('indeterminate', 0, 'Exporting saml');
     const objects = JSON.parse(fs.readFileSync(file, 'utf8'));
     for (const realm of Object.keys(objects)) {
       state.setRealm(realm);
+      updateProgressIndicator(indicatorId, `Exporting saml (${realm})`);
       for (const samlProvider of objects[realm].samlProviders) {
         const result = await exportSaml2Provider(samlProvider.entityId, {
           deps: false,
@@ -92,8 +100,12 @@ export async function configManagerExportSaml(file): Promise<boolean> {
         );
       }
     }
+    stopProgressIndicator(indicatorId, 'Exported saml');
     return true;
   } catch (err) {
+    if (indicatorId) {
+      stopProgressIndicator(indicatorId, 'Error exporting saml', 'fail');
+    }
     printError(err, `Error exporting SAML`);
   }
   return false;

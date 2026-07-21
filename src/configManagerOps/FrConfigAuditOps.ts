@@ -2,7 +2,11 @@ import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
 import { getIdmImportExportOptions } from '../ops/IdmOps';
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+} from '../utils/Console';
 
 const { exportConfigEntity, importConfigEntities } = frodo.idm.config;
 const { getFilePath, saveJsonToFile } = frodo.utils;
@@ -15,8 +19,14 @@ const { getFilePath, saveJsonToFile } = frodo.utils;
 export async function configManagerExportAudit(
   envFile?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
     const options = getIdmImportExportOptions(undefined, envFile);
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting audit'
+    );
     const exportData = (
       await exportConfigEntity('audit', {
         envReplaceParams: options.envReplaceParams,
@@ -25,9 +35,13 @@ export async function configManagerExportAudit(
     ).idm['audit'];
 
     saveJsonToFile(exportData, getFilePath('audit/audit.json', true), false);
+    stopProgressIndicator(indicatorId, 'Exported audit');
     return true;
   } catch (error) {
-    printError(error, `Error exporting config entity audit`);
+    if (indicatorId) {
+      stopProgressIndicator(indicatorId, 'Error exporting audit', 'fail');
+    }
+    printError(error, `Error exporting audit configuration`);
   }
   return false;
 }

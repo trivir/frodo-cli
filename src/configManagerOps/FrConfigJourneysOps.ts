@@ -53,7 +53,7 @@ export async function configManagerExportJourneys(
     }
     return true;
   } catch (error) {
-    printError(error, `Error exporting config entity endpoints`);
+    printError(error, `Error exporting journeys`);
   }
   return false;
 }

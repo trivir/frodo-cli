@@ -1,7 +1,11 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
-import { printError } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+} from '../utils/Console';
 
 const { readConfigEntitiesByType, importConfigEntities } = frodo.idm.config;
 const { saveJsonToFile, getFilePath } = frodo.utils;
@@ -14,12 +18,22 @@ const { saveJsonToFile, getFilePath } = frodo.utils;
 export async function configManagerExportLocales(
   localeName?: string
 ): Promise<boolean> {
+  let indicatorId: string | undefined;
   try {
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      'Exporting locales'
+    );
     const exportData = await readConfigEntitiesByType('uilocale');
     processLocales(exportData, 'locales', localeName);
+    stopProgressIndicator(indicatorId, 'Exported locales');
     return true;
   } catch (error) {
-    printError(error, `Error exporting config entity locales`);
+    if (indicatorId) {
+      stopProgressIndicator(indicatorId, 'Error exporting locales', 'fail');
+    }
+    printError(error, `Error exporting locales`);
   }
   return false;
 }
@@ -65,7 +79,7 @@ export async function configManagerImportLocales(
     await importConfigEntities(importLocaleData);
     return true;
   } catch (error) {
-    printError(error, `Error importing config entity locales`);
+    printError(error, `Error importing locales`);
     return false;
   }
 }
