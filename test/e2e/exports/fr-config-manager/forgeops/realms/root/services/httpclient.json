@@ -1,0 +1,12 @@
+{
+  "_id": "",
+  "_rev": "-1187676076",
+  "_type": {
+    "_id": "httpclient",
+    "collection": false,
+    "name": "Http Client Service"
+  },
+  "core": {
+    "enabled": false
+  }
+}

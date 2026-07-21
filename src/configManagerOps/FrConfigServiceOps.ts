@@ -1,10 +1,16 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
+import {
+  FullService,
+  ServiceNextDescendent,
+} from '@rockcarver/frodo-lib/types/api/ServiceApi';
+import fs from 'fs';
 
 import { printError } from '../utils/Console';
 import { realmList } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
-const { getFullServices } = frodo.service;
+const { getFullServices, importService } = frodo.service;
+const { DEFAULT_REALM_KEY } = frodo.utils.constants;
 
 /**
  * Export all services to separate files in fr-config-manager format
@@ -15,7 +21,7 @@ export async function configManagerExportServices(
   name?
 ): Promise<boolean> {
   try {
-    if (realm && realm !== '__default__realm__') {
+    if (realm && realm !== DEFAULT_REALM_KEY) {
       const services = await getFullServices(false);
       processServices(services, realm, name);
     } else {
@@ -33,7 +39,8 @@ export async function configManagerExportServices(
 }
 
 async function processServices(services, realm, name) {
-  const fileDir = `realms/${realm}/services`;
+  const realmDir = realm === '/' ? 'root' : realm;
+  const fileDir = `realms/${realmDir}/services`;
   for (const service of services) {
     if (name && name !== service._type._id) {
       continue;
@@ -60,4 +67,108 @@ async function processServices(services, realm, name) {
       true
     );
   }
+}
+
+/**
+ * Process services for a realm in fr-config-manager format.
+ * @param {string} realmDir realm directory name
+ * @returns {Promise<FullService[]>} services with descendants attached, or [] if the directory doesn't exist
+ */
+async function processImportServices(realmDir: string): Promise<FullService[]> {
+  const dir = getFilePath(`realms/${realmDir}/services/`);
+  if (!fs.existsSync(dir)) {
+    return [];
+  }
+
+  const results: FullService[] = [];
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    if (!entry.name.endsWith('.json')) {
+      continue;
+    }
+
+    const service = JSON.parse(
+      fs.readFileSync(`${dir}${entry.name}`, 'utf8')
+    ) as FullService;
+
+    const baseName = entry.name.replace('.json', '');
+    const subDirPath = `${dir}${baseName}`;
+
+    const descendants: ServiceNextDescendent[] = [];
+    if (fs.existsSync(subDirPath) && fs.statSync(subDirPath).isDirectory()) {
+      for (const subEntry of fs.readdirSync(subDirPath, {
+        withFileTypes: true,
+      })) {
+        if (!subEntry.name.endsWith('.json')) {
+          continue;
+        }
+        descendants.push(
+          JSON.parse(
+            fs.readFileSync(`${subDirPath}/${subEntry.name}`, 'utf8')
+          ) as ServiceNextDescendent
+        );
+      }
+    }
+    service.nextDescendents = descendants;
+
+    results.push(service);
+  }
+
+  return results;
+}
+/**
+ * Import all services from disk in fr-config-manager format. Iterates every realm
+ * directory under realms/, mapping the 'root' directory to the '/' realm, and skips
+ * the root realm on cloud deployments.
+ * @param {string} name optional service name to import, imports all services if omitted
+ * @returns {Promise<boolean>} true if all imports were successful, false otherwise
+ */
+export async function configManagerImportServices(
+  name?: string
+): Promise<boolean> {
+  try {
+    const realmsDir = getFilePath('realms/');
+    if (!fs.existsSync(realmsDir)) {
+      return true;
+    }
+
+    const realmDirs = fs
+      .readdirSync(realmsDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name);
+
+    for (const realmDir of realmDirs) {
+      state.setRealm(realmDir === 'root' ? '/' : realmDir);
+
+      if (
+        state.getRealm() === '/' &&
+        state.getDeploymentType() ===
+          frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY
+      ) {
+        continue;
+      }
+
+      for (const service of await processImportServices(realmDir)) {
+        const serviceId = service._type._id;
+        if (name && name !== serviceId) {
+          continue;
+        }
+
+        await importService(
+          serviceId,
+          { service: { [serviceId]: service } },
+          {
+            clean: false,
+            global: false,
+            realm: true,
+          }
+        );
+      }
+    }
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
 }

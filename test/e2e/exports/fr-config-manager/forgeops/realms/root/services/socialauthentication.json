@@ -1,0 +1,13 @@
+{
+  "_id": "",
+  "_rev": "-49730604",
+  "_type": {
+    "_id": "socialauthentication",
+    "collection": false,
+    "name": "Social Authentication Implementations"
+  },
+  "authenticationChains": {},
+  "displayNames": {},
+  "enabledKeys": [],
+  "icons": {}
+}

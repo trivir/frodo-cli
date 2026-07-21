@@ -1,0 +1,13 @@
+{
+  "_id": "",
+  "_rev": "-1666629725",
+  "_type": {
+    "_id": "deviceBindingService",
+    "collection": false,
+    "name": "Device Binding Service"
+  },
+  "deviceBindingAttrName": "boundDevices",
+  "deviceBindingSettingsEncryptionKeystorePassword": null,
+  "deviceBindingSettingsEncryptionKeystoreType": "JKS",
+  "deviceBindingSettingsEncryptionScheme": "NONE"
+}

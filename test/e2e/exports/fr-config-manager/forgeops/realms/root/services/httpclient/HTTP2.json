@@ -1,0 +1,20 @@
+{
+  "_id": "HTTP2",
+  "_type": {
+    "_id": "instances",
+    "collection": true,
+    "name": "Http Client Instance Configuration"
+  },
+  "core": {
+    "enabled": false
+  },
+  "timeouts": {
+    "connectionTimeout": 10,
+    "responseTimeout": 10,
+    "useInstanceTimeouts": false
+  },
+  "tls": {
+    "disableRevocationChecks": false,
+    "trustAllCertificates": false
+  }
+}

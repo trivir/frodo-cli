@@ -1,0 +1,13 @@
+{
+  "_id": "",
+  "_rev": "-1436509548",
+  "_type": {
+    "_id": "validation",
+    "collection": false,
+    "name": "Validation Service"
+  },
+  "validGotoDestinations": [
+    "&{am.server.protocol|https}://&{fqdn}/*?*",
+    "https://sso.fcps.dev.trivir.com:8888/enduser/?realm=/alpha"
+  ]
+}

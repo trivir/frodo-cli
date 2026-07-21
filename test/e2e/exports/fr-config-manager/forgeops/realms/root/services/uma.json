@@ -1,0 +1,31 @@
+{
+  "_id": "",
+  "_rev": "1674710545",
+  "_type": {
+    "_id": "uma",
+    "collection": false,
+    "name": "UMA Provider"
+  },
+  "claimsGathering": {
+    "claimsGatheringService": "[Empty]",
+    "interactiveClaimsGatheringEnabled": false,
+    "pctLifetime": 604800
+  },
+  "generalSettings": {
+    "deletePoliciesOnDeleteRS": true,
+    "deleteResourceSetsOnDeleteRS": true,
+    "emailRequestingPartyOnPendingRequestApproval": true,
+    "emailResourceOwnerOnPendingRequestCreation": true,
+    "grantResourceOwnerImplicitConsent": true,
+    "grantRptConditions": [
+      "REQUEST_PARTIAL",
+      "REQUEST_NONE",
+      "TICKET_PARTIAL"
+    ],
+    "pendingRequestsEnabled": true,
+    "permissionTicketLifetime": 120,
+    "resharingMode": "IMPLICIT",
+    "userProfileLocaleAttribute": "inetOrgPerson",
+    "warnIfConfusablesInUsername": false
+  }
+}
