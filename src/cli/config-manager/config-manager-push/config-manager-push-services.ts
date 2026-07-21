@@ -1,4 +1,3 @@
-import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import { configManagerImportServices } from '../../../configManagerOps/FrConfigServiceOps';
@@ -6,20 +5,9 @@ import { getTokens } from '../../../ops/AuthenticateOps';
 import { verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
-const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
-  frodo.utils.constants;
-
-const deploymentTypes = [
-  CLOUD_DEPLOYMENT_TYPE_KEY,
-  FORGEOPS_DEPLOYMENT_TYPE_KEY,
-];
-
 export default function setup() {
-  const program = new FrodoCommand(
-    'frodo config-manager push services',
-    [],
-    deploymentTypes
-  );
+  const program = new FrodoCommand('frodo config-manager push services');
+  program.description('Import AM authentication services.');
 
   program
     .addOption(
@@ -35,13 +23,9 @@ export default function setup() {
         command
       );
 
-      const getTokensIsSuccessful = await getTokens(
-        false,
-        true,
-        deploymentTypes
-      );
+      const getTokensIsSuccessful = await getTokens();
       if (!getTokensIsSuccessful) process.exit(1);
-      verboseMessage('Importing email provider configuration.');
+      verboseMessage('Importing services.');
       const outcome = await configManagerImportServices(options.name);
       if (!outcome) process.exitCode = 1;
     });
