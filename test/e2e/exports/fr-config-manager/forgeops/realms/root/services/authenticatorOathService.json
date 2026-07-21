@@ -1,0 +1,16 @@
+{
+  "_id": "",
+  "_rev": "-811807983",
+  "_type": {
+    "_id": "authenticatorOathService",
+    "collection": false,
+    "name": "ForgeRock Authenticator (OATH) Service"
+  },
+  "authenticatorOATHDeviceSettingsEncryptionKeystoreKeyPairAlias": "pushDeviceProfiles",
+  "authenticatorOATHDeviceSettingsEncryptionKeystorePassword": null,
+  "authenticatorOATHDeviceSettingsEncryptionKeystorePrivateKeyPassword": null,
+  "authenticatorOATHDeviceSettingsEncryptionKeystoreType": "JKS",
+  "authenticatorOATHDeviceSettingsEncryptionScheme": "NONE",
+  "authenticatorOATHSkippableName": "oath2faEnabled",
+  "oathAttrName": "oathDeviceProfiles"
+}

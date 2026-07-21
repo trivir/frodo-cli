@@ -1,0 +1,14 @@
+{
+  "_id": "",
+  "_rev": "-481384734",
+  "_type": {
+    "_id": "deviceProfilesService",
+    "collection": false,
+    "name": "Device Profiles Service"
+  },
+  "deviceProfilesAttrName": "deviceProfiles",
+  "deviceProfilesSettingsEncryptionKeystore": "/home/forgerock/openam/security/keystores/keystore.jks",
+  "deviceProfilesSettingsEncryptionKeystorePassword": null,
+  "deviceProfilesSettingsEncryptionKeystoreType": "JKS",
+  "deviceProfilesSettingsEncryptionScheme": "NONE"
+}

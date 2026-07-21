@@ -67,13 +67,11 @@ describe('frodo config-manager push service-objects', () => {
     test(`"frodo config-manager push services -D ${allDirectory} -m forgeops": should import all services into forgeops"`, async () => {
         const CMD = `frodo config-manager push services -D ${allDirectory} -m forgeops`;
         await testSuccess(CMD, forgeopsEnv);
-
     });
 
     test(`"frodo config-manager push services -n id-repositories -D ${allDirectory} -m forgeops": should import a specific service by name into forgeops"`, async () => {
         const CMD = `frodo config-manager push services -n id-repositories -D ${allDirectory} -m forgeops`;
         await testSuccess(CMD, forgeopsEnv);
-
     });
 
     test(`"frodo config-manager push services --name id-repositories -D ${allDirectory} -m forgeops": should import a specific service by realm into forgeops"`, async () => {

@@ -1,0 +1,12 @@
+{
+  "_id": "",
+  "_rev": "-1256449355",
+  "_type": {
+    "_id": "globalization",
+    "collection": false,
+    "name": "Globalization Settings"
+  },
+  "commonNameFormats": [
+    "zh={sn}{givenname}"
+  ]
+}
