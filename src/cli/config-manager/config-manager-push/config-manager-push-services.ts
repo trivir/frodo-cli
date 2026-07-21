@@ -7,9 +7,9 @@ import { FrodoCommand } from '../../FrodoCommand';
 
 export default function setup() {
   const program = new FrodoCommand('frodo config-manager push services');
-  program.description('Import AM authentication services.');
 
   program
+    .description('Import AM authentication services.')
     .addOption(
       new Option('-n, --name <name>', 'Name of the service to import.')
     )
