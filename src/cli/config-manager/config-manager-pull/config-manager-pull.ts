@@ -31,6 +31,7 @@ import SecretMappings from './config-manager-pull-secret-mappings';
 import Secrets from './config-manager-pull-secrets';
 import ServiceObjects from './config-manager-pull-service-objects';
 import Services from './config-manager-pull-services';
+import Telemetry from './config-manager-pull-telemetry';
 import Terms from './config-manager-pull-terms-and-conditions';
 import Test from './config-manager-pull-test';
 import Themes from './config-manager-pull-themes';
@@ -75,6 +76,7 @@ export default function setup() {
   program.addCommand(ServiceObjects().name('service-objects'));
   program.addCommand(Services().name('services'));
   program.addCommand(Themes().name('themes'));
+  program.addCommand(Telemetry().name('telemetry'));
   program.addCommand(Terms().name('terms-and-conditions'));
   program.addCommand(Test().name('test'));
   program.addCommand(UiConfig().name('ui-config'));
