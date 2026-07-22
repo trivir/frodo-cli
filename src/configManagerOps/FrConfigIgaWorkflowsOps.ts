@@ -24,7 +24,7 @@ export async function configManagerExportIgaWorkflows(
     if (name && workflows.length === 0) {
       throw new Error(`Workflow ${name} not found`);
     }
-    workflows.forEach(processIgaWorkflow);
+    workflows.forEach(processIgaWorkflowForExport);
     return true;
   } catch (error) {
     printError(error, 'Error exporting iga-workflows to files');
@@ -35,10 +35,11 @@ export async function configManagerExportIgaWorkflows(
  * Export a single IGA workflow to files in fr-config-manager format.
  * @param {object} workflow the workflow to export
  */
-async function processIgaWorkflow(workflow) {
+async function processIgaWorkflowForExport(workflow) {
   try {
     const workflowName = safeFileName(workflow.name);
-    const stepsPath = `${workflowName}/steps`;
+    const workflowPath = `iga/workflows/${workflowName}`;
+    const stepsPath = `${workflowPath}/steps`;
     workflow.steps.forEach((step) => {
       const uniqueId = safeFileName(`${step.displayName} - ${step.name}`);
       const stepPath = `${stepsPath}/${uniqueId}`;
@@ -55,12 +56,20 @@ async function processIgaWorkflow(workflow) {
           file: scriptFilename,
         };
       }
-      const stepFileName = `${stepPath}/${uniqueId}.json`;
-      saveJsonToFile(step, getFilePath(stepFileName, true), false, true);
+      saveJsonToFile(
+        step,
+        getFilePath(`${stepPath}/${uniqueId}.json`, true),
+        false,
+        true
+      );
     });
     delete workflow.steps;
-    const fileName = `${workflowName}/${workflowName}.json`;
-    saveJsonToFile(workflow, getFilePath(fileName, true), false, true);
+    saveJsonToFile(
+      workflow,
+      getFilePath(`${workflowPath}/${workflowName}.json`, true),
+      false,
+      true
+    );
   } catch (err) {
     printError(err);
   }
