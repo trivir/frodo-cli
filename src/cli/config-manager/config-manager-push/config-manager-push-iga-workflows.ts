@@ -6,12 +6,9 @@ import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
-const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
-  frodo.utils.constants;
-const deploymentTypes = [
-  CLOUD_DEPLOYMENT_TYPE_KEY,
-  FORGEOPS_DEPLOYMENT_TYPE_KEY,
-];
+const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
+
+const deploymentTypes = [CLOUD_DEPLOYMENT_TYPE_KEY];
 
 export default function setup() {
   const program = new FrodoCommand(
@@ -40,27 +37,26 @@ export default function setup() {
         command
       );
 
-      if (!state.getIsIGA()) { 
-        printMessage( 
-          'Command not supported for non-IGA cloud tenants', 
-          'error' 
-        ); 
-        process.exitCode = 1; 
-        return; 
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+      if (!state.getIsIGA()) {
+        printMessage(
+          'Command not supported for non-IGA cloud tenants',
+          'error'
+        );
+        process.exitCode = 1;
+        return;
       }
-
-      const getTokensIsSuccessful = await getTokens( 
-        false, 
-        true, 
-        deploymentTypes 
-      ); 
-      if (!getTokensIsSuccessful) process.exit(1); 
-      verboseMessage('Importing config entity iga-workflows'); 
+      verboseMessage('Importing IGA workflows.');
       const outcome = await configManagerImportIgaWorkflows(
-                  options.name,
-                  options.draft
-                ); 
-      if (!outcome) process.exitCode = 1; 
+        options.name,
+        options.draft
+      );
+      if (!outcome) process.exitCode = 1;
     });
   return program;
 }

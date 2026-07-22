@@ -50,16 +50,13 @@
 // Cloud
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-trivir-fairfax.forgeblocks.com/am frodo config-manager push iga-workflows -D test/e2e/exports/fr-config-manager/cloud
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-trivir-fairfax.forgeblocks.com/am frodo config-manager push iga-workflows --draft -D test/e2e/exports/fr-config-manager/cloud
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-trivir-fairfax.forgeblocks.com/am frodo config-manager push iga-workflows -n test_workflow_2 -D test/e2e/exports/fr-config-manager/cloud
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-trivir-fairfax.forgeblocks.com/am frodo config-manager push iga-workflows -n test-BasicApplicationGrant -D test/e2e/exports/fr-config-manager/cloud
 
 */
 
-import cp from 'child_process';
-import { promisify } from 'util';
-import { getEnv, removeAnsiEscapeCodes } from './utils/TestUtils';
+import { getEnv, testFail, testSuccess } from './utils/TestUtils';
 import { iga_connection as ic } from './utils/TestConfig';
 
-const exec = promisify(cp.exec);
 
 process.env['FRODO_MOCK'] = '1';
 const igaEnv = getEnv(ic);
@@ -69,17 +66,14 @@ const allDirectory = "test/e2e/exports/fr-config-manager/cloud";
 describe('frodo config-manager push iga-workflows', () => {
     test(`"frodo config-manager push iga-workflows -D ${allDirectory} ": should import the iga workflows into cloud tenant"`, async () => {
         const CMD = `frodo config-manager push iga-workflows -D ${allDirectory} `;
-        const { stdout } = await exec(CMD, igaEnv);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        await testSuccess(CMD, igaEnv);
     });
     test(`"frodo config-manager push iga-workflows --draft -D ${allDirectory} ": should import the iga workflows into cloud tenant as draft workflows"`, async () => {
         const CMD = `frodo config-manager push iga-workflows -D ${allDirectory} `;
-        const { stdout } = await exec(CMD, igaEnv);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        await testSuccess(CMD, igaEnv);
     });
-    test(`"frodo config-manager push iga-workflows -n test_workflow_2 -D ${allDirectory} ": should import a specific iga workflows by name into cloud tenant"`, async () => {
-        const CMD = `frodo config-manager push iga-workflows -n test_workflow_2 -D ${allDirectory} `;
-        const { stdout } = await exec(CMD, igaEnv);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+    test(`"frodo config-manager push iga-workflows -n test-BasicApplicationGrant -D ${allDirectory} ": should import a specific iga workflows by name into cloud tenant"`, async () => {
+        const CMD = `frodo config-manager push iga-workflows -n test-BasicApplicationGrant -D ${allDirectory} `;
+        await testSuccess(CMD, igaEnv);
     });
 });

@@ -25,7 +25,6 @@ Commands:
   email-templates        [Experimental] Import email template objects.
   endpoints              [Experimental] Import custom endpoints objects.
   help                   display help for command
-  iga-workflows          [Experimental] Import iga-workflows.
   internal-roles         [Experimental] Import internal roles.
   kba                    [Experimental] Import kba configuration.
   locales                [Experimental] Import custom locales objects.
@@ -41,6 +40,7 @@ Commands:
 
   (Cloud-only):
   csp                    [Experimental] Import content security policy.
+  iga-workflows          [Experimental] Import iga-workflows.
   secret-mappings        [Experimental] Import secret mappings.
 "
 `;

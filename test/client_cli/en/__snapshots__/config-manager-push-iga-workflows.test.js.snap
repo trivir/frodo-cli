@@ -16,8 +16,10 @@ Arguments:
                      appropriate rights to manage authentication journeys/trees.
   password           Password.
 
+Deployment: Cloud-only
+
 Options:
-  --draft            Push as draft version instead of publishing.
+  -d, --draft        Push as draft version instead of publishing.
   -n, --name <name>  Workflow name. Only import the workflow with this name.
   -h, --help         Help
   -hh, --help-more   Help with all options.

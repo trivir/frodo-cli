@@ -7,7 +7,7 @@ import { printError, verboseMessage } from '../utils/Console';
 import { safeFileName } from '../utils/FrConfig';
 
 const { saveJsonToFile, getFilePath } = frodo.utils;
-const { readWorkflows, importWorkflows } = frodo.cloud.iga.workflow;
+const { readWorkflows, updateWorkflow } = frodo.cloud.iga.workflow;
 
 /**
  * Export IGA workflows in fr-config-manager format.
@@ -92,70 +92,76 @@ export async function configManagerImportIgaWorkflows(
     let workflowDirs = [];
 
     if (name) {
-      const workflowName = `${workflowsPath}/${name}`;
-      workflowDirs = [workflowName];
+      const workflowDir = `${workflowsPath}/${name}`;
+      if (!fs.existsSync(workflowDir)) {
+        throw new verboseMessage(`Requested workflow ${name} not found`);
+      }
+      workflowDirs = [workflowDir];
     } else {
       workflowDirs = fs
         .readdirSync(workflowsPath)
         .map((dirName) => `${workflowsPath}/${dirName}`);
     }
 
+    const status = draft ? 'draft' : 'published';
     for (const workflowDir of workflowDirs) {
-      const workflow = processWorkflows(workflowDir);
+      const workflow = processWorkflowForImport(workflowDir);
+
       if (!workflow.mutable) {
         verboseMessage(`Skipping immutable workflow ${workflow.name}`);
         continue;
       }
-      const status = draft ? 'draft' : 'published';
+
       workflow.status = status;
-      const importData = {
-        workflow: { [workflow.id]: { [status]: workflow } },
-      } as any;
-      await importWorkflows(workflow.id, importData);
+      await updateWorkflow(workflow.id, workflow);
     }
     return true;
   } catch (error) {
-    printError(error, 'Error importing iga-workflows to files');
+    printError(error, 'Error importing iga-workflows');
   }
   return false;
 }
 
-function processWorkflows(workflowDir: string) {
+/**
+ * Process a workflow to import in fr-config-manager format
+ * @param {string} workflowDir path to the workflow directory
+ * @returns {object} the assembled workflow object
+ */
+function processWorkflowForImport(workflowDir: string) {
   try {
     const workflowName = path.parse(workflowDir).base;
     const workflowFile = path.join(workflowDir, `${workflowName}.json`);
     const workflow = JSON.parse(fs.readFileSync(workflowFile, 'utf8'));
 
     const stepsDir = path.join(workflowDir, 'steps');
+    if (!fs.existsSync(stepsDir)) return workflow;
+    const stepDirs = fs
+      .readdirSync(stepsDir, { withFileTypes: true })
+      .map((dirent) => path.join(stepsDir, dirent.name));
     const steps = [];
-    if (fs.existsSync(stepsDir)) {
-      const stepDirs = fs
-        .readdirSync(stepsDir, { withFileTypes: true })
-        .map((dirent) => path.join(stepsDir, dirent.name));
-
-      for (const stepDir of stepDirs) {
-        const stepName = path.parse(stepDir).base;
-        const stepFile = path.join(stepDir, `${stepName}.json`);
-        const step = JSON.parse(fs.readFileSync(stepFile, 'utf8'));
-        const stepBody = step?.[step?.type];
-        if (
-          stepBody &&
-          typeof stepBody === 'object' &&
-          stepBody.script &&
-          typeof stepBody.script === 'object' &&
-          typeof stepBody.script.file === 'string'
-        ) {
-          const filePath = path.join(stepDir, stepBody.script.file);
-          if (fs.existsSync(filePath)) {
-            stepBody.script = fs.readFileSync(filePath, 'utf8');
-          }
+    for (const stepDir of stepDirs) {
+      const stepName = path.parse(stepDir).base;
+      const stepFile = path.join(stepDir, `${stepName}.json`);
+      const step = JSON.parse(fs.readFileSync(stepFile, 'utf8'));
+      const stepBody = step?.[step?.type];
+      if (
+        stepBody &&
+        typeof stepBody === 'object' &&
+        stepBody.script &&
+        typeof stepBody.script === 'object' &&
+        typeof stepBody.script.file === 'string'
+      ) {
+        const filePath = path.join(stepDir, stepBody.script.file);
+        if (fs.existsSync(filePath)) {
+          stepBody.script = fs.readFileSync(filePath, 'utf8');
         }
-        steps.push(step);
       }
-      workflow.steps = steps;
+      steps.push(step);
     }
+    workflow.steps = steps;
+
     return workflow;
   } catch (error) {
-    printError(error, 'Error importing iga-workflows to files');
+    printError(error, 'Error importing iga-workflows');
   }
 }
