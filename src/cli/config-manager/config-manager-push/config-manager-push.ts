@@ -11,6 +11,7 @@ import CustomNodes from './config-manager-push-custom-nodes';
 import EmailProvider from './config-manager-push-email-provider';
 import EmailTemplates from './config-manager-push-email-templates';
 import Endpoints from './config-manager-push-endpoints';
+import IgaWorkflows from './config-manager-push-iga-workflows';
 import InternalRoles from './config-manager-push-internal-roles';
 import Kba from './config-manager-push-kba';
 import Locales from './config-manager-push-locales';
@@ -53,7 +54,7 @@ export default function setup() {
   program.addCommand(RemoteServers().name('remote-servers'));
   program.addCommand(SecretMappings().name('secret-mappings'));
   program.addCommand(CustomNodes().name('custom-nodes'));
-
+  program.addCommand(IgaWorkflows().name('iga-workflows'));
   program.addCommand(CSP().name('csp'));
   return program;
 }
