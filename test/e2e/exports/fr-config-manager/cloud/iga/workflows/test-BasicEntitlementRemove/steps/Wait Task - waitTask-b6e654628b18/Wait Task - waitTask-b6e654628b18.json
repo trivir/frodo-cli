@@ -1,6 +1,6 @@
 {
   "displayName": "Wait Task",
-  "name": "waitTask-4d9223fb79c5",
+  "name": "waitTask-b6e654628b18",
   "type": "waitTask",
   "waitTask": {
     "events": null,
@@ -8,12 +8,12 @@
       {
         "condition": "true",
         "outcome": "COMPLETE",
-        "step": null
+        "step": "scriptTask-0359a9d77ee2"
       }
     ],
     "resumeDate": {
       "isExpression": true,
-      "value": "(new Date(new Date().getTime()+(1*30*24*60*60*1000))).toISOString()"
+      "value": "requestIndex.request.common.endDate"
     }
   }
 }
