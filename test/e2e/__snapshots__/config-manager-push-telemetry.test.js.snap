@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -D test/e2e/exports/fr-config-manager/telemetry": should resolve header placeholders from process.env 1`] = `""`;
+
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c otlp -N datadog -e test-value -D test/e2e/exports/fr-config-manager/telemetry": should resolve placeholders from the -e override 1`] = `""`;
