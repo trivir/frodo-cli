@@ -36,10 +36,9 @@ export default function setup() {
       )
     )
     .addOption(new Option('-d, --pull-dependencies', 'Pull dependencies.'))
-    // TO DO: implementing for 'clean'
-    // .addOption(
-    //   new Option('-c, --clean', 'Clear existing configuration before pull.')
-    // )
+    .addOption(
+      new Option('-c, --clean', 'Clear existing configuration before pull.')
+    )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -58,7 +57,8 @@ export default function setup() {
         const outcome = await configManagerExportJourneys(
           options.name,
           realm,
-          options.pullDependencies
+          options.pullDependencies,
+          options.clean
         );
         if (!outcome) process.exitCode = 1;
       }
