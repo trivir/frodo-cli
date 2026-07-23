@@ -1,8 +1,8 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
+import { FullService } from '@rockcarver/frodo-lib/types/api/ServiceApi';
 
 import { printError } from '../utils/Console';
 import { realmList } from '../utils/FrConfig';
-import { FullService } from '@rockcarver/frodo-lib/types/api/ServiceApi';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { getFullServices } = frodo.service;
@@ -33,7 +33,11 @@ export async function configManagerExportServices(
   return false;
 }
 
-async function processServices(services: FullService[], realm: string, name: string) {
+async function processServices(
+  services: FullService[],
+  realm: string,
+  name: string
+) {
   const fileDir = `realms/${realm}/services`;
   for (const service of services) {
     if (name && name !== service._type._id) {

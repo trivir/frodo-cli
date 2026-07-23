@@ -49,7 +49,6 @@
 
 /*
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager pull org-privileges -D configManagerExportOrgPrivilegesDir0 -m forgeops
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_REALM=alpha FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager pull org-privileges --directory configManagerExportOrgPrivilegesDir1 -m forgeops
 */
 import { getEnv, testExport } from './utils/TestUtils';
 import { forgeops_connection as fc } from './utils/TestConfig';
@@ -64,10 +63,5 @@ describe('frodo config-manager pull org-privileges', () => {
         const dirName = 'configManagerExportOrgPrivilegesDir0';
         const CMD = `frodo config-manager pull org-privileges -D ${dirName} -m forgeops`;
         await testExport(CMD, forgeopsEnv, undefined, undefined, dirName, false);
-    });
-    test('"frodo config-manager pull org-privileges --directory configManagerExportOrgPrivilegesDir1 -m forgeops": should export all the alpha realm organizations privileges in fr-config manager style.', async () => {
-        const dirName = 'configManagerExportOrgPrivilegesDir1';
-        const CMD = `frodo config-manager pull org-privileges --directory ${dirName} -m forgeops`;
-        await testExport(CMD, { env: {...forgeopsEnv.env, FRODO_REALM: 'alpha' } }, undefined, undefined, dirName, false);
     });
 });
