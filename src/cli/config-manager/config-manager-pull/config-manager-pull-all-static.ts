@@ -35,7 +35,7 @@ export default function setup() {
         return;
       }
 
-      const outcome = await configManagerExportAllStatic();
+      const outcome = await configManagerExportAllStatic(realm);
       if (!outcome) process.exitCode = 1;
     });
 

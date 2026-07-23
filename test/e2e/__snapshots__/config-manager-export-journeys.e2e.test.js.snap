@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir11": should export the journeys in fr-config-manager style" 1`] = `0`;
 
@@ -19434,9 +19434,293 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testD
 }
 `;
 
-exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D testDir12": should export the journeys in alpha realm in fr-config-manager style" 1`] = `0`;
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style" 1`] = `0`;
 
 exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style" 2`] = `""`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/BravoTestRegistration.json 1`] = `
+{
+  "_id": "BravoTestRegistration",
+  "_rev": "-1612059806",
+  "description": "Platform Registration Tree",
+  "enabled": true,
+  "entryNodeId": "0997e6d1-7836-4519-95fa-0b1321d2eee9",
+  "identityResource": "managed/user",
+  "innerTreeOnly": false,
+  "mustRun": false,
+  "noSession": false,
+  "nodes": {
+    "0997e6d1-7836-4519-95fa-0b1321d2eee9": {
+      "connections": {
+        "outcome": "fe18620d-ba32-47a6-acff-2b86d79a2dd1",
+      },
+      "displayName": "Page Node",
+      "nodeType": "PageNode",
+      "x": 261,
+      "y": 168,
+    },
+    "5149f84b-bcb8-458a-8cdc-87f96abb82a5": {
+      "connections": {
+        "outcome": "70e691a5-1e33-4ac3-a356-e7b6d60d92e0",
+      },
+      "displayName": "Increment Login Count",
+      "nodeType": "IncrementLoginCountNode",
+      "x": 681,
+      "y": 144,
+    },
+    "fe18620d-ba32-47a6-acff-2b86d79a2dd1": {
+      "connections": {
+        "CREATED": "5149f84b-bcb8-458a-8cdc-87f96abb82a5",
+        "FAILURE": "e301438c-0bd0-429c-ab0c-66126501069a",
+      },
+      "displayName": "Create Object",
+      "nodeType": "CreateObjectNode",
+      "x": 537,
+      "y": 206,
+    },
+  },
+  "staticNodes": {
+    "70e691a5-1e33-4ac3-a356-e7b6d60d92e0": {
+      "x": 905,
+      "y": 171,
+    },
+    "e301438c-0bd0-429c-ab0c-66126501069a": {
+      "x": 741,
+      "y": 293,
+    },
+    "startNode": {
+      "x": 50,
+      "y": 25,
+    },
+  },
+  "uiConfig": {
+    "categories": "["Registration"]",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Create Object - fe18620d-ba32-47a6-acff-2b86d79a2dd1.json 1`] = `
+{
+  "_id": "fe18620d-ba32-47a6-acff-2b86d79a2dd1",
+  "_outcomes": [
+    {
+      "displayName": "Created",
+      "id": "CREATED",
+    },
+    {
+      "displayName": "Failed",
+      "id": "FAILURE",
+    },
+  ],
+  "_rev": "-157786796",
+  "_type": {
+    "_id": "CreateObjectNode",
+    "collection": true,
+    "name": "Create Object",
+    "version": "1.0",
+  },
+  "identityResource": "managed/user",
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Increment Login Count - 5149f84b-bcb8-458a-8cdc-87f96abb82a5.json 1`] = `
+{
+  "_id": "5149f84b-bcb8-458a-8cdc-87f96abb82a5",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "1315398658",
+  "_type": {
+    "_id": "EmailSuspendNode",
+    "collection": true,
+    "name": "Email Suspend Node",
+    "version": "1.0",
+  },
+  "emailAttribute": "mail",
+  "emailSuspendMessage": {
+    "en": "An email has been sent to the address you entered. Click the link in that email to proceed.",
+  },
+  "emailTemplateName": "registration",
+  "identityAttribute": "userName",
+  "objectLookup": false,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Page Node - 0997e6d1-7836-4519-95fa-0b1321d2eee9.json 1`] = `
+{
+  "_id": "0997e6d1-7836-4519-95fa-0b1321d2eee9",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-1929612627",
+  "_type": {
+    "_id": "PageNode",
+    "collection": true,
+    "name": "Page Node",
+    "version": "1.0",
+  },
+  "nodes": [
+    {
+      "_id": "90be4f5e-573b-4695-978a-d0cd88464431",
+      "displayName": "Platform Username",
+      "nodeType": "ValidatedUsernameNode",
+      "nodeVersion": "1.0",
+    },
+    {
+      "_id": "84a4c586-1dcc-4620-8232-8269dc0b108f",
+      "displayName": "Attribute Collector",
+      "nodeType": "AttributeCollectorNode",
+      "nodeVersion": "1.0",
+    },
+    {
+      "_id": "d83b7cef-ac0f-4a8c-80fe-ed29b616ec2d",
+      "displayName": "Platform Password",
+      "nodeType": "ValidatedPasswordNode",
+      "nodeVersion": "1.0",
+    },
+    {
+      "_id": "93463dab-b6b1-4f3c-91f4-fd69ff399ba4",
+      "displayName": "KBA Definition",
+      "nodeType": "KbaCreateNode",
+      "nodeVersion": "1.0",
+    },
+    {
+      "_id": "c0434fd3-46fd-4a5d-a432-d4cc02463691",
+      "displayName": "Accept Terms and Conditions",
+      "nodeType": "AcceptTermsAndConditionsNode",
+      "nodeVersion": "1.0",
+    },
+  ],
+  "pageDescription": {
+    "en": "Signing up is fast and easy.<br>Already have an account? <a href='#/service/Login'>Sign In</a>",
+  },
+  "pageHeader": {
+    "en": "Sign Up",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Page Node - 0997e6d1-7836-4519-95fa-0b1321d2eee9/Accept Terms and Conditions - c0434fd3-46fd-4a5d-a432-d4cc02463691.json 1`] = `
+{
+  "_id": "c0434fd3-46fd-4a5d-a432-d4cc02463691",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "1961133386",
+  "_type": {
+    "_id": "AcceptTermsAndConditionsNode",
+    "collection": true,
+    "name": "Accept Terms and Conditions",
+    "version": "1.0",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Page Node - 0997e6d1-7836-4519-95fa-0b1321d2eee9/Attribute Collector - 84a4c586-1dcc-4620-8232-8269dc0b108f.json 1`] = `
+{
+  "_id": "84a4c586-1dcc-4620-8232-8269dc0b108f",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-907823556",
+  "_type": {
+    "_id": "AttributeCollectorNode",
+    "collection": true,
+    "name": "Attribute Collector",
+    "version": "1.0",
+  },
+  "attributesToCollect": [
+    "givenName",
+    "sn",
+    "mail",
+    "preferences/marketing",
+    "preferences/updates",
+  ],
+  "identityAttribute": "userName",
+  "required": true,
+  "validateInputs": true,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Page Node - 0997e6d1-7836-4519-95fa-0b1321d2eee9/KBA Definition - 93463dab-b6b1-4f3c-91f4-fd69ff399ba4.json 1`] = `
+{
+  "_id": "93463dab-b6b1-4f3c-91f4-fd69ff399ba4",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "242876428",
+  "_type": {
+    "_id": "KbaCreateNode",
+    "collection": true,
+    "name": "KBA Definition",
+    "version": "1.0",
+  },
+  "allowUserDefinedQuestions": true,
+  "message": {
+    "en": "Select a security question",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Page Node - 0997e6d1-7836-4519-95fa-0b1321d2eee9/Platform Password - d83b7cef-ac0f-4a8c-80fe-ed29b616ec2d.json 1`] = `
+{
+  "_id": "d83b7cef-ac0f-4a8c-80fe-ed29b616ec2d",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-1286221928",
+  "_type": {
+    "_id": "ValidatedPasswordNode",
+    "collection": true,
+    "name": "Platform Password",
+    "version": "1.0",
+  },
+  "passwordAttribute": "password",
+  "validateInput": true,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Page Node - 0997e6d1-7836-4519-95fa-0b1321d2eee9/Platform Username - 90be4f5e-573b-4695-978a-d0cd88464431.json 1`] = `
+{
+  "_id": "90be4f5e-573b-4695-978a-d0cd88464431",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "1323128538",
+  "_type": {
+    "_id": "ValidatedUsernameNode",
+    "collection": true,
+    "name": "Platform Username",
+    "version": "1.0",
+  },
+  "autocompleteValues": [],
+  "usernameAttribute": "userName",
+  "validateInput": true,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D testDir12": should export the journeys in alpha realm in fr-config-manager style" 1`] = `0`;
 
 exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D testDir12": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Agent/Agent.json 1`] = `
 {
@@ -22042,56 +22326,6 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha
 }
 `;
 
-exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Create Object - fe18620d-ba32-47a6-acff-2b86d79a2dd1.json 1`] = `
-{
-  "_id": "fe18620d-ba32-47a6-acff-2b86d79a2dd1",
-  "_outcomes": [
-    {
-      "displayName": "Created",
-      "id": "CREATED",
-    },
-    {
-      "displayName": "Failed",
-      "id": "FAILURE",
-    },
-  ],
-  "_rev": "-157786796",
-  "_type": {
-    "_id": "CreateObjectNode",
-    "collection": true,
-    "name": "Create Object",
-    "version": "1.0",
-  },
-  "identityResource": "managed/user",
-}
-`;
-
-exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Increment Login Count - 5149f84b-bcb8-458a-8cdc-87f96abb82a5.json 1`] = `
-{
-  "_id": "5149f84b-bcb8-458a-8cdc-87f96abb82a5",
-  "_outcomes": [
-    {
-      "displayName": "Outcome",
-      "id": "outcome",
-    },
-  ],
-  "_rev": "1315398658",
-  "_type": {
-    "_id": "EmailSuspendNode",
-    "collection": true,
-    "name": "Email Suspend Node",
-    "version": "1.0",
-  },
-  "emailAttribute": "mail",
-  "emailSuspendMessage": {
-    "en": "An email has been sent to the address you entered. Click the link in that email to proceed.",
-  },
-  "emailTemplateName": "registration",
-  "identityAttribute": "userName",
-  "objectLookup": false,
-}
-`;
-
 exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D testDir12": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Registration/nodes/Increment Login Count - 97a15eb2-a015-4b6d-81a0-be78c3aa1a3b.json 1`] = `
 {
   "_id": "97a15eb2-a015-4b6d-81a0-be78c3aa1a3b",
@@ -22109,177 +22343,6 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha
     "version": "1.0",
   },
   "identityAttribute": "userName",
-}
-`;
-
-exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Page Node - 0997e6d1-7836-4519-95fa-0b1321d2eee9.json 1`] = `
-{
-  "_id": "0997e6d1-7836-4519-95fa-0b1321d2eee9",
-  "_outcomes": [
-    {
-      "displayName": "Outcome",
-      "id": "outcome",
-    },
-  ],
-  "_rev": "-1929612627",
-  "_type": {
-    "_id": "PageNode",
-    "collection": true,
-    "name": "Page Node",
-    "version": "1.0",
-  },
-  "nodes": [
-    {
-      "_id": "90be4f5e-573b-4695-978a-d0cd88464431",
-      "displayName": "Platform Username",
-      "nodeType": "ValidatedUsernameNode",
-      "nodeVersion": "1.0",
-    },
-    {
-      "_id": "84a4c586-1dcc-4620-8232-8269dc0b108f",
-      "displayName": "Attribute Collector",
-      "nodeType": "AttributeCollectorNode",
-      "nodeVersion": "1.0",
-    },
-    {
-      "_id": "d83b7cef-ac0f-4a8c-80fe-ed29b616ec2d",
-      "displayName": "Platform Password",
-      "nodeType": "ValidatedPasswordNode",
-      "nodeVersion": "1.0",
-    },
-    {
-      "_id": "93463dab-b6b1-4f3c-91f4-fd69ff399ba4",
-      "displayName": "KBA Definition",
-      "nodeType": "KbaCreateNode",
-      "nodeVersion": "1.0",
-    },
-    {
-      "_id": "c0434fd3-46fd-4a5d-a432-d4cc02463691",
-      "displayName": "Accept Terms and Conditions",
-      "nodeType": "AcceptTermsAndConditionsNode",
-      "nodeVersion": "1.0",
-    },
-  ],
-  "pageDescription": {
-    "en": "Signing up is fast and easy.<br>Already have an account? <a href='#/service/Login'>Sign In</a>",
-  },
-  "pageHeader": {
-    "en": "Sign Up",
-  },
-}
-`;
-
-exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Page Node - 0997e6d1-7836-4519-95fa-0b1321d2eee9/Accept Terms and Conditions - c0434fd3-46fd-4a5d-a432-d4cc02463691.json 1`] = `
-{
-  "_id": "c0434fd3-46fd-4a5d-a432-d4cc02463691",
-  "_outcomes": [
-    {
-      "displayName": "Outcome",
-      "id": "outcome",
-    },
-  ],
-  "_rev": "1961133386",
-  "_type": {
-    "_id": "AcceptTermsAndConditionsNode",
-    "collection": true,
-    "name": "Accept Terms and Conditions",
-    "version": "1.0",
-  },
-}
-`;
-
-exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Page Node - 0997e6d1-7836-4519-95fa-0b1321d2eee9/Attribute Collector - 84a4c586-1dcc-4620-8232-8269dc0b108f.json 1`] = `
-{
-  "_id": "84a4c586-1dcc-4620-8232-8269dc0b108f",
-  "_outcomes": [
-    {
-      "displayName": "Outcome",
-      "id": "outcome",
-    },
-  ],
-  "_rev": "-907823556",
-  "_type": {
-    "_id": "AttributeCollectorNode",
-    "collection": true,
-    "name": "Attribute Collector",
-    "version": "1.0",
-  },
-  "attributesToCollect": [
-    "givenName",
-    "sn",
-    "mail",
-    "preferences/marketing",
-    "preferences/updates",
-  ],
-  "identityAttribute": "userName",
-  "required": true,
-  "validateInputs": true,
-}
-`;
-
-exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Page Node - 0997e6d1-7836-4519-95fa-0b1321d2eee9/KBA Definition - 93463dab-b6b1-4f3c-91f4-fd69ff399ba4.json 1`] = `
-{
-  "_id": "93463dab-b6b1-4f3c-91f4-fd69ff399ba4",
-  "_outcomes": [
-    {
-      "displayName": "Outcome",
-      "id": "outcome",
-    },
-  ],
-  "_rev": "242876428",
-  "_type": {
-    "_id": "KbaCreateNode",
-    "collection": true,
-    "name": "KBA Definition",
-    "version": "1.0",
-  },
-  "allowUserDefinedQuestions": true,
-  "message": {
-    "en": "Select a security question",
-  },
-}
-`;
-
-exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Page Node - 0997e6d1-7836-4519-95fa-0b1321d2eee9/Platform Password - d83b7cef-ac0f-4a8c-80fe-ed29b616ec2d.json 1`] = `
-{
-  "_id": "d83b7cef-ac0f-4a8c-80fe-ed29b616ec2d",
-  "_outcomes": [
-    {
-      "displayName": "Outcome",
-      "id": "outcome",
-    },
-  ],
-  "_rev": "-1286221928",
-  "_type": {
-    "_id": "ValidatedPasswordNode",
-    "collection": true,
-    "name": "Platform Password",
-    "version": "1.0",
-  },
-  "passwordAttribute": "password",
-  "validateInput": true,
-}
-`;
-
-exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Page Node - 0997e6d1-7836-4519-95fa-0b1321d2eee9/Platform Username - 90be4f5e-573b-4695-978a-d0cd88464431.json 1`] = `
-{
-  "_id": "90be4f5e-573b-4695-978a-d0cd88464431",
-  "_outcomes": [
-    {
-      "displayName": "Outcome",
-      "id": "outcome",
-    },
-  ],
-  "_rev": "1323128538",
-  "_type": {
-    "_id": "ValidatedUsernameNode",
-    "collection": true,
-    "name": "Platform Username",
-    "version": "1.0",
-  },
-  "autocompleteValues": [],
-  "usernameAttribute": "userName",
-  "validateInput": true,
 }
 `;
 

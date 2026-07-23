@@ -1,10 +1,6 @@
 import { frodo } from '@rockcarver/frodo-lib';
 
-import {
-  configManagerExportOrgPrivileges,
-  configManagerExportOrgPrivilegesAllRealms,
-  configManagerExportOrgPrivilegesRealm,
-} from '../../../configManagerOps/FrConfigOrgPrivilegesOps';
+import { configManagerExportOrgPrivileges } from '../../../configManagerOps/FrConfigOrgPrivilegesOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
@@ -16,7 +12,6 @@ const deploymentTypes = [
   CLOUD_DEPLOYMENT_TYPE_KEY,
   FORGEOPS_DEPLOYMENT_TYPE_KEY,
 ];
-const { constants } = frodo.utils;
 
 export default function setup() {
   const program = new FrodoCommand(
@@ -38,20 +33,10 @@ export default function setup() {
       );
 
       if (await getTokens(false, true, deploymentTypes)) {
-        let outcome: boolean;
-        if (realm !== constants.DEFAULT_REALM_KEY) {
-          printMessage(
-            `Exporting organization privileges config from the realm: "${realm}"`
-          );
-          outcome =
-            (await configManagerExportOrgPrivileges()) &&
-            (await configManagerExportOrgPrivilegesRealm(realm)); 
-        } else {
-          printMessage(
-            'Exporting oranization privileges config from all realms'
-          );
-          outcome = await configManagerExportOrgPrivilegesAllRealms();
-        }
+        printMessage(
+          `Exporting organization privileges config from the realm: "${realm}"`
+        );
+        const outcome = await configManagerExportOrgPrivileges();
 
         if (!outcome) process.exitCode = 1;
       }

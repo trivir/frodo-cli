@@ -59,6 +59,7 @@ export default function setup() {
         );
         const outcome = await configManagerExportAllWithConfigFolder({
           configFolder: options.configFolder,
+          realm,
         });
         if (!outcome) process.exitCode = 1;
       }

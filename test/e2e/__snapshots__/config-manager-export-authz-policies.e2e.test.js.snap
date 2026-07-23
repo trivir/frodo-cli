@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`frodo config-manager pulls "frodo config-manager pull authz-policies --directory configManagerExportAuthzPoliciesDir4 -m forgeops": should export policies, policy-sets, and resource-types from the bravo realm in fr-config manager style. 1`] = `0`;
 
