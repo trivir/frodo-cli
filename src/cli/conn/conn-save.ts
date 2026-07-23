@@ -2,15 +2,13 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import * as s from '../../help/SampleData';
-import { getTokens } from '../../ops/AuthenticateOps';
-import { addExistingServiceAccount } from '../../ops/ConnectionProfileOps.js';
-import { provisionCreds } from '../../ops/LogOps';
+import fs from 'fs';
 import { printError, printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 const { isServiceAccountsFeatureAvailable } = frodo.cloud.serviceAccount;
-const { addNewServiceAccount, saveConnectionProfile } = frodo.conn;
+const { saveNewConnectionProfile } = frodo.conn;
 
 export default function setup() {
   const program = new FrodoCommand('frodo conn save', ['realm']);
@@ -18,26 +16,36 @@ export default function setup() {
   program
     .alias('add')
     .description('Save connection profiles.')
-    .addOption(new Option('--no-sa', 'Do not create and add service account.'))
+
     .addOption(
       new Option(
-        '--log-api-key [key]',
-        'Log API key. If specified, must also include --log-api-secret. Ignored with --no-log-api.'
+        '-s, --skip-prompts',
+        'Provide all credentials via flags; skip interactive prompts.'
       )
     )
     .addOption(
       new Option(
-        '--log-api-secret [secret]',
-        'Log API secret. If specified, must also include --log-api-key. Ignored with --no-log-api.'
+        '-n, --name',
+        'Name for the new connection profile.'
       )
     )
     .addOption(
+      new Option('--username <username>', 'User account username.').hideHelp()
+    )
+    .addOption(
+      new Option('--password <password>', 'User account password.').hideHelp()
+    )
+    .addOption(new Option('--log-api-key <key>', 'Log API key ID.').hideHelp())
+    .addOption(
+      new Option('--log-api-secret <secret>', 'Log API secret.').hideHelp()
+    )
+
+    .addOption(
       new Option(
-        '--no-log-api',
-        'Do not create and add log API key and secret.'
+        '--no-validate',
+        'Save the profile without validating the connection.'
       )
     )
-    .addOption(new Option('--no-validate', 'Do not validate connection.'))
     .addOption(
       new Option(
         '--authentication-service [service]',
@@ -47,191 +55,136 @@ export default function setup() {
     .addOption(
       new Option(
         '--authentication-header-overrides [headers]',
-        `Map of headers: '{"host":"am.example.com:8081"}'. These headers are sent with all requests and can be used to override default behavior, for example to set a custom host header for Proxy Connect-protected PingOne Advanced Identity Cloud environments.`
+        `Map of headers: '{"host":"am.example.com:8081"}'. Sent with all requests.`
       )
     )
     .addOption(
       new Option(
         '--configuration-header-overrides [headers]',
-        `Map of headers: '{"X-Configuration-Type":"mutable"}'. These headers are sent with all configuration requests and can be used to override default behavior, for example to set a custom configuration header for mutable PingOne Advanced Identity Cloud environments.`
+        `Map of headers: '{"X-Configuration-Type":"mutable"}'. Sent with all configuration requests.`
       )
     )
-    .addOption(
-      new Option('--alias [name]', 'Alias name for this connection profile.')
-    )
+
+    .on('--help', () => {
+      if (
+        process.argv.includes('-s') ||
+        process.argv.includes('--skip-prompts')
+      ) {
+        printMessage(`
+  Skip-Prompts Mode Options:
+
+    Service account path:
+      --sa-id <id>              Service account ID (required)
+      --sa-jwk-file <file>      Path to service account JWK file (required)
+
+    User account:
+      --username <username>     User account username (required)
+      --password <password>     User account password (required)
+
+    Log API (optional):
+      --log-api-key <key>       Log API key ID
+      --log-api-secret <secret> Log API secret
+        `);
+      }
+    })
+
     .addHelpText(
       'after',
-      `Usage Examples:\n` +
-        `  Create a connection profile with a new log API key and secret and a new service account:\n` +
-        `  $ frodo conn save ${s.amBaseUrl} ${s.username} '${s.password}'\n`[
+      `\nUsage Examples:\n` +
+        `  Save a connection profile using a service account (interactive):\n` +
+        `  $ frodo conn save ${s.amBaseUrl} --service-account\n`['brightCyan'] +
+        `  Save a connection profile using a service account (non-interactive):\n` +
+        `  $ frodo conn save ${s.amBaseUrl} --service-account -s --sa-id ${s.saId} --sa-jwk-file ${s.saJwkFile} --alias ${s.alias}\n`[
           'brightCyan'
         ] +
-        `  Create a connection profile with a new log API key and secret and a new service account and set an alias:\n` +
-        `  $ frodo conn save --alias ${s.alias} ${s.amBaseUrl} ${s.username} '${s.password}'\n`[
+        `  Save a connection profile using a user account (interactive):\n` +
+        `  $ frodo conn save ${s.amBaseUrl} --user-account --alias\n`[
           'brightCyan'
         ] +
-        `  Save an existing service account to an existing or new connection profile:\n` +
-        `  $ frodo conn save --sa-id ${s.saId} --sa-jwk-file ${s.saJwkFile} ${s.amBaseUrl}\n`[
+        `  Save a connection profile using a user account (non-interactive):\n` +
+        `  $ frodo conn save ${s.amBaseUrl} --user-account -s --username ${s.username} --password '${s.password}' --alias ${s.alias}\n`[
           'brightCyan'
         ] +
-        `  Save an existing service account to an existing or new connection profile and set an alias:\n` +
-        `  $ frodo conn save --alias ${s.alias} --sa-id ${s.saId} --sa-jwk-file ${s.saJwkFile} ${s.amBaseUrl}\n`[
-          'brightCyan'
-        ] +
-        `  Save an existing service account to an existing connection profile (partial host URL only updates an existing profile):\n` +
-        `  $ frodo conn save --sa-id ${s.saId} --sa-jwk-file ${s.saJwkFile} ${s.connId}\n`[
-          'brightCyan'
-        ] +
-        `  Create a connection profile using Amster private key credentials (PingAM classic deployments only):\n` +
-        `  $ frodo conn save --private-key ${s.amsterPrivateKey} ${s.amClassicBaseUrl}\n`[
-          'brightCyan'
-        ] +
-        `  Update an existing connection profile to use Amster private key credentials with a custom Amster journey (PingAM classic deployments only):\n` +
-        `  $ frodo conn save --private-key ${s.amsterPrivateKey} --authentication-service ${s.customAmsterService} ${s.classicConnId}\n`[
-          'brightCyan'
-        ] +
-        `  Save a connection profile for a Proxy Connect-protected PingOne Advanced Identity Cloud environment:\n` +
-        `  $ frodo conn save --authentication-header-overrides '{"MY-SECRET-HEADER": "proxyconnect secret header value"}' ${s.amBaseUrl} ${s.username} '${s.password}'\n`[
-          'brightCyan'
-        ] +
-        `  Update an existing connection profile with a custom header override for a freshly Proxy Connect-protected PingOne Advanced Identity Cloud environment:\n` +
-        `  $ frodo conn save --authentication-header-overrides '{"MY-SECRET-HEADER": "proxyconnect secret header value"}' ${s.connId}\n`[
-          'brightCyan'
-        ] +
-        `  Save a connection profile for a mutable PingOne Advanced Identity Cloud environment:\n` +
-        `  $ frodo conn save --configuration-header-overrides '{"X-Configuration-Type": "mutable"}' ${s.amBaseUrl} ${s.username} '${s.password}'\n`[
-          'brightCyan'
-        ] +
-        `  Update an existing connection profile with a configuration header override for a freshly mutable PingOne Advanced Identity Cloud environment:\n` +
-        `  $ frodo conn save --configuration-header-overrides '{"X-Configuration-Type": "mutable"}' ${s.connId}\n`[
+        `  Save a user account profile and provision a log API key (interactive):\n` +
+        `  $ frodo conn save ${s.amBaseUrl} --user-account --log-api\n`[
           'brightCyan'
         ]
     )
-    .action(
-      // implement command logic inside action handler
-      async (host, user, password, options, command) => {
-        command.handleDefaultArgsAndOpts(
-          host,
-          user,
-          password,
-          options,
-          command
+
+    .action(async (host, user, password, options, command) => {
+      command.handleDefaultArgsAndOpts(host, user, password, options, command);
+
+      if (!options.name) {
+        printMessage(
+          'Error: A unique connection name must be provided.\n' +
+          'error'
         );
-
-        // state setup
-        state.setLogApiKey(options.logApiKey);
-        state.setLogApiSecret(options.logApiSecret);
-        if (options.authenticationService) {
-          state.setAuthenticationService(options.authenticationService);
-        }
-        if (options.authenticationHeaderOverrides) {
-          state.setAuthenticationHeaderOverrides(
-            JSON.parse(options.authenticationHeaderOverrides)
-          );
-        }
-        if (options.configurationHeaderOverrides) {
-          state.setConfigurationHeaderOverrides(
-            JSON.parse(options.configurationHeaderOverrides)
-          );
-        }
-
-        // derived intent flags
-        const needAmsterLogin = !!options.privateKey;
-        const needSa =
-          options.sa &&
-          !state.getServiceAccountId() &&
-          !state.getServiceAccountJwk();
-        const needLogApiKey =
-          options.logApi && !state.getLogApiKey() && !state.getLogApiSecret();
-        const forceLoginAsUser = !needAmsterLogin && (needSa);
-
-        // authentication
-        const isAuthenticated =
-          !options.validate || (await getTokens(forceLoginAsUser));
-        if (!isAuthenticated) {
-          process.exitCode = 1;
-          return;
-        }
-
-        const isCloud =
-          options.validate &&
-          state.getDeploymentType() === CLOUD_DEPLOYMENT_TYPE_KEY;
-
-        verboseMessage(
-          `Saving connection profile for tenant ${state.getHost()}...`
-        );
-        if (options.alias) {
-          state.setAlias(options.alias);
-        }
-
-        await handleServiceAccount({ isCloud, options });
-        await handleLogApiKey({ isCloud, needLogApiKey, options });
-
-        try {
-          await saveConnectionProfile(host);
-          printMessage(`Saved connection profile ${state.getHost()}`);
-        } catch (error) {
-          printError(error);
-          process.exitCode = 1;
-        }
+        process.exitCode = 1;
+        return;
       }
-    );
+
+      if (
+        options.saId &&
+        options.saJwkFile &&
+        isServiceAccountsFeatureAvailable &&
+        state.getDeploymentType() === CLOUD_DEPLOYMENT_TYPE_KEY
+      ) {
+        options.serviceAccount = true;
+        state.setServiceAccountId(options.saId);
+        state.setServiceAccountJwk(
+          JSON.parse(fs.readFileSync(options.saJwkFile).toString())
+        );
+      }
+
+      if (options.username && options.password) {
+        options.userAccount = true;
+        state.setUsername(options.username);
+        state.setPassword(options.password);
+      }
+
+      if (
+        options.logApiKey &&
+        options.logApiSecret &&
+        state.getDeploymentType() === CLOUD_DEPLOYMENT_TYPE_KEY
+      ) {
+        options.logApi = true;
+        state.setLogApiKey(options.logApi);
+        state.setLogApiSecret(options.logApiSecret);
+      }
+
+      const interactive = !options.skipPrompts;
+
+      if (options.serviceAccount && options.userAccount) {
+        printMessage(
+          'Error: service accounts and user accounts are mutually exclusive. Choose only one.',
+          'error'
+        );
+        process.exitCode = 1;
+        return;
+      }
+
+      if (!options.serviceAccount && !options.userAccount) {
+        printMessage(
+          'Error: You must specify either a service account or user account.',
+          'error'
+        );
+        process.exitCode = 1;
+        return;
+      }
+
+      try {
+        await saveNewConnectionProfile(
+          options.serviceAccount,
+          options.userAccount,
+          options.logApi,
+          interactive
+        );
+        printMessage(`Saved connection profile ${options.name} [${host}]`, 'info');
+      } catch (error) {
+        printError(error);
+        process.exitCode = 1;
+      }
+    });
+
   return program;
-}
-
-async function handleServiceAccount({ isCloud, options }) {
-  const saAvailable =
-    isCloud && options.sa && (await isServiceAccountsFeatureAvailable());
-
-  if (!saAvailable) return;
-
-  if (options.saId && options.saJwkFile) {
-    verboseMessage(`Validating and adding service account...`);
-    const added = await addExistingServiceAccount(
-      options.saId,
-      options.saJwkFile,
-      options.validate
-    );
-    if (added) {
-      printMessage(
-        `Validated and added service account with id ${options.saId} to profile.`
-      );
-    }
-    return;
-  }
-
-  if (!state.getServiceAccountId()) {
-    try {
-      verboseMessage(`Creating new service accont...`);
-      const sa = await addNewServiceAccount();
-      printMessage(`Created and added service account ${sa._id} to profile.`);
-    } catch (error) {
-      printError(error);
-    }
-  }
-}
-
-async function handleLogApiKey({ isCloud, needLogApiKey, options }) {
-  if (options.logApiKey && options.logApiSecret) {
-    verboseMessage(
-      `Using provided log API key ${options.logApiKey} (validation: ${options.validate}).`
-    );
-    return;
-  }
-
-  if (!isCloud || !needLogApiKey) return;
-
-  try {
-    const creds = await provisionCreds();
-    state.setLogApiKey(creds.api_key_id as string);
-    state.setLogApiSecret(creds.api_key_secret as string);
-    printMessage(`Created log API key ${creds.api_key_id} and secret.`);
-  } catch (error) {
-    printMessage(error.response?.data, 'error');
-    printMessage(
-      `Error creating log API key and secret: ${error.response?.data?.message}`,
-      'error'
-    );
-    process.exitCode = 1;
-  }
 }
