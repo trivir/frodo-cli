@@ -6,12 +6,10 @@ import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
-const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
-  frodo.utils.constants;
-const deploymentTypes = [
-  CLOUD_DEPLOYMENT_TYPE_KEY,
-  FORGEOPS_DEPLOYMENT_TYPE_KEY,
-];
+const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
+
+const deploymentTypes = [CLOUD_DEPLOYMENT_TYPE_KEY];
+
 export default function setup() {
   const program = new FrodoCommand(
     'frodo config-manager push variables',
@@ -26,12 +24,7 @@ export default function setup() {
         'Variable name; import only the specified variable. If omitted, all variables are imported.'
       )
     )
-    .addOption(
-      new Option(
-        '-e, --env <value>',
-        'Value to set for the variable. Overrides .env files and environment variables.'
-      )
-    )
+
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -45,7 +38,8 @@ export default function setup() {
         verboseMessage('Importing variables');
         const outcome = await configManagerImportVariables(
           options.name,
-          options.env
+          options.envValue,
+          options.envVarFile
         );
         if (!outcome) process.exitCode = 1;
       }

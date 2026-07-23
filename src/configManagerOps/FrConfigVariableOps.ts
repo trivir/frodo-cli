@@ -11,7 +11,7 @@ import {
 } from '../utils/Console';
 import { escapePlaceholders, esvToEnv } from '../utils/FrConfig';
 
-const { getFilePath, saveJsonToFile, readToJson, loadEnvFile  } = frodo.utils;
+const { getFilePath, saveJsonToFile, readJsonFile } = frodo.utils;
 const { readVariables, importVariable } = frodo.cloud.variable;
 
 /**
@@ -74,7 +74,6 @@ export async function configManagerExportVariables(): Promise<boolean> {
   return false;
 }
 
-
 export function resolvePlaceholder(
   placeholder: string,
 
@@ -100,29 +99,70 @@ export function resolvePlaceholder(
 
   return isBase64 ? value : Buffer.from(value).toString('base64');
 }
+
 /**
  * Import variables to tenant
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function configManagerImportVariables(
   variableName?: string,
-  value?: string
+  env: string[] = [],
+  envFile: string[] = []
 ): Promise<boolean> {
   const errors = [];
+  let indicatorId: string;
+
+  const envValues: Record<string, string> = {};
+
+  for (const filePath of envFile) {
+    let content: string;
+    try {
+      content = fs.readFileSync(filePath, 'utf8');
+    } catch (error) {
+      printError(new FrodoError(`Error reading env file ${filePath}`, error));
+      return false;
+    }
+    for (const line of content.split('\n')) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      const separatorIndex = trimmed.indexOf('=');
+      if (separatorIndex < 1) {
+        printError(
+          new FrodoError(
+            `Invalid line in ${filePath}: ${trimmed}, expected key=value`
+          )
+        );
+        return false;
+      }
+      envValues[trimmed.slice(0, separatorIndex)] = trimmed.slice(
+        separatorIndex + 1
+      );
+    }
+  }
+
+  for (const pair of env) {
+    const separatorIndex = pair.indexOf('=');
+    if (separatorIndex < 1) {
+      printError(
+        new FrodoError(`Invalid env format: ${pair}, expected key=value`)
+      );
+      return false;
+    }
+    envValues[pair.slice(0, separatorIndex)] = pair.slice(separatorIndex + 1);
+  }
+
   const spinnerId = createProgressIndicator(
     'indeterminate',
     0,
     `Reading variables...`
   );
-  let indicatorId: string;
+
   try {
-    const variablesDir = getFilePath(`esvs/variables/`);
+    const variablesDir = getFilePath(`esvs/variables`);
     if (!fs.existsSync(variablesDir)) {
       stopProgressIndicator(spinnerId, `No variables found`, 'fail');
       return true;
     }
-
-    const envFile = loadEnvFile();
 
     const fileNames = fs
       .readdirSync(variablesDir)
@@ -146,7 +186,6 @@ export async function configManagerImportVariables(
       'success'
     );
 
-
     indicatorId = createProgressIndicator(
       'determinate',
       fileNames.length,
@@ -155,8 +194,11 @@ export async function configManagerImportVariables(
 
     for (const fileName of fileNames) {
       try {
-        const importData = readToJson(`${variablesDir}/${fileName}`, {overrideValue: value, envFile, base64Encode: true})
-       
+        const importData = readJsonFile(`${variablesDir}/${fileName}`, {
+          envFileValues: envValues,
+          base64Encode: true,
+        }) as VariableSkeleton;
+
         if (!importData.expressionType) {
           importData.expressionType = 'string';
         }
@@ -177,7 +219,10 @@ export async function configManagerImportVariables(
     if (errors.length > 0) {
       throw new FrodoError(`Error importing variables`, errors);
     }
-    stopProgressIndicator(indicatorId, `${fileNames.length} variables imported.`);
+    stopProgressIndicator(
+      indicatorId,
+      `${fileNames.length} variables imported.`
+    );
     return true;
   } catch (error) {
     stopProgressIndicator(indicatorId, `Error importing variables`, 'fail');

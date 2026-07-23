@@ -1,11 +1,47 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`frodo config-manager push variables "frodo config-manager push variables --name esv-email-welcome --env-file test/e2e/exports/fr-config-manager/cloud/email.env -D test/e2e/exports/fr-config-manager/cloud ": should import the specified variable into cloud" 1`] = `""`;
+
+exports[`frodo config-manager push variables "frodo config-manager push variables --name esv-email-welcome --env-file test/e2e/exports/fr-config-manager/cloud/email.env -D test/e2e/exports/fr-config-manager/cloud ": should import the specified variable into cloud" 2`] = `
+"Experimental feature in use: 'frodo config-manager push variables'. This feature may change without notice.
+✔ Successfully read 1 variables.
+• 1 variables imported.
+"
+`;
+
 exports[`frodo config-manager push variables "frodo config-manager push variables -D test/e2e/exports/fr-config-manager/cloud ": should import variables into cloud" 1`] = `""`;
 
 exports[`frodo config-manager push variables "frodo config-manager push variables -D test/e2e/exports/fr-config-manager/cloud ": should import variables into cloud" 2`] = `
 "Experimental feature in use: 'frodo config-manager push variables'. This feature may change without notice.
 ✔ Successfully read 2 variables.
 • 2 variables imported.
+"
+`;
+
+exports[`frodo config-manager push variables "frodo config-manager push variables -E ESV_CONNECTOR_TIMEOUT_RESET_COUNTER=20 -E ESV_EMAIL_WELCOME='this is a test' -D test/e2e/exports/fr-config-manager/cloud ": should import two variables into cloud" 1`] = `""`;
+
+exports[`frodo config-manager push variables "frodo config-manager push variables -E ESV_CONNECTOR_TIMEOUT_RESET_COUNTER=20 -E ESV_EMAIL_WELCOME='this is a test' -D test/e2e/exports/fr-config-manager/cloud ": should import two variables into cloud" 2`] = `
+"Experimental feature in use: 'frodo config-manager push variables'. This feature may change without notice.
+✔ Successfully read 2 variables.
+• 2 variables imported.
+"
+`;
+
+exports[`frodo config-manager push variables "frodo config-manager push variables -F test/e2e/exports/fr-config-manager/cloud/timeout.env -F test/e2e/exports/fr-config-manager/cloud/email.env  -D test/e2e/exports/fr-config-manager/cloud ": should import the specified variable into cloud" 1`] = `""`;
+
+exports[`frodo config-manager push variables "frodo config-manager push variables -F test/e2e/exports/fr-config-manager/cloud/timeout.env -F test/e2e/exports/fr-config-manager/cloud/email.env  -D test/e2e/exports/fr-config-manager/cloud ": should import the specified variable into cloud" 2`] = `
+"Experimental feature in use: 'frodo config-manager push variables'. This feature may change without notice.
+✔ Successfully read 2 variables.
+• 2 variables imported.
+"
+`;
+
+exports[`frodo config-manager push variables "frodo config-manager push variables -n esv-connector-timeout-reset-counter --env ESV_CONNECTOR_TIMEOUT_RESET_COUNTER=20 -D test/e2e/exports/fr-config-manager/cloud ": should import the specified variable into cloud" 1`] = `""`;
+
+exports[`frodo config-manager push variables "frodo config-manager push variables -n esv-connector-timeout-reset-counter --env ESV_CONNECTOR_TIMEOUT_RESET_COUNTER=20 -D test/e2e/exports/fr-config-manager/cloud ": should import the specified variable into cloud" 2`] = `
+"Experimental feature in use: 'frodo config-manager push variables'. This feature may change without notice.
+✔ Successfully read 1 variables.
+• 1 variables imported.
 "
 `;
 
