@@ -1,8 +1,6 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
-import {
-  MultiTreeExportInterface,
-  TreeExportOptions,
-} from '@rockcarver/frodo-lib/types/ops/JourneyOps';
+import { NodeSkeleton } from '@rockcarver/frodo-lib/types/api/NodeApi';
+import { SingleTreeExportInterface } from '@rockcarver/frodo-lib/types/ops/JourneyOps';
 import fs from 'fs';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
@@ -10,182 +8,174 @@ import { printError, printMessage } from '../utils/Console';
 import { existScript, realmList, safeFileName } from '../utils/FrConfig';
 
 const { saveJsonToFile, getFilePath } = frodo.utils;
+const { exportScript } = frodo.script;
 const { exportJourneys, importJourneys } = frodo.authn.journey;
 const { DEFAULT_REALM_KEY } = frodo.utils.constants;
 
+/**
+ * Export journeys in fr-config-manager format
+ * @param {string} name exports only the specifically named journey
+ * @param {string} realm exports journeys only in specified realm
+ * @param {boolean} pullDependencies include journey dependencies
+ * @param {boolean} clean if true clear existing configuration, otherwise false
+ * @returns {Promise<boolean>} A promise that resolves to true if successful, false otherwise
+ */
 export async function configManagerExportJourneys(
-  name?,
-  realm?,
-  pullDependency?
-  // TO DO: clean?
+  name?: string,
+  realm?: string,
+  pullDependencies: boolean = false,
+  clean: boolean = false
 ): Promise<boolean> {
-  const options: TreeExportOptions = {
-    deps: pullDependency,
-    useStringArrays: true,
-    coords: true,
-  };
-
   try {
     const realmNames =
       realm && realm !== DEFAULT_REALM_KEY ? [realm] : await realmList();
-
     for (const realmName of realmNames) {
       if (
-        realmName === '/ ' &&
+        realmName === '/' &&
         state.getDeploymentType() ===
           frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY
       )
         continue;
-
       state.setRealm(realmName);
-
-      const exportData = (await exportJourneys(
-        options
-      )) as MultiTreeExportInterface;
+      const exportData = await exportJourneys({
+        deps: false,
+        useStringArrays: false,
+        coords: true,
+      });
       await processJourneysExport(
         exportData.trees,
         name,
-        pullDependency,
-        'realms'
+        pullDependencies,
+        clean
       );
     }
     return true;
   } catch (error) {
-    printError(error, `Error exporting config entity endpoints`);
+    printError(error, `Error exporting journeys`);
   }
   return false;
 }
 
-function matchJourneyName(journey, name) {
-  return journey.tree._id === name;
-}
-
-function fileNameFromNode(displayName, id) {
-  return safeFileName(`${displayName} - ${id}`);
-}
-
-async function processJourneysExport(
-  journeys,
-  name,
-  pullDependencies,
-  exportDir
+/**
+ * Helper that processes a journey node for export
+ * @param {NodeSkeleton} node the journey node
+ * @param {string} displayName the node display name
+ * @param {string} nodeDir the node directory
+ * @param {string} realmDir the realm directory
+ * @param {boolean} pullDependencies include journey dependencies
+ * @param {SingleTreeExportInterface} journey the journey export
+ */
+async function processNodeExport(
+  node: NodeSkeleton,
+  displayName: string,
+  nodeDir: string,
+  realmDir: string,
+  pullDependencies: boolean,
+  journey: SingleTreeExportInterface
 ) {
-  const realmDir = state.getRealm() === '/' ? 'root' : state.getRealm();
-  const fileDir = `${exportDir}/${realmDir}/journeys`;
-  try {
-    for (const [, journey] of Object.entries(journeys) as [string, any]) {
-      if (name && !matchJourneyName(journey, name)) {
-        continue;
-      }
-
-      const journeyDir = `${fileDir}/${journey.tree._id}`;
-      const nodeDir = `${journeyDir}/nodes`;
-      const scriptJsonDir = `realms/${realmDir}/scripts/scripts-config`;
-
-      for (const [nodeId, node] of Object.entries(journey.nodes) as [
-        string,
-        any,
-      ]) {
-        const nodeFileNameRoot = `${nodeDir}/${fileNameFromNode(journey.tree.nodes[nodeId].displayName, nodeId)}`;
-
-        if (node._type._id === 'PageNode') {
-          for (const subNode of node.nodes) {
-            const subNodeSpec = journey.innerNodes[subNode._id];
-
-            const subNodeFilename = `${nodeFileNameRoot}/${fileNameFromNode(subNode.displayName, subNode._id)}.json`;
-            saveJsonToFile(
-              subNodeSpec,
-              getFilePath(subNodeFilename, true),
-              false,
-              true,
-              true
-            );
-            if (
-              pullDependencies &&
-              journeyNodeNeedsScript(subNodeSpec) &&
-              !(await existScript(subNodeSpec.script, realmDir))
-            ) {
-              const script = journey.scripts[subNodeSpec.script];
-
-              const scriptText = Array.isArray(script.script)
-                ? script.script.join('\n')
-                : script.script;
-              const scriptExtractDir = `realms/${realmDir}/scripts/`;
-              const scriptExtractName = `scripts-content/${script.context}/${script.name}.js`;
-              extractFrConfigDataToFile(
-                scriptText,
-                scriptExtractName,
-                scriptExtractDir
-              );
-              script.script = { file: `${scriptExtractName}` };
-
-              saveJsonToFile(
-                script,
-                getFilePath(`${scriptJsonDir}/${script._id}.json`, true),
-                false,
-                true,
-                true
-              );
-            }
-          }
-        } else if (
-          pullDependencies &&
-          journeyNodeNeedsScript(node) &&
-          !(await existScript(node.script, realmDir))
-        ) {
-          const script = journey.scripts[node.script];
-          const scriptText = Array.isArray(script.script)
-            ? script.script.join('\n')
-            : script.script;
-          const scriptExtractDir = `realms/${realmDir}/scripts`;
-          const scriptExtractName = `scripts-content/${script.context}/${script.name}.js`;
-          extractFrConfigDataToFile(
-            scriptText,
-            scriptExtractName,
-            scriptExtractDir
-          );
-
-          script.script = { file: `${scriptExtractName}` };
-          saveJsonToFile(
-            script,
-            getFilePath(`${scriptJsonDir}/${script._id}.json`, true),
-            false,
-            true,
-            true
-          );
-        } else if (
-          !!name &&
-          pullDependencies &&
-          node._type._id === 'InnerTreeEvaluatorNode'
-        ) {
-          await processJourneysExport(
-            journeys,
-            node.tree,
-            pullDependencies,
-            exportDir
-          );
-        }
-
-        saveJsonToFile(
-          node,
-          getFilePath(`${nodeFileNameRoot}.json`, true),
-          false,
-          true,
-          true
-        );
-      }
-
-      const fileName = `${journeyDir}/${journey.tree._id}.json`;
-      saveJsonToFile(
-        journey.tree,
-        getFilePath(`${fileName}`, true),
-        false,
-        true,
-        true
+  const nodeFileDir = `${nodeDir}/${safeFileName(`${displayName} - ${node._id}`)}`;
+  if (node._type?._id === 'PageNode') {
+    for (const innerNode of node.nodes) {
+      await processNodeExport(
+        journey.innerNodes[innerNode._id],
+        innerNode.displayName,
+        nodeFileDir,
+        realmDir,
+        pullDependencies,
+        journey
       );
     }
-  } catch (err) {
-    printError(err);
+  }
+  if (
+    pullDependencies &&
+    journeyNodeNeedsScript(node) &&
+    !existScript(node.script, realmDir)
+  ) {
+    const script = (
+      await exportScript(node.script, {
+        deps: false,
+        includeDefault: true,
+        useStringArrays: false,
+      })
+    ).script[node.script];
+    const scriptsDir = `realms/${realmDir}/scripts/`;
+    script.script = extractFrConfigDataToFile(
+      script.script,
+      `scripts-content/${script.context}/${script.name}.js`,
+      scriptsDir
+    ) as any;
+    saveJsonToFile(
+      script,
+      getFilePath(`${scriptsDir}scripts-config/${script._id}.json`, true),
+      false,
+      true,
+      true
+    );
+  }
+  saveJsonToFile(
+    node,
+    getFilePath(`${nodeFileDir}.json`, true),
+    false,
+    true,
+    true
+  );
+}
+
+/**
+ * Helper that processes journeys for export
+ * @param {Record<string, SingleTreeExportInterface>} journeys The journeys to process
+ * @param {string} name processes only the specifically named journey
+ * @param {boolean} pullDependencies include journey dependencies
+ * @param {boolean} clean if true clear existing configuration, otherwise false
+ */
+async function processJourneysExport(
+  journeys: Record<string, SingleTreeExportInterface>,
+  name?: string,
+  pullDependencies: boolean = false,
+  clean: boolean = false
+): Promise<void> {
+  const realmDir = state.getRealm() === '/' ? 'root' : state.getRealm();
+  for (const [treeId, journey] of Object.entries(journeys)) {
+    if (name && treeId !== name) {
+      continue;
+    }
+    const journeyDir = `realms/${realmDir}/journeys/${treeId}`;
+    const nodeDir = `${journeyDir}/nodes`;
+    if (clean) {
+      fs.rmSync(nodeDir, { recursive: true, force: true });
+    }
+    if (!fs.existsSync(nodeDir)) {
+      fs.mkdirSync(nodeDir, { recursive: true });
+    }
+    for (const node of Object.values(journey.nodes)) {
+      if (
+        name &&
+        pullDependencies &&
+        node._type._id === 'InnerTreeEvaluatorNode'
+      ) {
+        await processJourneysExport(
+          journeys,
+          node.tree,
+          pullDependencies,
+          clean
+        );
+      }
+      await processNodeExport(
+        node,
+        journey.tree.nodes[node._id].displayName,
+        nodeDir,
+        realmDir,
+        pullDependencies,
+        journey
+      );
+    }
+    saveJsonToFile(
+      journey.tree,
+      getFilePath(`${journeyDir}/${journey.tree._id}.json`, true),
+      false,
+      true,
+      true
+    );
   }
 }
 

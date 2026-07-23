@@ -46,17 +46,9 @@ export function replaceAllInJson(
   return JSON.parse(contentString);
 }
 
-export async function existScript(
-  fileName: string,
-  realmDir: string
-): Promise<boolean> {
+export function existScript(fileName: string, realmDir: string): boolean {
   const scriptDir = `realms/${realmDir}/scripts/scripts-config`;
   if (!fs.existsSync(scriptDir)) return false;
-  const result = await findFilesByName(`${fileName}.json`, true, scriptDir);
-
-  if (result.length) {
-    return true;
-  } else {
-    return false;
-  }
+  const result = findFilesByName(`${fileName}.json`, true, scriptDir);
+  return result.length > 0;
 }
