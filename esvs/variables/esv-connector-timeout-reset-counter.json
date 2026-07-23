@@ -1,0 +1,6 @@
+{
+  "_id": "esv-connector-timeout-reset-counter",
+  "description": "",
+  "expressionType": "string",
+  "valueBase64": "${ESV_CONNECTOR_TIMEOUT_RESET_COUNTER}"
+}

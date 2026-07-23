@@ -427,6 +427,18 @@ function cloneArgument(argument: Argument): Argument {
   return cloned;
 }
 
+/**
+ * Option that collects repeated values into an array.
+ */
+export class ListOption extends Option {
+  constructor(flags: string, description?: string) {
+    super(flags, description);
+    this.argParser((value: string, previous: string[]) =>
+      previous === this.defaultValue ? [value] : [...previous, value]
+    ).default([]);
+  }
+}
+
 export const hostArgument = new Argument(
   '[host]',
   'AM base URL, e.g.: https://cdk.iam.example.com/am. To use a connection profile, just specify a unique substring or alias.'
@@ -520,6 +532,22 @@ const directoryOption = withHelpGroup(
     '-D, --directory <directory>',
     'Set the working directory.'
   ).default(undefined, 'undefined'),
+  RUNTIME_OPTIONS_HEADING
+);
+
+const envOption = withHelpGroup(
+  new ListOption(
+    '-E, --env <key=value>',
+    'Set an environment variable for placeholder resolution. Omit the value to pass through the host environment variable of the same name. May be specified multiple times. Overrides values from --env-file.'
+  ),
+  RUNTIME_OPTIONS_HEADING
+);
+
+const envFileOption = withHelpGroup(
+  new ListOption(
+    '-F, --env-file <file>',
+    'Read environment variables from a file for placeholder resolution. May be specified multiple times; later files override earlier ones.'
+  ),
   RUNTIME_OPTIONS_HEADING
 );
 
@@ -631,6 +659,8 @@ const defaultOpts = [
   flushCacheOption,
   retryOption,
   useRealmPrefixOnManagedObjects,
+  envOption,
+  envFileOption,
 ];
 
 /**
@@ -714,6 +744,44 @@ const stateMap = {
   },
   [retryOption.attributeName()]: (strategy: RetryStrategy) => {
     state.setAxiosRetryStrategy(strategy);
+  },
+  [envFileOption.attributeName()]: (
+    files: string[],
+    options: Record<string, unknown>
+  ) => {
+    const merged: Record<string, string> = {};
+
+    for (const filePath of files) {
+      let content: string;
+      try {
+        content = fs.readFileSync(filePath, 'utf8');
+      } catch (error) {
+        throw new FrodoError(`Error reading env file ${filePath}`, error);
+      }
+      for (const line of content.split('\n')) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+        const separatorIndex = trimmed.indexOf('=');
+        if (separatorIndex < 1) {
+          throw new FrodoError(
+            `Invalid line in ${filePath}: "${trimmed}", expected key=value`
+          );
+        }
+        merged[trimmed.slice(0, separatorIndex)] = trimmed.slice(
+          separatorIndex + 1
+        );
+      }
+    }
+    for (const pair of (options[envOption.attributeName()] as string[]) || []) {
+      const separatorIndex = pair.indexOf('=');
+      if (separatorIndex < 1) {
+        throw new FrodoError(
+          `Invalid env format: "${pair}", expected key=value`
+        );
+      }
+      merged[pair.slice(0, separatorIndex)] = pair.slice(separatorIndex + 1);
+    }
+    state.setEnvValues(merged);
   },
 };
 

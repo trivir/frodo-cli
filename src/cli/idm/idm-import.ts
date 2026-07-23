@@ -48,15 +48,8 @@ export default function setup() {
     .addOption(new Option('-f, --file [file]', 'Import file. Ignored with -A.'))
     .addOption(
       new Option(
-        '-E, --entities-file [entities-file]',
+        '-e, --entities-file [entities-file]',
         'Name of the entity file. Ignored with -i.'
-      )
-    )
-    .addOption(new Option('-e, --env-file [envfile]', 'Name of the env file.'))
-    .addOption(
-      new Option(
-        '-a, --all',
-        'Import all IDM configuration objects from a single file in directory -D. Ignored with -i.'
       )
     )
     .addOption(

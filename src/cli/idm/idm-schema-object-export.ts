@@ -51,13 +51,6 @@ export default function setup() {
         'Export file if -x or -a are included. Ignored with -A.'
       )
     )
-    .addOption(new Option('-e, --env-file [envfile]', 'Name of the env file.'))
-    .addOption(
-      new Option(
-        '-N, --no-metadata',
-        'Does not include metadata in the export file.'
-      )
-    )
     .addOption(
       new Option(
         '-x, --no-extract',

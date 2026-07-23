@@ -1,0 +1,6 @@
+{
+  "_id": "esv-email-welcome",
+  "description": "Welcome email template",
+  "expressionType": "string",
+  "valueBase64": "${ESV_EMAIL_WELCOME}"
+}

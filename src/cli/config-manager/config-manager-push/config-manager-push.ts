@@ -24,6 +24,7 @@ import ServiceObjects from './config-manager-push-service-objects';
 import TermsAndConditions from './config-manager-push-terms-and-conditions';
 import Themes from './config-manager-push-themes';
 import UiConfig from './config-manager-push-ui-config';
+import Variables from './config-manager-push-variables';
 
 export default function setup() {
   const program = new FrodoStubCommand('push').description(
@@ -53,7 +54,8 @@ export default function setup() {
   program.addCommand(RemoteServers().name('remote-servers'));
   program.addCommand(SecretMappings().name('secret-mappings'));
   program.addCommand(CustomNodes().name('custom-nodes'));
-
   program.addCommand(CSP().name('csp'));
+  program.addCommand(Variables().name('variables'));
+
   return program;
 }
