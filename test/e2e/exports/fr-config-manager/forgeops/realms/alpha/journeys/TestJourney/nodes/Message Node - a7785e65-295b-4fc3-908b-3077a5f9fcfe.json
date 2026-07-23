@@ -1,0 +1,24 @@
+{
+  "_id": "a7785e65-295b-4fc3-908b-3077a5f9fcfe",
+  "_outcomes": [
+    {
+      "displayName": "True",
+      "id": "true"
+    },
+    {
+      "displayName": "False",
+      "id": "false"
+    }
+  ],
+  "_rev": "-402204299",
+  "_type": {
+    "_id": "MessageNode",
+    "collection": true,
+    "name": "Message Node"
+  },
+  "message": {
+    "en": "This user has been registered."
+  },
+  "messageNo": {},
+  "messageYes": {}
+}

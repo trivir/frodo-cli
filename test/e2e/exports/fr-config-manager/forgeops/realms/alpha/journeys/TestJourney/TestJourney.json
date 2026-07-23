@@ -1,0 +1,67 @@
+{
+  "_id": "TestJourney",
+  "_rev": "2029200158",
+  "enabled": true,
+  "entryNodeId": "7d97831d-feb8-42d4-b665-f3bd596555ce",
+  "identityResource": "managed/user",
+  "innerTreeOnly": false,
+  "mustRun": false,
+  "noSession": false,
+  "nodes": {
+    "1a62e972-325a-4955-8c5f-b3fdd2e5176d": {
+      "connections": {
+        "false": "e301438c-0bd0-429c-ab0c-66126501069a",
+        "true": "a7785e65-295b-4fc3-908b-3077a5f9fcfe"
+      },
+      "displayName": "Inner Tree Evaluator",
+      "nodeType": "InnerTreeEvaluatorNode",
+      "x": 726,
+      "y": 242.015625
+    },
+    "1b879025-76c8-4660-8b33-7c0c1f284482": {
+      "connections": {
+        "outcome": "1a62e972-325a-4955-8c5f-b3fdd2e5176d"
+      },
+      "displayName": "Page Node",
+      "nodeType": "PageNode",
+      "x": 496.34375,
+      "y": 188.015625
+    },
+    "7d97831d-feb8-42d4-b665-f3bd596555ce": {
+      "connections": {
+        "outcome": "1b879025-76c8-4660-8b33-7c0c1f284482"
+      },
+      "displayName": "Page Node",
+      "nodeType": "PageNode",
+      "x": 199.34375,
+      "y": 149.015625
+    },
+    "a7785e65-295b-4fc3-908b-3077a5f9fcfe": {
+      "connections": {
+        "false": "7d97831d-feb8-42d4-b665-f3bd596555ce",
+        "true": "70e691a5-1e33-4ac3-a356-e7b6d60d92e0"
+      },
+      "displayName": "Message Node",
+      "nodeType": "MessageNode",
+      "x": 1002,
+      "y": 145.015625
+    }
+  },
+  "staticNodes": {
+    "70e691a5-1e33-4ac3-a356-e7b6d60d92e0": {
+      "x": 1413,
+      "y": 101
+    },
+    "e301438c-0bd0-429c-ab0c-66126501069a": {
+      "x": 1453,
+      "y": 305
+    },
+    "startNode": {
+      "x": 50,
+      "y": 250
+    }
+  },
+  "uiConfig": {
+    "categories": "[]"
+  }
+}

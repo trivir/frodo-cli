@@ -1,0 +1,21 @@
+{
+  "_id": "1a62e972-325a-4955-8c5f-b3fdd2e5176d",
+  "_outcomes": [
+    {
+      "displayName": "True",
+      "id": "true"
+    },
+    {
+      "displayName": "False",
+      "id": "false"
+    }
+  ],
+  "_rev": "812016987",
+  "_type": {
+    "_id": "InnerTreeEvaluatorNode",
+    "collection": true,
+    "name": "Inner Tree Evaluator"
+  },
+  "displayErrorOutcome": false,
+  "tree": "Registration"
+}

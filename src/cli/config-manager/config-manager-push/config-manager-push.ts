@@ -12,6 +12,7 @@ import EmailProvider from './config-manager-push-email-provider';
 import EmailTemplates from './config-manager-push-email-templates';
 import Endpoints from './config-manager-push-endpoints';
 import InternalRoles from './config-manager-push-internal-roles';
+import Journeys from './config-manager-push-journeys';
 import Kba from './config-manager-push-kba';
 import Locales from './config-manager-push-locales';
 import ManagedObjects from './config-manager-push-managed-objects';
@@ -53,7 +54,8 @@ export default function setup() {
   program.addCommand(RemoteServers().name('remote-servers'));
   program.addCommand(SecretMappings().name('secret-mappings'));
   program.addCommand(CustomNodes().name('custom-nodes'));
-
+  program.addCommand(Journeys().name('journeys'));
   program.addCommand(CSP().name('csp'));
+  
   return program;
 }

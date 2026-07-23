@@ -1,0 +1,24 @@
+{
+  "_id": "1b879025-76c8-4660-8b33-7c0c1f284482",
+  "_outcomes": [
+    {
+      "displayName": "outcome",
+      "id": "outcome"
+    }
+  ],
+  "_rev": "675174006",
+  "_type": {
+    "_id": "PageNode",
+    "collection": true,
+    "name": "Page Node"
+  },
+  "nodes": [
+    {
+      "_id": "7fbfd7c2-18f8-4875-bc7a-f9fb5b8a2ef5",
+      "displayName": "VerifyUsername",
+      "nodeType": "ScriptedDecisionNode"
+    }
+  ],
+  "pageDescription": {},
+  "pageHeader": {}
+}
