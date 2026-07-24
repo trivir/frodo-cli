@@ -16,12 +16,12 @@ import { configManagerExportKbaConfig } from './FrConfigKbaOps';
 import { configManagerExportLocales } from './FrConfigLocalesOps';
 import { configManagerExportManagedObjects } from './FrConfigManagedObjectsOps';
 import { configManagerExportConfigAgents } from './FrConfigOauth2AgentOps';
-import { configManagerExportOrgPrivilegesAllRealms } from './FrConfigOrgPrivilegesOps';
+import { configManagerExportOrgPrivileges } from './FrConfigOrgPrivilegesOps';
 import { configManagerExportPasswordPolicy } from './FrConfigPasswordPolicyOps';
 import { configManagerExportRemoteServers } from './FrConfigRemoteServersOps';
 import { configManagerExportSaml } from './FrConfigSamlOps';
 import { configManagerExportSchedules } from './FrConfigSchedulesOps';
-import { configManagerExportScriptsAll } from './FrConfigScriptOps';
+import { configManagerExportScripts } from './FrConfigScriptOps';
 import { configManagerExportSecretMappings } from './FrConfigSecretMappingsOps';
 import { configManagerExportSecrets } from './FrConfigSecretOps';
 import { configManagerExportServiceObjectsFromFile } from './FrConfigServiceObjectsOps';
@@ -38,12 +38,13 @@ export interface ConfigManagerAllOptions {
 }
 
 export async function configManagerExportAllWithConfigFolder(
-  options: ConfigManagerAllOptions = {}
+  options: ConfigManagerAllOptions = {},
+  realm?: string
 ): Promise<boolean> {
   try {
     await configManagerExportAccessConfig();
     await configManagerExportAudit();
-    await configManagerExportAuthentication();
+    await configManagerExportAuthentication(realm);
 
     try {
       await configManagerExportAuthzPolicySets(
@@ -64,7 +65,7 @@ export async function configManagerExportAllWithConfigFolder(
     await configManagerExportEmailTemplates();
     await configManagerExportEndpoints();
     await configManagerExportInternalRoles();
-    await configManagerExportJourneys();
+    await configManagerExportJourneys(undefined, realm);
     await configManagerExportKbaConfig();
     await configManagerExportLocales();
     await configManagerExportManagedObjects();
@@ -80,8 +81,8 @@ export async function configManagerExportAllWithConfigFolder(
       );
     }
 
-    await configManagerExportOrgPrivilegesAllRealms();
-    await configManagerExportPasswordPolicy();
+    await configManagerExportOrgPrivileges();
+    await configManagerExportPasswordPolicy(realm);
     await configManagerExportRemoteServers();
     await configManagerExportSchedules();
 
@@ -94,9 +95,9 @@ export async function configManagerExportAllWithConfigFolder(
       );
     }
 
-    await configManagerExportScriptsAll();
+    await configManagerExportScripts();
     await configManagerExportSecrets();
-    await configManagerExportSecretMappings();
+    await configManagerExportSecretMappings(undefined, realm);
 
     try {
       await configManagerExportServiceObjectsFromFile(
@@ -109,7 +110,7 @@ export async function configManagerExportAllWithConfigFolder(
       );
     }
 
-    await configManagerExportServices();
+    await configManagerExportServices(realm);
     await configManagerExportThemes();
     await configManagerExportTermsAndConditions();
     await configManagerExportUiConfig();
@@ -121,11 +122,13 @@ export async function configManagerExportAllWithConfigFolder(
   }
 }
 
-export async function configManagerExportAllStatic(): Promise<boolean> {
+export async function configManagerExportAllStatic(
+  realm?: string
+): Promise<boolean> {
   try {
     await configManagerExportAccessConfig();
     await configManagerExportAudit();
-    await configManagerExportAuthentication();
+    await configManagerExportAuthentication(realm);
     await configManagerExportConnectorDefinitionsAll();
     await configManagerExportMappings();
 
@@ -133,18 +136,18 @@ export async function configManagerExportAllStatic(): Promise<boolean> {
     await configManagerExportEmailProviderConfiguration();
     await configManagerExportEmailTemplates();
     await configManagerExportEndpoints();
-    await configManagerExportJourneys();
+    await configManagerExportJourneys(undefined, realm);
 
     await configManagerExportKbaConfig();
     await configManagerExportLocales();
     await configManagerExportManagedObjects();
-    await configManagerExportOrgPrivilegesAllRealms();
-    await configManagerExportPasswordPolicy();
+    await configManagerExportOrgPrivileges();
+    await configManagerExportPasswordPolicy(realm);
 
     await configManagerExportRemoteServers();
     await configManagerExportSchedules();
-    await configManagerExportScriptsAll();
-    await configManagerExportServices();
+    await configManagerExportScripts();
+    await configManagerExportServices(realm);
     await configManagerExportThemes();
 
     await configManagerExportTermsAndConditions();

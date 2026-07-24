@@ -1,11 +1,7 @@
-import { frodo, state } from '@rockcarver/frodo-lib';
+import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
-import {
-  configManagerExportScript,
-  configManagerExportScriptsAll,
-  configManagerExportScriptsRealms,
-} from '../../../configManagerOps/FrConfigScriptOps';
+import { configManagerExportScripts } from '../../../configManagerOps/FrConfigScriptOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
@@ -17,8 +13,6 @@ const deploymentTypes = [
   CLOUD_DEPLOYMENT_TYPE_KEY,
   FORGEOPS_DEPLOYMENT_TYPE_KEY,
 ];
-const { constants } = frodo.utils;
-const { readRealms } = frodo.realm;
 
 export default function setup() {
   const program = new FrodoCommand(
@@ -30,12 +24,6 @@ export default function setup() {
     .description('Export authorization scripts.')
     .addOption(
       new Option(
-        '-r, --realm <realm>',
-        'Specifies the realm to export from. Only the scripts from this realm will be exported.'
-      )
-    )
-    .addOption(
-      new Option(
         '-n, --script-name <script name>',
         'Export specific script using filename. Omit file extension.'
       )
@@ -44,33 +32,13 @@ export default function setup() {
     .addOption(
       new Option(
         '-p, --prefix <prefix>',
-        'Export all scripts that start with a certain prefix. Ignored with -n'
+        'Export all scripts that start with a certain prefix. Repetition of this flag is allowed. Ignored with -n'
       )
-    )
-    .addOption(
-      new Option(
-        '--just-content',
-        'Export only the script .js files, no config files'
-      )
-    )
-    .addOption(
-      new Option(
-        '--just-config',
-        'Export only the config .json files, no scripts. Ignored with --just-content'
-      )
-    )
-    .addOption(
-      new Option(
-        '--script-type <script type>',
-        'Export all scripts of a certain type. Ignored with -n.'
-      )
-    )
-    .addOption(
-      new Option(
-        // the two options are groovy and all because the command "fr-config-pull scripts" in fr-config manager with no specified arguements returns only js files
-        '--language <programming language>',
-        'Export all scripts written a certain programming language. ALL, GROOVY, or JAVASCRIPT. defaults to JAVASCRIPT. Ignored with -n'
-      )
+        .argParser((value, previous: string[] = []) => {
+          previous.push(value);
+          return previous;
+        })
+        .default([])
     )
 
     .addHelpText(
@@ -109,102 +77,20 @@ export default function setup() {
         command
       );
 
-      // -r/--realm flag has precedence over [realm] arguement
-      if (options.realm) {
-        realm = options.realm;
-      }
-
-      const hasOptions: boolean =
-        options.language ||
-        options.scriptType ||
-        options.justConfig ||
-        options.justContent ||
-        options.prefix;
-
       if (await getTokens(false, true, deploymentTypes)) {
         let outcome: boolean;
-
-        // -n/--script-name
-        if (options.scriptName) {
-          // try and find script in current realm
-          printMessage(
-            `Exporting script ${options.scriptName} from the ${state.getRealm()} realm.`
-          );
-          const originalRealm: string = state.getRealm();
-          outcome = await configManagerExportScript(
-            {
-              scriptName: options.scriptName,
-            },
-            options.justContent,
-            options.justConfig
-          );
-
-          // check other realms for the script
-          if (!outcome) {
-            for (const realm of await readRealms()) {
-              if (outcome) {
-                break;
-              }
-              if (realm.name !== originalRealm) {
-                printMessage(
-                  `Exporting script ${options.scriptName} from the ${state.getRealm()} realm failed.`
-                );
-                state.setRealm(realm.name);
-                printMessage(
-                  `Looking for the ${options.scriptName} script in the ${state.getRealm()} realm now.`
-                );
-                outcome = await configManagerExportScript(
-                  {
-                    scriptName: options.scriptName,
-                  },
-                  options.justContent,
-                  options.justConfig
-                );
-              }
-            }
-            if (!outcome) {
-              printMessage(
-                `Did not find the script "${options.scriptName}" anywhere.`
-              );
-            }
-          }
-        }
-
-        // -r/--realm
-        else if (realm !== constants.DEFAULT_REALM_KEY) {
-          printMessage(
-            `Exporting scripts from the ${state.getRealm()} realm${hasOptions ? ' with custom options.' : '.'}`
-          );
-          outcome = await configManagerExportScriptsRealms(
-            options.prefix,
-            options.justContent,
-            options.justConfig,
-            options.scriptType,
-            options.language
-          );
-        }
-
-        // export all, the default
-        else {
-          printMessage(
-            `Exporting scripts from entire tenant${hasOptions ? ' with custom options.' : '.'}`
-          );
-          outcome = await configManagerExportScriptsAll(
-            options.prefix,
-            options.justContent,
-            options.justConfig,
-            options.scriptType,
-            options.language
-          );
-        }
-
-        if (!outcome) {
-          process.exitCode = 1;
-        }
-      }
-
-      // unrecognized combination of options or no options
-      else {
+        printMessage(
+          options.scriptName
+            ? `Exporting script "${options.scriptName}".`
+            : 'Exporting scripts'
+        );
+        outcome = await configManagerExportScripts(
+          options.prefix,
+          realm,
+          options.scriptName
+        );
+        if (!outcome) process.exitCode = 1;
+      } else {
         printMessage(
           'Unrecognized combination of options or no options...',
           'error'
@@ -213,6 +99,5 @@ export default function setup() {
         process.exitCode = 1;
       }
     });
-
   return program;
 }

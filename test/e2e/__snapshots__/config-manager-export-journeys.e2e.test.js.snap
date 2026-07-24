@@ -8618,6 +8618,1885 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testD
 }
 `;
 
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style" 1`] = `0`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style" 2`] = `""`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Agent/Agent.json 1`] = `
+{
+  "_id": "Agent",
+  "_rev": "174532371",
+  "description": "Authentication Tree for Agent",
+  "enabled": true,
+  "entryNodeId": "6c24a892-4bae-48ad-8d9c-8061257c9ed7",
+  "innerTreeOnly": false,
+  "mustRun": false,
+  "noSession": false,
+  "nodes": {
+    "35cb0861-c160-47ff-808c-3429ba18772c": {
+      "connections": {
+        "outcome": "7a910023-cad2-4f49-9ce0-1a0c711613d3",
+      },
+      "displayName": "Page Node",
+      "nodeType": "PageNode",
+      "x": 350,
+      "y": 200,
+    },
+    "6c24a892-4bae-48ad-8d9c-8061257c9ed7": {
+      "connections": {
+        "false": "35cb0861-c160-47ff-808c-3429ba18772c",
+        "true": "7a910023-cad2-4f49-9ce0-1a0c711613d3",
+      },
+      "displayName": "Zero Page Login Collector",
+      "nodeType": "ZeroPageLoginNode",
+      "x": 150,
+      "y": 25,
+    },
+    "7a910023-cad2-4f49-9ce0-1a0c711613d3": {
+      "connections": {
+        "false": "e301438c-0bd0-429c-ab0c-66126501069a",
+        "true": "70e691a5-1e33-4ac3-a356-e7b6d60d92e0",
+      },
+      "displayName": "Agent Data Store Decision",
+      "nodeType": "AgentDataStoreDecisionNode",
+      "x": 700,
+      "y": 25,
+    },
+  },
+  "staticNodes": {
+    "70e691a5-1e33-4ac3-a356-e7b6d60d92e0": {
+      "x": 1000,
+      "y": 25,
+    },
+    "e301438c-0bd0-429c-ab0c-66126501069a": {
+      "x": 1000,
+      "y": 200,
+    },
+    "startNode": {
+      "x": 50,
+      "y": 25,
+    },
+  },
+  "uiConfig": {
+    "categories": "["Authentication"]",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Agent/nodes/Agent Data Store Decision - 7a910023-cad2-4f49-9ce0-1a0c711613d3.json 1`] = `
+{
+  "_id": "7a910023-cad2-4f49-9ce0-1a0c711613d3",
+  "_outcomes": [
+    {
+      "displayName": "True",
+      "id": "true",
+    },
+    {
+      "displayName": "False",
+      "id": "false",
+    },
+  ],
+  "_rev": "1005305455",
+  "_type": {
+    "_id": "AgentDataStoreDecisionNode",
+    "collection": true,
+    "name": "Agent Data Store Decision",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Agent/nodes/Page Node - 35cb0861-c160-47ff-808c-3429ba18772c.json 1`] = `
+{
+  "_id": "35cb0861-c160-47ff-808c-3429ba18772c",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-520517447",
+  "_type": {
+    "_id": "PageNode",
+    "collection": true,
+    "name": "Page Node",
+  },
+  "nodes": [
+    {
+      "_id": "d0990b1c-e23d-4f0c-a32d-af3c4a1cd16e",
+      "displayName": "Username Collector",
+      "nodeType": "UsernameCollectorNode",
+    },
+    {
+      "_id": "b0faff37-78ad-492f-a614-9b96814e6915",
+      "displayName": "Password Collector",
+      "nodeType": "PasswordCollectorNode",
+    },
+  ],
+  "pageDescription": {},
+  "pageHeader": {},
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Agent/nodes/Page Node - 35cb0861-c160-47ff-808c-3429ba18772c/Password Collector - b0faff37-78ad-492f-a614-9b96814e6915.json 1`] = `
+{
+  "_id": "b0faff37-78ad-492f-a614-9b96814e6915",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "835969126",
+  "_type": {
+    "_id": "PasswordCollectorNode",
+    "collection": true,
+    "name": "Password Collector",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Agent/nodes/Page Node - 35cb0861-c160-47ff-808c-3429ba18772c/Username Collector - d0990b1c-e23d-4f0c-a32d-af3c4a1cd16e.json 1`] = `
+{
+  "_id": "d0990b1c-e23d-4f0c-a32d-af3c4a1cd16e",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-674343946",
+  "_type": {
+    "_id": "UsernameCollectorNode",
+    "collection": true,
+    "name": "Username Collector",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Agent/nodes/Zero Page Login Collector - 6c24a892-4bae-48ad-8d9c-8061257c9ed7.json 1`] = `
+{
+  "_id": "6c24a892-4bae-48ad-8d9c-8061257c9ed7",
+  "_outcomes": [
+    {
+      "displayName": "Has Credentials",
+      "id": "true",
+    },
+    {
+      "displayName": "No Credentials",
+      "id": "false",
+    },
+  ],
+  "_rev": "-605868868",
+  "_type": {
+    "_id": "ZeroPageLoginNode",
+    "collection": true,
+    "name": "Zero Page Login Collector",
+  },
+  "allowWithoutReferer": true,
+  "passwordHeader": "X-OpenAM-Password",
+  "referrerWhiteList": [],
+  "usernameHeader": "X-OpenAM-Username",
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ForgottenUsername/ForgottenUsername.json 1`] = `
+{
+  "_id": "ForgottenUsername",
+  "_rev": "-1065471530",
+  "description": "Forgotten Username Tree",
+  "enabled": true,
+  "entryNodeId": "5e2a7c95-94af-4b23-8724-deb13853726a",
+  "innerTreeOnly": false,
+  "mustRun": false,
+  "noSession": false,
+  "nodes": {
+    "5e2a7c95-94af-4b23-8724-deb13853726a": {
+      "connections": {
+        "outcome": "bf9ea8d5-9802-4f26-9664-a21840faac23",
+      },
+      "displayName": "Page Node",
+      "nodeType": "PageNode",
+      "x": 139,
+      "y": 146,
+    },
+    "b93ce36e-1976-4610-b24f-8d6760b5463b": {
+      "connections": {
+        "false": "e301438c-0bd0-429c-ab0c-66126501069a",
+        "true": "70e691a5-1e33-4ac3-a356-e7b6d60d92e0",
+      },
+      "displayName": "Inner Tree Evaluator",
+      "nodeType": "InnerTreeEvaluatorNode",
+      "x": 767,
+      "y": 188,
+    },
+    "bf9ea8d5-9802-4f26-9664-a21840faac23": {
+      "connections": {
+        "false": "d9a79f01-2ce3-4be2-a28a-975f35c3c8ca",
+        "true": "d9a79f01-2ce3-4be2-a28a-975f35c3c8ca",
+      },
+      "displayName": "Identify Existing User",
+      "nodeType": "IdentifyExistingUserNode",
+      "x": 324,
+      "y": 152,
+    },
+    "d9a79f01-2ce3-4be2-a28a-975f35c3c8ca": {
+      "connections": {
+        "outcome": "b93ce36e-1976-4610-b24f-8d6760b5463b",
+      },
+      "displayName": "Email Suspend Node",
+      "nodeType": "EmailSuspendNode",
+      "x": 563,
+      "y": 193,
+    },
+  },
+  "staticNodes": {
+    "70e691a5-1e33-4ac3-a356-e7b6d60d92e0": {
+      "x": 970,
+      "y": 149,
+    },
+    "e301438c-0bd0-429c-ab0c-66126501069a": {
+      "x": 982,
+      "y": 252,
+    },
+    "startNode": {
+      "x": 50,
+      "y": 25,
+    },
+  },
+  "uiConfig": {
+    "categories": "["Username Reset"]",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ForgottenUsername/nodes/Email Suspend Node - d9a79f01-2ce3-4be2-a28a-975f35c3c8ca.json 1`] = `
+{
+  "_id": "d9a79f01-2ce3-4be2-a28a-975f35c3c8ca",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "2035832000",
+  "_type": {
+    "_id": "EmailSuspendNode",
+    "collection": true,
+    "name": "Email Suspend Node",
+  },
+  "emailAttribute": "mail",
+  "emailSuspendMessage": {
+    "en": "An email has been sent to the address you entered. Click the link in that email to proceed.",
+  },
+  "emailTemplateName": "forgottenUsername",
+  "identityAttribute": "mail",
+  "objectLookup": true,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ForgottenUsername/nodes/Identify Existing User - bf9ea8d5-9802-4f26-9664-a21840faac23.json 1`] = `
+{
+  "_id": "bf9ea8d5-9802-4f26-9664-a21840faac23",
+  "_outcomes": [
+    {
+      "displayName": "True",
+      "id": "true",
+    },
+    {
+      "displayName": "False",
+      "id": "false",
+    },
+  ],
+  "_rev": "-626658673",
+  "_type": {
+    "_id": "IdentifyExistingUserNode",
+    "collection": true,
+    "name": "Identify Existing User",
+  },
+  "identifier": "userName",
+  "identityAttribute": "mail",
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ForgottenUsername/nodes/Inner Tree Evaluator - b93ce36e-1976-4610-b24f-8d6760b5463b.json 1`] = `
+{
+  "_id": "b93ce36e-1976-4610-b24f-8d6760b5463b",
+  "_outcomes": [
+    {
+      "displayName": "True",
+      "id": "true",
+    },
+    {
+      "displayName": "False",
+      "id": "false",
+    },
+  ],
+  "_rev": "1166482376",
+  "_type": {
+    "_id": "InnerTreeEvaluatorNode",
+    "collection": true,
+    "name": "Inner Tree Evaluator",
+  },
+  "displayErrorOutcome": false,
+  "tree": "Login",
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ForgottenUsername/nodes/Page Node - 5e2a7c95-94af-4b23-8724-deb13853726a.json 1`] = `
+{
+  "_id": "5e2a7c95-94af-4b23-8724-deb13853726a",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-1421046051",
+  "_type": {
+    "_id": "PageNode",
+    "collection": true,
+    "name": "Page Node",
+  },
+  "nodes": [
+    {
+      "_id": "9f1e8d94-4922-481b-9e14-212b66548900",
+      "displayName": "Attribute Collector",
+      "nodeType": "AttributeCollectorNode",
+    },
+  ],
+  "pageDescription": {
+    "en": "Enter your email address or <a href="#/service/Login">Sign in</a>",
+  },
+  "pageHeader": {
+    "en": "Forgotten Username",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ForgottenUsername/nodes/Page Node - 5e2a7c95-94af-4b23-8724-deb13853726a/Attribute Collector - 9f1e8d94-4922-481b-9e14-212b66548900.json 1`] = `
+{
+  "_id": "9f1e8d94-4922-481b-9e14-212b66548900",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-1331445210",
+  "_type": {
+    "_id": "AttributeCollectorNode",
+    "collection": true,
+    "name": "Attribute Collector",
+  },
+  "attributesToCollect": [
+    "mail",
+  ],
+  "identityAttribute": "mail",
+  "required": true,
+  "validateInputs": false,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Login/Login.json 1`] = `
+{
+  "_id": "Login",
+  "_rev": "870652898",
+  "description": "Platform Login Tree",
+  "enabled": true,
+  "entryNodeId": "a12bc72f-ad97-4f1e-a789-a1fa3dd566c8",
+  "innerTreeOnly": false,
+  "mustRun": false,
+  "noSession": false,
+  "nodes": {
+    "2998c1c9-f4c8-4a00-b2c6-3426783ee49d": {
+      "connections": {
+        "false": "e301438c-0bd0-429c-ab0c-66126501069a",
+        "true": "bba3e0d8-8525-4e82-bf48-ac17f7988917",
+      },
+      "displayName": "Data Store Decision",
+      "nodeType": "DataStoreDecisionNode",
+      "x": 315,
+      "y": 140,
+    },
+    "33b24514-3e50-4180-8f08-ab6f4e51b07e": {
+      "connections": {
+        "false": "e301438c-0bd0-429c-ab0c-66126501069a",
+        "true": "70e691a5-1e33-4ac3-a356-e7b6d60d92e0",
+      },
+      "displayName": "Inner Tree Evaluator",
+      "nodeType": "InnerTreeEvaluatorNode",
+      "x": 815,
+      "y": 180,
+    },
+    "a12bc72f-ad97-4f1e-a789-a1fa3dd566c8": {
+      "connections": {
+        "outcome": "2998c1c9-f4c8-4a00-b2c6-3426783ee49d",
+      },
+      "displayName": "Page Node",
+      "nodeType": "PageNode",
+      "x": 136,
+      "y": 59,
+    },
+    "bba3e0d8-8525-4e82-bf48-ac17f7988917": {
+      "connections": {
+        "outcome": "33b24514-3e50-4180-8f08-ab6f4e51b07e",
+      },
+      "displayName": "Increment Login Count",
+      "nodeType": "IncrementLoginCountNode",
+      "x": 564,
+      "y": 132,
+    },
+  },
+  "staticNodes": {
+    "70e691a5-1e33-4ac3-a356-e7b6d60d92e0": {
+      "x": 1008,
+      "y": 186,
+    },
+    "e301438c-0bd0-429c-ab0c-66126501069a": {
+      "x": 624,
+      "y": 267,
+    },
+    "startNode": {
+      "x": 50,
+      "y": 25,
+    },
+  },
+  "uiConfig": {
+    "categories": "["Authentication"]",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Login/nodes/Data Store Decision - 2998c1c9-f4c8-4a00-b2c6-3426783ee49d.json 1`] = `
+{
+  "_id": "2998c1c9-f4c8-4a00-b2c6-3426783ee49d",
+  "_outcomes": [
+    {
+      "displayName": "True",
+      "id": "true",
+    },
+    {
+      "displayName": "False",
+      "id": "false",
+    },
+  ],
+  "_rev": "-656534578",
+  "_type": {
+    "_id": "DataStoreDecisionNode",
+    "collection": true,
+    "name": "Data Store Decision",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Login/nodes/Increment Login Count - bba3e0d8-8525-4e82-bf48-ac17f7988917.json 1`] = `
+{
+  "_id": "bba3e0d8-8525-4e82-bf48-ac17f7988917",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "2098371942",
+  "_type": {
+    "_id": "IncrementLoginCountNode",
+    "collection": true,
+    "name": "Increment Login Count",
+  },
+  "identityAttribute": "userName",
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Login/nodes/Inner Tree Evaluator - 33b24514-3e50-4180-8f08-ab6f4e51b07e.json 1`] = `
+{
+  "_id": "33b24514-3e50-4180-8f08-ab6f4e51b07e",
+  "_outcomes": [
+    {
+      "displayName": "True",
+      "id": "true",
+    },
+    {
+      "displayName": "False",
+      "id": "false",
+    },
+  ],
+  "_rev": "-1628846194",
+  "_type": {
+    "_id": "InnerTreeEvaluatorNode",
+    "collection": true,
+    "name": "Inner Tree Evaluator",
+  },
+  "displayErrorOutcome": false,
+  "tree": "ProgressiveProfile",
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Login/nodes/Page Node - a12bc72f-ad97-4f1e-a789-a1fa3dd566c8.json 1`] = `
+{
+  "_id": "a12bc72f-ad97-4f1e-a789-a1fa3dd566c8",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-1594114",
+  "_type": {
+    "_id": "PageNode",
+    "collection": true,
+    "name": "Page Node",
+  },
+  "nodes": [
+    {
+      "_id": "7354982f-57b6-4b04-9ddc-f1dd1e1e07d0",
+      "displayName": "Platform Username",
+      "nodeType": "ValidatedUsernameNode",
+    },
+    {
+      "_id": "0c80c39b-4813-4e67-b4fb-5a0bba85f994",
+      "displayName": "Platform Password",
+      "nodeType": "ValidatedPasswordNode",
+    },
+  ],
+  "pageDescription": {
+    "en": "New here? <a href="#/service/Registration">Create an account</a><br><a href="#/service/ForgottenUsername">Forgot username?</a><a href="#/service/ResetPassword"> Forgot password?</a>",
+  },
+  "pageHeader": {
+    "en": "Sign In",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Login/nodes/Page Node - a12bc72f-ad97-4f1e-a789-a1fa3dd566c8/Platform Password - 0c80c39b-4813-4e67-b4fb-5a0bba85f994.json 1`] = `
+{
+  "_id": "0c80c39b-4813-4e67-b4fb-5a0bba85f994",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-1763423776",
+  "_type": {
+    "_id": "ValidatedPasswordNode",
+    "collection": true,
+    "name": "Platform Password",
+  },
+  "passwordAttribute": "password",
+  "validateInput": false,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Login/nodes/Page Node - a12bc72f-ad97-4f1e-a789-a1fa3dd566c8/Platform Username - 7354982f-57b6-4b04-9ddc-f1dd1e1e07d0.json 1`] = `
+{
+  "_id": "7354982f-57b6-4b04-9ddc-f1dd1e1e07d0",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-2064640544",
+  "_type": {
+    "_id": "ValidatedUsernameNode",
+    "collection": true,
+    "name": "Platform Username",
+  },
+  "usernameAttribute": "userName",
+  "validateInput": false,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ProgressiveProfile/ProgressiveProfile.json 1`] = `
+{
+  "_id": "ProgressiveProfile",
+  "_rev": "2039065517",
+  "description": "Prompt for missing preferences on 3rd login",
+  "enabled": true,
+  "entryNodeId": "8afdaec3-275e-4301-bb53-34f03e6a4b29",
+  "innerTreeOnly": false,
+  "mustRun": false,
+  "noSession": false,
+  "nodes": {
+    "423a959a-a1b9-498a-b0f7-596b6b6e775a": {
+      "connections": {
+        "FAILURE": "e301438c-0bd0-429c-ab0c-66126501069a",
+        "PATCHED": "70e691a5-1e33-4ac3-a356-e7b6d60d92e0",
+      },
+      "displayName": "Patch Object",
+      "nodeType": "PatchObjectNode",
+      "x": 766,
+      "y": 36,
+    },
+    "8afdaec3-275e-4301-bb53-34f03e6a4b29": {
+      "connections": {
+        "false": "70e691a5-1e33-4ac3-a356-e7b6d60d92e0",
+        "true": "a1f45b44-5bf7-4c57-aa3f-75c619c7db8e",
+      },
+      "displayName": "Login Count Decision",
+      "nodeType": "LoginCountDecisionNode",
+      "x": 152,
+      "y": 36,
+    },
+    "a1f45b44-5bf7-4c57-aa3f-75c619c7db8e": {
+      "connections": {
+        "false": "70e691a5-1e33-4ac3-a356-e7b6d60d92e0",
+        "true": "a5aecad8-854a-4ed5-b719-ff6c90e858c0",
+      },
+      "displayName": "Query Filter Decision",
+      "nodeType": "QueryFilterDecisionNode",
+      "x": 357,
+      "y": 36,
+    },
+    "a5aecad8-854a-4ed5-b719-ff6c90e858c0": {
+      "connections": {
+        "outcome": "423a959a-a1b9-498a-b0f7-596b6b6e775a",
+      },
+      "displayName": "Page Node",
+      "nodeType": "PageNode",
+      "x": 555,
+      "y": 20,
+    },
+  },
+  "staticNodes": {
+    "70e691a5-1e33-4ac3-a356-e7b6d60d92e0": {
+      "x": 802,
+      "y": 312,
+    },
+    "e301438c-0bd0-429c-ab0c-66126501069a": {
+      "x": 919,
+      "y": 171,
+    },
+    "startNode": {
+      "x": 50,
+      "y": 58.5,
+    },
+  },
+  "uiConfig": {
+    "categories": "["Progressive Profile"]",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ProgressiveProfile/nodes/Login Count Decision - 8afdaec3-275e-4301-bb53-34f03e6a4b29.json 1`] = `
+{
+  "_id": "8afdaec3-275e-4301-bb53-34f03e6a4b29",
+  "_outcomes": [
+    {
+      "displayName": "True",
+      "id": "true",
+    },
+    {
+      "displayName": "False",
+      "id": "false",
+    },
+  ],
+  "_rev": "-1679047423",
+  "_type": {
+    "_id": "LoginCountDecisionNode",
+    "collection": true,
+    "name": "Login Count Decision",
+  },
+  "amount": 3,
+  "identityAttribute": "userName",
+  "interval": "AT",
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ProgressiveProfile/nodes/Page Node - a5aecad8-854a-4ed5-b719-ff6c90e858c0.json 1`] = `
+{
+  "_id": "a5aecad8-854a-4ed5-b719-ff6c90e858c0",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "380010937",
+  "_type": {
+    "_id": "PageNode",
+    "collection": true,
+    "name": "Page Node",
+  },
+  "nodes": [
+    {
+      "_id": "0a042e10-b22e-4e02-86c4-65e26e775f7a",
+      "displayName": "Attribute Collector",
+      "nodeType": "AttributeCollectorNode",
+    },
+  ],
+  "pageDescription": {},
+  "pageHeader": {
+    "en": "Please select your preferences",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ProgressiveProfile/nodes/Page Node - a5aecad8-854a-4ed5-b719-ff6c90e858c0/Attribute Collector - 0a042e10-b22e-4e02-86c4-65e26e775f7a.json 1`] = `
+{
+  "_id": "0a042e10-b22e-4e02-86c4-65e26e775f7a",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-1210529544",
+  "_type": {
+    "_id": "AttributeCollectorNode",
+    "collection": true,
+    "name": "Attribute Collector",
+  },
+  "attributesToCollect": [
+    "preferences/updates",
+    "preferences/marketing",
+  ],
+  "identityAttribute": "userName",
+  "required": false,
+  "validateInputs": false,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ProgressiveProfile/nodes/Patch Object - 423a959a-a1b9-498a-b0f7-596b6b6e775a.json 1`] = `
+{
+  "_id": "423a959a-a1b9-498a-b0f7-596b6b6e775a",
+  "_outcomes": [
+    {
+      "displayName": "Patched",
+      "id": "PATCHED",
+    },
+    {
+      "displayName": "Failed",
+      "id": "FAILURE",
+    },
+  ],
+  "_rev": "1653653564",
+  "_type": {
+    "_id": "PatchObjectNode",
+    "collection": true,
+    "name": "Patch Object",
+  },
+  "identityAttribute": "userName",
+  "identityResource": "managed/user",
+  "ignoredFields": [],
+  "patchAsObject": false,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ProgressiveProfile/nodes/Query Filter Decision - a1f45b44-5bf7-4c57-aa3f-75c619c7db8e.json 1`] = `
+{
+  "_id": "a1f45b44-5bf7-4c57-aa3f-75c619c7db8e",
+  "_outcomes": [
+    {
+      "displayName": "True",
+      "id": "true",
+    },
+    {
+      "displayName": "False",
+      "id": "false",
+    },
+  ],
+  "_rev": "-1852493841",
+  "_type": {
+    "_id": "QueryFilterDecisionNode",
+    "collection": true,
+    "name": "Query Filter Decision",
+  },
+  "identityAttribute": "userName",
+  "queryFilter": "!(/preferences pr) or /preferences/marketing eq false or /preferences/updates eq false",
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Registration/Registration.json 1`] = `
+{
+  "_id": "Registration",
+  "_rev": "-1700711221",
+  "description": "Platform Registration Tree",
+  "enabled": true,
+  "entryNodeId": "0c091c49-f3af-48fb-ac6f-07fba0499dd6",
+  "innerTreeOnly": false,
+  "mustRun": false,
+  "noSession": false,
+  "nodes": {
+    "0c091c49-f3af-48fb-ac6f-07fba0499dd6": {
+      "connections": {
+        "outcome": "ad5dcbb3-7335-49b7-b3e7-7d850bb88237",
+      },
+      "displayName": "Page Node",
+      "nodeType": "PageNode",
+      "x": 261,
+      "y": 168,
+    },
+    "97a15eb2-a015-4b6d-81a0-be78c3aa1a3b": {
+      "connections": {
+        "outcome": "70e691a5-1e33-4ac3-a356-e7b6d60d92e0",
+      },
+      "displayName": "Increment Login Count",
+      "nodeType": "IncrementLoginCountNode",
+      "x": 681,
+      "y": 144,
+    },
+    "ad5dcbb3-7335-49b7-b3e7-7d850bb88237": {
+      "connections": {
+        "CREATED": "97a15eb2-a015-4b6d-81a0-be78c3aa1a3b",
+        "FAILURE": "e301438c-0bd0-429c-ab0c-66126501069a",
+      },
+      "displayName": "Create Object",
+      "nodeType": "CreateObjectNode",
+      "x": 537,
+      "y": 206,
+    },
+  },
+  "staticNodes": {
+    "70e691a5-1e33-4ac3-a356-e7b6d60d92e0": {
+      "x": 905,
+      "y": 171,
+    },
+    "e301438c-0bd0-429c-ab0c-66126501069a": {
+      "x": 741,
+      "y": 293,
+    },
+    "startNode": {
+      "x": 50,
+      "y": 25,
+    },
+  },
+  "uiConfig": {
+    "categories": "["Registration"]",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Registration/nodes/Create Object - ad5dcbb3-7335-49b7-b3e7-7d850bb88237.json 1`] = `
+{
+  "_id": "ad5dcbb3-7335-49b7-b3e7-7d850bb88237",
+  "_outcomes": [
+    {
+      "displayName": "Created",
+      "id": "CREATED",
+    },
+    {
+      "displayName": "Failed",
+      "id": "FAILURE",
+    },
+  ],
+  "_rev": "-246787506",
+  "_type": {
+    "_id": "CreateObjectNode",
+    "collection": true,
+    "name": "Create Object",
+  },
+  "identityResource": "managed/user",
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Registration/nodes/Increment Login Count - 97a15eb2-a015-4b6d-81a0-be78c3aa1a3b.json 1`] = `
+{
+  "_id": "97a15eb2-a015-4b6d-81a0-be78c3aa1a3b",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-841385771",
+  "_type": {
+    "_id": "IncrementLoginCountNode",
+    "collection": true,
+    "name": "Increment Login Count",
+  },
+  "identityAttribute": "userName",
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Registration/nodes/Page Node - 0c091c49-f3af-48fb-ac6f-07fba0499dd6.json 1`] = `
+{
+  "_id": "0c091c49-f3af-48fb-ac6f-07fba0499dd6",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "762531723",
+  "_type": {
+    "_id": "PageNode",
+    "collection": true,
+    "name": "Page Node",
+  },
+  "nodes": [
+    {
+      "_id": "7fcaf48e-a754-4959-858b-05b2933b825f",
+      "displayName": "Platform Username",
+      "nodeType": "ValidatedUsernameNode",
+    },
+    {
+      "_id": "d3ce2036-1523-4ce8-b1a2-895a2a036667",
+      "displayName": "Attribute Collector",
+      "nodeType": "AttributeCollectorNode",
+    },
+    {
+      "_id": "3d8709a1-f09f-4d1f-8094-2850e472c1db",
+      "displayName": "Platform Password",
+      "nodeType": "ValidatedPasswordNode",
+    },
+    {
+      "_id": "120c69d3-90b4-4ad4-b7af-380e8b119340",
+      "displayName": "KBA Definition",
+      "nodeType": "KbaCreateNode",
+    },
+    {
+      "_id": "b4a0e915-c15d-4b83-9c9d-18347d645976",
+      "displayName": "Accept Terms and Conditions",
+      "nodeType": "AcceptTermsAndConditionsNode",
+    },
+  ],
+  "pageDescription": {
+    "en": "Signing up is fast and easy.<br>Already have an account? <a href='#/service/Login'>Sign In</a>",
+  },
+  "pageHeader": {
+    "en": "Sign Up",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Registration/nodes/Page Node - 0c091c49-f3af-48fb-ac6f-07fba0499dd6/Accept Terms and Conditions - b4a0e915-c15d-4b83-9c9d-18347d645976.json 1`] = `
+{
+  "_id": "b4a0e915-c15d-4b83-9c9d-18347d645976",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "1508860909",
+  "_type": {
+    "_id": "AcceptTermsAndConditionsNode",
+    "collection": true,
+    "name": "Accept Terms and Conditions",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Registration/nodes/Page Node - 0c091c49-f3af-48fb-ac6f-07fba0499dd6/Attribute Collector - d3ce2036-1523-4ce8-b1a2-895a2a036667.json 1`] = `
+{
+  "_id": "d3ce2036-1523-4ce8-b1a2-895a2a036667",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-1158802257",
+  "_type": {
+    "_id": "AttributeCollectorNode",
+    "collection": true,
+    "name": "Attribute Collector",
+  },
+  "attributesToCollect": [
+    "givenName",
+    "sn",
+    "mail",
+    "preferences/marketing",
+    "preferences/updates",
+  ],
+  "identityAttribute": "userName",
+  "required": true,
+  "validateInputs": true,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Registration/nodes/Page Node - 0c091c49-f3af-48fb-ac6f-07fba0499dd6/KBA Definition - 120c69d3-90b4-4ad4-b7af-380e8b119340.json 1`] = `
+{
+  "_id": "120c69d3-90b4-4ad4-b7af-380e8b119340",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-8134977",
+  "_type": {
+    "_id": "KbaCreateNode",
+    "collection": true,
+    "name": "KBA Definition",
+  },
+  "allowUserDefinedQuestions": true,
+  "message": {
+    "en": "Select a security question",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Registration/nodes/Page Node - 0c091c49-f3af-48fb-ac6f-07fba0499dd6/Platform Password - 3d8709a1-f09f-4d1f-8094-2850e472c1db.json 1`] = `
+{
+  "_id": "3d8709a1-f09f-4d1f-8094-2850e472c1db",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-1470058997",
+  "_type": {
+    "_id": "ValidatedPasswordNode",
+    "collection": true,
+    "name": "Platform Password",
+  },
+  "passwordAttribute": "password",
+  "validateInput": true,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Registration/nodes/Page Node - 0c091c49-f3af-48fb-ac6f-07fba0499dd6/Platform Username - 7fcaf48e-a754-4959-858b-05b2933b825f.json 1`] = `
+{
+  "_id": "7fcaf48e-a754-4959-858b-05b2933b825f",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "1966656034",
+  "_type": {
+    "_id": "ValidatedUsernameNode",
+    "collection": true,
+    "name": "Platform Username",
+  },
+  "usernameAttribute": "userName",
+  "validateInput": true,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ResetPassword/ResetPassword.json 1`] = `
+{
+  "_id": "ResetPassword",
+  "_rev": "1024569230",
+  "description": "Reset Password Tree",
+  "enabled": true,
+  "entryNodeId": "cc3e1ed2-25f1-47bf-83c6-17084f8b2b2b",
+  "innerTreeOnly": false,
+  "mustRun": false,
+  "noSession": false,
+  "nodes": {
+    "06c97be5-7fdd-4739-aea1-ecc7fe082865": {
+      "connections": {
+        "outcome": "e4c752f9-c625-48c9-9644-a58802fa9e9c",
+      },
+      "displayName": "Email Suspend Node",
+      "nodeType": "EmailSuspendNode",
+      "x": 453,
+      "y": 66,
+    },
+    "21b8ddf3-0203-4ae1-ab05-51cf3a3a707a": {
+      "connections": {
+        "false": "06c97be5-7fdd-4739-aea1-ecc7fe082865",
+        "true": "06c97be5-7fdd-4739-aea1-ecc7fe082865",
+      },
+      "displayName": "Identify Existing User",
+      "nodeType": "IdentifyExistingUserNode",
+      "x": 271,
+      "y": 21,
+    },
+    "989f0bf8-a328-4217-b82b-5275d79ca8bd": {
+      "connections": {
+        "FAILURE": "e301438c-0bd0-429c-ab0c-66126501069a",
+        "PATCHED": "70e691a5-1e33-4ac3-a356-e7b6d60d92e0",
+      },
+      "displayName": "Patch Object",
+      "nodeType": "PatchObjectNode",
+      "x": 819,
+      "y": 61,
+    },
+    "cc3e1ed2-25f1-47bf-83c6-17084f8b2b2b": {
+      "connections": {
+        "outcome": "21b8ddf3-0203-4ae1-ab05-51cf3a3a707a",
+      },
+      "displayName": "Page Node",
+      "nodeType": "PageNode",
+      "x": 103,
+      "y": 50,
+    },
+    "e4c752f9-c625-48c9-9644-a58802fa9e9c": {
+      "connections": {
+        "outcome": "989f0bf8-a328-4217-b82b-5275d79ca8bd",
+      },
+      "displayName": "Page Node",
+      "nodeType": "PageNode",
+      "x": 643,
+      "y": 50,
+    },
+  },
+  "staticNodes": {
+    "70e691a5-1e33-4ac3-a356-e7b6d60d92e0": {
+      "x": 970,
+      "y": 79,
+    },
+    "e301438c-0bd0-429c-ab0c-66126501069a": {
+      "x": 981,
+      "y": 147,
+    },
+    "startNode": {
+      "x": 25,
+      "y": 25,
+    },
+  },
+  "uiConfig": {
+    "categories": "["Password Reset"]",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ResetPassword/nodes/Email Suspend Node - 06c97be5-7fdd-4739-aea1-ecc7fe082865.json 1`] = `
+{
+  "_id": "06c97be5-7fdd-4739-aea1-ecc7fe082865",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-1138066714",
+  "_type": {
+    "_id": "EmailSuspendNode",
+    "collection": true,
+    "name": "Email Suspend Node",
+  },
+  "emailAttribute": "mail",
+  "emailSuspendMessage": {
+    "en": "An email has been sent to the address you entered. Click the link in that email to proceed.",
+  },
+  "emailTemplateName": "resetPassword",
+  "identityAttribute": "mail",
+  "objectLookup": true,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ResetPassword/nodes/Identify Existing User - 21b8ddf3-0203-4ae1-ab05-51cf3a3a707a.json 1`] = `
+{
+  "_id": "21b8ddf3-0203-4ae1-ab05-51cf3a3a707a",
+  "_outcomes": [
+    {
+      "displayName": "True",
+      "id": "true",
+    },
+    {
+      "displayName": "False",
+      "id": "false",
+    },
+  ],
+  "_rev": "402776485",
+  "_type": {
+    "_id": "IdentifyExistingUserNode",
+    "collection": true,
+    "name": "Identify Existing User",
+  },
+  "identifier": "userName",
+  "identityAttribute": "mail",
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ResetPassword/nodes/Page Node - cc3e1ed2-25f1-47bf-83c6-17084f8b2b2b.json 1`] = `
+{
+  "_id": "cc3e1ed2-25f1-47bf-83c6-17084f8b2b2b",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "86486605",
+  "_type": {
+    "_id": "PageNode",
+    "collection": true,
+    "name": "Page Node",
+  },
+  "nodes": [
+    {
+      "_id": "276afa7c-a680-4cf4-a5f6-d6c78191f5c9",
+      "displayName": "Attribute Collector",
+      "nodeType": "AttributeCollectorNode",
+    },
+  ],
+  "pageDescription": {
+    "en": "Enter your email address or <a href="#/service/Login">Sign in</a>",
+  },
+  "pageHeader": {
+    "en": "Reset Password",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ResetPassword/nodes/Page Node - cc3e1ed2-25f1-47bf-83c6-17084f8b2b2b/Attribute Collector - 276afa7c-a680-4cf4-a5f6-d6c78191f5c9.json 1`] = `
+{
+  "_id": "276afa7c-a680-4cf4-a5f6-d6c78191f5c9",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-1256358519",
+  "_type": {
+    "_id": "AttributeCollectorNode",
+    "collection": true,
+    "name": "Attribute Collector",
+  },
+  "attributesToCollect": [
+    "mail",
+  ],
+  "identityAttribute": "mail",
+  "required": true,
+  "validateInputs": false,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ResetPassword/nodes/Page Node - e4c752f9-c625-48c9-9644-a58802fa9e9c.json 1`] = `
+{
+  "_id": "e4c752f9-c625-48c9-9644-a58802fa9e9c",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "1593283676",
+  "_type": {
+    "_id": "PageNode",
+    "collection": true,
+    "name": "Page Node",
+  },
+  "nodes": [
+    {
+      "_id": "009c19c8-9572-47bb-adb2-1f092c559a43",
+      "displayName": "Platform Password",
+      "nodeType": "ValidatedPasswordNode",
+    },
+  ],
+  "pageDescription": {
+    "en": "Change password",
+  },
+  "pageHeader": {
+    "en": "Reset Password",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ResetPassword/nodes/Page Node - e4c752f9-c625-48c9-9644-a58802fa9e9c/Platform Password - 009c19c8-9572-47bb-adb2-1f092c559a43.json 1`] = `
+{
+  "_id": "009c19c8-9572-47bb-adb2-1f092c559a43",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "519412822",
+  "_type": {
+    "_id": "ValidatedPasswordNode",
+    "collection": true,
+    "name": "Platform Password",
+  },
+  "passwordAttribute": "password",
+  "validateInput": true,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ResetPassword/nodes/Patch Object - 989f0bf8-a328-4217-b82b-5275d79ca8bd.json 1`] = `
+{
+  "_id": "989f0bf8-a328-4217-b82b-5275d79ca8bd",
+  "_outcomes": [
+    {
+      "displayName": "Patched",
+      "id": "PATCHED",
+    },
+    {
+      "displayName": "Failed",
+      "id": "FAILURE",
+    },
+  ],
+  "_rev": "920985509",
+  "_type": {
+    "_id": "PatchObjectNode",
+    "collection": true,
+    "name": "Patch Object",
+  },
+  "identityAttribute": "mail",
+  "identityResource": "managed/user",
+  "ignoredFields": [],
+  "patchAsObject": false,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/UpdatePassword/UpdatePassword.json 1`] = `
+{
+  "_id": "UpdatePassword",
+  "_rev": "459173545",
+  "description": "Update password using active session",
+  "enabled": true,
+  "entryNodeId": "d1b79744-493a-44fe-bc26-7d324a8caa4e",
+  "innerTreeOnly": false,
+  "mustRun": false,
+  "noSession": false,
+  "nodes": {
+    "0f0904e6-1da3-4cdb-9abf-0d2545016fab": {
+      "connections": {
+        "false": "a3d97b53-e38a-4b24-aed0-a021050eb744",
+        "true": "20237b34-26cb-4a0b-958f-abb422290d42",
+      },
+      "displayName": "Attribute Present Decision",
+      "nodeType": "AttributePresentDecisionNode",
+      "x": 288,
+      "y": 133,
+    },
+    "20237b34-26cb-4a0b-958f-abb422290d42": {
+      "connections": {
+        "outcome": "7d1deabe-cd98-49c8-943f-ca12305775f3",
+      },
+      "displayName": "Page Node",
+      "nodeType": "PageNode",
+      "x": 526,
+      "y": 46,
+    },
+    "3990ce1f-cce6-435b-ae1c-f138e89411c1": {
+      "connections": {
+        "FAILURE": "e301438c-0bd0-429c-ab0c-66126501069a",
+        "PATCHED": "70e691a5-1e33-4ac3-a356-e7b6d60d92e0",
+      },
+      "displayName": "Patch Object",
+      "nodeType": "PatchObjectNode",
+      "x": 1062,
+      "y": 189,
+    },
+    "7d1deabe-cd98-49c8-943f-ca12305775f3": {
+      "connections": {
+        "false": "e301438c-0bd0-429c-ab0c-66126501069a",
+        "true": "d018fcd1-4e22-4160-8c41-63bee51c9cb3",
+      },
+      "displayName": "Data Store Decision",
+      "nodeType": "DataStoreDecisionNode",
+      "x": 722,
+      "y": 45,
+    },
+    "a3d97b53-e38a-4b24-aed0-a021050eb744": {
+      "connections": {
+        "outcome": "d018fcd1-4e22-4160-8c41-63bee51c9cb3",
+      },
+      "displayName": "Email Suspend Node",
+      "nodeType": "EmailSuspendNode",
+      "x": 659,
+      "y": 223,
+    },
+    "d018fcd1-4e22-4160-8c41-63bee51c9cb3": {
+      "connections": {
+        "outcome": "3990ce1f-cce6-435b-ae1c-f138e89411c1",
+      },
+      "displayName": "Page Node",
+      "nodeType": "PageNode",
+      "x": 943,
+      "y": 30,
+    },
+    "d1b79744-493a-44fe-bc26-7d324a8caa4e": {
+      "connections": {
+        "outcome": "0f0904e6-1da3-4cdb-9abf-0d2545016fab",
+      },
+      "displayName": "Get Session Data",
+      "nodeType": "SessionDataNode",
+      "x": 122,
+      "y": 129,
+    },
+  },
+  "staticNodes": {
+    "70e691a5-1e33-4ac3-a356-e7b6d60d92e0": {
+      "x": 1212,
+      "y": 128,
+    },
+    "e301438c-0bd0-429c-ab0c-66126501069a": {
+      "x": 939,
+      "y": 290,
+    },
+    "startNode": {
+      "x": 50,
+      "y": 25,
+    },
+  },
+  "uiConfig": {
+    "categories": "["Password Reset"]",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/UpdatePassword/nodes/Attribute Present Decision - 0f0904e6-1da3-4cdb-9abf-0d2545016fab.json 1`] = `
+{
+  "_id": "0f0904e6-1da3-4cdb-9abf-0d2545016fab",
+  "_outcomes": [
+    {
+      "displayName": "True",
+      "id": "true",
+    },
+    {
+      "displayName": "False",
+      "id": "false",
+    },
+  ],
+  "_rev": "-1218497043",
+  "_type": {
+    "_id": "AttributePresentDecisionNode",
+    "collection": true,
+    "name": "Attribute Present Decision",
+  },
+  "identityAttribute": "userName",
+  "presentAttribute": "password",
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/UpdatePassword/nodes/Data Store Decision - 7d1deabe-cd98-49c8-943f-ca12305775f3.json 1`] = `
+{
+  "_id": "7d1deabe-cd98-49c8-943f-ca12305775f3",
+  "_outcomes": [
+    {
+      "displayName": "True",
+      "id": "true",
+    },
+    {
+      "displayName": "False",
+      "id": "false",
+    },
+  ],
+  "_rev": "869693667",
+  "_type": {
+    "_id": "DataStoreDecisionNode",
+    "collection": true,
+    "name": "Data Store Decision",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/UpdatePassword/nodes/Email Suspend Node - a3d97b53-e38a-4b24-aed0-a021050eb744.json 1`] = `
+{
+  "_id": "a3d97b53-e38a-4b24-aed0-a021050eb744",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-1059437256",
+  "_type": {
+    "_id": "EmailSuspendNode",
+    "collection": true,
+    "name": "Email Suspend Node",
+  },
+  "emailAttribute": "mail",
+  "emailSuspendMessage": {
+    "en": "An email has been sent to your address, please verify your email address to update your password. Click the link in that email to proceed.",
+  },
+  "emailTemplateName": "updatePassword",
+  "identityAttribute": "userName",
+  "objectLookup": true,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/UpdatePassword/nodes/Get Session Data - d1b79744-493a-44fe-bc26-7d324a8caa4e.json 1`] = `
+{
+  "_id": "d1b79744-493a-44fe-bc26-7d324a8caa4e",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-716667889",
+  "_type": {
+    "_id": "SessionDataNode",
+    "collection": true,
+    "name": "Get Session Data",
+  },
+  "sessionDataKey": "UserToken",
+  "sharedStateKey": "userName",
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/UpdatePassword/nodes/Page Node - 20237b34-26cb-4a0b-958f-abb422290d42.json 1`] = `
+{
+  "_id": "20237b34-26cb-4a0b-958f-abb422290d42",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "1965792723",
+  "_type": {
+    "_id": "PageNode",
+    "collection": true,
+    "name": "Page Node",
+  },
+  "nodes": [
+    {
+      "_id": "fe2962fc-4db3-4066-8624-553649afc438",
+      "displayName": "Platform Password",
+      "nodeType": "ValidatedPasswordNode",
+    },
+  ],
+  "pageDescription": {
+    "en": "Enter current password",
+  },
+  "pageHeader": {
+    "en": "Verify Existing Password",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/UpdatePassword/nodes/Page Node - 20237b34-26cb-4a0b-958f-abb422290d42/Platform Password - fe2962fc-4db3-4066-8624-553649afc438.json 1`] = `
+{
+  "_id": "fe2962fc-4db3-4066-8624-553649afc438",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "875005143",
+  "_type": {
+    "_id": "ValidatedPasswordNode",
+    "collection": true,
+    "name": "Platform Password",
+  },
+  "passwordAttribute": "password",
+  "validateInput": false,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/UpdatePassword/nodes/Page Node - d018fcd1-4e22-4160-8c41-63bee51c9cb3.json 1`] = `
+{
+  "_id": "d018fcd1-4e22-4160-8c41-63bee51c9cb3",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-1359533036",
+  "_type": {
+    "_id": "PageNode",
+    "collection": true,
+    "name": "Page Node",
+  },
+  "nodes": [
+    {
+      "_id": "21a99653-a7a7-47ee-b650-f493a84bba09",
+      "displayName": "Platform Password",
+      "nodeType": "ValidatedPasswordNode",
+    },
+  ],
+  "pageDescription": {
+    "en": "Enter new password",
+  },
+  "pageHeader": {
+    "en": "Update Password",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/UpdatePassword/nodes/Page Node - d018fcd1-4e22-4160-8c41-63bee51c9cb3/Platform Password - 21a99653-a7a7-47ee-b650-f493a84bba09.json 1`] = `
+{
+  "_id": "21a99653-a7a7-47ee-b650-f493a84bba09",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "688403743",
+  "_type": {
+    "_id": "ValidatedPasswordNode",
+    "collection": true,
+    "name": "Platform Password",
+  },
+  "passwordAttribute": "password",
+  "validateInput": true,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/UpdatePassword/nodes/Patch Object - 3990ce1f-cce6-435b-ae1c-f138e89411c1.json 1`] = `
+{
+  "_id": "3990ce1f-cce6-435b-ae1c-f138e89411c1",
+  "_outcomes": [
+    {
+      "displayName": "Patched",
+      "id": "PATCHED",
+    },
+    {
+      "displayName": "Failed",
+      "id": "FAILURE",
+    },
+  ],
+  "_rev": "152951098",
+  "_type": {
+    "_id": "PatchObjectNode",
+    "collection": true,
+    "name": "Patch Object",
+  },
+  "identityAttribute": "userName",
+  "identityResource": "managed/user",
+  "ignoredFields": [
+    "userName",
+  ],
+  "patchAsObject": false,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/amsterService/amsterService.json 1`] = `
+{
+  "_id": "amsterService",
+  "_rev": "-809809713",
+  "description": "Authentication Tree for Amster utility",
+  "enabled": true,
+  "entryNodeId": "cfcd2084-95d5-35ef-a6e7-d7f9f98764db",
+  "identityResource": "null",
+  "innerTreeOnly": false,
+  "mustRun": false,
+  "noSession": false,
+  "nodes": {
+    "cfcd2084-95d5-35ef-a6e7-d7f9f98764db": {
+      "connections": {
+        "false": "e301438c-0bd0-429c-ab0c-66126501069a",
+        "true": "70e691a5-1e33-4ac3-a356-e7b6d60d92e0",
+      },
+      "displayName": "Amster Jwt Decision Node",
+      "nodeType": "AmsterJwtDecisionNode",
+      "x": 200,
+      "y": 30,
+    },
+  },
+  "staticNodes": {
+    "70e691a5-1e33-4ac3-a356-e7b6d60d92e0": {
+      "x": 500,
+      "y": 30,
+    },
+    "e301438c-0bd0-429c-ab0c-66126501069a": {
+      "x": 500,
+      "y": 130,
+    },
+    "startNode": {
+      "x": 50,
+      "y": 30,
+    },
+  },
+  "uiConfig": {
+    "categories": "["Authentication"]",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/amsterService/nodes/Amster Jwt Decision Node - cfcd2084-95d5-35ef-a6e7-d7f9f98764db.json 1`] = `
+{
+  "_id": "cfcd2084-95d5-35ef-a6e7-d7f9f98764db",
+  "_outcomes": [
+    {
+      "displayName": "True",
+      "id": "true",
+    },
+    {
+      "displayName": "False",
+      "id": "false",
+    },
+  ],
+  "_rev": "-1115967105",
+  "_type": {
+    "_id": "AmsterJwtDecisionNode",
+    "collection": true,
+    "name": "Amster Jwt Decision Node",
+  },
+  "authorizedKeys": "/var/run/secrets/amster/authorized_keys",
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ldapService/ldapService.json 1`] = `
+{
+  "_id": "ldapService",
+  "_rev": "-972265986",
+  "description": "Authentication tree replacing old default chain for backward compatibility",
+  "enabled": true,
+  "entryNodeId": "eccbc87e-4b5c-32fe-a830-8fd9f2a7baf5",
+  "identityResource": "null",
+  "innerTreeOnly": false,
+  "mustRun": false,
+  "noSession": false,
+  "nodes": {
+    "6c8349cc-7260-3e62-a3b1-396831a8398a": {
+      "connections": {
+        "outcome": "c81e728d-9d4c-3f63-af06-7f89cc14862d",
+      },
+      "displayName": "Page Node",
+      "nodeType": "PageNode",
+      "x": 500,
+      "y": 25,
+    },
+    "c81e728d-9d4c-3f63-af06-7f89cc14862d": {
+      "connections": {
+        "false": "e301438c-0bd0-429c-ab0c-66126501069a",
+        "true": "70e691a5-1e33-4ac3-a356-e7b6d60d92e0",
+      },
+      "displayName": "Data Store Decision",
+      "nodeType": "DataStoreDecisionNode",
+      "x": 800,
+      "y": 25,
+    },
+    "eccbc87e-4b5c-32fe-a830-8fd9f2a7baf5": {
+      "connections": {
+        "false": "6c8349cc-7260-3e62-a3b1-396831a8398a",
+        "true": "c81e728d-9d4c-3f63-af06-7f89cc14862d",
+      },
+      "displayName": "Zero Page Login Collector",
+      "nodeType": "ZeroPageLoginNode",
+      "x": 150,
+      "y": 25,
+    },
+  },
+  "staticNodes": {
+    "70e691a5-1e33-4ac3-a356-e7b6d60d92e0": {
+      "x": 1000,
+      "y": 25,
+    },
+    "e301438c-0bd0-429c-ab0c-66126501069a": {
+      "x": 1000,
+      "y": 200,
+    },
+    "startNode": {
+      "x": 50,
+      "y": 25,
+    },
+  },
+  "uiConfig": {
+    "categories": "["Authentication"]",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ldapService/nodes/Data Store Decision - c81e728d-9d4c-3f63-af06-7f89cc14862d.json 1`] = `
+{
+  "_id": "c81e728d-9d4c-3f63-af06-7f89cc14862d",
+  "_outcomes": [
+    {
+      "displayName": "True",
+      "id": "true",
+    },
+    {
+      "displayName": "False",
+      "id": "false",
+    },
+  ],
+  "_rev": "1201833785",
+  "_type": {
+    "_id": "DataStoreDecisionNode",
+    "collection": true,
+    "name": "Data Store Decision",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ldapService/nodes/Page Node - 6c8349cc-7260-3e62-a3b1-396831a8398a.json 1`] = `
+{
+  "_id": "6c8349cc-7260-3e62-a3b1-396831a8398a",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-1862464893",
+  "_type": {
+    "_id": "PageNode",
+    "collection": true,
+    "name": "Page Node",
+  },
+  "nodes": [
+    {
+      "_id": "cfcd2084-95d5-35ef-a6e7-dff9f98764db",
+      "displayName": "User Name Collector",
+      "nodeType": "UsernameCollectorNode",
+    },
+    {
+      "_id": "c4ca4238-a0b9-3382-8dcc-509a6f75849c",
+      "displayName": "Password Collector",
+      "nodeType": "PasswordCollectorNode",
+    },
+  ],
+  "pageDescription": {
+    "en": "",
+  },
+  "pageHeader": {
+    "en": "Sign In",
+  },
+  "stage": "null",
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ldapService/nodes/Page Node - 6c8349cc-7260-3e62-a3b1-396831a8398a/Password Collector - c4ca4238-a0b9-3382-8dcc-509a6f75849c.json 1`] = `
+{
+  "_id": "c4ca4238-a0b9-3382-8dcc-509a6f75849c",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-1271206474",
+  "_type": {
+    "_id": "PasswordCollectorNode",
+    "collection": true,
+    "name": "Password Collector",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ldapService/nodes/Page Node - 6c8349cc-7260-3e62-a3b1-396831a8398a/User Name Collector - cfcd2084-95d5-35ef-a6e7-dff9f98764db.json 1`] = `
+{
+  "_id": "cfcd2084-95d5-35ef-a6e7-dff9f98764db",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-1588216697",
+  "_type": {
+    "_id": "UsernameCollectorNode",
+    "collection": true,
+    "name": "Username Collector",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir12 -m forgeops": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/ldapService/nodes/Zero Page Login Collector - eccbc87e-4b5c-32fe-a830-8fd9f2a7baf5.json 1`] = `
+{
+  "_id": "eccbc87e-4b5c-32fe-a830-8fd9f2a7baf5",
+  "_outcomes": [
+    {
+      "displayName": "Has Credentials",
+      "id": "true",
+    },
+    {
+      "displayName": "No Credentials",
+      "id": "false",
+    },
+  ],
+  "_rev": "1517053586",
+  "_type": {
+    "_id": "ZeroPageLoginNode",
+    "collection": true,
+    "name": "Zero Page Login Collector",
+  },
+  "allowWithoutReferer": true,
+  "passwordHeader": "X-OpenAM-Password",
+  "referrerWhiteList": [],
+  "usernameHeader": "X-OpenAM-Username",
+}
+`;
+
 exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir14 --pull-dependencies": should export the journeys in fr-config-manager style" 1`] = `0`;
 
 exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testDir14 --pull-dependencies": should export the journeys in fr-config-manager style" 2`] = `""`;
@@ -17555,9 +19434,293 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -D testD
 }
 `;
 
-exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D testDir12": should export the journeys in alpha realm in fr-config-manager style" 1`] = `0`;
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style" 1`] = `0`;
 
-exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D testDir12": should export the journeys in alpha realm in fr-config-manager style" 2`] = `""`;
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style" 2`] = `""`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/BravoTestRegistration.json 1`] = `
+{
+  "_id": "BravoTestRegistration",
+  "_rev": "-1612059806",
+  "description": "Platform Registration Tree",
+  "enabled": true,
+  "entryNodeId": "0997e6d1-7836-4519-95fa-0b1321d2eee9",
+  "identityResource": "managed/user",
+  "innerTreeOnly": false,
+  "mustRun": false,
+  "noSession": false,
+  "nodes": {
+    "0997e6d1-7836-4519-95fa-0b1321d2eee9": {
+      "connections": {
+        "outcome": "fe18620d-ba32-47a6-acff-2b86d79a2dd1",
+      },
+      "displayName": "Page Node",
+      "nodeType": "PageNode",
+      "x": 261,
+      "y": 168,
+    },
+    "5149f84b-bcb8-458a-8cdc-87f96abb82a5": {
+      "connections": {
+        "outcome": "70e691a5-1e33-4ac3-a356-e7b6d60d92e0",
+      },
+      "displayName": "Increment Login Count",
+      "nodeType": "IncrementLoginCountNode",
+      "x": 681,
+      "y": 144,
+    },
+    "fe18620d-ba32-47a6-acff-2b86d79a2dd1": {
+      "connections": {
+        "CREATED": "5149f84b-bcb8-458a-8cdc-87f96abb82a5",
+        "FAILURE": "e301438c-0bd0-429c-ab0c-66126501069a",
+      },
+      "displayName": "Create Object",
+      "nodeType": "CreateObjectNode",
+      "x": 537,
+      "y": 206,
+    },
+  },
+  "staticNodes": {
+    "70e691a5-1e33-4ac3-a356-e7b6d60d92e0": {
+      "x": 905,
+      "y": 171,
+    },
+    "e301438c-0bd0-429c-ab0c-66126501069a": {
+      "x": 741,
+      "y": 293,
+    },
+    "startNode": {
+      "x": 50,
+      "y": 25,
+    },
+  },
+  "uiConfig": {
+    "categories": "["Registration"]",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Create Object - fe18620d-ba32-47a6-acff-2b86d79a2dd1.json 1`] = `
+{
+  "_id": "fe18620d-ba32-47a6-acff-2b86d79a2dd1",
+  "_outcomes": [
+    {
+      "displayName": "Created",
+      "id": "CREATED",
+    },
+    {
+      "displayName": "Failed",
+      "id": "FAILURE",
+    },
+  ],
+  "_rev": "-157786796",
+  "_type": {
+    "_id": "CreateObjectNode",
+    "collection": true,
+    "name": "Create Object",
+    "version": "1.0",
+  },
+  "identityResource": "managed/user",
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Increment Login Count - 5149f84b-bcb8-458a-8cdc-87f96abb82a5.json 1`] = `
+{
+  "_id": "5149f84b-bcb8-458a-8cdc-87f96abb82a5",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "1315398658",
+  "_type": {
+    "_id": "EmailSuspendNode",
+    "collection": true,
+    "name": "Email Suspend Node",
+    "version": "1.0",
+  },
+  "emailAttribute": "mail",
+  "emailSuspendMessage": {
+    "en": "An email has been sent to the address you entered. Click the link in that email to proceed.",
+  },
+  "emailTemplateName": "registration",
+  "identityAttribute": "userName",
+  "objectLookup": false,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Page Node - 0997e6d1-7836-4519-95fa-0b1321d2eee9.json 1`] = `
+{
+  "_id": "0997e6d1-7836-4519-95fa-0b1321d2eee9",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-1929612627",
+  "_type": {
+    "_id": "PageNode",
+    "collection": true,
+    "name": "Page Node",
+    "version": "1.0",
+  },
+  "nodes": [
+    {
+      "_id": "90be4f5e-573b-4695-978a-d0cd88464431",
+      "displayName": "Platform Username",
+      "nodeType": "ValidatedUsernameNode",
+      "nodeVersion": "1.0",
+    },
+    {
+      "_id": "84a4c586-1dcc-4620-8232-8269dc0b108f",
+      "displayName": "Attribute Collector",
+      "nodeType": "AttributeCollectorNode",
+      "nodeVersion": "1.0",
+    },
+    {
+      "_id": "d83b7cef-ac0f-4a8c-80fe-ed29b616ec2d",
+      "displayName": "Platform Password",
+      "nodeType": "ValidatedPasswordNode",
+      "nodeVersion": "1.0",
+    },
+    {
+      "_id": "93463dab-b6b1-4f3c-91f4-fd69ff399ba4",
+      "displayName": "KBA Definition",
+      "nodeType": "KbaCreateNode",
+      "nodeVersion": "1.0",
+    },
+    {
+      "_id": "c0434fd3-46fd-4a5d-a432-d4cc02463691",
+      "displayName": "Accept Terms and Conditions",
+      "nodeType": "AcceptTermsAndConditionsNode",
+      "nodeVersion": "1.0",
+    },
+  ],
+  "pageDescription": {
+    "en": "Signing up is fast and easy.<br>Already have an account? <a href='#/service/Login'>Sign In</a>",
+  },
+  "pageHeader": {
+    "en": "Sign Up",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Page Node - 0997e6d1-7836-4519-95fa-0b1321d2eee9/Accept Terms and Conditions - c0434fd3-46fd-4a5d-a432-d4cc02463691.json 1`] = `
+{
+  "_id": "c0434fd3-46fd-4a5d-a432-d4cc02463691",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "1961133386",
+  "_type": {
+    "_id": "AcceptTermsAndConditionsNode",
+    "collection": true,
+    "name": "Accept Terms and Conditions",
+    "version": "1.0",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Page Node - 0997e6d1-7836-4519-95fa-0b1321d2eee9/Attribute Collector - 84a4c586-1dcc-4620-8232-8269dc0b108f.json 1`] = `
+{
+  "_id": "84a4c586-1dcc-4620-8232-8269dc0b108f",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-907823556",
+  "_type": {
+    "_id": "AttributeCollectorNode",
+    "collection": true,
+    "name": "Attribute Collector",
+    "version": "1.0",
+  },
+  "attributesToCollect": [
+    "givenName",
+    "sn",
+    "mail",
+    "preferences/marketing",
+    "preferences/updates",
+  ],
+  "identityAttribute": "userName",
+  "required": true,
+  "validateInputs": true,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Page Node - 0997e6d1-7836-4519-95fa-0b1321d2eee9/KBA Definition - 93463dab-b6b1-4f3c-91f4-fd69ff399ba4.json 1`] = `
+{
+  "_id": "93463dab-b6b1-4f3c-91f4-fd69ff399ba4",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "242876428",
+  "_type": {
+    "_id": "KbaCreateNode",
+    "collection": true,
+    "name": "KBA Definition",
+    "version": "1.0",
+  },
+  "allowUserDefinedQuestions": true,
+  "message": {
+    "en": "Select a security question",
+  },
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Page Node - 0997e6d1-7836-4519-95fa-0b1321d2eee9/Platform Password - d83b7cef-ac0f-4a8c-80fe-ed29b616ec2d.json 1`] = `
+{
+  "_id": "d83b7cef-ac0f-4a8c-80fe-ed29b616ec2d",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "-1286221928",
+  "_type": {
+    "_id": "ValidatedPasswordNode",
+    "collection": true,
+    "name": "Platform Password",
+    "version": "1.0",
+  },
+  "passwordAttribute": "password",
+  "validateInput": true,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -n BravoTestRegistration -D testDir13 -m forgeops": should export journey with name: BravoTestRegistration from bravo realm in fr-config-manager style": testDir13/realms/bravo/journeys/BravoTestRegistration/nodes/Page Node - 0997e6d1-7836-4519-95fa-0b1321d2eee9/Platform Username - 90be4f5e-573b-4695-978a-d0cd88464431.json 1`] = `
+{
+  "_id": "90be4f5e-573b-4695-978a-d0cd88464431",
+  "_outcomes": [
+    {
+      "displayName": "Outcome",
+      "id": "outcome",
+    },
+  ],
+  "_rev": "1323128538",
+  "_type": {
+    "_id": "ValidatedUsernameNode",
+    "collection": true,
+    "name": "Platform Username",
+    "version": "1.0",
+  },
+  "autocompleteValues": [],
+  "usernameAttribute": "userName",
+  "validateInput": true,
+}
+`;
+
+exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D testDir12": should export the journeys in alpha realm in fr-config-manager style" 1`] = `0`;
 
 exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D testDir12": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Agent/Agent.json 1`] = `
 {
@@ -20094,15 +22257,15 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha
   "_rev": "388671950",
   "description": "Platform Registration Tree",
   "enabled": true,
-  "entryNodeId": "0c091c49-f3af-48fb-ac6f-07fba0499dd6",
-  "identityResource": "managed/alpha_user",
+  "entryNodeId": "0997e6d1-7836-4519-95fa-0b1321d2eee9",
+  "identityResource": "managed/user",
   "innerTreeOnly": false,
   "mustRun": false,
   "noSession": false,
   "nodes": {
-    "0c091c49-f3af-48fb-ac6f-07fba0499dd6": {
+    "0997e6d1-7836-4519-95fa-0b1321d2eee9": {
       "connections": {
-        "outcome": "466f8b54-07fb-4e31-a11d-a6842618cc37",
+        "outcome": "fe18620d-ba32-47a6-acff-2b86d79a2dd1",
       },
       "displayName": "Page Node",
       "nodeType": "PageNode",
@@ -20130,9 +22293,9 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha
       "x": 861,
       "y": 221,
     },
-    "ad5dcbb3-7335-49b7-b3e7-7d850bb88237": {
+    "fe18620d-ba32-47a6-acff-2b86d79a2dd1": {
       "connections": {
-        "CREATED": "97a15eb2-a015-4b6d-81a0-be78c3aa1a3b",
+        "CREATED": "5149f84b-bcb8-458a-8cdc-87f96abb82a5",
         "FAILURE": "e301438c-0bd0-429c-ab0c-66126501069a",
       },
       "displayName": "Create Object",
@@ -20144,12 +22307,12 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha
   },
   "staticNodes": {
     "70e691a5-1e33-4ac3-a356-e7b6d60d92e0": {
-      "x": 1085,
-      "y": 248,
+      "x": 905,
+      "y": 171,
     },
     "e301438c-0bd0-429c-ab0c-66126501069a": {
-      "x": 921,
-      "y": 370,
+      "x": 741,
+      "y": 293,
     },
     "startNode": {
       "x": 50,
@@ -20160,56 +22323,6 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha
   "uiConfig": {
     "categories": "["Registration"]",
   },
-}
-`;
-
-exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D testDir12": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Registration/nodes/Create Object - ad5dcbb3-7335-49b7-b3e7-7d850bb88237.json 1`] = `
-{
-  "_id": "ad5dcbb3-7335-49b7-b3e7-7d850bb88237",
-  "_outcomes": [
-    {
-      "displayName": "Created",
-      "id": "CREATED",
-    },
-    {
-      "displayName": "Failed",
-      "id": "FAILURE",
-    },
-  ],
-  "_rev": "-157786796",
-  "_type": {
-    "_id": "CreateObjectNode",
-    "collection": true,
-    "name": "Create Object",
-    "version": "1.0",
-  },
-  "identityResource": "managed/alpha_user",
-}
-`;
-
-exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D testDir12": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Registration/nodes/Email Suspend Node - 466f8b54-07fb-4e31-a11d-a6842618cc37.json 1`] = `
-{
-  "_id": "466f8b54-07fb-4e31-a11d-a6842618cc37",
-  "_outcomes": [
-    {
-      "displayName": "Outcome",
-      "id": "outcome",
-    },
-  ],
-  "_rev": "1315398658",
-  "_type": {
-    "_id": "EmailSuspendNode",
-    "collection": true,
-    "name": "Email Suspend Node",
-    "version": "1.0",
-  },
-  "emailAttribute": "mail",
-  "emailSuspendMessage": {
-    "en": "An email has been sent to the address you entered. Click the link in that email to proceed.",
-  },
-  "emailTemplateName": "registration",
-  "identityAttribute": "userName",
-  "objectLookup": false,
 }
 `;
 
@@ -20230,178 +22343,6 @@ exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha
     "version": "1.0",
   },
   "identityAttribute": "userName",
-}
-`;
-
-exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D testDir12": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Registration/nodes/Page Node - 0c091c49-f3af-48fb-ac6f-07fba0499dd6.json 1`] = `
-{
-  "_id": "0c091c49-f3af-48fb-ac6f-07fba0499dd6",
-  "_outcomes": [
-    {
-      "displayName": "Outcome",
-      "id": "outcome",
-    },
-  ],
-  "_rev": "-1929612627",
-  "_type": {
-    "_id": "PageNode",
-    "collection": true,
-    "name": "Page Node",
-    "version": "1.0",
-  },
-  "nodes": [
-    {
-      "_id": "7fcaf48e-a754-4959-858b-05b2933b825f",
-      "displayName": "Platform Username",
-      "nodeType": "ValidatedUsernameNode",
-      "nodeVersion": "1.0",
-    },
-    {
-      "_id": "d3ce2036-1523-4ce8-b1a2-895a2a036667",
-      "displayName": "Attribute Collector",
-      "nodeType": "AttributeCollectorNode",
-      "nodeVersion": "1.0",
-    },
-    {
-      "_id": "3d8709a1-f09f-4d1f-8094-2850e472c1db",
-      "displayName": "Platform Password",
-      "nodeType": "ValidatedPasswordNode",
-      "nodeVersion": "1.0",
-    },
-    {
-      "_id": "120c69d3-90b4-4ad4-b7af-380e8b119340",
-      "displayName": "KBA Definition",
-      "nodeType": "KbaCreateNode",
-      "nodeVersion": "1.0",
-    },
-    {
-      "_id": "b4a0e915-c15d-4b83-9c9d-18347d645976",
-      "displayName": "Accept Terms and Conditions",
-      "nodeType": "AcceptTermsAndConditionsNode",
-      "nodeVersion": "1.0",
-    },
-  ],
-  "pageDescription": {
-    "en": "Signing up is fast and easy.<br>Already have an account? <a href='#/service/Login'>Sign In</a>",
-  },
-  "pageHeader": {
-    "en": "Sign Up",
-  },
-  "stage": "{"ValidatedCreatePasswordCallback":[{"id":"3d8709a1-f09f-4d1f-8094-2850e472c1db","confirmPassword":true,"policyDisplayCheckmark":true}]}",
-}
-`;
-
-exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D testDir12": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Registration/nodes/Page Node - 0c091c49-f3af-48fb-ac6f-07fba0499dd6/Accept Terms and Conditions - b4a0e915-c15d-4b83-9c9d-18347d645976.json 1`] = `
-{
-  "_id": "b4a0e915-c15d-4b83-9c9d-18347d645976",
-  "_outcomes": [
-    {
-      "displayName": "Outcome",
-      "id": "outcome",
-    },
-  ],
-  "_rev": "1961133386",
-  "_type": {
-    "_id": "AcceptTermsAndConditionsNode",
-    "collection": true,
-    "name": "Accept Terms and Conditions",
-    "version": "1.0",
-  },
-}
-`;
-
-exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D testDir12": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Registration/nodes/Page Node - 0c091c49-f3af-48fb-ac6f-07fba0499dd6/Attribute Collector - d3ce2036-1523-4ce8-b1a2-895a2a036667.json 1`] = `
-{
-  "_id": "d3ce2036-1523-4ce8-b1a2-895a2a036667",
-  "_outcomes": [
-    {
-      "displayName": "Outcome",
-      "id": "outcome",
-    },
-  ],
-  "_rev": "-907823556",
-  "_type": {
-    "_id": "AttributeCollectorNode",
-    "collection": true,
-    "name": "Attribute Collector",
-    "version": "1.0",
-  },
-  "attributesToCollect": [
-    "givenName",
-    "sn",
-    "mail",
-    "preferences/marketing",
-    "preferences/updates",
-  ],
-  "identityAttribute": "userName",
-  "required": true,
-  "validateInputs": true,
-}
-`;
-
-exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D testDir12": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Registration/nodes/Page Node - 0c091c49-f3af-48fb-ac6f-07fba0499dd6/KBA Definition - 120c69d3-90b4-4ad4-b7af-380e8b119340.json 1`] = `
-{
-  "_id": "120c69d3-90b4-4ad4-b7af-380e8b119340",
-  "_outcomes": [
-    {
-      "displayName": "Outcome",
-      "id": "outcome",
-    },
-  ],
-  "_rev": "242876428",
-  "_type": {
-    "_id": "KbaCreateNode",
-    "collection": true,
-    "name": "KBA Definition",
-    "version": "1.0",
-  },
-  "allowUserDefinedQuestions": true,
-  "message": {
-    "en": "Select a security question",
-  },
-}
-`;
-
-exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D testDir12": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Registration/nodes/Page Node - 0c091c49-f3af-48fb-ac6f-07fba0499dd6/Platform Password - 3d8709a1-f09f-4d1f-8094-2850e472c1db.json 1`] = `
-{
-  "_id": "3d8709a1-f09f-4d1f-8094-2850e472c1db",
-  "_outcomes": [
-    {
-      "displayName": "Outcome",
-      "id": "outcome",
-    },
-  ],
-  "_rev": "-1286221928",
-  "_type": {
-    "_id": "ValidatedPasswordNode",
-    "collection": true,
-    "name": "Platform Password",
-    "version": "1.0",
-  },
-  "passwordAttribute": "password",
-  "validateInput": true,
-}
-`;
-
-exports[`frodo config-manager pulls "frodo config-manager pull journeys -r alpha -D testDir12": should export the journeys in alpha realm in fr-config-manager style": testDir12/realms/alpha/journeys/Registration/nodes/Page Node - 0c091c49-f3af-48fb-ac6f-07fba0499dd6/Platform Username - 7fcaf48e-a754-4959-858b-05b2933b825f.json 1`] = `
-{
-  "_id": "7fcaf48e-a754-4959-858b-05b2933b825f",
-  "_outcomes": [
-    {
-      "displayName": "Outcome",
-      "id": "outcome",
-    },
-  ],
-  "_rev": "1323128538",
-  "_type": {
-    "_id": "ValidatedUsernameNode",
-    "collection": true,
-    "name": "Platform Username",
-    "version": "1.0",
-  },
-  "autocompleteValues": [],
-  "usernameAttribute": "userName",
-  "validateInput": true,
 }
 `;
 

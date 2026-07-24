@@ -1890,25 +1890,6 @@ exports[`frodo config-manager pull oauth2-agents "frodo config-manager pull oaut
 }
 `;
 
-exports[`frodo config-manager pull oauth2-agents "frodo config-manager pull oauth2-agents -D configManagerExportOauth2AgentsDir1 -r alpha": should export all agents in the alpha realm in fr-config manager style. 1`] = `0`;
-
-exports[`frodo config-manager pull oauth2-agents "frodo config-manager pull oauth2-agents -D configManagerExportOauth2AgentsDir1 -r alpha": should export all agents in the alpha realm in fr-config manager style. 2`] = `""`;
-
-exports[`frodo config-manager pull oauth2-agents "frodo config-manager pull oauth2-agents -D configManagerExportOauth2AgentsDir1 -r alpha": should export all agents in the alpha realm in fr-config manager style.: configManagerExportOauth2AgentsDir1/realms/alpha/realm-config/agents/2.2_Agent/my-policy-agent.json 1`] = `
-{
-  "_id": "my-policy-agent",
-  "_rev": "-504717871",
-  "_type": {
-    "_id": "2.2_Agent",
-    "collection": true,
-    "name": "Policy Agents",
-  },
-  "cdssoRootUrl": [],
-  "description": null,
-  "status": "Active",
-}
-`;
-
 exports[`frodo config-manager pull oauth2-agents "frodo config-manager pull oauth2-agents -D configManagerExportOauth2AgentsDir1 -r alpha": should export all agents in the alpha realm in fr-config manager style.: configManagerExportOauth2AgentsDir1/realms/alpha/realm-config/agents/IdentityGatewayAgent/cdsso-ig-agent.json 1`] = `
 {
   "_id": "cdsso-ig-agent",
@@ -3066,5 +3047,24 @@ exports[`frodo config-manager pull oauth2-agents "frodo config-manager pull oaut
     "setCookieAttributeMap": {},
     "setCookieInternalMap": {},
   },
+}
+`;
+
+exports[`frodo config-manager pull oauth2-agents "frodo config-manager pull oauth2-agents -D configManagerExportOauth2AgentsDir3 -n frodo-web-test-agent -m forgeops": should export only the agent with the name: "frodo-web-test-agent" from bravo realm. 1`] = `0`;
+
+exports[`frodo config-manager pull oauth2-agents "frodo config-manager pull oauth2-agents -D configManagerExportOauth2AgentsDir3 -n frodo-web-test-agent -m forgeops": should export only the agent with the name: "frodo-web-test-agent" from bravo realm. 2`] = `""`;
+
+exports[`frodo config-manager pull oauth2-agents "frodo config-manager pull oauth2-agents -D configManagerExportOauth2AgentsDir3 -n frodo-web-test-agent -m forgeops": should export only the agent with the name: "frodo-web-test-agent" from bravo realm.: configManagerExportOauth2AgentsDir3/realms/bravo/realm-config/agents/WebAgent/frodo-web-test-agent.json 1`] = `
+{
+  "_id": "my-policy-agent",
+  "_rev": "-504717871",
+  "_type": {
+    "_id": "2.2_Agent",
+    "collection": true,
+    "name": "Policy Agents",
+  },
+  "cdssoRootUrl": [],
+  "description": null,
+  "status": "Active",
 }
 `;

@@ -228,3 +228,74 @@ export async function configManagerExportAuthzPoliciesAll(): Promise<boolean> {
     return false;
   }
 }
+
+/**
+ * Export policy-sets
+ * @param {string} realm specific realm to export ese
+ * @param {string} configFile json file to read from.
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
+export async function configManagerExportAuthzPolicy(
+  realm?: string,
+  configFile?: string
+): Promise<boolean> {
+  try {
+    if (configFile) {
+      verboseMessage(`Reading the config file "${configFile}"`);
+      const configFileData = JSON.parse(
+        await readFile(configFile, { encoding: 'utf8' })
+      ) as Record<string, string[]>;
+
+      for (const [realm, policies] of Object.entries(configFileData)) {
+        state.setRealm(realm);
+
+        if (policies.length === 0) {
+          verboseMessage(
+            `\nNo policy sets defined for the ${realm} realm in the config file.`
+          );
+          continue;
+        }
+
+        verboseMessage(`\n${state.getRealm()} realm:`);
+
+        for (const policy of policies) {
+          if (
+            !(await configManagerExportAuthzPolicySet(
+              { policySetName: policy },
+              null
+            ))
+          ) {
+            return false;
+          }
+        }
+      }
+    } else {
+      const realms = realm ? await readRealms() : [{ name: state.getRealm() }];
+
+      for (const realm of realms) {
+        state.setRealm(realm.name);
+
+        const allPolicySets = await policySet.readPolicySets();
+
+        if (allPolicySets.length === 0) {
+          verboseMessage(
+            `There are no policy sets in the realm "${state.getRealm()}"`
+          );
+          continue;
+        }
+
+        verboseMessage(`\n${state.getRealm()} realm:`);
+
+        for (const ps of allPolicySets) {
+          if (!(await configManagerExportAuthzPolicySet({ ps }, null))) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
