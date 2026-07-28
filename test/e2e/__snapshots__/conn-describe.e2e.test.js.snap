@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo conn describe Classic "frodo conn describe http://openam-frodo-dev.amster.com:8080/am": should describe the classic connection 1`] = `
-"Host                  │http://openam-frodo-dev.amster.com:8080/am
-Alias                 │amster                                    
+exports[`frodo conn describe Classic "frodo conn describe amster": should describe the classic connection 1`] = `
+"Name                  │amster                                    
+Host                  │http://openam-frodo-dev.amster.com:8080/am
 Deployment Type       │classic                                   
 Username              │amadmin                                   
 Password              │                                          
@@ -11,8 +11,9 @@ Amster Private Key    │[present]
 "
 `;
 
-exports[`frodo conn describe Cloud "frodo conn describe https://openam-frodo-dev.forgeblocks.com/am": should describe the connection 1`] = `
-"Host                 │https://openam-frodo-dev.forgeblocks.com/am
+exports[`frodo conn describe Cloud "frodo conn describe frodo-dev": should describe the connection 1`] = `
+"Name                 │frodo-dev                                  
+Host                 │https://openam-frodo-dev.forgeblocks.com/am
 Deployment Type      │cloud                                      
 isIGA                │false                                      
 Service Account Name │Frodo-SA-1758728043147                     

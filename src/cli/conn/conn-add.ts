@@ -14,11 +14,11 @@ const { isServiceAccountsFeatureAvailable } = frodo.cloud.serviceAccount;
 const { addNewServiceAccount, saveConnectionProfile } = frodo.conn;
 
 export default function setup() {
-  const program = new FrodoCommand('frodo conn save', ['realm']);
+  const program = new FrodoCommand('frodo conn add', ['realm']);
 
   program
-    .alias('add')
-    .description('Save connection profiles.')
+    .alias('save')
+    .description('Create new connection profiles.')
     .addOption(new Option('--no-sa', 'Do not create and add service account.'))
     .addOption(
       new Option(
@@ -58,55 +58,35 @@ export default function setup() {
       )
     )
     .addOption(
-      new Option('--alias [name]', 'Alias name for this connection profile.')
+      new Option(
+        '--name <name>',
+        'Name for this connection profile. Must be unique.'
+      ).makeOptionMandatory()
     )
     .addHelpText(
       'after',
       `Usage Examples:\n` +
         `  Create a connection profile with a new log API key and secret and a new service account:\n` +
         c.command(
-          `  $ frodo conn save ${s.amBaseUrl} ${s.username} '${s.password}'\n`
+          `  $ frodo conn add --name ${s.name} ${s.amBaseUrl} ${s.username} '${s.password}'\n`
         ) +
         `  Create a connection profile using Amster private key credentials (PingAM classic deployments only):\n` +
         c.command(
-          `  $ frodo conn save --private-key ${s.amsterPrivateKey} ${s.amClassicBaseUrl}\n`
+          `  $ frodo conn add --name ${s.name} --private-key ${s.amsterPrivateKey} ${s.amClassicBaseUrl}\n`
         ) +
-        `  Create a connection profile with a new log API key and secret and a new service account and set an alias:\n` +
+        `  Save a new connection profile using an existing service account:\n` +
         c.command(
-          `  $ frodo conn save --alias ${s.alias} ${s.amBaseUrl} ${s.username} '${s.password}'\n`
-        ) +
-        `  Save an existing service account to an existing or new connection profile:\n` +
-        c.command(
-          `  $ frodo conn save --sa-id ${s.saId} --sa-jwk-file ${s.saJwkFile} ${s.amBaseUrl}\n`
-        ) +
-        `  Save an existing service account to an existing or new connection profile and set an alias:\n` +
-        c.command(
-          `  $ frodo conn save --alias ${s.alias} --sa-id ${s.saId} --sa-jwk-file ${s.saJwkFile} ${s.amBaseUrl}\n`
-        ) +
-        `  Save an existing service account to an existing connection profile (partial host URL only updates an existing profile):\n` +
-        c.command(
-          `  $ frodo conn save --sa-id ${s.saId} --sa-jwk-file ${s.saJwkFile} ${s.connId}\n`
+          `  $ frodo conn add --name ${s.name} --sa-id ${s.saId} --sa-jwk-file ${s.saJwkFile} ${s.amBaseUrl}\n`
         ) +
         `  Save a connection profile for a Proxy Connect-protected PingOne Advanced Identity Cloud environment:\n` +
         c.command(
-          `  $ frodo conn save --authentication-header-overrides '{"MY-SECRET-HEADER": "proxyconnect secret header value"}' ${s.amBaseUrl} ${s.username} '${s.password}'\n`
-        ) +
-        `  Update an existing connection profile with a custom header override for a freshly Proxy Connect-protected PingOne Advanced Identity Cloud environment:\n` +
-        c.command(
-          `  $ frodo conn save --authentication-header-overrides '{"MY-SECRET-HEADER": "proxyconnect secret header value"}' ${s.connId}\n`
+          `  $ frodo conn add --name ${s.name} --authentication-header-overrides '{"MY-SECRET-HEADER": "proxyconnect secret header value"}' ${s.amBaseUrl} ${s.username} '${s.password}'\n`
         ) +
         `  Save a connection profile for a mutable PingOne Advanced Identity Cloud environment:\n` +
         c.command(
-          `  $ frodo conn save --configuration-header-overrides '{"X-Configuration-Type": "mutable"}' ${s.amBaseUrl} ${s.username} '${s.password}'\n`
+          `  $ frodo conn add --name ${s.name} --configuration-header-overrides '{"X-Configuration-Type": "mutable"}' ${s.amBaseUrl} ${s.username} '${s.password}'\n`
         ) +
-        `  Update an existing connection profile with a configuration header override for a freshly mutable PingOne Advanced Identity Cloud environment:\n` +
-        c.command(
-          `  $ frodo conn save --configuration-header-overrides '{"X-Configuration-Type": "mutable"}' ${s.connId}\n`
-        ) +
-        `  Update an existing connection profile to use Amster private key credentials with a custom Amster journey (PingAM classic deployments only):\n` +
-        c.command(
-          `  $ frodo conn save --private-key ${s.amsterPrivateKey} --authentication-service ${s.customAmsterService} ${s.classicConnId}\n`
-        )
+        `\nTo update an existing connection profile, use ${c.command('frodo conn edit')} instead.\n`
     )
     .action(
       // implement command logic inside action handler
@@ -118,6 +98,14 @@ export default function setup() {
           options,
           command
         );
+
+        // set the right URL under the hood
+        if (!state.getHost().endsWith('/am')) {
+          host += '/am';
+          state.setHost(host);
+        }
+
+        state.setName(options.name);
         state.setLogApiKey(options.logApiKey);
         state.setLogApiSecret(options.logApiSecret);
         if (options.authenticationService) {
@@ -149,11 +137,8 @@ export default function setup() {
           !options.validate
         ) {
           verboseMessage(
-            `Saving connection profile for tenant ${state.getHost()}...`
+            `Saving connection profile '${state.getName()}' for tenant ${state.getHost()}...`
           );
-          if (options.alias) {
-            state.setAlias(options.alias);
-          }
           // if cloud deployment add service account
           if (
             options.validate &&
@@ -182,7 +167,8 @@ export default function setup() {
                 verboseMessage(`Creating service account...`);
                 const sa = await addNewServiceAccount();
                 printMessage(
-                  `Created and added service account ${sa.name} with id ${sa._id} to profile.`
+                  `Created and added service account ${sa.name} with id ${sa._id} to profile.`,
+                  'info'
                 );
               } catch (error) {
                 printError(error);
@@ -245,11 +231,11 @@ export default function setup() {
               }
             }
           }
-          // add existing log api key and secret without validation
-          // storing log API key and secret in the connection profile is happening default, therefore no code required here
           try {
-            await saveConnectionProfile(host);
-            printMessage(`Saved connection profile ${state.getHost()}`);
+            await saveConnectionProfile(state.getName(), host, true);
+            printMessage(
+              `Saved connection profile '${state.getName()}' (${state.getHost()})`
+            );
           } catch (error) {
             printError(error);
             process.exitCode = 1;

@@ -38,7 +38,7 @@ export default function setup() {
       // unrecognized combination of options or no options
       else {
         printMessage(
-          `Error getting tokens from the host: ${host}. Make sure to connect to the host using frodo conn save command.`,
+          `Error getting tokens from the host: ${host}. Make sure to connect to the host using frodo conn add command.`,
           'error'
         );
         process.exitCode = 1;

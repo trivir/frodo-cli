@@ -115,7 +115,7 @@ export default function setup() {
           state.setLogApiKey(creds.api_key_id as string);
           state.setLogApiSecret(creds.api_key_secret as string);
           try {
-            await saveConnectionProfile(state.getHost());
+            await saveConnectionProfile(state.getName(), state.getHost());
           } catch (error) {
             printError(error);
           }

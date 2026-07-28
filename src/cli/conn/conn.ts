@@ -1,9 +1,8 @@
 import { FrodoStubCommand } from '../FrodoCommand';
-import AliasCmd from './conn-alias.js';
+import AddCmd from './conn-add.js';
 import DeleteCmd from './conn-delete.js';
 import DescribeCmd from './conn-describe.js';
 import ListCmd from './conn-list.js';
-import SaveCmd from './conn-save.js';
 
 export default function setup() {
   const program = new FrodoStubCommand('conn')
@@ -12,9 +11,7 @@ export default function setup() {
     .alias('connections')
     .description('Manage connection profiles.');
 
-  program.addCommand(SaveCmd().name('save'));
-
-  program.addCommand(AliasCmd().name('alias'));
+  program.addCommand(AddCmd().name('add'));
 
   program.addCommand(DeleteCmd().name('delete'));
 

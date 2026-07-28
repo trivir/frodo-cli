@@ -25,37 +25,39 @@ export function listConnectionProfiles(long: boolean = false): void {
   try {
     const data = fs.readFileSync(filename, 'utf8');
     const connectionsData = JSON.parse(data);
-    if (Object.keys(connectionsData).length < 1) {
+    const connections = connectionsData.connections || {};
+    const connectionNames = Object.keys(connections);
+    if (connectionNames.length < 1) {
       printMessage(`No connection profiles in ${filename}`, 'info');
     } else {
       if (long) {
         const table = createTable([
+          'Name',
           'Host',
-          'Alias',
           'Service Account',
           'Username',
           'Log API Key',
           'Authentication Service',
         ]);
-        Object.keys(connectionsData).forEach((c) => {
+        connectionNames.forEach((c) => {
           table.push([
             c,
-            connectionsData[c].alias,
-            connectionsData[c].svcacctName || connectionsData[c].svcacctId,
-            connectionsData[c].username,
-            connectionsData[c].logApiKey,
-            connectionsData[c].authenticationService,
+            connections[c].tenant,
+            connections[c].svcacctName || connections[c].svcacctId,
+            connections[c].username,
+            connections[c].logApiKey,
+            connections[c].authenticationService,
           ]);
         });
         printMessage(table.toString(), 'data');
       } else {
-        Object.keys(connectionsData).forEach((c) => {
+        connectionNames.forEach((c) => {
           printMessage(`${c}`, 'data');
         });
         // getUniqueNames(5, Object.keys(connectionsData));
       }
       printMessage(
-        'Any unique substring or alias of a saved host can be used as the value for host parameter in all commands',
+        'Any connection profile name can be used as the value for host parameter in all commands',
         'info'
       );
     }
@@ -67,7 +69,7 @@ export function listConnectionProfiles(long: boolean = false): void {
 
 /**
  * Describe connection profile
- * @param {string} host Host URL, unique substring, or alias
+ * @param {string} host connection name, host URL, or unique substring of a connection name
  * @param {boolean} showSecrets Whether secrets should be shown in clear text or not
  */
 export async function describeConnectionProfile(
@@ -89,6 +91,9 @@ export async function describeConnectionProfile(
     }
     if (!profile.idmHost) {
       delete profile.idmHost;
+    }
+    if (!profile.name) {
+      delete profile.name;
     }
     if (profile.allowInsecureConnection === undefined) {
       delete profile.allowInsecureConnection;
@@ -143,12 +148,9 @@ export async function describeConnectionProfile(
     if (!profile.authenticationService) {
       delete profile.authenticationService;
     }
-    if (!profile.alias) {
-      delete profile.alias;
-    }
     const keyMap = {
+      name: 'Name',
       tenant: 'Host',
-      alias: 'Alias',
       deploymentType: 'Deployment Type',
       username: 'Username',
       password: 'Password',

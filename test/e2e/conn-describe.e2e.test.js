@@ -5,7 +5,7 @@
  *    In mock mode, run the command you want to test with the same arguments
  *    and parameters exactly as you want to test it, for example:
  *
- *    $ FRODO_MOCK=1 FRODO_CONNECTION_PROFILES_PATH=./test/e2e/env/Connections.json FRODO_MASTER_KEY_PATH=./test/e2e/env/masterkey.key frodo conn describe https://openam-frodo-dev.forgeblocks.com/am
+ *    $ FRODO_MOCK=1 FRODO_CONNECTION_PROFILES_PATH=./test/e2e/env/Connections.json FRODO_MASTER_KEY_PATH=./test/e2e/env/masterkey.key frodo conn describe frodo-dev
  *
  *    If your command completes without errors and with the expected results,
  *    all the required mocks already exist and you are good to write your
@@ -20,7 +20,7 @@
  *    In mock record mode, run the command you want to test with the same arguments
  *    and parameters exactly as you want to test it, for example:
  *
- *    $ FRODO_MOCK=record FRODO_CONNECTION_PROFILES_PATH=./test/e2e/env/Connections.json FRODO_MASTER_KEY_PATH=./test/e2e/env/masterkey.key frodo conn describe https://openam-frodo-dev.forgeblocks.com/am
+ *    $ FRODO_MOCK=record FRODO_CONNECTION_PROFILES_PATH=./test/e2e/env/Connections.json FRODO_MASTER_KEY_PATH=./test/e2e/env/masterkey.key frodo conn describe frodo-dev
  *
  *    Wait until you see all the Polly instances (mock recording adapters) have
  *    shutdown before you try to run step #1 again.
@@ -38,7 +38,7 @@
  * 3. Validate your freshly recorded mock responses are complete and working.
  *    Re-run the exact command you want to test in mock mode (see step #1).
  * 
- *    $ FRODO_MOCK=1 FRODO_CONNECTION_PROFILES_PATH=./test/e2e/env/Connections.json FRODO_MASTER_KEY_PATH=./test/e2e/env/masterkey.key frodo conn describe https://openam-frodo-dev.forgeblocks.com/am
+ *    $ FRODO_MOCK=1 FRODO_CONNECTION_PROFILES_PATH=./test/e2e/env/Connections.json FRODO_MASTER_KEY_PATH=./test/e2e/env/masterkey.key frodo conn describe frodo-dev
  *
  * 4. Write your test.
  *    Make sure to use the exact command including number of arguments and params.
@@ -90,18 +90,18 @@ beforeAll(() => {
 describe('frodo conn describe', () => {
     describe('Cloud', () => {
         testif(hasUsableMasterKey)(
-            `"frodo conn describe ${c.host}": should describe the connection`,
+            `"frodo conn describe ${c.name}": should describe the connection`,
             async () => {
-                const CMD = `frodo conn describe ${c.host}`;
+                const CMD = `frodo conn describe ${c.name}`;
                 const { stdout } = await exec(CMD, { ...cloudEnv, cwd: process.cwd() });
                 expect(stdout).toMatchSnapshot();
             }
         );
 
         testif(hasUsableMasterKey)(
-            `"frodo conn describe --show-secrets ${c.host}": should describe the connection and show the associated secrets`,
+            `"frodo conn describe --show-secrets ${c.name}": should describe the connection and show the associated secrets`,
             async () => {
-                const CMD = `frodo conn describe --show-secrets ${c.host}`;
+                const CMD = `frodo conn describe --show-secrets ${c.name}`;
                 const { stdout } = await exec(CMD, { ...cloudEnv, cwd: process.cwd() });
                 //Don't test with snapshot, otherwise the snapshot would contain secrets. Instead, just check to make sure "[present]" doesn't exist anywhere.
                 expect(stdout.includes("[present]")).toBeFalsy();
@@ -111,18 +111,18 @@ describe('frodo conn describe', () => {
 
     describe('Classic', () => {
         testif(hasUsableMasterKey)(
-            `"frodo conn describe ${cc.host}": should describe the classic connection`,
+            `"frodo conn describe ${cc.name}": should describe the classic connection`,
             async () => {
-                const CMD = `frodo conn describe ${cc.host}`;
+                const CMD = `frodo conn describe ${cc.name}`;
                 const { stdout } = await exec(CMD, { ...classicEnv, cwd: process.cwd() });
                 expect(stdout).toMatchSnapshot();
             }
         );
 
         testif(hasUsableMasterKey)(
-            `"frodo conn describe --show-secrets ${cc.host}": should describe the classic connection and show the associated secrets`,
+            `"frodo conn describe --show-secrets ${cc.name}": should describe the classic connection and show the associated secrets`,
             async () => {
-                const CMD = `frodo conn describe --show-secrets ${cc.host}`;
+                const CMD = `frodo conn describe --show-secrets ${cc.name}`;
                 const { stdout } = await exec(CMD, { ...classicEnv, cwd: process.cwd() });
                 //Don't test with snapshot, otherwise the snapshot would contain secrets. Instead, just check to make sure "[present]" doesn't exist anywhere.
                 expect(stdout.includes("[present]")).toBeFalsy();

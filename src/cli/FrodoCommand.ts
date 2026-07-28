@@ -118,7 +118,7 @@ type DeploymentScope = 'classic-only' | 'cloud-only' | 'forgeops-only';
  * Optional per-command variants for a single environment variable.
  *
  * Use this when a variable has different override rules depending on the
- * command (for example `frodo conn save` versus `frodo log`).
+ * command (for example `frodo conn add` versus `frodo log`).
  */
 type VariantDescriptor = {
   description: string;
@@ -444,7 +444,7 @@ export class ListOption extends Option {
 
 export const hostArgument = new Argument(
   '[host]',
-  'AM base URL, e.g.: https://cdk.iam.example.com/am. To use a connection profile, just specify a unique substring or alias.'
+  'AM base URL, e.g.: https://cdk.iam.example.com/am. To use a connection profile, just specify a name.'
 );
 
 const realmArgument = new Argument(
@@ -945,8 +945,8 @@ const environmentVariables: EnvironmentVariableDescriptor[] = [
     variants: [
       {
         description: "Overridden by '--log-api-key' option.",
-        appliesTo: '`frodo conn save`',
-        commandNames: ['frodo conn save'],
+        appliesTo: '`frodo conn add`',
+        commandNames: ['frodo conn add'],
       },
       {
         description: "Overridden by 'username' argument.",
@@ -963,8 +963,8 @@ const environmentVariables: EnvironmentVariableDescriptor[] = [
     variants: [
       {
         description: "Overridden by '--log-api-secret' option.",
-        appliesTo: '`frodo conn save`',
-        commandNames: ['frodo conn save'],
+        appliesTo: '`frodo conn add`',
+        commandNames: ['frodo conn add'],
       },
       {
         description: "Overridden by 'password' argument.",
