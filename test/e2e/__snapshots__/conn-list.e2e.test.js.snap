@@ -1,21 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo conn list "frodo conn list --long": should list the connection hosts, service accounts, usernames, and log API keys. 1`] = `
-"Host                                       │Alias │Service Account       │Username│Log API Key│Authentication Service
-http://openam-frodo-dev.amster.com:8080/am │amster│                      │amadmin │           │MockAmsterService     
-https://openam-frodo-dev.forgeblocks.com/am│      │Frodo-SA-1758728043147│        │           │                      
+exports[`frodo conn list "frodo conn list --long": should list the connection names, hosts, service accounts, usernames, and log API keys. 1`] = `
+"Name     │Host                                       │Service Account       │Username│Log API Key│Authentication Service
+amster   │http://openam-frodo-dev.amster.com:8080/am │                      │amadmin │           │MockAmsterService     
+frodo-dev│https://openam-frodo-dev.forgeblocks.com/am│Frodo-SA-1758728043147│        │           │                      
 "
 `;
 
-exports[`frodo conn list "frodo conn list -l": should list the connection hosts, service accounts, usernames, and log API keys. 1`] = `
-"Host                                       │Alias │Service Account       │Username│Log API Key│Authentication Service
-http://openam-frodo-dev.amster.com:8080/am │amster│                      │amadmin │           │MockAmsterService     
-https://openam-frodo-dev.forgeblocks.com/am│      │Frodo-SA-1758728043147│        │           │                      
+exports[`frodo conn list "frodo conn list -l": should list the connection names, hosts, service accounts, usernames, and log API keys. 1`] = `
+"Name     │Host                                       │Service Account       │Username│Log API Key│Authentication Service
+amster   │http://openam-frodo-dev.amster.com:8080/am │                      │amadmin │           │MockAmsterService     
+frodo-dev│https://openam-frodo-dev.forgeblocks.com/am│Frodo-SA-1758728043147│        │           │                      
 "
 `;
 
-exports[`frodo conn list "frodo conn list": should list the connection hosts 1`] = `
-"http://openam-frodo-dev.amster.com:8080/am
-https://openam-frodo-dev.forgeblocks.com/am
+exports[`frodo conn list "frodo conn list": should list the connection profile names 1`] = `
+"amster
+frodo-dev
 "
 `;

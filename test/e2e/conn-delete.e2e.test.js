@@ -5,7 +5,7 @@
  *    In mock mode, run the command you want to test with the same arguments
  *    and parameters exactly as you want to test it, for example:
  *
- *    $ FRODO_MOCK=1 frodo conn save https://openam-frodo-dev.forgeblocks.com/am volker.scheuber@forgerock.com Sup3rS3cr3t!
+ *    $ FRODO_MOCK=1 frodo conn add --no-validate --name frodo-dev-user https://openam-frodo-dev.forgeblocks.com/am volker.scheuber@forgerock.com Sup3rS3cr3t!
  *
  *    If your command completes without errors and with the expected results,
  *    all the required mocks already exist and you are good to write your
@@ -20,7 +20,7 @@
  *    In mock record mode, run the command you want to test with the same arguments
  *    and parameters exactly as you want to test it, for example:
  *
- *    $ FRODO_MOCK=record frodo conn save https://openam-frodo-dev.forgeblocks.com/am volker.scheuber@forgerock.com Sup3rS3cr3t!
+ *    $ FRODO_MOCK=record frodo conn add --no-validate --name frodo-dev-user https://openam-frodo-dev.forgeblocks.com/am volker.scheuber@forgerock.com Sup3rS3cr3t!
  *
  *    Wait until you see all the Polly instances (mock recording adapters) have
  *    shutdown before you try to run step #1 again.
@@ -76,10 +76,10 @@ afterAll(() => {
 });
 
 describe('frodo conn delete', () => {
-  testif(process.env['FRODO_MASTER_KEY'])(
-    `"frodo conn delete ${c.host}": should delete the connection profile`,
+  testif(process.env['FRODO_MASTER_KEY'] || process.env['FRODO_MASTER_KEY_PATH'])(
+    `"frodo conn delete ${c.name}": should delete the connection profile`,
     async () => {
-      const CMD = `frodo conn delete ${c.host}`;
+      const CMD = `frodo conn delete ${c.name}`;
       const { stderr } = await exec(CMD, { ...env, cwd: process.cwd() });
       expect(stderr).toMatchSnapshot();
     }

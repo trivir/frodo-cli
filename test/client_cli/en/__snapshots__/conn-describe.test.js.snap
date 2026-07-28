@@ -7,8 +7,7 @@ Describe connection profile.
 
 Arguments:
   host              AM base URL, e.g.: https://cdk.iam.example.com/am. To use a
-                    connection profile, just specify a unique substring or
-                    alias.
+                    connection profile, just specify a name.
 
 Options:
   --show-secrets    Show passwords and secrets.

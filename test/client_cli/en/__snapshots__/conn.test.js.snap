@@ -12,7 +12,7 @@ Options:
                     examples.
 
 Commands:
-  alias             Manage connection aliases.
+  add|save          Create new connection profiles.
   delete            Delete connection profiles.
   describe          Describe connection profile.
   help              display help for command

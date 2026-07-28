@@ -5,7 +5,7 @@
  *    In mock mode, run the command you want to test with the same arguments
  *    and parameters exactly as you want to test it, for example:
  *
- *    $ FRODO_MOCK=1 frodo conn save https://openam-frodo-dev.forgeblocks.com/am volker.scheuber@forgerock.com Sup3rS3cr3t!
+ *    $ FRODO_MOCK=1 frodo conn add --no-validate --name frodo-dev-user https://openam-frodo-dev.forgeblocks.com/am volker.scheuber@forgerock.com Sup3rS3cr3t!
  *
  *    If your command completes without errors and with the expected results,
  *    all the required mocks already exist and you are good to write your
@@ -20,7 +20,7 @@
  *    In mock record mode, run the command you want to test with the same arguments
  *    and parameters exactly as you want to test it, for example:
  *
- *    $ FRODO_MOCK=record FRODO_MASTER_KEY=<master key> frodo conn save https://nightly.gcp.forgeops.com/am amadmin <password>
+ *    $ FRODO_MOCK=record FRODO_MASTER_KEY=<master key> frodo conn add --no-validate --name forgeops https://nightly.gcp.forgeops.com/am amadmin <password>
  *
  *    Wait until you see all the Polly instances (mock recording adapters) have
  *    shutdown before you try to run step #1 again.
@@ -64,8 +64,8 @@ process.env['FRODO_MASTER_KEY_PATH'] =
 const env = getEnv(c, { preserveProfilePaths: true });
 const classicEnv = getEnv(cc, { preserveProfilePaths: true });
 
-const jwkFile = 'test/fs_tmp/conn-save-jwk.json';
-const pkFile = 'test/fs_tmp/conn-save-pk';
+const jwkFile = 'test/fs_tmp/conn-add-jwk.json';
+const pkFile = 'test/fs_tmp/conn-add-pk';
 
 beforeAll(() => {
   // Verify environment variables are properly set to prevent accidentally writing to user's ~/.frodo/Connections.json
@@ -74,7 +74,10 @@ beforeAll(() => {
   );
   writeFileSync(jwkFile, c.saJwk);
   writeFileSync(pkFile, cc.pk);
-  writeFileSync(connectionsSaveFile, '{}');
+  writeFileSync(
+    connectionsSaveFile,
+    JSON.stringify({ version: '2', connections: {} }, null, 2)
+  );
 });
 
 afterAll(() => {
@@ -83,38 +86,38 @@ afterAll(() => {
   rmSync(connectionsSaveFile);
 });
 
-describe('frodo conn save', () => {
+describe('frodo conn add', () => {
   testif(process.env['FRODO_MASTER_KEY'] || process.env['FRODO_MASTER_KEY_PATH'])(
-    `"frodo conn save --no-validate ${c.host} ${c.user} ${c.pass}": save new connection profile using an admin account.`,
+    `"frodo conn add --no-validate --name frodo-dev-user ${c.host} ${c.user} ${c.pass}": save new connection profile using an admin account.`,
     async () => {
-      const CMD = `frodo conn save --no-validate ${c.host} ${c.user} ${c.pass}`;
+      const CMD = `frodo conn add --no-validate --name frodo-dev-user ${c.host} ${c.user} ${c.pass}`;
       const { stderr } = await exec(CMD, { ...env, cwd: process.cwd() });
       expect(stderr).toMatchSnapshot();
     }
   );
 
   testif(process.env['FRODO_MASTER_KEY'] || process.env['FRODO_MASTER_KEY_PATH'])(
-    `"frodo conn save --no-validate --sa-id ${c.saId} --sa-jwk-file ${jwkFile} ${c.host}": save new connection profile with existing service account and without admin account.`,
+    `"frodo conn add --no-validate --name frodo-dev-sa --sa-id ${c.saId} --sa-jwk-file ${jwkFile} ${c.host}": save new connection profile with existing service account and without admin account.`,
     async () => {
-      const CMD = `frodo conn save --no-validate --sa-id ${c.saId} --sa-jwk-file ${jwkFile} ${c.host}`;
+      const CMD = `frodo conn add --no-validate --name frodo-dev-sa --sa-id ${c.saId} --sa-jwk-file ${jwkFile} ${c.host}`;
       const { stderr } = await exec(CMD, { ...env, cwd: process.cwd() });
       expect(stderr).toMatchSnapshot();
     }
   );
 
   testif(process.env['FRODO_MASTER_KEY'] || process.env['FRODO_MASTER_KEY_PATH'])(
-    `"frodo conn save --no-validate ${cc.host} ${cc.user} ${cc.pass}": save new classic connection profile using an admin account.`,
+    `"frodo conn add --no-validate --name amster-user ${cc.host} ${cc.user} ${cc.pass}": save new classic connection profile using an admin account.`,
     async () => {
-      const CMD = `frodo conn save --no-validate ${cc.host} ${cc.user} ${cc.pass}`;
+      const CMD = `frodo conn add --no-validate --name amster-user ${cc.host} ${cc.user} ${cc.pass}`;
       const { stderr } = await exec(CMD, { ...classicEnv, cwd: process.cwd() });
       expect(stderr).toMatchSnapshot();
     }
   );
 
   testif(process.env['FRODO_MASTER_KEY'] || process.env['FRODO_MASTER_KEY_PATH'])(
-    `"frodo conn save --no-validate --private-key ${pkFile} --authentication-service ${cc.authService} ${cc.host}": save new classic connection profile with private key and custom authentication service.`,
+    `"frodo conn add --no-validate --name amster-pk --private-key ${pkFile} --authentication-service ${cc.authService} ${cc.host}": save new classic connection profile with private key and custom authentication service.`,
     async () => {
-      const CMD = `frodo conn save --no-validate --private-key ${pkFile} --authentication-service ${cc.authService} ${cc.host}`;
+      const CMD = `frodo conn add --no-validate --name amster-pk --private-key ${pkFile} --authentication-service ${cc.authService} ${cc.host}`;
       const { stderr } = await exec(CMD, { ...classicEnv, cwd: process.cwd() });
       expect(stderr).toMatchSnapshot();
     }
