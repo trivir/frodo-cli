@@ -1,5 +1,4 @@
 import { frodo } from '@rockcarver/frodo-lib';
-import { Option } from 'commander';
 
 import { configManagerExportAuthentication } from '../../../configManagerOps/FrConfigAuthenticationOps';
 import { getTokens } from '../../../ops/AuthenticateOps';

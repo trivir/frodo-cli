@@ -78,13 +78,12 @@ export default function setup() {
       );
 
       if (await getTokens(false, true, deploymentTypes)) {
-        let outcome: boolean;
         printMessage(
           options.scriptName
             ? `Exporting script "${options.scriptName}".`
             : 'Exporting scripts'
         );
-        outcome = await configManagerExportScripts(
+        const outcome = await configManagerExportScripts(
           options.prefix,
           realm,
           options.scriptName

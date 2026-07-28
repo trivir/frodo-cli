@@ -47,46 +47,29 @@
  */
 
 /*
-// Cloud
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull authz-policies -D configManagerExportAuthzPoliciesDir2
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull authz-policies -D configManagerExportAuthzPoliciesDir6 -f test/e2e/fr-config-manager-pull-config/authz-policies.json
-
 // ForgeOps
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_REALM=bravo FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager pull authz-policies --directory configManagerExportAuthzPoliciesDir4 -m forgeops
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_REALM=bravo FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager pull authz-policies -D configManagerExportAuthzPoliciesDir5 -n bravoTestPolicySet -m forgeops
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager pull authz-policies -D configManagerExportAuthzPoliciesDir1 -f test/e2e/fr-config-manager-pull-config/authz-policies.json -m forgeops
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager pull authz-policies --directory configManagerExportAuthzPoliciesDir2 -f test/e2e/fr-config-manager-pull-config/authz-policies.json -m forgeops
 */
 
 
 import { getEnv, testExport } from './utils/TestUtils';
-import { connection as c, forgeops_connection as fc } from './utils/TestConfig';
+import { forgeops_connection as fc } from './utils/TestConfig';
 
 process.env['FRODO_MOCK'] = '1';
 process.env['FRODO_CONNECTION_PROFILES_PATH'] =
   './test/e2e/env/Connections.json';
-const env = getEnv(c);
 const forgeopsEnv = getEnv(fc);
 
-// TODO: Need to update all the recordings
-describe.skip('frodo config-manager pulls', () => {
- test('"frodo config-manager pull authz-policies -D configManagerExportAuthzPoliciesDir2": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.', async () => {
-         const dirName = 'configManagerExportAuthzPoliciesDir2';
-         const CMD = `frodo config-manager pull authz-policies -D ${dirName}`;
-         await testExport(CMD, env, undefined, undefined, dirName, false);
+describe('frodo config-manager pulls', () => {
+    test('"frodo config-manager pull authz-policies -D configManagerExportAuthzPoliciesDir1 -f test/e2e/fr-config-manager-pull-config/authz-policies.json -m forgeops": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.', async () => {
+        const dirName = 'configManagerExportAuthzPoliciesDir1';
+        const CMD = `frodo config-manager pull authz-policies -D ${dirName} -f test/e2e/fr-config-manager-pull-config/authz-policies.json -m forgeops`;
+        await testExport(CMD, forgeopsEnv, undefined, undefined, dirName, false);
     });
-    test('"frodo config-manager pull authz-policies --directory configManagerExportAuthzPoliciesDir4 -m forgeops": should export policies, policy-sets, and resource-types from the bravo realm in fr-config manager style.', async () => {
-        const dirName = 'configManagerExportAuthzPoliciesDir4';
-        const CMD = `frodo config-manager pull authz-policies --directory ${dirName} -m forgeops`;
-        await testExport(CMD, { env: {...forgeopsEnv.env, FRODO_REALM: 'bravo' } }, undefined, undefined, dirName, false);
-    });
-    test('"frodo config-manager pull authz-policies -D configManagerExportAuthzPoliciesDir5 -n bravoTestPolicySet -m forgeops": should export from bravo realm only the policy set with the id: "bravoTestPolicySet".', async () => {
-        const dirName = 'configManagerExportAuthzPoliciesDir5';
-        const policySetName = 'bravoTestPolicySet';
-        const CMD = `frodo config-manager pull authz-policies -D ${dirName} -n ${policySetName} -m forgeops`;
-        await testExport(CMD, { env: {...forgeopsEnv.env, FRODO_REALM: 'bravo' } }, undefined, undefined, dirName, false);
-    });
-    test('"frodo config-manager pull authz-policies -D configManagerExportAuthzPoliciesDir6-f test/e2e/fr-config-manager-pull-config/authz-policies.json" : should export only the policy set with the id: "murphyTestPolicySet".', async () => {
-        const dirName = 'configManagerExportAuthzPoliciesDir6'
-        const CMD = `frodo config-manager pull authz-policies -D ${dirName} -f test/e2e/fr-config-manager-pull-config/authz-policies.json`;
-        await testExport(CMD, env, undefined, undefined, dirName, false);
+    test('"frodo config-manager pull authz-policies --directory configManagerExportAuthzPoliciesDir2 -f test/e2e/fr-config-manager-pull-config/authz-policies.json -m forgeops": should export policies, policy-sets, and resource-types from all realms in fr-config manager style.', async () => {
+        const dirName = 'configManagerExportAuthzPoliciesDir2';
+        const CMD = `frodo config-manager pull authz-policies --directory ${dirName} -f test/e2e/fr-config-manager-pull-config/authz-policies.json -m forgeops`;
+        await testExport(CMD, forgeopsEnv, undefined, undefined, dirName, false);
     });
 });

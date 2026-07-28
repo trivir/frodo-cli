@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CLI help interface for 'config export' should be expected english 1`] = `
 "Usage: frodo config-manager pull authz-policies [options] [host] [realm] [username] [password]
@@ -20,10 +20,9 @@ Arguments:
   password                             Password.
 
 Options:
-  -f, --file <file>                    The AUTHZ_POLICY_SETS_CONFIG json file.
-                                       ex:
-                                       "/home/trivir/Documents/policy-sets.json",
-                                       or "policy-sets.json"
+  -f, --file <file>                    *Required* The AUTHZ_POLICY_SETS_CONFIG
+                                       json file. ex:
+                                       "/Documents/policy-sets.json"
   -n, --policy-name <policy-set-name>  Get only a specific policy set with the
                                        name.
   -h, --help                           Help
