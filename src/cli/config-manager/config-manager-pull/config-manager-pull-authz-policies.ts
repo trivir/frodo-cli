@@ -24,12 +24,6 @@ export default function setup() {
     .description('Export authorization policies from realm.')
     .addOption(
       new Option(
-        '-n, --policy-name <policy-set-name>',
-        'Get only a specific policy set with the name.'
-      )
-    )
-    .addOption(
-      new Option(
         '-f, --file <file>',
         '*Required* The AUTHZ_POLICY_SETS_CONFIG json file. ex: "/Documents/policy-sets.json"'
       )
@@ -69,7 +63,7 @@ export default function setup() {
       if (await getTokens(false, true, deploymentTypes)) {
         printMessage(`Exporting all policy sets in the provided config file.`);
         const outcome = await configManagerExportAuthzPolicySets(options.file);
-        if (!outcome) process.exitCode = 1;
+        if (!outcome) process.exit(1);
       }
 
       // unrecognized combination of options or no options

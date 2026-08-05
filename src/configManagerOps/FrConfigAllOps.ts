@@ -30,97 +30,285 @@ import { configManagerExportTermsAndConditions } from './FrConfigTermsAndConditi
 import { configManagerExportThemes } from './FrConfigThemeOps';
 import { configManagerExportUiConfig } from './FrConfigUiConfigOps';
 import { configManagerExportVariables } from './FrConfigVariableOps';
+import { frodo, state } from '@rockcarver/frodo-lib';
+
+const { CLASSIC_DEPLOYMENT_TYPE_KEY, CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
+  frodo.utils.constants;
+
+const deploymentMapAll = {
+  [FORGEOPS_DEPLOYMENT_TYPE_KEY]: [
+    () => configManagerExportAccessConfig,
+    () => configManagerExportAudit,
+    options => configManagerExportAuthentication(options.realm),
+    options => configManagerExportAuthzPolicySets(`${options.configFolder}/authz-policies.json`),
+    options => configManagerExportConfigAgents(`${options.configFolder}/oauth2-agents.json`),
+    () => configManagerExportConnectorDefinitionsAll,
+    () => configManagerExportCookieDomains,
+    () => configManagerExportCors,
+    () => configManagerExportEmailProviderConfiguration,
+    () => configManagerExportEmailTemplates,
+    () => configManagerExportEndpoints,
+    () => configManagerExportInternalRoles,
+    options => configManagerExportJourneys(undefined, options.realm),
+    () => configManagerExportKbaConfig,
+    () => configManagerExportLocales,
+    () => configManagerExportManagedObjects,
+    () => configManagerExportMappings,
+    () => configManagerExportOrgPrivileges,
+    options => configManagerExportPasswordPolicy(options.realm),
+    () => configManagerExportRemoteServers,
+    options => configManagerExportSaml(`${options.configFolder}/saml.json`),
+    () => configManagerExportSchedules,
+    () => configManagerExportScripts,
+    options => configManagerExportSecretMappings(undefined, options.realm),
+    options => configManagerExportServiceObjectsFromFile(`${options.configFolder}/service-objects.json`),
+    options => configManagerExportServices(options.realm),
+    () => configManagerExportTermsAndConditions,
+    () => configManagerExportThemes,
+    () => configManagerExportUiConfig,
+  ],
+  [CLOUD_DEPLOYMENT_TYPE_KEY]: [
+    () => configManagerExportAccessConfig,
+    () => configManagerExportAudit,
+    options => configManagerExportAuthentication(options.realm),
+    options => configManagerExportAuthzPolicySets(`${options.configFolder}/authz-policies.json`),
+    options => configManagerExportConfigAgents(`${options.configFolder}/oauth2-agents.json`),
+    () => configManagerExportConnectorDefinitionsAll,
+    () => configManagerExportCookieDomains,
+    () => configManagerExportCors,
+    () => configManagerExportEmailProviderConfiguration,
+    () => configManagerExportEmailTemplates,
+    () => configManagerExportEndpoints,
+    () => configManagerExportInternalRoles,
+    options => configManagerExportJourneys(undefined, options.realm),
+    () => configManagerExportKbaConfig,
+    () => configManagerExportLocales,
+    () => configManagerExportManagedObjects,
+    () => configManagerExportMappings,
+    () => configManagerExportOrgPrivileges,
+    options => configManagerExportPasswordPolicy(options.realm),
+    () => configManagerExportRemoteServers,
+    options => configManagerExportSaml(`${options.configFolder}/saml.json`),
+    () => configManagerExportSchedules,
+    () => configManagerExportScripts,
+    options => configManagerExportSecretMappings(undefined, options.realm),
+    options => configManagerExportServiceObjectsFromFile(`${options.configFolder}/service-objects.json`),
+    options => configManagerExportServices(options.realm),
+    () => configManagerExportTermsAndConditions,
+    () => configManagerExportThemes,
+    () => configManagerExportUiConfig,
+  ],
+  [CLASSIC_DEPLOYMENT_TYPE_KEY]: [
+    options => configManagerExportAuthentication(options.realm),
+    options => configManagerExportAuthzPolicySets(`${options.configFolder}/authz-policies.json`),
+    options => configManagerExportConfigAgents(`${options.configFolder}/oauth2-agents.json`),
+    () => configManagerExportCookieDomains,
+    options => configManagerExportJourneys(undefined, options.realm),
+    options => configManagerExportSaml(`${options.configFolder}/saml.json`),
+    () => configManagerExportScripts,
+    options => configManagerExportServices(options.realm),
+  ],
+};
+
+const deploymentMapAllStatic = {
+  [FORGEOPS_DEPLOYMENT_TYPE_KEY]: [
+    configManagerExportAccessConfig,
+    configManagerExportAudit,
+    configManagerExportAuthentication,
+    configManagerExportAuthzPolicySets,
+    configManagerExportConnectorDefinitionsAll,
+    configManagerExportMappings,
+    configManagerExportCookieDomains,
+    configManagerExportCors,
+    configManagerExportEmailProviderConfiguration,
+    configManagerExportEmailTemplates,
+    configManagerExportEndpoints,
+    configManagerExportInternalRoles,
+    configManagerExportJourneys,
+    configManagerExportKbaConfig,
+    configManagerExportLocales,
+    configManagerExportManagedObjects,
+    configManagerExportConfigAgents,
+    configManagerExportOrgPrivileges,
+    configManagerExportPasswordPolicy,
+    configManagerExportRemoteServers,
+    configManagerExportSchedules,
+    configManagerExportSaml,
+    configManagerExportScripts,
+    configManagerExportSecrets,
+    configManagerExportSecretMappings,
+    configManagerExportServiceObjectsFromFile,
+    configManagerExportServices,
+    configManagerExportThemes,
+    configManagerExportTermsAndConditions,
+    configManagerExportUiConfig,
+    configManagerExportVariables,
+  ],
+  [CLOUD_DEPLOYMENT_TYPE_KEY]: [
+    configManagerExportAccessConfig,
+    configManagerExportAudit,
+    configManagerExportAuthentication,
+    configManagerExportAuthzPolicySets,
+    configManagerExportConnectorDefinitionsAll,
+    configManagerExportMappings,
+    configManagerExportCookieDomains,
+    configManagerExportCors,
+    configManagerExportEmailProviderConfiguration,
+    configManagerExportEmailTemplates,
+    configManagerExportEndpoints,
+    configManagerExportInternalRoles,
+    configManagerExportJourneys,
+    configManagerExportKbaConfig,
+    configManagerExportLocales,
+    configManagerExportManagedObjects,
+    configManagerExportConfigAgents,
+    configManagerExportOrgPrivileges,
+    configManagerExportPasswordPolicy,
+    configManagerExportRemoteServers,
+    configManagerExportSchedules,
+    configManagerExportSaml,
+    configManagerExportScripts,
+    configManagerExportSecrets,
+    configManagerExportSecretMappings,
+    configManagerExportServiceObjectsFromFile,
+    configManagerExportServices,
+    configManagerExportThemes,
+    configManagerExportTermsAndConditions,
+    configManagerExportUiConfig,
+    configManagerExportVariables,
+  ],
+  [CLASSIC_DEPLOYMENT_TYPE_KEY]: [
+    configManagerExportAccessConfig,
+    configManagerExportAudit,
+    configManagerExportAuthentication,
+    configManagerExportAuthzPolicySets,
+    configManagerExportConnectorDefinitionsAll,
+    configManagerExportMappings,
+    configManagerExportCookieDomains,
+    configManagerExportCors,
+    configManagerExportEmailProviderConfiguration,
+    configManagerExportEmailTemplates,
+    configManagerExportEndpoints,
+    configManagerExportInternalRoles,
+    configManagerExportJourneys,
+    configManagerExportKbaConfig,
+    configManagerExportLocales,
+    configManagerExportManagedObjects,
+    configManagerExportConfigAgents,
+    configManagerExportOrgPrivileges,
+    configManagerExportPasswordPolicy,
+    configManagerExportRemoteServers,
+    configManagerExportSchedules,
+    configManagerExportSaml,
+    configManagerExportScripts,
+    configManagerExportSecrets,
+    configManagerExportSecretMappings,
+    configManagerExportServiceObjectsFromFile,
+    configManagerExportServices,
+    configManagerExportThemes,
+    configManagerExportTermsAndConditions,
+    configManagerExportUiConfig,
+    configManagerExportVariables,
+  ],
+};
 
 export interface ConfigManagerAllOptions {
-  all?: boolean;
   realm?: string;
   configFolder?: string;
 }
 
 export async function configManagerExportAllWithConfigFolder(
   options: ConfigManagerAllOptions = {},
-  realm?: string
 ): Promise<boolean> {
-  try {
-    await configManagerExportAccessConfig();
-    await configManagerExportAudit();
-    await configManagerExportAuthentication(realm);
+  const promises = deploymentMapAll[state.getDeploymentType()]
+    .map(fn => fn(options));
 
-    try {
-      await configManagerExportAuthzPolicySets(
-        `${options.configFolder}/authz-policies.json`
-      );
-    } catch (err) {
-      printError(
-        err,
-        'Error exporting Authz Policy Sets, Please make sure the config file name is authz-policies.json in the config folder.'
-      );
-    }
+  const results = await Promise.allSettled(promises);
 
-    await configManagerExportConnectorDefinitionsAll();
-    await configManagerExportMappings();
-    await configManagerExportCookieDomains();
-    await configManagerExportCors();
-    await configManagerExportEmailProviderConfiguration();
-    await configManagerExportEmailTemplates();
-    await configManagerExportEndpoints();
-    await configManagerExportInternalRoles();
-    await configManagerExportJourneys(undefined, realm);
-    await configManagerExportKbaConfig();
-    await configManagerExportLocales();
-    await configManagerExportManagedObjects();
-
-    try {
-      await configManagerExportConfigAgents(
-        `${options.configFolder}/oauth2-agents.json`
-      );
-    } catch (err) {
-      printError(
-        err,
-        'Error exporting Oauth2 agents, Please make sure the config file name is oauth2-agents.json in the config folder.'
-      );
-    }
-
-    await configManagerExportOrgPrivileges();
-    await configManagerExportPasswordPolicy(realm);
-    await configManagerExportRemoteServers();
-    await configManagerExportSchedules();
-
-    try {
-      await configManagerExportSaml(`${options.configFolder}/saml.json`);
-    } catch (err) {
-      printError(
-        err,
-        'Error exporting SAML, Please make sure the config file name is saml.json in the config folder.'
-      );
-    }
-
-    await configManagerExportScripts();
-    await configManagerExportSecrets();
-    await configManagerExportSecretMappings(undefined, realm);
-
-    try {
-      await configManagerExportServiceObjectsFromFile(
-        `${options.configFolder}/service-objects.json`
-      );
-    } catch (err) {
-      printError(
-        err,
-        'Error exporting service objects, Please make sure the config file name is service-objects.json in the config folder.'
-      );
-    }
-
-    await configManagerExportServices(realm);
-    await configManagerExportThemes();
-    await configManagerExportTermsAndConditions();
-    await configManagerExportUiConfig();
-    await configManagerExportVariables();
-    return true;
-  } catch (error) {
-    printError(error, 'Error exporting all config files.');
-    return false;
-  }
+  return results.every(
+    result => result.status === 'fulfilled' && result.value
+  );
 }
+//   try {
+//     await configManagerExportAccessConfig();
+//     await configManagerExportAudit();
+//     await configManagerExportAuthentication(realm);
+
+//     try {
+//       await configManagerExportAuthzPolicySets(
+//         `${options.configFolder}/authz-policies.json`
+//       );
+//     } catch (err) {
+//       printError(
+//         err,
+//         'Error exporting Authz Policy Sets, Please make sure the config file name is authz-policies.json in the config folder.'
+//       );
+//     }
+
+//     await configManagerExportConnectorDefinitionsAll();
+//     await configManagerExportMappings();
+//     await configManagerExportCookieDomains();
+//     await configManagerExportCors();
+//     await configManagerExportEmailProviderConfiguration();
+//     await configManagerExportEmailTemplates();
+//     await configManagerExportEndpoints();
+//     await configManagerExportInternalRoles();
+//     await configManagerExportJourneys(undefined, realm);
+//     await configManagerExportKbaConfig();
+//     await configManagerExportLocales();
+//     await configManagerExportManagedObjects();
+
+//     try {
+//       await configManagerExportConfigAgents(
+//         `${options.configFolder}/oauth2-agents.json`
+//       );
+//     } catch (err) {
+//       printError(
+//         err,
+//         'Error exporting Oauth2 agents, Please make sure the config file name is oauth2-agents.json in the config folder.'
+//       );
+//     }
+
+//     await configManagerExportOrgPrivileges();
+//     await configManagerExportPasswordPolicy(realm);
+//     await configManagerExportRemoteServers();
+//     await configManagerExportSchedules();
+
+//     try {
+//       await configManagerExportSaml(`${options.configFolder}/saml.json`);
+//     } catch (err) {
+//       printError(
+//         err,
+//         'Error exporting SAML, Please make sure the config file name is saml.json in the config folder.'
+//       );
+//     }
+
+//     await configManagerExportScripts();
+//     await configManagerExportSecrets();
+//     await configManagerExportSecretMappings(undefined, realm);
+
+//     try {
+//       await configManagerExportServiceObjectsFromFile(
+//         `${options.configFolder}/service-objects.json`
+//       );
+//     } catch (err) {
+//       printError(
+//         err,
+//         'Error exporting service objects, Please make sure the config file name is service-objects.json in the config folder.'
+//       );
+//     }
+
+//     await configManagerExportServices(realm);
+//     await configManagerExportThemes();
+//     await configManagerExportTermsAndConditions();
+//     await configManagerExportUiConfig();
+//     await configManagerExportVariables();
+//     return true;
+//   } catch (error) {
+//     printError(error, 'Error exporting all config files.');
+//     return false;
+//   }
+// }
 
 export async function configManagerExportAllStatic(
   realm?: string

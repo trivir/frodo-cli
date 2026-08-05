@@ -1,9 +1,4 @@
 {
-    "root": [
-        "iPlanetAMWebAgentService",
-        "oauth2Scopes",
-        "test-policy-set"
-    ],
     "alpha": [
         "testAlphaPolicySet"
     ],

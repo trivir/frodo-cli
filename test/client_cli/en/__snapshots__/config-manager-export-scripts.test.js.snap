@@ -23,7 +23,8 @@ Options:
   -n, --script-name <script name>  Export specific script using filename. Omit
                                    file extension.
   -p, --prefix <prefix>            Export all scripts that start with a certain
-                                   prefix. Ignored with -n (default: [])
+                                   prefix. Repetition of this flag is allowed.
+                                   Ignored with -n (default: [])
   -h, --help                       Help
   -hh, --help-more                 Help with all options.
   -hhh, --help-all                 Help with all options, environment variables,
