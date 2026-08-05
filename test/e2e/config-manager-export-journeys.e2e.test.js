@@ -50,7 +50,7 @@
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull journeys -D testDir11
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull journeys -r alpha -D testDir12
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull journeys -r alpha -n FrodoTest -D testDir13
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull journeys -D testDir14 --pull-dependencies
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull journeys -cD testDir14 --pull-dependencies
 
 */
 
@@ -79,9 +79,9 @@ describe('frodo config-manager pulls', () => {
       const CMD = `frodo config-manager pull journeys -r alpha -n FrodoTest -D ${dirName}`;
       await testExport(CMD, env, undefined, undefined, dirName, false);
     });
-    test('"frodo config-manager pull journeys -D testDir14 --pull-dependencies": should export the journeys in fr-config-manager style"', async () => {
+    test('"frodo config-manager pull journeys -cD testDir14 --pull-dependencies": should export the journeys in fr-config-manager style"', async () => {
       const dirName = 'testDir14';
-      const CMD = `frodo config-manager pull journeys -D ${dirName} --pull-dependencies`;
+      const CMD = `frodo config-manager pull journeys -cD ${dirName} --pull-dependencies`;
       await testExport(CMD, env, undefined, undefined, dirName, false);
     });
 });
