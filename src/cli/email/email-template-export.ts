@@ -3,7 +3,6 @@ import { Option } from 'commander';
 
 import { getTokens } from '../../ops/AuthenticateOps';
 import {
-  exportEmailTemplatesToFile,
   exportEmailTemplatesToFiles,
   exportEmailTemplateToFile,
 } from '../../ops/EmailTemplateOps';
@@ -98,7 +97,7 @@ export default function setup() {
           (await getTokens(false, true, deploymentTypes))
         ) {
           verboseMessage('Exporting all email templates to a single file...');
-          const outcome = await exportEmailTemplatesToFile(
+          const outcome = await exportEmailTemplatesToFiles(
             options.extract,
             options.file,
             options.metadata
@@ -113,6 +112,7 @@ export default function setup() {
           verboseMessage('Exporting all email templates to separate files...');
           const outcome = await exportEmailTemplatesToFiles(
             options.extract,
+            "",
             options.metadata
           );
           if (!outcome) process.exitCode = 1;

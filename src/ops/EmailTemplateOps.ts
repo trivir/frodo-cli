@@ -21,6 +21,7 @@ import wordwrap from './utils/Wordwrap';
 const {
   validateImport,
   getTypedFilename,
+  saveTextToFile,
   saveJsonToFile,
   getFilePath,
   getWorkingDirectory,
@@ -165,6 +166,82 @@ export async function listEmailTemplates(
   return true;
 }
 
+function removeHtmlAndCssFromJson(
+  emailTemplate: EmailTemplateSkeleton,
+  isAdvanced: boolean
+) {
+  if (isAdvanced) {
+    emailTemplate.html = {};
+    if (emailTemplate.styles) delete emailTemplate.styles;
+  } else {
+    if (emailTemplate.message) delete emailTemplate.message;
+  }
+}
+
+export function extractHtmlAndCssToFiles(
+  templateId: string,
+  fileName: string,
+  templateData: EmailTemplateSkeleton,
+  extract: boolean = true,
+  includeMeta: boolean = false
+): void {
+  const formattedTemplate = templateData;
+
+  const isAdvanced = (templateData.advancedEditor ?? false) as boolean;
+  const htmlReference = (isAdvanced ? templateData.message : templateData.html) ?? {};
+
+  if (extract) {
+    let fullFilePath = "";
+    let indicatorId = "";
+
+    Object.entries(htmlReference).forEach(([key, value]) => {
+      const htmlFileName = fileName + key + ".html";
+      fullFilePath = getFilePath(htmlFileName, true);
+
+      indicatorId = createProgressIndicator(
+        'determinate',
+        1,
+        `Exporting ${templateId} ${key} HTML file`
+      );
+
+      updateProgressIndicator(indicatorId, `Writing HTML file ${templateId}`);
+
+      saveTextToFile(value, fullFilePath);
+
+      stopProgressIndicator(
+        indicatorId,
+        `Exported ${`${templateId} ${key} HTML file`['brightCyan']} to ${fullFilePath['brightCyan']}.`
+      );
+    });
+
+    if (!isAdvanced && templateData.styles && templateData.styles !== "") {
+      const stylesFileName = fileName + "css";
+      const fullFilePath = getFilePath(stylesFileName, true);
+
+      indicatorId = createProgressIndicator(
+        'determinate',
+        1,
+        `Exporting ${templateId} CSS file`
+      );
+
+      saveTextToFile(templateData.styles as string, fullFilePath);
+
+      stopProgressIndicator(
+        indicatorId,
+        `Exported ${(templateId + " CSS file")['brightCyan']} to ${fullFilePath['brightCyan']}.`
+      );
+    }
+  }
+
+  removeHtmlAndCssFromJson(formattedTemplate, isAdvanced);
+
+  saveJsonToFile(formattedTemplate, getFilePath(fileName + "json", true), includeMeta);
+}
+
+export function getEmailTemplateExportFromFile() {
+
+}
+
 /**
  * Export single email template to a file
  * @param {string} templateId email template id to export
@@ -182,39 +259,28 @@ export async function exportEmailTemplateToFile(
   try {
     let fileName = file;
     if (!fileName) {
-      fileName = getTypedFilename(templateId, EMAIL_TEMPLATE_FILE_TYPE);
+      fileName = getTypedFilename(templateId, EMAIL_TEMPLATE_FILE_TYPE).split("json")[0];
     }
-    const filePath = getFilePath(fileName, true);
+    const filePath = getFilePath(fileName + "json", true);
+
     indicatorId = createProgressIndicator(
       'determinate',
       1,
       `Exporting ${templateId}`
     );
-    const templateData = await readEmailTemplate(templateId);
+    
     updateProgressIndicator(indicatorId, `Writing file ${filePath}`);
-    const fileData = getFileDataTemplate();
-    fileData.emailTemplate[templateId] = templateData;
 
-    if (extract && (templateData.html || templateData.styles)) {
-      const fileThemeName = file ? file.replace('.json', '') + '.theme.json' : getTypedFilename(
-        templateId,
-        EMAIL_TEMPLATE_FILE_TYPE + '.theme'
-      );
-      const fileHTMLData = getFileDataHTMLTemplate();
-      fileHTMLData.html[templateId] = templateData.html ?? {};
-      fileHTMLData.css[templateId] = templateData.styles ?? {};
+    const templateData = await readEmailTemplate(templateId);
 
-      saveJsonToFile(fileHTMLData, getFilePath(fileThemeName, true), includeMeta);
+    extractHtmlAndCssToFiles(
+      templateId,
+      fileName,
+      templateData,
+      extract,
+      includeMeta
+    );
 
-      const formattedTemplate = templateData;
-
-      if (formattedTemplate.html) delete formattedTemplate.html;
-      if (formattedTemplate.styles) delete formattedTemplate.styles;
-        
-      fileData.emailTemplate[templateId] = formattedTemplate;
-    }
-
-    saveJsonToFile(fileData, filePath, includeMeta);
     stopProgressIndicator(
       indicatorId,
       `Exported ${templateId['brightCyan']} to ${filePath['brightCyan']}.`
@@ -233,110 +299,60 @@ export async function exportEmailTemplateToFile(
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
-export async function exportEmailTemplatesToFile(
+export async function exportEmailTemplatesToFiles(
   extract: boolean = false,
   file: string,
   includeMeta: boolean = true
 ): Promise<boolean> {
   try {
     let fileName = file;
-    if (!fileName) {
+    if (fileName === "") {
       fileName = getTypedFilename(
         `allEmailTemplates`,
         EMAIL_TEMPLATE_FILE_TYPE
       );
     }
-    const filePath = getFilePath(fileName, true);
+    
     const exportData = await exportEmailTemplates(true);
+    const fileData = getFileDataTemplate();
 
-    if (extract) {
-      const fileHTMLData = getFileDataHTMLTemplate();
-      const fileThemeName = file ? file.replace('.json', '') + '.theme.json' : getTypedFilename(
-        `allEmailTemplates`,
-        EMAIL_TEMPLATE_FILE_TYPE + '.theme'
-      );
-
-      Object.keys(exportData.emailTemplate).forEach((templateId) => {
-        const templateData = exportData.emailTemplate[templateId];
-
-        if (templateData.html || templateData.styles) {
-          fileHTMLData.html[templateId] = templateData.html ?? {};
-          fileHTMLData.css[templateId] = templateData.styles ?? {};
-    
-          const formattedTemplate = templateData;
-    
-          if (formattedTemplate.html) delete formattedTemplate.html;
-          if (formattedTemplate.styles) delete formattedTemplate.styles;
-            
-          exportData.emailTemplate[templateId] = formattedTemplate;
-        }
-      });
-
-      saveJsonToFile(fileHTMLData, getFilePath(fileThemeName, true), includeMeta);
+    if (!extract && includeMeta) {
+      fileData["meta"] = exportData.meta;
+      return;
     }
 
-    saveJsonToFile(exportData, filePath, includeMeta);
-    return true;
-  } catch (error) {
-    printError(error);
-  }
-  return false;
-}
+    Object.entries(exportData.emailTemplate).forEach(([key, value]) => {
+      if (extract) {
+        fileName = getTypedFilename(key, EMAIL_TEMPLATE_FILE_TYPE).split("json")[0];
 
-/**
- * Export all email templates to separate files
- * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
- * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
- */
-export async function exportEmailTemplatesToFiles(
-  extract: boolean = false,
-  includeMeta: boolean = true
-): Promise<boolean> {
-  let indicatorId;
-  try {
-    const exportData = Object.entries(
-      (await exportEmailTemplates(true)).emailTemplate
-    );
-    indicatorId = createProgressIndicator(
-      'determinate',
-      exportData.length,
-      'Writing email templates'
-    );
-    for (const [templateId, template] of exportData) {
-      const fileName = getTypedFilename(templateId, EMAIL_TEMPLATE_FILE_TYPE);
-      const fileData = getFileDataTemplate();
-      updateProgressIndicator(indicatorId, `Exporting ${templateId}`);
-      fileData.emailTemplate[templateId] = template;
-
-      // Separate html and styles into a different file by default
-      if (extract && (template.html || template.styles)) {
-        const fileThemeName = getTypedFilename(
-          templateId,
-          EMAIL_TEMPLATE_FILE_TYPE + '.theme'
+        try {
+        extractHtmlAndCssToFiles(
+          key,
+          fileName,
+          value,
+          extract,
+          includeMeta
         );
-        const fileHTMLData = getFileDataHTMLTemplate();
-        fileHTMLData.html[templateId] = template.html ?? {};
-        fileHTMLData.css[templateId] = template.styles ?? {};
+        } catch(e) {console.log(key); console.log(value);}
+      } else {
+        const emailTemplate = structuredClone(value);
 
-        saveJsonToFile(fileHTMLData, getFilePath(fileThemeName, true), includeMeta);
-
-        const formattedTemplate = template;
-
-        if (formattedTemplate.html) delete formattedTemplate.html;
-        if (formattedTemplate.styles) delete formattedTemplate.styles;
-          
-        fileData.emailTemplate[templateId] = formattedTemplate;
+        removeHtmlAndCssFromJson(
+          emailTemplate,
+          (emailTemplate.advancedEditor ?? false) as boolean
+        );
+        
+        fileData[key] = emailTemplate;
       }
+    });
 
-      saveJsonToFile(fileData, getFilePath(fileName, true), includeMeta);
+    if (!extract) {
+      const filePath = getFilePath(fileName, true);
+      saveJsonToFile(fileData, filePath);
     }
-    stopProgressIndicator(
-      indicatorId,
-      `${exportData.length} templates written.`
-    );
+
     return true;
   } catch (error) {
-    stopProgressIndicator(indicatorId, `${error}`);
     printError(error);
   }
   return false;
