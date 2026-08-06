@@ -195,7 +195,7 @@ export function extractHtmlAndCssToFiles(
   fileData?: Record<string, EmailTemplateSkeleton | ExportMetaData>,
   extract: boolean = false,
   includeMeta: boolean = false
-): void {
+): Record<string, EmailTemplateSkeleton | ExportMetaData> | undefined {
   let singleFileData: Record<string, EmailTemplateSkeleton | ExportMetaData> | undefined;
 
   if (!fileData) {
@@ -238,6 +238,8 @@ export function extractHtmlAndCssToFiles(
   if (singleFileData) {
     saveJsonToFile(singleFileData, getFilePath(fileName + "json", true), includeMeta);
   }
+
+  return fileData;
 }
 
 export function getEmailTemplateExportFromFile() {
@@ -329,13 +331,13 @@ export async function exportEmailTemplatesToFiles(
     }
 
     for (const [key, value] of Object.entries(exportData.emailTemplate)) {
-      fileName =
-        type === "all" ? fileName :
+      const templateName =
+        type === "all" && !extract ? fileName :
         getTypedFilename(key, EMAIL_TEMPLATE_FILE_TYPE).split("json")[0];
 
-      extractHtmlAndCssToFiles(
+      fileData = extractHtmlAndCssToFiles(
         key,
-        fileName,
+        templateName,
         value,
         fileData,
         extract,
