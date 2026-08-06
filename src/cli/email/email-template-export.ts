@@ -92,27 +92,17 @@ export default function setup() {
           if (!outcome) process.exitCode = 1;
         }
         // --all -a
-        else if (
-          options.all &&
-          (await getTokens(false, true, deploymentTypes))
-        ) {
-          verboseMessage('Exporting all email templates to a single file...');
-          const outcome = await exportEmailTemplatesToFiles(
-            options.extract,
-            options.file,
-            options.metadata
-          );
-          if (!outcome) process.exitCode = 1;
-        }
         // --all-separate -A
         else if (
-          options.allSeparate &&
+          (options.all || options.allSeparate) &&
           (await getTokens(false, true, deploymentTypes))
         ) {
-          verboseMessage('Exporting all email templates to separate files...');
+          const message = options.all ? "single" : "separate";
+          verboseMessage(`Exporting all email templates to a ${message} file...`);
           const outcome = await exportEmailTemplatesToFiles(
+            options.all ? "all" : "separate",
             options.extract,
-            "",
+            options.file,
             options.metadata
           );
           if (!outcome) process.exitCode = 1;

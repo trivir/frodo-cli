@@ -17,6 +17,7 @@ import {
 } from '../utils/Console';
 import { cloneDeep } from './utils/OpsUtils';
 import wordwrap from './utils/Wordwrap';
+import { ExportMetaData } from '@rockcarver/frodo-lib/types/ops/OpsTypes';
 
 const {
   validateImport,
@@ -41,9 +42,9 @@ const EMAIL_TEMPLATE_FILE_TYPE = 'template.email';
 const regexEmailTemplateType = new RegExp(`${EMAIL_TEMPLATE_TYPE}/`, 'g');
 
 // use a function vs a template variable to avoid problems in loops
-function getFileDataTemplate() {
+function getFileDataTemplate(): Record<string, EmailTemplateSkeleton | ExportMetaData> {
   return {
-    emailTemplate: {},
+    emailTemplate: {} as EmailTemplateSkeleton,
   };
 }
 
@@ -168,8 +169,17 @@ export async function listEmailTemplates(
 
 function removeHtmlAndCssFromJson(
   emailTemplate: EmailTemplateSkeleton,
-  isDefault: boolean
+  isDefault: boolean,
+  extract: boolean = false
 ) {
+  if (extract) {
+    emailTemplate.html = {};
+    if (emailTemplate.message) delete emailTemplate.message;
+    if (emailTemplate.styles) delete emailTemplate.styles;
+
+    return;
+  }
+
   if (isDefault) {
     if (emailTemplate.message) delete emailTemplate.message;
   } else {
@@ -182,11 +192,17 @@ export function extractHtmlAndCssToFiles(
   templateId: string,
   fileName: string,
   templateData: EmailTemplateSkeleton,
-  extract: boolean = true,
+  fileData?: Record<string, EmailTemplateSkeleton | ExportMetaData>,
+  extract: boolean = false,
   includeMeta: boolean = false
 ): void {
-  const fileData = getFileDataTemplate();
-  const formattedTemplate = templateData;
+  let singleFileData: Record<string, EmailTemplateSkeleton | ExportMetaData> | undefined;
+
+  if (!fileData) {
+    singleFileData = getFileDataTemplate();
+  }
+  
+  const formattedTemplate = structuredClone(templateData);
 
   const isDefault = templateData.html && !templateData.advancedEditor;
   const htmlReference = isDefault ? templateData.html : templateData.message;
@@ -209,11 +225,19 @@ export function extractHtmlAndCssToFiles(
     }
   }
 
-  removeHtmlAndCssFromJson(formattedTemplate, isDefault);
+  removeHtmlAndCssFromJson(formattedTemplate, isDefault, extract);
 
-  fileData.emailTemplate[templateId] = formattedTemplate;
+  (fileData ?? singleFileData).emailTemplate[templateId] = formattedTemplate;
 
-  saveJsonToFile(fileData, getFilePath(fileName + "json", true), includeMeta);
+  // If the HTML prop exists at all, it'll always be an advanced editor template
+  // regardless of what the advanced editor is set to. So, set this to true anyways.
+  if (!isDefault) {
+    (fileData ?? singleFileData).emailTemplate[templateId].advancedEditor = true;
+  }
+
+  if (singleFileData) {
+    saveJsonToFile(singleFileData, getFilePath(fileName + "json", true), includeMeta);
+  }
 }
 
 export function getEmailTemplateExportFromFile() {
@@ -255,6 +279,7 @@ export async function exportEmailTemplateToFile(
       templateId,
       fileName,
       templateData,
+      undefined,
       extract,
       includeMeta
     );
@@ -272,14 +297,15 @@ export async function exportEmailTemplateToFile(
 }
 
 /**
- * Export all email templates to file
+ * Export all email templates to file(s)
  * @param {string} file optional filename
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function exportEmailTemplatesToFiles(
+  type: string,
   extract: boolean = false,
-  file: string,
+  file?: string,
   includeMeta: boolean = true
 ): Promise<boolean> {
   try {
@@ -292,36 +318,32 @@ export async function exportEmailTemplatesToFiles(
     }
     
     const exportData = await exportEmailTemplates(true);
-    const fileData = getFileDataTemplate();
+    let fileData: Record<string, EmailTemplateSkeleton | ExportMetaData> | undefined;
 
-    if (!extract && includeMeta) {
-      fileData["meta"] = exportData.meta;
+    if (type === "all") {
+      fileData = getFileDataTemplate();
+
+      if (!extract && includeMeta) {
+        fileData["meta"] = exportData.meta;
+      }
     }
 
     for (const [key, value] of Object.entries(exportData.emailTemplate)) {
-      if (extract) {
-        fileName = getTypedFilename(key, EMAIL_TEMPLATE_FILE_TYPE).split("json")[0];
+      fileName =
+        type === "all" ? fileName :
+        getTypedFilename(key, EMAIL_TEMPLATE_FILE_TYPE).split("json")[0];
 
-        extractHtmlAndCssToFiles(
-          key,
-          fileName,
-          value,
-          extract,
-          includeMeta
-        );
-      } else {
-        const emailTemplate = structuredClone(value);
-
-        removeHtmlAndCssFromJson(
-          emailTemplate,
-          emailTemplate.html && !emailTemplate.advancedEditor
-        );
-        
-        fileData.emailTemplate[key] = emailTemplate;
-      }
+      extractHtmlAndCssToFiles(
+        key,
+        fileName,
+        value,
+        fileData,
+        extract,
+        includeMeta
+      );
     };
 
-    if (!extract) {
+    if (type === "all") {
       saveJsonToFile(fileData, getFilePath(fileName, true));
     }
 
@@ -354,22 +376,68 @@ export async function importEmailTemplateFromFile(
       1,
       `Importing ${templateId}`
     );
+
     if (
       (fileData.emailTemplate && fileData.emailTemplate[templateId]) ||
       (raw && getTemplateIdFromFileName(file) === templateId)
     ) {
       try {
-        const emailTemplateData = raw
-          ? s2sConvert(fileData)
-          : fileData.emailTemplate[templateId];
-        await updateEmailTemplate(templateId, emailTemplateData);
-        updateProgressIndicator(indicatorId, `Importing ${templateId}`);
-        stopProgressIndicator(indicatorId, `Imported ${templateId}`);
-        return true;
-      } catch (error) {
-        stopProgressIndicator(indicatorId, `${error}`);
-        printError(error);
+        const emailTemplate = fileData.emailTemplate[templateId];
+        const isAdvanced = emailTemplate.advancedEditor;
+        const removeExtension = file.split("json")[0];
+        const locales = Object.keys(emailTemplate.html ?? {});
+
+        locales.forEach((locale) => {
+          const htmlFilePath = getFilePath(removeExtension + locale + ".html");
+          const htmlData = fs.readFileSync(htmlFilePath, 'utf8');
+          const htmlProperty = isAdvanced ? "html" : "message";
+
+          if (!emailTemplate[htmlProperty]) {
+            emailTemplate[htmlProperty] = {};
+          }
+
+          emailTemplate[htmlProperty][locale] = htmlData;
+        });
+
+        // It's possble that the css file doesn't exist regardless of if the
+        // email template is advanced or not
+        try {
+          const cssFilePath = getFilePath(removeExtension + "css");
+          emailTemplate.styles = fs.readFileSync(cssFilePath, 'utf8');
+        } catch(_) {
+          // Do nothing
+        }
+
+        fileData.emailTemplate[templateId] = emailTemplate;
+        await importEmailTemplates(fileData);
+      } catch (_) {
+        if (raw) {
+          const emailTemplateData = raw
+            ? s2sConvert(fileData)
+            : fileData.emailTemplate[templateId];
+          await updateEmailTemplate(templateId, emailTemplateData);
+        } else {
+          await importEmailTemplates(fileData);
+        }
       }
+    }
+
+    if (
+      (fileData.emailTemplate && fileData.emailTemplate[templateId]) ||
+      (raw && getTemplateIdFromFileName(file) === templateId)
+    ) {
+      // try {
+      //   const emailTemplateData = raw
+      //     ? s2sConvert(fileData)
+      //     : fileData.emailTemplate[templateId];
+      //   await updateEmailTemplate(templateId, emailTemplateData);
+      //   updateProgressIndicator(indicatorId, `Importing ${templateId}`);
+      //   stopProgressIndicator(indicatorId, `Imported ${templateId}`);
+      //   return true;
+      // } catch (error) {
+      //   stopProgressIndicator(indicatorId, `${error}`);
+      //   printError(error);
+      // }
     } else {
       stopProgressIndicator(
         indicatorId,
