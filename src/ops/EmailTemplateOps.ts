@@ -387,12 +387,18 @@ export async function importEmailTemplateFromFile(
         const emailTemplate = fileData.emailTemplate[templateId];
         const isAdvanced = emailTemplate.advancedEditor;
         const removeExtension = file.split("json")[0];
-        const locales = Object.keys(emailTemplate.html ?? {});
+
+        // Subject is used to find the locales because this should always exist
+        const locales = Object.keys(emailTemplate.subject ?? {});
+
+        if (raw) {
+          fileData.emailTemplate[templateId]._id = `emailTemplate/${templateId}`;
+        }
 
         locales.forEach((locale) => {
           const htmlFilePath = getFilePath(removeExtension + locale + ".html");
           const htmlData = fs.readFileSync(htmlFilePath, 'utf8');
-          const htmlProperty = isAdvanced ? "html" : "message";
+          const htmlProperty = isAdvanced ? "message" : "html";
 
           if (!emailTemplate[htmlProperty]) {
             emailTemplate[htmlProperty] = {};
@@ -411,6 +417,7 @@ export async function importEmailTemplateFromFile(
         }
 
         fileData.emailTemplate[templateId] = emailTemplate;
+
         await importEmailTemplates(fileData);
       } catch (_) {
         if (raw) {
@@ -422,24 +429,8 @@ export async function importEmailTemplateFromFile(
           await importEmailTemplates(fileData);
         }
       }
-    }
 
-    if (
-      (fileData.emailTemplate && fileData.emailTemplate[templateId]) ||
-      (raw && getTemplateIdFromFileName(file) === templateId)
-    ) {
-      // try {
-      //   const emailTemplateData = raw
-      //     ? s2sConvert(fileData)
-      //     : fileData.emailTemplate[templateId];
-      //   await updateEmailTemplate(templateId, emailTemplateData);
-      //   updateProgressIndicator(indicatorId, `Importing ${templateId}`);
-      //   stopProgressIndicator(indicatorId, `Imported ${templateId}`);
-      //   return true;
-      // } catch (error) {
-      //   stopProgressIndicator(indicatorId, `${error}`);
-      //   printError(error);
-      // }
+      stopProgressIndicator(indicatorId, `Imported ${templateId}`);
     } else {
       stopProgressIndicator(
         indicatorId,
