@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CLI help interface for 'config export' should be expected english 1`] = `
+exports[`CLI help interface for 'config-manager pull telemetry' should be expected english 1`] = `
 "Usage: frodo config-manager pull telemetry [options] [host] [realm] [username] [password]
 
 [Experimental] Export telemetry exporters.
@@ -17,10 +17,11 @@ Arguments:
                              journeys/trees.
   password                   Password.
 
+Deployment: Cloud-only
+
 Options:
-  -c, --category <category>  Telemetry category to export (otlp or splunk).
-  -N, --name <name>          Name of a single exporter to export. Requires
-                             --category.
+  -c, --category <category>  Telemetry category to export (e.g. otlp, splunk).
+  -n, --name <name>          Name of a single exporter to export.
   -h, --help                 Help
   -hh, --help-more           Help with all options.
   -hhh, --help-all           Help with all options, environment variables, and

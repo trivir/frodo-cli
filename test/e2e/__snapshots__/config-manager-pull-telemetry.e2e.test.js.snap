@@ -1,17 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -c otlp -N datadog": should export a single named exporter 1`] = `0`;
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -c otlp -n test-otlp": should export a single named exporter 1`] = `0`;
 
-exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -c otlp -N datadog": should export a single named exporter 2`] = `""`;
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -c otlp -n test-otlp": should export a single named exporter 2`] = `""`;
 
-exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -c otlp -N datadog": should export a single named exporter: telemetryTestDir3/telemetry/otlp/datadog.json 1`] = `
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -c otlp -n test-otlp": should export a single named exporter: telemetryTestDir3/telemetry/otlp/test-otlp.json 1`] = `
 {
-  "encoding": "PROTO",
-  "endpoint": "https://otlp.us5.datadoghq.com/v1/logs",
+  "encoding": "JSON",
+  "endpoint": "https://example-siem.com:4317",
   "headers": {
-    "dd-api-key": "\${TELEMETRY_HEADER_OTLP_DATADOG_DD_API_KEY}",
+    "api-key": "\${TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY}",
+    "api-secret": "\${TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET}",
   },
-  "id": "datadog",
+  "id": "test-otlp",
   "sources": [
     "am-activity",
     "idm-activity",
@@ -32,6 +33,27 @@ exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetr
     "dd-api-key": "\${TELEMETRY_HEADER_OTLP_DATADOG_DD_API_KEY}",
   },
   "id": "datadog",
+  "sources": [
+    "am-activity",
+    "idm-activity",
+  ],
+  "type": "HTTP",
+}
+`;
+
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -n test-otlp": should export a single named exporter 1`] = `0`;
+
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -n test-otlp": should export a single named exporter 2`] = `""`;
+
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -n test-otlp": should export a single named exporter: telemetryTestDir4/telemetry/otlp/test-otlp.json 1`] = `
+{
+  "encoding": "JSON",
+  "endpoint": "https://example-siem.com:4317",
+  "headers": {
+    "api-key": "\${TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY}",
+    "api-secret": "\${TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET}",
+  },
+  "id": "test-otlp",
   "sources": [
     "am-activity",
     "idm-activity",

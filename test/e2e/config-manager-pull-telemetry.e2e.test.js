@@ -49,7 +49,8 @@
 /*
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull telemetry -D telemetryTestDir
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull telemetry -c otlp -D telemetryTestDir2
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull telemetry -c otlp -N datadog -D telemetryTestDir3
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull telemetry -c otlp -n test-otlp -D telemetryTestDir3
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull telemetry -n test-otlp -D telemetryTestDir4
 */
 
 
@@ -74,9 +75,15 @@ describe('frodo config-manager pull telemetry', () => {
     await testExport(CMD, env, undefined, undefined, dirName, false);
   });
  
-  test('"frodo config-manager pull telemetry -c otlp -N datadog": should export a single named exporter', async () => {
+  test('"frodo config-manager pull telemetry -c otlp -n test-otlp": should export a single named exporter', async () => {
     const dirName = 'telemetryTestDir3';
-    const CMD = `frodo config-manager pull telemetry -c otlp -N datadog -D ${dirName}`;
+    const CMD = `frodo config-manager pull telemetry -c otlp -n test-otlp -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
+
+  test('"frodo config-manager pull telemetry -n test-otlp": should export a single named exporter', async () => {
+    const dirName = 'telemetryTestDir4';
+    const CMD = `frodo config-manager pull telemetry -n test-otlp -D ${dirName}`;
     await testExport(CMD, env, undefined, undefined, dirName, false);
   });
 });
