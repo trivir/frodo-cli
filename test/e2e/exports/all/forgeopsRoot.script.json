@@ -1,0 +1,82 @@
+{
+  "meta": {
+    "exportDate": "2026-08-07T17:00:10.186Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.1.3-0 [v24.13.0]",
+    "exportedBy": "amadmin",
+    "origin": "https://platform.dev.trivir.com/am",
+    "originAmVersion": "8.0.1"
+  },
+  "script": {
+    "3d27b6d3-0f41-410a-9975-2e9df43d885e": {
+      "_id": "3d27b6d3-0f41-410a-9975-2e9df43d885e",
+      "context": "SCRIPTED_DECISION_NODE",
+      "default": false,
+      "description": "null",
+      "evaluatorVersion": "2.0",
+      "language": "JAVASCRIPT",
+      "name": "Test Next Gen",
+      "script": [
+        "/*",
+        "  - Data made available by nodes that have already executed are available in the sharedState variable.",
+        "  - The script should set outcome to either \"true\" or \"false\".",
+        " */",
+        "",
+        "outcome = \"true\";",
+        ""
+      ]
+    },
+    "9b75654f-2553-4627-9938-b14a5f62ce81": {
+      "_id": "9b75654f-2553-4627-9938-b14a5f62ce81",
+      "context": "AUTHENTICATION_TREE_DECISION_NODE",
+      "default": false,
+      "description": "Debug script that prints the shared state",
+      "evaluatorVersion": "1.0",
+      "language": "JAVASCRIPT",
+      "name": "Debug",
+      "script": [
+        "var fr = JavaImporter(",
+        "    org.forgerock.openam.auth.node.api.Action,",
+        "    javax.security.auth.callback.TextOutputCallback,",
+        ");",
+        "",
+        "var scriptOutcomes = {",
+        "    OUTCOME: 'outcome',",
+        "};",
+        "",
+        "function main() {",
+        "    if (callbacks.isEmpty()) {",
+        "        var debugState = {",
+        "            sharedState: sharedState,",
+        "            transientState: transientState",
+        "        };",
+        "        action = fr.Action.send(new fr.TextOutputCallback(0, `<pre style=\"text-align: left;\">${JSON.stringify(debugState, null, 2)}</pre>`)).build();",
+        "        return;",
+        "    }",
+        "    outcome = scriptOutcomes.OUTCOME;",
+        "}",
+        "",
+        "main();",
+        ""
+      ]
+    },
+    "bd027bdf-002d-42e2-a549-d5fdb0d6605a": {
+      "_id": "bd027bdf-002d-42e2-a549-d5fdb0d6605a",
+      "context": "AUTHENTICATION_TREE_DECISION_NODE",
+      "default": false,
+      "description": "Test",
+      "evaluatorVersion": "1.0",
+      "language": "GROOVY",
+      "name": "Test Groovy Script",
+      "script": [
+        "/*",
+        "  - Data made available by nodes that have already executed are available in the sharedState variable.",
+        "  - The script should set outcome to either \"true\" or \"false\".",
+        " */",
+        "",
+        "outcome = \"true\";",
+        ""
+      ]
+    }
+  }
+}

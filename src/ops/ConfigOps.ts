@@ -386,6 +386,7 @@ export async function importEverythingFromFile(
     includeActiveValues: false,
     onlyCustom: false,
     source: '',
+    forcePush: false,
   }
 ): Promise<boolean> {
   try {
@@ -421,6 +422,7 @@ export async function importEverythingFromFiles(
     includeActiveValues: false,
     onlyCustom: false,
     source: '',
+    forcePush: false,
   }
 ): Promise<boolean> {
   try {
@@ -453,6 +455,7 @@ export async function importEntityfromFile(
     includeActiveValues: false,
     onlyCustom: false,
     source: '',
+    forcePush: false,
   }
 ): Promise<boolean> {
   try {

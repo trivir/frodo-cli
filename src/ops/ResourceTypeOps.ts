@@ -422,14 +422,15 @@ export async function exportResourceTypesToFiles(
  */
 export async function importResourceTypeFromFile(
   resourceTypeId: string,
-  file: string
+  file: string,
+  forcePush: boolean = false
 ): Promise<boolean> {
   debugMessage(`cli.ResourceTypeOps.importResourceTypeFromFile: begin`);
   showSpinner(`Importing ${resourceTypeId}...`);
   try {
     const data = fs.readFileSync(getFilePath(file), 'utf8');
     const fileData = JSON.parse(data);
-    await importResourceType(resourceTypeId, fileData);
+    await importResourceType(resourceTypeId, fileData, forcePush);
     succeedSpinner(`Imported ${resourceTypeId}.`);
     debugMessage(`cli.ResourceTypeOps.importResourceTypeFromFile: end`);
     return true;
@@ -448,14 +449,15 @@ export async function importResourceTypeFromFile(
  */
 export async function importResourceTypeByNameFromFile(
   resourceTypeName: string,
-  file: string
+  file: string,
+  forcePush: boolean = false
 ): Promise<boolean> {
   debugMessage(`cli.ResourceTypeOps.importResourceTypeByNameFromFile: begin`);
   showSpinner(`Importing ${resourceTypeName}...`);
   try {
     const data = fs.readFileSync(getFilePath(file), 'utf8');
     const fileData = JSON.parse(data);
-    await importResourceTypeByName(resourceTypeName, fileData);
+    await importResourceTypeByName(resourceTypeName, fileData, forcePush);
     succeedSpinner(`Imported ${resourceTypeName}.`);
     debugMessage(`cli.ResourceTypeOps.importResourceTypeByNameFromFile: end`);
     return true;
@@ -472,7 +474,8 @@ export async function importResourceTypeByNameFromFile(
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function importFirstResourceTypeFromFile(
-  file: string
+  file: string,
+  forcePush: boolean = false
 ): Promise<boolean> {
   debugMessage(`cli.ResourceTypeOps.importFirstResourceTypeFromFile: begin`);
   const filePath = getFilePath(file);
@@ -480,7 +483,7 @@ export async function importFirstResourceTypeFromFile(
   try {
     const data = fs.readFileSync(filePath, 'utf8');
     const fileData = JSON.parse(data);
-    await importFirstResourceType(fileData);
+    await importFirstResourceType(fileData, forcePush);
     succeedSpinner(`Imported ${filePath}.`);
     debugMessage(`cli.ResourceTypeOps.importFirstResourceTypeFromFile: end`);
     return true;
@@ -497,7 +500,8 @@ export async function importFirstResourceTypeFromFile(
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function importResourceTypesFromFile(
-  file: string
+  file: string,
+  forcePush: boolean = false
 ): Promise<boolean> {
   debugMessage(`cli.ResourceTypeOps.importResourceTypesFromFile: begin`);
   const filePath = getFilePath(file);
@@ -505,7 +509,7 @@ export async function importResourceTypesFromFile(
   try {
     const data = fs.readFileSync(filePath, 'utf8');
     const fileData = JSON.parse(data);
-    await importResourceTypes(fileData);
+    await importResourceTypes(fileData, forcePush);
     succeedSpinner(`Imported ${filePath}.`);
     debugMessage(`cli.ResourceTypeOps.importResourceTypesFromFile: end`);
     return true;
@@ -520,7 +524,9 @@ export async function importResourceTypesFromFile(
  * Import resource types from files
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
-export async function importResourceTypesFromFiles(): Promise<boolean> {
+export async function importResourceTypesFromFiles(
+  forcePush: boolean = false
+): Promise<boolean> {
   const errors = [];
   let indicatorId: string;
   try {
@@ -547,7 +553,7 @@ export async function importResourceTypesFromFiles(): Promise<boolean> {
         const fileData: ResourceTypeExportInterface = JSON.parse(data);
         const count = Object.keys(fileData.resourcetype).length;
         total += count;
-        await importResourceTypes(fileData);
+        await importResourceTypes(fileData, forcePush);
         updateProgressIndicator(
           indicatorId,
           `Imported ${count} resource types from ${file}`

@@ -47,107 +47,108 @@
  */
 
 /*
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo authz type import -n URL -f test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo authz type import --type-name URL --file test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo authz type import -n URL -f allAlphaResourceTypes.resourcetype.authz.json -D test/e2e/exports/all
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo authz type import -i 76656a38-5f8e-401b-83aa-4ccb74ce88d2 -f test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo authz type import --type-id 76656a38-5f8e-401b-83aa-4ccb74ce88d2 --file test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo authz type import -i 76656a38-5f8e-401b-83aa-4ccb74ce88d2 -f allAlphaResourceTypes.resourcetype.authz.json -D test/e2e/exports/all
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo authz type import -f test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo authz type import --file test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo authz type import -f allAlphaResourceTypes.resourcetype.authz.json -D test/e2e/exports/all
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo authz type import -af test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo authz type import --all --file test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo authz type import -af allAlphaResourceTypes.resourcetype.authz.json -D test/e2e/exports/all
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo authz type import -AD test/e2e/exports/all-separate/cloud/realm/root-alpha/resourcetype
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo authz type import --all-separate --directory test/e2e/exports/all-separate/cloud/realm/root-alpha/resourcetype
+Forgeops 
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo authz type import -n URL -f test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json  
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo authz type import --type-name URL --file test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json --force-push
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo authz type import -n URL -f forgeopsAllResourceTypes.resourcetype.authz.json -D test/e2e/exports/all
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo authz type import -i 76656a38-5f8e-401b-83aa-4ccb74ce88d2 -f test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json 
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo authz type import --type-id 76656a38-5f8e-401b-83aa-4ccb74ce88d2 --file test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json --force-push
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo authz type import -i 76656a38-5f8e-401b-83aa-4ccb74ce88d2 -f forgeopsAllResourceTypes.resourcetype.authz.json -D test/e2e/exports/all 
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo authz type import -f test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json 
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo authz type import --file test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json --force-push
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo authz type import -f forgeopsAllResourceTypes.resourcetype.authz.json -D test/e2e/exports/all 
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo authz type import -af test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json 
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo authz type import --all --file test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json --force-push
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo authz type import -af forgeopsAllResourceTypes.resourcetype.authz.json -D test/e2e/exports/all 
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo authz type import -AD test/e2e/exports/all-separate/forgeops/realm/root-alpha/resourcetype 
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo authz type import --all-separate --directory test/e2e/exports/all-separate/forgeops/realm/root-alpha/resourcetype --force-push
 */
 import cp from 'child_process';
 import { promisify } from 'util';
 import { getEnv } from './utils/TestUtils';
-import { connection as c } from './utils/TestConfig';
+import { forgeops_connection as fc } from './utils/TestConfig';
 
 const exec = promisify(cp.exec);
 
 process.env['FRODO_MOCK'] = '1';
-const env = getEnv(c);
+const env = getEnv(fc);
 
 
 const allDirectory = "test/e2e/exports/all";
-const allAlphaResourceTypesFileName = "allAlphaResourceTypes.resourcetype.authz.json";
-const allAlphaResourceTypesExport = `${allDirectory}/${allAlphaResourceTypesFileName}`;
-const allSeparateResourceTypesDirectory = `test/e2e/exports/all-separate/cloud/realm/root-alpha/resourcetype`;
+const allResourceTypeFileName = "forgeopsAllResourceTypes.resourcetype.authz.json";
+const allResourceTypesExport = `${allDirectory}/${allResourceTypeFileName}`;
+const allSeparateResourceTypesDirectory = `test/e2e/exports/all-separate/forgeops/realm/root-alpha/resourcetype`;
 
 describe('frodo authz type import', () => {
-    test(`"frodo authz type import -n URL -f ${allAlphaResourceTypesExport}": should import the resource type with the name "URL" from the file "${allAlphaResourceTypesExport}"`, async () => {
-        const CMD = `frodo authz type import -n URL -f ${allAlphaResourceTypesExport}`;
+    test(`"frodo authz type import -n URL -f ${allResourceTypesExport}": should import the resource type with the name "URL" from the file "${allResourceTypesExport}"`, async () => {
+        const CMD = `frodo authz type import -n URL -f ${allResourceTypesExport}`;
         const { stdout } = await exec(CMD, env);
         expect(stdout).toMatchSnapshot()
     });
 
-    test(`"frodo authz type import --type-name URL --file ${allAlphaResourceTypesExport}": should import the resource with the name "URL" from the file "${allAlphaResourceTypesExport}"`, async () => {
-        const CMD = `frodo authz type import --type-name URL --file ${allAlphaResourceTypesExport}`;
+    test(`"frodo authz type import --type-name URL --file ${allResourceTypesExport} --force-push": should import the resource with the name "URL" from the file "${allResourceTypesExport}"`, async () => {
+        const CMD = `frodo authz type import --type-name URL --file ${allResourceTypesExport} --force-push`;
         const { stdout } = await exec(CMD, env);
         expect(stdout).toMatchSnapshot()
     });
 
-    test(`"frodo authz type import -n URL -f ${allAlphaResourceTypesFileName} -D ${allDirectory}": should import the resource type with the name "URL" from the file "${allAlphaResourceTypesExport}"`, async () => {
-        const CMD = `frodo authz type import -n URL -f ${allAlphaResourceTypesFileName} -D ${allDirectory}`;
+    test(`"frodo authz type import -n URL -f ${allResourceTypeFileName} -D ${allDirectory}": should import the resource type with the name "URL" from the file "${allResourceTypesExport}"`, async () => {
+        const CMD = `frodo authz type import -n URL -f ${allResourceTypeFileName} -D ${allDirectory}`;
         const { stdout } = await exec(CMD, env);
         expect(stdout).toMatchSnapshot()
     });
 
-    test(`"frodo authz type import -i 76656a38-5f8e-401b-83aa-4ccb74ce88d2 -f ${allAlphaResourceTypesExport}": should import the resource type with the id "76656a38-5f8e-401b-83aa-4ccb74ce88d2" from the file "${allAlphaResourceTypesExport}"`, async () => {
-        const CMD = `frodo authz type import -i 76656a38-5f8e-401b-83aa-4ccb74ce88d2 -f ${allAlphaResourceTypesExport}`;
+    test(`"frodo authz type import -i 76656a38-5f8e-401b-83aa-4ccb74ce88d2 -f ${allResourceTypesExport}": should import the resource type with the id "76656a38-5f8e-401b-83aa-4ccb74ce88d2" from the file "${allResourceTypesExport}"`, async () => {
+        const CMD = `frodo authz type import -i 76656a38-5f8e-401b-83aa-4ccb74ce88d2 -f ${allResourceTypesExport}`;
         const { stdout } = await exec(CMD, env);
         expect(stdout).toMatchSnapshot()
     });
 
-    test(`"frodo authz type import --type-id 76656a38-5f8e-401b-83aa-4ccb74ce88d2 --file ${allAlphaResourceTypesExport}": should import the resource type with the id "76656a38-5f8e-401b-83aa-4ccb74ce88d2" from the file "${allAlphaResourceTypesExport}"`, async () => {
-        const CMD = `frodo authz type import --type-id 76656a38-5f8e-401b-83aa-4ccb74ce88d2 --file ${allAlphaResourceTypesExport}`;
+    test(`"frodo authz type import --type-id 76656a38-5f8e-401b-83aa-4ccb74ce88d2 --file ${allResourceTypesExport} --force-push": should import the resource type with the id "76656a38-5f8e-401b-83aa-4ccb74ce88d2" from the file "${allResourceTypesExport}"`, async () => {
+        const CMD = `frodo authz type import --type-id 76656a38-5f8e-401b-83aa-4ccb74ce88d2 --file ${allResourceTypesExport} --force-push`;
         const { stdout } = await exec(CMD, env);
         expect(stdout).toMatchSnapshot()
     });
 
-    test(`"frodo authz type import -i 76656a38-5f8e-401b-83aa-4ccb74ce88d2 -f ${allAlphaResourceTypesFileName} -D ${allDirectory}": should import the resource type with the id "76656a38-5f8e-401b-83aa-4ccb74ce88d2" from the file "${allAlphaResourceTypesExport}"`, async () => {
-        const CMD = `frodo authz type import -i 76656a38-5f8e-401b-83aa-4ccb74ce88d2 -f ${allAlphaResourceTypesFileName} -D ${allDirectory}`;
+    test(`"frodo authz type import -i 76656a38-5f8e-401b-83aa-4ccb74ce88d2 -f ${allResourceTypeFileName} -D ${allDirectory}": should import the resource type with the id "76656a38-5f8e-401b-83aa-4ccb74ce88d2" from the file "${allResourceTypesExport}"`, async () => {
+        const CMD = `frodo authz type import -i 76656a38-5f8e-401b-83aa-4ccb74ce88d2 -f ${allResourceTypeFileName} -D ${allDirectory}`;
         const { stdout } = await exec(CMD, env);
         expect(stdout).toMatchSnapshot()
     });
 
 
-    test(`"frodo authz type import -f ${allAlphaResourceTypesExport}": should import the first resource type from the file "${allAlphaResourceTypesExport}"`, async () => {
-        const CMD = `frodo authz type import -f ${allAlphaResourceTypesExport}`;
+    test(`"frodo authz type import -f ${allResourceTypesExport}": should import the first resource type from the file "${allResourceTypesExport}"`, async () => {
+        const CMD = `frodo authz type import -f ${allResourceTypesExport}`;
         const { stdout } = await exec(CMD, env);
         expect(stdout).toMatchSnapshot()
     });
 
-    test(`"frodo authz type import --file ${allAlphaResourceTypesExport}": should import the first resource type from the file "${allAlphaResourceTypesExport}"`, async () => {
-        const CMD = `frodo authz type import --file ${allAlphaResourceTypesExport}`;
+    test(`"frodo authz type import --file ${allResourceTypesExport} --force-push": should import the first resource type from the file "${allResourceTypesExport}"`, async () => {
+        const CMD = `frodo authz type import --file ${allResourceTypesExport} --force-push`;
         const { stdout } = await exec(CMD, env);
         expect(stdout).toMatchSnapshot()
     });
 
-    test(`"frodo authz type import -f ${allAlphaResourceTypesFileName} -D ${allDirectory}": should import the first resource type from the file "${allAlphaResourceTypesExport}"`, async () => {
-        const CMD = `frodo authz type import -f ${allAlphaResourceTypesFileName} -D ${allDirectory}`;
+    test(`"frodo authz type import -f ${allResourceTypeFileName} -D ${allDirectory}": should import the first resource type from the file "${allResourceTypesExport}"`, async () => {
+        const CMD = `frodo authz type import -f ${allResourceTypeFileName} -D ${allDirectory}`;
         const { stdout } = await exec(CMD, env);
         expect(stdout).toMatchSnapshot()
     });
 
-    test(`"frodo authz type import -af ${allAlphaResourceTypesExport}": should import all resource types from the file "${allAlphaResourceTypesExport}"`, async () => {
-        const CMD = `frodo authz type import -af ${allAlphaResourceTypesExport}`;
+    test(`"frodo authz type import -af ${allResourceTypesExport}": should import all resource types from the file "${allResourceTypesExport}"`, async () => {
+        const CMD = `frodo authz type import -af ${allResourceTypesExport}`;
         const { stdout } = await exec(CMD, env);
         expect(stdout).toMatchSnapshot()
     });
 
-    test(`"frodo authz type import --all --file ${allAlphaResourceTypesExport}": should import all resource types from the file "${allAlphaResourceTypesExport}"`, async () => {
-        const CMD = `frodo authz type import --all --file ${allAlphaResourceTypesExport}`;
+    test(`"frodo authz type import --all --file ${allResourceTypesExport} --force-push": should import all resource types from the file "${allResourceTypesExport}"`, async () => {
+        const CMD = `frodo authz type import --all --file ${allResourceTypesExport} --force-push`;
         const { stdout } = await exec(CMD, env);
         expect(stdout).toMatchSnapshot()
     });
 
-    test(`"frodo authz type import -af ${allAlphaResourceTypesFileName} -D ${allDirectory}": should import all resource types from the file "${allAlphaResourceTypesExport}"`, async () => {
-        const CMD = `frodo authz type import -af ${allAlphaResourceTypesFileName} -D ${allDirectory}`;
+    test(`"frodo authz type import -af ${allResourceTypeFileName} -D ${allDirectory}": should import all resource types from the file "${allResourceTypesExport}"`, async () => {
+        const CMD = `frodo authz type import -af ${allResourceTypeFileName} -D ${allDirectory}`;
         const { stdout } = await exec(CMD, env);
         expect(stdout).toMatchSnapshot()
     });
@@ -158,8 +159,8 @@ describe('frodo authz type import', () => {
         expect(stdout).toMatchSnapshot()
     });
 
-    test(`"frodo authz type import --all-separate --directory ${allSeparateResourceTypesDirectory}": should import all resource types from the ${allSeparateResourceTypesDirectory} directory"`, async () => {
-        const CMD = `frodo authz type import --all-separate --directory ${allSeparateResourceTypesDirectory}`;
+    test(`"frodo authz type import --all-separate --directory ${allSeparateResourceTypesDirectory} --force-push": should import all resource types from the ${allSeparateResourceTypesDirectory} directory"`, async () => {
+        const CMD = `frodo authz type import --all-separate --directory ${allSeparateResourceTypesDirectory} --force-push`;
         const { stdout } = await exec(CMD, env);
         expect(stdout).toMatchSnapshot()
     });

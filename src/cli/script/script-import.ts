@@ -64,6 +64,12 @@ export default function setup() {
         'Do not include script dependencies (i.e. library scripts). Can only be used with -n or -i.'
       )
     )
+    .addOption(
+      new Option(
+        '--force-push',
+        'Force import the import file(s) even if there is no change. Without this, frodo will check if there is any changes from the import file(s) and what is in the deployement, and will not import if there is no change.'
+      )
+    )
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {
@@ -88,6 +94,7 @@ export default function setup() {
               deps: options.deps,
               reUuid: options.reUuid,
               includeDefault: options.default,
+              forcePush: options.forcePush,
             }
           );
           if (!outcome) process.exitCode = 1;
@@ -102,6 +109,7 @@ export default function setup() {
                 deps: options.deps,
                 reUuid: options.reUuid,
                 includeDefault: options.default,
+                forcePush: options.forcePush,
               },
               true
             );

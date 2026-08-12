@@ -41,6 +41,12 @@ export default function setup() {
         'Import all resource types from separate files (*.resourcetype.authz.json or *.resourcetype.json) in the current directory. Ignored with -i, -n, or -a.'
       )
     )
+    .addOption(
+      new Option(
+        '--force-push',
+        'Force import the import file(s) even if there is no change. Without this, frodo will check if there is any changes from the import file(s) and what is in the deployement, and will not import if there is no change.'
+      )
+    )
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {
@@ -59,7 +65,8 @@ export default function setup() {
           );
           const outcome = await importResourceTypeFromFile(
             options.typeId,
-            options.file
+            options.file,
+            options.forcePush
           );
           if (!outcome) process.exitCode = 1;
         }
@@ -70,7 +77,8 @@ export default function setup() {
           );
           const outcome = await importResourceTypeByNameFromFile(
             options.typeName,
-            options.file
+            options.file,
+            options.forcePush
           );
           if (!outcome) process.exitCode = 1;
         }
@@ -79,7 +87,10 @@ export default function setup() {
           verboseMessage(
             'Importing all authorization resource types from file...'
           );
-          const outcome = await importResourceTypesFromFile(options.file);
+          const outcome = await importResourceTypesFromFile(
+            options.file,
+            options.forcePush
+          );
           if (!outcome) process.exitCode = 1;
         }
         // -A/--all-separate
@@ -87,7 +98,7 @@ export default function setup() {
           verboseMessage(
             'Importing all authorization resource types from separate files...'
           );
-          const outcome = await importResourceTypesFromFiles();
+          const outcome = await importResourceTypesFromFiles(options.forcePush);
           if (!outcome) process.exitCode = 1;
         }
         // import first
@@ -95,7 +106,10 @@ export default function setup() {
           verboseMessage(
             `Importing first authorization resource type from file "${options.file}"...`
           );
-          const outcome = await importFirstResourceTypeFromFile(options.file);
+          const outcome = await importFirstResourceTypeFromFile(
+            options.file,
+            options.forcePush
+          );
           if (!outcome) process.exitCode = 1;
         }
         // unrecognized combination of options or no options
