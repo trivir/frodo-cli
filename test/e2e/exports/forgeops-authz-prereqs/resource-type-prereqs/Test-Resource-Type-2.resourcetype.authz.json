@@ -1,0 +1,26 @@
+{
+  "policy": {},
+  "policyset": {},
+  "resourcetype": {
+    "88e74fda-3e8b-47b3-b50d-22a456c9bab1": {
+      "actions": {
+        "create": true,
+        "delete": true,
+        "read": false,
+        "update": false
+      },
+      "createdBy": "id=amadmin,ou=user,ou=am-config",
+      "creationDate": 1784141939871,
+      "description": "",
+      "lastModifiedBy": "id=amadmin,ou=user,ou=am-config",
+      "lastModifiedDate": 1784672892942,
+      "name": "Test Resource Type 2",
+      "patterns": [
+        "*/test2",
+        "test2/*"
+      ],
+      "uuid": "88e74fda-3e8b-47b3-b50d-22a456c9bab1"
+    }
+  },
+  "script": {}
+}

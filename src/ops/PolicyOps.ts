@@ -566,7 +566,11 @@ export async function exportPoliciesByPolicySetToFiles(
 export async function importPolicyFromFile(
   policyId: string,
   file: string,
-  options: PolicyImportOptions = { deps: true, prereqs: false }
+  options: PolicyImportOptions = {
+    deps: true,
+    prereqs: false,
+    forcePush: false,
+  }
 ): Promise<boolean> {
   debugMessage(`cli.PolicyOps.importPolicyFromFile: begin`);
   showSpinner(`Importing ${policyId}...`);
@@ -592,7 +596,11 @@ export async function importPolicyFromFile(
  */
 export async function importFirstPolicyFromFile(
   file: string,
-  options: PolicyImportOptions = { deps: true, prereqs: false }
+  options: PolicyImportOptions = {
+    deps: true,
+    prereqs: false,
+    forcePush: false,
+  }
 ): Promise<boolean> {
   debugMessage(`cli.PolicySetOps.importFirstPolicyFromFile: begin`);
   const filePath = getFilePath(file);
@@ -621,7 +629,11 @@ export async function importFirstPolicyFromFile(
  */
 export async function importPoliciesFromFile(
   file: string,
-  options: PolicyImportOptions = { deps: true, prereqs: false }
+  options: PolicyImportOptions = {
+    deps: true,
+    prereqs: false,
+    forcePush: false,
+  }
 ): Promise<boolean> {
   debugMessage(`cli.PolicyOps.importPoliciesFromFile: begin`);
   const filePath = getFilePath(file);
@@ -658,7 +670,11 @@ export async function importPoliciesFromFile(
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function importPoliciesFromFiles(
-  options: PolicyImportOptions = { deps: true, prereqs: false }
+  options: PolicyImportOptions = {
+    deps: true,
+    prereqs: false,
+    forcePush: false,
+  }
 ): Promise<boolean> {
   const errors = [];
   let indicatorId: string;

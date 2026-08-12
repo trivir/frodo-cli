@@ -1,0 +1,60 @@
+{
+  "meta": {
+    "exportDate": "2026-08-07T16:59:08.539Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.1.3-0 [v24.13.0]",
+    "exportedBy": "amadmin",
+    "origin": "https://platform.dev.trivir.com/am",
+    "originAmVersion": "8.0.1"
+  },
+  "policy": {},
+  "policyset": {
+    "oauth2Scopes": {
+      "applicationType": "iPlanetAMWebAgentService",
+      "attributeNames": [],
+      "conditions": [
+        "Script",
+        "AMIdentityMembership",
+        "IPv6",
+        "SimpleTime",
+        "IPv4",
+        "LEAuthLevel",
+        "LDAPFilter",
+        "AuthScheme",
+        "Session",
+        "AND",
+        "AuthenticateToRealm",
+        "ResourceEnvIP",
+        "SessionProperty",
+        "OAuth2Scope",
+        "OR",
+        "Transaction",
+        "NOT",
+        "AuthLevel",
+        "AuthenticateToService"
+      ],
+      "description": "The built-in Application used by the OAuth2 scope authorization process.",
+      "displayName": "Default OAuth2 Scopes Policy Set",
+      "editable": true,
+      "entitlementCombiner": "DenyOverride",
+      "name": "oauth2Scopes",
+      "resourceComparator": null,
+      "resourceTypeUuids": [
+        "d60b7a71-1dc6-44a5-8e48-e4b9d92dee8b"
+      ],
+      "saveIndex": null,
+      "searchIndex": null,
+      "subjects": [
+        "AuthenticatedUsers",
+        "NOT",
+        "Identity",
+        "OR",
+        "AND",
+        "NONE",
+        "JwtClaim"
+      ]
+    }
+  },
+  "resourcetype": {},
+  "script": {}
+}

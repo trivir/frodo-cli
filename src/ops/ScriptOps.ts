@@ -628,6 +628,7 @@ export async function importScriptsFromFile(
     deps: true,
     reUuid: false,
     includeDefault: false,
+    forcePush: false,
   }
 ): Promise<boolean> {
   const filePath = getFilePath(file);

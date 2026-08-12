@@ -596,6 +596,7 @@ async function addSwitch(
           deps: true,
           reUuid: false,
           includeDefault: false,
+          forcePush: false,
         }
       );
       logmessages.push(`add script ${importFilePath}`);
@@ -812,6 +813,7 @@ async function addSwitch(
       const outcome = await importPolicyFromFile(policy._id, importFilePath, {
         deps: true,
         prereqs: false,
+        forcePush: false,
       });
       logmessages.push(`add policy ${importFilePath}`);
       verboseMessage(`add policy ${importFilePath}\n`);

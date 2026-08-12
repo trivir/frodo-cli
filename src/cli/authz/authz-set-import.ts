@@ -43,6 +43,12 @@ export default function setup() {
     .addOption(
       new Option('--prereqs', 'Include prerequisites (resource types).')
     )
+    .addOption(
+      new Option(
+        '--force-push',
+        'Force import the import file(s) even if there is no change. Without this, frodo will check if there is any changes from the import file(s) and what is in the deployement, and will not import if there is no change.'
+      )
+    )
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {
@@ -63,6 +69,7 @@ export default function setup() {
             {
               deps: options.deps,
               prereqs: options.prereqs,
+              forcePush: options.forcePush,
             }
           );
           if (!outcome) process.exitCode = 1;
@@ -75,6 +82,7 @@ export default function setup() {
           const outcome = await importPolicySetsFromFile(options.file, {
             deps: options.deps,
             prereqs: options.prereqs,
+            forcePush: options.forcePush,
           });
           if (!outcome) process.exitCode = 1;
         }
@@ -86,6 +94,7 @@ export default function setup() {
           const outcome = await importPolicySetsFromFiles({
             deps: options.deps,
             prereqs: options.prereqs,
+            forcePush: options.forcePush,
           });
           if (!outcome) process.exitCode = 1;
         }
@@ -97,6 +106,7 @@ export default function setup() {
           const outcome = await importFirstPolicySetFromFile(options.file, {
             deps: options.deps,
             prereqs: options.prereqs,
+            forcePush: options.forcePush,
           });
           if (!outcome) process.exitCode = 1;
         }

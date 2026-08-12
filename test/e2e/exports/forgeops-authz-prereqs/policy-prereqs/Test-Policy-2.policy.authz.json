@@ -1,0 +1,261 @@
+{
+  "policy": {
+    "Test Policy 2": {
+      "_id": "Test Policy 2",
+      "actionValues": {
+        "create": false,
+        "delete": false,
+        "read": true,
+        "update": true
+      },
+      "active": true,
+      "applicationName": "test-policy-set",
+      "condition": {
+        "conditions": [
+          {
+            "requiredScopes": [
+              "test",
+              "scope"
+            ],
+            "type": "OAuth2Scope"
+          },
+          {
+            "scriptId": "11e1a3c0-038b-4c16-956a-6c9d89328cff",
+            "type": "Script"
+          },
+          {
+            "condition": {
+              "scriptId": "6b3cfd48-62d3-48ff-a96f-fe8f3a22ab30",
+              "type": "Script"
+            },
+            "type": "NOT"
+          },
+          {
+            "conditions": [
+              {
+                "comparator": "REGEX",
+                "decisionField": "decision",
+                "identityResource": "resource",
+                "queryField": "query",
+                "type": "IdmUser",
+                "value": "regex"
+              },
+              {
+                "authenticateToService": "tree",
+                "type": "AuthenticateToService"
+              }
+            ],
+            "type": "OR"
+          }
+        ],
+        "type": "AND"
+      },
+      "createdBy": "id=amadmin,ou=user,ou=am-config",
+      "creationDate": "2026-07-15T18:59:02.775Z",
+      "description": "Policy Description",
+      "lastModifiedBy": "id=amadmin,ou=user,ou=am-config",
+      "lastModifiedDate": "2026-07-21T22:30:54.755Z",
+      "name": "Test Policy 2",
+      "resourceAttributes": [
+        {
+          "propertyName": "sn",
+          "propertyValues": [
+            "surName"
+          ],
+          "type": "Static"
+        },
+        {
+          "propertyName": "cn",
+          "propertyValues": [],
+          "type": "User"
+        },
+        {
+          "propertyName": "sn",
+          "propertyValues": [],
+          "type": "User"
+        },
+        {
+          "propertyName": "cn",
+          "propertyValues": [
+            "currentName"
+          ],
+          "type": "Static"
+        }
+      ],
+      "resourceTypeUuid": "88e74fda-3e8b-47b3-b50d-22a456c9bab1",
+      "resources": [
+        "*/test2",
+        "test2/hello"
+      ],
+      "subject": {
+        "subjects": [
+          {
+            "type": "AuthenticatedUsers"
+          },
+          {
+            "type": "NONE"
+          },
+          {
+            "subjects": [
+              {
+                "claimName": "claim",
+                "claimValue": "val",
+                "type": "JwtClaim"
+              }
+            ],
+            "type": "OR"
+          },
+          {
+            "subject": {
+              "subjectValues": [],
+              "type": "Identity"
+            },
+            "type": "NOT"
+          }
+        ],
+        "type": "AND"
+      }
+    }
+  },
+  "policyset": {
+    "test-policy-set": {
+      "applicationType": "iPlanetAMWebAgentService",
+      "attributeNames": [],
+      "conditions": [
+        "AMIdentityMembership",
+        "AND",
+        "AuthLevel",
+        "AuthenticateToRealm",
+        "AuthenticateToService",
+        "IPv4",
+        "IPv6",
+        "IdmUser",
+        "LDAPFilter",
+        "LEAuthLevel",
+        "NOT",
+        "OAuth2Scope",
+        "OR",
+        "Policy",
+        "ResourceEnvIP",
+        "Script",
+        "Session",
+        "SessionProperty",
+        "SimpleTime",
+        "Transaction"
+      ],
+      "createdBy": "id=amadmin,ou=user,ou=am-config",
+      "creationDate": 1784141942480,
+      "description": "Test policy set description",
+      "displayName": "Test Policy Set",
+      "editable": true,
+      "entitlementCombiner": "DenyOverride",
+      "lastModifiedBy": "id=amadmin,ou=user,ou=am-config",
+      "lastModifiedDate": 1784672687738,
+      "name": "test-policy-set",
+      "resourceComparator": null,
+      "resourceTypeUuids": [
+        "88e74fda-3e8b-47b3-b50d-22a456c9bab1",
+        "f42519db-f43c-4325-b8d4-04a631ff46cb"
+      ],
+      "saveIndex": null,
+      "searchIndex": null,
+      "subjects": [
+        "AND",
+        "AuthenticatedUsers",
+        "Identity",
+        "JwtClaim",
+        "NONE",
+        "NOT",
+        "OR",
+        "Policy"
+      ]
+    }
+  },
+  "resourcetype": {
+    "88e74fda-3e8b-47b3-b50d-22a456c9bab1": {
+      "actions": {
+        "create": true,
+        "delete": true,
+        "read": false,
+        "update": false
+      },
+      "createdBy": "id=amadmin,ou=user,ou=am-config",
+      "creationDate": 1784141939871,
+      "description": "",
+      "lastModifiedBy": "id=amadmin,ou=user,ou=am-config",
+      "lastModifiedDate": 1784672892942,
+      "name": "Test Resource Type 2",
+      "patterns": [
+        "*/test2",
+        "test2/*"
+      ],
+      "uuid": "88e74fda-3e8b-47b3-b50d-22a456c9bab1"
+    }
+  },
+  "script": {
+    "11e1a3c0-038b-4c16-956a-6c9d89328cff": {
+      "_id": "11e1a3c0-038b-4c16-956a-6c9d89328cff",
+      "context": "SCRIPTED_DECISION_NODE",
+      "createdBy": "id=dsameuser,ou=user,dc=openam,dc=forgerock,dc=org",
+      "creationDate": 1433147666269,
+      "default": true,
+      "description": "Default global script for a scripted decision node",
+      "evaluatorVersion": "2.0",
+      "language": "JAVASCRIPT",
+      "lastModifiedBy": "id=amadmin,ou=user,ou=am-config",
+      "lastModifiedDate": 1784673054812,
+      "name": "Next Generation Scripted Decision Node Script",
+      "script": [
+        "/*",
+        " * Copyright 2024-2025 Ping Identity Corporation. All Rights Reserved",
+        " *",
+        " * This code is to be used exclusively in connection with Ping Identity",
+        " * Corporation software or services. Ping Identity Corporation only offers",
+        " * such software or services to legal entities who have entered into a",
+        " * binding license agreement with Ping Identity Corporation.",
+        " */",
+        "/*",
+        "  - Data made available by nodes that have already executed is available in the nodeState variable.",
+        "  - Use the action object to set the outcome of the node.",
+        " */",
+        "",
+        "action.goTo(\"true\");",
+        ""
+      ]
+    },
+    "6b3cfd48-62d3-48ff-a96f-fe8f3a22ab30": {
+      "_id": "6b3cfd48-62d3-48ff-a96f-fe8f3a22ab30",
+      "context": "SOCIAL_IDP_PROFILE_TRANSFORMATION",
+      "createdBy": "id=dsameuser,ou=user,dc=openam,dc=forgerock,dc=org",
+      "creationDate": 1433147666269,
+      "default": true,
+      "description": "Normalizes raw profile data from Amazon",
+      "evaluatorVersion": "1.0",
+      "language": "GROOVY",
+      "lastModifiedBy": "id=amadmin,ou=user,ou=am-config",
+      "lastModifiedDate": 1784673054833,
+      "name": "Amazon Profile Normalization",
+      "script": [
+        "/*",
+        " * Copyright 2020-2025 Ping Identity Corporation. All Rights Reserved",
+        " *",
+        " * This code is to be used exclusively in connection with Ping Identity",
+        " * Corporation software or services. Ping Identity Corporation only offers",
+        " * such software or services to legal entities who have entered into a",
+        " * binding license agreement with Ping Identity Corporation.",
+        " */",
+        "",
+        "import static org.forgerock.json.JsonValue.field",
+        "import static org.forgerock.json.JsonValue.json",
+        "import static org.forgerock.json.JsonValue.object",
+        "",
+        "return json(object(",
+        "        field(\"id\", rawProfile.user_id),",
+        "        field(\"displayName\", rawProfile.name),",
+        "        field(\"email\", rawProfile.email),",
+        "        field(\"username\", rawProfile.email)))",
+        ""
+      ]
+    }
+  }
+}

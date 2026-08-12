@@ -1,29 +1,603 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo authz type import "frodo authz type import --all --file test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json": should import all resource types from the file "test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json" 1`] = `""`;
+exports[`frodo authz type import "frodo authz type import --all --file test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json --force-push": should import all resource types from the file "test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json" 1`] = `
+"Usage: frodo authz type import [options] [host] [realm] [username] [password]
 
-exports[`frodo authz type import "frodo authz type import --all-separate --directory test/e2e/exports/all-separate/cloud/realm/root-alpha/resourcetype": should import all resource types from the test/e2e/exports/all-separate/cloud/realm/root-alpha/resourcetype directory" 1`] = `""`;
+Import authorization resource types.
 
-exports[`frodo authz type import "frodo authz type import --file test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json": should import the first resource type from the file "test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json" 1`] = `""`;
+Arguments:
+  host                         AM base URL, e.g.:
+                               https://cdk.iam.example.com/am. To use a
+                               connection profile, just specify a unique
+                               substring or alias.
+  realm                        Realm. Specify realm as '/' for the root realm or
+                               'realm' or '/parent/child' otherwise. (default:
+                               "alpha" for Identity Cloud tenants, "/"
+                               otherwise.)
+  username                     Username to login with. Must be an admin user
+                               with appropriate rights to manage authentication
+                               journeys/trees.
+  password                     Password.
 
-exports[`frodo authz type import "frodo authz type import --type-id 76656a38-5f8e-401b-83aa-4ccb74ce88d2 --file test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json": should import the resource type with the id "76656a38-5f8e-401b-83aa-4ccb74ce88d2" from the file "test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json" 1`] = `""`;
+Options:
+  -a, --all                    Import all resource types from single file.
+                               Ignored with -i.
+  -A, --all-separate           Import all resource types from separate files
+                               (*.resourcetype.authz.json or
+                               *.resourcetype.json) in the current directory.
+                               Ignored with -i, -n, or -a.
+  -f, --file <file>            Name of the file to import.
+  --force-push                 Force import the import file(s) even if there is
+                               no change. Without this, frodo will check if
+                               there is any changes from the import file(s) and
+                               what is in the deployement, and will not import
+                               if there is no change.
+  -i, --type-id <type-uuid>    Resource type uuid. If specified, -a and -A are
+                               ignored.
+  -n, --type-name <type-name>  Resource type name. If specified, -a and -A are
+                               ignored.
+  -h, --help                   Help
+  -hh, --help-more             Help with all options.
+  -hhh, --help-all             Help with all options, environment variables, and
+                               usage examples.
+"
+`;
 
-exports[`frodo authz type import "frodo authz type import --type-name URL --file test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json": should import the resource with the name "URL" from the file "test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json" 1`] = `""`;
+exports[`frodo authz type import "frodo authz type import --all-separate --directory test/e2e/exports/all-separate/forgeops/realm/root-alpha/resourcetype --force-push": should import all resource types from the test/e2e/exports/all-separate/forgeops/realm/root-alpha/resourcetype directory" 1`] = `
+"Usage: frodo authz type import [options] [host] [realm] [username] [password]
 
-exports[`frodo authz type import "frodo authz type import -AD test/e2e/exports/all-separate/cloud/realm/root-alpha/resourcetype": should import all resource types from the test/e2e/exports/all-separate/cloud/realm/root-alpha/resourcetype directory" 1`] = `""`;
+Import authorization resource types.
 
-exports[`frodo authz type import "frodo authz type import -af allAlphaResourceTypes.resourcetype.authz.json -D test/e2e/exports/all": should import all resource types from the file "test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json" 1`] = `""`;
+Arguments:
+  host                         AM base URL, e.g.:
+                               https://cdk.iam.example.com/am. To use a
+                               connection profile, just specify a unique
+                               substring or alias.
+  realm                        Realm. Specify realm as '/' for the root realm or
+                               'realm' or '/parent/child' otherwise. (default:
+                               "alpha" for Identity Cloud tenants, "/"
+                               otherwise.)
+  username                     Username to login with. Must be an admin user
+                               with appropriate rights to manage authentication
+                               journeys/trees.
+  password                     Password.
 
-exports[`frodo authz type import "frodo authz type import -af test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json": should import all resource types from the file "test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json" 1`] = `""`;
+Options:
+  -a, --all                    Import all resource types from single file.
+                               Ignored with -i.
+  -A, --all-separate           Import all resource types from separate files
+                               (*.resourcetype.authz.json or
+                               *.resourcetype.json) in the current directory.
+                               Ignored with -i, -n, or -a.
+  -f, --file <file>            Name of the file to import.
+  --force-push                 Force import the import file(s) even if there is
+                               no change. Without this, frodo will check if
+                               there is any changes from the import file(s) and
+                               what is in the deployement, and will not import
+                               if there is no change.
+  -i, --type-id <type-uuid>    Resource type uuid. If specified, -a and -A are
+                               ignored.
+  -n, --type-name <type-name>  Resource type name. If specified, -a and -A are
+                               ignored.
+  -h, --help                   Help
+  -hh, --help-more             Help with all options.
+  -hhh, --help-all             Help with all options, environment variables, and
+                               usage examples.
+"
+`;
 
-exports[`frodo authz type import "frodo authz type import -f allAlphaResourceTypes.resourcetype.authz.json -D test/e2e/exports/all": should import the first resource type from the file "test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json" 1`] = `""`;
+exports[`frodo authz type import "frodo authz type import --file test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json --force-push": should import the first resource type from the file "test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json" 1`] = `
+"Usage: frodo authz type import [options] [host] [realm] [username] [password]
 
-exports[`frodo authz type import "frodo authz type import -f test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json": should import the first resource type from the file "test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json" 1`] = `""`;
+Import authorization resource types.
 
-exports[`frodo authz type import "frodo authz type import -i 76656a38-5f8e-401b-83aa-4ccb74ce88d2 -f allAlphaResourceTypes.resourcetype.authz.json -D test/e2e/exports/all": should import the resource type with the id "76656a38-5f8e-401b-83aa-4ccb74ce88d2" from the file "test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json" 1`] = `""`;
+Arguments:
+  host                         AM base URL, e.g.:
+                               https://cdk.iam.example.com/am. To use a
+                               connection profile, just specify a unique
+                               substring or alias.
+  realm                        Realm. Specify realm as '/' for the root realm or
+                               'realm' or '/parent/child' otherwise. (default:
+                               "alpha" for Identity Cloud tenants, "/"
+                               otherwise.)
+  username                     Username to login with. Must be an admin user
+                               with appropriate rights to manage authentication
+                               journeys/trees.
+  password                     Password.
 
-exports[`frodo authz type import "frodo authz type import -i 76656a38-5f8e-401b-83aa-4ccb74ce88d2 -f test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json": should import the resource type with the id "76656a38-5f8e-401b-83aa-4ccb74ce88d2" from the file "test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json" 1`] = `""`;
+Options:
+  -a, --all                    Import all resource types from single file.
+                               Ignored with -i.
+  -A, --all-separate           Import all resource types from separate files
+                               (*.resourcetype.authz.json or
+                               *.resourcetype.json) in the current directory.
+                               Ignored with -i, -n, or -a.
+  -f, --file <file>            Name of the file to import.
+  --force-push                 Force import the import file(s) even if there is
+                               no change. Without this, frodo will check if
+                               there is any changes from the import file(s) and
+                               what is in the deployement, and will not import
+                               if there is no change.
+  -i, --type-id <type-uuid>    Resource type uuid. If specified, -a and -A are
+                               ignored.
+  -n, --type-name <type-name>  Resource type name. If specified, -a and -A are
+                               ignored.
+  -h, --help                   Help
+  -hh, --help-more             Help with all options.
+  -hhh, --help-all             Help with all options, environment variables, and
+                               usage examples.
+"
+`;
 
-exports[`frodo authz type import "frodo authz type import -n URL -f allAlphaResourceTypes.resourcetype.authz.json -D test/e2e/exports/all": should import the resource type with the name "URL" from the file "test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json" 1`] = `""`;
+exports[`frodo authz type import "frodo authz type import --type-id 76656a38-5f8e-401b-83aa-4ccb74ce88d2 --file test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json --force-push": should import the resource type with the id "76656a38-5f8e-401b-83aa-4ccb74ce88d2" from the file "test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json" 1`] = `
+"Usage: frodo authz type import [options] [host] [realm] [username] [password]
 
-exports[`frodo authz type import "frodo authz type import -n URL -f test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json": should import the resource type with the name "URL" from the file "test/e2e/exports/all/allAlphaResourceTypes.resourcetype.authz.json" 1`] = `""`;
+Import authorization resource types.
+
+Arguments:
+  host                         AM base URL, e.g.:
+                               https://cdk.iam.example.com/am. To use a
+                               connection profile, just specify a unique
+                               substring or alias.
+  realm                        Realm. Specify realm as '/' for the root realm or
+                               'realm' or '/parent/child' otherwise. (default:
+                               "alpha" for Identity Cloud tenants, "/"
+                               otherwise.)
+  username                     Username to login with. Must be an admin user
+                               with appropriate rights to manage authentication
+                               journeys/trees.
+  password                     Password.
+
+Options:
+  -a, --all                    Import all resource types from single file.
+                               Ignored with -i.
+  -A, --all-separate           Import all resource types from separate files
+                               (*.resourcetype.authz.json or
+                               *.resourcetype.json) in the current directory.
+                               Ignored with -i, -n, or -a.
+  -f, --file <file>            Name of the file to import.
+  --force-push                 Force import the import file(s) even if there is
+                               no change. Without this, frodo will check if
+                               there is any changes from the import file(s) and
+                               what is in the deployement, and will not import
+                               if there is no change.
+  -i, --type-id <type-uuid>    Resource type uuid. If specified, -a and -A are
+                               ignored.
+  -n, --type-name <type-name>  Resource type name. If specified, -a and -A are
+                               ignored.
+  -h, --help                   Help
+  -hh, --help-more             Help with all options.
+  -hhh, --help-all             Help with all options, environment variables, and
+                               usage examples.
+"
+`;
+
+exports[`frodo authz type import "frodo authz type import --type-name URL --file test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json --force-push": should import the resource with the name "URL" from the file "test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json" 1`] = `
+"Usage: frodo authz type import [options] [host] [realm] [username] [password]
+
+Import authorization resource types.
+
+Arguments:
+  host                         AM base URL, e.g.:
+                               https://cdk.iam.example.com/am. To use a
+                               connection profile, just specify a unique
+                               substring or alias.
+  realm                        Realm. Specify realm as '/' for the root realm or
+                               'realm' or '/parent/child' otherwise. (default:
+                               "alpha" for Identity Cloud tenants, "/"
+                               otherwise.)
+  username                     Username to login with. Must be an admin user
+                               with appropriate rights to manage authentication
+                               journeys/trees.
+  password                     Password.
+
+Options:
+  -a, --all                    Import all resource types from single file.
+                               Ignored with -i.
+  -A, --all-separate           Import all resource types from separate files
+                               (*.resourcetype.authz.json or
+                               *.resourcetype.json) in the current directory.
+                               Ignored with -i, -n, or -a.
+  -f, --file <file>            Name of the file to import.
+  --force-push                 Force import the import file(s) even if there is
+                               no change. Without this, frodo will check if
+                               there is any changes from the import file(s) and
+                               what is in the deployement, and will not import
+                               if there is no change.
+  -i, --type-id <type-uuid>    Resource type uuid. If specified, -a and -A are
+                               ignored.
+  -n, --type-name <type-name>  Resource type name. If specified, -a and -A are
+                               ignored.
+  -h, --help                   Help
+  -hh, --help-more             Help with all options.
+  -hhh, --help-all             Help with all options, environment variables, and
+                               usage examples.
+"
+`;
+
+exports[`frodo authz type import "frodo authz type import -AD test/e2e/exports/all-separate/forgeops/realm/root-alpha/resourcetype": should import all resource types from the test/e2e/exports/all-separate/forgeops/realm/root-alpha/resourcetype directory" 1`] = `
+"Usage: frodo authz type import [options] [host] [realm] [username] [password]
+
+Import authorization resource types.
+
+Arguments:
+  host                         AM base URL, e.g.:
+                               https://cdk.iam.example.com/am. To use a
+                               connection profile, just specify a unique
+                               substring or alias.
+  realm                        Realm. Specify realm as '/' for the root realm or
+                               'realm' or '/parent/child' otherwise. (default:
+                               "alpha" for Identity Cloud tenants, "/"
+                               otherwise.)
+  username                     Username to login with. Must be an admin user
+                               with appropriate rights to manage authentication
+                               journeys/trees.
+  password                     Password.
+
+Options:
+  -a, --all                    Import all resource types from single file.
+                               Ignored with -i.
+  -A, --all-separate           Import all resource types from separate files
+                               (*.resourcetype.authz.json or
+                               *.resourcetype.json) in the current directory.
+                               Ignored with -i, -n, or -a.
+  -f, --file <file>            Name of the file to import.
+  --force-push                 Force import the import file(s) even if there is
+                               no change. Without this, frodo will check if
+                               there is any changes from the import file(s) and
+                               what is in the deployement, and will not import
+                               if there is no change.
+  -i, --type-id <type-uuid>    Resource type uuid. If specified, -a and -A are
+                               ignored.
+  -n, --type-name <type-name>  Resource type name. If specified, -a and -A are
+                               ignored.
+  -h, --help                   Help
+  -hh, --help-more             Help with all options.
+  -hhh, --help-all             Help with all options, environment variables, and
+                               usage examples.
+"
+`;
+
+exports[`frodo authz type import "frodo authz type import -af forgeopsAllResourceTypes.resourcetype.authz.json -D test/e2e/exports/all": should import all resource types from the file "test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json" 1`] = `
+"Usage: frodo authz type import [options] [host] [realm] [username] [password]
+
+Import authorization resource types.
+
+Arguments:
+  host                         AM base URL, e.g.:
+                               https://cdk.iam.example.com/am. To use a
+                               connection profile, just specify a unique
+                               substring or alias.
+  realm                        Realm. Specify realm as '/' for the root realm or
+                               'realm' or '/parent/child' otherwise. (default:
+                               "alpha" for Identity Cloud tenants, "/"
+                               otherwise.)
+  username                     Username to login with. Must be an admin user
+                               with appropriate rights to manage authentication
+                               journeys/trees.
+  password                     Password.
+
+Options:
+  -a, --all                    Import all resource types from single file.
+                               Ignored with -i.
+  -A, --all-separate           Import all resource types from separate files
+                               (*.resourcetype.authz.json or
+                               *.resourcetype.json) in the current directory.
+                               Ignored with -i, -n, or -a.
+  -f, --file <file>            Name of the file to import.
+  --force-push                 Force import the import file(s) even if there is
+                               no change. Without this, frodo will check if
+                               there is any changes from the import file(s) and
+                               what is in the deployement, and will not import
+                               if there is no change.
+  -i, --type-id <type-uuid>    Resource type uuid. If specified, -a and -A are
+                               ignored.
+  -n, --type-name <type-name>  Resource type name. If specified, -a and -A are
+                               ignored.
+  -h, --help                   Help
+  -hh, --help-more             Help with all options.
+  -hhh, --help-all             Help with all options, environment variables, and
+                               usage examples.
+"
+`;
+
+exports[`frodo authz type import "frodo authz type import -af test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json": should import all resource types from the file "test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json" 1`] = `
+"Usage: frodo authz type import [options] [host] [realm] [username] [password]
+
+Import authorization resource types.
+
+Arguments:
+  host                         AM base URL, e.g.:
+                               https://cdk.iam.example.com/am. To use a
+                               connection profile, just specify a unique
+                               substring or alias.
+  realm                        Realm. Specify realm as '/' for the root realm or
+                               'realm' or '/parent/child' otherwise. (default:
+                               "alpha" for Identity Cloud tenants, "/"
+                               otherwise.)
+  username                     Username to login with. Must be an admin user
+                               with appropriate rights to manage authentication
+                               journeys/trees.
+  password                     Password.
+
+Options:
+  -a, --all                    Import all resource types from single file.
+                               Ignored with -i.
+  -A, --all-separate           Import all resource types from separate files
+                               (*.resourcetype.authz.json or
+                               *.resourcetype.json) in the current directory.
+                               Ignored with -i, -n, or -a.
+  -f, --file <file>            Name of the file to import.
+  --force-push                 Force import the import file(s) even if there is
+                               no change. Without this, frodo will check if
+                               there is any changes from the import file(s) and
+                               what is in the deployement, and will not import
+                               if there is no change.
+  -i, --type-id <type-uuid>    Resource type uuid. If specified, -a and -A are
+                               ignored.
+  -n, --type-name <type-name>  Resource type name. If specified, -a and -A are
+                               ignored.
+  -h, --help                   Help
+  -hh, --help-more             Help with all options.
+  -hhh, --help-all             Help with all options, environment variables, and
+                               usage examples.
+"
+`;
+
+exports[`frodo authz type import "frodo authz type import -f forgeopsAllResourceTypes.resourcetype.authz.json -D test/e2e/exports/all": should import the first resource type from the file "test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json" 1`] = `
+"Usage: frodo authz type import [options] [host] [realm] [username] [password]
+
+Import authorization resource types.
+
+Arguments:
+  host                         AM base URL, e.g.:
+                               https://cdk.iam.example.com/am. To use a
+                               connection profile, just specify a unique
+                               substring or alias.
+  realm                        Realm. Specify realm as '/' for the root realm or
+                               'realm' or '/parent/child' otherwise. (default:
+                               "alpha" for Identity Cloud tenants, "/"
+                               otherwise.)
+  username                     Username to login with. Must be an admin user
+                               with appropriate rights to manage authentication
+                               journeys/trees.
+  password                     Password.
+
+Options:
+  -a, --all                    Import all resource types from single file.
+                               Ignored with -i.
+  -A, --all-separate           Import all resource types from separate files
+                               (*.resourcetype.authz.json or
+                               *.resourcetype.json) in the current directory.
+                               Ignored with -i, -n, or -a.
+  -f, --file <file>            Name of the file to import.
+  --force-push                 Force import the import file(s) even if there is
+                               no change. Without this, frodo will check if
+                               there is any changes from the import file(s) and
+                               what is in the deployement, and will not import
+                               if there is no change.
+  -i, --type-id <type-uuid>    Resource type uuid. If specified, -a and -A are
+                               ignored.
+  -n, --type-name <type-name>  Resource type name. If specified, -a and -A are
+                               ignored.
+  -h, --help                   Help
+  -hh, --help-more             Help with all options.
+  -hhh, --help-all             Help with all options, environment variables, and
+                               usage examples.
+"
+`;
+
+exports[`frodo authz type import "frodo authz type import -f test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json": should import the first resource type from the file "test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json" 1`] = `
+"Usage: frodo authz type import [options] [host] [realm] [username] [password]
+
+Import authorization resource types.
+
+Arguments:
+  host                         AM base URL, e.g.:
+                               https://cdk.iam.example.com/am. To use a
+                               connection profile, just specify a unique
+                               substring or alias.
+  realm                        Realm. Specify realm as '/' for the root realm or
+                               'realm' or '/parent/child' otherwise. (default:
+                               "alpha" for Identity Cloud tenants, "/"
+                               otherwise.)
+  username                     Username to login with. Must be an admin user
+                               with appropriate rights to manage authentication
+                               journeys/trees.
+  password                     Password.
+
+Options:
+  -a, --all                    Import all resource types from single file.
+                               Ignored with -i.
+  -A, --all-separate           Import all resource types from separate files
+                               (*.resourcetype.authz.json or
+                               *.resourcetype.json) in the current directory.
+                               Ignored with -i, -n, or -a.
+  -f, --file <file>            Name of the file to import.
+  --force-push                 Force import the import file(s) even if there is
+                               no change. Without this, frodo will check if
+                               there is any changes from the import file(s) and
+                               what is in the deployement, and will not import
+                               if there is no change.
+  -i, --type-id <type-uuid>    Resource type uuid. If specified, -a and -A are
+                               ignored.
+  -n, --type-name <type-name>  Resource type name. If specified, -a and -A are
+                               ignored.
+  -h, --help                   Help
+  -hh, --help-more             Help with all options.
+  -hhh, --help-all             Help with all options, environment variables, and
+                               usage examples.
+"
+`;
+
+exports[`frodo authz type import "frodo authz type import -i 76656a38-5f8e-401b-83aa-4ccb74ce88d2 -f forgeopsAllResourceTypes.resourcetype.authz.json -D test/e2e/exports/all": should import the resource type with the id "76656a38-5f8e-401b-83aa-4ccb74ce88d2" from the file "test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json" 1`] = `
+"Usage: frodo authz type import [options] [host] [realm] [username] [password]
+
+Import authorization resource types.
+
+Arguments:
+  host                         AM base URL, e.g.:
+                               https://cdk.iam.example.com/am. To use a
+                               connection profile, just specify a unique
+                               substring or alias.
+  realm                        Realm. Specify realm as '/' for the root realm or
+                               'realm' or '/parent/child' otherwise. (default:
+                               "alpha" for Identity Cloud tenants, "/"
+                               otherwise.)
+  username                     Username to login with. Must be an admin user
+                               with appropriate rights to manage authentication
+                               journeys/trees.
+  password                     Password.
+
+Options:
+  -a, --all                    Import all resource types from single file.
+                               Ignored with -i.
+  -A, --all-separate           Import all resource types from separate files
+                               (*.resourcetype.authz.json or
+                               *.resourcetype.json) in the current directory.
+                               Ignored with -i, -n, or -a.
+  -f, --file <file>            Name of the file to import.
+  --force-push                 Force import the import file(s) even if there is
+                               no change. Without this, frodo will check if
+                               there is any changes from the import file(s) and
+                               what is in the deployement, and will not import
+                               if there is no change.
+  -i, --type-id <type-uuid>    Resource type uuid. If specified, -a and -A are
+                               ignored.
+  -n, --type-name <type-name>  Resource type name. If specified, -a and -A are
+                               ignored.
+  -h, --help                   Help
+  -hh, --help-more             Help with all options.
+  -hhh, --help-all             Help with all options, environment variables, and
+                               usage examples.
+"
+`;
+
+exports[`frodo authz type import "frodo authz type import -i 76656a38-5f8e-401b-83aa-4ccb74ce88d2 -f test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json": should import the resource type with the id "76656a38-5f8e-401b-83aa-4ccb74ce88d2" from the file "test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json" 1`] = `
+"Usage: frodo authz type import [options] [host] [realm] [username] [password]
+
+Import authorization resource types.
+
+Arguments:
+  host                         AM base URL, e.g.:
+                               https://cdk.iam.example.com/am. To use a
+                               connection profile, just specify a unique
+                               substring or alias.
+  realm                        Realm. Specify realm as '/' for the root realm or
+                               'realm' or '/parent/child' otherwise. (default:
+                               "alpha" for Identity Cloud tenants, "/"
+                               otherwise.)
+  username                     Username to login with. Must be an admin user
+                               with appropriate rights to manage authentication
+                               journeys/trees.
+  password                     Password.
+
+Options:
+  -a, --all                    Import all resource types from single file.
+                               Ignored with -i.
+  -A, --all-separate           Import all resource types from separate files
+                               (*.resourcetype.authz.json or
+                               *.resourcetype.json) in the current directory.
+                               Ignored with -i, -n, or -a.
+  -f, --file <file>            Name of the file to import.
+  --force-push                 Force import the import file(s) even if there is
+                               no change. Without this, frodo will check if
+                               there is any changes from the import file(s) and
+                               what is in the deployement, and will not import
+                               if there is no change.
+  -i, --type-id <type-uuid>    Resource type uuid. If specified, -a and -A are
+                               ignored.
+  -n, --type-name <type-name>  Resource type name. If specified, -a and -A are
+                               ignored.
+  -h, --help                   Help
+  -hh, --help-more             Help with all options.
+  -hhh, --help-all             Help with all options, environment variables, and
+                               usage examples.
+"
+`;
+
+exports[`frodo authz type import "frodo authz type import -n URL -f forgeopsAllResourceTypes.resourcetype.authz.json -D test/e2e/exports/all": should import the resource type with the name "URL" from the file "test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json" 1`] = `
+"Usage: frodo authz type import [options] [host] [realm] [username] [password]
+
+Import authorization resource types.
+
+Arguments:
+  host                         AM base URL, e.g.:
+                               https://cdk.iam.example.com/am. To use a
+                               connection profile, just specify a unique
+                               substring or alias.
+  realm                        Realm. Specify realm as '/' for the root realm or
+                               'realm' or '/parent/child' otherwise. (default:
+                               "alpha" for Identity Cloud tenants, "/"
+                               otherwise.)
+  username                     Username to login with. Must be an admin user
+                               with appropriate rights to manage authentication
+                               journeys/trees.
+  password                     Password.
+
+Options:
+  -a, --all                    Import all resource types from single file.
+                               Ignored with -i.
+  -A, --all-separate           Import all resource types from separate files
+                               (*.resourcetype.authz.json or
+                               *.resourcetype.json) in the current directory.
+                               Ignored with -i, -n, or -a.
+  -f, --file <file>            Name of the file to import.
+  --force-push                 Force import the import file(s) even if there is
+                               no change. Without this, frodo will check if
+                               there is any changes from the import file(s) and
+                               what is in the deployement, and will not import
+                               if there is no change.
+  -i, --type-id <type-uuid>    Resource type uuid. If specified, -a and -A are
+                               ignored.
+  -n, --type-name <type-name>  Resource type name. If specified, -a and -A are
+                               ignored.
+  -h, --help                   Help
+  -hh, --help-more             Help with all options.
+  -hhh, --help-all             Help with all options, environment variables, and
+                               usage examples.
+"
+`;
+
+exports[`frodo authz type import "frodo authz type import -n URL -f test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json": should import the resource type with the name "URL" from the file "test/e2e/exports/all/forgeopsAllResourceTypes.resourcetype.authz.json" 1`] = `
+"Usage: frodo authz type import [options] [host] [realm] [username] [password]
+
+Import authorization resource types.
+
+Arguments:
+  host                         AM base URL, e.g.:
+                               https://cdk.iam.example.com/am. To use a
+                               connection profile, just specify a unique
+                               substring or alias.
+  realm                        Realm. Specify realm as '/' for the root realm or
+                               'realm' or '/parent/child' otherwise. (default:
+                               "alpha" for Identity Cloud tenants, "/"
+                               otherwise.)
+  username                     Username to login with. Must be an admin user
+                               with appropriate rights to manage authentication
+                               journeys/trees.
+  password                     Password.
+
+Options:
+  -a, --all                    Import all resource types from single file.
+                               Ignored with -i.
+  -A, --all-separate           Import all resource types from separate files
+                               (*.resourcetype.authz.json or
+                               *.resourcetype.json) in the current directory.
+                               Ignored with -i, -n, or -a.
+  -f, --file <file>            Name of the file to import.
+  --force-push                 Force import the import file(s) even if there is
+                               no change. Without this, frodo will check if
+                               there is any changes from the import file(s) and
+                               what is in the deployement, and will not import
+                               if there is no change.
+  -i, --type-id <type-uuid>    Resource type uuid. If specified, -a and -A are
+                               ignored.
+  -n, --type-name <type-name>  Resource type name. If specified, -a and -A are
+                               ignored.
+  -h, --help                   Help
+  -hh, --help-more             Help with all options.
+  -hhh, --help-all             Help with all options, environment variables, and
+                               usage examples.
+"
+`;

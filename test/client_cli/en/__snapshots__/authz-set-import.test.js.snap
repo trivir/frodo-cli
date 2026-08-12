@@ -24,6 +24,10 @@ Options:
                          (*.policyset.authz.json or *.policyset.json) in the
                          current directory. Ignored with -i or -a.
   -f, --file <file>      Name of the file to import.
+  --force-push           Force import the import file(s) even if there is no
+                         change. Without this, frodo will check if there is any
+                         changes from the import file(s) and what is in the
+                         deployement, and will not import if there is no change.
   -i, --set-id <set-id>  Policy set id/name. If specified, only one policy set
                          is imported and the options -a and -A are ignored.
   --no-deps              Do not include any dependencies (policies, scripts).

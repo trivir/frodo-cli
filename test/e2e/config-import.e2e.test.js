@@ -92,6 +92,7 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/a
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am  frodo config import -aCf test/e2e/exports/all/all.forgeops.json -m forgeops
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config import -AD test/e2e/exports/all-separate/forgeops -m forgeops
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am  frodo config import --default -CAD test/e2e/exports/all-separate/forgeops -m forgeops
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am  frodo config import -AD test/e2e/exports/all-separate/forgeops -m forgeops --force-push
 */
 import {
   getEnv,
@@ -238,6 +239,11 @@ describe('frodo config import', () => {
 
     test(`"frodo config import -AD ${allSeparateForgeopsDirectory} -m forgeops" Import everything from directory "${allSeparateForgeopsDirectory}".`, async () => {
       const CMD = `frodo config import -AD ${allSeparateForgeopsDirectory} -m forgeops`;
+      await testFail(CMD, forgeopsEnv);
+    });
+
+    test(`"frodo config import -AD ${allSeparateForgeopsDirectory} -m forgeops --force-push" Import everything from directory "${allSeparateForgeopsDirectory}" with --force-push.`, async () => {
+      const CMD = `frodo config import -AD ${allSeparateForgeopsDirectory} -m forgeops --force-push`;
       await testFail(CMD, forgeopsEnv);
     });
 

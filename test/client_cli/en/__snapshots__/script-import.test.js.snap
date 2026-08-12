@@ -23,6 +23,11 @@ Options:
                             with -n.
   -d, --default             Import all scripts including the default scripts.
   -f, --file <file>         Name of the file to import.
+  --force-push              Force import the import file(s) even if there is no
+                            change. Without this, frodo will check if there is
+                            any changes from the import file(s) and what is in
+                            the deployement, and will not import if there is no
+                            change.
   -i, --script-id <uuid>    Uuid of the script. If specified, -a and -A are
                             ignored.
   -n, --script-name <name>  Name of the script. If specified, -a and -A are

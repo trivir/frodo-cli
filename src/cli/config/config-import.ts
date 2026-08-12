@@ -86,6 +86,12 @@ export default function setup() {
         'Import global entity. Ignored with -a and -A.'
       )
     )
+    .addOption(
+      new Option(
+        '--force-push',
+        'Force import the import file(s) even if there is no change. Without this, frodo will check if there is any changes from the import file(s) and what is in the deployement, and will not import if there is no change. (policy, policy set, resource type, script) '
+      )
+    )
     .addHelpText(
       'after',
       c.greenBright(`How Frodo handles secrets:\n`) +
@@ -137,6 +143,7 @@ export default function setup() {
             includeActiveValues: options.includeActiveValues,
             source: options.source,
             onlyCustom: options.onlyCustom,
+            forcePush: options.forcePush,
           });
           if (!outcome) process.exitCode = 1;
         }
@@ -161,6 +168,7 @@ export default function setup() {
             includeActiveValues: options.includeActiveValues,
             source: options.source,
             onlyCustom: options.onlyCustom,
+            forcePush: options.forcePush,
           });
           if (!outcome) process.exitCode = 1;
         }
@@ -179,6 +187,7 @@ export default function setup() {
               includeActiveValues: options.includeActiveValues,
               source: options.source,
               onlyCustom: options.onlyCustom,
+              forcePush: options.forcePush,
             }
           );
           if (!outcome) process.exitCode = 1;
