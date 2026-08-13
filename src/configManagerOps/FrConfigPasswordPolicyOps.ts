@@ -1,15 +1,16 @@
-import { frodo } from '@rockcarver/frodo-lib';
+import { frodo, state } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
 import { getIdmImportExportOptions } from '../ops/IdmOps';
 import { printError } from '../utils/Console';
 import { realmList } from '../utils/FrConfig';
 
-const { getFilePath, saveJsonToFile } = frodo.utils;
+const { getFilePath, saveJsonToFile, constants } = frodo.utils;
 const { exportConfigEntity, importConfigEntities } = frodo.idm.config;
 
 /**
  * Export IDM password policy configuration object in the fr-config-manager format.
+ * @param {string} realm Defines a specific realm to pull password-policy config from
  * @param {string} envFile File that defines environment specific variables for replacement during configuration export/import
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
@@ -18,6 +19,56 @@ export async function configManagerExportPasswordPolicy(
   envFile?: string
 ): Promise<boolean> {
   try {
+    const isForgeOpsRealmUnprefixed =
+      state.getDeploymentType() === constants.FORGEOPS_DEPLOYMENT_TYPE_KEY &&
+      (realm === constants.DEFAULT_REALM_KEY ||
+        !state.getUseRealmPrefixOnManagedObjects());
+    const options = getIdmImportExportOptions(undefined, envFile);
+
+    if (isForgeOpsRealmUnprefixed) {
+      const realmData = (
+        await exportConfigEntity('fieldPolicy/user', {
+          envReplaceParams: options.envReplaceParams,
+          entitiesToExport: undefined,
+        })
+      ).idm['fieldPolicy/user'];
+      const fileName = `realms/password-policy/user-password-policy.json`;
+      saveJsonToFile(realmData, getFilePath(fileName, true), false, true);
+    } else {
+      const isForgeOpsRootRealm =
+        state.getDeploymentType() === constants.FORGEOPS_DEPLOYMENT_TYPE_KEY &&
+        realm === '/';
+      const realms =
+        realm !== constants.DEFAULT_REALM_KEY ? [realm] : await realmList();
+      for (const realmName of realms) {
+        // fr-config-manager doesn't support root themes
+        if (realmName === '/' && !isForgeOpsRootRealm) continue;
+        const realmData = (
+          await exportConfigEntity(
+            `fieldPolicy/${isForgeOpsRootRealm ? '' : `${realmName}_`}user`,
+            {
+              envReplaceParams: options.envReplaceParams,
+              entitiesToExport: undefined,
+            }
+          )
+        ).idm[`fieldPolicy/${isForgeOpsRootRealm ? '' : `${realmName}_`}user`];
+        const fileName = `realms/${realmName}/password-policy/${isForgeOpsRootRealm ? '' : `${realmName}_`}user-password-policy.json`;
+        saveJsonToFile(realmData, getFilePath(fileName, true), false, true);
+      }
+    }
+    return true;
+  } catch (error) {
+    printError(error, `Error exporting config entity ui-configuration`);
+  }
+  return false;
+}
+
+export async function configManagerExportPasswordPolicyOld(
+  realm?: string,
+  envFile?: string
+): Promise<boolean> {
+  try {
+    // if deployment_Type == forgeops && !realm
     const options = getIdmImportExportOptions(undefined, envFile);
     if (realm && realm !== '__default__realm__') {
       const realmData = (

@@ -1,3 +1,5 @@
+import { frodo, state } from '@rockcarver/frodo-lib';
+
 import { printError } from '../utils/Console';
 import { configManagerExportAccessConfig } from './FrConfigAccessConfigOps';
 import { configManagerExportAudit } from './FrConfigAuditOps';
@@ -7,6 +9,8 @@ import { configManagerExportConnectorDefinitionsAll } from './FrConfigConnectorD
 import { configManagerExportMappings } from './FrConfigConnectorMappingOps';
 import { configManagerExportCookieDomains } from './FrConfigCookieDomainsOps';
 import { configManagerExportCors } from './FrConfigCorsOps';
+import { configManagerExportCsp } from './FrConfigCspOps';
+import { configManagerExportCustomNodes } from './FrConfigCustomNodesOps';
 import { configManagerExportEmailProviderConfiguration } from './FrConfigEmailProviderOps';
 import { configManagerExportEmailTemplates } from './FrConfigEmailTemplatesOps';
 import { configManagerExportEndpoints } from './FrConfigEndpointsOps';
@@ -18,6 +22,7 @@ import { configManagerExportManagedObjects } from './FrConfigManagedObjectsOps';
 import { configManagerExportConfigAgents } from './FrConfigOauth2AgentOps';
 import { configManagerExportOrgPrivileges } from './FrConfigOrgPrivilegesOps';
 import { configManagerExportPasswordPolicy } from './FrConfigPasswordPolicyOps';
+import { configManagerExportRaw } from './FrConfigRawOps';
 import { configManagerExportRemoteServers } from './FrConfigRemoteServersOps';
 import { configManagerExportSaml } from './FrConfigSamlOps';
 import { configManagerExportSchedules } from './FrConfigSchedulesOps';
@@ -30,204 +35,247 @@ import { configManagerExportTermsAndConditions } from './FrConfigTermsAndConditi
 import { configManagerExportThemes } from './FrConfigThemeOps';
 import { configManagerExportUiConfig } from './FrConfigUiConfigOps';
 import { configManagerExportVariables } from './FrConfigVariableOps';
-import { frodo, state } from '@rockcarver/frodo-lib';
 
-const { CLASSIC_DEPLOYMENT_TYPE_KEY, CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
-  frodo.utils.constants;
+const {
+  CLASSIC_DEPLOYMENT_TYPE_KEY,
+  CLOUD_DEPLOYMENT_TYPE_KEY,
+  FORGEOPS_DEPLOYMENT_TYPE_KEY,
+} = frodo.utils.constants;
 
 const deploymentMapAll = {
   [FORGEOPS_DEPLOYMENT_TYPE_KEY]: [
-    () => configManagerExportAccessConfig,
-    () => configManagerExportAudit,
-    options => configManagerExportAuthentication(options.realm),
-    options => configManagerExportAuthzPolicySets(`${options.configFolder}/authz-policies.json`),
-    options => configManagerExportConfigAgents(`${options.configFolder}/oauth2-agents.json`),
-    () => configManagerExportConnectorDefinitionsAll,
-    () => configManagerExportCookieDomains,
-    () => configManagerExportCors,
-    () => configManagerExportEmailProviderConfiguration,
-    () => configManagerExportEmailTemplates,
-    () => configManagerExportEndpoints,
-    () => configManagerExportInternalRoles,
-    options => configManagerExportJourneys(undefined, options.realm),
-    () => configManagerExportKbaConfig,
-    () => configManagerExportLocales,
-    () => configManagerExportManagedObjects,
-    () => configManagerExportMappings,
-    () => configManagerExportOrgPrivileges,
-    options => configManagerExportPasswordPolicy(options.realm),
-    () => configManagerExportRemoteServers,
-    options => configManagerExportSaml(`${options.configFolder}/saml.json`),
-    () => configManagerExportSchedules,
-    () => configManagerExportScripts,
-    options => configManagerExportSecretMappings(undefined, options.realm),
-    options => configManagerExportServiceObjectsFromFile(`${options.configFolder}/service-objects.json`),
-    options => configManagerExportServices(options.realm),
-    () => configManagerExportTermsAndConditions,
-    () => configManagerExportThemes,
-    () => configManagerExportUiConfig,
+    () => configManagerExportAccessConfig(),
+    () => configManagerExportAudit(),
+    (options) => configManagerExportAuthentication(options.realm),
+    (options) =>
+      configManagerExportAuthzPolicySets(
+        `${options.configFolder}/authz-policies.json`
+      ),
+    (options) =>
+      configManagerExportConfigAgents(
+        `${options.configFolder}/oauth2-agents.json`
+      ),
+    () => configManagerExportConnectorDefinitionsAll(),
+    () => configManagerExportCors(),
+    () => configManagerExportCustomNodes(),
+    () => configManagerExportEmailProviderConfiguration(),
+    () => configManagerExportEmailTemplates(),
+    () => configManagerExportEndpoints(),
+    () => configManagerExportInternalRoles(),
+    (options) => configManagerExportJourneys(undefined, options.realm),
+    () => configManagerExportKbaConfig(),
+    () => configManagerExportLocales(),
+    () => configManagerExportManagedObjects(),
+    () => configManagerExportMappings(),
+    () => configManagerExportOrgPrivileges(),
+    (options) => configManagerExportPasswordPolicy(options.realm),
+    (options) => configManagerExportRaw(`${options.configFolder}/raw.json`),
+    () => configManagerExportRemoteServers(),
+    (options) => configManagerExportSaml(`${options.configFolder}/saml.json`),
+    () => configManagerExportSchedules(),
+    () => configManagerExportScripts(),
+    (options) =>
+      configManagerExportServiceObjectsFromFile(
+        `${options.configFolder}/service-objects.json`
+      ),
+    (options) => configManagerExportServices(options.realm),
+    () => configManagerExportTermsAndConditions(),
+    () => configManagerExportThemes(),
+    () => configManagerExportUiConfig(),
   ],
   [CLOUD_DEPLOYMENT_TYPE_KEY]: [
-    () => configManagerExportAccessConfig,
-    () => configManagerExportAudit,
-    options => configManagerExportAuthentication(options.realm),
-    options => configManagerExportAuthzPolicySets(`${options.configFolder}/authz-policies.json`),
-    options => configManagerExportConfigAgents(`${options.configFolder}/oauth2-agents.json`),
-    () => configManagerExportConnectorDefinitionsAll,
-    () => configManagerExportCookieDomains,
-    () => configManagerExportCors,
-    () => configManagerExportEmailProviderConfiguration,
-    () => configManagerExportEmailTemplates,
-    () => configManagerExportEndpoints,
-    () => configManagerExportInternalRoles,
-    options => configManagerExportJourneys(undefined, options.realm),
-    () => configManagerExportKbaConfig,
-    () => configManagerExportLocales,
-    () => configManagerExportManagedObjects,
-    () => configManagerExportMappings,
-    () => configManagerExportOrgPrivileges,
-    options => configManagerExportPasswordPolicy(options.realm),
-    () => configManagerExportRemoteServers,
-    options => configManagerExportSaml(`${options.configFolder}/saml.json`),
-    () => configManagerExportSchedules,
-    () => configManagerExportScripts,
-    options => configManagerExportSecretMappings(undefined, options.realm),
-    options => configManagerExportServiceObjectsFromFile(`${options.configFolder}/service-objects.json`),
-    options => configManagerExportServices(options.realm),
-    () => configManagerExportTermsAndConditions,
-    () => configManagerExportThemes,
-    () => configManagerExportUiConfig,
+    () => configManagerExportAccessConfig(),
+    () => configManagerExportAudit(),
+    (options) => configManagerExportAuthentication(options.realm),
+    (options) =>
+      configManagerExportAuthzPolicySets(
+        `${options.configFolder}/authz-policies.json`
+      ),
+    (options) =>
+      configManagerExportConfigAgents(
+        `${options.configFolder}/oauth2-agents.json`
+      ),
+    () => configManagerExportConnectorDefinitionsAll(),
+    () => configManagerExportCookieDomains(),
+    () => configManagerExportCors(),
+    () => configManagerExportCsp(),
+    () => configManagerExportEmailProviderConfiguration(),
+    () => configManagerExportEmailTemplates(),
+    () => configManagerExportEndpoints(),
+    () => configManagerExportInternalRoles(),
+    (options) => configManagerExportJourneys(undefined, options.realm),
+    () => configManagerExportKbaConfig(),
+    () => configManagerExportLocales(),
+    () => configManagerExportManagedObjects(),
+    () => configManagerExportMappings(),
+    () => configManagerExportOrgPrivileges(),
+    (options) => configManagerExportPasswordPolicy(options.realm),
+    () => configManagerExportRemoteServers(),
+    (options) => configManagerExportSaml(`${options.configFolder}/saml.json`),
+    () => configManagerExportSchedules(),
+    () => configManagerExportScripts(),
+    () => configManagerExportSecrets(),
+    (options) => configManagerExportSecretMappings(undefined, options.realm),
+    (options) =>
+      configManagerExportServiceObjectsFromFile(
+        `${options.configFolder}/service-objects.json`
+      ),
+    () => configManagerExportServices(),
+    () => configManagerExportTermsAndConditions(),
+    () => configManagerExportThemes(),
+    () => configManagerExportUiConfig(),
+    () => configManagerExportVariables(),
   ],
   [CLASSIC_DEPLOYMENT_TYPE_KEY]: [
-    options => configManagerExportAuthentication(options.realm),
-    options => configManagerExportAuthzPolicySets(`${options.configFolder}/authz-policies.json`),
-    options => configManagerExportConfigAgents(`${options.configFolder}/oauth2-agents.json`),
-    () => configManagerExportCookieDomains,
-    options => configManagerExportJourneys(undefined, options.realm),
-    options => configManagerExportSaml(`${options.configFolder}/saml.json`),
-    () => configManagerExportScripts,
-    options => configManagerExportServices(options.realm),
+    (options) => configManagerExportAuthentication(options.realm),
+    (options) =>
+      configManagerExportAuthzPolicySets(
+        `${options.configFolder}/authz-policies.json`
+      ),
+    (options) =>
+      configManagerExportConfigAgents(
+        `${options.configFolder}/oauth2-agents.json`
+      ),
+    () => configManagerExportCookieDomains(),
+    (options) => configManagerExportJourneys(undefined, options.realm),
+    (options) => configManagerExportSaml(`${options.configFolder}/saml.json`),
+    () => configManagerExportScripts(),
+    (options) => configManagerExportServices(options.realm),
   ],
 };
 
-const deploymentMapAllStatic = {
-  [FORGEOPS_DEPLOYMENT_TYPE_KEY]: [
-    configManagerExportAccessConfig,
-    configManagerExportAudit,
-    configManagerExportAuthentication,
-    configManagerExportAuthzPolicySets,
-    configManagerExportConnectorDefinitionsAll,
-    configManagerExportMappings,
-    configManagerExportCookieDomains,
-    configManagerExportCors,
-    configManagerExportEmailProviderConfiguration,
-    configManagerExportEmailTemplates,
-    configManagerExportEndpoints,
-    configManagerExportInternalRoles,
-    configManagerExportJourneys,
-    configManagerExportKbaConfig,
-    configManagerExportLocales,
-    configManagerExportManagedObjects,
-    configManagerExportConfigAgents,
-    configManagerExportOrgPrivileges,
-    configManagerExportPasswordPolicy,
-    configManagerExportRemoteServers,
-    configManagerExportSchedules,
-    configManagerExportSaml,
-    configManagerExportScripts,
-    configManagerExportSecrets,
-    configManagerExportSecretMappings,
-    configManagerExportServiceObjectsFromFile,
-    configManagerExportServices,
-    configManagerExportThemes,
-    configManagerExportTermsAndConditions,
-    configManagerExportUiConfig,
-    configManagerExportVariables,
-  ],
-  [CLOUD_DEPLOYMENT_TYPE_KEY]: [
-    configManagerExportAccessConfig,
-    configManagerExportAudit,
-    configManagerExportAuthentication,
-    configManagerExportAuthzPolicySets,
-    configManagerExportConnectorDefinitionsAll,
-    configManagerExportMappings,
-    configManagerExportCookieDomains,
-    configManagerExportCors,
-    configManagerExportEmailProviderConfiguration,
-    configManagerExportEmailTemplates,
-    configManagerExportEndpoints,
-    configManagerExportInternalRoles,
-    configManagerExportJourneys,
-    configManagerExportKbaConfig,
-    configManagerExportLocales,
-    configManagerExportManagedObjects,
-    configManagerExportConfigAgents,
-    configManagerExportOrgPrivileges,
-    configManagerExportPasswordPolicy,
-    configManagerExportRemoteServers,
-    configManagerExportSchedules,
-    configManagerExportSaml,
-    configManagerExportScripts,
-    configManagerExportSecrets,
-    configManagerExportSecretMappings,
-    configManagerExportServiceObjectsFromFile,
-    configManagerExportServices,
-    configManagerExportThemes,
-    configManagerExportTermsAndConditions,
-    configManagerExportUiConfig,
-    configManagerExportVariables,
-  ],
-  [CLASSIC_DEPLOYMENT_TYPE_KEY]: [
-    configManagerExportAccessConfig,
-    configManagerExportAudit,
-    configManagerExportAuthentication,
-    configManagerExportAuthzPolicySets,
-    configManagerExportConnectorDefinitionsAll,
-    configManagerExportMappings,
-    configManagerExportCookieDomains,
-    configManagerExportCors,
-    configManagerExportEmailProviderConfiguration,
-    configManagerExportEmailTemplates,
-    configManagerExportEndpoints,
-    configManagerExportInternalRoles,
-    configManagerExportJourneys,
-    configManagerExportKbaConfig,
-    configManagerExportLocales,
-    configManagerExportManagedObjects,
-    configManagerExportConfigAgents,
-    configManagerExportOrgPrivileges,
-    configManagerExportPasswordPolicy,
-    configManagerExportRemoteServers,
-    configManagerExportSchedules,
-    configManagerExportSaml,
-    configManagerExportScripts,
-    configManagerExportSecrets,
-    configManagerExportSecretMappings,
-    configManagerExportServiceObjectsFromFile,
-    configManagerExportServices,
-    configManagerExportThemes,
-    configManagerExportTermsAndConditions,
-    configManagerExportUiConfig,
-    configManagerExportVariables,
-  ],
-};
+// const deploymentMapAllStatic = {
+//   [FORGEOPS_DEPLOYMENT_TYPE_KEY]: [
+//     configManagerExportAccessConfig,
+//     configManagerExportAudit,
+//     configManagerExportAuthentication,
+//     configManagerExportAuthzPolicySets,
+//     configManagerExportConnectorDefinitionsAll,
+//     configManagerExportMappings,
+//     configManagerExportCookieDomains,
+//     configManagerExportCors,
+//     configManagerExportEmailProviderConfiguration,
+//     configManagerExportEmailTemplates,
+//     configManagerExportEndpoints,
+//     configManagerExportInternalRoles,
+//     configManagerExportJourneys,
+//     configManagerExportKbaConfig,
+//     configManagerExportLocales,
+//     configManagerExportManagedObjects,
+//     configManagerExportConfigAgents,
+//     configManagerExportOrgPrivileges,
+//     configManagerExportPasswordPolicy,
+//     configManagerExportRemoteServers,
+//     configManagerExportSchedules,
+//     configManagerExportSaml,
+//     configManagerExportScripts,
+//     configManagerExportSecrets,
+//     configManagerExportSecretMappings,
+//     configManagerExportServiceObjectsFromFile,
+//     configManagerExportServices,
+//     configManagerExportThemes,
+//     configManagerExportTermsAndConditions,
+//     configManagerExportUiConfig,
+//     configManagerExportVariables,
+//   ],
+//   [CLOUD_DEPLOYMENT_TYPE_KEY]: [
+//     configManagerExportAccessConfig,
+//     configManagerExportAudit,
+//     configManagerExportAuthentication,
+//     configManagerExportAuthzPolicySets,
+//     configManagerExportConnectorDefinitionsAll,
+//     configManagerExportMappings,
+//     configManagerExportCookieDomains,
+//     configManagerExportCors,
+//     configManagerExportEmailProviderConfiguration,
+//     configManagerExportEmailTemplates,
+//     configManagerExportEndpoints,
+//     configManagerExportInternalRoles,
+//     configManagerExportJourneys,
+//     configManagerExportKbaConfig,
+//     configManagerExportLocales,
+//     configManagerExportManagedObjects,
+//     configManagerExportConfigAgents,
+//     configManagerExportOrgPrivileges,
+//     configManagerExportPasswordPolicy,
+//     configManagerExportRemoteServers,
+//     configManagerExportSchedules,
+//     configManagerExportSaml,
+//     configManagerExportScripts,
+//     configManagerExportSecrets,
+//     configManagerExportSecretMappings,
+//     configManagerExportServiceObjectsFromFile,
+//     configManagerExportServices,
+//     configManagerExportThemes,
+//     configManagerExportTermsAndConditions,
+//     configManagerExportUiConfig,
+//     configManagerExportVariables,
+//   ],
+//   [CLASSIC_DEPLOYMENT_TYPE_KEY]: [
+//     configManagerExportAccessConfig,
+//     configManagerExportAudit,
+//     configManagerExportAuthentication,
+//     configManagerExportAuthzPolicySets,
+//     configManagerExportConnectorDefinitionsAll,
+//     configManagerExportMappings,
+//     configManagerExportCookieDomains,
+//     configManagerExportCors,
+//     configManagerExportEmailProviderConfiguration,
+//     configManagerExportEmailTemplates,
+//     configManagerExportEndpoints,
+//     configManagerExportInternalRoles,
+//     configManagerExportJourneys,
+//     configManagerExportKbaConfig,
+//     configManagerExportLocales,
+//     configManagerExportManagedObjects,
+//     configManagerExportConfigAgents,
+//     configManagerExportOrgPrivileges,
+//     configManagerExportPasswordPolicy,
+//     configManagerExportRemoteServers,
+//     configManagerExportSchedules,
+//     configManagerExportSaml,
+//     configManagerExportScripts,
+//     configManagerExportSecrets,
+//     configManagerExportSecretMappings,
+//     configManagerExportServiceObjectsFromFile,
+//     configManagerExportServices,
+//     configManagerExportThemes,
+//     configManagerExportTermsAndConditions,
+//     configManagerExportUiConfig,
+//     configManagerExportVariables,
+//   ],
+// };
 
 export interface ConfigManagerAllOptions {
-  realm?: string;
   configFolder?: string;
+  realm?: string;
 }
 
 export async function configManagerExportAllWithConfigFolder(
-  options: ConfigManagerAllOptions = {},
+  options: ConfigManagerAllOptions = {}
 ): Promise<boolean> {
-  const promises = deploymentMapAll[state.getDeploymentType()]
-    .map(fn => fn(options));
+  const functions = deploymentMapAll[state.getDeploymentType()];
+  for (const f of functions) {
+    await f(options);
+  }
+  return true;
+  // const batchSize = 8;
 
-  const results = await Promise.allSettled(promises);
+  // const results: PromiseSettledResult<boolean>[] = [];
 
-  return results.every(
-    result => result.status === 'fulfilled' && result.value
-  );
+  // for (let i = 0; i < functions.length; i += batchSize) {
+  //   const batch = functions.slice(i, i + batchSize);
+
+  //   const batchResults = await Promise.allSettled(
+  //     batch.map((fn) => fn(options))
+  //   );
+
+  //   results.push(...batchResults);
+  // }
+
+  // return results.every(
+  //   (result) => result.status === 'fulfilled' && result.value
+  // );
 }
 //   try {
 //     await configManagerExportAccessConfig();

@@ -1,9 +1,7 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
-import {
-  configManagerExportConfigAgents,
-} from '../../../configManagerOps/FrConfigOauth2AgentOps';
+import { configManagerExportConfigAgents } from '../../../configManagerOps/FrConfigOauth2AgentOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
@@ -78,7 +76,8 @@ export default function setup() {
 
       if (await getTokens(false, true, deploymentTypes)) {
         printMessage(
-          `Exporting all the agents defined in the provided config file.`)
+          `Exporting all the agents defined in the provided config file.`
+        );
         const outcome = await configManagerExportConfigAgents(options.file);
         if (!outcome) process.exit(1);
       }
