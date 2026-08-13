@@ -73,14 +73,14 @@ const deploymentMapAll = {
     () => configManagerExportRemoteServers(),
     (options) => configManagerExportSaml(`${options.configFolder}/saml.json`),
     () => configManagerExportSchedules(),
-    () => configManagerExportScripts(),
+    (options) => configManagerExportScripts(undefined, options.realm),
     (options) =>
       configManagerExportServiceObjectsFromFile(
         `${options.configFolder}/service-objects.json`
       ),
     (options) => configManagerExportServices(options.realm),
     () => configManagerExportTermsAndConditions(),
-    () => configManagerExportThemes(),
+    (options) => configManagerExportThemes(options.realm),
     () => configManagerExportUiConfig(),
   ],
   [CLOUD_DEPLOYMENT_TYPE_KEY]: [
@@ -90,6 +90,7 @@ const deploymentMapAll = {
     (options) =>
       configManagerExportAuthzPolicySets(
         `${options.configFolder}/authz-policies.json`
+
       ),
     (options) =>
       configManagerExportConfigAgents(
@@ -98,7 +99,8 @@ const deploymentMapAll = {
     () => configManagerExportConnectorDefinitionsAll(),
     () => configManagerExportCookieDomains(),
     () => configManagerExportCors(),
-    () => configManagerExportCsp(),
+    (options) => configManagerExportCsp(`${options.configFolder}/csp-overrides.json`),
+    () => configManagerExportCustomNodes(),
     () => configManagerExportEmailProviderConfiguration(),
     () => configManagerExportEmailTemplates(),
     () => configManagerExportEndpoints(),
@@ -110,10 +112,11 @@ const deploymentMapAll = {
     () => configManagerExportMappings(),
     () => configManagerExportOrgPrivileges(),
     (options) => configManagerExportPasswordPolicy(options.realm),
+    (options) => configManagerExportRaw(`${options.configFolder}/raw.json`),
     () => configManagerExportRemoteServers(),
     (options) => configManagerExportSaml(`${options.configFolder}/saml.json`),
     () => configManagerExportSchedules(),
-    () => configManagerExportScripts(),
+    (options) => configManagerExportScripts(undefined, options.realm),
     () => configManagerExportSecrets(),
     (options) => configManagerExportSecretMappings(undefined, options.realm),
     (options) =>
@@ -121,8 +124,9 @@ const deploymentMapAll = {
         `${options.configFolder}/service-objects.json`
       ),
     () => configManagerExportServices(),
+    //() => configManagerExportTelemetry(),
     () => configManagerExportTermsAndConditions(),
-    () => configManagerExportThemes(),
+    (options) => configManagerExportThemes(options.realm),
     () => configManagerExportUiConfig(),
     () => configManagerExportVariables(),
   ],
@@ -136,10 +140,12 @@ const deploymentMapAll = {
       configManagerExportConfigAgents(
         `${options.configFolder}/oauth2-agents.json`
       ),
-    () => configManagerExportCookieDomains(),
+    () => configManagerExportCors(),
+    () => configManagerExportCustomNodes(),
     (options) => configManagerExportJourneys(undefined, options.realm),
+    (options) => configManagerExportRaw(`${options.configFolder}/raw.json`),
     (options) => configManagerExportSaml(`${options.configFolder}/saml.json`),
-    () => configManagerExportScripts(),
+    (options) => configManagerExportScripts(undefined, options.realm),
     (options) => configManagerExportServices(options.realm),
   ],
 };
