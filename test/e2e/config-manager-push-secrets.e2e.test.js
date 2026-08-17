@@ -47,19 +47,17 @@
  */
 
 /*
-// ForgeOps
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push secrets -D test/e2e/exports/fr-config-manager/cloud 
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push secrets -n esv-fr-test-secret -e my-test-value -D test/e2e/exports/fr-config-manager/cloud 
+// cloud
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push secrets -D test/e2e/exports/fr-config-manager/cloud 
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push secrets -n esv-fr-test-secret -e my-test-value -D test/e2e/exports/fr-config-manager/cloud 
 
 
 */
 
-import cp from 'child_process';
-import { promisify } from 'util';
-import { getEnv, removeAnsiEscapeCodes } from './utils/TestUtils';
+import { getEnv, testSuccess } from './utils/TestUtils';
 import { connection as c } from './utils/TestConfig';
 
-const exec = promisify(cp.exec);
+
 
 process.env['FRODO_MOCK'] = '1';
 const cloudEnv = getEnv(c);
@@ -69,18 +67,10 @@ const allDirectory = "test/e2e/exports/fr-config-manager/cloud";
 describe('frodo config-manager push secrets', () => {
     test(`"frodo config-manager push secrets -D ${allDirectory} ": should import the secrets into cloud"`, async () => {
         const CMD = `frodo config-manager push secrets -D ${allDirectory} `;
-        const { stdout, stderr } = await exec(CMD, {
-            env: {
-                ...cloudEnv.env,
-                ESV_FR_TEST_SECRET: "my-fr-test-secret-value",
-                ESV_TEST_SECRET: "my-test-secret-value"
-            }
-        });
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        testSuccess(CMD, cloudEnv)
     });
     test(`"frodo config-manager push secrets -n esv-fr-test-secret -e my-test-value ${allDirectory}": should import the specified secret into cloud`, async () => {
         const CMD = `frodo config-manager push secrets -n esv-fr-test-secret -e my-test-value -D ${allDirectory}`;
-        const { stdout } = await exec(CMD, cloudEnv);
-        expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+        testSuccess(CMD, cloudEnv)
     });
 });

@@ -1,22 +1,27 @@
-import { frodo, FrodoError } from '@rockcarver/frodo-lib';
-import { SecretSkeleton } from '@rockcarver/frodo-lib/types/api/cloud/SecretsApi';
+import { frodo } from '@rockcarver/frodo-lib';
+import {
+  SecretSkeleton,
+  VersionOfSecretSkeleton,
+} from '@rockcarver/frodo-lib/types/api/cloud/SecretsApi';
 import { SecretsExportInterface } from '@rockcarver/frodo-lib/types/ops/cloud/SecretsOps';
 import fs from 'fs';
 
 import {
   createProgressIndicator,
   printError,
+  printMessage,
   stopProgressIndicator,
   updateProgressIndicator,
 } from '../utils/Console';
 
-const { getFilePath, saveJsonToFile, readToJson, loadEnvFile } = frodo.utils;
+const { getFilePath, saveJsonToFile, readJsonFile } = frodo.utils;
 const {
   readSecrets,
   exportSecret,
   createSecret,
   createVersionOfSecret,
-  readSecret,
+  pruneVersionsOfSecret,
+  importSecrets,
 } = frodo.cloud.secret;
 
 /**
@@ -95,33 +100,15 @@ export async function configManagerExportSecrets(
   return false;
 }
 
-export function resolvePlaceholder(
-  placeholder: string,
-  envFile: Record<string, string> = {}
-): string {
-  const match = placeholder.match(/^\$\{(BASE64:)?(.+)\}$/);
-  if (!match) {
-    throw new FrodoError(`Invalid placeholder format: ${placeholder}`);
-  }
-  const isBase64 = !!match[1];
-  const name = match[2];
-
-  let value: string;
-  if (name in envFile) {
-    value = envFile[name];
-  } else if (name in process.env) {
-    value = process.env[name];
-  } else {
-    throw new FrodoError(`No value found for ${name}`);
-  }
-  return isBase64 ? value : Buffer.from(value).toString('base64');
-}
-
+/**
+ * Import secrets to to cloud from fr-config-manager format
+ * @param {string} secretName optional name of secret to import
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
 export async function configManagerImportSecrets(
   secretName?: string,
-  value?: string
+  prune?: boolean
 ): Promise<boolean> {
-  const errors = [];
   const spinnerId = createProgressIndicator(
     'indeterminate',
     0,
@@ -132,13 +119,13 @@ export async function configManagerImportSecrets(
     const secretsDir = getFilePath(`esvs/secrets/`);
     if (!fs.existsSync(secretsDir)) {
       stopProgressIndicator(spinnerId, `No secrets found`, 'fail');
-      return true;
+      return false;
     }
 
     const fileNames = fs
       .readdirSync(secretsDir)
       .filter((name) => name.toLowerCase().endsWith('.json'))
-      .filter((name) => !secretName || name === secretName);
+      .filter((name) => !secretName || name === `${secretName}.json`);
 
     if (fileNames.length === 0) {
       stopProgressIndicator(
@@ -148,7 +135,7 @@ export async function configManagerImportSecrets(
           : 'No secrets found to import',
         'fail'
       );
-      return true;
+      return false;
     }
 
     stopProgressIndicator(
@@ -157,56 +144,83 @@ export async function configManagerImportSecrets(
       'success'
     );
 
-    const envFile = loadEnvFile();
-
     indicatorId = createProgressIndicator(
-      'determinate',
-      fileNames.length,
+      'indeterminate',
+      0,
       'Importing secrets'
     );
 
+    const remoteSecrets = Object.fromEntries(
+      (await readSecrets()).map((s) => [s._id, s])
+    );
+    const secrets = {} as Record<string, SecretSkeleton>;
+
     for (const fileName of fileNames) {
       try {
-        const importData = readToJson(`${secretsDir}/${fileName}`, {overrideValue: value, envFile, base64Encode: false})
-        const secretValue = importData.valueBase64
-        
-        if (!secretValue){
-          throw new FrodoError(
-            `No value provided for secret ${importData._id}`
-          )
-        }
-
-        let exists = true;
-        try {
-          await readSecret(importData._id);
-        } catch {
-          exists = false;
-        }
-
-        if (exists) {
-          await createVersionOfSecret(importData._id, secretValue);
+        const secret = readJsonFile(
+          `${secretsDir}/${fileName}`
+        ) as SecretSkeleton & {
+          valueBase4?: string;
+          versions?: VersionOfSecretSkeleton[];
+        };
+        if (prune) await pruneVersionsOfSecret(secret._id, false, true);
+        if (secret.valueBase64 !== undefined) {
+          secret.activeValue = secret.valueBase64;
         } else {
-          await createSecret(
-            importData._id,
-            secretValue,
-            importData.description,
-            importData.encoding,
-            importData.useInPlaceholders
+          const versions = [...secret.versions].sort((a, b) =>
+            Number(a.version) - Number(b.version) ? 1 : -1
           );
+          for (let i = 0; i < versions.length - 1; ++i) {
+            if (i === 0 && !remoteSecrets[secret._id]) {
+              await createSecret(
+                secret._id,
+                versions[i].valueBase64,
+                secret.description,
+                secret.encoding,
+                secret.useInPlaceholders
+              );
+            } else {
+              await createVersionOfSecret(secret._id, versions[i].valueBase64);
+            }
+          }
+          secret.activeValue = versions[versions.length - 1].valueBase64;
         }
-        updateProgressIndicator(
-          indicatorId,
-          `Imported secret ${importData._id}`
-        );
-      } catch (error) {
-        errors.push(error);
+        secrets[secret._id] = secret;
+      } catch (e) {
+        printError(e, `Error importing secret from "${fileName}"`);
       }
     }
-    
-    if (errors.length > 0) {
-      throw new FrodoError(`Error importing secrets`, errors);
+    const includeActiveValues = true;
+
+    const imported = await importSecrets(
+      { secret: secrets },
+      includeActiveValues
+    );
+
+    let unchanged = 0;
+    let updated = 0;
+
+    for (const s of imported) {
+      if (
+        remoteSecrets[s._id] &&
+        remoteSecrets[s._id].activeVersion === s.activeVersion
+      ) {
+        printMessage(`Secret ${s._id} unchanged version ${s.activeVersion}`);
+        unchanged++;
+      } else {
+        printMessage(`Secret ${s._id} created version ${s.activeVersion}`);
+        updated++;
+      }
     }
-    stopProgressIndicator(indicatorId, `${fileNames.length} secrets imported.`);
+
+    stopProgressIndicator(indicatorId, `${imported.length} secrets imported.`);
+
+    printMessage(
+      updated > 0
+        ? `Changes made to secrets: ${updated} updated, ${unchanged} unchanged`
+        : `No changes, (${unchanged} secrets(s) already up to date)`
+    );
+
     return true;
   } catch (error) {
     stopProgressIndicator(indicatorId, `Error importing secrets`, 'fail');
