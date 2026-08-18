@@ -49,7 +49,7 @@ export default function setup() {
       );
       if (!getTokensIsSuccessful) process.exit(1);
       verboseMessage('Importing secrets to cloud');
-      const outcome = await configManagerImportSecrets();
+      const outcome = await configManagerImportSecrets(options.name, options.prune);
       if (!outcome) process.exitCode = 1;
     });
 

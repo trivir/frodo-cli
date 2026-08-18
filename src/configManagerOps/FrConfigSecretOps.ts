@@ -160,7 +160,7 @@ export async function configManagerImportSecrets(
         const secret = readJsonFile(
           `${secretsDir}/${fileName}`
         ) as SecretSkeleton & {
-          valueBase4?: string;
+          valueBase64?: string;
           versions?: VersionOfSecretSkeleton[];
         };
         if (prune) await pruneVersionsOfSecret(secret._id, false, true);
@@ -187,6 +187,9 @@ export async function configManagerImportSecrets(
         }
         secrets[secret._id] = secret;
       } catch (e) {
+        if (e instanceof Error && e.message.includes('No value found for placeholder')){
+          continue;
+        }
         printError(e, `Error importing secret from "${fileName}"`);
       }
     }

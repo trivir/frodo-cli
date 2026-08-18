@@ -56,6 +56,12 @@ export default function setup() {
     )
     .addOption(
       new Option(
+        '-a, --all',
+        'Export all IDM configuration objects into a single file in directory -D. Ignored with -i.'
+      )
+    )
+    .addOption(
+      new Option(
         '-N, --no-metadata',
         'Does not include metadata in the export file.'
       )

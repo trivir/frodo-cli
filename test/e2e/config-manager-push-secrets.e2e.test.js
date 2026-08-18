@@ -49,8 +49,8 @@
 /*
 // cloud
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push secrets -D test/e2e/exports/fr-config-manager/cloud 
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push secrets -n esv-fr-test-secret -e my-test-value -D test/e2e/exports/fr-config-manager/cloud 
-
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push secrets -n esv-fr-test-secret -E ESV_TEST_SECRET="new version" -D test/e2e/exports/fr-config-manager/cloud 
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push secrets -n esv-test-secret -E ESV_TEST_SECRET="test2" -n esv-fr-test-secret -E ESV_FR_TEST_SECRET="test3 -D test/e2e/exports/fr-config-manager/cloud 
 
 */
 
@@ -69,8 +69,16 @@ describe('frodo config-manager push secrets', () => {
         const CMD = `frodo config-manager push secrets -D ${allDirectory} `;
         testSuccess(CMD, cloudEnv)
     });
-    test(`"frodo config-manager push secrets -n esv-fr-test-secret -e my-test-value ${allDirectory}": should import the specified secret into cloud`, async () => {
-        const CMD = `frodo config-manager push secrets -n esv-fr-test-secret -e my-test-value -D ${allDirectory}`;
+    test(`"frodo config-manager push secrets -n esv-fr-test-secret -E ESV_FR_TEST_SECRET="test1" ${allDirectory}": should import the specified secret into cloud`, async () => {
+        const CMD = `frodo config-manager push secrets -n esv-fr-test-secret -E ESV_FR_TEST_SECRET="test1"  -D ${allDirectory}`;
+        testSuccess(CMD, cloudEnv)
+    });
+        test(`"frodo config-manager push secrets -n esv-test-secret -E ESV_TEST_SECRET="test2" -n esv-fr-test-secret -E ESV_FR_TEST_SECRET="test3"  ${allDirectory}": should import the specified secret into cloud`, async () => {
+        const CMD = `frodo config-manager push secrets -n esv-test-secret -E ESV_TEST_SECRET="test2" -n esv-fr-test-secret -E ESV_FR_TEST_SECRET="test3" -D ${allDirectory}`;
+        testSuccess(CMD, cloudEnv)
+    });
+        test(`"frodo config-manager push secrets -n esv-fr-test-secret -E  ${allDirectory}": should import the specified secret into cloud`, async () => {
+        const CMD = `frodo config-manager push secrets -n esv-fr-test-secret -E ESV_TEST_SECRET="new version"  -D ${allDirectory}`;
         testSuccess(CMD, cloudEnv)
     });
 });

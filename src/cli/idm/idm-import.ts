@@ -64,6 +64,13 @@ export default function setup() {
         'Import all IDM configuration objects from separate files in directory -D. Ignored with -i, and -a.'
       )
     )
+    .addOption(
+      new Option(
+        '-a, --all',
+        'Export all IDM configuration objects into a single file in directory -D. Ignored with -i.'
+      )
+    )
+
     .action(
       // implement command logic inside action handler
       async (
@@ -129,7 +136,9 @@ export default function setup() {
           verboseMessage(
             `Importing first object${envMessage}${fileMessage}...`
           );
-          const outcome = await importFirstConfigEntityFromFile(options.file);
+          const outcome = await importFirstConfigEntityFromFile(
+            options.file
+          );
           if (!outcome) process.exitCode = 1;
         }
         // require --directory -D for all-separate functions
