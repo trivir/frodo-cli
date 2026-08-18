@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo config-manager push "frodo config-manager push test": should receive access tokens" 1`] = `""`;
+
+exports[`frodo config-manager push "frodo config-manager push test": should receive access tokens" 2`] = `
+"Experimental feature in use: 'frodo config-manager push test'. This feature may change without notice.
+Authenticated successfully
+"
+`;
