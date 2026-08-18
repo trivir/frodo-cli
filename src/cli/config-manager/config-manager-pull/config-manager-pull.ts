@@ -34,7 +34,7 @@ import Secrets from './config-manager-pull-secrets';
 import ServiceObjects from './config-manager-pull-service-objects';
 import Services from './config-manager-pull-services';
 import Terms from './config-manager-pull-terms-and-conditions';
-import Test from './config-manager-pull-test';
+import Test from '../../conn/conn-test';
 import Themes from './config-manager-pull-themes';
 import UiConfig from './config-manager-pull-uiConfig';
 import Variables from './config-manager-pull-variables';
