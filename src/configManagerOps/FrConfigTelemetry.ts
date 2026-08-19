@@ -1,17 +1,13 @@
-
-import { frodo, FrodoError } from '@rockcarver/frodo-lib';
-
+import { frodo } from '@rockcarver/frodo-lib';
 import { TelemetryExporterCategory } from '@rockcarver/frodo-lib/types/api/cloud/TelemetryApi';
+import { TelemetryExportInterface } from '@rockcarver/frodo-lib/types/ops/cloud/TelemetryOps';
+import fs from 'fs';
 
 import {
   createProgressIndicator,
   printError,
   stopProgressIndicator,
-  updateProgressIndicator,
 } from '../utils/Console';
-
-
-import fs from 'fs'
 
 const { saveJsonToFile, getFilePath, readJsonFile } = frodo.utils;
 const { exportTelemetry, importTelemetry } = frodo.cloud.telemetry;
@@ -56,13 +52,10 @@ export async function configManagerExportTelemetry(
   return false;
 }
 
-
 export async function configManagerImportTelemetry(
-  category?: 'otlp' | 'splunk',
-  name?: string,
-  value?: string
+  category?: TelemetryExporterCategory,
+  name?: string
 ): Promise<boolean> {
-  const errors = [];
   const spinnerId = createProgressIndicator(
     'indeterminate',
     0,
@@ -70,11 +63,31 @@ export async function configManagerImportTelemetry(
   );
   let indicatorId: string;
   try {
-    const envFile = loadEnvFile();
-    const categories: ('otlp' | 'splunk')[] = category
-      ? [category]
-      : ['otlp', 'splunk'];
-    const targets: { cat: 'otlp' | 'splunk'; file: string }[] = [];
+    const telemetryDir = getFilePath('telemetry');
+
+    if (!fs.existsSync(telemetryDir)) {
+      stopProgressIndicator(
+        spinnerId,
+        'No telemetry exporters found to import',
+        'fail'
+      );
+      return true;
+    }
+
+    const categories = fs
+      .readdirSync(telemetryDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name as TelemetryExporterCategory)
+      .filter((cat) => !category || cat === category);
+
+    const importData: TelemetryExportInterface = {
+      telemetry: Object.fromEntries(
+        categories.map((cat) => [cat, []])
+      ) as TelemetryExportInterface['telemetry'],
+    };
+
+    let exportCounter = 0;
+
     for (const cat of categories) {
       const catDir = getFilePath(`telemetry/${cat}`);
       if (!fs.existsSync(catDir)) {
@@ -84,11 +97,14 @@ export async function configManagerImportTelemetry(
         .readdirSync(catDir)
         .filter((f) => f.toLowerCase().endsWith('.json'))
         .filter((f) => !name || f === `${name}.json`);
-      for (const f of files) {
-        targets.push({ cat, file: `${catDir}/${f}` });
+      for (const file of files) {
+        const filePath = `${catDir}/${file}`;
+        const provider = readJsonFile(filePath) as any;
+        importData.telemetry[cat].push(provider);
+        exportCounter++;
       }
     }
-    if (targets.length === 0) {
+    if (exportCounter === 0) {
       stopProgressIndicator(
         spinnerId,
         name
@@ -96,48 +112,33 @@ export async function configManagerImportTelemetry(
           : 'No telemetry exporters found to import',
         'fail'
       );
+      indicatorId = undefined;
       return true;
     }
+
     stopProgressIndicator(
       spinnerId,
-      `Successfully read ${targets.length} telemetry exporter(s).`,
+      `Successfully read ${exportCounter} telemetry exporter(s).`,
       'success'
     );
+    indicatorId = undefined;
+
     indicatorId = createProgressIndicator(
-      'determinate',
-      targets.length,
-      'Importing telemetry exporters'
+      'indeterminate',
+      0,
+      'Importing telemetry exporters...'
     );
-    for (const { cat, file } of targets) {
-      try {
-        const provider = readToJson(file, {
-          overrideValue: value,
-          envFile,
-          base64Encode: false,
-        });
-        await importTelemetry(provider.id, cat, provider);
-        updateProgressIndicator(
-          indicatorId,
-          `Imported ${cat} exporter ${provider.id}`
-        );
-      } catch (error) {
-        errors.push(error);
-      }
-    }
-    if (errors.length > 0) {
-      throw new FrodoError(`Error importing telemetry exporters`, errors);
-    }
+    
+    await importTelemetry(importData);
+    
     stopProgressIndicator(
-      indicatorId,
-      `${targets.length} telemetry exporter(s) imported.`
+      spinnerId,
+      `Successfully read ${exportCounter} telemetry exporter(s).`,
+      'success'
     );
+
     return true;
   } catch (error) {
-    stopProgressIndicator(
-      indicatorId,
-      `Error importing telemetry exporters`,
-      'fail'
-    );
     printError(error);
     return false;
   }

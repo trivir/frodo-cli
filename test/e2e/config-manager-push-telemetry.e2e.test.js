@@ -47,39 +47,41 @@
  */
 
 /*
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push telemetry -c otlp -N datadog -e test-value -D test/e2e/exports/fr-config-manager/cloud
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push telemetry -D test/e2e/exports/fr-config-manager/cloud
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push telemetry -n test-otlp -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value -D test/e2e/exports/fr-config-manager/cloud 
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push telemetry -c otlp -n datadog -E TELEMETRY_HEADER_OTLP_DATADOG_DD_API_KEY=test-value -D test/e2e/exports/fr-config-manager/cloud
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push telemetry -c splunk -n test -D test/e2e/exports/fr-config-manager/cloud
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push telemetry -c splunk -D test/e2e/exports/fr-config-manager/cloud
 */
 
-
-import cp from 'child_process';
-import { promisify } from 'util';
-import { getEnv, removeAnsiEscapeCodes } from './utils/TestUtils';
+import { getEnv, testFail, testSuccess } from './utils/TestUtils';
 import { connection as c } from './utils/TestConfig';
 
-const exec = promisify(cp.exec);
+
 process.env['FRODO_MOCK'] = '1';
 process.env['FRODO_CONNECTION_PROFILES_PATH'] =
   './test/e2e/env/Connections.json';
 const env = getEnv(c);
 
-const telemetryDir = 'test/e2e/exports/fr-config-manager/telemetry';
+const telemetryDir = 'test/e2e/exports/fr-config-manager/cloud';
 
 describe('frodo config-manager push telemetry', () => {
-  test(`"frodo config-manager push telemetry -D ${telemetryDir}": should resolve header placeholders from process.env`, async () => {
-    const CMD = `frodo config-manager push telemetry -D ${telemetryDir}`;
-    const { stdout } = await exec(CMD, {
-      env: {
-        ...env.env,
-        TELEMETRY_HEADER_OTLP_MYEXPORTER_AUTHORIZATION: 'Bearer test-value',
-      },
-    });
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+  test(`"frodo config-manager push telemetry -n test-otlp -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value -D ${telemetryDir}": should push telemetry to cloud`, async () => {
+    const CMD = `frodo config-manager push telemetry -n test-otlp -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value  -D ${telemetryDir}`;
+    await testSuccess(CMD, env);
   });
 
-  test(`"frodo config-manager push telemetry -c otlp -N datadog -e test-value -D ${telemetryDir}": should resolve placeholders from the -e override`, async () => {
-    const CMD = `frodo config-manager push telemetry -c otlp -N datadog -e "test-value" -D ${telemetryDir}`;
-    const { stdout } = await exec(CMD, env);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
+  test(`"frodo config-manager push telemetry -c otlp -n datadog -E TELEMETRY_HEADER_OTLP_DATADOG_DD_API_KEY=test-value -D ${telemetryDir}": should fail to import otlp telemetry`, async () => {
+    const CMD = `frodo config-manager push telemetry -c otlp -n datadog -E TELEMETRY_HEADER_OTLP_DATADOG_DD_API_KEY=test-value -D ${telemetryDir}`;
+    await testFail(CMD, env);
   });
+
+  test(`"frodo config-manager push telemetry -c splunk -n test -D ${telemetryDir}": should fail to import splunk telemetry`, async () => {
+    const CMD = `frodo config-manager push telemetry -c splunk -n test -D ${telemetryDir}`;
+    await testFail(CMD, env);
+  });
+
+  test(`"frodo config-manager push telemetry -c splunk -D ${telemetryDir}": should fail to import splunk telemetry`, async () => {
+  const CMD = `frodo config-manager push telemetry -c splunk -D ${telemetryDir}`;
+  await testSuccess(CMD, env);
+});
 });
