@@ -51,25 +51,17 @@
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager pull idm-authentication -D test/e2e/exports/fr-config-manager/forgeops -m forgeops
 
 */
-
-import cp from 'child_process';
-import { promisify } from 'util';
-import { getEnv } from './utils/TestUtils';
+import { getEnv, testExport } from './utils/TestUtils';
 import { forgeops_connection as fc } from './utils/TestConfig';
-
-const exec = promisify(cp.exec);
 
 process.env['FRODO_MOCK'] = '1';
 const forgeopsEnv = getEnv(fc);
 
-
-const forgeopsDirectory = "test/e2e/exports/fr-config-manager/forgeops/";
+const dirName = "idmAuthDir";
 
 describe('frodo config-manager pull idm-authentication', () => {
-    test(`"frodo config-manager pull idm-authentication -D ${forgeopsDirectory} -m forgeops": should export idm authentication from forgeops"`, async () => {
-        const CMD = `frodo config-manager pull idm-authentication -D ${forgeopsDirectory} -m forgeops`;
-        const { stdout, stderr } = await exec(CMD, forgeopsEnv);
-        expect(stdout).toMatchSnapshot();
-        expect(stderr).toMatchSnapshot();
+    test(`"frodo config-manager pull idm-authentication -D ${dirName} -m forgeops": should export idm authentication from forgeops"`, async () => {
+        const CMD = `frodo config-manager pull idm-authentication -D ${dirName} -m forgeops`;
+        await testExport(CMD, forgeopsEnv, undefined, undefined, dirName, false);
     });
 });
