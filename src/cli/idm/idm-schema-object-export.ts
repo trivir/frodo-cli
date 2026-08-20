@@ -63,12 +63,6 @@ export default function setup() {
         'Do not extract and save idm scripts to separate files. Ignored with -a and -A.'
       ).default(true, 'true')
     )
-    .addOption(
-      new Option(
-        '-N, --no-metadata',
-        'Does not include metadata in the export file.'
-      )
-    )
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {

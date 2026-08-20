@@ -187,7 +187,10 @@ export async function configManagerImportSecrets(
         }
         secrets[secret._id] = secret;
       } catch (e) {
-        if (e instanceof Error && e.message.includes('No value found for placeholder')){
+        if (
+          e instanceof Error &&
+          e.message.includes('No value found for placeholder')
+        ) {
           continue;
         }
         printError(e, `Error importing secret from "${fileName}"`);
