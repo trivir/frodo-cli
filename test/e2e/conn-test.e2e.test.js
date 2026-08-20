@@ -47,8 +47,8 @@
  */
 
 /*
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push test
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push test frodo alpha username password
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo conn test
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo conn test "https://openam-frodo-dev.forgeblocks.com/am" "alpha" username password
 
 */
 
@@ -63,13 +63,13 @@ process.env['FRODO_CONNECTION_PROFILES_PATH'] =
 const env = getEnv(c);
 
 
-describe('frodo config-manager push', () => {
-  test('"frodo config-manager push test": should receive access tokens"', async () => {
-      const CMD = `frodo config-manager push test`;
-      await testSuccess(CMD, env);
-  });
-  // test('"frodo config-manager push test": should fail connection with invalid credentials"', async () => {
-  //     const CMD = `frodo config-manager push test ${c.host} ${c.realm} username password`;
-  //     await testFail(CMD, env);
-  // });
+describe('frodo conn test', () => {
+    test('"frodo conn test": should receive access tokens"', async () => {
+        const CMD = `frodo conn test`;
+        await testSuccess(CMD, env);
+    });
+    test('"frodo conn test": should fail connection with invalid credentials"', async () => {
+        const CMD = `frodo conn test "${c.host}" "${c.realm}" username password`;
+        await testFail(CMD, env);
+    });
 });

@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo conn test "frodo conn test": should fail connection with invalid credentials" 1`] = `
+"/bin/sh: 1: Syntax error: Unterminated quoted string
+"
+`;
+
+exports[`frodo conn test "frodo conn test": should fail connection with invalid credentials" 2`] = `2`;
+
+exports[`frodo conn test "frodo conn test": should receive access tokens" 1`] = `""`;
+
+exports[`frodo conn test "frodo conn test": should receive access tokens" 2`] = `
+"Connected and authenticated successfully
+"
+`;

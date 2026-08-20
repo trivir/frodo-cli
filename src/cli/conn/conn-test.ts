@@ -19,7 +19,8 @@ export default function setup() {
       if (await getTokens()) {
         printMessage('Connected and authenticated successfully');
       } else {
-        process.exit(1);
+        // process.exit(1);
+        process.exitCode =1
       }
     });
   return program;
