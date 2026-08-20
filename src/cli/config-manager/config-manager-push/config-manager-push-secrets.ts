@@ -6,13 +6,9 @@ import { getTokens } from '../../../ops/AuthenticateOps';
 import { verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
-const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
-  frodo.utils.constants;
+const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
-const deploymentTypes = [
-  CLOUD_DEPLOYMENT_TYPE_KEY,
-  FORGEOPS_DEPLOYMENT_TYPE_KEY,
-];
+const deploymentTypes = [CLOUD_DEPLOYMENT_TYPE_KEY];
 
 export default function setup() {
   const program = new FrodoCommand(
@@ -30,7 +26,12 @@ export default function setup() {
       )
     )
 
-    .addOption(new Option('-p, --prune', 'Prune old configureation'))
+    .addOption(
+      new Option(
+        '-p, --prune',
+        'Prunes old versions that are still enabled before importing the new version(s)'
+      )
+    )
 
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(

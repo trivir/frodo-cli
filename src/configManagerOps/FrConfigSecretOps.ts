@@ -101,8 +101,9 @@ export async function configManagerExportSecrets(
 }
 
 /**
- * Import secrets to to cloud from fr-config-manager format
+ * Import secrets to cloud from fr-config-manager format
  * @param {string} secretName optional name of secret to import
+ * @param {boolean} prune if true, prunes old enabled versions before importing new versions.
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function configManagerImportSecrets(
@@ -145,8 +146,8 @@ export async function configManagerImportSecrets(
     );
 
     indicatorId = createProgressIndicator(
-      'indeterminate',
-      0,
+      'determinate',
+      fileNames.length,
       'Importing secrets'
     );
 
@@ -167,8 +168,8 @@ export async function configManagerImportSecrets(
         if (secret.valueBase64 !== undefined) {
           secret.activeValue = secret.valueBase64;
         } else {
-          const versions = [...secret.versions].sort((a, b) =>
-            Number(a.version) - Number(b.version) ? 1 : -1
+          const versions = secret.versions.sort((a, b) =>
+            Number(a.version) > Number(b.version) ? 1 : -1
           );
           for (let i = 0; i < versions.length - 1; ++i) {
             if (i === 0 && !remoteSecrets[secret._id]) {
@@ -187,21 +188,12 @@ export async function configManagerImportSecrets(
         }
         secrets[secret._id] = secret;
       } catch (e) {
-        if (
-          e instanceof Error &&
-          e.message.includes('No value found for placeholder')
-        ) {
-          continue;
-        }
         printError(e, `Error importing secret from "${fileName}"`);
       }
+      updateProgressIndicator(indicatorId, `Exported secret ${secrets._id}`);
     }
-    const includeActiveValues = true;
 
-    const imported = await importSecrets(
-      { secret: secrets },
-      includeActiveValues
-    );
+    const imported = await importSecrets({ secret: secrets }, true);
 
     let unchanged = 0;
     let updated = 0;

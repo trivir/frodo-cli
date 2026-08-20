@@ -34,7 +34,6 @@ Commands:
   password-policy        [Experimental] Import password-policy objects.
   remote-servers         [Experimental] Import RCS config.
   schedules              [Experimental] Import schedules.
-  secrets                [Experimental] Import secrets.
   service-objects        [Experimental] Import service objects.
   terms-and-conditions   [Experimental] Import terms and conditions.
   themes                 [Experimental] Import themes.
@@ -45,6 +44,7 @@ Commands:
   iga-workflows          [Experimental] Import iga-workflows.
   restart                [Experimental] Restart the environment.
   secret-mappings        [Experimental] Import secret mappings.
+  secrets                [Experimental] Import secrets.
   variables              [Experimental] Import variables.
 "
 `;
