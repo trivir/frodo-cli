@@ -23,6 +23,7 @@ import RemoteServers from './config-manager-push-remote-servers';
 import Restart from './config-manager-push-restart';
 import Schedules from './config-manager-push-schedules';
 import SecretMappings from './config-manager-push-secret-mappings';
+import Secrets from './config-manager-push-secrets';
 import ServiceObjects from './config-manager-push-service-objects';
 import TermsAndConditions from './config-manager-push-terms-and-conditions';
 import Themes from './config-manager-push-themes';
@@ -62,6 +63,7 @@ export default function setup() {
   program.addCommand(Restart().name('restart'));
   program.addCommand(Journeys().name('journeys'));
   program.addCommand(Variables().name('variables'));
+  program.addCommand(Secrets().name('secrets'));
 
   return program;
 }

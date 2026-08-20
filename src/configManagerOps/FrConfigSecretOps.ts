@@ -1,16 +1,28 @@
 import { frodo } from '@rockcarver/frodo-lib';
-import { SecretSkeleton } from '@rockcarver/frodo-lib/types/api/cloud/SecretsApi';
+import {
+  SecretSkeleton,
+  VersionOfSecretSkeleton,
+} from '@rockcarver/frodo-lib/types/api/cloud/SecretsApi';
 import { SecretsExportInterface } from '@rockcarver/frodo-lib/types/ops/cloud/SecretsOps';
+import fs from 'fs';
 
 import {
   createProgressIndicator,
   printError,
+  printMessage,
   stopProgressIndicator,
   updateProgressIndicator,
 } from '../utils/Console';
 
-const { getFilePath, saveJsonToFile } = frodo.utils;
-const { readSecrets, exportSecret } = frodo.cloud.secret;
+const { getFilePath, saveJsonToFile, readJsonFile } = frodo.utils;
+const {
+  readSecrets,
+  exportSecret,
+  createSecret,
+  createVersionOfSecret,
+  pruneVersionsOfSecret,
+  importSecrets,
+} = frodo.cloud.secret;
 
 /**
  * Export all secrets to individual files in fr-config-manager format
@@ -86,4 +98,131 @@ export async function configManagerExportSecrets(
     printError(error);
   }
   return false;
+}
+
+/**
+ * Import secrets to cloud from fr-config-manager format
+ * @param {string} secretName optional name of secret to import
+ * @param {boolean} prune if true, prunes old enabled versions before importing new versions.
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
+export async function configManagerImportSecrets(
+  secretName?: string,
+  prune?: boolean
+): Promise<boolean> {
+  const spinnerId = createProgressIndicator(
+    'indeterminate',
+    0,
+    `Reading secrets...`
+  );
+  let indicatorId: string;
+  try {
+    const secretsDir = getFilePath(`esvs/secrets/`);
+    if (!fs.existsSync(secretsDir)) {
+      stopProgressIndicator(spinnerId, `No secrets found`, 'fail');
+      return false;
+    }
+
+    const fileNames = fs
+      .readdirSync(secretsDir)
+      .filter((name) => name.toLowerCase().endsWith('.json'))
+      .filter((name) => !secretName || name === `${secretName}.json`);
+
+    if (fileNames.length === 0) {
+      stopProgressIndicator(
+        spinnerId,
+        secretName
+          ? `No matching secret found for ${secretName}`
+          : 'No secrets found to import',
+        'fail'
+      );
+      return false;
+    }
+
+    stopProgressIndicator(
+      spinnerId,
+      `Successfully read ${fileNames.length} secrets.`,
+      'success'
+    );
+
+    indicatorId = createProgressIndicator(
+      'determinate',
+      fileNames.length,
+      'Importing secrets'
+    );
+
+    const remoteSecrets = Object.fromEntries(
+      (await readSecrets()).map((s) => [s._id, s])
+    );
+    const secrets = {} as Record<string, SecretSkeleton>;
+
+    for (const fileName of fileNames) {
+      try {
+        const secret = readJsonFile(
+          `${secretsDir}/${fileName}`
+        ) as SecretSkeleton & {
+          valueBase64?: string;
+          versions?: VersionOfSecretSkeleton[];
+        };
+        if (prune) await pruneVersionsOfSecret(secret._id, false, true);
+        if (secret.valueBase64 !== undefined) {
+          secret.activeValue = secret.valueBase64;
+        } else {
+          const versions = secret.versions.sort((a, b) =>
+            Number(a.version) > Number(b.version) ? 1 : -1
+          );
+          for (let i = 0; i < versions.length - 1; ++i) {
+            if (i === 0 && !remoteSecrets[secret._id]) {
+              await createSecret(
+                secret._id,
+                versions[i].valueBase64,
+                secret.description,
+                secret.encoding,
+                secret.useInPlaceholders
+              );
+            } else {
+              await createVersionOfSecret(secret._id, versions[i].valueBase64);
+            }
+          }
+          secret.activeValue = versions[versions.length - 1].valueBase64;
+        }
+        secrets[secret._id] = secret;
+      } catch (e) {
+        printError(e, `Error importing secret from "${fileName}"`);
+      }
+      updateProgressIndicator(indicatorId, `Exported secret ${secrets._id}`);
+    }
+
+    const imported = await importSecrets({ secret: secrets }, true);
+
+    let unchanged = 0;
+    let updated = 0;
+
+    for (const s of imported) {
+      if (
+        remoteSecrets[s._id] &&
+        remoteSecrets[s._id].activeVersion === s.activeVersion
+      ) {
+        printMessage(`Secret ${s._id} unchanged version ${s.activeVersion}`);
+        unchanged++;
+      } else {
+        printMessage(`Secret ${s._id} created version ${s.activeVersion}`);
+        updated++;
+      }
+    }
+
+    stopProgressIndicator(indicatorId, `${imported.length} secrets imported.`);
+
+    printMessage(
+      updated > 0
+        ? `Changes made to secrets: ${updated} updated, ${unchanged} unchanged`
+        : `No changes, (${unchanged} secrets(s) already up to date)`
+    );
+
+    return true;
+  } catch (error) {
+    stopProgressIndicator(indicatorId, `Error importing secrets`, 'fail');
+    printError(error);
+    return false;
+  }
 }
