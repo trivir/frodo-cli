@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -D test/e2e/exports/fr-config-manager/cloud": should fail to import all telemetry config 1`] = `
+"[32mA new version of frodo is available.
+Please run 'frodo -v' for more details.
+[39mExperimental feature in use: 'frodo config-manager push telemetry'. This feature may change without notice.
+Error importing telemetry configuration
+No value found for placeholder "TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY"
+"
+`;
+
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -D test/e2e/exports/fr-config-manager/cloud": should fail to import all telemetry config 2`] = `1`;
+
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c otlp --env TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value --env TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value -D test/e2e/exports/fr-config-manager/cloud": should import otlp telemetry by category and update placeholder values 1`] = `""`;
+
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c otlp --env TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value --env TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value -D test/e2e/exports/fr-config-manager/cloud": should import otlp telemetry by category and update placeholder values 2`] = `
+"[32mA new version of frodo is available.
+Please run 'frodo -v' for more details.
+[39mExperimental feature in use: 'frodo config-manager push telemetry'. This feature may change without notice.
+✔ Successfully read 1 telemetry exporter(s).
+Progress indicator e0cd34f3-450c-403e-b082-5c433f685ae2 not found.
+"
+`;
+
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c otlp -n test-otlp -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value -D test/e2e/exports/fr-config-manager/cloud": should import otlp telemetry by name and update placeholder values 1`] = `""`;
+
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c otlp -n test-otlp -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value -D test/e2e/exports/fr-config-manager/cloud": should import otlp telemetry by name and update placeholder values 2`] = `
+"[32mA new version of frodo is available.
+Please run 'frodo -v' for more details.
+[39mExperimental feature in use: 'frodo config-manager push telemetry'. This feature may change without notice.
+✔ Successfully read 1 telemetry exporter(s).
+Progress indicator 185e23e0-32d7-4fe5-8577-182f50f17346 not found.
+"
+`;
+
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c splunk --name test -D test/e2e/exports/fr-config-manager/cloud": should import splunk telemetry by name 1`] = `""`;
+
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c splunk --name test -D test/e2e/exports/fr-config-manager/cloud": should import splunk telemetry by name 2`] = `
+"[32mA new version of frodo is available.
+Please run 'frodo -v' for more details.
+[39mExperimental feature in use: 'frodo config-manager push telemetry'. This feature may change without notice.
+✔ Successfully read 1 telemetry exporter(s).
+Progress indicator dc8426b5-f043-4aea-b22f-8a2873b847eb not found.
+"
+`;
+
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c splunk -D test/e2e/exports/fr-config-manager/cloud": should import splunk telemetry by category 1`] = `""`;
+
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c splunk -D test/e2e/exports/fr-config-manager/cloud": should import splunk telemetry by category 2`] = `
+"[32mA new version of frodo is available.
+Please run 'frodo -v' for more details.
+[39mExperimental feature in use: 'frodo config-manager push telemetry'. This feature may change without notice.
+✔ Successfully read 1 telemetry exporter(s).
+Progress indicator dcd920ad-d9a9-4702-9dcb-3616cc83565b not found.
+"
+`;
