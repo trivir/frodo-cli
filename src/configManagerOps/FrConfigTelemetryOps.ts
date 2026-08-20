@@ -8,7 +8,7 @@ const { exportTelemetry } = frodo.cloud.telemetry;
 
 /**
  * Exports telemetry configuration in config manager format
- * @param {TelemetryExporterCategory} category optional paremeter to export specific telemetry.
+ * @param {TelemetryExporterCategory} category optional parameter to export telemetry by category.
  * @param {string} name optional parameter to export telemetry config by name.
  * @returns { Promise<boolean> } returns true if telemetry was successfully exported
  */

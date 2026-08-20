@@ -37,19 +37,24 @@ exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetr
 }
 `;
 
-exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -c splunk": should export a single named exporter 1`] = `0`;
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -c otlp": should export only the otlp exporter 1`] = `0`;
 
-exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -c splunk": should export a single named exporter 2`] = `""`;
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -c otlp": should export only the otlp exporter 2`] = `""`;
 
-exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -c splunk": should export a single named exporter: telemetryTestDir5/telemetry/splunk/frodo-test-splunk-1.json 1`] = `
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry -c otlp": should export only the otlp exporter: telemetryTestDir5/telemetry/otlp/test-otlp.json 1`] = `
 {
-  "endpoint": "https://example.com:8088'",
-  "id": "frodo-test-splunk-1",
-  "index": "test",
+  "encoding": "JSON",
+  "endpoint": "https://example-siem.com:4317",
+  "headers": {
+    "api-key": "\${TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY}",
+    "api-secret": "\${TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET}",
+  },
+  "id": "test-otlp",
   "sources": [
-    "am-access",
+    "am-activity",
+    "idm-activity",
   ],
-  "token": "",
+  "type": "HTTP",
 }
 `;
 
@@ -74,11 +79,11 @@ exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetr
 }
 `;
 
-exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry": should export the secrets in fr-config-manager style" 1`] = `0`;
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry": should export telemetry in fr-config-manager style" 1`] = `0`;
 
-exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry": should export the secrets in fr-config-manager style" 2`] = `""`;
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry": should export telemetry in fr-config-manager style" 2`] = `""`;
 
-exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry": should export the secrets in fr-config-manager style": telemetryTestDir/telemetry/otlp/datadog.json 1`] = `
+exports[`frodo config-manager pull telemetry "frodo config-manager pull telemetry": should export telemetry in fr-config-manager style": telemetryTestDir/telemetry/otlp/datadog.json 1`] = `
 {
   "encoding": "PROTO",
   "endpoint": "https://otlp.us5.datadoghq.com/v1/logs",

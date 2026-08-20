@@ -51,7 +51,7 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull telemetry --category splunk -D telemetryTestDir2
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull telemetry -c otlp -n test-otlp -D telemetryTestDir3
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull telemetry -n test-otlp -D telemetryTestDir4
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull telemetry -c splunk -D telemetryTestDir5
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull telemetry -c otlp -D telemetryTestDir5
 */
 
 
@@ -64,7 +64,7 @@ process.env['FRODO_CONNECTION_PROFILES_PATH'] =
 const env = getEnv(c);
 
 describe('frodo config-manager pull telemetry', () => {
-  test('"frodo config-manager pull telemetry": should export the secrets in fr-config-manager style"', async () => {
+  test('"frodo config-manager pull telemetry": should export telemetry in fr-config-manager style"', async () => {
     const dirName = 'telemetryTestDir';
     const CMD = `frodo config-manager pull telemetry -D ${dirName}`;
     await testExport(CMD, env, undefined, undefined, dirName, false);
@@ -88,9 +88,9 @@ describe('frodo config-manager pull telemetry', () => {
     await testExport(CMD, env, undefined, undefined, dirName, false);
   });
 
-  test('"frodo config-manager pull telemetry -c splunk": should export a single named exporter', async () => {
+  test('"frodo config-manager pull telemetry -c otlp": should export only the otlp exporter', async () => {
     const dirName = 'telemetryTestDir5';
-    const CMD = `frodo config-manager pull telemetry -c splunk -D ${dirName}`;
+    const CMD = `frodo config-manager pull telemetry -c otlp -D ${dirName}`;
     await testExport(CMD, env, undefined, undefined, dirName, false);
   });
 
