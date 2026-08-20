@@ -47,10 +47,11 @@
  */
 
 /*
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push telemetry -n test-otlp -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value -D test/e2e/exports/fr-config-manager/cloud 
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push telemetry -c otlp -n datadog -E TELEMETRY_HEADER_OTLP_DATADOG_DD_API_KEY=test-value -D test/e2e/exports/fr-config-manager/cloud
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push telemetry -c splunk -n test -D test/e2e/exports/fr-config-manager/cloud
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push telemetry -c otlp --env TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value --env TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value -D test/e2e/exports/fr-config-manager/cloud 
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push telemetry -c otlp -n test-otlp -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value -D test/e2e/exports/fr-config-manager/cloud
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push telemetry -c splunk --name test -D test/e2e/exports/fr-config-manager/cloud
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push telemetry -c splunk -D test/e2e/exports/fr-config-manager/cloud
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push telemetry -D test/e2e/exports/fr-config-manager/cloud
 */
 
 import { getEnv, testFail, testSuccess } from './utils/TestUtils';
@@ -65,23 +66,27 @@ const env = getEnv(c);
 const telemetryDir = 'test/e2e/exports/fr-config-manager/cloud';
 
 describe('frodo config-manager push telemetry', () => {
-  test(`"frodo config-manager push telemetry -n test-otlp -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value -D ${telemetryDir}": should push telemetry to cloud`, async () => {
-    const CMD = `frodo config-manager push telemetry -n test-otlp -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value  -D ${telemetryDir}`;
+  test(`"frodo config-manager push telemetry -c otlp --env TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value --env TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value -D ${telemetryDir}": should import otlp telemetry by category and update placeholder values`, async () => {
+    const CMD = `frodo config-manager push telemetry -c otlp --env TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value --env TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value  -D ${telemetryDir}`;
     await testSuccess(CMD, env);
   });
 
-  test(`"frodo config-manager push telemetry -c otlp -n datadog -E TELEMETRY_HEADER_OTLP_DATADOG_DD_API_KEY=test-value -D ${telemetryDir}": should fail to import otlp telemetry`, async () => {
-    const CMD = `frodo config-manager push telemetry -c otlp -n datadog -E TELEMETRY_HEADER_OTLP_DATADOG_DD_API_KEY=test-value -D ${telemetryDir}`;
-    await testFail(CMD, env);
+  test(`"frodo config-manager push telemetry -c otlp -n test-otlp -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value -D ${telemetryDir}": should import otlp telemetry by name and update placeholder values`, async () => {
+    const CMD = `frodo config-manager push telemetry -c otlp -n test-otlp -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value -D ${telemetryDir}`;
+    await testSuccess(CMD, env);
   });
 
-  test(`"frodo config-manager push telemetry -c splunk -n test -D ${telemetryDir}": should fail to import splunk telemetry`, async () => {
-    const CMD = `frodo config-manager push telemetry -c splunk -n test -D ${telemetryDir}`;
-    await testFail(CMD, env);
+  test(`"frodo config-manager push telemetry -c splunk --name test -D ${telemetryDir}": should import splunk telemetry by name`, async () => {
+    const CMD = `frodo config-manager push telemetry -c splunk --name test -D ${telemetryDir}`;
+    await testSuccess(CMD, env);
   });
 
-  test(`"frodo config-manager push telemetry -c splunk -D ${telemetryDir}": should fail to import splunk telemetry`, async () => {
-  const CMD = `frodo config-manager push telemetry -c splunk -D ${telemetryDir}`;
-  await testSuccess(CMD, env);
-});
+  test(`"frodo config-manager push telemetry -c splunk -D ${telemetryDir}": should import splunk telemetry by category`, async () => {
+    const CMD = `frodo config-manager push telemetry -c splunk -D ${telemetryDir}`;
+    await testSuccess(CMD, env);
+  });
+  test(`"frodo config-manager push telemetry -D ${telemetryDir}": should fail to import all telemetry config`, async () => {
+    const CMD = `frodo config-manager push telemetry -D ${telemetryDir}`;
+    await testFail(CMD, env);
+  });
 });

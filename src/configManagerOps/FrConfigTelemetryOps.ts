@@ -1,9 +1,13 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { TelemetryExporterCategory } from '@rockcarver/frodo-lib/types/api/cloud/TelemetryApi';
+import { TelemetryExportInterface } from '@rockcarver/frodo-lib/types/ops/cloud/TelemetryOps';
+import fs from 'fs';
 
-import { createProgressIndicator, printError, stopProgressIndicator } from '../utils/Console';
-import { TelemetryExportInterface} from '@rockcarver/frodo-lib/types/ops/cloud/TelemetryOps';
-import fs from 'fs'
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+} from '../utils/Console';
 
 const { saveJsonToFile, getFilePath, readJsonFile } = frodo.utils;
 const { exportTelemetry, importTelemetry } = frodo.cloud.telemetry;
@@ -48,6 +52,12 @@ export async function configManagerExportTelemetry(
   return false;
 }
 
+/**
+ * Imports telemetry configuration in config manager format
+ * @param {TelemetryExporterCategory} category optional paremeter to export specific telemetry.
+ * @param {string} name optional parameter to export telemetry config by name.
+ * @returns { Promise<boolean> } returns true if telemetry was successfully imported
+ */
 export async function configManagerImportTelemetry(
   category?: TelemetryExporterCategory,
   name?: string
@@ -57,7 +67,7 @@ export async function configManagerImportTelemetry(
     0,
     `Reading telemetry exporters...`
   );
-  let indicatorId: string;
+
   try {
     const telemetryDir = getFilePath('telemetry');
 
@@ -67,7 +77,7 @@ export async function configManagerImportTelemetry(
         'No telemetry exporters found to import',
         'fail'
       );
-      return true;
+      return false;
     }
 
     const categories = fs
@@ -76,11 +86,9 @@ export async function configManagerImportTelemetry(
       .map((entry) => entry.name as TelemetryExporterCategory)
       .filter((cat) => !category || cat === category);
 
-    const importData: TelemetryExportInterface = {
-      telemetry: Object.fromEntries(
-        categories.map((cat) => [cat, []])
-      ) as TelemetryExportInterface['telemetry'],
-    };
+    const importData = {
+      telemetry: Object.fromEntries(categories.map((cat) => [cat, []])),
+    } as TelemetryExportInterface;
 
     let exportCounter = 0;
 
@@ -108,8 +116,7 @@ export async function configManagerImportTelemetry(
           : 'No telemetry exporters found to import',
         'fail'
       );
-      indicatorId = undefined;
-      return true;
+      return false;
     }
 
     stopProgressIndicator(
@@ -117,25 +124,18 @@ export async function configManagerImportTelemetry(
       `Successfully read ${exportCounter} telemetry exporter(s).`,
       'success'
     );
-    indicatorId = undefined;
 
-    indicatorId = createProgressIndicator(
-      'indeterminate',
-      0,
-      'Importing telemetry exporters...'
-    );
-    
     await importTelemetry(importData);
-    
+
     stopProgressIndicator(
       spinnerId,
-      `Successfully read ${exportCounter} telemetry exporter(s).`,
+      `Successfully imported ${exportCounter} telemetry exporter(s).`,
       'success'
     );
 
     return true;
   } catch (error) {
-    printError(error);
+    printError(error, 'Error importing telemetry configuration');
     return false;
   }
 }

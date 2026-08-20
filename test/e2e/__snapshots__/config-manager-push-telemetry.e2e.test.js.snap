@@ -1,57 +1,56 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c otlp -n datadog -E TELEMETRY_HEADER_OTLP_DATADOG_DD_API_KEY=test-value -D test/e2e/exports/fr-config-manager/cloud": should fail to import otlp telemetry 1`] = `
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -D test/e2e/exports/fr-config-manager/cloud": should fail to import all telemetry config 1`] = `
 "[32mA new version of frodo is available.
 Please run 'frodo -v' for more details.
 [39mExperimental feature in use: 'frodo config-manager push telemetry'. This feature may change without notice.
-✔ Successfully read 1 telemetry exporter(s).
-Error importing telemetry exporters
-  Error updating telemetry exporter
-    Network error:
-      URL: https://openam-frodo-dev.forgeblocks.com/environment/telemetry/otlp/datadog
-      Status: 409
-      Code: ERR_BAD_REQUEST
-      Message: maximum number of exporters reached
+Error importing telemetry configuration
+No value found for placeholder "TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY"
 "
 `;
 
-exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c otlp -n datadog -E TELEMETRY_HEADER_OTLP_DATADOG_DD_API_KEY=test-value -D test/e2e/exports/fr-config-manager/cloud": should fail to import otlp telemetry 2`] = `1`;
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -D test/e2e/exports/fr-config-manager/cloud": should fail to import all telemetry config 2`] = `1`;
 
-exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c splunk -D test/e2e/exports/fr-config-manager/cloud": should fail to import splunk telemetry 1`] = `""`;
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c otlp --env TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value --env TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value -D test/e2e/exports/fr-config-manager/cloud": should import otlp telemetry by category and update placeholder values 1`] = `""`;
 
-exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c splunk -D test/e2e/exports/fr-config-manager/cloud": should fail to import splunk telemetry 2`] = `
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c otlp --env TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value --env TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value -D test/e2e/exports/fr-config-manager/cloud": should import otlp telemetry by category and update placeholder values 2`] = `
 "[32mA new version of frodo is available.
 Please run 'frodo -v' for more details.
 [39mExperimental feature in use: 'frodo config-manager push telemetry'. This feature may change without notice.
 ✔ Successfully read 1 telemetry exporter(s).
-Progress indicator 21cadce3-505d-4edb-967b-5339051be81f not found.
+Progress indicator e0cd34f3-450c-403e-b082-5c433f685ae2 not found.
 "
 `;
 
-exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c splunk -n test -D test/e2e/exports/fr-config-manager/cloud": should fail to import splunk telemetry 1`] = `
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c otlp -n test-otlp -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value -D test/e2e/exports/fr-config-manager/cloud": should import otlp telemetry by name and update placeholder values 1`] = `""`;
+
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c otlp -n test-otlp -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value -D test/e2e/exports/fr-config-manager/cloud": should import otlp telemetry by name and update placeholder values 2`] = `
 "[32mA new version of frodo is available.
 Please run 'frodo -v' for more details.
 [39mExperimental feature in use: 'frodo config-manager push telemetry'. This feature may change without notice.
 ✔ Successfully read 1 telemetry exporter(s).
-Error importing telemetry exporters
-  Error updating telemetry exporter
-    Network error:
-      URL: https://openam-frodo-dev.forgeblocks.com/environment/telemetry/splunk/frodo-test-splunk-1
-      Status: 409
-      Code: ERR_BAD_REQUEST
-      Message: maximum number of exporters reached
+Progress indicator 185e23e0-32d7-4fe5-8577-182f50f17346 not found.
 "
 `;
 
-exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c splunk -n test -D test/e2e/exports/fr-config-manager/cloud": should fail to import splunk telemetry 2`] = `1`;
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c splunk --name test -D test/e2e/exports/fr-config-manager/cloud": should import splunk telemetry by name 1`] = `""`;
 
-exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -n test-otlp -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value -D test/e2e/exports/fr-config-manager/cloud": should push telemetry to cloud 1`] = `""`;
-
-exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -n test-otlp -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY=test-value -E TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET=test-value -D test/e2e/exports/fr-config-manager/cloud": should push telemetry to cloud 2`] = `
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c splunk --name test -D test/e2e/exports/fr-config-manager/cloud": should import splunk telemetry by name 2`] = `
 "[32mA new version of frodo is available.
 Please run 'frodo -v' for more details.
 [39mExperimental feature in use: 'frodo config-manager push telemetry'. This feature may change without notice.
 ✔ Successfully read 1 telemetry exporter(s).
-Progress indicator f34d3e8a-de5d-49c8-99df-2451d920f416 not found.
+Progress indicator dc8426b5-f043-4aea-b22f-8a2873b847eb not found.
+"
+`;
+
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c splunk -D test/e2e/exports/fr-config-manager/cloud": should import splunk telemetry by category 1`] = `""`;
+
+exports[`frodo config-manager push telemetry "frodo config-manager push telemetry -c splunk -D test/e2e/exports/fr-config-manager/cloud": should import splunk telemetry by category 2`] = `
+"[32mA new version of frodo is available.
+Please run 'frodo -v' for more details.
+[39mExperimental feature in use: 'frodo config-manager push telemetry'. This feature may change without notice.
+✔ Successfully read 1 telemetry exporter(s).
+Progress indicator dcd920ad-d9a9-4702-9dcb-3616cc83565b not found.
 "
 `;
