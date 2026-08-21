@@ -66,6 +66,6 @@ export default function setup() {
   program.addCommand(Journeys().name('journeys'));
   program.addCommand(Variables().name('variables'));
   program.addCommand(Saml().name('saml'));
-  
+
   return program;
 }
