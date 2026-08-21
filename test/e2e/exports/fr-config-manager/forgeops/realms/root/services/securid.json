@@ -1,0 +1,11 @@
+{
+  "_id": "",
+  "_rev": "1356810412",
+  "_type": {
+    "_id": "securid",
+    "collection": false,
+    "name": "SecurID"
+  },
+  "authenticationLevel": 0,
+  "serverConfigPath": "/home/forgerock/openam/config/auth/ace/data"
+}

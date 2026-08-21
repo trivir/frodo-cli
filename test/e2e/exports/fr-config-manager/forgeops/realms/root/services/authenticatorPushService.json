@@ -1,0 +1,15 @@
+{
+  "_id": "",
+  "_rev": "-1470914252",
+  "_type": {
+    "_id": "authenticatorPushService",
+    "collection": false,
+    "name": "ForgeRock Authenticator (Push) Service"
+  },
+  "authenticatorPushDeviceSettingsEncryptionKeystorePassword": null,
+  "authenticatorPushDeviceSettingsEncryptionKeystorePrivateKeyPassword": null,
+  "authenticatorPushDeviceSettingsEncryptionKeystoreType": "JKS",
+  "authenticatorPushDeviceSettingsEncryptionScheme": "NONE",
+  "authenticatorPushSkippableName": "push2faEnabled",
+  "pushAttrName": "pushDeviceProfiles"
+}

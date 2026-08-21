@@ -1,0 +1,11 @@
+{
+  "_id": "",
+  "_rev": "403540704",
+  "_type": {
+    "_id": "IdentityAssertionService",
+    "collection": false,
+    "name": "Identity Assertion Service"
+  },
+  "cacheDuration": 120,
+  "enable": true
+}
