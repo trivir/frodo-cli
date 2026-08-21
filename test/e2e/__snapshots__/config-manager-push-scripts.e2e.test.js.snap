@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo config-manager push schedules "frodo config-manager push scripts -D test/e2e/exports/fr-config-manager/forgeops -m forgeops": should import the scripts into forgeops" 1`] = `""`;
+
+exports[`frodo config-manager push schedules "frodo config-manager push scripts -n 832807d9-fb5d-4810-88ef-6e0a1aa89924 -D test/e2e/exports/fr-config-manager/forgeops -m forgeops": should import the scripts into forgeops" 1`] = `""`;
+
+exports[`frodo config-manager push schedules "frodo config-manager push scripts -r alpha -D test/e2e/exports/fr-config-manager/forgeops -m forgeops": should import the scripts into forgeops" 1`] = `""`;
