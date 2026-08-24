@@ -3,7 +3,6 @@ import repl from 'node:repl';
 
 import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
-import c from 'tinyrainbow';
 import util from 'util';
 import vm from 'vm';
 
@@ -16,6 +15,7 @@ import {
 } from '../../ops/ShellAutoCompleteOps';
 import { createHelpContext } from '../../ops/ShellHelpOps';
 import { ShellHistory } from '../../ops/ShellHistoryOps';
+import c from '../../utils/ColorTheme';
 import { printMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 

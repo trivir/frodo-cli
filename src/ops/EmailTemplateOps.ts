@@ -2,8 +2,8 @@ import { frodo, FrodoError } from '@rockcarver/frodo-lib';
 import { EmailTemplateSkeleton } from '@rockcarver/frodo-lib/types/ops/EmailTemplateOps';
 import fs from 'fs';
 import path from 'path';
-import c from 'tinyrainbow';
 
+import c from '../utils/ColorTheme';
 import {
   createProgressIndicator,
   createTable,

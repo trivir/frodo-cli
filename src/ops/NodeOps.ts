@@ -12,8 +12,8 @@ import {
   type CustomNodeImportOptions,
 } from '@rockcarver/frodo-lib/types/ops/NodeOps';
 import fs from 'fs';
-import c from 'tinyrainbow';
 
+import c from '../utils/ColorTheme';
 import { extractDataToFile, getExtractedData } from '../utils/Config';
 import {
   createKeyValueTable,

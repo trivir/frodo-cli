@@ -1,9 +1,9 @@
 import { frodo } from '@rockcarver/frodo-lib';
-import c from 'tinyrainbow';
 
 import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { createVariable } from '../../ops/cloud/VariablesOps';
+import c from '../../utils/ColorTheme';
 import { verboseMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
 

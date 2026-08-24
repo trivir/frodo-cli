@@ -8,8 +8,8 @@ import {
 } from '@rockcarver/frodo-lib/types/ops/ScriptOps';
 import chokidar from 'chokidar';
 import fs from 'fs';
-import c from 'tinyrainbow';
 
+import c from '../utils/ColorTheme';
 import {
   extractDataToFile,
   getExtractedData,

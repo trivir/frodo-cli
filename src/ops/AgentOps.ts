@@ -1,8 +1,8 @@
 import { frodo, FrodoError, state } from '@rockcarver/frodo-lib';
 import { type AgentExportInterface } from '@rockcarver/frodo-lib/types/ops/AgentOps';
 import fs from 'fs';
-import c from 'tinyrainbow';
 
+import c from '../utils/ColorTheme';
 import {
   createProgressIndicator,
   createTable,

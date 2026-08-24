@@ -6,8 +6,8 @@ import {
 } from '@rockcarver/frodo-lib/types/api/cloud/SecretsApi';
 import { SecretsExportInterface } from '@rockcarver/frodo-lib/types/ops/cloud/SecretsOps';
 import fs from 'fs';
-import c from 'tinyrainbow';
 
+import c from '../../utils/ColorTheme';
 import { getFullExportConfig, getIdLocations } from '../../utils/Config';
 import {
   createKeyValueTable,

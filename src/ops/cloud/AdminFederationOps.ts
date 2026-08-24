@@ -1,7 +1,7 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
-import c from 'tinyrainbow';
 
+import c from '../../utils/ColorTheme';
 import {
   createProgressIndicator,
   debugMessage,

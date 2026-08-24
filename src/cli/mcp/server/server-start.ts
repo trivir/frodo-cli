@@ -6,7 +6,6 @@ import {
   state,
 } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
-import c from 'tinyrainbow';
 
 import * as s from '../../../help/SampleData';
 import {
@@ -19,6 +18,7 @@ import {
   startHttpTransport,
   startStdioTransport,
 } from '../../../ops/McpServerOps.js';
+import c from '../../../utils/ColorTheme';
 import { printMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 import { type McpPolicyPreset, resolvePolicySelection } from './server-policy';

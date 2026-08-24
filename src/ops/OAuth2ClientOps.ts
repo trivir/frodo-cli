@@ -6,8 +6,8 @@ import {
   type OAuth2ClientImportOptions,
 } from '@rockcarver/frodo-lib/types/ops/OAuth2ClientOps';
 import fs from 'fs';
-import c from 'tinyrainbow';
 
+import c from '../utils/ColorTheme';
 import {
   createProgressIndicator,
   createTable,
