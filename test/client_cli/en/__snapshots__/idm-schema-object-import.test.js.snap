@@ -3,7 +3,8 @@
 exports[`CLI help interface for 'idm schema object import' should be expected english 1`] = `
 "Usage: frodo idm schema object import [options] [host] [realm] [username] [password]
 
-Import IDM configuration managed objects.
+Import IDM managed-object configuration (schema, notifications, etc.). Prompts
+for confirmation before importing schema changes, unless -y/--yes is passed.
 
 Arguments:
   host                     AM base URL, e.g.: https://cdk.iam.example.com/am. To
@@ -25,6 +26,8 @@ Options:
   -f, --file [file]        Import file.
   -i, --individual-object  Import an individual object. Requires the use of the
                            -f to specify the file.
+  -y, --yes                Answer y/yes to the schema-change confirmation
+                           prompt.
   -h, --help               Help
   -hh, --help-more         Help with all options.
   -hhh, --help-all         Help with all options, environment variables, and

@@ -13,6 +13,7 @@ Options:
 
 Commands:
   help              display help for command
-  object            Manage IDM configuration objects.
+  object            Manage IDM managed-object configuration (schema,
+                    notifications, etc.).
 "
 `;

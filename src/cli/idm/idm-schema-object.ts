@@ -5,7 +5,9 @@ import ImportCmd from './idm-schema-object-import';
 export default function setup() {
   const program = new FrodoStubCommand('frodo idm schema object');
 
-  program.description('Manage IDM configuration objects.');
+  program.description(
+    'Manage IDM managed-object configuration (schema, notifications, etc.).'
+  );
 
   program.addCommand(ExportCmd().name('export'));
 

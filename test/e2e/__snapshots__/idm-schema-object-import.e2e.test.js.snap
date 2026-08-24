@@ -1,25 +1,109 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo idm import "frodo idm schema object import -D test/e2e/exports/all-separate/cloud/global/idm/managed": should import the managed objects from the directory test/e2e/exports/all-separate/cloud/global/idm/managed 1`] = `""`;
+exports[`frodo idm import "frodo idm schema object import -D test/e2e/exports/all-separate/cloud/global/idm/managed": should refuse to import the managed objects from the directory test/e2e/exports/all-separate/cloud/global/idm/managed without -y 1`] = `
+"
+This import defines the SCHEMA of the following managed-object type(s), not just their configuration:
+  - alpha_user
+  - bravo_user
+  - alpha_role
+  - bravo_role
+  - alpha_assignment
+  - bravo_assignment
+  - alpha_organization
+  - bravo_organization
+  - alpha_group
+  - bravo_group
+  - alpha_application
+  - bravo_application
 
-exports[`frodo idm import "frodo idm schema object import -D test/e2e/exports/all-separate/forgeops/global/idm/managed -m forgeops": should import the managed objects from the directory 'test/e2e/exports/all-separate/forgeops/global/idm/managed'. 1`] = `""`;
-
-exports[`frodo idm import "frodo idm schema object import -D test/e2e/exports/all-separate/forgeops/global/idm/managed -m forgeops": should import the managed objects from the directory 'test/e2e/exports/all-separate/forgeops/global/idm/managed'. 2`] = `
-"✔ Imported config entities
+Refusing to prompt for confirmation without an interactive terminal. Pass -y/--yes to proceed with this schema change non-interactively.
+Import aborted.
 "
 `;
 
-exports[`frodo idm import "frodo idm schema object import -f test/e2e/exports/all/all.managed.json": should import all managed objects from a single file test/e2e/exports/all/all.managed.json 1`] = `""`;
+exports[`frodo idm import "frodo idm schema object import -D test/e2e/exports/all-separate/cloud/global/idm/managed": should refuse to import the managed objects from the directory test/e2e/exports/all-separate/cloud/global/idm/managed without -y 2`] = `1`;
 
-exports[`frodo idm import "frodo idm schema object import -f test/e2e/exports/all-separate/forgeops/global/idm/managed/managed.idm.json -m forgeops": should import the managed objects from a single file 'test/e2e/exports/all-separate/forgeops/global/idm/managed/managed.idm.json' 1`] = `""`;
+exports[`frodo idm import "frodo idm schema object import -D test/e2e/exports/all-separate/forgeops/global/idm/managed -m forgeops": should refuse to import the managed objects from the directory 'test/e2e/exports/all-separate/forgeops/global/idm/managed' without -y. 1`] = `
+"
+This import defines the SCHEMA of the following managed-object type(s), not just their configuration:
+  - user
+  - role
+  - assignment
+  - organization
+  - group
+  - application
+  - javascript
+  - groovy
 
-exports[`frodo idm import "frodo idm schema object import -f test/e2e/exports/all-separate/forgeops/global/idm/managed/managed.idm.json -m forgeops": should import the managed objects from a single file 'test/e2e/exports/all-separate/forgeops/global/idm/managed/managed.idm.json' 2`] = `""`;
-
-exports[`frodo idm import "frodo idm schema object import -i -f test/e2e/exports/all-separate/cloud/global/idm/managed/alpha_user.managed.json": should import just the alpha user managed object test/e2e/exports/all-separate/cloud/global/idm/managed/alpha_user.managed.json 1`] = `""`;
-
-exports[`frodo idm import "frodo idm schema object import -i -f test/e2e/exports/all-separate/forgeops/global/idm/managed/groovy/groovy.managed.json -m forgeops": should import just the groovy managed object from 'test/e2e/exports/all-separate/forgeops/global/idm/managed/groovy/groovy.managed.json'. 1`] = `""`;
-
-exports[`frodo idm import "frodo idm schema object import -i -f test/e2e/exports/all-separate/forgeops/global/idm/managed/groovy/groovy.managed.json -m forgeops": should import just the groovy managed object from 'test/e2e/exports/all-separate/forgeops/global/idm/managed/groovy/groovy.managed.json'. 2`] = `
-"✔ Imported config managed object
+Refusing to prompt for confirmation without an interactive terminal. Pass -y/--yes to proceed with this schema change non-interactively.
+Import aborted.
 "
 `;
+
+exports[`frodo idm import "frodo idm schema object import -D test/e2e/exports/all-separate/forgeops/global/idm/managed -m forgeops": should refuse to import the managed objects from the directory 'test/e2e/exports/all-separate/forgeops/global/idm/managed' without -y. 2`] = `1`;
+
+exports[`frodo idm import "frodo idm schema object import -f test/e2e/exports/all/all.managed.json": should refuse to import all managed objects from a single file test/e2e/exports/all/all.managed.json without -y 1`] = `
+"
+This import defines the SCHEMA of the following managed-object type(s), not just their configuration:
+  - alpha_user
+  - bravo_user
+  - alpha_role
+  - bravo_role
+  - alpha_assignment
+  - bravo_assignment
+  - alpha_organization
+  - bravo_organization
+  - alpha_group
+  - bravo_group
+  - alpha_application
+  - bravo_application
+
+Refusing to prompt for confirmation without an interactive terminal. Pass -y/--yes to proceed with this schema change non-interactively.
+Import aborted.
+"
+`;
+
+exports[`frodo idm import "frodo idm schema object import -f test/e2e/exports/all/all.managed.json": should refuse to import all managed objects from a single file test/e2e/exports/all/all.managed.json without -y 2`] = `1`;
+
+exports[`frodo idm import "frodo idm schema object import -f test/e2e/exports/all-separate/forgeops/global/idm/managed/managed.idm.json -m forgeops": should refuse to import the managed objects from a single file 'test/e2e/exports/all-separate/forgeops/global/idm/managed/managed.idm.json' without -y 1`] = `
+"
+This import defines the SCHEMA of the following managed-object type(s), not just their configuration:
+  - user
+  - role
+  - assignment
+  - organization
+  - group
+  - application
+  - javascript
+  - groovy
+
+Refusing to prompt for confirmation without an interactive terminal. Pass -y/--yes to proceed with this schema change non-interactively.
+Import aborted.
+"
+`;
+
+exports[`frodo idm import "frodo idm schema object import -f test/e2e/exports/all-separate/forgeops/global/idm/managed/managed.idm.json -m forgeops": should refuse to import the managed objects from a single file 'test/e2e/exports/all-separate/forgeops/global/idm/managed/managed.idm.json' without -y 2`] = `1`;
+
+exports[`frodo idm import "frodo idm schema object import -i -f test/e2e/exports/all-separate/cloud/global/idm/managed/alpha_user.managed.json": should refuse to import just the alpha user managed object test/e2e/exports/all-separate/cloud/global/idm/managed/alpha_user.managed.json without -y 1`] = `
+"
+This import defines the SCHEMA of the following managed-object type(s), not just their configuration:
+  - alpha_user
+
+Refusing to prompt for confirmation without an interactive terminal. Pass -y/--yes to proceed with this schema change non-interactively.
+Import aborted.
+"
+`;
+
+exports[`frodo idm import "frodo idm schema object import -i -f test/e2e/exports/all-separate/cloud/global/idm/managed/alpha_user.managed.json": should refuse to import just the alpha user managed object test/e2e/exports/all-separate/cloud/global/idm/managed/alpha_user.managed.json without -y 2`] = `1`;
+
+exports[`frodo idm import "frodo idm schema object import -i -f test/e2e/exports/all-separate/forgeops/global/idm/managed/groovy/groovy.managed.json -m forgeops": should refuse to import just the groovy managed object from 'test/e2e/exports/all-separate/forgeops/global/idm/managed/groovy/groovy.managed.json' without -y. 1`] = `
+"
+This import defines the SCHEMA of the following managed-object type(s), not just their configuration:
+  - groovy
+
+Refusing to prompt for confirmation without an interactive terminal. Pass -y/--yes to proceed with this schema change non-interactively.
+Import aborted.
+"
+`;
+
+exports[`frodo idm import "frodo idm schema object import -i -f test/e2e/exports/all-separate/forgeops/global/idm/managed/groovy/groovy.managed.json -m forgeops": should refuse to import just the groovy managed object from 'test/e2e/exports/all-separate/forgeops/global/idm/managed/groovy/groovy.managed.json' without -y. 2`] = `1`;

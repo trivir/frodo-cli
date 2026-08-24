@@ -511,6 +511,31 @@ export async function importAllConfigEntitiesFromFile(
 }
 
 /**
+ * Identifies which incoming managed-object type entries carry a schema
+ * definition, to gate schema-bearing 'frodo idm schema object import'
+ * calls behind an explicit confirmation before writing. Managed-object
+ * CONFIGURATION (this command) is a superset of managed-object SCHEMA
+ * (each object entry's own .schema key) — most configuration edits
+ * (notifications, meta, etc.) don't touch schema at all, so this only
+ * flags the subset of incoming objects that carry a schema.
+ *
+ * Deliberately does not compare against the live tenant's current schema
+ * (which would need an extra read per type): a type carrying a schema key
+ * is flagged whether or not that schema would actually change anything,
+ * trading a small amount of false-positive friction for not depending on
+ * an extra live read succeeding to make the correct safety call. Does not
+ * read or write anything itself; pure/synchronous over the parsed import
+ * data already in hand.
+ * @param {{name: string; schema?: unknown}[]} objects incoming managed-object type entries about to be imported
+ * @returns {string[]} the object type names that carry a schema definition
+ */
+export function getSchemaBearingObjectNames(
+  objects: { name: string; schema?: unknown }[]
+): string[] {
+  return objects.filter((object) => object.schema).map((object) => object.name);
+}
+
+/**
  * Import an individual managed object from a file
  * @param {string} file the file containing the managed object
  * @param {boolean} validate True to validate script hooks. Default: false

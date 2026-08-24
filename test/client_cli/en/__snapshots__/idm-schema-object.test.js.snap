@@ -3,7 +3,7 @@
 exports[`CLI help interface for 'idm schema object' should be expected english 1`] = `
 "Usage: frodo idm schema object [options] [command]
 
-Manage IDM configuration objects.
+Manage IDM managed-object configuration (schema, notifications, etc.).
 
 Options:
   -h, --help        Help
@@ -12,8 +12,11 @@ Options:
                     examples.
 
 Commands:
-  export            Export IDM configuration managed objects.
+  export            Export IDM managed-object configuration (schema,
+                    notifications, etc.).
   help              display help for command
-  import            Import IDM configuration managed objects.
+  import            Import IDM managed-object configuration (schema,
+                    notifications, etc.). Prompts for confirmation before
+                    importing schema changes, unless -y/--yes is passed.
 "
 `;
