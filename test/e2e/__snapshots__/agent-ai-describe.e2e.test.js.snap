@@ -362,10 +362,7 @@ exports[`frodo agent ai describe "frodo agent ai describe -i banking-assistant -
       }
     }
   },
-  "aiAgentIdentityUid": {
-    "inherited": false,
-    "value": "ec85268c-729a-47a2-887e-6d2884a0fdb1"
-  },
+  "aiAgentIdentityUid": "ec85268c-729a-47a2-887e-6d2884a0fdb1",
   "_type": {
     "_id": "AIAgent",
     "name": "AI Agents",
