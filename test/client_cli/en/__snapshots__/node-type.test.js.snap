@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CLI help interface for 'node type' should be expected english 1`] = `
+"Usage: frodo node type [options] [command]
+
+Inspect node types (standard or custom).
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+
+Commands:
+  describe          Describe a node type's configurable-property schema
+                    (standard or custom).
+  help              display help for command
+  list              List available node types.
+"
+`;

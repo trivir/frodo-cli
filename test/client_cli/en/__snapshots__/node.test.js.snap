@@ -18,5 +18,6 @@ Commands:
   help              display help for command
   import            Import custom nodes.
   list              List custom nodes.
+  type              Inspect node types (standard or custom).
 "
 `;
