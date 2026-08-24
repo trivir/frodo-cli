@@ -24,6 +24,18 @@ const tsConfigs = compat
       'no-console': 'warn',
       'no-underscore-dangle': 'off',
       'no-restricted-syntax': ['error', 'LabeledStatement', 'WithStatement'],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'tinyrainbow',
+              message:
+                "Import color from './utils/ColorTheme' (relative path may vary) instead of 'tinyrainbow' directly, so the color palette stays centralized in one place.",
+            },
+          ],
+        },
+      ],
       'no-multi-str': 'off',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
@@ -47,4 +59,10 @@ export default [
     ignores: ['src/**/*.test.ts', 'src/**/*.test_.ts', 'test/**/*.test.ts', 'test/**/*.test_.ts', 'tsup.config.ts'],
   },
   ...tsConfigs,
+  {
+    files: ['src/utils/ColorTheme.ts'],
+    rules: {
+      'no-restricted-imports': 'off',
+    },
+  },
 ];
