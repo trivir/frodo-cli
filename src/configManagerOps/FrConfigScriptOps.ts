@@ -34,6 +34,8 @@ export async function configManagerExportScript(
   justContent: boolean = false, // create only the content folder for the specified script, outranks justConfig
   justConfig: boolean = false // create only the config folder, ignored if justContent is set
 ): Promise<boolean> {
+  const realm = state.getRealm();
+  const realmDir = realm === '/' ? 'root' : realm;
   try {
     const s: ScriptSkeleton =
       'ss' in criteria
@@ -59,7 +61,7 @@ export async function configManagerExportScript(
       saveJsonToFile(
         { ...s, script: fileObj },
         getFilePath(
-          `realms/${state.getRealm()}/scripts/scripts-config/${s._id}.json`,
+          `realms/${realmDir}/scripts/scripts-config/${s._id}.json`,
           true
         ),
         false,
@@ -76,7 +78,7 @@ export async function configManagerExportScript(
     // create script file
     saveTextToFile(
       decodedScript,
-      getFilePath(`realms/${state.getRealm()}/scripts/${relScriptPath}`, true)
+      getFilePath(`realms/${realmDir}/scripts/${relScriptPath}`, true)
     );
 
     return true;
@@ -84,7 +86,7 @@ export async function configManagerExportScript(
     printError(
       error,
       'scriptName' in criteria
-        ? `Script "${criteria.scriptName}" was not found is in the realm "${state.getRealm()}"`
+        ? `Script "${criteria.scriptName}" was not found is in the realm "${realmDir}"`
         : ''
     );
     return false;
@@ -109,7 +111,9 @@ export async function configManagerExportScriptsRealms(
 ): Promise<boolean> {
   try {
     // create scripts directory if it doesnt exist even if there are no scripts, thats what fr-config-manager does
-    getFilePath(`realms/${state.getRealm()}/scripts/`, true);
+    const realm = state.getRealm();
+    const realmDir = realm === '/' ? 'root' : realm;
+    getFilePath(`realms/${realmDir}/scripts/`, true);
     let allScripts: ScriptSkeleton[] = await readScripts();
 
     // get scripts that start with prefix
@@ -117,7 +121,7 @@ export async function configManagerExportScriptsRealms(
       allScripts = allScripts.filter((ss) => ss.name.startsWith(prefix));
       if (allScripts.length === 0) {
         verboseMessage(
-          `There are no scripts that start with "${prefix}" in the ${state.getRealm()} realm.`
+          `There are no scripts that start with "${prefix}" in the ${realmDir} realm.`
         );
         return true;
       }
@@ -128,7 +132,7 @@ export async function configManagerExportScriptsRealms(
       allScripts = allScripts.filter((ss) => ss.context === scriptType);
       if (allScripts.length === 0) {
         verboseMessage(
-          `There are no scripts of type "${scriptType}" in the ${state.getRealm()} realm.`
+          `There are no scripts of type "${scriptType}" in the ${realmDir} realm.`
         );
         return true;
       }
@@ -146,7 +150,7 @@ export async function configManagerExportScriptsRealms(
         allScripts = allScripts.filter((ss) => ss.language === 'GROOVY');
         if (allScripts.length === 0) {
           verboseMessage(
-            `There are no scripts written in groovy in the ${state.getRealm()} realm.`
+            `There are no scripts written in groovy in the ${realmDir} realm.`
           );
           return true;
         }
@@ -155,7 +159,7 @@ export async function configManagerExportScriptsRealms(
       allScripts = allScripts.filter((ss) => ss.language === 'JAVASCRIPT');
       if (allScripts.length === 0) {
         verboseMessage(
-          `There are no scripts written in javascript in the ${state.getRealm()} realm.`
+          `There are no scripts written in javascript in the ${realmDir} realm.`
         );
         return true;
       }
@@ -171,7 +175,7 @@ export async function configManagerExportScriptsRealms(
         }
       }
     } else {
-      verboseMessage(`There are no scripts in the realm "${state.getRealm()}"`);
+      verboseMessage(`There are no scripts in the realm "${realmDir}"`);
     }
     return true;
   } catch (error) {
@@ -223,25 +227,25 @@ export async function configManagerExportScriptsAll(
 
 /**
  * Import script in fr-config-manager format
- * @param realm option to determine which realm to import
- * @param name option to import a specific script by name
+ * @param {string} realm option to determine which realm to import
+ * @param {string} name option to import a specific script by name
  * @returns True if Import was successful
  */
 export async function configManagerImportScripts(
-  realmName?: string,
+  realm?: string,
   name?: string
 ): Promise<boolean> {
   try {
     const realmsDir = getFilePath('realms/');
-    const realms: string[] = realmName
-      ? [realmName]
+    const realms: string[] = realm
+      ? [realm]
       : fs
           .readdirSync(realmsDir, { withFileTypes: true })
           .filter((entry) => entry.isDirectory())
           .map((entry) => entry.name);
 
     for (const realm of realms) {
-      if (!realmName) state.setRealm(realm);
+      state.setRealm(realm);
 
       const configDir = getFilePath(`realms/${realm}/scripts/scripts-config/`);
 
@@ -254,6 +258,7 @@ export async function configManagerImportScripts(
           const configPath = `${configDir}/${file}`;
           if (!fs.existsSync(configPath)) continue;
           const importData = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+          if (name && importData.script.name !== name) continue;
           const fullScriptPath = getFilePath(
             `realms/${realm}/scripts/${importData.script.file}`
           );
