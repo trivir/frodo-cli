@@ -1,5 +1,9 @@
 import { frodo, FrodoError } from '@rockcarver/frodo-lib';
 import { type IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
+import {
+  type ManagedObjectSchema,
+  type ManagedObjectSchemaProperty,
+} from '@rockcarver/frodo-lib/types/api/ManagedObjectApi';
 import { type ConfigEntityExportInterface } from '@rockcarver/frodo-lib/types/ops/IdmConfigOps';
 import {
   MappingSkeleton,
@@ -7,6 +11,7 @@ import {
 } from '@rockcarver/frodo-lib/types/ops/MappingOps';
 import fs from 'fs';
 import path from 'path';
+import yesno from 'yesno';
 
 import {
   extractDataToFile,
@@ -14,7 +19,9 @@ import {
   getExtractedJsonData,
 } from '../utils/Config';
 import {
+  createObjectTable,
   createProgressIndicator,
+  createTable,
   printError,
   printMessage,
   stopProgressIndicator,
@@ -43,8 +50,11 @@ const {
   importConfigEntities,
   readSubConfigEntity,
   importSubConfigEntity,
+  removeSubConfigEntity,
 } = frodo.idm.config;
-const { queryManagedObjects } = frodo.idm.managed;
+const { queryManagedObjects, countManagedObjects: countManagedObjectsOfType } =
+  frodo.idm.managed;
+const { readManagedObjectSchema } = frodo.idm.managed.schema;
 const { testConnectorServers } = frodo.idm.system;
 
 type MatchResult = { path: string; source: string; type: string };
@@ -97,6 +107,10 @@ type ObjectSkeleton = IdObjectSkeletonInterface & {
 
 export type ManagedSkeleton = IdObjectSkeletonInterface & {
   objects: ObjectSkeleton[];
+};
+
+type ManagedObjectTypeConfig = ObjectSkeleton & {
+  schema?: ManagedObjectSchema;
 };
 
 /**
@@ -580,6 +594,627 @@ export async function importManagedObjectFromFile(
   }
   return false;
 }
+
+/**
+ * Read and parse a local JSON file (e.g. a schema property definition or a
+ * full managed-object type definition).
+ * @param {string} file file to read
+ * @return {unknown} the parsed JSON content
+ */
+function readJsonFile(file: string): unknown {
+  const filePath = getFilePath(file);
+  const fileData = fs.readFileSync(filePath, 'utf8');
+  return JSON.parse(fileData);
+}
+
+/**
+ * Prints a warning and asks for confirmation before a schema-affecting
+ * change, unless skipConfirmation is set. Refuses (rather than hanging on a
+ * readline call with nowhere to read from) if stdin isn't an interactive
+ * terminal and skipConfirmation wasn't passed. Mirrors the confirmation gate
+ * `frodo idm schema object import` already uses.
+ * @param {string} warning warning message printed before the prompt
+ * @param {string} question the yes/no question to prompt
+ * @param {boolean} skipConfirmation true to skip the prompt and proceed
+ * @return {Promise<boolean>} a promise that resolves to true if the change should proceed
+ */
+async function confirmChange(
+  warning: string,
+  question: string,
+  skipConfirmation: boolean
+): Promise<boolean> {
+  printMessage(warning, 'warn');
+  if (skipConfirmation) {
+    return true;
+  }
+  if (!process.stdin.isTTY) {
+    printMessage(
+      '\nRefusing to prompt for confirmation without an interactive terminal. Pass -y/--yes to proceed non-interactively.',
+      'error'
+    );
+    return false;
+  }
+  return yesno({ question });
+}
+
+/**
+ * Checks whether a managed object type is currently defined, by reading the
+ * whole `managed` config entity and checking membership. Deliberately does
+ * not infer absence from a caught read failure — a transient/permission
+ * failure reading the whole `managed` entity must not be misclassified as
+ * "type not found" (the exact anti-pattern behind the tracker's
+ * isNotFound/create-fallback finding); any such failure propagates instead.
+ * @param {string} type managed object type name
+ * @return {Promise<boolean>} a promise that resolves to true if the type exists
+ */
+async function managedObjectTypeExists(type: string): Promise<boolean> {
+  const managedConfig = (await frodo.idm.config.readConfigEntity(
+    'managed'
+  )) as IdObjectSkeletonInterface & { objects?: ObjectSkeleton[] };
+  return (managedConfig.objects || []).some((object) => object.name === type);
+}
+
+/**
+ * Sets or replaces a schema property definition on a managed-object type
+ * config (as returned by readSubConfigEntity('managed', type)), keeping the
+ * top-level schema.required/order arrays in sync.
+ */
+function setSchemaProperty(
+  typeConfig: ManagedObjectTypeConfig,
+  propertyName: string,
+  propertyData: ManagedObjectSchemaProperty
+): void {
+  if (!typeConfig.schema) {
+    throw new FrodoError(
+      `Managed type "${typeConfig.name}" has no schema definition`
+    );
+  }
+  typeConfig.schema.properties = {
+    ...typeConfig.schema.properties,
+    [propertyName]: propertyData,
+  };
+  const required = new Set(typeConfig.schema.required || []);
+  if ((propertyData as { required?: boolean }).required) {
+    required.add(propertyName);
+  } else {
+    required.delete(propertyName);
+  }
+  typeConfig.schema.required = Array.from(required);
+  if (!(typeConfig.schema.order || []).includes(propertyName)) {
+    typeConfig.schema.order = [
+      ...(typeConfig.schema.order || []),
+      propertyName,
+    ];
+  }
+}
+
+/**
+ * Removes a schema property definition (and its required/order bookkeeping)
+ * from a managed-object type config.
+ */
+function removeSchemaProperty(
+  typeConfig: ManagedObjectTypeConfig,
+  propertyName: string
+): void {
+  if (!typeConfig.schema) {
+    return;
+  }
+  const properties = { ...typeConfig.schema.properties };
+  delete properties[propertyName];
+  typeConfig.schema.properties = properties;
+  typeConfig.schema.required = (typeConfig.schema.required || []).filter(
+    (name) => name !== propertyName
+  );
+  typeConfig.schema.order = (typeConfig.schema.order || []).filter(
+    (name) => name !== propertyName
+  );
+}
+
+/**
+ * List the schema properties of a managed object type.
+ * @param {string} type managed object type, e.g. alpha_user
+ * @param {boolean} json true to print raw JSON instead of a table
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function listManagedObjectSchemaProperties(
+  type: string,
+  json: boolean = false
+): Promise<boolean> {
+  try {
+    const schema = await readManagedObjectSchema(type);
+    if (json) {
+      printMessage(JSON.stringify(schema.properties, null, 2), 'data');
+      return true;
+    }
+    const table = createTable([
+      'Name',
+      'Type',
+      'Title',
+      'Required',
+      'Searchable',
+      'User Editable',
+      'Viewable',
+    ]);
+    const required = new Set(schema.required || []);
+    Object.entries(schema.properties || {})
+      .sort(([a], [b]) => a.localeCompare(b))
+      .forEach(([name, property]) => {
+        table.push([
+          name,
+          property.type,
+          property.title || '',
+          required.has(name) ? 'yes' : 'no',
+          property.searchable ? 'yes' : 'no',
+          property.userEditable ? 'yes' : 'no',
+          property.viewable ? 'yes' : 'no',
+        ]);
+      });
+    printMessage(table.toString(), 'data');
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Describe a single schema property of a managed object type.
+ * @param {string} type managed object type, e.g. alpha_user
+ * @param {string} propertyName schema property name, e.g. custom_merchantId
+ * @param {boolean} json true to print raw JSON instead of a table
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function describeManagedObjectSchemaProperty(
+  type: string,
+  propertyName: string,
+  json: boolean = false
+): Promise<boolean> {
+  try {
+    const schema = await readManagedObjectSchema(type);
+    const property = schema.properties?.[propertyName];
+    if (!property) {
+      printError(
+        new FrodoError(
+          `Schema property "${propertyName}" not found on managed type "${type}"`
+        )
+      );
+      return false;
+    }
+    if (json) {
+      printMessage(JSON.stringify(property, null, 2), 'data');
+      return true;
+    }
+    printMessage(createObjectTable(property).toString(), 'data');
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Create a new schema property on a managed object type. Refuses if a
+ * property with that name already exists (use update instead). Applies to
+ * any deployment type — this reads and rewrites the whole type definition,
+ * the same mechanism `frodo idm schema object export/import` already use,
+ * regardless of the new property's type (relationship properties included).
+ * @param {string} type managed object type, e.g. alpha_user
+ * @param {string} propertyName schema property name, e.g. custom_merchantId
+ * @param {string} file file containing the property definition to create
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function createManagedObjectSchemaProperty(
+  type: string,
+  propertyName: string,
+  file: string
+): Promise<boolean> {
+  let indicatorId: string;
+  try {
+    const propertyData = readJsonFile(file) as ManagedObjectSchemaProperty;
+    const typeConfig = (await readSubConfigEntity(
+      'managed',
+      type
+    )) as ManagedObjectTypeConfig;
+    if (typeConfig.schema?.properties?.[propertyName]) {
+      printError(
+        new FrodoError(
+          `Schema property "${propertyName}" already exists on managed type "${type}". Use update instead.`
+        )
+      );
+      return false;
+    }
+    setSchemaProperty(typeConfig, propertyName, propertyData);
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      `Creating schema property ${propertyName} on ${type}...`
+    );
+    await importSubConfigEntity('managed', typeConfig, { validate: false });
+    stopProgressIndicator(
+      indicatorId,
+      `Created schema property ${propertyName} on ${type}`,
+      'success'
+    );
+    return true;
+  } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        `Error creating schema property ${propertyName} on ${type}.`,
+        'fail'
+      );
+    }
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Update an existing schema property on a managed object type. Refuses if
+ * the property doesn't exist (use create instead). Prints a Current/
+ * Proposed diff and prompts for confirmation unless skipConfirmation is set.
+ * @param {string} type managed object type, e.g. alpha_user
+ * @param {string} propertyName schema property name, e.g. custom_merchantId
+ * @param {string} file file containing the updated property definition
+ * @param {boolean} skipConfirmation true to skip the confirmation prompt
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function updateManagedObjectSchemaPropertyCli(
+  type: string,
+  propertyName: string,
+  file: string,
+  skipConfirmation: boolean = false
+): Promise<boolean> {
+  let indicatorId: string;
+  try {
+    const propertyData = readJsonFile(file) as ManagedObjectSchemaProperty;
+    const typeConfig = (await readSubConfigEntity(
+      'managed',
+      type
+    )) as ManagedObjectTypeConfig;
+    const current = typeConfig.schema?.properties?.[propertyName];
+    if (!current) {
+      printError(
+        new FrodoError(
+          `Schema property "${propertyName}" not found on managed type "${type}". Use create instead.`
+        )
+      );
+      return false;
+    }
+    const warning = `\nCurrent:\n${JSON.stringify(current, null, 2)}\n\nProposed:\n${JSON.stringify(propertyData, null, 2)}`;
+    if (
+      !(await confirmChange(
+        warning,
+        `\nUpdate schema property "${propertyName}" on managed type "${type}"? This affects every existing and future record of that type. Continue? (y|n):`,
+        skipConfirmation
+      ))
+    ) {
+      printMessage('Update aborted.', 'warn');
+      return false;
+    }
+    setSchemaProperty(typeConfig, propertyName, propertyData);
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      `Updating schema property ${propertyName} on ${type}...`
+    );
+    await importSubConfigEntity('managed', typeConfig, { validate: false });
+    stopProgressIndicator(
+      indicatorId,
+      `Updated schema property ${propertyName} on ${type}`,
+      'success'
+    );
+    return true;
+  } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        `Error updating schema property ${propertyName} on ${type}.`,
+        'fail'
+      );
+    }
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Delete a schema property from a managed object type. Prompts for
+ * confirmation unless skipConfirmation is set.
+ * @param {string} type managed object type, e.g. alpha_user
+ * @param {string} propertyName schema property name, e.g. custom_merchantId
+ * @param {boolean} skipConfirmation true to skip the confirmation prompt
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function deleteManagedObjectSchemaPropertyCli(
+  type: string,
+  propertyName: string,
+  skipConfirmation: boolean = false
+): Promise<boolean> {
+  let indicatorId: string;
+  try {
+    const typeConfig = (await readSubConfigEntity(
+      'managed',
+      type
+    )) as ManagedObjectTypeConfig;
+    const current = typeConfig.schema?.properties?.[propertyName];
+    if (!current) {
+      printError(
+        new FrodoError(
+          `Schema property "${propertyName}" not found on managed type "${type}"`
+        )
+      );
+      return false;
+    }
+    const warning = `\nThis will permanently remove the following schema property definition from managed type "${type}":\n${JSON.stringify(current, null, 2)}\n\nThis removes the property from the schema only — it does not purge any values already stored for it on existing records.`;
+    if (
+      !(await confirmChange(
+        warning,
+        `\nDelete schema property "${propertyName}" from managed type "${type}"? This affects every existing and future record of that type. Continue? (y|n):`,
+        skipConfirmation
+      ))
+    ) {
+      printMessage('Delete aborted.', 'warn');
+      return false;
+    }
+    removeSchemaProperty(typeConfig, propertyName);
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      `Deleting schema property ${propertyName} from ${type}...`
+    );
+    await importSubConfigEntity('managed', typeConfig, { validate: false });
+    stopProgressIndicator(
+      indicatorId,
+      `Deleted schema property ${propertyName} from ${type}`,
+      'success'
+    );
+    return true;
+  } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        `Error deleting schema property ${propertyName} from ${type}.`,
+        'fail'
+      );
+    }
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Create a new managed object type from a file. The type name comes from
+ * the file's own `name` field. Refuses if a type with that name already
+ * exists (use update instead). Prompts for confirmation, reusing the same
+ * schema-change gate `frodo idm schema object import` already uses, unless
+ * skipConfirmation is set.
+ * @param {string} file file containing the full type definition (schema included), including its `name`
+ * @param {boolean} skipConfirmation true to skip the confirmation prompt
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function createManagedObjectType(
+  file: string,
+  skipConfirmation: boolean = false
+): Promise<boolean> {
+  let indicatorId: string;
+  let type: string;
+  try {
+    const typeConfig = readJsonFile(file) as ManagedObjectTypeConfig;
+    type = typeConfig.name;
+    if (
+      !(await confirmChange(
+        `\nThis creates the SCHEMA of a new managed-object type "${type}", not just its configuration.`,
+        '\nSchema changes affect every existing and future record of that managed-object type. Continue? (y|n):',
+        skipConfirmation
+      ))
+    ) {
+      printMessage('Create aborted.', 'warn');
+      return false;
+    }
+    if (await managedObjectTypeExists(type)) {
+      printError(
+        new FrodoError(
+          `Managed type "${type}" already exists. Use update instead.`
+        )
+      );
+      return false;
+    }
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      `Creating managed object type ${type}...`
+    );
+    await importSubConfigEntity('managed', typeConfig, { validate: false });
+    stopProgressIndicator(
+      indicatorId,
+      `Created managed object type ${type}`,
+      'success'
+    );
+    return true;
+  } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        `Error creating managed object type ${type}.`,
+        'fail'
+      );
+    }
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Update an existing managed object type from a file. The type name comes
+ * from the file's own `name` field. Refuses if the type doesn't exist (use
+ * create instead). Prompts for confirmation, reusing the same schema-change
+ * gate `frodo idm schema object import` already uses, unless
+ * skipConfirmation is set.
+ * @param {string} file file containing the updated type definition, including its `name`
+ * @param {boolean} skipConfirmation true to skip the confirmation prompt
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function updateManagedObjectTypeCli(
+  file: string,
+  skipConfirmation: boolean = false
+): Promise<boolean> {
+  let indicatorId: string;
+  let type: string;
+  try {
+    const typeConfig = readJsonFile(file) as ManagedObjectTypeConfig;
+    type = typeConfig.name;
+    const names = getSchemaBearingObjectNames([typeConfig]);
+    if (
+      names.length > 0 &&
+      !(await confirmChange(
+        `\nThis import defines the SCHEMA of managed-object type "${type}", not just its configuration.`,
+        '\nSchema changes affect every existing and future record of that managed-object type. Continue? (y|n):',
+        skipConfirmation
+      ))
+    ) {
+      printMessage('Update aborted.', 'warn');
+      return false;
+    }
+    if (!(await managedObjectTypeExists(type))) {
+      printError(
+        new FrodoError(`Managed type "${type}" not found. Use create instead.`)
+      );
+      return false;
+    }
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      `Updating managed object type ${type}...`
+    );
+    await importSubConfigEntity('managed', typeConfig, { validate: false });
+    stopProgressIndicator(
+      indicatorId,
+      `Updated managed object type ${type}`,
+      'success'
+    );
+    return true;
+  } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        `Error updating managed object type ${type}.`,
+        'fail'
+      );
+    }
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Counts the records of a managed object type. A 404 from the query
+ * endpoint reliably means the type's collection was never provisioned —
+ * i.e. confirmed zero records, not an unknown failure — so it resolves to
+ * 0 rather than propagating. Any other failure (permission, timeout, etc.)
+ * propagates, since that genuinely is an unknown count and must not be
+ * silently treated as "safe to proceed" (the exact not-found-misclassification
+ * anti-pattern the tracker flagged elsewhere).
+ * @param {string} type managed object type
+ * @return {Promise<number>} a promise that resolves to the record count
+ */
+async function countManagedObjectRecords(type: string): Promise<number> {
+  try {
+    return await countManagedObjectsOfType(type);
+  } catch (error) {
+    if ((error as FrodoError).httpStatus === 404) {
+      return 0;
+    }
+    throw error;
+  }
+}
+
+/**
+ * Delete a managed object type entirely (schema included). Refuses if the
+ * type has existing records, or if the record count couldn't be confirmed,
+ * unless force is set — every existing record of that type becomes
+ * orphaned by this operation, so an -F/--force override is required in
+ * addition to skipConfirmation (matching `frodo iga workflow delete -F`'s
+ * existing pattern in this codebase: a distinct override for a safety
+ * check, not a bigger confirmation prompt). Otherwise prompts for
+ * confirmation unless skipConfirmation is set.
+ * @param {string} type managed object type to delete, e.g. alpha_customType
+ * @param {boolean} skipConfirmation true to skip the confirmation prompt
+ * @param {boolean} force true to proceed even if records exist or the record count is unknown
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function deleteManagedObjectTypeCli(
+  type: string,
+  skipConfirmation: boolean = false,
+  force: boolean = false
+): Promise<boolean> {
+  let indicatorId: string;
+  try {
+    let recordCount: number | undefined;
+    try {
+      recordCount = await countManagedObjectRecords(type);
+    } catch {
+      // count stays undefined; handled as "unknown" below
+    }
+    if (recordCount === undefined && !force) {
+      printError(
+        new FrodoError(
+          `Could not confirm whether managed type "${type}" has existing records. Pass -F/--force to delete anyway.`
+        )
+      );
+      return false;
+    }
+    if (recordCount !== undefined && recordCount > 0 && !force) {
+      printError(
+        new FrodoError(
+          `Refusing: managed type "${type}" has ${recordCount} existing record(s). Pass -F/--force to delete anyway.`
+        )
+      );
+      return false;
+    }
+    const recordCountMessage =
+      recordCount === undefined
+        ? ' (record count could not be confirmed)'
+        : `, which has ${recordCount} existing record(s)`;
+    if (
+      !(await confirmChange(
+        `\nThis will permanently delete the SCHEMA of managed-object type "${type}"${recordCountMessage}. Every existing record of this type becomes orphaned.`,
+        `\nDelete managed-object type "${type}"? This cannot be undone through Frodo. Continue? (y|n):`,
+        skipConfirmation
+      ))
+    ) {
+      printMessage('Delete aborted.', 'warn');
+      return false;
+    }
+    // No separate existence pre-check: removeSubConfigEntity does its own
+    // single read of the whole 'managed' config entity and throws its own
+    // not-found error if the type is missing, so a second read here would
+    // be a redundant round-trip.
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      `Deleting managed object type ${type}...`
+    );
+    await removeSubConfigEntity('managed', type, { validate: false });
+    stopProgressIndicator(
+      indicatorId,
+      `Deleted managed object type ${type}`,
+      'success'
+    );
+    return true;
+  } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        `Error deleting managed object type ${type}.`,
+        'fail'
+      );
+    }
+    printError(error);
+  }
+  return false;
+}
+
 /**
  * Import all IDM configuration objects from working directory
  * @param {string} entitiesFile JSON file that specifies the config entities to export/import
