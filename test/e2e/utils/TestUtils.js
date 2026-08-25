@@ -151,6 +151,18 @@ export function removePollyRecordingNoise(text) {
     if (line.startsWith('{"url":"') && line.includes('"recordingName":')) {
       return false;
     }
+    // frodo-lib's Polly setup logs one line per allow-listed host while
+    // actually recording (mode === modes.RECORD) -- diagnostic chatter, not
+    // command output. Only ever appears in FRODO_MOCK=record captures.
+    if (line.startsWith('***** Host: ')) {
+      return false;
+    }
+    // Polly's own shutdown countdown/confirmation, printed while a
+    // long-running command (e.g. one using a progress indicator) keeps the
+    // process alive past the point Polly starts winding down its instance.
+    if (/^Polly instance '.*' (stopping in \d+s\.\.\.|stopped\.)$/.test(line)) {
+      return false;
+    }
     return true;
   });
   return filtered.join('\n').trim();

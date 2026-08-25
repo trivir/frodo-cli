@@ -56,12 +56,8 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/a
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo idm schema object import -f test/e2e/exports/all-separate/forgeops/global/idm/managed/managed.idm.json -m forgeops
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo idm schema object import -i -f test/e2e/exports/all-separate/forgeops/global/idm/managed/groovy/groovy.managed.json -m forgeops
 */
-import cp from 'child_process';
-import { promisify } from 'util';
-import { getEnv,  testSuccess } from './utils/TestUtils';
+import { getEnv, testFail } from './utils/TestUtils';
 import { connection as c , forgeops_connection as fc} from './utils/TestConfig';
-
-const exec = promisify(cp.exec);
 
 process.env['FRODO_MOCK'] = '1';
 const env = getEnv(c);
@@ -74,42 +70,51 @@ const forgeopsManagedObjectsExportDirectory =
 const alphaUserFile = 'alpha_user.managed.json';
 const allManagedPath = 'test/e2e/exports/all/all.managed.json';
 
+// All of the fixtures below carry a schema for at least one managed-object
+// type, so they now hit the schema-change confirmation gate added to
+// 'frodo idm schema object import'. None of these commands pass -y/--yes,
+// and these tests run non-interactively (no TTY), so the command is
+// expected to correctly refuse and exit non-zero rather than hang or
+// silently write a schema change — see idm-schema-object-import.ts.
+// Passing -y would exercise the full successful-import path instead, but
+// -y is itself a flag recorded into these fixtures' Polly recording name
+// (see SetupPollyForFrodoLib.getFrodoArgsId), so doing that here would
+// require fresh recordings from a live tenant, which these mocked tests
+// don't have. That's tracked as follow-up work for whoever next has live
+// tenant access, not something these tests can produce on their own.
 describe('frodo idm import', () => {
 
   // Cloud Tests
 
-  test(`"frodo idm schema object import -D ${managedObjectsExportDirectory}": should import the managed objects from the directory ${managedObjectsExportDirectory}`, async () => {
+  test(`"frodo idm schema object import -D ${managedObjectsExportDirectory}": should refuse to import the managed objects from the directory ${managedObjectsExportDirectory} without -y`, async () => {
     const CMD = `frodo idm schema object import -D ${managedObjectsExportDirectory}`;
-    const { stdout } = await exec(CMD, env);
-    expect(stdout).toMatchSnapshot()
+    await testFail(CMD, env);
   });
 
-  test(`"frodo idm schema object import -i -f ${managedObjectsExportDirectory}/${alphaUserFile}": should import just the alpha user managed object ${managedObjectsExportDirectory}/${alphaUserFile}`, async () => {
+  test(`"frodo idm schema object import -i -f ${managedObjectsExportDirectory}/${alphaUserFile}": should refuse to import just the alpha user managed object ${managedObjectsExportDirectory}/${alphaUserFile} without -y`, async () => {
     const CMD = `frodo idm schema object import -i -f ${managedObjectsExportDirectory}/${alphaUserFile}`;
-    const { stdout } = await exec(CMD, env);
-    expect(stdout).toMatchSnapshot()
+    await testFail(CMD, env);
   });
 
-  test(`"frodo idm schema object import -f ${allManagedPath}": should import all managed objects from a single file ${allManagedPath}`, async () => {
+  test(`"frodo idm schema object import -f ${allManagedPath}": should refuse to import all managed objects from a single file ${allManagedPath} without -y`, async () => {
     const CMD = `frodo idm schema object import -f ${allManagedPath}`;
-    const { stdout } = await exec(CMD, env);
-    expect(stdout).toMatchSnapshot()
+    await testFail(CMD, env);
   });
 
   // Forgeops Tests
-  
-  test(`"frodo idm schema object import -D ${forgeopsManagedObjectsExportDirectory} -m forgeops": should import the managed objects from the directory '${forgeopsManagedObjectsExportDirectory}'.`, async () => {
+
+  test(`"frodo idm schema object import -D ${forgeopsManagedObjectsExportDirectory} -m forgeops": should refuse to import the managed objects from the directory '${forgeopsManagedObjectsExportDirectory}' without -y.`, async () => {
     const CMD = `frodo idm schema object import -D ${forgeopsManagedObjectsExportDirectory} -m forgeops`;
-    await testSuccess(CMD, forgeopsEnv);
+    await testFail(CMD, forgeopsEnv);
   });
 
-  test(`"frodo idm schema object import -f ${forgeopsManagedObjectsExportDirectory}/managed.idm.json -m forgeops": should import the managed objects from a single file '${forgeopsManagedObjectsExportDirectory}/managed.idm.json'`, async () => {
+  test(`"frodo idm schema object import -f ${forgeopsManagedObjectsExportDirectory}/managed.idm.json -m forgeops": should refuse to import the managed objects from a single file '${forgeopsManagedObjectsExportDirectory}/managed.idm.json' without -y`, async () => {
     const CMD = `frodo idm schema object import -f ${forgeopsManagedObjectsExportDirectory}/managed.idm.json -m forgeops`;
-    await testSuccess(CMD, forgeopsEnv);
+    await testFail(CMD, forgeopsEnv);
   });
-  
-  test(`"frodo idm schema object import -i -f ${forgeopsManagedObjectsExportDirectory}/groovy/groovy.managed.json -m forgeops": should import just the groovy managed object from '${forgeopsManagedObjectsExportDirectory}/groovy/groovy.managed.json'.`, async () => {
+
+  test(`"frodo idm schema object import -i -f ${forgeopsManagedObjectsExportDirectory}/groovy/groovy.managed.json -m forgeops": should refuse to import just the groovy managed object from '${forgeopsManagedObjectsExportDirectory}/groovy/groovy.managed.json' without -y.`, async () => {
     const CMD = `frodo idm schema object import -i -f ${forgeopsManagedObjectsExportDirectory}/groovy/groovy.managed.json -m forgeops`;
-    await testSuccess(CMD, forgeopsEnv);
+    await testFail(CMD, forgeopsEnv);
   });
 });

@@ -1,0 +1,7 @@
+{
+  "type": "integer",
+  "title": "Widget Size",
+  "viewable": true,
+  "searchable": false,
+  "userEditable": true
+}

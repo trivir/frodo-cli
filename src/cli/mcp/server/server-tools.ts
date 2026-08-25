@@ -1,7 +1,7 @@
 import { createMcpService } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
-import c from 'tinyrainbow';
 
+import c from '../../../utils/ColorTheme';
 import { printMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 import { type McpPolicyPreset, resolvePolicySelection } from './server-policy';

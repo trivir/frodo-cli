@@ -1,5 +1,4 @@
-import c from 'tinyrainbow';
-
+import c from '../../utils/ColorTheme';
 import { FrodoStubCommand } from '../FrodoCommand';
 import DeleteCmd from './app-delete.js';
 // import DescribeCmd from './app-describe.js';

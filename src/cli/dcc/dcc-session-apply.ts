@@ -1,10 +1,10 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
-import c from 'tinyrainbow';
 
 import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { applyDirectConfigurationSession } from '../../ops/cloud/EnvDirectConfigurationControlOps';
+import c from '../../utils/ColorTheme';
 import { FrodoCommand } from '../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;

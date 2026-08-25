@@ -1,0 +1,8 @@
+{
+  "type": "integer",
+  "title": "Widget Size",
+  "description": "The widget's size, updated by the lifecycle e2e test to add this description and make the property searchable.",
+  "viewable": true,
+  "searchable": true,
+  "userEditable": true
+}

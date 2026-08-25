@@ -8,8 +8,9 @@ import {
 } from '@rockcarver/frodo-lib/types/utils/Console';
 import Table, { Table as TableType } from 'cli-table3';
 import { stderr as logUpdateStderr } from 'log-update';
-import c from 'tinyrainbow';
 import { v4 as uuidv4 } from 'uuid';
+
+import c from './ColorTheme';
 
 const arcSpinner = {
   frames: ['◜', '◠', '◝', '◞', '◡', '◟'],

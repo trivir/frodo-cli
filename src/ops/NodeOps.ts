@@ -12,8 +12,8 @@ import {
   type CustomNodeImportOptions,
 } from '@rockcarver/frodo-lib/types/ops/NodeOps';
 import fs from 'fs';
-import c from 'tinyrainbow';
 
+import c from '../utils/ColorTheme';
 import { extractDataToFile, getExtractedData } from '../utils/Config';
 import {
   createKeyValueTable,
@@ -39,6 +39,8 @@ const {
   importCustomNodes,
   deleteCustomNode: _deleteCustomNode,
   deleteCustomNodes: _deleteCustomNodes,
+  readNodeTypes,
+  readNodeSchema,
 } = frodo.authn.node;
 const {
   getTypedFilename,
@@ -223,6 +225,115 @@ export async function describeCustomNode(
           stringify(prop.defaultValue).split('\n')
         );
       }
+      if (prop.options) {
+        getTableRowsFromArray(
+          propTable,
+          'Options',
+          Object.entries(prop.options).map(([k, v]) => `${k} (${v})`)
+        );
+      }
+      printMessage('\n' + propTable.toString(), 'data');
+    }
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * List available node types
+ * @param {boolean} [long=false] include versions/tags/help for each type
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
+export async function listNodeTypes(long: boolean = false): Promise<boolean> {
+  try {
+    const types = await readNodeTypes();
+    if (long) {
+      const table = createTable(['Name', 'Versions', 'Tags']);
+      for (const type of types) {
+        table.push([
+          type.name,
+          (type.versions || []).join(', '),
+          (type.tags || type.metadata?.tags || []).join(', '),
+        ]);
+      }
+      printMessage(table.toString(), 'data');
+    } else {
+      types.forEach((type) => {
+        printMessage(type.name, 'data');
+      });
+    }
+    return true;
+  } catch (error) {
+    printError(error, `Error listing node types`);
+  }
+  return false;
+}
+
+/**
+ * Describe a node type's configurable-property schema — either a standard
+ * node type (by nodeType) or a custom node (by nodeId or nodeName, resolved
+ * the same way describeCustomNode resolves them). Exactly one of nodeType
+ * or nodeId/nodeName must be provided.
+ * @param {string} nodeType standard node type, e.g. PasswordCollectorNode
+ * @param {string} nodeTypeVersion standard node type version
+ * @param {string} nodeId custom node id or service name
+ * @param {string} nodeName custom node display name
+ * @param {boolean} json true to print the raw schema as JSON, false for a summary table
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
+export async function describeNodeType(
+  nodeType: string,
+  nodeTypeVersion: string,
+  nodeId: string,
+  nodeName: string,
+  json = false
+): Promise<boolean> {
+  try {
+    let properties: Record<string, any>;
+    let label: string;
+    if (nodeType) {
+      const schema = await readNodeSchema(nodeType, nodeTypeVersion);
+      properties = (schema as { properties?: Record<string, any> }).properties;
+      label = nodeType;
+    } else {
+      const node = await readCustomNode(nodeId, nodeName);
+      properties = node.properties;
+      label = node.serviceName || node.displayName || node._id;
+    }
+    if (json) {
+      printMessage({ properties }, 'data');
+      return true;
+    }
+    printMessage(`\nSchema for node type ${label}`, 'data');
+    if (!properties || Object.keys(properties).length === 0) {
+      printMessage('This node type has no configurable properties.', 'data');
+      return true;
+    }
+    for (const [name, prop] of Object.entries(properties)) {
+      const propTable = createKeyValueTable();
+      propTable.push([c.cyanBright('Name'), name]);
+      if (prop.title) propTable.push([c.cyanBright('Title'), prop.title]);
+      if (prop.description)
+        propTable.push([c.cyanBright('Description'), prop.description]);
+      if (prop.type) propTable.push([c.cyanBright('Type'), prop.type]);
+      if (prop.required !== undefined)
+        propTable.push([
+          c.cyanBright('Required'),
+          prop.required ? c.greenBright('true') : c.redBright('false'),
+        ]);
+      if (prop.multivalued !== undefined)
+        propTable.push([
+          c.cyanBright('Multivalued'),
+          prop.multivalued ? c.greenBright('true') : c.redBright('false'),
+        ]);
+      if (prop.defaultValue !== undefined)
+        getTableRowsFromArray(
+          propTable,
+          'Default Value',
+          stringify(prop.defaultValue).split('\n')
+        );
       if (prop.options) {
         getTableRowsFromArray(
           propTable,

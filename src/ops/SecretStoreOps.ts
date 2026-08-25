@@ -1,8 +1,8 @@
 import { frodo, FrodoError, state } from '@rockcarver/frodo-lib';
 import { SecretStoreMappingSkeleton } from '@rockcarver/frodo-lib/types/api/SecretStoreApi';
 import fs from 'fs';
-import c from 'tinyrainbow';
 
+import c from '../utils/ColorTheme';
 import {
   createKeyValueTable,
   createProgressIndicator,

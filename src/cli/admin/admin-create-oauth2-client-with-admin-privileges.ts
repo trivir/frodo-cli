@@ -1,7 +1,6 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import Table from 'cli-table3';
 import { Option } from 'commander';
-import c from 'tinyrainbow';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -9,6 +8,7 @@ import {
   createOAuth2ClientWithAdminPrivileges,
 } from '../../ops/AdminOps';
 import { getTokens } from '../../ops/AuthenticateOps';
+import c from '../../utils/ColorTheme';
 import { printError, printMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand';
 

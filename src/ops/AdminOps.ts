@@ -6,8 +6,8 @@ import { OAuth2TrustedJwtIssuerSkeleton } from '@rockcarver/frodo-lib/types/api/
 import { JwkRsa, JwksInterface } from '@rockcarver/frodo-lib/types/ops/JoseOps';
 import { AccessTokenMetaType } from '@rockcarver/frodo-lib/types/ops/OAuth2OidcOps';
 import fs from 'fs';
-import c from 'tinyrainbow';
 
+import c from '../utils/ColorTheme';
 import {
   cleanupProgressIndicators,
   createKeyValueTable,

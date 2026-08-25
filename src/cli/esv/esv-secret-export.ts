@@ -1,6 +1,5 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
-import c from 'tinyrainbow';
 
 import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
@@ -9,6 +8,7 @@ import {
   exportSecretsToFiles,
   exportSecretToFile,
 } from '../../ops/cloud/SecretsOps';
+import c from '../../utils/ColorTheme';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 

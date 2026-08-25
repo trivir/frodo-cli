@@ -1,11 +1,11 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
-import c from 'tinyrainbow';
 
 import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { addExistingServiceAccount } from '../../ops/ConnectionProfileOps.js';
 import { provisionCreds } from '../../ops/LogOps';
+import c from '../../utils/ColorTheme';
 import { printError, printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 

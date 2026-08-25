@@ -4,9 +4,9 @@ import {
   type ThemeSkeleton,
 } from '@rockcarver/frodo-lib/types/ops/ThemeOps';
 import * as fs from 'fs';
-import c from 'tinyrainbow';
 import { v4 as uuidv4 } from 'uuid';
 
+import c from '../utils/ColorTheme';
 import {
   createProgressIndicator,
   createTable,

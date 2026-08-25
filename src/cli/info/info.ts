@@ -1,9 +1,9 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
-import c from 'tinyrainbow';
 
 import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
+import c from '../../utils/ColorTheme';
 import {
   createObjectTable,
   printMessage,

@@ -1,12 +1,12 @@
 import { JwkRsa } from '@rockcarver/frodo-lib/types/ops/JoseOps.js';
 import { Option } from 'commander';
 import fs from 'fs';
-import c from 'tinyrainbow';
 import { v4 as uuidv4 } from 'uuid';
 
 import * as s from '../../help/SampleData';
 import { executeRfc7523AuthZGrantFlow } from '../../ops/AdminOps.js';
 import { getTokens } from '../../ops/AuthenticateOps';
+import c from '../../utils/ColorTheme';
 import { printMessage } from '../../utils/Console.js';
 import { FrodoCommand } from '../FrodoCommand.js';
 

@@ -7,13 +7,13 @@ import {
   resolveMcpProfileSelection,
 } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
-import c from 'tinyrainbow';
 
 import packageJson from '../../../../package.json';
 import {
   MCP_SERVER_VERSION,
   MCP_SUPPORTED_PROTOCOL_VERSIONS,
 } from '../../../ops/McpServerMetadata.js';
+import c from '../../../utils/ColorTheme';
 import { printMessage } from '../../../utils/Console';
 import { getCliBuildTimestamp } from '../../../utils/Version.js';
 import { FrodoStubCommand } from '../../FrodoCommand';

@@ -37,9 +37,11 @@ import {
 } from '@modelcontextprotocol/server';
 import { serveStdio } from '@modelcontextprotocol/server/stdio';
 import {
+  getRealmFromContext,
   type McpRuntimeRequestContext,
   type McpService,
   type McpToolRuntimeTraceHandler,
+  resolveRequestScopedFrodo,
   state,
 } from '@rockcarver/frodo-lib';
 import { z } from 'zod';
@@ -1055,6 +1057,48 @@ function buildErrorResult(err: unknown): {
     ],
     isError: true as const,
   };
+}
+
+type FrodoInstance = ReturnType<typeof resolveRequestScopedFrodo>;
+
+/**
+ * Resolves the Frodo instance to use for one MCP request.
+ *
+ * @remarks
+ * `frodo mcp server start` authenticates one `Frodo` singleton at startup
+ * and reuses it for every request, to avoid a redundant re-authentication
+ * round trip on every tool call. But a dispatch call's `realm` argument is
+ * meant to scope just that one call (see `applyDispatchScopeOverride` in
+ * frodo-lib's `ToolRuntime.ts`) — handing back the shared singleton
+ * unconditionally would silently ignore it, since the singleton's own
+ * realm was fixed once at startup and never changes. This falls back to a
+ * genuinely realm-scoped instance (via {@link resolveRequestScopedFrodo})
+ * only when `context` actually asks for a realm different from the
+ * singleton's, and is otherwise a plain passthrough.
+ *
+ * Exported and pure (the singleton's realm is passed in rather than read
+ * from the shared `state` singleton directly) so this realm-scoping
+ * decision has direct unit test coverage — silently ignoring `context`
+ * for every call is exactly the bug this guards against, and it was only
+ * caught by live testing, not a type error.
+ *
+ * @param context Request-scoped runtime auth context (see
+ * {@link buildRequestContext}).
+ * @param frodoSingleton The server's pre-authenticated Frodo singleton.
+ * @param singletonRealm The realm `frodoSingleton` is currently scoped to.
+ * @returns `frodoSingleton` when no realm override applies, otherwise a
+ * fresh instance scoped to the requested realm.
+ */
+export async function resolveFrodoForMcpRequest(
+  context: McpRuntimeRequestContext,
+  frodoSingleton: FrodoInstance,
+  singletonRealm: string | undefined
+): Promise<FrodoInstance> {
+  const requestedRealm = getRealmFromContext(context);
+  if (!requestedRealm || requestedRealm === singletonRealm) {
+    return frodoSingleton;
+  }
+  return resolveRequestScopedFrodo(context, frodoSingleton);
 }
 
 /**

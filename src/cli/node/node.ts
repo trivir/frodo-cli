@@ -4,6 +4,7 @@ import DescribeCmd from './node-describe.js';
 import ExportCmd from './node-export.js';
 import ImportCmd from './node-import.js';
 import ListCmd from './node-list.js';
+import TypeCmd from './node-type.js';
 
 export default function setup() {
   const program = new FrodoStubCommand('node').description(
@@ -19,6 +20,8 @@ export default function setup() {
   program.addCommand(ImportCmd().name('import'));
 
   program.addCommand(DeleteCmd().name('delete'));
+
+  program.addCommand(TypeCmd().name('type'));
 
   return program;
 }

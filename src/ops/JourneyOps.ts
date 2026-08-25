@@ -11,8 +11,8 @@ import {
   type TreeImportOptions,
 } from '@rockcarver/frodo-lib/types/ops/JourneyOps';
 import fs from 'fs';
-import c from 'tinyrainbow';
 
+import c from '../utils/ColorTheme';
 import {
   createProgressIndicator,
   createTable,

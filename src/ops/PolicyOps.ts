@@ -6,8 +6,8 @@ import type {
   PolicyImportOptions,
 } from '@rockcarver/frodo-lib/types/ops/PolicyOps';
 import fs from 'fs';
-import c from 'tinyrainbow';
 
+import c from '../utils/ColorTheme';
 import {
   createObjectTable,
   createProgressIndicator,

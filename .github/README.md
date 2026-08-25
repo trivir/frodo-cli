@@ -492,6 +492,8 @@ If you are a node developer and want to use frodo as a cli tool or as a library 
 
 ### MCP Server
 
+For instructions on configuring a specific MCP client (VS Code Copilot, Claude Code, Claude Desktop, and others) to connect to this server, see the [MCP client setup guide](../docs/MCP_CLIENT_SETUP.md).
+
 Start the MCP server with a saved connection profile:
 
 ```console

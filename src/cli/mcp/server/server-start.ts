@@ -6,7 +6,6 @@ import {
   state,
 } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
-import c from 'tinyrainbow';
 
 import * as s from '../../../help/SampleData';
 import {
@@ -16,9 +15,11 @@ import {
 } from '../../../ops/McpLogger.js';
 import {
   McpServerStartupInfo,
+  resolveFrodoForMcpRequest,
   startHttpTransport,
   startStdioTransport,
 } from '../../../ops/McpServerOps.js';
+import c from '../../../utils/ColorTheme';
 import { printMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 import { type McpPolicyPreset, resolvePolicySelection } from './server-policy';
@@ -219,10 +220,15 @@ export default function setup() {
           includeUtils: !!opts.includeUtils,
         },
         discoveryContext,
-        // Reuse the preconfigured frodo singleton; the CLI has already
-        // applied connection credentials via handleDefaultArgsAndOpts.
+        // Reuse the preconfigured frodo singleton for the common case (no
+        // per-call realm override) so most requests skip a redundant
+        // re-authentication round trip; the CLI has already applied
+        // connection credentials via handleDefaultArgsAndOpts. See
+        // resolveFrodoForMcpRequest for why a per-call realm override
+        // still needs to fall back to a genuinely scoped instance.
         runtimeOptions: {
-          resolveFrodoForRequest: async () => frodo,
+          resolveFrodoForRequest: (context) =>
+            resolveFrodoForMcpRequest(context, frodo, state.getRealm()),
           executeRecommendedByDefault: true,
         },
       });

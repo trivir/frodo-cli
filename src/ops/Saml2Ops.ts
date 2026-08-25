@@ -6,8 +6,8 @@ import type {
   Saml2ExportInterface,
 } from '@rockcarver/frodo-lib/types/ops/Saml2Ops';
 import fs from 'fs';
-import c from 'tinyrainbow';
 
+import c from '../utils/ColorTheme';
 import {
   createObjectTable,
   createProgressIndicator,
