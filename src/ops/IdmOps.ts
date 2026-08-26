@@ -52,8 +52,7 @@ const {
   importSubConfigEntity,
   removeSubConfigEntity,
 } = frodo.idm.config;
-const { queryManagedObjects, countManagedObjects: countManagedObjectsOfType } =
-  frodo.idm.managed;
+const { countManagedObjects: countManagedObjectsOfType } = frodo.idm.managed;
 const { readManagedObjectSchema } = frodo.idm.managed.schema;
 const { testConnectorServers } = frodo.idm.system;
 
@@ -1264,8 +1263,8 @@ export async function importAllConfigEntitiesFromFiles(
  */
 export async function countManagedObjects(type: string): Promise<boolean> {
   try {
-    const result = await queryManagedObjects(type);
-    printMessage(`${type}: ${result.length}`, 'data');
+    const result = await countManagedObjectsOfType(type);
+    printMessage(`${type}: ${result}`, 'data');
     return true;
   } catch (error) {
     printError(error);
