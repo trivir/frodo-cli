@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CLI help interface for 'feature' should be expected english 1`] = `
+"Usage: frodo feature [options] [command]
+
+Manage IDM tenant-configuration features (e.g. groups, aiagent,
+am/2fa/profiles).
+
+Deployment: Cloud-only
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+
+Commands:
+  help              display help for command
+
+  (Cloud-only):
+  describe          Describe an IDM tenant-configuration feature.
+  install           Install an IDM tenant-configuration feature. IRREVERSIBLE:
+                    uninstalling or disabling a feature once installed requires
+                    contacting Ping support and rolling back the tenant. Prompts
+                    for confirmation, unless -y/--yes is passed.
+  list              List IDM tenant-configuration features.
+  validate          Validate whether an IDM tenant-configuration feature is
+                    installable, without installing it.
+"
+`;

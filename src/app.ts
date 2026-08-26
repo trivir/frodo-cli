@@ -12,6 +12,7 @@ import conn from './cli/conn/conn';
 import directConfigSession from './cli/dcc/dcc';
 import email from './cli/email/email';
 import esv from './cli/esv/esv';
+import feature from './cli/feature/feature';
 // enable sample command template.
 // import something from './cli/_template/something';
 import {
@@ -89,6 +90,7 @@ process.argv = normalizeExpandedHelpArgv(process.argv);
     program.addCommand(directConfigSession());
     program.addCommand(email());
     program.addCommand(esv());
+    program.addCommand(feature());
     program.addCommand(idm());
     program.addCommand(idp());
     program.addCommand(iga());

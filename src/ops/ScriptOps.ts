@@ -61,6 +61,7 @@ const {
   deleteScriptByName,
   deleteScripts,
 } = frodo.script;
+const { readScriptBindings } = frodo.scriptType;
 
 const langMap = { JAVASCRIPT: 'JavaScript', GROOVY: 'Groovy' };
 
@@ -333,6 +334,43 @@ export async function describeScript(
       }
       printMessage(table.toString(), 'data');
     }
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Describe the bindings (available objects/APIs) exposed to scripts running
+ * in a given scripting context, e.g. what httpClient/idRepository/logger
+ * methods a SCRIPTED_DECISION_NODE script can call.
+ * @param {string} context scripting context id, e.g. SCRIPTED_DECISION_NODE
+ * @param {boolean} json output the full binding definitions as JSON instead of a summary table
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
+export async function describeScriptBindings(
+  context: string,
+  json = false
+): Promise<boolean> {
+  try {
+    const bindings = await readScriptBindings(context);
+    if (json) {
+      printMessage(JSON.stringify(bindings, null, 2), 'data');
+      return true;
+    }
+    const table = createTable(['Name', 'Java Class', 'Elements']);
+    bindings
+      .slice()
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .forEach((binding) => {
+        table.push([
+          binding.name,
+          binding.javaClass,
+          String(binding.elements?.length ?? 0),
+        ]);
+      });
+    printMessage(table.toString(), 'data');
     return true;
   } catch (error) {
     printError(error);

@@ -18,5 +18,6 @@ Commands:
   help              display help for command
   import            Import scripts.
   list              List scripts.
+  type              Manage scripting contexts (script types).
 "
 `;
