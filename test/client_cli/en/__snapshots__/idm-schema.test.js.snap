@@ -15,5 +15,13 @@ Commands:
   help              display help for command
   object            Manage IDM managed-object configuration (schema,
                     notifications, etc.).
+  property          Manage individual managed-object schema properties.
+
+  (Cloud-only):
+  relationship      Manage relationship managed-object schema properties
+                    directly via the dedicated Cloud-only v2 schema API,
+                    including bidirectional (two-type) relationships. Cloud only
+                    -- use "idm schema property" for relationship properties on
+                    other deployments.
 "
 `;

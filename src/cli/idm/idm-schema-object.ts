@@ -3,7 +3,6 @@ import CreateCmd from './idm-schema-object-create';
 import DeleteCmd from './idm-schema-object-delete';
 import ExportCmd from './idm-schema-object-export';
 import ImportCmd from './idm-schema-object-import';
-import PropertyCmd from './idm-schema-object-property';
 import UpdateCmd from './idm-schema-object-update';
 
 export default function setup() {
@@ -22,8 +21,6 @@ export default function setup() {
   program.addCommand(UpdateCmd().name('update'));
 
   program.addCommand(DeleteCmd().name('delete'));
-
-  program.addCommand(PropertyCmd().name('property'));
 
   return program;
 }

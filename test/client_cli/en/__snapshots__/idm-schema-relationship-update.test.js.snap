@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CLI help interface for 'idm schema relationship update' should be expected english 1`] = `
+"Usage: frodo idm schema relationship update [options] [host] [realm] [username] [password]
+
+Update an existing relationship schema property, via the dedicated Cloud-only v2
+schema API. Refuses if the property does not exist. Only the fields whose flags
+are passed change; everything else keeps its current value. Prints a
+current/proposed preview and prompts for confirmation, unless -y/--yes is
+passed.
+
+Arguments:
+  host                            AM base URL, e.g.:
+                                  https://cdk.iam.example.com/am. To use a
+                                  connection profile, just specify a unique
+                                  substring or alias.
+  realm                           Realm. Specify realm as '/' for the root realm
+                                  or 'realm' or '/parent/child' otherwise.
+                                  (default: "alpha" for Identity Cloud tenants,
+                                  "/" otherwise.)
+  username                        Username to login with. Must be an admin user
+                                  with appropriate rights to manage
+                                  authentication journeys/trees. If given
+                                  without a password, and it matches the
+                                  username already stored in the connection
+                                  profile for the target host, frodo uses that
+                                  profile's stored password instead of requiring
+                                  it on the command line.
+  password                        Password.
+
+Deployment: Cloud-only
+
+Options:
+  --description <text>            Change the display description.
+  --label <text>                  Change the resource collection label.
+  --many                          Change to a to-many (array) relationship.
+  --not-validate                  Skip target-existence validation on write.
+  --not-viewable                  Hide this property from views.
+  --notify                        Notify the target object of relationship
+                                  changes.
+  --notify-self                   Notify this object of relationship changes.
+  -o, --managed-object <type>     Managed object type. E.g.
+                                  "alpha_aiagentprivilege".
+  -p, --property <name>           Relationship property name. E.g. "agent".
+  --query-fields <csv>            Change the comma-separated list of fields
+                                  fetched from the target object.
+  --query-filter <filter>         Change the query filter applied against the
+                                  target object.
+  --return-by-default             Return this property by default on reads.
+  --reverse-property-name <name>  Change the reverse property name this
+                                  relationship points back at on
+                                  --target-object.
+  --searchable                    Mark the property searchable.
+  --single                        Change to a to-one (single) relationship.
+  --sort-keys <csv>               Change the comma-separated list of sort keys.
+  --target-object <type>          Change the managed object type this
+                                  relationship points to.
+  --title <text>                  Change the display title.
+  --user-editable                 Allow end users to edit this property.
+  --with-reverse                  Also apply the same explicitly-passed field
+                                  overrides to the reverse side, inferred from
+                                  this property's own current definition. Errors
+                                  if no reverse relationship is configured.
+  -y, --yes                       Answer y/yes to the schema-change confirmation
+                                  prompt.
+  -h, --help                      Help
+  -hh, --help-more                Help with all options.
+  -hhh, --help-all                Help with all options, environment variables,
+                                  and usage examples.
+"
+`;

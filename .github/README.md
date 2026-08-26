@@ -245,11 +245,35 @@ A set of commands supporting `Custom Nodes` in PingAM and PingOne Advanced Ident
 | &emsp;&emsp;list                                 |  1.0.0  | List variables.                                                        |
 | &emsp;&emsp;set                                  |  1.0.0  | Set variable description.                                              |
 |                                                  |         |                                                                        |
+| frodo feature                                    | `4.9.0` | Manage IDM tenant-configuration features (e.g. groups, aiagent, am/2fa/profiles). |
+| &emsp;describe                                   | `4.9.0` | Describe an IDM tenant-configuration feature.                         |
+| &emsp;install                                    | `4.9.0` | Install an IDM tenant-configuration feature. IRREVERSIBLE.            |
+| &emsp;list                                       | `4.9.0` | List IDM tenant-configuration features.                               |
+| &emsp;validate                                   | `4.9.0` | Validate whether an IDM tenant-configuration feature is installable, without installing it. |
+|                                                  |         |                                                                        |
 | frodo idm                                        |  1.0.0  | Manage IDM configuration.                                              |
 | &emsp;count                                      |  1.0.0  | Count managed objects.                                                 |
 | &emsp;export                                     |  1.0.0  | Export IDM configuration objects.                                      |
 | &emsp;import                                     |  1.0.0  | Import IDM configuration objects.                                      |
 | &emsp;list                                       |  1.0.0  | List IDM configuration objects.                                        |
+| &emsp;schema                                     | `4.9.0` | Manage IDM schema.                                                     |
+| &emsp;&emsp;object                               | `4.9.0` | Manage IDM managed-object configuration (schema, notifications, etc.). |
+| &emsp;&emsp;&emsp;create                         | `4.9.0` | Create a new managed-object type from a file.                         |
+| &emsp;&emsp;&emsp;delete                         | `4.9.0` | Delete a managed-object type entirely, schema included.                |
+| &emsp;&emsp;&emsp;export                         | `4.9.0` | Export IDM managed-object configuration.                              |
+| &emsp;&emsp;&emsp;import                         | `4.9.0` | Import IDM managed-object configuration.                              |
+| &emsp;&emsp;&emsp;update                         | `4.9.0` | Update an existing managed-object type from a file.                    |
+| &emsp;&emsp;property                             | `4.9.0` | Manage individual managed-object schema properties (any deployment).   |
+| &emsp;&emsp;&emsp;create                         | `4.9.0` | Create a new schema property on a managed-object type.                |
+| &emsp;&emsp;&emsp;delete                         | `4.9.0` | Delete a schema property from a managed-object type.                  |
+| &emsp;&emsp;&emsp;describe                       | `4.9.0` | Describe a single schema property of a managed-object type.           |
+| &emsp;&emsp;&emsp;list                           | `4.9.0` | List the schema properties of a managed-object type.                  |
+| &emsp;&emsp;&emsp;update                         | `4.9.0` | Update an existing schema property on a managed-object type.          |
+| &emsp;&emsp;relationship                         | `4.9.0` | Manage relationship schema properties directly via the dedicated Cloud-only v2 schema API, including bidirectional (two-type) relationships. |
+| &emsp;&emsp;&emsp;create                         | `4.9.0` | Create a new relationship schema property, optionally auto-creating a bidirectional reverse side on a second managed-object type. |
+| &emsp;&emsp;&emsp;delete                         | `4.9.0` | Delete a relationship schema property, optionally including its reverse side. |
+| &emsp;&emsp;&emsp;describe                       | `4.9.0` | Describe a single relationship schema property, optionally including its reverse side. |
+| &emsp;&emsp;&emsp;update                         | `4.9.0` | Update an existing relationship schema property, optionally including its reverse side. |
 |                                                  |         |                                                                        |
 | frodo idp                                        |  1.0.0  | Manage (social) identity providers.                                    |
 | &emsp;export                                     |  1.0.0  | Export (social) identity providers.                                    |
@@ -323,6 +347,8 @@ A set of commands supporting `Custom Nodes` in PingAM and PingOne Advanced Ident
 | &emsp;export                                     |  1.0.0  | Export scripts.                                                        |
 | &emsp;import                                     |  1.0.0  | Import scripts.                                                        |
 | &emsp;list                                       |  1.0.0  | List scripts.                                                          |
+| &emsp;type                                       | `4.9.0` | Manage scripting contexts (script types).                             |
+| &emsp;&emsp;describe                             | `4.9.0` | Describe the bindings (available objects/APIs) exposed to scripts running in a given scripting context. |
 |                                                  |         |                                                                        |
 | frodo service                                    |  1.0.0  | Manage AM services.                                                    |
 | &emsp;delete                                     |  1.0.0  | Delete AM services.                                                    |

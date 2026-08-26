@@ -126,50 +126,50 @@ describe('frodo idm schema object lifecycle (create type -> add property -> upda
     expect(assertNoPollyReplayError(stderr, CMD)).toMatchSnapshot();
   });
 
-  test(`"frodo idm schema object property list -o ${type}": should list the new type's base properties`, async () => {
-    const CMD = `frodo idm schema object property list -o ${type}`;
+  test(`"frodo idm schema property list -o ${type}": should list the new type's base properties`, async () => {
+    const CMD = `frodo idm schema property list -o ${type}`;
     const { stdout, stderr } = await execWithRecordingProgress(CMD, env, isRecording);
     expect(assertNoPollyReplayError(stdout, CMD)).toMatchSnapshot();
     expect(assertNoPollyReplayError(stderr, CMD)).toMatchSnapshot();
   });
 
-  test(`"frodo idm schema object property create -o ${type} -p widgetSize -f ${propertyCreateFile}": should add a new schema property`, async () => {
-    const CMD = `frodo idm schema object property create -o ${type} -p widgetSize -f ${propertyCreateFile}`;
+  test(`"frodo idm schema property create -o ${type} -p widgetSize -f ${propertyCreateFile}": should add a new schema property`, async () => {
+    const CMD = `frodo idm schema property create -o ${type} -p widgetSize -f ${propertyCreateFile}`;
     const { stdout, stderr } = await execWithRecordingProgress(CMD, env, isRecording);
     expect(assertNoPollyReplayError(stdout, CMD)).toMatchSnapshot();
     expect(assertNoPollyReplayError(stderr, CMD)).toMatchSnapshot();
   });
 
-  test(`"frodo idm schema object property describe -o ${type} -p widgetSize": should describe the new property`, async () => {
-    const CMD = `frodo idm schema object property describe -o ${type} -p widgetSize`;
+  test(`"frodo idm schema property describe -o ${type} -p widgetSize": should describe the new property`, async () => {
+    const CMD = `frodo idm schema property describe -o ${type} -p widgetSize`;
     const { stdout, stderr } = await execWithRecordingProgress(CMD, env, isRecording);
     expect(assertNoPollyReplayError(stdout, CMD)).toMatchSnapshot();
     expect(assertNoPollyReplayError(stderr, CMD)).toMatchSnapshot();
   });
 
-  test(`"frodo idm schema object property update -o ${type} -p widgetSize -f ${propertyUpdateFile} -y": should update the property, previewing current vs. proposed`, async () => {
-    const CMD = `frodo idm schema object property update -o ${type} -p widgetSize -f ${propertyUpdateFile} -y`;
+  test(`"frodo idm schema property update -o ${type} -p widgetSize -f ${propertyUpdateFile} -y": should update the property, previewing current vs. proposed`, async () => {
+    const CMD = `frodo idm schema property update -o ${type} -p widgetSize -f ${propertyUpdateFile} -y`;
     const { stdout, stderr } = await execWithRecordingProgress(CMD, env, isRecording);
     expect(assertNoPollyReplayError(stdout, CMD)).toMatchSnapshot();
     expect(assertNoPollyReplayError(stderr, CMD)).toMatchSnapshot();
   });
 
-  test(`"frodo idm schema object property describe -o ${type} -p widgetSize --json": should reflect the updated property definition`, async () => {
-    const CMD = `frodo idm schema object property describe -o ${type} -p widgetSize --json`;
+  test(`"frodo idm schema property describe -o ${type} -p widgetSize --json": should reflect the updated property definition`, async () => {
+    const CMD = `frodo idm schema property describe -o ${type} -p widgetSize --json`;
     const { stdout, stderr } = await execWithRecordingProgress(CMD, env, isRecording);
     expect(assertNoPollyReplayError(stdout, CMD)).toMatchSnapshot();
     expect(assertNoPollyReplayError(stderr, CMD)).toMatchSnapshot();
   });
 
-  test(`"frodo idm schema object property delete -o ${type} -p widgetSize -y": should remove the property`, async () => {
-    const CMD = `frodo idm schema object property delete -o ${type} -p widgetSize -y`;
+  test(`"frodo idm schema property delete -o ${type} -p widgetSize -y": should remove the property`, async () => {
+    const CMD = `frodo idm schema property delete -o ${type} -p widgetSize -y`;
     const { stdout, stderr } = await execWithRecordingProgress(CMD, env, isRecording);
     expect(assertNoPollyReplayError(stdout, CMD)).toMatchSnapshot();
     expect(assertNoPollyReplayError(stderr, CMD)).toMatchSnapshot();
   });
 
-  test(`"frodo idm schema object property list -o ${type}": should be back to only the base properties`, async () => {
-    const CMD = `frodo idm schema object property list -o ${type}`;
+  test(`"frodo idm schema property list -o ${type}": should be back to only the base properties`, async () => {
+    const CMD = `frodo idm schema property list -o ${type}`;
     const { stdout, stderr } = await execWithRecordingProgress(CMD, env, isRecording);
     expect(assertNoPollyReplayError(stdout, CMD)).toMatchSnapshot();
     expect(assertNoPollyReplayError(stderr, CMD)).toMatchSnapshot();
@@ -189,8 +189,8 @@ describe('frodo idm schema object lifecycle (create type -> add property -> upda
     expect(assertNoPollyReplayError(stderr, CMD)).toMatchSnapshot();
   });
 
-  test(`"frodo idm schema object property list -o ${type} --json": should fail, the type no longer exists`, async () => {
-    const CMD = `frodo idm schema object property list -o ${type} --json`;
+  test(`"frodo idm schema property list -o ${type} --json": should fail, the type no longer exists`, async () => {
+    const CMD = `frodo idm schema property list -o ${type} --json`;
     try {
       await execWithRecordingProgress(CMD, env, isRecording);
       throw new Error('Command should have failed with non-zero exit code');

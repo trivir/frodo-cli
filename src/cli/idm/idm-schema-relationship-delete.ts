@@ -1,0 +1,79 @@
+import { frodo } from '@rockcarver/frodo-lib';
+import { Option } from 'commander';
+
+import { getTokens } from '../../ops/AuthenticateOps';
+import { deleteManagedObjectSchemaRelationshipPropertyCli } from '../../ops/IdmOps';
+import { verboseMessage } from '../../utils/Console';
+import { FrodoCommand } from '../FrodoCommand';
+
+const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
+
+const deploymentTypes = [CLOUD_DEPLOYMENT_TYPE_KEY];
+
+export default function setup() {
+  const program = new FrodoCommand(
+    'frodo idm schema relationship delete',
+    [],
+    deploymentTypes
+  );
+
+  program
+    .description(
+      'Delete a relationship schema property, via the dedicated Cloud-only v2 schema API. Prompts for confirmation, unless -y/--yes is passed.'
+    )
+    .addOption(
+      new Option(
+        '-o, --managed-object <type>',
+        'Managed object type. E.g. "alpha_aiagentprivilege".'
+      ).makeOptionMandatory()
+    )
+    .addOption(
+      new Option(
+        '-p, --property <name>',
+        'Relationship property name. E.g. "agent".'
+      ).makeOptionMandatory()
+    )
+    .addOption(
+      new Option(
+        '--with-reverse',
+        "Also delete the reverse side, inferred from this property's own current definition. Errors if no reverse relationship is configured."
+      )
+    )
+    .addOption(
+      new Option(
+        '-y, --yes',
+        'Answer y/yes to the schema-change confirmation prompt.'
+      )
+    )
+    .action(
+      // implement command logic inside action handler
+      async (host, realm, user, password, options, command) => {
+        command.handleDefaultArgsAndOpts(
+          host,
+          realm,
+          user,
+          password,
+          options,
+          command
+        );
+        if (await getTokens(false, true, deploymentTypes)) {
+          verboseMessage(
+            `Deleting relationship property "${options.property}" from "${options.managedObject}"...`
+          );
+          const outcome =
+            await deleteManagedObjectSchemaRelationshipPropertyCli(
+              options.managedObject,
+              options.property,
+              options.yes,
+              options.withReverse
+            );
+          if (!outcome) process.exitCode = 1;
+        } else {
+          process.exitCode = 1;
+        }
+      }
+      // end command logic inside action handler
+    );
+
+  return program;
+}

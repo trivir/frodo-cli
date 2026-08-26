@@ -27,7 +27,6 @@ Commands:
   import            Import IDM managed-object configuration (schema,
                     notifications, etc.). Prompts for confirmation before
                     importing schema changes, unless -y/--yes is passed.
-  property          Manage individual managed-object schema properties.
   update            Update an existing managed-object type from a file. The type
                     name comes from the file's own "name" field. Refuses if that
                     type does not exist. Prompts for confirmation before

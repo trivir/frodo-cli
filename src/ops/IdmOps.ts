@@ -40,6 +40,7 @@ const {
   getWorkingDirectory,
   saveJsonToFile,
   saveToFile,
+  titleCase,
 } = frodo.utils;
 
 const {
@@ -53,7 +54,12 @@ const {
   removeSubConfigEntity,
 } = frodo.idm.config;
 const { countManagedObjects: countManagedObjectsOfType } = frodo.idm.managed;
-const { readManagedObjectSchema } = frodo.idm.managed.schema;
+const {
+  readManagedObjectSchema,
+  readManagedObjectSchemaProperty,
+  updateManagedObjectSchemaProperty,
+  removeManagedObjectSchemaProperty,
+} = frodo.idm.managed.schema;
 const { testConnectorServers } = frodo.idm.system;
 
 type MatchResult = { path: string; source: string; type: string };
@@ -974,6 +980,781 @@ export async function deleteManagedObjectSchemaPropertyCli(
       stopProgressIndicator(
         indicatorId,
         `Error deleting schema property ${propertyName} from ${type}.`,
+        'fail'
+      );
+    }
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Field values for a relationship schema property, as resolved from CLI
+ * flags. Used both for `create` (fully specified) and `update` (only the
+ * explicitly-passed subset, merged onto the property's current definition).
+ */
+export type RelationshipPropertyFields = {
+  targetObject?: string;
+  many?: boolean;
+  queryFields?: string[];
+  title?: string;
+  description?: string;
+  label?: string;
+  queryFilter?: string;
+  sortKeys?: string[];
+  notify?: boolean;
+  notifySelf?: boolean;
+  searchable?: boolean;
+  userEditable?: boolean;
+  notViewable?: boolean;
+  notValidate?: boolean;
+  returnByDefault?: boolean;
+  reversePropertyName?: string;
+};
+
+/** Field values for the reverse side of a bidirectional `create`. */
+export type RelationshipReverseCreateFields = {
+  propertyName: string;
+  many: boolean;
+  queryFields: string[];
+  title?: string;
+  description?: string;
+};
+
+/**
+ * Turns a property name like "widgetSize" or "custom_merchantId" into a
+ * human-readable default title ("Widget Size", "Custom Merchant Id") when
+ * the caller didn't pass an explicit --title.
+ */
+function humanizePropertyName(propertyName: string): string {
+  const spaced = propertyName
+    .replace(/[_-]+/g, ' ')
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2');
+  return titleCase(spaced);
+}
+
+/**
+ * The `_ref`/`_refProperties` sub-schema every relationship property carries.
+ * Confirmed structurally identical (only the `_refProperties.title` label
+ * varies, derived from the property's own title) across all 70 relationship
+ * properties surveyed live on volker-dev -- hardcoded here rather than
+ * exposed as a flag.
+ */
+function buildRelationshipRefProperties(
+  effectiveTitle: string
+): Record<string, unknown> {
+  return {
+    _ref: {
+      type: 'string',
+      description: 'References a relationship from a managed object',
+    },
+    _refProperties: {
+      type: 'object',
+      description: 'Supports metadata within the relationship',
+      title: `${effectiveTitle} _refProperties`,
+      properties: {
+        _id: { type: 'string', description: '_refProperties object ID' },
+      },
+    },
+  };
+}
+
+/**
+ * Describes the reverse side for the v2 API's single-call bidirectional
+ * auto-creation mechanism: embedding this descriptor in the forward side's
+ * own `resourceCollection[0].reverseProperty` makes the server create the
+ * reverse property itself, in the same write that creates the forward
+ * side -- live-confirmed against volker-dev to work for all four
+ * single/many combinations on both sides (this is also the definitive,
+ * live-confirmed answer to whether the v2 API auto-creates the reverse
+ * side: yes, given this descriptor; without it, `reverseRelationship: true`
+ * is rejected outright with a 400, "field is required"). The server does
+ * NOT honor a custom title/description here -- the auto-created property
+ * always gets the raw property name for both, live-confirmed -- but they're
+ * still passed through for forward compatibility in case that changes;
+ * `--reverse-title`/`--reverse-description` are documented accordingly.
+ */
+function buildReversePropertyDescriptor(
+  reverse: RelationshipReverseCreateFields
+): Record<string, unknown> {
+  return {
+    type: reverse.many ? 'array' : 'relationship',
+    ...(reverse.title && { title: reverse.title }),
+    ...(reverse.description && { description: reverse.description }),
+    validate: true,
+    resourceCollection: {
+      notify: false,
+      query: { fields: reverse.queryFields, queryFilter: 'true' },
+    },
+  };
+}
+
+function buildRelationshipResourceCollectionItem(
+  fields: RelationshipPropertyFields,
+  reverse?: RelationshipReverseCreateFields
+): Record<string, unknown> {
+  return {
+    label: fields.label || humanizePropertyName(fields.targetObject),
+    notify: !!fields.notify,
+    path: `managed/${fields.targetObject}`,
+    ...(reverse && {
+      reverseProperty: buildReversePropertyDescriptor(reverse),
+    }),
+    query: {
+      fields: fields.queryFields,
+      queryFilter: fields.queryFilter || 'true',
+      ...(fields.sortKeys ? { sortKeys: fields.sortKeys } : {}),
+    },
+  };
+}
+
+/**
+ * Assembles a full relationship (or array-of-relationship) schema-property
+ * payload from resolved field values, applying this tracker item's
+ * empirically-derived defaults (see the implementation plan for the full
+ * justification table from a live survey of 70 relationship properties on
+ * volker-dev): `validate`/`viewable` default true, `userEditable`/
+ * `returnByDefault`/`notifySelf`/resourceCollection `notify` default false,
+ * `queryFilter` defaults `'true'`, and `searchable`/`sortKeys` are omitted
+ * entirely unless explicitly passed. `reverse`, when given (create only),
+ * embeds a reverse-property descriptor that makes the server auto-create
+ * the reverse side in the same write -- see
+ * {@link buildReversePropertyDescriptor}.
+ *
+ * Built as a plain object and cast at the call site rather than typed as
+ * `ManagedObjectSchemaProperty` throughout: the real IDM v2 API is more
+ * lenient than that type declares (`sortKeys`/`searchable` in particular are
+ * routinely absent from real property definitions returned by the server).
+ */
+function buildRelationshipPropertyPayload(
+  propertyName: string,
+  fields: RelationshipPropertyFields,
+  reverse?: RelationshipReverseCreateFields
+): Record<string, unknown> {
+  const title = fields.title || humanizePropertyName(propertyName);
+  const itemsTitle = `${title} Items`;
+  const effectiveTitle = fields.many ? itemsTitle : title;
+
+  const relationshipCore: Record<string, unknown> = {
+    id: propertyName,
+    type: 'relationship',
+    ...(fields.many && { title: itemsTitle }),
+    properties: buildRelationshipRefProperties(effectiveTitle),
+    resourceCollection: [
+      buildRelationshipResourceCollectionItem(fields, reverse),
+    ],
+    reverseRelationship: !!fields.reversePropertyName,
+    ...(fields.reversePropertyName && {
+      reversePropertyName: fields.reversePropertyName,
+    }),
+    validate: !fields.notValidate,
+    notifySelf: !!fields.notifySelf,
+  };
+
+  const baseFields: Record<string, unknown> = {
+    title,
+    ...(fields.description && { description: fields.description }),
+    viewable: !fields.notViewable,
+    userEditable: !!fields.userEditable,
+    returnByDefault: !!fields.returnByDefault,
+    ...(fields.searchable !== undefined && { searchable: fields.searchable }),
+  };
+
+  if (!fields.many) {
+    return { ...relationshipCore, ...baseFields };
+  }
+  return { type: 'array', ...baseFields, items: relationshipCore };
+}
+
+/**
+ * Reverse-parses a live relationship (or array-of-relationship) property
+ * definition back into `RelationshipPropertyFields`, so `update` can merge
+ * only the explicitly-passed CLI overrides onto the property's actual
+ * current state rather than the create-time defaults.
+ */
+function extractRelationshipFields(
+  current: Record<string, unknown>
+): RelationshipPropertyFields {
+  const many = current.type === 'array';
+  const rel = (many ? current.items : current) as Record<string, unknown>;
+  const base = many ? current : rel;
+  const resourceCollection = (
+    rel.resourceCollection as Array<Record<string, unknown>>
+  )?.[0];
+  const query = resourceCollection?.query as
+    Record<string, unknown> | undefined;
+  const path = resourceCollection?.path as string | undefined;
+  return {
+    targetObject: path?.startsWith('managed/')
+      ? path.slice('managed/'.length)
+      : undefined,
+    many,
+    queryFields: (query?.fields as string[]) || [],
+    title: base.title as string | undefined,
+    description: base.description as string | undefined,
+    label: resourceCollection?.label as string | undefined,
+    queryFilter: query?.queryFilter as string | undefined,
+    sortKeys: query?.sortKeys as string[] | undefined,
+    notify: !!resourceCollection?.notify,
+    notifySelf: !!rel.notifySelf,
+    searchable: base.searchable as boolean | undefined,
+    userEditable: !!base.userEditable,
+    notViewable: base.viewable === false,
+    notValidate: rel.validate === false,
+    returnByDefault: !!base.returnByDefault,
+    reversePropertyName: rel.reversePropertyName as string | undefined,
+  };
+}
+
+/**
+ * Turns an already-fetched relationship property's extracted fields into the
+ * descriptor shape `buildRelationshipPropertyPayload`'s `reverse` parameter
+ * expects. Used on `update`: the v2 API requires a
+ * `resourceCollection[0].reverseProperty` descriptor on *every* write of a
+ * property that has `reverseRelationship: true` set, not just its initial
+ * creation -- live-confirmed via a 400 ("field is required") when updating
+ * an already-bidirectional property without one -- so any update to a
+ * property with a configured reverse side must re-supply this descriptor
+ * even when the caller isn't touching the reverse side's own fields.
+ */
+function toReverseDescriptorFields(
+  propertyName: string,
+  fields: RelationshipPropertyFields
+): RelationshipReverseCreateFields {
+  return {
+    propertyName,
+    many: !!fields.many,
+    queryFields: fields.queryFields || [],
+    title: fields.title,
+    description: fields.description,
+  };
+}
+
+/** Drops keys whose value is `undefined`, so a partial CLI-flag object only overrides what was actually passed. */
+function pruneUndefined<T extends Record<string, unknown>>(obj: T): Partial<T> {
+  const result: Partial<T> = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (value !== undefined) {
+      (result as Record<string, unknown>)[key] = value;
+    }
+  }
+  return result;
+}
+
+/**
+ * Reads a relationship property, returning `null` (rather than throwing) if
+ * it doesn't exist. A 404 from the dedicated v2 API reliably means the
+ * property itself doesn't exist -- confirmed by the same pattern already
+ * used for `hasIdmFeature` in frodo-lib's IdmFeatureOps. Any other failure
+ * propagates rather than being silently treated as "not found".
+ */
+async function tryReadRelationshipProperty(
+  type: string,
+  propertyName: string
+): Promise<Record<string, unknown> | null> {
+  try {
+    const property = await readManagedObjectSchemaProperty(type, propertyName);
+    return property as unknown as Record<string, unknown>;
+  } catch (error) {
+    if ((error as FrodoError).httpStatus === 404) {
+      return null;
+    }
+    throw error;
+  }
+}
+
+/**
+ * Infers a relationship property's reverse side (type + property name) from
+ * its own definition -- the source of truth `--with-reverse` reads from on
+ * `update`/`delete`, needing no separate identity flags.
+ */
+function inferReverseIdentity(
+  property: Record<string, unknown>
+): { type: string; propertyName: string } | null {
+  const rel = (property.type === 'array' ? property.items : property) as Record<
+    string,
+    unknown
+  >;
+  const reversePropertyName = rel?.reversePropertyName as string | undefined;
+  const resourceCollection = (
+    rel?.resourceCollection as Array<Record<string, unknown>>
+  )?.[0];
+  const path = resourceCollection?.path as string | undefined;
+  if (!reversePropertyName || !path?.startsWith('managed/')) {
+    return null;
+  }
+  return {
+    type: path.slice('managed/'.length),
+    propertyName: reversePropertyName,
+  };
+}
+
+/**
+ * Describe a single relationship schema property of a managed object type,
+ * via the dedicated Cloud-only v2 API. `withReverse` also reads and displays
+ * the reverse side, inferred from the forward property's own definition.
+ * @param {string} type managed object type, e.g. alpha_aiagentprivilege
+ * @param {string} propertyName relationship property name, e.g. agent
+ * @param {boolean} json true to print raw JSON instead of a table
+ * @param {boolean} withReverse true to also read and display the reverse side
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function describeManagedObjectSchemaRelationshipProperty(
+  type: string,
+  propertyName: string,
+  json: boolean = false,
+  withReverse: boolean = false
+): Promise<boolean> {
+  try {
+    const property = await tryReadRelationshipProperty(type, propertyName);
+    if (!property) {
+      printError(
+        new FrodoError(
+          `Relationship property "${propertyName}" not found on managed type "${type}"`
+        )
+      );
+      return false;
+    }
+    let reverse:
+      | {
+          type: string;
+          propertyName: string;
+          property: Record<string, unknown>;
+        }
+      | undefined;
+    if (withReverse) {
+      const identity = inferReverseIdentity(property);
+      if (!identity) {
+        printError(
+          new FrodoError(
+            `Relationship property "${propertyName}" on managed type "${type}" has no reverse relationship configured.`
+          )
+        );
+        return false;
+      }
+      const reverseProperty = await tryReadRelationshipProperty(
+        identity.type,
+        identity.propertyName
+      );
+      if (!reverseProperty) {
+        printError(
+          new FrodoError(
+            `Reverse relationship property "${identity.propertyName}" not found on managed type "${identity.type}".`
+          )
+        );
+        return false;
+      }
+      reverse = { ...identity, property: reverseProperty };
+    }
+    if (json) {
+      printMessage(
+        JSON.stringify(
+          reverse
+            ? {
+                [type]: { [propertyName]: property },
+                [reverse.type]: { [reverse.propertyName]: reverse.property },
+              }
+            : property,
+          null,
+          2
+        ),
+        'data'
+      );
+      return true;
+    }
+    printMessage(`\n${type}.${propertyName}:`, 'data');
+    printMessage(createObjectTable(property).toString(), 'data');
+    if (reverse) {
+      printMessage(
+        `\n${reverse.type}.${reverse.propertyName} (reverse):`,
+        'data'
+      );
+      printMessage(createObjectTable(reverse.property).toString(), 'data');
+    }
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Create a new relationship schema property, via the dedicated Cloud-only v2
+ * API. Refuses if a property with that name already exists (use update
+ * instead). When `reverse` is given, the reverse side on
+ * `fields.targetObject` is auto-created by the server in the same write --
+ * see {@link buildReversePropertyDescriptor} -- rather than through a
+ * separate CLI-side write; live-confirmed to work for all four single/many
+ * combinations on both sides. Note the server does not honor a custom
+ * reverse title/description (it always uses the raw property name for
+ * both), even though `--reverse-title`/`--reverse-description` are threaded
+ * through in case that changes.
+ * @param {string} type managed object type, e.g. alpha_aiagentprivilege
+ * @param {string} propertyName relationship property name, e.g. agent
+ * @param {RelationshipPropertyFields} fields the forward side's field values
+ * @param {RelationshipReverseCreateFields} [reverse] the reverse side's field values, if creating both sides
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function createManagedObjectSchemaRelationshipProperty(
+  type: string,
+  propertyName: string,
+  fields: RelationshipPropertyFields,
+  reverse?: RelationshipReverseCreateFields
+): Promise<boolean> {
+  let indicatorId: string;
+  try {
+    const existingForward = await tryReadRelationshipProperty(
+      type,
+      propertyName
+    );
+    if (existingForward) {
+      printError(
+        new FrodoError(
+          `Relationship property "${propertyName}" already exists on managed type "${type}". Use update instead.`
+        )
+      );
+      return false;
+    }
+    if (reverse) {
+      const existingReverse = await tryReadRelationshipProperty(
+        fields.targetObject,
+        reverse.propertyName
+      );
+      if (existingReverse) {
+        printError(
+          new FrodoError(
+            `Relationship property "${reverse.propertyName}" already exists on managed type "${fields.targetObject}". Use update instead.`
+          )
+        );
+        return false;
+      }
+    }
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      reverse
+        ? `Creating relationship property ${propertyName} on ${type}, with reverse side ${reverse.propertyName} on ${fields.targetObject}...`
+        : `Creating relationship property ${propertyName} on ${type}...`
+    );
+    const forwardPayload = buildRelationshipPropertyPayload(
+      propertyName,
+      {
+        ...fields,
+        reversePropertyName: reverse
+          ? reverse.propertyName
+          : fields.reversePropertyName,
+      },
+      reverse
+    );
+    await updateManagedObjectSchemaProperty(
+      type,
+      propertyName,
+      forwardPayload as unknown as ManagedObjectSchemaProperty
+    );
+    stopProgressIndicator(
+      indicatorId,
+      reverse
+        ? `Created relationship property ${propertyName} on ${type}, with reverse side ${reverse.propertyName} auto-created on ${fields.targetObject}`
+        : `Created relationship property ${propertyName} on ${type}`,
+      'success'
+    );
+    return true;
+  } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        `Error creating relationship property ${propertyName} on ${type}.`,
+        'fail'
+      );
+    }
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Update an existing relationship schema property, via the dedicated
+ * Cloud-only v2 API. Refuses if the property doesn't exist (use create
+ * instead). Only the fields present in `changedFields` change; everything
+ * else keeps its current value. `withReverse` infers the reverse side from
+ * the forward property's own current definition (no separate identity
+ * flags needed) and applies the same explicit overrides to it too; no
+ * automatic rollback if the reverse write fails after the forward side
+ * already succeeded.
+ * @param {string} type managed object type, e.g. alpha_aiagentprivilege
+ * @param {string} propertyName relationship property name, e.g. agent
+ * @param {Partial<RelationshipPropertyFields>} changedFields only the explicitly-passed field overrides
+ * @param {boolean} skipConfirmation true to skip the confirmation prompt
+ * @param {boolean} withReverse true to also update the inferred reverse side
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function updateManagedObjectSchemaRelationshipPropertyCli(
+  type: string,
+  propertyName: string,
+  changedFields: Partial<RelationshipPropertyFields>,
+  skipConfirmation: boolean = false,
+  withReverse: boolean = false
+): Promise<boolean> {
+  let indicatorId: string;
+  try {
+    const current = await tryReadRelationshipProperty(type, propertyName);
+    if (!current) {
+      printError(
+        new FrodoError(
+          `Relationship property "${propertyName}" not found on managed type "${type}". Use create instead.`
+        )
+      );
+      return false;
+    }
+    // A configured reverse side's descriptor must be re-supplied on every
+    // write, not just when --with-reverse asks to also change its fields --
+    // see toReverseDescriptorFields. So the reverse side is fetched whenever
+    // one exists, regardless of --with-reverse.
+    const reverseIdentity = inferReverseIdentity(current);
+    if (withReverse && !reverseIdentity) {
+      printError(
+        new FrodoError(
+          `Relationship property "${propertyName}" on managed type "${type}" has no reverse relationship configured; --with-reverse cannot be used.`
+        )
+      );
+      return false;
+    }
+    let reverseCurrent: Record<string, unknown> | null = null;
+    if (reverseIdentity) {
+      reverseCurrent = await tryReadRelationshipProperty(
+        reverseIdentity.type,
+        reverseIdentity.propertyName
+      );
+      if (!reverseCurrent) {
+        printError(
+          new FrodoError(
+            `Reverse relationship property "${reverseIdentity.propertyName}" not found on managed type "${reverseIdentity.type}".`
+          )
+        );
+        return false;
+      }
+    }
+    const overrides = pruneUndefined(changedFields);
+    const mergedForwardFields = {
+      ...extractRelationshipFields(current),
+      ...overrides,
+    };
+    const mergedReverseFields =
+      reverseCurrent && reverseIdentity
+        ? withReverse
+          ? { ...extractRelationshipFields(reverseCurrent), ...overrides }
+          : extractRelationshipFields(reverseCurrent)
+        : undefined;
+    const forwardPayload = buildRelationshipPropertyPayload(
+      propertyName,
+      mergedForwardFields,
+      mergedReverseFields && reverseIdentity
+        ? toReverseDescriptorFields(
+            reverseIdentity.propertyName,
+            mergedReverseFields
+          )
+        : undefined
+    );
+    let warning = `\nCurrent (${type}.${propertyName}):\n${JSON.stringify(current, null, 2)}\n\nProposed:\n${JSON.stringify(forwardPayload, null, 2)}`;
+    let reversePayload: Record<string, unknown> | undefined;
+    if (withReverse && mergedReverseFields && reverseIdentity) {
+      reversePayload = buildRelationshipPropertyPayload(
+        reverseIdentity.propertyName,
+        mergedReverseFields,
+        toReverseDescriptorFields(propertyName, mergedForwardFields)
+      );
+      warning += `\n\nCurrent (${reverseIdentity.type}.${reverseIdentity.propertyName}, reverse):\n${JSON.stringify(reverseCurrent, null, 2)}\n\nProposed:\n${JSON.stringify(reversePayload, null, 2)}`;
+    }
+    if (
+      !(await confirmChange(
+        warning,
+        `\nUpdate relationship property "${propertyName}" on managed type "${type}"${withReverse ? ' and its reverse side' : ''}? This affects every existing and future record of that type. Continue? (y|n):`,
+        skipConfirmation
+      ))
+    ) {
+      printMessage('Update aborted.', 'warn');
+      return false;
+    }
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      `Updating relationship property ${propertyName} on ${type}...`
+    );
+    await updateManagedObjectSchemaProperty(
+      type,
+      propertyName,
+      forwardPayload as unknown as ManagedObjectSchemaProperty
+    );
+    stopProgressIndicator(
+      indicatorId,
+      `Updated relationship property ${propertyName} on ${type}`,
+      'success'
+    );
+    if (withReverse && reversePayload && reverseIdentity) {
+      indicatorId = createProgressIndicator(
+        'indeterminate',
+        0,
+        `Updating reverse relationship property ${reverseIdentity.propertyName} on ${reverseIdentity.type}...`
+      );
+      try {
+        await updateManagedObjectSchemaProperty(
+          reverseIdentity.type,
+          reverseIdentity.propertyName,
+          reversePayload as unknown as ManagedObjectSchemaProperty
+        );
+        stopProgressIndicator(
+          indicatorId,
+          `Updated reverse relationship property ${reverseIdentity.propertyName} on ${reverseIdentity.type}`,
+          'success'
+        );
+      } catch (error) {
+        stopProgressIndicator(
+          indicatorId,
+          `Updated ${type}.${propertyName}, but failed to update its reverse side ${reverseIdentity.type}.${reverseIdentity.propertyName}.`,
+          'fail'
+        );
+        printError(error);
+        return false;
+      }
+    }
+    return true;
+  } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        `Error updating relationship property ${propertyName} on ${type}.`,
+        'fail'
+      );
+    }
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Delete a relationship schema property, via the dedicated Cloud-only v2
+ * API. `withReverse` infers the reverse side from the forward property's
+ * own current definition (no separate identity flags needed) and deletes
+ * it first, then the forward side, so a failed second delete leaves the
+ * explicitly-named side as the one still consistently present.
+ * @param {string} type managed object type, e.g. alpha_aiagentprivilege
+ * @param {string} propertyName relationship property name, e.g. agent
+ * @param {boolean} skipConfirmation true to skip the confirmation prompt
+ * @param {boolean} withReverse true to also delete the inferred reverse side
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function deleteManagedObjectSchemaRelationshipPropertyCli(
+  type: string,
+  propertyName: string,
+  skipConfirmation: boolean = false,
+  withReverse: boolean = false
+): Promise<boolean> {
+  let indicatorId: string;
+  try {
+    const current = await tryReadRelationshipProperty(type, propertyName);
+    if (!current) {
+      printError(
+        new FrodoError(
+          `Relationship property "${propertyName}" not found on managed type "${type}"`
+        )
+      );
+      return false;
+    }
+    let reverseIdentity: { type: string; propertyName: string } | null = null;
+    let reverseCurrent: Record<string, unknown> | null = null;
+    if (withReverse) {
+      reverseIdentity = inferReverseIdentity(current);
+      if (!reverseIdentity) {
+        printError(
+          new FrodoError(
+            `Relationship property "${propertyName}" on managed type "${type}" has no reverse relationship configured; --with-reverse cannot be used.`
+          )
+        );
+        return false;
+      }
+      reverseCurrent = await tryReadRelationshipProperty(
+        reverseIdentity.type,
+        reverseIdentity.propertyName
+      );
+      if (!reverseCurrent) {
+        printError(
+          new FrodoError(
+            `Reverse relationship property "${reverseIdentity.propertyName}" not found on managed type "${reverseIdentity.type}".`
+          )
+        );
+        return false;
+      }
+    }
+    let warning = `\nThis will permanently remove the following relationship property definition from managed type "${type}":\n${JSON.stringify(current, null, 2)}`;
+    if (withReverse && reverseCurrent && reverseIdentity) {
+      warning += `\n\n...and its reverse side, from managed type "${reverseIdentity.type}":\n${JSON.stringify(reverseCurrent, null, 2)}`;
+    }
+    warning += `\n\nThis removes the property from the schema only — it does not purge any values already stored for it on existing records.`;
+    if (
+      !(await confirmChange(
+        warning,
+        `\nDelete relationship property "${propertyName}" from managed type "${type}"${withReverse ? ' and its reverse side' : ''}? This affects every existing and future record of that type. Continue? (y|n):`,
+        skipConfirmation
+      ))
+    ) {
+      printMessage('Delete aborted.', 'warn');
+      return false;
+    }
+    if (withReverse && reverseIdentity) {
+      indicatorId = createProgressIndicator(
+        'indeterminate',
+        0,
+        `Deleting reverse relationship property ${reverseIdentity.propertyName} from ${reverseIdentity.type}...`
+      );
+      try {
+        await removeManagedObjectSchemaProperty(
+          reverseIdentity.type,
+          reverseIdentity.propertyName
+        );
+        stopProgressIndicator(
+          indicatorId,
+          `Deleted reverse relationship property ${reverseIdentity.propertyName} from ${reverseIdentity.type}`,
+          'success'
+        );
+      } catch (error) {
+        stopProgressIndicator(
+          indicatorId,
+          `Error deleting reverse relationship property ${reverseIdentity.propertyName} from ${reverseIdentity.type}. Forward side "${type}.${propertyName}" was left untouched.`,
+          'fail'
+        );
+        printError(error);
+        return false;
+      }
+    }
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      `Deleting relationship property ${propertyName} from ${type}...`
+    );
+    try {
+      await removeManagedObjectSchemaProperty(type, propertyName);
+    } catch (error) {
+      // Deleting a relationship property auto-created via the bidirectional
+      // create mechanism (see buildReversePropertyDescriptor) cascades:
+      // removing the reverse side already removed this forward side too --
+      // live-confirmed. A 404 here right after a --with-reverse deletion
+      // means the end state we wanted (both sides gone) was already
+      // reached, not a failure.
+      if (!(withReverse && (error as FrodoError).httpStatus === 404)) {
+        throw error;
+      }
+    }
+    stopProgressIndicator(
+      indicatorId,
+      `Deleted relationship property ${propertyName} from ${type}`,
+      'success'
+    );
+    return true;
+  } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        `Error deleting relationship property ${propertyName} from ${type}.`,
         'fail'
       );
     }
