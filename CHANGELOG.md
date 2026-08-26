@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+## [v4.8.0] - 2026-08-26
+
+### Added
+- Introduced the `-c, --clean` flag for `config-manager journeys`, allowing users to clean up configurations during the pull process. This feature mirrors the logic used in `fr-config-pull journeys` (#671).
+- Added new `config-manager idm-authentication` commands to support push and pull operations for IDM authentication configurations (#670).
+- Implemented CRUD commands for managed-object schema types and properties, enhancing the ability to manage IDM schema objects directly through the CLI (#672).
+- Added commands to list and describe Frodo node types, providing users with more detailed insights into node configurations (#672).
+
+### Changed
+- Updated `@rockcarver/frodo-lib` to version 4.5.0, which includes improvements that may affect the behavior and performance of Frodo CLI (1b2850ff).
+
+### Fixed
+- Resolved an issue in `mcp server start` where the per-request realm override was not being honored, ensuring more accurate server start configurations (3818f6ea).
+- Simplified the `aiAgentIdentityUid` structure in snapshots to improve clarity and reduce complexity (24a62b92).
+- Updated color handling to use a non-bright ANSI palette and centralized the color source for consistent CLI output (4f58ff0b).
+
 ## [v4.7.2] - 2026-08-20
 
 ### Fixed
