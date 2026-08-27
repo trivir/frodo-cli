@@ -137,7 +137,7 @@ function debug(message: string | object, newline = true) {
  */
 function curlirize(message: string) {
   if (!message) return;
-  c.cyanBright(printMessage(message));
+  printMessage(c.blueBright(message));
 }
 
 /**
