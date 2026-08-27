@@ -1291,7 +1291,7 @@ function inferReverseIdentity(
 
 /**
  * Describe a single relationship schema property of a managed object type,
- * via the dedicated Cloud-only v2 API. `withReverse` also reads and displays
+ * via the dedicated v2 API (any deployment that runs IDM -- Cloud and ForgeOps). `withReverse` also reads and displays
  * the reverse side, inferred from the forward property's own definition.
  * @param {string} type managed object type, e.g. alpha_aiagentprivilege
  * @param {string} propertyName relationship property name, e.g. agent
@@ -1379,8 +1379,9 @@ export async function describeManagedObjectSchemaRelationshipProperty(
 }
 
 /**
- * Create a new relationship schema property, via the dedicated Cloud-only v2
- * API. Refuses if a property with that name already exists (use update
+ * Create a new relationship schema property, via IDM's dedicated v2 schema
+ * API (any deployment that runs IDM -- Cloud and ForgeOps). Refuses if a
+ * property with that name already exists (use update
  * instead). When `reverse` is given, the reverse side on
  * `fields.targetObject` is auto-created by the server in the same write --
  * see {@link buildReversePropertyDescriptor} -- rather than through a
@@ -1473,8 +1474,9 @@ export async function createManagedObjectSchemaRelationshipProperty(
 }
 
 /**
- * Update an existing relationship schema property, via the dedicated
- * Cloud-only v2 API. Refuses if the property doesn't exist (use create
+ * Update an existing relationship schema property, via IDM's dedicated v2
+ * schema API (any deployment that runs IDM -- Cloud and ForgeOps). Refuses
+ * if the property doesn't exist (use create
  * instead). Only the fields present in `changedFields` change; everything
  * else keeps its current value. `withReverse` infers the reverse side from
  * the forward property's own current definition (no separate identity
@@ -1632,8 +1634,9 @@ export async function updateManagedObjectSchemaRelationshipPropertyCli(
 }
 
 /**
- * Delete a relationship schema property, via the dedicated Cloud-only v2
- * API. `withReverse` infers the reverse side from the forward property's
+ * Delete a relationship schema property, via IDM's dedicated v2 schema API
+ * (any deployment that runs IDM -- Cloud and ForgeOps). `withReverse`
+ * infers the reverse side from the forward property's
  * own current definition (no separate identity flags needed) and deletes
  * it first, then the forward side, so a failed second delete leaves the
  * explicitly-named side as the one still consistently present.

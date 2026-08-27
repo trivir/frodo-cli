@@ -3,10 +3,10 @@
 exports[`CLI help interface for 'idm schema relationship create' should be expected english 1`] = `
 "Usage: frodo idm schema relationship create [options] [host] [realm] [username] [password]
 
-Create a new relationship schema property, via the dedicated Cloud-only v2
-schema API. Refuses if the property already exists. Pass --reverse-property to
-also create the reverse side on --target-object in the same command, spanning
-both managed-object types.
+Create a new relationship schema property, via IDM's dedicated v2 schema API.
+Refuses if the property already exists. Pass --reverse-property to also create
+the reverse side on --target-object in the same command, spanning both
+managed-object types.
 
 Arguments:
   host                            AM base URL, e.g.:
@@ -26,8 +26,6 @@ Arguments:
                                   profile's stored password instead of requiring
                                   it on the command line.
   password                        Password.
-
-Deployment: Cloud-only
 
 Options:
   --description <text>            Display description.

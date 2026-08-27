@@ -8,7 +8,7 @@ export default function setup() {
   const program = new FrodoStubCommand('frodo idm schema relationship');
 
   program.description(
-    'Manage relationship managed-object schema properties directly via the dedicated Cloud-only v2 schema API, including bidirectional (two-type) relationships. Cloud only -- use "idm schema property" for relationship properties on other deployments.'
+    'Manage relationship managed-object schema properties directly via IDM\'s dedicated v2 schema API, including bidirectional (two-type) relationships. Available on any deployment that runs IDM (Cloud and ForgeOps) -- use "idm schema property" for relationship properties on classic.'
   );
 
   program.addCommand(DescribeCmd().name('describe'));

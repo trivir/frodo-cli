@@ -3,8 +3,8 @@
 exports[`CLI help interface for 'idm schema relationship delete' should be expected english 1`] = `
 "Usage: frodo idm schema relationship delete [options] [host] [realm] [username] [password]
 
-Delete a relationship schema property, via the dedicated Cloud-only v2 schema
-API. Prompts for confirmation, unless -y/--yes is passed.
+Delete a relationship schema property, via IDM's dedicated v2 schema API.
+Prompts for confirmation, unless -y/--yes is passed.
 
 Arguments:
   host                         AM base URL, e.g.:
@@ -23,8 +23,6 @@ Arguments:
                                uses that profile's stored password instead of
                                requiring it on the command line.
   password                     Password.
-
-Deployment: Cloud-only
 
 Options:
   -o, --managed-object <type>  Managed object type. E.g.

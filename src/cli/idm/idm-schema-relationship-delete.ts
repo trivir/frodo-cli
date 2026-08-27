@@ -6,9 +6,13 @@ import { deleteManagedObjectSchemaRelationshipPropertyCli } from '../../ops/IdmO
 import { verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
-const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
+const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
+  frodo.utils.constants;
 
-const deploymentTypes = [CLOUD_DEPLOYMENT_TYPE_KEY];
+const deploymentTypes = [
+  CLOUD_DEPLOYMENT_TYPE_KEY,
+  FORGEOPS_DEPLOYMENT_TYPE_KEY,
+];
 
 export default function setup() {
   const program = new FrodoCommand(
@@ -19,7 +23,7 @@ export default function setup() {
 
   program
     .description(
-      'Delete a relationship schema property, via the dedicated Cloud-only v2 schema API. Prompts for confirmation, unless -y/--yes is passed.'
+      "Delete a relationship schema property, via IDM's dedicated v2 schema API. Prompts for confirmation, unless -y/--yes is passed."
     )
     .addOption(
       new Option(

@@ -6,10 +6,11 @@
 - Added `frodo feature list/describe/validate/install` to manage IDM tenant-configuration features (Cloud only). `install` is confirmation-gated with an explicit irreversibility warning and is a no-op if the feature is already installed (ca2f90a9).
 - Added `frodo script type describe` to print the bindings (available objects/APIs) exposed to scripts running in a given AM scripting context (ca2f90a9).
 - Restructured `frodo idm schema`: promoted `property` to a sibling of `object` (`frodo idm schema property ...` instead of `frodo idm schema object property ...`).
-- Added `frodo idm schema relationship describe/create/update/delete`, a Cloud-only command tree backed by IDM's dedicated v2 relationship-schema API, including bidirectional (two-managed-object-type) relationship support -- `create --reverse-property` auto-creates the reverse side in the same write; `update`/`delete --with-reverse` infer the reverse side's identity from the property's own existing definition.
+- Added `frodo idm schema relationship describe/create/update/delete`, a command tree (any deployment that runs IDM -- Cloud and ForgeOps) backed by IDM's dedicated v2 relationship-schema API, including bidirectional (two-managed-object-type) relationship support -- `create --reverse-property` auto-creates the reverse side in the same write; `update`/`delete --with-reverse` infer the reverse side's identity from the property's own existing definition.
 
 ### Fixed
 - `frodo idm count` no longer silently undercounts managed-object types with more than 1000 records; now uses the dedicated exact-count endpoint instead of a page-capped record fetch (84dcbc9d).
+- `frodo idm schema relationship` no longer rejects ForgeOps deployments. IDM's dedicated v2 relationship-schema API is a standard IDM REST API available since IDM 7.5.0, not Cloud-specific as previously assumed; the command tree is now gated to any deployment that runs IDM (Cloud and ForgeOps), rejecting only classic.
 
 ## [v4.8.0] - 2026-08-26
 

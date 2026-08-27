@@ -5,9 +5,13 @@ import { getTokens } from '../../ops/AuthenticateOps';
 import { describeManagedObjectSchemaRelationshipProperty } from '../../ops/IdmOps';
 import { FrodoCommand } from '../FrodoCommand';
 
-const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
+const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
+  frodo.utils.constants;
 
-const deploymentTypes = [CLOUD_DEPLOYMENT_TYPE_KEY];
+const deploymentTypes = [
+  CLOUD_DEPLOYMENT_TYPE_KEY,
+  FORGEOPS_DEPLOYMENT_TYPE_KEY,
+];
 
 export default function setup() {
   const program = new FrodoCommand(
@@ -18,7 +22,7 @@ export default function setup() {
 
   program
     .description(
-      'Describe a single relationship schema property of a managed-object type, via the dedicated Cloud-only v2 schema API.'
+      "Describe a single relationship schema property of a managed-object type, via IDM's dedicated v2 schema API."
     )
     .addOption(
       new Option(

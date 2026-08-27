@@ -3,8 +3,8 @@
 exports[`CLI help interface for 'idm schema relationship describe' should be expected english 1`] = `
 "Usage: frodo idm schema relationship describe [options] [host] [realm] [username] [password]
 
-Describe a single relationship schema property of a managed-object type, via the
-dedicated Cloud-only v2 schema API.
+Describe a single relationship schema property of a managed-object type, via
+IDM's dedicated v2 schema API.
 
 Arguments:
   host                         AM base URL, e.g.:
@@ -23,8 +23,6 @@ Arguments:
                                uses that profile's stored password instead of
                                requiring it on the command line.
   password                     Password.
-
-Deployment: Cloud-only
 
 Options:
   --json                       Output in JSON format.

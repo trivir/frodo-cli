@@ -9,9 +9,13 @@ import {
 import { printError, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
-const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
+const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
+  frodo.utils.constants;
 
-const deploymentTypes = [CLOUD_DEPLOYMENT_TYPE_KEY];
+const deploymentTypes = [
+  CLOUD_DEPLOYMENT_TYPE_KEY,
+  FORGEOPS_DEPLOYMENT_TYPE_KEY,
+];
 
 function splitCsv(value: string): string[] {
   return value
@@ -29,7 +33,7 @@ export default function setup() {
 
   program
     .description(
-      'Update an existing relationship schema property, via the dedicated Cloud-only v2 schema API. Refuses if the property does not exist. Only the fields whose flags are passed change; everything else keeps its current value. Prints a current/proposed preview and prompts for confirmation, unless -y/--yes is passed.'
+      "Update an existing relationship schema property, via IDM's dedicated v2 schema API. Refuses if the property does not exist. Only the fields whose flags are passed change; everything else keeps its current value. Prints a current/proposed preview and prompts for confirmation, unless -y/--yes is passed."
     )
     .addOption(
       new Option(

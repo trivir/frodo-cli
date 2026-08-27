@@ -269,7 +269,7 @@ A set of commands supporting `Custom Nodes` in PingAM and PingOne Advanced Ident
 | &emsp;&emsp;&emsp;describe                       | `4.9.0` | Describe a single schema property of a managed-object type.           |
 | &emsp;&emsp;&emsp;list                           | `4.9.0` | List the schema properties of a managed-object type.                  |
 | &emsp;&emsp;&emsp;update                         | `4.9.0` | Update an existing schema property on a managed-object type.          |
-| &emsp;&emsp;relationship                         | `4.9.0` | Manage relationship schema properties directly via the dedicated Cloud-only v2 schema API, including bidirectional (two-type) relationships. |
+| &emsp;&emsp;relationship                         | `4.9.0` | Manage relationship schema properties directly via IDM's dedicated v2 schema API (any deployment that runs IDM -- Cloud and ForgeOps), including bidirectional (two-type) relationships. |
 | &emsp;&emsp;&emsp;create                         | `4.9.0` | Create a new relationship schema property, optionally auto-creating a bidirectional reverse side on a second managed-object type. |
 | &emsp;&emsp;&emsp;delete                         | `4.9.0` | Delete a relationship schema property, optionally including its reverse side. |
 | &emsp;&emsp;&emsp;describe                       | `4.9.0` | Describe a single relationship schema property, optionally including its reverse side. |

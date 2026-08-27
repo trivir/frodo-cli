@@ -10,9 +10,13 @@ import {
 import { printError, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
-const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
+const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
+  frodo.utils.constants;
 
-const deploymentTypes = [CLOUD_DEPLOYMENT_TYPE_KEY];
+const deploymentTypes = [
+  CLOUD_DEPLOYMENT_TYPE_KEY,
+  FORGEOPS_DEPLOYMENT_TYPE_KEY,
+];
 
 function splitCsv(value: string): string[] {
   return value
@@ -30,7 +34,7 @@ export default function setup() {
 
   program
     .description(
-      'Create a new relationship schema property, via the dedicated Cloud-only v2 schema API. Refuses if the property already exists. Pass --reverse-property to also create the reverse side on --target-object in the same command, spanning both managed-object types.'
+      "Create a new relationship schema property, via IDM's dedicated v2 schema API. Refuses if the property already exists. Pass --reverse-property to also create the reverse side on --target-object in the same command, spanning both managed-object types."
     )
     .addOption(
       new Option(
