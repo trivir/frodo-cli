@@ -16,10 +16,6 @@ Commands:
   object            Manage IDM managed-object configuration (schema,
                     notifications, etc.).
   property          Manage individual managed-object schema properties.
-  relationship      Manage relationship managed-object schema properties
-                    directly via IDM's dedicated v2 schema API, including
-                    bidirectional (two-type) relationships. Available on any
-                    deployment that runs IDM (Cloud and ForgeOps) -- use "idm
-                    schema property" for relationship properties on classic.
+  relationship      Manage relationship properties.
 "
 `;

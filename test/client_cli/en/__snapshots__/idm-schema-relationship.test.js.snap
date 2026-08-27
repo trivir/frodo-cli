@@ -3,10 +3,7 @@
 exports[`CLI help interface for 'idm schema relationship' should be expected english 1`] = `
 "Usage: frodo idm schema relationship [options] [command]
 
-Manage relationship managed-object schema properties directly via IDM's
-dedicated v2 schema API, including bidirectional (two-type) relationships.
-Available on any deployment that runs IDM (Cloud and ForgeOps) -- use "idm
-schema property" for relationship properties on classic.
+Manage relationship properties.
 
 Options:
   -h, --help        Help

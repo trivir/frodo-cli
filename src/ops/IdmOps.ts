@@ -1291,7 +1291,7 @@ function inferReverseIdentity(
 
 /**
  * Describe a single relationship schema property of a managed object type,
- * via the dedicated v2 API (any deployment that runs IDM -- Cloud and ForgeOps). `withReverse` also reads and displays
+ * via the dedicated v2 API (requires IDM 7.5+; Cloud always qualifies). `withReverse` also reads and displays
  * the reverse side, inferred from the forward property's own definition.
  * @param {string} type managed object type, e.g. alpha_aiagentprivilege
  * @param {string} propertyName relationship property name, e.g. agent
@@ -1380,7 +1380,7 @@ export async function describeManagedObjectSchemaRelationshipProperty(
 
 /**
  * Create a new relationship schema property, via IDM's dedicated v2 schema
- * API (any deployment that runs IDM -- Cloud and ForgeOps). Refuses if a
+ * API (requires IDM 7.5+; Cloud always qualifies). Refuses if a
  * property with that name already exists (use update
  * instead). When `reverse` is given, the reverse side on
  * `fields.targetObject` is auto-created by the server in the same write --
@@ -1475,7 +1475,7 @@ export async function createManagedObjectSchemaRelationshipProperty(
 
 /**
  * Update an existing relationship schema property, via IDM's dedicated v2
- * schema API (any deployment that runs IDM -- Cloud and ForgeOps). Refuses
+ * schema API (requires IDM 7.5+; Cloud always qualifies). Refuses
  * if the property doesn't exist (use create
  * instead). Only the fields present in `changedFields` change; everything
  * else keeps its current value. `withReverse` infers the reverse side from
@@ -1635,7 +1635,7 @@ export async function updateManagedObjectSchemaRelationshipPropertyCli(
 
 /**
  * Delete a relationship schema property, via IDM's dedicated v2 schema API
- * (any deployment that runs IDM -- Cloud and ForgeOps). `withReverse`
+ * (requires IDM 7.5+; Cloud always qualifies). `withReverse`
  * infers the reverse side from the forward property's
  * own current definition (no separate identity flags needed) and deletes
  * it first, then the forward side, so a failed second delete leaves the
