@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo script type describe "frodo script type describe -c SCRIPTED_DECISION_NODE": should list the bindings available in that scripting context 1`] = `
+"Name              │Java Class                                                                         │Elements
+action            │org.forgerock.openam.auth.nodes.script.ActionWrapper                               │15      
+cacheManager      │org.forgerock.openam.scripting.cache.service.CacheManagerScriptFacade              │2       
+callbacks         │org.forgerock.openam.auth.nodes.script.ScriptedCallbacksWrapper                    │21      
+callbacksBuilder  │org.forgerock.openam.auth.nodes.script.ScriptedCallbacksBuilder                    │56      
+cookieName        │                                                                                   │0       
+emailService      │org.forgerock.openam.scripting.bindings.ScriptEmailService                         │2       
+httpClient        │org.forgerock.openam.scripting.wrappers.HttpClientScriptWrapper                    │2       
+idRepository      │org.forgerock.openam.scripting.api.identity.ScriptedIdentityRepositoryScriptWrapper│3       
+journey           │org.forgerock.openam.auth.nodes.script.ScriptedTreeWrapper                         │4       
+jwtAssertion      │org.forgerock.openam.scripting.bindings.JwtAssertionScriptWrapper                  │1       
+jwtValidator      │org.forgerock.openam.scripting.bindings.JwtValidatorScriptWrapper                  │1       
+locales           │                                                                                   │0       
+logger            │org.forgerock.openam.scripting.logging.ScriptedLoggerWrapper                       │31      
+nodeState         │org.forgerock.openam.auth.node.api.NodeStateScriptWrapper                          │9       
+oauthApplication  │org.forgerock.oauth2.core.application.tree.OAuthScriptedBindingObjectImpl          │3       
+openidm           │org.forgerock.openam.scripting.wrappers.IdmIntegrationServiceScriptWrapper         │21      
+policy            │org.forgerock.openam.scripting.bindings.ScriptPolicyService                        │2       
+realm             │                                                                                   │0       
+requestCookies    │                                                                                   │0       
+requestHeaders    │                                                                                   │0       
+requestParameters │                                                                                   │0       
+resumedFromSuspend│                                                                                   │0       
+samlApplication   │org.forgerock.openam.saml2.SAMLScriptedBindingObjectImpl                           │6       
+scriptName        │                                                                                   │0       
+secrets           │org.forgerock.openam.scripting.api.secrets.ScriptedSecretsFacadeImpl               │5       
+systemEnv         │org.forgerock.openam.scripting.bindings.SystemEnvScriptWrapper                     │4       
+utils             │org.forgerock.openam.scripting.bindings.ScriptUtilityService                       │4"
+`;
+
+exports[`frodo script type describe "frodo script type describe -c SCRIPTED_DECISION_NODE": should list the bindings available in that scripting context 2`] = `""`;

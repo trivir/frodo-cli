@@ -16,6 +16,7 @@
 ### Fixed
 - `frodo idm count` no longer silently undercounts managed-object types with more than 1000 records; now uses the dedicated exact-count endpoint instead of a page-capped record fetch (84dcbc9d).
 - `frodo idm schema relationship` no longer rejects ForgeOps deployments. IDM's dedicated v2 relationship-schema API is a standard IDM REST API available since IDM 7.5.0, not Cloud-specific as previously assumed; the command tree is now gated to any deployment that runs IDM (Cloud and ForgeOps), rejecting only classic.
+- `frodo idm schema relationship create/update/delete` now wait for the relationship-property config write to fully propagate before returning (via a `frodo-lib` default), matching a captured, working Platform Admin UI request for the same endpoint -- avoids an occasional race where an immediately-following read or dependent write (e.g. auto-creating a bidirectional relationship's reverse side) could see IDM's config not yet fully applied.
 
 ## [v4.8.0] - 2026-08-26
 

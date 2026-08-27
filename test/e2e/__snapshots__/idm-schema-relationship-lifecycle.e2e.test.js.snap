@@ -1,0 +1,245 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo idm schema relationship lifecycle (single-side, then bidirectional across two types) "frodo idm schema relationship describe -o alpha_frodoE2ERelTestA -p bidiLinkedB --with-reverse --json": should describe both sides of the bidirectional relationship 1`] = `
+"{
+  "alpha_frodoE2ERelTestA": {
+    "bidiLinkedB": {
+      "_id": "bidiLinkedB",
+      "id": "bidiLinkedB",
+      "type": "relationship",
+      "properties": {
+        "_ref": {
+          "type": "string",
+          "description": "References a relationship from a managed object"
+        },
+        "_refProperties": {
+          "type": "object",
+          "description": "Supports metadata within the relationship",
+          "title": "Bidi Linked B _refProperties",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "description": "_refProperties object ID"
+            }
+          }
+        }
+      },
+      "resourceCollection": [
+        {
+          "label": "Alpha Frodo E2 Erel Test B",
+          "notify": false,
+          "path": "managed/alpha_frodoE2ERelTestB",
+          "query": {
+            "fields": [
+              "name"
+            ],
+            "queryFilter": "true"
+          },
+          "reverseProperty": {
+            "type": "array",
+            "validate": true,
+            "resourceCollection": {
+              "notify": false,
+              "query": {
+                "queryFilter": "true",
+                "fields": [
+                  "name"
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "reverseRelationship": true,
+      "reversePropertyName": "bidiLinkedAs",
+      "validate": true,
+      "notifySelf": false,
+      "title": "Bidi Linked B",
+      "viewable": true,
+      "userEditable": false,
+      "returnByDefault": false,
+      "required": false
+    }
+  },
+  "alpha_frodoE2ERelTestB": {
+    "bidiLinkedAs": {
+      "_id": "bidiLinkedAs",
+      "description": "bidiLinkedAs",
+      "title": "bidiLinkedAs",
+      "type": "array",
+      "viewable": true,
+      "searchable": false,
+      "userEditable": false,
+      "returnByDefault": false,
+      "notifySelf": false,
+      "items": {
+        "reverseRelationship": true,
+        "reversePropertyName": "bidiLinkedB",
+        "validate": true,
+        "properties": {
+          "_ref": {
+            "type": "string"
+          },
+          "_refProperties": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "resourceCollection": [
+          {
+            "path": "managed/alpha_frodoE2ERelTestA",
+            "label": "alpha_frodoE2ERelTestA",
+            "query": {
+              "queryFilter": "true",
+              "fields": [
+                "name"
+              ],
+              "sortKeys": []
+            },
+            "notify": false,
+            "reverseProperty": {
+              "type": "relationship",
+              "validate": true,
+              "resourceCollection": {
+                "notify": false,
+                "query": {
+                  "fields": [
+                    "name"
+                  ],
+                  "queryFilter": "true"
+                }
+              }
+            }
+          }
+        ],
+        "type": "relationship",
+        "id": "urn:jsonschema:org:forgerock:openidm:managed:api:Alpha_frodoE2ERelTestB:bidiLinkedAs:items"
+      },
+      "id": "urn:jsonschema:org:forgerock:openidm:managed:api:Alpha_frodoE2ERelTestB:bidiLinkedAs",
+      "required": false
+    }
+  }
+}"
+`;
+
+exports[`frodo idm schema relationship lifecycle (single-side, then bidirectional across two types) "frodo idm schema relationship describe -o alpha_frodoE2ERelTestA -p bidiLinkedB --with-reverse --json": should describe both sides of the bidirectional relationship 2`] = `""`;
+
+exports[`frodo idm schema relationship lifecycle (single-side, then bidirectional across two types) "frodo idm schema relationship describe -o alpha_frodoE2ERelTestA -p singleLinkB --json": should reflect the updated title 1`] = `
+"{
+  "_id": "singleLinkB",
+  "id": "singleLinkB",
+  "type": "relationship",
+  "properties": {
+    "_ref": {
+      "type": "string",
+      "description": "References a relationship from a managed object"
+    },
+    "_refProperties": {
+      "type": "object",
+      "description": "Supports metadata within the relationship",
+      "title": "Linked B (Updated) _refProperties",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "_refProperties object ID"
+        }
+      }
+    }
+  },
+  "resourceCollection": [
+    {
+      "label": "Alpha Frodo E2 Erel Test B",
+      "notify": false,
+      "path": "managed/alpha_frodoE2ERelTestB",
+      "query": {
+        "fields": [
+          "name"
+        ],
+        "queryFilter": "true"
+      }
+    }
+  ],
+  "reverseRelationship": false,
+  "validate": true,
+  "notifySelf": false,
+  "title": "Linked B (Updated)",
+  "viewable": true,
+  "userEditable": false,
+  "returnByDefault": false,
+  "required": false
+}"
+`;
+
+exports[`frodo idm schema relationship lifecycle (single-side, then bidirectional across two types) "frodo idm schema relationship describe -o alpha_frodoE2ERelTestA -p singleLinkB --json": should reflect the updated title 2`] = `""`;
+
+exports[`frodo idm schema relationship lifecycle (single-side, then bidirectional across two types) "frodo idm schema relationship describe -o alpha_frodoE2ERelTestB -p bidiLinkedAs": should reflect the update on the reverse side 1`] = `
+"alpha_frodoE2ERelTestB.bidiLinkedAs:
+_id                         │bidiLinkedAs                                                                        
+type                        │array                                                                               
+title                       │bidiLinkedAs                                                                        
+description                 │Bidirectional link                                                                  
+viewable                    │true                                                                                
+userEditable                │false                                                                               
+returnByDefault             │false                                                                               
+searchable                  │false                                                                               
+id                          │urn:jsonschema:org:forgerock:openidm:managed:api:Alpha_frodoE2ERelTestB:bidiLinkedAs
+required                    │false                                                                               
+                            │                                                                                    
+  items                     │                                                                                    
+                          id│bidiLinkedAs                                                                        
+                        type│relationship                                                                        
+                       title│bidiLinkedAs Items                                                                  
+         reverseRelationship│true                                                                                
+         reversePropertyName│bidiLinkedB                                                                         
+                    validate│true                                                                                
+                  notifySelf│false                                                                               
+                            │                                                                                    
+    properties              │                                                                                    
+      _ref                  │                                                                                    
+                        type│string                                                                              
+                 description│References a relationship from a managed object                                     
+      _refProperties        │                                                                                    
+                        type│object                                                                              
+                 description│Supports metadata within the relationship                                           
+                       title│bidiLinkedAs Items _refProperties                                                   
+        properties          │                                                                                    
+          _id               │                                                                                    
+                        type│string                                                                              
+                 description│_refProperties object ID                                                            
+                            │                                                                                    
+    resourceCollection      │                                                                                    
+      0                     │                                                                                    
+                       label│alpha_frodoE2ERelTestA                                                              
+                      notify│false                                                                               
+                        path│managed/alpha_frodoE2ERelTestA                                                      
+        query               │                                                                                    
+                 queryFilter│true                                                                                
+          fields            │                                                                                    
+                           0│name                                                                                
+        reverseProperty     │                                                                                    
+                        type│relationship                                                                        
+                    validate│true                                                                                
+          resourceCollection│                                                                                    
+                      notify│false                                                                               
+            query           │                                                                                    
+                 queryFilter│true                                                                                
+              fields        │                                                                                    
+                           0│name"
+`;
+
+exports[`frodo idm schema relationship lifecycle (single-side, then bidirectional across two types) "frodo idm schema relationship describe -o alpha_frodoE2ERelTestB -p bidiLinkedAs": should reflect the update on the reverse side 2`] = `""`;
+
+exports[`frodo idm schema relationship lifecycle (single-side, then bidirectional across two types) "frodo idm schema relationship list -o alpha_frodoE2ERelTestA --json": should be back to no relationship properties 1`] = `"{}"`;
+
+exports[`frodo idm schema relationship lifecycle (single-side, then bidirectional across two types) "frodo idm schema relationship list -o alpha_frodoE2ERelTestA --json": should be back to no relationship properties 2`] = `""`;
+
+exports[`frodo idm schema relationship lifecycle (single-side, then bidirectional across two types) "frodo idm schema relationship list -o alpha_frodoE2ERelTestA": should list the single-side relationship property 1`] = `
+"Name       │Title        │Many│Target                
+singleLinkB│Single Link B│no  │alpha_frodoE2ERelTestB"
+`;
+
+exports[`frodo idm schema relationship lifecycle (single-side, then bidirectional across two types) "frodo idm schema relationship list -o alpha_frodoE2ERelTestA": should list the single-side relationship property 2`] = `""`;
