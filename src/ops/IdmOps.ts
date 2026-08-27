@@ -1766,25 +1766,61 @@ export async function deleteManagedObjectSchemaRelationshipPropertyCli(
   return false;
 }
 
+/** Default icon written for a new managed-object type when --icon isn't passed. */
+const DEFAULT_MANAGED_OBJECT_ICON = 'fa-asterisk';
+
 /**
- * Create a new managed object type from a file. The type name comes from
- * the file's own `name` field. Refuses if a type with that name already
- * exists (use update instead). Prompts for confirmation, reusing the same
- * schema-change gate `frodo idm schema object import` already uses, unless
- * skipConfirmation is set.
- * @param {string} file file containing the full type definition (schema included), including its `name`
+ * Assembles a minimal managed-object type definition from flag values --
+ * just the type's own identity/metadata, no custom properties (those are
+ * added afterward via `property create`/`relationship create`, which
+ * already keep `schema.order`/`schema.required` in sync as they go). Always
+ * writes a populated `order` array (`['_id']`) and an `icon`, even when
+ * `--icon` isn't passed -- item 19's empirical finding was that a type
+ * whose schema lacks a populated `order` array causes the v2
+ * relationship-property API to 500 later, and `icon` was fixed at the same
+ * time as part of the same working example, so it's kept as a paired
+ * default rather than risking the same failure mode again.
+ */
+function buildManagedObjectTypeConfig(
+  type: string,
+  title: string,
+  icon: string | undefined
+): ManagedObjectTypeConfig {
+  // Cast via unknown: the real API doesn't require `resourceCollection` on
+  // the whole-type schema (absent in every real fixture confirmed this
+  // session), even though ManagedObjectSchema's type declares it required.
+  const schema = {
+    $schema: 'http://json-schema.org/draft-04/schema#',
+    title,
+    icon: icon || DEFAULT_MANAGED_OBJECT_ICON,
+    type: 'object',
+    properties: { _id: { type: 'string', title: 'Id' } },
+    order: ['_id'],
+    required: [] as string[],
+  } as unknown as ManagedObjectSchema;
+  return { name: type, schema };
+}
+
+/**
+ * Create a new managed object type. Refuses if a type with that name
+ * already exists (use update instead). Prompts for confirmation, reusing
+ * the same schema-change gate `frodo idm schema object import` already
+ * uses, unless skipConfirmation is set.
+ * @param {string} type managed object type, e.g. alpha_widget
+ * @param {string} title display title for the new type
+ * @param {string} [icon] display icon; defaults to a generic icon if not passed
  * @param {boolean} skipConfirmation true to skip the confirmation prompt
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function createManagedObjectType(
-  file: string,
+  type: string,
+  title: string,
+  icon: string | undefined,
   skipConfirmation: boolean = false
 ): Promise<boolean> {
   let indicatorId: string;
-  let type: string;
   try {
-    const typeConfig = readJsonFile(file) as ManagedObjectTypeConfig;
-    type = typeConfig.name;
+    const typeConfig = buildManagedObjectTypeConfig(type, title, icon);
     if (
       !(await confirmChange(
         `\nThis creates the SCHEMA of a new managed-object type "${type}", not just its configuration.`,
@@ -1829,29 +1865,45 @@ export async function createManagedObjectType(
 }
 
 /**
- * Update an existing managed object type from a file. The type name comes
- * from the file's own `name` field. Refuses if the type doesn't exist (use
- * create instead). Prompts for confirmation, reusing the same schema-change
- * gate `frodo idm schema object import` already uses, unless
+ * Update an existing managed object type. Refuses if the type doesn't
+ * exist (use create instead). Only the fields whose flags are passed
+ * change; everything else keeps its current value. Prints a
+ * current/proposed preview and prompts for confirmation, unless
  * skipConfirmation is set.
- * @param {string} file file containing the updated type definition, including its `name`
+ * @param {string} type managed object type, e.g. alpha_widget
+ * @param {{title?: string, icon?: string}} changedFields only the explicitly-passed field overrides
  * @param {boolean} skipConfirmation true to skip the confirmation prompt
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function updateManagedObjectTypeCli(
-  file: string,
+  type: string,
+  changedFields: { title?: string; icon?: string },
   skipConfirmation: boolean = false
 ): Promise<boolean> {
   let indicatorId: string;
-  let type: string;
   try {
-    const typeConfig = readJsonFile(file) as ManagedObjectTypeConfig;
-    type = typeConfig.name;
-    const names = getSchemaBearingObjectNames([typeConfig]);
+    const typeConfig = (await readSubConfigEntity(
+      'managed',
+      type
+    )) as ManagedObjectTypeConfig;
+    if (!typeConfig.schema) {
+      printError(
+        new FrodoError(`Managed type "${type}" not found. Use create instead.`)
+      );
+      return false;
+    }
+    const current = {
+      title: typeConfig.schema.title,
+      icon: typeConfig.schema.icon,
+    };
+    const proposed = {
+      title: changedFields.title ?? current.title,
+      icon: changedFields.icon ?? current.icon,
+    };
+    const warning = `\nThis updates the SCHEMA of managed-object type "${type}", not just its configuration.\n\nCurrent:\n${JSON.stringify(current, null, 2)}\n\nProposed:\n${JSON.stringify(proposed, null, 2)}`;
     if (
-      names.length > 0 &&
       !(await confirmChange(
-        `\nThis import defines the SCHEMA of managed-object type "${type}", not just its configuration.`,
+        warning,
         '\nSchema changes affect every existing and future record of that managed-object type. Continue? (y|n):',
         skipConfirmation
       ))
@@ -1859,12 +1911,8 @@ export async function updateManagedObjectTypeCli(
       printMessage('Update aborted.', 'warn');
       return false;
     }
-    if (!(await managedObjectTypeExists(type))) {
-      printError(
-        new FrodoError(`Managed type "${type}" not found. Use create instead.`)
-      );
-      return false;
-    }
+    typeConfig.schema.title = proposed.title;
+    typeConfig.schema.icon = proposed.icon;
     indicatorId = createProgressIndicator(
       'indeterminate',
       0,
@@ -1885,6 +1933,139 @@ export async function updateManagedObjectTypeCli(
         'fail'
       );
     }
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Describe a single managed object type's own metadata (title, icon,
+ * property/relationship counts) -- not a full property dump, which
+ * `property list`/`relationship list` already own.
+ * @param {string} type managed object type, e.g. alpha_user or user
+ * @param {boolean} json true to print raw JSON instead of a table
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function describeManagedObjectType(
+  type: string,
+  json: boolean = false
+): Promise<boolean> {
+  try {
+    const schema = await readManagedObjectSchema(type);
+    const properties = Object.values(schema.properties || {});
+    const relationshipCount = properties.filter(
+      (property) =>
+        property.type === 'relationship' ||
+        (property.type === 'array' && property.items?.type === 'relationship')
+    ).length;
+    if (json) {
+      printMessage(JSON.stringify(schema, null, 2), 'data');
+      return true;
+    }
+    printMessage(
+      createObjectTable({
+        name: type,
+        title: schema.title,
+        icon: schema.icon,
+        propertyCount: properties.length,
+        relationshipPropertyCount: relationshipCount,
+      }).toString(),
+      'data'
+    );
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * List every managed object type defined on the tenant. A single read of
+ * the whole `managed` config entity already contains every type's
+ * `{name, schema}`, so no per-type follow-up read is needed.
+ * @param {boolean} json true to print raw JSON instead of a table
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function listManagedObjectTypes(
+  json: boolean = false
+): Promise<boolean> {
+  try {
+    const managedConfig = (await frodo.idm.config.readConfigEntity(
+      'managed'
+    )) as IdObjectSkeletonInterface & { objects?: ManagedObjectTypeConfig[] };
+    const objects = managedConfig.objects || [];
+    if (json) {
+      printMessage(
+        JSON.stringify(
+          objects.map((object) => object.name),
+          null,
+          2
+        ),
+        'data'
+      );
+      return true;
+    }
+    const table = createTable(['Name', 'Title']);
+    objects
+      .slice()
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .forEach((object) => {
+        table.push([object.name, object.schema?.title || '']);
+      });
+    printMessage(table.toString(), 'data');
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * List the relationship schema properties of a managed object type --
+ * fills the gap noted when the dedicated v2 relationship-schema API was
+ * first exposed via `frodo idm schema relationship`: that API is
+ * single-property GET/PUT/DELETE only, no bulk listing, so this falls back
+ * to the same whole-type schema read `property list` already uses,
+ * filtered to relationship-typed properties.
+ * @param {string} type managed object type, e.g. alpha_user
+ * @param {boolean} json true to print raw JSON instead of a table
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function listManagedObjectSchemaRelationshipProperties(
+  type: string,
+  json: boolean = false
+): Promise<boolean> {
+  try {
+    const schema = await readManagedObjectSchema(type);
+    const entries = Object.entries(schema.properties || {}).filter(
+      ([, property]) =>
+        property.type === 'relationship' ||
+        (property.type === 'array' && property.items?.type === 'relationship')
+    );
+    if (json) {
+      printMessage(
+        JSON.stringify(Object.fromEntries(entries), null, 2),
+        'data'
+      );
+      return true;
+    }
+    const table = createTable(['Name', 'Title', 'Many', 'Target']);
+    entries
+      .sort(([a], [b]) => a.localeCompare(b))
+      .forEach(([name, property]) => {
+        const many = property.type === 'array';
+        const relationship = (
+          many ? (property as { items?: unknown }).items : property
+        ) as Record<string, unknown>;
+        const resourceCollection = relationship?.resourceCollection as
+          Array<{ path?: string }> | undefined;
+        const target =
+          resourceCollection?.[0]?.path?.replace(/^managed\//, '') || '';
+        table.push([name, property.title || '', many ? 'yes' : 'no', target]);
+      });
+    printMessage(table.toString(), 'data');
+    return true;
+  } catch (error) {
     printError(error);
   }
   return false;

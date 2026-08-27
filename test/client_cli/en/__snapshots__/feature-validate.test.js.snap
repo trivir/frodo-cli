@@ -3,8 +3,7 @@
 exports[`CLI help interface for 'feature validate' should be expected english 1`] = `
 "Usage: frodo feature validate [options] [host] [username] [password]
 
-Validate whether an IDM tenant-configuration feature is installable, without
-installing it.
+Validate whether a feature is installable.
 
 Arguments:
   host                   AM base URL, e.g.: https://cdk.iam.example.com/am. To

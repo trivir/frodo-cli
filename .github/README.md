@@ -245,11 +245,11 @@ A set of commands supporting `Custom Nodes` in PingAM and PingOne Advanced Ident
 | &emsp;&emsp;list                                 |  1.0.0  | List variables.                                                        |
 | &emsp;&emsp;set                                  |  1.0.0  | Set variable description.                                              |
 |                                                  |         |                                                                        |
-| frodo feature                                    | `4.9.0` | Manage IDM tenant-configuration features (e.g. groups, aiagent, am/2fa/profiles). |
-| &emsp;describe                                   | `4.9.0` | Describe an IDM tenant-configuration feature.                         |
-| &emsp;install                                    | `4.9.0` | Install an IDM tenant-configuration feature. IRREVERSIBLE.            |
-| &emsp;list                                       | `4.9.0` | List IDM tenant-configuration features.                               |
-| &emsp;validate                                   | `4.9.0` | Validate whether an IDM tenant-configuration feature is installable, without installing it. |
+| frodo feature                                    | `4.9.0` | Manage features (e.g. groups, aiagent, am/2fa/profiles).              |
+| &emsp;describe                                   | `4.9.0` | Describe feature.                                                     |
+| &emsp;install                                    | `4.9.0` | Install a feature. IRREVERSIBLE.                                      |
+| &emsp;list                                       | `4.9.0` | List features.                                                        |
+| &emsp;validate                                   | `4.9.0` | Validate whether a feature is installable.                            |
 |                                                  |         |                                                                        |
 | frodo idm                                        |  1.0.0  | Manage IDM configuration.                                              |
 | &emsp;count                                      |  1.0.0  | Count managed objects.                                                 |
@@ -257,23 +257,26 @@ A set of commands supporting `Custom Nodes` in PingAM and PingOne Advanced Ident
 | &emsp;import                                     |  1.0.0  | Import IDM configuration objects.                                      |
 | &emsp;list                                       |  1.0.0  | List IDM configuration objects.                                        |
 | &emsp;schema                                     | `4.9.0` | Manage IDM schema.                                                     |
-| &emsp;&emsp;object                               | `4.9.0` | Manage IDM managed-object configuration (schema, notifications, etc.). |
-| &emsp;&emsp;&emsp;create                         | `4.9.0` | Create a new managed-object type from a file.                         |
-| &emsp;&emsp;&emsp;delete                         | `4.9.0` | Delete a managed-object type entirely, schema included.                |
-| &emsp;&emsp;&emsp;export                         | `4.9.0` | Export IDM managed-object configuration.                              |
-| &emsp;&emsp;&emsp;import                         | `4.9.0` | Import IDM managed-object configuration.                              |
-| &emsp;&emsp;&emsp;update                         | `4.9.0` | Update an existing managed-object type from a file.                    |
-| &emsp;&emsp;property                             | `4.9.0` | Manage individual managed-object schema properties (any deployment).   |
-| &emsp;&emsp;&emsp;create                         | `4.9.0` | Create a new schema property on a managed-object type.                |
-| &emsp;&emsp;&emsp;delete                         | `4.9.0` | Delete a schema property from a managed-object type.                  |
-| &emsp;&emsp;&emsp;describe                       | `4.9.0` | Describe a single schema property of a managed-object type.           |
-| &emsp;&emsp;&emsp;list                           | `4.9.0` | List the schema properties of a managed-object type.                  |
-| &emsp;&emsp;&emsp;update                         | `4.9.0` | Update an existing schema property on a managed-object type.          |
-| &emsp;&emsp;relationship                         | `4.9.0` | Manage relationship schema properties directly via IDM's dedicated v2 schema API (requires IDM 7.5+; Cloud always qualifies), including bidirectional (two-type) relationships. |
-| &emsp;&emsp;&emsp;create                         | `4.9.0` | Create a new relationship schema property, optionally auto-creating a bidirectional reverse side on a second managed-object type. |
-| &emsp;&emsp;&emsp;delete                         | `4.9.0` | Delete a relationship schema property, optionally including its reverse side. |
-| &emsp;&emsp;&emsp;describe                       | `4.9.0` | Describe a single relationship schema property, optionally including its reverse side. |
-| &emsp;&emsp;&emsp;update                         | `4.9.0` | Update an existing relationship schema property, optionally including its reverse side. |
+| &emsp;&emsp;object                               | `4.9.0` | Manage IDM managed object schema definitions.                         |
+| &emsp;&emsp;&emsp;create                         | `4.9.0` | Create IDM managed object schema definition.                          |
+| &emsp;&emsp;&emsp;delete                         | `4.9.0` | Delete IDM managed object schema definition.                          |
+| &emsp;&emsp;&emsp;describe                       | `4.9.0` | Describe IDM managed object schema definition.                        |
+| &emsp;&emsp;&emsp;export                         | `4.9.0` | Export IDM managed object schema definition.                          |
+| &emsp;&emsp;&emsp;import                         | `4.9.0` | Import IDM managed object schema definition.                          |
+| &emsp;&emsp;&emsp;list                           | `4.9.0` | List IDM managed object schema definitions.                           |
+| &emsp;&emsp;&emsp;update                         | `4.9.0` | Update IDM managed object schema definition.                          |
+| &emsp;&emsp;property                             | `4.9.0` | Manage IDM managed object property schema definitions.                |
+| &emsp;&emsp;&emsp;create                         | `4.9.0` | Create IDM managed object property schema definition.                 |
+| &emsp;&emsp;&emsp;delete                         | `4.9.0` | Delete IDM managed object property schema definition.                 |
+| &emsp;&emsp;&emsp;describe                       | `4.9.0` | Describe IDM managed object property schema definition.               |
+| &emsp;&emsp;&emsp;list                           | `4.9.0` | List IDM managed object property schema definitions.                  |
+| &emsp;&emsp;&emsp;update                         | `4.9.0` | Update IDM managed object property schema definition.                 |
+| &emsp;&emsp;relationship                         | `4.9.0` | Manage IDM relationship schema definitions.                           |
+| &emsp;&emsp;&emsp;create                         | `4.9.0` | Create IDM managed object relationship schema definition.             |
+| &emsp;&emsp;&emsp;delete                         | `4.9.0` | Delete IDM managed object relationship schema definition.             |
+| &emsp;&emsp;&emsp;describe                       | `4.9.0` | Describe IDM managed object relationship schema definition.           |
+| &emsp;&emsp;&emsp;list                           | `4.9.0` | List IDM managed object relationship schema definitions.              |
+| &emsp;&emsp;&emsp;update                         | `4.9.0` | Update IDM managed object relationship schema definition.             |
 |                                                  |         |                                                                        |
 | frodo idp                                        |  1.0.0  | Manage (social) identity providers.                                    |
 | &emsp;export                                     |  1.0.0  | Export (social) identity providers.                                    |

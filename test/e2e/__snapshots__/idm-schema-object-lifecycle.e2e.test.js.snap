@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema object create -f test/e2e/test-data/idm-schema-object-lifecycle/alpha_frodoE2ETestWidget.managed.json -y": should create the new managed-object type 1`] = `""`;
+exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema object create -o alpha_frodoE2ETestWidget --title 'Frodo E2E Test Widget' -y": should create the new managed-object type 1`] = `""`;
 
-exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema object create -f test/e2e/test-data/idm-schema-object-lifecycle/alpha_frodoE2ETestWidget.managed.json -y": should create the new managed-object type 2`] = `
+exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema object create -o alpha_frodoE2ETestWidget --title 'Frodo E2E Test Widget' -y": should create the new managed-object type 2`] = `
 "This creates the SCHEMA of a new managed-object type "alpha_frodoE2ETestWidget", not just its configuration.
 ✔ Created managed object type alpha_frodoE2ETestWidget"
 `;
@@ -69,17 +69,15 @@ exports[`frodo idm schema object lifecycle (create type -> add property -> updat
 `;
 
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property list -o alpha_frodoE2ETestWidget": should be back to only the base properties 1`] = `
-"Name       │Type  │Title       │Required│Searchable│User Editable│Viewable
-widgetColor│string│Widget Color│no      │no        │yes          │yes     
-widgetName │string│Widget Name │yes     │yes       │yes          │yes"
+"Name│Type  │Title│Required│Searchable│User Editable│Viewable
+_id │string│Id   │no      │no        │no           │no"
 `;
 
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property list -o alpha_frodoE2ETestWidget": should be back to only the base properties 2`] = `""`;
 
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property list -o alpha_frodoE2ETestWidget": should list the new type's base properties 1`] = `
-"Name       │Type  │Title       │Required│Searchable│User Editable│Viewable
-widgetColor│string│Widget Color│no      │no        │yes          │yes     
-widgetName │string│Widget Name │yes     │yes       │yes          │yes"
+"Name│Type  │Title│Required│Searchable│User Editable│Viewable
+_id │string│Id   │no      │no        │no           │no"
 `;
 
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property list -o alpha_frodoE2ETestWidget": should list the new type's base properties 2`] = `""`;

@@ -8,7 +8,7 @@ import UpdateCmd from './idm-schema-property-update';
 export default function setup() {
   const program = new FrodoStubCommand('frodo idm schema property');
 
-  program.description('Manage individual managed-object schema properties.');
+  program.description('Manage IDM managed object property schema definitions.');
 
   program.addCommand(ListCmd().name('list'));
 

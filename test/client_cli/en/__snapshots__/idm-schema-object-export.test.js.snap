@@ -3,7 +3,7 @@
 exports[`CLI help interface for 'idm schema object export' should be expected english 1`] = `
 "Usage: frodo idm schema object export [options] [host] [realm] [username] [password]
 
-Export IDM managed-object configuration (schema, notifications, etc.).
+Export IDM managed object schema definition.
 
 Arguments:
   host                            AM base URL, e.g.:

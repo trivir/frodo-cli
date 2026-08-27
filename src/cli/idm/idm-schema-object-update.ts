@@ -22,15 +22,15 @@ export default function setup() {
   );
 
   program
-    .description(
-      'Update an existing managed-object type from a file. The type name comes from the file\'s own "name" field. Refuses if that type does not exist. Prompts for confirmation before updating schema-bearing changes, unless -y/--yes is passed.'
-    )
+    .description('Update IDM managed object schema definition.')
     .addOption(
       new Option(
-        '-f, --file <file>',
-        'File containing the updated type definition, including its "name".'
+        '-o, --managed-object <type>',
+        'Managed object type. E.g. "alpha_widget".'
       ).makeOptionMandatory()
     )
+    .addOption(new Option('--title <text>', 'Change the display title.'))
+    .addOption(new Option('--icon <icon>', 'Change the display icon.'))
     .addOption(
       new Option(
         '-y, --yes',
@@ -50,10 +50,11 @@ export default function setup() {
         );
         if (await getTokens(false, true, deploymentTypes)) {
           verboseMessage(
-            `Updating managed object type from ${options.file}...`
+            `Updating managed object type "${options.managedObject}"...`
           );
           const outcome = await updateManagedObjectTypeCli(
-            options.file,
+            options.managedObject,
+            { title: options.title, icon: options.icon },
             options.yes
           );
           if (!outcome) process.exitCode = 1;

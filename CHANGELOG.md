@@ -7,6 +7,11 @@
 - Added `frodo script type describe` to print the bindings (available objects/APIs) exposed to scripts running in a given AM scripting context (ca2f90a9).
 - Restructured `frodo idm schema`: promoted `property` to a sibling of `object` (`frodo idm schema property ...` instead of `frodo idm schema object property ...`).
 - Added `frodo idm schema relationship describe/create/update/delete`, a command tree (any deployment that runs IDM -- Cloud and ForgeOps) backed by IDM's dedicated v2 relationship-schema API, including bidirectional (two-managed-object-type) relationship support -- `create --reverse-property` auto-creates the reverse side in the same write; `update`/`delete --with-reverse` infer the reverse side's identity from the property's own existing definition.
+- Added `frodo idm schema object describe/list` and `frodo idm schema relationship list`, filling gaps left when the `object`/`relationship` trees were first built (`property` already had both; `relationship`'s dedicated v2 API has no bulk-list endpoint, so `list` falls back to a whole-type schema read filtered to relationship-typed properties).
+- `frodo idm schema object create`/`update` are now flags-only (`-o`/`--title`/`--icon`), matching `relationship`'s design, instead of taking a `-f/--file` JSON payload -- `export`/`import` remain the file-based round-trip path. `create` seeds a minimal type (just the `_id` property, a populated `order` array, and a default icon if `--icon` isn't passed) since custom properties are added afterward via `property create`/`relationship create`, which already keep `order`/`required` in sync.
+
+### Changed
+- Shortened the `frodo idm schema object/property/relationship` and `frodo feature` command families' help text to match the rest of the CLI's one-line style, following a tracker-wide help-text review.
 
 ### Fixed
 - `frodo idm count` no longer silently undercounts managed-object types with more than 1000 records; now uses the dedicated exact-count endpoint instead of a page-capped record fetch (84dcbc9d).

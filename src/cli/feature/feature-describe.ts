@@ -18,7 +18,7 @@ export default function setup() {
   );
 
   program
-    .description('Describe an IDM tenant-configuration feature.')
+    .description('Describe feature.')
     .addOption(
       new Option(
         '-i, --feature-id <id>',

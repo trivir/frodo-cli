@@ -22,9 +22,7 @@ export default function setup() {
   );
 
   program
-    .description(
-      "Delete a relationship schema property, via IDM's dedicated v2 schema API. Prompts for confirmation, unless -y/--yes is passed."
-    )
+    .description('Delete IDM managed object relationship schema definition.')
     .addOption(
       new Option(
         '-o, --managed-object <type>',

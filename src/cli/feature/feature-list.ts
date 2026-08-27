@@ -20,7 +20,7 @@ export default function setup() {
   );
 
   program
-    .description('List IDM tenant-configuration features.')
+    .description('List features.')
     .addOption(new Option('-l, --long', 'Long with all fields.').default(false))
     .action(
       // implement command logic inside action handler

@@ -22,9 +22,7 @@ export default function setup() {
   );
 
   program
-    .description(
-      'Update an existing schema property on a managed-object type. Refuses if the property does not exist. Prints a current/proposed preview and prompts for confirmation, unless -y/--yes is passed.'
-    )
+    .description('Update IDM managed object property schema definition.')
     .addOption(
       new Option(
         '-o, --managed-object <type>',

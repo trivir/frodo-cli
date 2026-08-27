@@ -19,7 +19,7 @@ export default function setup() {
 
   program
     .description(
-      'Install an IDM tenant-configuration feature. IRREVERSIBLE: uninstalling or disabling a feature once installed requires contacting Ping support and rolling back the tenant. Prompts for confirmation, unless -y/--yes is passed.'
+      'Install a feature. IRREVERSIBLE: uninstalling or disabling a feature once installed requires contacting Ping support and rolling back the tenant.'
     )
     .addOption(
       new Option(

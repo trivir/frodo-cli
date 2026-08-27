@@ -22,14 +22,21 @@ export default function setup() {
   );
 
   program
-    .description(
-      'Create a new managed-object type from a file. The type name comes from the file\'s own "name" field. Refuses if that type already exists. Prompts for confirmation before creating, unless -y/--yes is passed.'
+    .description('Create IDM managed object schema definition.')
+    .addOption(
+      new Option(
+        '-o, --managed-object <type>',
+        'Managed object type. E.g. "alpha_widget".'
+      ).makeOptionMandatory()
+    )
+    .addOption(
+      new Option('--title <text>', 'Display title.').makeOptionMandatory()
     )
     .addOption(
       new Option(
-        '-f, --file <file>',
-        'File containing the type definition (schema included), including its "name".'
-      ).makeOptionMandatory()
+        '--icon <icon>',
+        'Display icon. Defaults to a generic icon if not passed.'
+      )
     )
     .addOption(
       new Option(
@@ -50,10 +57,12 @@ export default function setup() {
         );
         if (await getTokens(false, true, deploymentTypes)) {
           verboseMessage(
-            `Creating managed object type from ${options.file}...`
+            `Creating managed object type "${options.managedObject}"...`
           );
           const outcome = await createManagedObjectType(
-            options.file,
+            options.managedObject,
+            options.title,
+            options.icon,
             options.yes
           );
           if (!outcome) process.exitCode = 1;

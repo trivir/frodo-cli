@@ -21,9 +21,7 @@ export default function setup() {
   );
 
   program
-    .description(
-      "Describe a single relationship schema property of a managed-object type, via IDM's dedicated v2 schema API."
-    )
+    .description('Describe IDM managed object relationship schema definition.')
     .addOption(
       new Option(
         '-o, --managed-object <type>',

@@ -3,7 +3,7 @@
 exports[`CLI help interface for 'idm schema property' should be expected english 1`] = `
 "Usage: frodo idm schema property [options] [command]
 
-Manage individual managed-object schema properties.
+Manage IDM managed object property schema definitions.
 
 Options:
   -h, --help        Help
@@ -12,16 +12,11 @@ Options:
                     examples.
 
 Commands:
-  create            Create a new schema property on a managed-object type.
-                    Refuses if the property already exists.
-  delete            Delete a schema property from a managed-object type. Prompts
-                    for confirmation, unless -y/--yes is passed.
-  describe          Describe a single schema property of a managed-object type.
+  create            Create IDM managed object property schema definition.
+  delete            Delete IDM managed object property schema definition.
+  describe          Describe IDM managed object property schema definition.
   help              display help for command
-  list              List the schema properties of a managed-object type.
-  update            Update an existing schema property on a managed-object type.
-                    Refuses if the property does not exist. Prints a
-                    current/proposed preview and prompts for confirmation,
-                    unless -y/--yes is passed.
+  list              List IDM managed object property schema definitions.
+  update            Update IDM managed object property schema definition.
 "
 `;

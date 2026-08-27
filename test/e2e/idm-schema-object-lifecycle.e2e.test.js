@@ -48,11 +48,9 @@ recording against the live tenant, run:
 
   frodo idm schema object delete -o alpha_frodoE2ETestWidget -y -F <host>
 
-to manually clean up before re-recording. 'object create'/'object update'
-take the type name from the file's own "name" field (no -o) -- 'object
-delete' and every 'property' command still take -o explicitly, since a
-delete has no file to read a name from and a property file doesn't carry
-the type name at all.
+to manually clean up before re-recording. 'object create' is flags-only
+(-o/--title/--icon, no file) -- every command in this family takes -o
+explicitly.
 
 Two pairs of steps intentionally use different flags for what would
 otherwise be the exact same command ('property describe' before vs. after
@@ -87,7 +85,6 @@ const env = getEnv(c);
 
 const type = 'alpha_frodoE2ETestWidget';
 const fixtureDir = 'test/e2e/test-data/idm-schema-object-lifecycle';
-const typeFile = `${fixtureDir}/alpha_frodoE2ETestWidget.managed.json`;
 const propertyCreateFile = `${fixtureDir}/widgetSize.property.create.json`;
 const propertyUpdateFile = `${fixtureDir}/widgetSize.property.update.json`;
 
@@ -119,8 +116,8 @@ describe('frodo idm schema object lifecycle (create type -> add property -> upda
     }
   });
 
-  test(`"frodo idm schema object create -f ${typeFile} -y": should create the new managed-object type`, async () => {
-    const CMD = `frodo idm schema object create -f ${typeFile} -y`;
+  test(`"frodo idm schema object create -o ${type} --title 'Frodo E2E Test Widget' -y": should create the new managed-object type`, async () => {
+    const CMD = `frodo idm schema object create -o ${type} --title "Frodo E2E Test Widget" -y`;
     const { stdout, stderr } = await execWithRecordingProgress(CMD, env, isRecording);
     expect(assertNoPollyReplayError(stdout, CMD)).toMatchSnapshot();
     expect(assertNoPollyReplayError(stderr, CMD)).toMatchSnapshot();

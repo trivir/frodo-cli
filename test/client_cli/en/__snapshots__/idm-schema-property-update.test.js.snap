@@ -3,9 +3,7 @@
 exports[`CLI help interface for 'idm schema property update' should be expected english 1`] = `
 "Usage: frodo idm schema property update [options] [host] [realm] [username] [password]
 
-Update an existing schema property on a managed-object type. Refuses if the
-property does not exist. Prints a current/proposed preview and prompts for
-confirmation, unless -y/--yes is passed.
+Update IDM managed object property schema definition.
 
 Arguments:
   host                         AM base URL, e.g.:

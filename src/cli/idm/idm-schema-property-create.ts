@@ -22,9 +22,7 @@ export default function setup() {
   );
 
   program
-    .description(
-      'Create a new schema property on a managed-object type. Refuses if the property already exists.'
-    )
+    .description('Create IDM managed object property schema definition.')
     .addOption(
       new Option(
         '-o, --managed-object <type>',

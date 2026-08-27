@@ -3,8 +3,7 @@
 exports[`CLI help interface for 'idm schema property delete' should be expected english 1`] = `
 "Usage: frodo idm schema property delete [options] [host] [realm] [username] [password]
 
-Delete a schema property from a managed-object type. Prompts for confirmation,
-unless -y/--yes is passed.
+Delete IDM managed object property schema definition.
 
 Arguments:
   host                         AM base URL, e.g.:

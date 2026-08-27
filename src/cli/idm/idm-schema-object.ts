@@ -1,16 +1,20 @@
 import { FrodoStubCommand } from '../FrodoCommand';
 import CreateCmd from './idm-schema-object-create';
 import DeleteCmd from './idm-schema-object-delete';
+import DescribeCmd from './idm-schema-object-describe';
 import ExportCmd from './idm-schema-object-export';
 import ImportCmd from './idm-schema-object-import';
+import ListCmd from './idm-schema-object-list';
 import UpdateCmd from './idm-schema-object-update';
 
 export default function setup() {
   const program = new FrodoStubCommand('frodo idm schema object');
 
-  program.description(
-    'Manage IDM managed-object configuration (schema, notifications, etc.).'
-  );
+  program.description('Manage IDM managed object schema definitions.');
+
+  program.addCommand(ListCmd().name('list'));
+
+  program.addCommand(DescribeCmd().name('describe'));
 
   program.addCommand(ExportCmd().name('export'));
 

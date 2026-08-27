@@ -26,9 +26,7 @@ export default function setup() {
   );
 
   program
-    .description(
-      'Export IDM managed-object configuration (schema, notifications, etc.).'
-    )
+    .description('Export IDM managed object schema definition.')
     .addOption(
       new Option(
         '-a, --all',

@@ -3,11 +3,7 @@
 exports[`CLI help interface for 'idm schema relationship update' should be expected english 1`] = `
 "Usage: frodo idm schema relationship update [options] [host] [realm] [username] [password]
 
-Update an existing relationship schema property, via IDM's dedicated v2 schema
-API. Refuses if the property does not exist. Only the fields whose flags are
-passed change; everything else keeps its current value. Prints a
-current/proposed preview and prompts for confirmation, unless -y/--yes is
-passed.
+Update IDM managed object relationship schema definition.
 
 Arguments:
   host                            AM base URL, e.g.:

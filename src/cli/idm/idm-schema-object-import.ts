@@ -69,9 +69,7 @@ export default function setup() {
   );
 
   program
-    .description(
-      'Import IDM managed-object configuration (schema, notifications, etc.). Prompts for confirmation before importing schema changes, unless -y/--yes is passed.'
-    )
+    .description('Import IDM managed object schema definition.')
     .addOption(new Option('-f, --file [file]', 'Import file.'))
     .addOption(
       new Option(

@@ -3,7 +3,7 @@
 exports[`CLI help interface for 'idm schema relationship' should be expected english 1`] = `
 "Usage: frodo idm schema relationship [options] [command]
 
-Manage relationship properties.
+Manage IDM relationship schema definitions.
 
 Options:
   -h, --help        Help
@@ -12,22 +12,11 @@ Options:
                     examples.
 
 Commands:
-  create            Create a new relationship schema property, via IDM's
-                    dedicated v2 schema API. Refuses if the property already
-                    exists. Pass --reverse-property to also create the reverse
-                    side on --target-object in the same command, spanning both
-                    managed-object types.
-  delete            Delete a relationship schema property, via IDM's dedicated
-                    v2 schema API. Prompts for confirmation, unless -y/--yes is
-                    passed.
-  describe          Describe a single relationship schema property of a
-                    managed-object type, via IDM's dedicated v2 schema API.
+  create            Create IDM managed object relationship schema definition.
+  delete            Delete IDM managed object relationship schema definition.
+  describe          Describe IDM managed object relationship schema definition.
   help              display help for command
-  update            Update an existing relationship schema property, via IDM's
-                    dedicated v2 schema API. Refuses if the property does not
-                    exist. Only the fields whose flags are passed change;
-                    everything else keeps its current value. Prints a
-                    current/proposed preview and prompts for confirmation,
-                    unless -y/--yes is passed.
+  list              List IDM managed object relationship schema definitions.
+  update            Update IDM managed object relationship schema definition.
 "
 `;

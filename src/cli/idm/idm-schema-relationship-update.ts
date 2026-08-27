@@ -32,9 +32,7 @@ export default function setup() {
   );
 
   program
-    .description(
-      "Update an existing relationship schema property, via IDM's dedicated v2 schema API. Refuses if the property does not exist. Only the fields whose flags are passed change; everything else keeps its current value. Prints a current/proposed preview and prompts for confirmation, unless -y/--yes is passed."
-    )
+    .description('Update IDM managed object relationship schema definition.')
     .addOption(
       new Option(
         '-o, --managed-object <type>',

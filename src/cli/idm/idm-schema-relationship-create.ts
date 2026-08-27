@@ -33,9 +33,7 @@ export default function setup() {
   );
 
   program
-    .description(
-      "Create a new relationship schema property, via IDM's dedicated v2 schema API. Refuses if the property already exists. Pass --reverse-property to also create the reverse side on --target-object in the same command, spanning both managed-object types."
-    )
+    .description('Create IDM managed object relationship schema definition.')
     .addOption(
       new Option(
         '-o, --managed-object <type>',

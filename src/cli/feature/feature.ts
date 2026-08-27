@@ -8,7 +8,7 @@ export default function setup() {
   const program = new FrodoStubCommand('feature');
 
   program.description(
-    'Manage IDM tenant-configuration features (e.g. groups, aiagent, am/2fa/profiles).'
+    'Manage features (e.g. groups, aiagent, am/2fa/profiles).'
   );
 
   program.addCommand(ListCmd().name('list'));

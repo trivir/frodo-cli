@@ -21,7 +21,7 @@ export default function setup() {
   );
 
   program
-    .description('List the schema properties of a managed-object type.')
+    .description('List IDM managed object property schema definitions.')
     .addOption(
       new Option(
         '-o, --managed-object <type>',

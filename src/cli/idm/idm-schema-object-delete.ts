@@ -22,9 +22,7 @@ export default function setup() {
   );
 
   program
-    .description(
-      "Delete a managed-object type entirely, schema included. Every existing record of that type becomes orphaned. Refuses if the type has existing records, or if the record count can't be confirmed, unless -F/--force is also passed. Prompts for confirmation, unless -y/--yes is passed."
-    )
+    .description('Delete IDM managed object schema definition.')
     .addOption(
       new Option(
         '-o, --managed-object <type>',

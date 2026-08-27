@@ -3,32 +3,35 @@
 exports[`CLI help interface for 'idm schema object update' should be expected english 1`] = `
 "Usage: frodo idm schema object update [options] [host] [realm] [username] [password]
 
-Update an existing managed-object type from a file. The type name comes from the
-file's own "name" field. Refuses if that type does not exist. Prompts for
-confirmation before updating schema-bearing changes, unless -y/--yes is passed.
+Update IDM managed object schema definition.
 
 Arguments:
-  host               AM base URL, e.g.: https://cdk.iam.example.com/am. To use a
-                     connection profile, just specify a unique substring or
-                     alias.
-  realm              Realm. Specify realm as '/' for the root realm or 'realm'
-                     or '/parent/child' otherwise. (default: "alpha" for
-                     Identity Cloud tenants, "/" otherwise.)
-  username           Username to login with. Must be an admin user with
-                     appropriate rights to manage authentication journeys/trees.
-                     If given without a password, and it matches the username
-                     already stored in the connection profile for the target
-                     host, frodo uses that profile's stored password instead of
-                     requiring it on the command line.
-  password           Password.
+  host                         AM base URL, e.g.:
+                               https://cdk.iam.example.com/am. To use a
+                               connection profile, just specify a unique
+                               substring or alias.
+  realm                        Realm. Specify realm as '/' for the root realm or
+                               'realm' or '/parent/child' otherwise. (default:
+                               "alpha" for Identity Cloud tenants, "/"
+                               otherwise.)
+  username                     Username to login with. Must be an admin user
+                               with appropriate rights to manage authentication
+                               journeys/trees. If given without a password, and
+                               it matches the username already stored in the
+                               connection profile for the target host, frodo
+                               uses that profile's stored password instead of
+                               requiring it on the command line.
+  password                     Password.
 
 Options:
-  -f, --file <file>  File containing the updated type definition, including its
-                     "name".
-  -y, --yes          Answer y/yes to the schema-change confirmation prompt.
-  -h, --help         Help
-  -hh, --help-more   Help with all options.
-  -hhh, --help-all   Help with all options, environment variables, and usage
-                     examples.
+  --icon <icon>                Change the display icon.
+  -o, --managed-object <type>  Managed object type. E.g. "alpha_widget".
+  --title <text>               Change the display title.
+  -y, --yes                    Answer y/yes to the schema-change confirmation
+                               prompt.
+  -h, --help                   Help
+  -hh, --help-more             Help with all options.
+  -hhh, --help-all             Help with all options, environment variables, and
+                               usage examples.
 "
 `;

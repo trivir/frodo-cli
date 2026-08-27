@@ -22,9 +22,7 @@ export default function setup() {
   );
 
   program
-    .description(
-      'Delete a schema property from a managed-object type. Prompts for confirmation, unless -y/--yes is passed.'
-    )
+    .description('Delete IDM managed object property schema definition.')
     .addOption(
       new Option(
         '-o, --managed-object <type>',

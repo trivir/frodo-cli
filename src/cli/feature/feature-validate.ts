@@ -18,9 +18,7 @@ export default function setup() {
   );
 
   program
-    .description(
-      'Validate whether an IDM tenant-configuration feature is installable, without installing it.'
-    )
+    .description('Validate whether a feature is installable.')
     .addOption(
       new Option(
         '-i, --feature-id <id>',

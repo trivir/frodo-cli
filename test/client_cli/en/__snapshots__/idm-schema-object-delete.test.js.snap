@@ -3,10 +3,7 @@
 exports[`CLI help interface for 'idm schema object delete' should be expected english 1`] = `
 "Usage: frodo idm schema object delete [options] [host] [realm] [username] [password]
 
-Delete a managed-object type entirely, schema included. Every existing record of
-that type becomes orphaned. Refuses if the type has existing records, or if the
-record count can't be confirmed, unless -F/--force is also passed. Prompts for
-confirmation, unless -y/--yes is passed.
+Delete IDM managed object schema definition.
 
 Arguments:
   host                         AM base URL, e.g.:

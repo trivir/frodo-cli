@@ -3,7 +3,7 @@
 exports[`CLI help interface for 'idm schema property describe' should be expected english 1`] = `
 "Usage: frodo idm schema property describe [options] [host] [realm] [username] [password]
 
-Describe a single schema property of a managed-object type.
+Describe IDM managed object property schema definition.
 
 Arguments:
   host                         AM base URL, e.g.:

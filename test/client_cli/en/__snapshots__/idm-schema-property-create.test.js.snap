@@ -3,8 +3,7 @@
 exports[`CLI help interface for 'idm schema property create' should be expected english 1`] = `
 "Usage: frodo idm schema property create [options] [host] [realm] [username] [password]
 
-Create a new schema property on a managed-object type. Refuses if the property
-already exists.
+Create IDM managed object property schema definition.
 
 Arguments:
   host                         AM base URL, e.g.:
