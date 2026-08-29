@@ -1,29 +1,16 @@
-import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
-import { listManagedObjectTypes } from '../../ops/IdmOps';
+import { listScriptTypes } from '../../ops/ScriptOps';
 import c from '../../utils/ColorTheme';
 import { FrodoCommand } from '../FrodoCommand';
 
-const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
-  frodo.utils.constants;
-
-const deploymentTypes = [
-  CLOUD_DEPLOYMENT_TYPE_KEY,
-  FORGEOPS_DEPLOYMENT_TYPE_KEY,
-];
-
 export default function setup() {
-  const program = new FrodoCommand(
-    'frodo idm schema object list',
-    [],
-    deploymentTypes
-  );
+  const program = new FrodoCommand('frodo script type list');
 
   program
-    .description('List IDM managed object schema definitions.')
+    .description('List scripting contexts.')
     .addOption(
       new Option('-l, --long', 'Long with all fields.').default(false, 'false')
     )
@@ -31,12 +18,10 @@ export default function setup() {
     .addHelpText(
       'after',
       `Usage Examples:\n` +
-        `  List every managed object type:\n` +
-        c.cyanBright(`  $ frodo idm schema object list ${s.amBaseUrl}\n`) +
+        `  List every scripting context:\n` +
+        c.cyanBright(`  $ frodo script type list ${s.amBaseUrl}\n`) +
         `  List them with all fields:\n` +
-        c.cyanBright(`  $ frodo idm schema object list --long ${s.connId}\n`) +
-        `  List them in JSON format:\n` +
-        c.cyanBright(`  $ frodo idm schema object list --json ${s.connId}\n`)
+        c.cyanBright(`  $ frodo script type list --long ${s.connId}\n`)
     )
     .action(
       // implement command logic inside action handler
@@ -49,11 +34,8 @@ export default function setup() {
           options,
           command
         );
-        if (await getTokens(false, true, deploymentTypes)) {
-          const outcome = await listManagedObjectTypes(
-            options.json,
-            options.long
-          );
+        if (await getTokens()) {
+          const outcome = await listScriptTypes(options.json, options.long);
           if (!outcome) process.exitCode = 1;
         } else {
           process.exitCode = 1;

@@ -1,8 +1,10 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
+import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { describeFeature } from '../../ops/FeatureOps';
+import c from '../../utils/ColorTheme';
 import { verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
@@ -20,10 +22,15 @@ export default function setup() {
   program
     .description('Describe feature.')
     .addOption(
-      new Option(
-        '-i, --feature-id <id>',
-        'Feature id. E.g. "aiagent", "groups".'
-      ).makeOptionMandatory()
+      new Option('-i, --feature-id <id>', 'Feature id.').makeOptionMandatory()
+    )
+    .addHelpText(
+      'after',
+      `Usage Examples:\n` +
+        `  Describe the "${s.featureId}" feature:\n` +
+        c.cyanBright(
+          `  $ frodo feature describe -i ${s.featureId} ${s.amBaseUrl}\n`
+        )
     )
     .action(
       // implement command logic inside action handler

@@ -61,7 +61,7 @@ const {
   deleteScriptByName,
   deleteScripts,
 } = frodo.script;
-const { readScriptBindings } = frodo.scriptType;
+const { readScriptBindings, readScriptTypes } = frodo.scriptType;
 
 const langMap = { JAVASCRIPT: 'JavaScript', GROOVY: 'Groovy' };
 
@@ -334,6 +334,48 @@ export async function describeScript(
       }
       printMessage(table.toString(), 'data');
     }
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * List every scripting context, i.e. the valid `-c/--context` values for
+ * `script type describe` (the context's own `_id`, e.g.
+ * `SCRIPTED_DECISION_NODE`). Name only by default, one per line; `long`
+ * prints a Name/Languages/Hidden table instead. A context marked hidden
+ * (e.g. `NODE_DESIGNER`) is an internal one the platform doesn't surface in
+ * its own UI, not one `describe` refuses to read -- included either way.
+ * @param {boolean} json true to print raw JSON instead of a table -- always the complete list, regardless of `long`
+ * @param {boolean} long true to print a Name/Languages/Hidden table instead of just names
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
+export async function listScriptTypes(
+  json = false,
+  long = false
+): Promise<boolean> {
+  try {
+    const types = await readScriptTypes();
+    const sorted = types.slice().sort((a, b) => a._id.localeCompare(b._id));
+    if (json) {
+      printMessage(JSON.stringify(sorted, null, 2), 'data');
+      return true;
+    }
+    if (!long) {
+      sorted.forEach((type) => printMessage(type._id, 'data'));
+      return true;
+    }
+    const table = createTable(['Name', 'Languages', 'Hidden']);
+    sorted.forEach((type) => {
+      table.push([
+        type._id,
+        (type.languages || []).join(', '),
+        type.isHidden ? 'yes' : 'no',
+      ]);
+    });
+    printMessage(table.toString(), 'data');
     return true;
   } catch (error) {
     printError(error);

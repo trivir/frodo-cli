@@ -1,8 +1,10 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
+import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { createManagedObjectType } from '../../ops/IdmOps';
+import c from '../../utils/ColorTheme';
 import { verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
@@ -26,7 +28,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-o, --managed-object <type>',
-        'Managed object type. E.g. "alpha_widget".'
+        'Managed object type.'
       ).makeOptionMandatory()
     )
     .addOption(
@@ -35,14 +37,26 @@ export default function setup() {
     .addOption(
       new Option(
         '--icon <icon>',
-        'Display icon. Defaults to a generic icon if not passed.'
+        'Google Material Icon to use for this managed object. Defaults to a generic icon.'
       )
     )
-    .addOption(
-      new Option(
-        '-y, --yes',
-        'Answer y/yes to the schema-change confirmation prompt.'
-      )
+    .addOption(new Option('--description <text>', 'Object type description.'))
+    .addOption(new Option('-y, --yes', 'Answer y/yes to all prompts.'))
+    .addHelpText(
+      'after',
+      `Usage Examples:\n` +
+        `  Create the "${s.managedObjectTitle}" managed object type:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema object create -o ${s.managedObjectType} --title "${s.managedObjectTitle}" --icon ${s.managedObjectIcon} -y ${s.amBaseUrl}\n`
+        ) +
+        `  Create it without --icon, falling back to a generic icon:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema object create -o ${s.managedObjectType} --title "${s.managedObjectTitle}" -y ${s.connId}\n`
+        ) +
+        `  Create it with a description:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema object create -o ${s.managedObjectType} --title "${s.managedObjectTitle}" --description "A hovercraft owned by the fleet" -y ${s.connId}\n`
+        )
     )
     .action(
       // implement command logic inside action handler
@@ -63,6 +77,7 @@ export default function setup() {
             options.managedObject,
             options.title,
             options.icon,
+            options.description,
             options.yes
           );
           if (!outcome) process.exitCode = 1;

@@ -24,10 +24,11 @@ Arguments:
   password                     Password.
 
 Options:
-  -o, --managed-object <type>  Managed object type. E.g. "alpha_user".
-  -p, --property <name>        Schema property name. E.g. "custom_merchantId".
-  -y, --yes                    Answer y/yes to the schema-change confirmation
-                               prompt.
+  -o, --managed-object <type>  Managed object type.
+  -p, --property <name>        Property name.
+  --sub-property <path>        Delete a nested property, as a dot-path relative
+                               to -p.
+  -y, --yes                    Answer y/yes to all prompts.
   -h, --help                   Help
   -hh, --help-more             Help with all options.
   -hhh, --help-all             Help with all options, environment variables, and

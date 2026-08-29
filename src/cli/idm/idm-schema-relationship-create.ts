@@ -1,12 +1,15 @@
-import { frodo, FrodoError } from '@rockcarver/frodo-lib';
+import {
+  frodo,
+  FrodoError,
+  type ManagedObjectSchemaRelationshipPropertyFields as RelationshipPropertyFields,
+  type ManagedObjectSchemaRelationshipReverseFields as RelationshipReverseCreateFields,
+} from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
+import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
-import {
-  createManagedObjectSchemaRelationshipProperty,
-  type RelationshipPropertyFields,
-  type RelationshipReverseCreateFields,
-} from '../../ops/IdmOps';
+import { createManagedObjectSchemaRelationshipProperty } from '../../ops/IdmOps';
+import c from '../../utils/ColorTheme';
 import { printError, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
@@ -37,19 +40,19 @@ export default function setup() {
     .addOption(
       new Option(
         '-o, --managed-object <type>',
-        'Managed object type. E.g. "alpha_aiagentprivilege".'
+        'Managed object type.'
       ).makeOptionMandatory()
     )
     .addOption(
       new Option(
         '-p, --property <name>',
-        'Relationship property name. E.g. "agent".'
+        'Relationship property name.'
       ).makeOptionMandatory()
     )
     .addOption(
       new Option(
         '--target-object <type>',
-        'Managed object type this relationship points to. E.g. "alpha_aiagent".'
+        'Managed object type this relationship points to.'
       ).makeOptionMandatory()
     )
     .addOption(new Option('--many', 'This is a to-many (array) relationship.'))
@@ -59,7 +62,7 @@ export default function setup() {
     .addOption(
       new Option(
         '--query-fields <csv>',
-        'Comma-separated list of fields to fetch from the target object. E.g. "userName,givenName,sn".'
+        'Comma-separated list of fields to fetch from the target object.'
       ).makeOptionMandatory()
     )
     .addOption(
@@ -68,7 +71,7 @@ export default function setup() {
         'Display title. Defaults to a title-cased version of the property name.'
       )
     )
-    .addOption(new Option('--description <text>', 'Display description.'))
+    .addOption(new Option('--description <text>', 'Property description.'))
     .addOption(
       new Option(
         '--label <text>',
@@ -82,10 +85,7 @@ export default function setup() {
       )
     )
     .addOption(
-      new Option(
-        '--sort-keys <csv>',
-        'Comma-separated list of sort keys. Omitted from the definition if not passed.'
-      )
+      new Option('--sort-keys <csv>', 'Comma-separated list of sort keys.')
     )
     .addOption(
       new Option(
@@ -100,10 +100,7 @@ export default function setup() {
       )
     )
     .addOption(
-      new Option(
-        '--searchable',
-        'Mark the property searchable. Omitted from the definition (server default applies) if not passed.'
-      )
+      new Option('--searchable', 'Mark the property searchable in the UI.')
     )
     .addOption(
       new Option(
@@ -114,7 +111,7 @@ export default function setup() {
     .addOption(
       new Option(
         '--not-viewable',
-        'Hide this property from views. Default: viewable.'
+        'Hide this property in the UI. Default: viewable.'
       )
     )
     .addOption(
@@ -170,6 +167,30 @@ export default function setup() {
         '--reverse-description <text>',
         'Reverse side display description.'
       )
+    )
+    .addHelpText(
+      'after',
+      `Usage Examples:\n` +
+        `  Create the "${s.relationshipPropertyName}" relationship, pointing from "${s.managedObjectTitle}" at "${s.targetManagedObjectType}":\n` +
+        c.cyanBright(
+          `  $ frodo idm schema relationship create -o ${s.managedObjectType} -p ${s.relationshipPropertyName} --target-object ${s.targetManagedObjectType} --single --query-fields "${s.relationshipQueryFields}" ${s.amBaseUrl}\n`
+        ) +
+        `  Create it bidirectionally, auto-creating the reverse "${s.reverseRelationshipPropertyName}" property on "${s.targetManagedObjectType}":\n` +
+        c.cyanBright(
+          `  $ frodo idm schema relationship create -o ${s.managedObjectType} -p ${s.relationshipPropertyName} --target-object ${s.targetManagedObjectType} --single --query-fields "${s.relationshipQueryFields}" --reverse-property ${s.reverseRelationshipPropertyName} --reverse-many --reverse-query-fields name ${s.connId}\n`
+        ) +
+        `  Create a to-many relationship instead, one "${s.managedObjectTitle}" pointing at multiple "${s.targetManagedObjectType}" records:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema relationship create -o ${s.managedObjectType} -p ${s.manyRelationshipPropertyName} --target-object ${s.targetManagedObjectType} --many --query-fields "${s.relationshipQueryFields}" ${s.connId}\n`
+        ) +
+        `  Create it with a custom label, query filter, sort order, and change notifications on both sides:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema relationship create -o ${s.managedObjectType} -p ${s.relationshipPropertyName} --target-object ${s.targetManagedObjectType} --single --query-fields "${s.relationshipQueryFields}" --label "Pilot" --query-filter 'accountStatus eq "active"' --sort-keys sn --notify --notify-self ${s.connId}\n`
+        ) +
+        `  Mark it as having a reverse property that already exists on "${s.targetManagedObjectType}", without creating it:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema relationship create -o ${s.managedObjectType} -p ${s.relationshipPropertyName} --target-object ${s.targetManagedObjectType} --single --query-fields "${s.relationshipQueryFields}" --reverse-property-name ${s.reverseRelationshipPropertyName} ${s.connId}\n`
+        )
     )
     .action(
       // implement command logic inside action handler

@@ -16,5 +16,6 @@ Commands:
                     httpClient, idRepository) exposed to scripts running in a
                     given scripting context.
   help              display help for command
+  list              List scripting contexts.
 "
 `;

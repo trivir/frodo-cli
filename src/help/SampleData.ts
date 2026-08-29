@@ -15,3 +15,16 @@ export const classicConnId = 'am.example';
 export const amsterPrivateKey =
   '/home/trinity/am/security/keys/amster/amster_rsa';
 export const customAmsterService = 'AmsterLogin';
+export const managedObjectType = 'alpha_hovercraft';
+export const managedObjectTitle = 'Hovercraft';
+export const managedObjectIcon = 'directions_boat';
+export const propertyName = 'custom_maxCrew';
+export const arrayPropertyName = 'custom_callsigns';
+export const objectPropertyName = 'custom_cabin';
+export const subPropertyName = 'seatCount';
+export const targetManagedObjectType = 'alpha_user';
+export const relationshipPropertyName = 'pilot';
+export const reverseRelationshipPropertyName = 'hovercraftsPiloted';
+export const manyRelationshipPropertyName = 'crewMembers';
+export const relationshipQueryFields = 'userName,givenName,sn';
+export const featureId = 'groups';

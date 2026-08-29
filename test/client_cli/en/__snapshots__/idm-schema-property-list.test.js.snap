@@ -25,7 +25,13 @@ Arguments:
 
 Options:
   --json                       Output in JSON format.
-  -o, --managed-object <type>  Managed object type. E.g. "alpha_user".
+  -l, --long                   Long with all fields. (default: false)
+  -o, --managed-object <type>  Managed object type.
+  -p, --property <name>        List an object property's own child properties
+                               instead of the managed object type's top-level
+                               properties.
+  --sub-property <path>        Dot-path to a property nested more than one level
+                               deep, relative to -p.
   -h, --help                   Help
   -hh, --help-more             Help with all options.
   -hhh, --help-all             Help with all options, environment variables, and

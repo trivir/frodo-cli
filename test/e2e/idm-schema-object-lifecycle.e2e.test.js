@@ -108,9 +108,6 @@ const liveOnlyEnv = {
 };
 
 const type = 'alpha_frodoE2ETestWidget';
-const fixtureDir = 'test/e2e/test-data/idm-schema-object-lifecycle';
-const propertyCreateFile = `${fixtureDir}/widgetSize.property.create.json`;
-const propertyUpdateFile = `${fixtureDir}/widgetSize.property.update.json`;
 
 async function cleanUp() {
   try {
@@ -182,8 +179,8 @@ describe('frodo idm schema object lifecycle (create type -> add property -> upda
     expect(assertNoPollyReplayError(stderr, CMD)).toMatchSnapshot();
   });
 
-  test(`"frodo idm schema property create -o ${type} -p widgetSize -f ${propertyCreateFile}": should add a new schema property`, async () => {
-    const CMD = `frodo idm schema property create -o ${type} -p widgetSize -f ${propertyCreateFile}`;
+  test(`"frodo idm schema property create -o ${type} -p widgetSize --property-type number --title 'Widget Size' --user-editable": should add a new schema property`, async () => {
+    const CMD = `frodo idm schema property create -o ${type} -p widgetSize --property-type number --title "Widget Size" --user-editable`;
     const { stdout, stderr } = await execWithRecordingProgress(CMD, env, isRecording);
     expect(assertNoPollyReplayError(stdout, CMD)).toMatchSnapshot();
     expect(assertNoPollyReplayError(stderr, CMD)).toMatchSnapshot();
@@ -196,8 +193,8 @@ describe('frodo idm schema object lifecycle (create type -> add property -> upda
     expect(assertNoPollyReplayError(stderr, CMD)).toMatchSnapshot();
   });
 
-  test(`"frodo idm schema property update -o ${type} -p widgetSize -f ${propertyUpdateFile} -y": should update the property, previewing current vs. proposed`, async () => {
-    const CMD = `frodo idm schema property update -o ${type} -p widgetSize -f ${propertyUpdateFile} -y`;
+  test(`"frodo idm schema property update -o ${type} -p widgetSize --description '...' --searchable -y": should update the property, previewing current vs. proposed`, async () => {
+    const CMD = `frodo idm schema property update -o ${type} -p widgetSize --description "The widget's size, updated by the lifecycle e2e test to add this description and make the property searchable." --searchable -y`;
     const { stdout, stderr } = await execWithRecordingProgress(CMD, env, isRecording);
     expect(assertNoPollyReplayError(stdout, CMD)).toMatchSnapshot();
     expect(assertNoPollyReplayError(stderr, CMD)).toMatchSnapshot();

@@ -4,6 +4,8 @@
 
 A command line interface to manage PingOne Advanced Identity Cloud environments, ForgeOps deployments, and classic deployments. Frodo-cli is powered by [frodo-lib](https://github.com/rockcarver/frodo-lib), a hybrid (ESM and CJS) library to manage PingOne Advanced Identity Cloud environments, ForgeOps deployments, and classic deployments.
 
+Frodo-cli also ships a turn-key **[MCP server](#mcp-server)**: point any MCP-compatible client (Claude Code, Claude Desktop, VS Code Copilot, and others) at `frodo mcp server start`, using a connection profile you've already saved, and it can discover and operate on your tenant through the same capabilities the CLI itself uses — no separate server to build or host.
+
 ## Quick Nav
 
 - [Quick start](#quick-start)
@@ -12,6 +14,7 @@ A command line interface to manage PingOne Advanced Identity Cloud environments,
 - [Considerations](#considerations)
 - [Installing](#installing)
 - [Usage](#usage)
+- [MCP Server](#mcp-server)
 - [Request features or report issues](#feature-requests)
 - [Contributing](#contributing)
 - [Maintaining](#maintaining)
@@ -269,12 +272,16 @@ A set of commands supporting `Custom Nodes` in PingAM and PingOne Advanced Ident
 | &emsp;&emsp;&emsp;create                         | `4.9.0` | Create IDM managed object property schema definition.                 |
 | &emsp;&emsp;&emsp;delete                         | `4.9.0` | Delete IDM managed object property schema definition.                 |
 | &emsp;&emsp;&emsp;describe                       | `4.9.0` | Describe IDM managed object property schema definition.               |
+| &emsp;&emsp;&emsp;export                         | `4.9.0` | Export IDM managed object property schema definition.                 |
+| &emsp;&emsp;&emsp;import                         | `4.9.0` | Import IDM managed object property schema definition.                 |
 | &emsp;&emsp;&emsp;list                           | `4.9.0` | List IDM managed object property schema definitions.                  |
 | &emsp;&emsp;&emsp;update                         | `4.9.0` | Update IDM managed object property schema definition.                 |
 | &emsp;&emsp;relationship                         | `4.9.0` | Manage IDM relationship schema definitions.                           |
 | &emsp;&emsp;&emsp;create                         | `4.9.0` | Create IDM managed object relationship schema definition.             |
 | &emsp;&emsp;&emsp;delete                         | `4.9.0` | Delete IDM managed object relationship schema definition.             |
 | &emsp;&emsp;&emsp;describe                       | `4.9.0` | Describe IDM managed object relationship schema definition.           |
+| &emsp;&emsp;&emsp;export                         | `4.9.0` | Export IDM managed object relationship schema definition.             |
+| &emsp;&emsp;&emsp;import                         | `4.9.0` | Import IDM managed object relationship schema definition.             |
 | &emsp;&emsp;&emsp;list                           | `4.9.0` | List IDM managed object relationship schema definitions.              |
 | &emsp;&emsp;&emsp;update                         | `4.9.0` | Update IDM managed object relationship schema definition.             |
 |                                                  |         |                                                                        |
@@ -519,24 +526,6 @@ If you are a node developer and want to use frodo as a cli tool or as a library 
 
 ## Usage
 
-### MCP Server
-
-For instructions on configuring a specific MCP client (VS Code Copilot, Claude Code, Claude Desktop, and others) to connect to this server, see the [MCP client setup guide](../docs/MCP_CLIENT_SETUP.md).
-
-Start the MCP server with a saved connection profile:
-
-```console
-frodo mcp server start my-tenant
-```
-
-The server authenticates before accepting MCP requests and uses Frodo's detected or explicitly overridden deployment type when ranking skills. Cloud and ForgeOps deployments prefer `frodo.idm.managed` for user management, while classic deployments prefer `frodo.user`. When the deployment is known, incompatible skills are hidden from `frodo_find_skills` by default; pass `includeIncompatible: true` for diagnostics. Direct incompatible dispatch remains rejected before invocation.
-
-For Cloud and ForgeOps, startup performs a bounded, best-effort hydration of tenant managed-object type names. Semantic queries such as `count users`, `users/groups`, or a native type such as `alpha_user` can then find managed-object skills; matching concrete types are returned in a bounded `matchedObjectTypes` list. Hydration failures fall back to static skill metadata. `frodo_discover` reports the sanitized active host and MCP profile so clients do not need to inspect local MCP configuration.
-
-For agent discovery, start with a concise `query`, the intended `operationTypes`, and a small `limit` such as 5. The logical `user.User` coordinates are deployment-aware: they select `idm.ManagedObject` identity skills on Cloud/ForgeOps and AM `user.User` skills on classic. Other `domain` and `objectType` selectors remain exact capability coordinates rather than tenant object names. A zero-result response caused by exact filters includes guidance to retry without those selectors rather than treating the capability as unavailable. Active target and deployment metadata appear first in `frodo_discover`, ahead of its larger capability catalog.
-
-Routine startup information is sent to compatible MCP clients as protocol-level `info` messages rather than process stderr. MCP server logging is controlled exclusively by `--mcp-log-level off|error|warn|info|debug` and defaults to `info`; the existing `--verbose` and `--debug` options retain their legacy Frodo behavior but do not change MCP protocol logging. Frodo emits the selected levels even when a client does not call `logging/setLevel`, although clients may still hide received records in their own output. At the default MCP `info` level, `frodo_find_skills` logs its supplied free-text query or structured selectors, candidate count, and up to five ranked candidates with their routing status in a compact single-line record. Credentials, object-valued authentication records, dispatch arguments, and result payloads are not logged. MCP logging does not create a log file. Live stdio sessions reserve stdout for JSON-RPC and do not write routine MCP diagnostics to stderr. Use `--dry-run --json` for a structured startup summary without starting a transport.
-
 ### Connection Profiles
 
 A connection profile is a set of ForgeRock environment URL (Access Management base URL) and login credentials. For PingOne Advanced Identity Cloud connections, the profile also contains log API key and secret and service account id and jwk. Connection profiless are stored in `~/.frodo/.frodorc`. Passwords, secrets, and keys are encrypted.
@@ -713,6 +702,24 @@ Environment Variables:
   FRODO_MASTER_KEY_PATH: Use this master key file instead of '~/.frodo/masterkey.key' file.
   FRODO_MASTER_KEY: Use this master key instead of what's in '~/.frodo/masterkey.key'. Takes precedence over FRODO_MASTER_KEY_PATH.
 ```
+
+## MCP Server
+
+Frodo-cli includes a turn-key [MCP](https://modelcontextprotocol.io/) server: point any MCP-compatible client at it and it can discover and operate on your tenant using the same capabilities the CLI itself uses, no separate server to build or host. It reuses a [connection profile](#connection-profiles) you've already saved, so if you can already run `frodo info my-tenant`, you're ready to start the MCP server too.
+
+```console
+frodo mcp server start my-tenant
+```
+
+For instructions on configuring a specific MCP client (VS Code Copilot, Claude Code, Claude Desktop, and others) to connect to this server, see the [MCP client setup guide](../docs/MCP_CLIENT_SETUP.md).
+
+The server authenticates before accepting MCP requests and uses Frodo's detected or explicitly overridden deployment type when ranking skills. Cloud and ForgeOps deployments prefer `frodo.idm.managed` for user management, while classic deployments prefer `frodo.user`. When the deployment is known, incompatible skills are hidden from `frodo_find_skills` by default; pass `includeIncompatible: true` for diagnostics. Direct incompatible dispatch remains rejected before invocation.
+
+For Cloud and ForgeOps, startup performs a bounded, best-effort hydration of tenant managed-object type names. Semantic queries such as `count users`, `users/groups`, or a native type such as `alpha_user` can then find managed-object skills; matching concrete types are returned in a bounded `matchedObjectTypes` list. Hydration failures fall back to static skill metadata. `frodo_discover` reports the sanitized active host and MCP profile so clients do not need to inspect local MCP configuration.
+
+For agent discovery, start with a concise `query`, the intended `operationTypes`, and a small `limit` such as 5. The logical `user.User` coordinates are deployment-aware: they select `idm.ManagedObject` identity skills on Cloud/ForgeOps and AM `user.User` skills on classic. Other `domain` and `objectType` selectors remain exact capability coordinates rather than tenant object names. A zero-result response caused by exact filters includes guidance to retry without those selectors rather than treating the capability as unavailable. Active target and deployment metadata appear first in `frodo_discover`, ahead of its larger capability catalog.
+
+Routine startup information is sent to compatible MCP clients as protocol-level `info` messages rather than process stderr. MCP server logging is controlled exclusively by `--mcp-log-level off|error|warn|info|debug` and defaults to `info`; the existing `--verbose` and `--debug` options retain their legacy Frodo behavior but do not change MCP protocol logging. Frodo emits the selected levels even when a client does not call `logging/setLevel`, although clients may still hide received records in their own output. At the default MCP `info` level, `frodo_find_skills` logs its supplied free-text query or structured selectors, candidate count, and up to five ranked candidates with their routing status in a compact single-line record. Credentials, object-valued authentication records, dispatch arguments, and result payloads are not logged. MCP logging does not create a log file. Live stdio sessions reserve stdout for JSON-RPC and do not write routine MCP diagnostics to stderr. Use `--dry-run --json` for a structured startup summary without starting a transport.
 
 ## Feature requests
 

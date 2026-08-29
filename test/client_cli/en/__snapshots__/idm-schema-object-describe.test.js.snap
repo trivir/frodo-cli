@@ -25,7 +25,10 @@ Arguments:
 
 Options:
   --json                       Output in JSON format.
-  -o, --managed-object <type>  Managed object type. E.g. "alpha_widget".
+  -o, --managed-object <type>  Managed object type.
+  -r, --recursive              Expand nested object properties inline in the
+                               table, named by dot-path (e.g.
+                               "preferences.marketing").
   -h, --help                   Help
   -hh, --help-more             Help with all options.
   -hhh, --help-all             Help with all options, environment variables, and

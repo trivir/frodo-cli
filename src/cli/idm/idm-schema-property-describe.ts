@@ -1,8 +1,10 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
+import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { describeManagedObjectSchemaProperty } from '../../ops/IdmOps';
+import c from '../../utils/ColorTheme';
 import { FrodoCommand } from '../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
@@ -25,16 +27,42 @@ export default function setup() {
     .addOption(
       new Option(
         '-o, --managed-object <type>',
-        'Managed object type. E.g. "alpha_user".'
+        'Managed object type.'
       ).makeOptionMandatory()
     )
     .addOption(
       new Option(
         '-p, --property <name>',
-        'Schema property name. E.g. "custom_merchantId".'
+        'Property name.'
       ).makeOptionMandatory()
     )
+    .addOption(
+      new Option(
+        '--sub-property <path>',
+        'Dot-path to a nested property, relative to -p. Requires every level but the last to be of type object.'
+      )
+    )
     .addOption(new Option('--json', 'Output in JSON format.'))
+    .addHelpText(
+      'after',
+      `Usage Examples:\n` +
+        `  Describe the "${s.propertyName}" property:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema property describe -o ${s.managedObjectType} -p ${s.propertyName} ${s.amBaseUrl}\n`
+        ) +
+        `  Describe it in JSON format:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema property describe -o ${s.managedObjectType} -p ${s.propertyName} --json ${s.connId}\n`
+        ) +
+        `  Describe the "${s.objectPropertyName}" object property -- its properties table renders automatically:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema property describe -o ${s.managedObjectType} -p ${s.objectPropertyName} ${s.connId}\n`
+        ) +
+        `  Describe the "${s.subPropertyName}" sub-property directly, by dot-path:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema property describe -o ${s.managedObjectType} -p ${s.objectPropertyName} --sub-property ${s.subPropertyName} ${s.connId}\n`
+        )
+    )
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {
@@ -50,7 +78,8 @@ export default function setup() {
           const outcome = await describeManagedObjectSchemaProperty(
             options.managedObject,
             options.property,
-            options.json
+            options.json,
+            options.subProperty
           );
           if (!outcome) process.exitCode = 1;
         } else {

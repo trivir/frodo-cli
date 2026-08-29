@@ -22,6 +22,7 @@ Arguments:
 
 Options:
   --json            Output in JSON format.
+  -l, --long        Long with all fields. (default: false)
   -h, --help        Help
   -hh, --help-more  Help with all options.
   -hhh, --help-all  Help with all options, environment variables, and usage

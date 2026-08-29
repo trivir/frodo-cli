@@ -3,28 +3,111 @@
 ## Unreleased
 
 ### Added
-- Added `frodo feature list/describe/validate/install` to manage IDM tenant-configuration features (Cloud only). `install` is confirmation-gated with an explicit irreversibility warning and is a no-op if the feature is already installed (ca2f90a9).
+- Added new commands to manage IDM tenant-configuration features (Cloud only) (ca2f90a9):
+  - `frodo feature list`
+  - `frodo feature describe`
+  - `frodo feature validate`
+  - `frodo feature install`
+
+  `install` is confirmation-gated with an explicit irreversibility warning and is a no-op if the feature is already installed.
 - Added `frodo script type describe` to print the bindings (available objects/APIs) exposed to scripts running in a given AM scripting context (ca2f90a9).
 - Restructured `frodo idm schema`: promoted `property` to a sibling of `object` (`frodo idm schema property ...` instead of `frodo idm schema object property ...`).
-- Added `frodo idm schema relationship describe/create/update/delete`, a command tree (any deployment that runs IDM -- Cloud and ForgeOps) backed by IDM's dedicated v2 relationship-schema API, including bidirectional (two-managed-object-type) relationship support -- `create --reverse-property` auto-creates the reverse side in the same write; `update`/`delete --with-reverse` infer the reverse side's identity from the property's own existing definition.
-- Added `frodo idm schema object describe/list` and `frodo idm schema relationship list`, filling gaps left when the `object`/`relationship` trees were first built (`property` already had both; `relationship`'s dedicated v2 API has no bulk-list endpoint, so `list` falls back to a whole-type schema read filtered to relationship-typed properties).
+- Added a new `frodo idm schema relationship` command tree (any deployment that runs IDM -- Cloud and ForgeOps), backed by IDM's dedicated v2 relationship-schema API:
+  - `frodo idm schema relationship describe`
+  - `frodo idm schema relationship create`
+  - `frodo idm schema relationship update`
+  - `frodo idm schema relationship delete`
+
+  Includes bidirectional (two-managed-object-type) relationship support -- `create --reverse-property` auto-creates the reverse side in the same write; `update`/`delete --with-reverse` infer the reverse side's identity from the property's own existing definition.
+- Added new commands filling gaps left when the `object`/`relationship` trees were first built (`property` already had both):
+  - `frodo idm schema object describe`
+  - `frodo idm schema object list`
+  - `frodo idm schema relationship list`
+
+  `relationship`'s dedicated v2 API has no bulk-list endpoint, so `relationship list` falls back to a whole-type schema read filtered to relationship-typed properties.
 - `frodo idm schema object create`/`update` are now flags-only (`-o`/`--title`/`--icon`), matching `relationship`'s design, instead of taking a `-f/--file` JSON payload -- `export`/`import` remain the file-based round-trip path. `create` seeds a minimal type (just the `_id` property, a populated `order` array, and a default icon if `--icon` isn't passed) since custom properties are added afterward via `property create`/`relationship create`, which already keep `order`/`required` in sync.
+- `frodo idm schema property create`/`update` now take flags (`--property-type`, `--array`, `--title`, `--description`, `--required`, `--searchable`, `--user-editable`, `--not-viewable`, `--return-by-default`) instead of a `-f/--file` JSON payload, matching `object`/`relationship`'s design; `--property-type` supports every type the Admin UI's picker offers (string/number/boolean/date/time/datetime/duration/object).
+- Added new commands as the file-based round-trip path the `property create`/`update` flags above displace:
+  - `frodo idm schema property export`
+  - `frodo idm schema property import`
+
+  `import` is also the only way to give a new `object` property its own nested sub-properties in one write, since the flags only build a flat definition.
+- Added new commands giving `relationship` the same file-based round-trip commands `object`/`property` already have:
+  - `frodo idm schema relationship export`
+  - `frodo idm schema relationship import`
+- Added `--sub-property <path>` for managing nested properties of a `type: object` property, a dot-path relative to `-p`/`--property` (e.g. `--sub-property geo` with `-p address` targets `address.geo`):
+  - `frodo idm schema property create --sub-property <path>`
+  - `frodo idm schema property update --sub-property <path>`
+  - `frodo idm schema property delete --sub-property <path>`
+  - `frodo idm schema property describe --sub-property <path>`
+  - `frodo idm schema property list --sub-property <path>`
+
+  Every path segment but the last must already exist and be `type: object`; `list` alone takes an optional `-p` (with `--sub-property` relative to it) since it has no other property target.
+- Added `-l, --long`, matching the rest of the CLI's list-command convention: names only, one per line, by default; `-l` prints the full table instead, using the same columns/abbreviations as the corresponding describe command:
+  - `frodo idm schema object list -l`
+  - `frodo idm schema property list -l`
+  - `frodo idm schema relationship list -l`
+
+  `property list -l`/`relationship list -l` reuse `property describe`/`object describe`'s row-building, including cardinality and the extra reverse-lookup reads for `relationship list -l`. `--json` is unaffected by `-l` on all three.
+- `frodo idm schema object list -l` now also shows Icon, Properties, and Relationships columns -- all counted from the same single bulk `managed` config-entity read `list` already does, so no extra API calls. Properties and Relationships are each shown as `total/required` (e.g. `4/1`) rather than a separate Required column, since a required entry can be either a property or a relationship; the numerator is right-padded to the widest one in its column so the `/` lines up down the column. That bulk read doesn't include IDM's auto-injected `_meta`/`_notifications` relationship properties (those only appear via the dedicated per-type schema read `object describe`/`relationship list` use), so a type's Properties/Relationships counts here can run up to 2 low relative to those commands -- accepted in exchange for staying on one read instead of one per type.
+- Added `-r, --recursive` to `frodo idm schema object describe`. It now prints `Title (name)` (or just `name` with no title), the icon on its own line if configured, a `Properties` table, and (only if the type has any) a separate `Relationships` table -- previously just a property/relationship-property count. Flat by default, `-r` expands nested `type: object` properties inline using dot-path row names (e.g. `address.street`) that are valid `--sub-property` values. Both tables abbreviate their flag columns (`REQ`/`SRH`/`UED`/`VIW`), with a key line printed underneath (a blank line separating it from the table); `Properties` omits the Target column, which only `Relationships` needs, placed right after Title. `--json` is unaffected by `-r` -- always the complete definition. `property describe` leads the same way (`Title (name)`, or just the dot-path if untitled), then -- always, no flag needed -- a `Properties` table of a `type: object` property's own children (full nested tree, dot-path rows), then, for a virtual property, a `Scripts` section with each `onRetrieve`/`onStore` script's source printed verbatim instead of mangled into the generic field table one line per row. The `Title (name)`/`Properties`/`Relationships`/`Scripts` headings are bold (the table column headers keep their existing color-coding, unchanged). `frodo idm schema relationship describe`'s non-recursive output now leads the same way (`Title (name.path)`, bold, `title` no longer duplicated in the field table below it; the reverse side, with `--with-reverse`, is suffixed ` (reverse)`).
+- Added new flags to `frodo idm schema property create`/`update` for default values, enumerated properties, and virtual properties:
+  - `--default <value>`
+  - `--enum <csv>`
+  - `--enum-titles <csv>`
+  - `--on-retrieve-script <file>`
+  - `--on-store-script <file>`
+  - `--derive-from-relationship <name>`
+  - `--derive-fields <csv>`
+  - `--flatten`
+
+  A script-derived property computes its value from a local JavaScript file's contents on read/write, while an RDVP (relationship-derived virtual property) computes it by querying through a relationship instead, with no script at all. Both live entirely inside `schema.properties`, the same place `create`/`update` already read and write -- confirmed against two live examples on `alpha_user` (`custom_availableFactors`, script-derived; `memberOfOrgIDs`, a pure RDVP) -- so no new API surface was needed.
+- Added `frodo script type list`, so `frodo script type describe -c <context>`'s required context id has a discoverable source -- name only by default, one per line; `-l, --long` adds Languages/Hidden columns. Reuses the same `readScriptTypes()` read `describe` was already adjacent to; a context's own `_id` (e.g. `SCRIPTED_DECISION_NODE`) is exactly the value `-c/--context` expects.
+- Added `--description <text>` to `frodo idm schema object create/update`, targeting the type's own `schema.description` (confirmed real via a live type that has one set) -- not in frodo-lib's `ManagedObjectSchema` type any more than `mat-icon` is, same reason.
+- `frodo idm schema property create/update` now reject a `--derive-from-relationship` value that doesn't name an existing relationship property on the type, and reject `--enum-titles` when its entry count doesn't match `--enum`'s -- both now enforced in `frodo-lib` (see its own changelog), not just by `--property-type`'s CLI `.choices()`.
 
 ### Changed
 - Shortened the `frodo idm schema object/property/relationship` and `frodo feature` command families' help text to match the rest of the CLI's one-line style, following a tracker-wide help-text review.
+- Expanded the `frodo idm schema object/property/relationship` command families' usage examples, especially the commands with the most flag combinations (`relationship create`/`update`, `property create`/`update`, `object export`/`import`) -- `object export`/`import` previously had none at all. Added `--sub-property`, `-r/--recursive`, `--many`/`--reverse-property-name`-only, and multi-flag combo examples where the flag interactions weren't otherwise obvious from a single example.
+- `frodo idm schema object export/import`'s `-i, --individual-object` is now `-o, --managed-object`, matching every other command in the `object`/`property`/`relationship` families, which all already used `-o` for the managed object type. `import`'s stays a boolean flag (the type itself still comes from the imported file's own content, same as before) rather than gaining a `<type>` value with no functional use.
+- Revised the `frodo idm schema object/property/relationship` and `frodo feature`/`script type` command families' help text for consistency: flag descriptions are now free of examples (`E.g. "..."`) and use "Managed object type."/"Property name."/"Relationship property name." uniformly, `-y/--yes` now reads "Answer y/yes to all prompts." everywhere instead of a command-specific phrase, and a few other wording tweaks (e.g. "Property description." instead of "Display description.", "Mark the property searchable in the UI." instead of the longer "omitted if not passed" phrasing).
+- `frodo idm schema object create/update`'s `--icon` now writes `mat-icon` (a Material Design Icon name, e.g. `directions_boat`) instead of `icon` (a Font Awesome name). Confirmed via PingIDM's docs that `icon` only applies to standalone IDM while `mat-icon` is what the Ping Identity Platform's own Admin UI reads, and this command only ever targets Cloud/ForgeOps (Platform deployments) -- every live example checked this session had both fields set, with only `mat-icon` matching what the modern Admin UI actually displays. `SampleData`'s icon example changed from `fa-ship` to `directions_boat` to match.
+- `frodo idm schema property create/update/delete`'s type definitions (`SchemaPropertyFields`), payload building (`buildSchemaPropertyPayload`), current-value parsing (`extractSchemaPropertyFields`), the `--property-type` choice list, and the sub-property dot-path navigation helpers now come from `frodo-lib` (`ManagedObjectSchemaPropertyFields`/`buildManagedObjectSchemaPropertyPayload`/`extractManagedObjectSchemaPropertyFields`/`MANAGED_OBJECT_SCHEMA_CREATABLE_PROPERTY_TYPES`/`navigatePropertyPath` and friends) instead of being defined locally in this CLI, along with the actual read-modify-write for create/update/delete (`frodo.idm.managed.schema.createManagedObjectSchemaFlatProperty`/`updateManagedObjectSchemaFlatProperty`/`removeManagedObjectSchemaFlatProperty`) -- this CLI now only handles flag parsing, the confirmation prompt/diff on `update`/`delete`, and progress indicators. Pure refactor: no behavior change for `create`/`update`/`delete`/`describe`/`list`/`export`/`import`, apart from the two new validations noted above.
+- `frodo idm schema object create/update/delete`'s type-schema building (`buildManagedObjectTypeConfig`), the default icon constant, and the actual read-modify-write/existence checks now come from `frodo-lib` (`buildManagedObjectTypeSchema`/`MANAGED_OBJECT_TYPE_DEFAULT_ICON`/`frodo.idm.managed.schema.createManagedObjectType`/`updateManagedObjectType`/`removeManagedObjectType`) instead of being defined locally in this CLI -- this CLI now only handles flag parsing, the confirmation prompt/diff, and progress indicators. Pure refactor: no behavior change.
+- `frodo idm schema relationship create/update/delete`'s type definitions (`RelationshipPropertyFields`/`RelationshipReverseCreateFields`), payload building/parsing (`buildRelationshipPropertyPayload`/`extractRelationshipFields`/`toReverseDescriptorFields`/`inferReverseIdentity`), and the actual read-modify-write orchestration -- including the bidirectional reverse-side handling (auto-create on `create`, the required reverse-descriptor re-supply and second write on `update`, and the ordered delete-with-cascade-404-as-success handling on `delete`) -- now come from `frodo-lib` (`ManagedObjectSchemaRelationshipPropertyFields`/`ManagedObjectSchemaRelationshipReverseFields`/`buildManagedObjectSchemaRelationshipPropertyPayload`/`extractManagedObjectSchemaRelationshipPropertyFields`/`toManagedObjectSchemaRelationshipReverseFields`/`inferManagedObjectSchemaRelationshipReverseIdentity`/`frodo.idm.managed.schema.createManagedObjectSchemaRelationshipProperty`/`updateManagedObjectSchemaRelationshipProperty`/`removeManagedObjectSchemaRelationshipProperty`) instead of being defined locally in this CLI -- this CLI now only handles flag parsing, building the confirmation prompt/diff (`describe`/`update`/`delete` still read the property directly for this preview), and progress indicators. `update --with-reverse`'s two writes (forward, then reverse) now run under a single progress indicator instead of two sequential ones, since a partial failure (forward succeeded, reverse didn't) is now reported as one descriptive error rather than a second indicator's own failure message; the underlying behavior (including no automatic rollback) is unchanged. Otherwise a pure refactor: no other behavior change for `create`/`update`/`delete`/`describe`/`export`/`import`/`list`.
+- `frodo idm schema object/property/relationship`, `frodo feature`, and `frodo script type`'s usage examples now use `${connId}` (a short connection-profile alias, e.g. `matrix`) for every example after the first on each command, instead of the full `${amBaseUrl}` (e.g. `https://openam-matrix.id.forgerock.io/am`) on all of them -- the first example on each command still uses the full URL, so both forms stay visible, while the (often long, multi-flag) later examples read far more clearly with the short form.
+- README: promoted MCP Server from a `### MCP Server` subsection buried under `## Usage` to its own top-level `## MCP Server` section, added it to the Quick Nav table of contents, and gave it a callout in the top summary -- frodo-cli's MCP server is turn-key (reuses an existing connection profile, no separate server to build or host), so it belongs alongside the other top-level sections instead of nested where it was easy to miss.
 
 ### Fixed
 - `frodo idm count` no longer silently undercounts managed-object types with more than 1000 records; now uses the dedicated exact-count endpoint instead of a page-capped record fetch (84dcbc9d).
 - `frodo idm schema relationship` no longer rejects ForgeOps deployments. IDM's dedicated v2 relationship-schema API is a standard IDM REST API available since IDM 7.5.0, not Cloud-specific as previously assumed; the command tree is now gated to any deployment that runs IDM (Cloud and ForgeOps), rejecting only classic.
 - `frodo idm schema relationship create/update/delete` now wait for the relationship-property config write to fully propagate before returning (via a `frodo-lib` default), matching a captured, working Platform Admin UI request for the same endpoint -- avoids an occasional race where an immediately-following read or dependent write (e.g. auto-creating a bidirectional relationship's reverse side) could see IDM's config not yet fully applied.
+- `frodo idm schema object describe`/`property describe`'s Type column no longer shows a raw `number,null` for a nullable property (IDM represents nullable as `type: [x, "null"]`, not a plain string); Type now renders the plain `x`, with nullability moved to its own `NUL` flag column (between Type and REQ, added to the legend) alongside `REQ`/`SRH`/`UED`/`VIW`, and Title now comes before Type.
+- `frodo idm schema property describe`/`export` now read via the same raw `managed` config entity `create`/`update` already use, instead of the dedicated per-type schema endpoint, which silently omits a virtual property's `onRetrieve`/`onStore` script -- `describe` was showing an incomplete definition for one, and `export` was silently dropping the script on an export/import round trip.
+- `object describe`'s Relationships table's Type column no longer shows the redundant `relationship`/`relationship[]` -- it now shows the relationship's cardinality (`1:1`/`1:n`/`n:1`/`n:n`/`1:-`/`n:-`, `-` meaning no reverse configured), and Target moved between Title and Type. The reverse side's own cardinality isn't in the whole-type schema read `object describe` already had in hand, so getting it right costs one extra dedicated-API read per top-level relationship property (parallelized); a failed read, or a relationship nested under `--sub-property` (unsupported by that API), falls back to what's locally knowable (`1:-`/`n:-`) rather than failing the describe. `property describe -r` shows the same cardinality in Type when describing a relationship property, but -- like its non-recursive view -- never shows a Target column at all, even then: Target is relationship-specific, and `relationship describe` is the dedicated command for that.
+- `frodo idm schema property create/update --property-type` no longer offers `integer` as a choice. It was never a real option: the Admin UI's own property-type picker offers only string/number/boolean/date/time/datetime/duration/object (confirmed both by an earlier live screenshot and, now, by live `moSample` data -- a type built through that same picker -- whose own "Number" property is `type: "number"`, never `"integer"`); `integer` could still be written because `create`/`update` write with `validate: false`, which bypasses IDM's server-side schema validation entirely, not because IDM recognizes it as a property type.
 
 ## [v4.8.0] - 2026-08-26
 
 ### Added
-- Introduced the `-c, --clean` flag for `config-manager journeys`, allowing users to clean up configurations during the pull process. This feature mirrors the logic used in `fr-config-pull journeys` (#671).
-- Added new `config-manager idm-authentication` commands to support push and pull operations for IDM authentication configurations (#670).
-- Implemented CRUD commands for managed-object schema types and properties, enhancing the ability to manage IDM schema objects directly through the CLI (#672).
-- Added commands to list and describe Frodo node types, providing users with more detailed insights into node configurations (#672).
+- Introduced the `-c, --clean` flag for `frodo config-manager pull journeys`, allowing users to clean up configurations before the pull. This feature mirrors the logic used in `fr-config-pull journeys` (#671).
+- Added new commands to support push and pull operations for IDM authentication configurations (#670):
+  - `frodo config-manager push idm-authentication`
+  - `frodo config-manager pull idm-authentication`
+- Added new commands to manage IDM managed-object schema types and properties directly through the CLI (#672):
+  - `frodo idm schema object create`
+  - `frodo idm schema object update`
+  - `frodo idm schema object delete`
+  - `frodo idm schema object export`
+  - `frodo idm schema object import`
+  - `frodo idm schema object property create`
+  - `frodo idm schema object property update`
+  - `frodo idm schema object property delete`
+  - `frodo idm schema object property describe`
+  - `frodo idm schema object property list`
+- Added new commands to list and describe Frodo node types, providing users with more detailed insights into node configurations (#672):
+  - `frodo node type list`
+  - `frodo node type describe`
 
 ### Changed
 - Updated `@rockcarver/frodo-lib` to version 4.5.0, which includes improvements that may affect the behavior and performance of Frodo CLI (1b2850ff).

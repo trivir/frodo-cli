@@ -1,8 +1,10 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
+import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { describeManagedObjectSchemaRelationshipProperty } from '../../ops/IdmOps';
+import c from '../../utils/ColorTheme';
 import { FrodoCommand } from '../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
@@ -25,13 +27,13 @@ export default function setup() {
     .addOption(
       new Option(
         '-o, --managed-object <type>',
-        'Managed object type. E.g. "alpha_aiagentprivilege".'
+        'Managed object type.'
       ).makeOptionMandatory()
     )
     .addOption(
       new Option(
         '-p, --property <name>',
-        'Relationship property name. E.g. "agent".'
+        'Relationship property name.'
       ).makeOptionMandatory()
     )
     .addOption(
@@ -41,6 +43,18 @@ export default function setup() {
       )
     )
     .addOption(new Option('--json', 'Output in JSON format.'))
+    .addHelpText(
+      'after',
+      `Usage Examples:\n` +
+        `  Describe the "${s.relationshipPropertyName}" relationship:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema relationship describe -o ${s.managedObjectType} -p ${s.relationshipPropertyName} ${s.amBaseUrl}\n`
+        ) +
+        `  Describe both sides, including the auto-created reverse "${s.reverseRelationshipPropertyName}" property, in JSON format:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema relationship describe -o ${s.managedObjectType} -p ${s.relationshipPropertyName} --with-reverse --json ${s.connId}\n`
+        )
+    )
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {

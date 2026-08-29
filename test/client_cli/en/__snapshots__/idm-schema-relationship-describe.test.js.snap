@@ -25,9 +25,8 @@ Arguments:
 
 Options:
   --json                       Output in JSON format.
-  -o, --managed-object <type>  Managed object type. E.g.
-                               "alpha_aiagentprivilege".
-  -p, --property <name>        Relationship property name. E.g. "agent".
+  -o, --managed-object <type>  Managed object type.
+  -p, --property <name>        Relationship property name.
   --with-reverse               Also read and display the reverse side, inferred
                                from the forward property's own definition.
                                Errors if the property has no reverse

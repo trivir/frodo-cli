@@ -6,31 +6,79 @@ exports[`CLI help interface for 'idm schema property create' should be expected 
 Create IDM managed object property schema definition.
 
 Arguments:
-  host                         AM base URL, e.g.:
-                               https://cdk.iam.example.com/am. To use a
-                               connection profile, just specify a unique
-                               substring or alias.
-  realm                        Realm. Specify realm as '/' for the root realm or
-                               'realm' or '/parent/child' otherwise. (default:
-                               "alpha" for Identity Cloud tenants, "/"
-                               otherwise.)
-  username                     Username to login with. Must be an admin user
-                               with appropriate rights to manage authentication
-                               journeys/trees. If given without a password, and
-                               it matches the username already stored in the
-                               connection profile for the target host, frodo
-                               uses that profile's stored password instead of
-                               requiring it on the command line.
-  password                     Password.
+  host                               AM base URL, e.g.:
+                                     https://cdk.iam.example.com/am. To use a
+                                     connection profile, just specify a unique
+                                     substring or alias.
+  realm                              Realm. Specify realm as '/' for the root
+                                     realm or 'realm' or '/parent/child'
+                                     otherwise. (default: "alpha" for Identity
+                                     Cloud tenants, "/" otherwise.)
+  username                           Username to login with. Must be an admin
+                                     user with appropriate rights to manage
+                                     authentication journeys/trees. If given
+                                     without a password, and it matches the
+                                     username already stored in the connection
+                                     profile for the target host, frodo uses
+                                     that profile's stored password instead of
+                                     requiring it on the command line.
+  password                           Password.
 
 Options:
-  -f, --file <file>            File containing the property definition to
-                               create.
-  -o, --managed-object <type>  Managed object type. E.g. "alpha_user".
-  -p, --property <name>        Schema property name. E.g. "custom_merchantId".
-  -h, --help                   Help
-  -hh, --help-more             Help with all options.
-  -hhh, --help-all             Help with all options, environment variables, and
-                               usage examples.
+  --array                            Whether this is an array of
+                                     --property-type. Default: false.
+  --default <value>                  Default value. Parsed as JSON when possible
+                                     (e.g. "5" becomes the number 5, "true" the
+                                     boolean true), otherwise used as a literal
+                                     string.
+  --derive-fields <csv>              Comma-separated list of fields to pull from
+                                     each object referenced by
+                                     --derive-from-relationship. Requires
+                                     --derive-from-relationship.
+  --derive-from-relationship <name>  Make this a relationship-derived virtual
+                                     property (RDVP): compute its value by
+                                     querying through this relationship
+                                     property. E.g. "memberOfOrg".
+  --description <text>               Property description.
+  --enum <csv>                       Comma-separated list of allowed values,
+                                     turning this into an enumerated
+                                     (dropdown-style) property.
+  --enum-titles <csv>                Comma-separated list of display labels for
+                                     --enum, in the same order. Requires --enum.
+  --flatten                          Flatten --derive-fields values from a
+                                     to-many relationship into a single array,
+                                     instead of one array entry per referenced
+                                     object. Requires
+                                     --derive-from-relationship.
+  --not-viewable                     Hide this property in the UI. Default:
+                                     viewable.
+  -o, --managed-object <type>        Managed object type.
+  --on-retrieve-script <file>        Make this a script-derived virtual
+                                     property: compute its value on read from
+                                     this local JavaScript file.
+  --on-store-script <file>           Compute this property's stored value on
+                                     write from this local JavaScript file.
+  -p, --property <name>              Property name.
+  --property-type <type>             Type of the property to create. Valid
+                                     types: string, number, boolean, date, time,
+                                     datetime, duration, object. (choices:
+                                     "string", "number", "boolean", "date",
+                                     "time", "datetime", "duration", "object")
+  --required                         Require a value for this property. Default:
+                                     false.
+  --return-by-default                Return this property by default on reads.
+                                     Default: false.
+  --searchable                       Mark the property searchable in the UI.
+  --sub-property <path>              Create the property nested inside an
+                                     existing object property, as a dot-path
+                                     relative to -p. Requires every level to
+                                     already exist and be of type "object".
+  --title <text>                     Display title.
+  --user-editable                    Allow end users to edit this property.
+                                     Default: false.
+  -h, --help                         Help
+  -hh, --help-more                   Help with all options.
+  -hhh, --help-all                   Help with all options, environment
+                                     variables, and usage examples.
 "
 `;

@@ -3,7 +3,7 @@ import { Option } from 'commander';
 
 import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
-import { deleteManagedObjectSchemaPropertyCli } from '../../ops/IdmOps';
+import { exportManagedObjectSchemaPropertyToFile } from '../../ops/IdmOps';
 import c from '../../utils/ColorTheme';
 import { verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
@@ -18,13 +18,13 @@ const deploymentTypes = [
 
 export default function setup() {
   const program = new FrodoCommand(
-    'frodo idm schema property delete',
+    'frodo idm schema property export',
     [],
     deploymentTypes
   );
 
   program
-    .description('Delete IDM managed object property schema definition.')
+    .description('Export IDM managed object property schema definition.')
     .addOption(
       new Option(
         '-o, --managed-object <type>',
@@ -37,23 +37,13 @@ export default function setup() {
         'Property name.'
       ).makeOptionMandatory()
     )
-    .addOption(
-      new Option(
-        '--sub-property <path>',
-        'Delete a nested property, as a dot-path relative to -p.'
-      )
-    )
-    .addOption(new Option('-y, --yes', 'Answer y/yes to all prompts.'))
+    .addOption(new Option('-f, --file [file]', 'Export file.'))
     .addHelpText(
       'after',
       `Usage Examples:\n` +
-        `  Delete the "${s.propertyName}" property:\n` +
+        `  Export the "${s.propertyName}" property:\n` +
         c.cyanBright(
-          `  $ frodo idm schema property delete -o ${s.managedObjectType} -p ${s.propertyName} -y ${s.amBaseUrl}\n`
-        ) +
-        `  Delete just the "${s.subPropertyName}" sub-property nested inside "${s.objectPropertyName}":\n` +
-        c.cyanBright(
-          `  $ frodo idm schema property delete -o ${s.managedObjectType} -p ${s.objectPropertyName} --sub-property ${s.subPropertyName} -y ${s.connId}\n`
+          `  $ frodo idm schema property export -o ${s.managedObjectType} -p ${s.propertyName} ${s.amBaseUrl}\n`
         )
     )
     .action(
@@ -68,17 +58,14 @@ export default function setup() {
           command
         );
         if (await getTokens(false, true, deploymentTypes)) {
-          const path = options.subProperty
-            ? `${options.property}.${options.subProperty}`
-            : options.property;
+          const fileMessage = options.file ? ` into ${options.file}` : '';
           verboseMessage(
-            `Deleting schema property "${path}" from "${options.managedObject}"...`
+            `Exporting property "${options.property}" on "${options.managedObject}"${fileMessage}...`
           );
-          const outcome = await deleteManagedObjectSchemaPropertyCli(
+          const outcome = await exportManagedObjectSchemaPropertyToFile(
             options.managedObject,
             options.property,
-            options.yes,
-            options.subProperty
+            options.file
           );
           if (!outcome) process.exitCode = 1;
         } else {

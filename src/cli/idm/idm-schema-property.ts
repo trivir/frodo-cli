@@ -2,6 +2,8 @@ import { FrodoStubCommand } from '../FrodoCommand';
 import CreateCmd from './idm-schema-property-create';
 import DeleteCmd from './idm-schema-property-delete';
 import DescribeCmd from './idm-schema-property-describe';
+import ExportCmd from './idm-schema-property-export';
+import ImportCmd from './idm-schema-property-import';
 import ListCmd from './idm-schema-property-list';
 import UpdateCmd from './idm-schema-property-update';
 
@@ -13,6 +15,10 @@ export default function setup() {
   program.addCommand(ListCmd().name('list'));
 
   program.addCommand(DescribeCmd().name('describe'));
+
+  program.addCommand(ExportCmd().name('export'));
+
+  program.addCommand(ImportCmd().name('import'));
 
   program.addCommand(CreateCmd().name('create'));
 

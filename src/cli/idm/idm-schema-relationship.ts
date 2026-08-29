@@ -2,6 +2,8 @@ import { FrodoStubCommand } from '../FrodoCommand';
 import CreateCmd from './idm-schema-relationship-create';
 import DeleteCmd from './idm-schema-relationship-delete';
 import DescribeCmd from './idm-schema-relationship-describe';
+import ExportCmd from './idm-schema-relationship-export';
+import ImportCmd from './idm-schema-relationship-import';
 import ListCmd from './idm-schema-relationship-list';
 import UpdateCmd from './idm-schema-relationship-update';
 
@@ -13,6 +15,10 @@ export default function setup() {
   program.addCommand(ListCmd().name('list'));
 
   program.addCommand(DescribeCmd().name('describe'));
+
+  program.addCommand(ExportCmd().name('export'));
+
+  program.addCommand(ImportCmd().name('import'));
 
   program.addCommand(CreateCmd().name('create'));
 

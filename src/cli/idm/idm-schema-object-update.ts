@@ -1,8 +1,10 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
+import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { updateManagedObjectTypeCli } from '../../ops/IdmOps';
+import c from '../../utils/ColorTheme';
 import { verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
@@ -26,16 +28,39 @@ export default function setup() {
     .addOption(
       new Option(
         '-o, --managed-object <type>',
-        'Managed object type. E.g. "alpha_widget".'
+        'Managed object type.'
       ).makeOptionMandatory()
     )
     .addOption(new Option('--title <text>', 'Change the display title.'))
-    .addOption(new Option('--icon <icon>', 'Change the display icon.'))
     .addOption(
       new Option(
-        '-y, --yes',
-        'Answer y/yes to the schema-change confirmation prompt.'
+        '--icon <icon>',
+        'Change the Google Material Icon for this managed object.'
       )
+    )
+    .addOption(
+      new Option('--description <text>', 'Change the object type description.')
+    )
+    .addOption(new Option('-y, --yes', 'Answer y/yes to all prompts.'))
+    .addHelpText(
+      'after',
+      `Usage Examples:\n` +
+        `  Update the "${s.managedObjectTitle}" managed object type's title:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema object update -o ${s.managedObjectType} --title "${s.managedObjectTitle} (Updated)" -y ${s.amBaseUrl}\n`
+        ) +
+        `  Update just its icon:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema object update -o ${s.managedObjectType} --icon sailing -y ${s.connId}\n`
+        ) +
+        `  Update both title and icon in one call:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema object update -o ${s.managedObjectType} --title "${s.managedObjectTitle} (Updated)" --icon sailing -y ${s.connId}\n`
+        ) +
+        `  Update its description:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema object update -o ${s.managedObjectType} --description "A hovercraft owned by the fleet" -y ${s.connId}\n`
+        )
     )
     .action(
       // implement command logic inside action handler
@@ -54,7 +79,11 @@ export default function setup() {
           );
           const outcome = await updateManagedObjectTypeCli(
             options.managedObject,
-            { title: options.title, icon: options.icon },
+            {
+              title: options.title,
+              icon: options.icon,
+              description: options.description,
+            },
             options.yes
           );
           if (!outcome) process.exitCode = 1;

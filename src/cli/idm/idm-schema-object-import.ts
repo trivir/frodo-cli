@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import yesno from 'yesno';
 
+import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import {
   getIdmImportDataFromIdmDirectory,
@@ -13,6 +14,7 @@ import {
   importConfigEntityByIdFromFile,
   importManagedObjectFromFile,
 } from '../../ops/IdmOps';
+import c from '../../utils/ColorTheme';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
@@ -39,7 +41,7 @@ async function confirmSchemaChanges(
     return true;
   }
   printMessage(
-    '\nThis import defines the SCHEMA of the following managed-object type(s), not just their configuration:',
+    '\nThis import defines the schema of the following managed object type(s), not just their configuration:',
     'warn'
   );
   for (const name of names) {
@@ -57,7 +59,7 @@ async function confirmSchemaChanges(
   }
   return yesno({
     question:
-      '\nSchema changes affect every existing and future record of that managed-object type. Continue? (y|n):',
+      '\nSchema changes affect every existing and future record of that managed object type. Continue? (y|n):',
   });
 }
 
@@ -73,15 +75,26 @@ export default function setup() {
     .addOption(new Option('-f, --file [file]', 'Import file.'))
     .addOption(
       new Option(
-        '-i, --individual-object',
-        'Import an individual object. Requires the use of the -f to specify the file.'
+        '-o, --managed-object',
+        'Import a single managed object type. Requires -f to specify the file.'
       )
     )
-    .addOption(
-      new Option(
-        '-y, --yes',
-        'Answer y/yes to the schema-change confirmation prompt.'
-      )
+    .addOption(new Option('-y, --yes', 'Answer y/yes to all prompts.'))
+    .addHelpText(
+      'after',
+      `Usage Examples:\n` +
+        `  Import the "${s.managedObjectTitle}" managed object type, exported earlier with -o:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema object import -o -f ${s.managedObjectType}.managed.object.json -y ${s.amBaseUrl}\n`
+        ) +
+        `  Import every managed object type from a single file, exported earlier with -a:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema object import -f all-managed-objects.json -y ${s.connId}\n`
+        ) +
+        `  Import every managed object type from a directory of separate files, exported earlier with -A:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema object import -D ./managed-objects -y ${s.connId}\n`
+        )
     )
     .action(
       // implement command logic inside action handler
@@ -110,9 +123,9 @@ export default function setup() {
           );
           program.help();
           process.exitCode = 1;
-        } // -i, --individual-object
+        } // -o, --managed-object
         else if (
-          options.individualObject &&
+          options.managedObject &&
           options.file &&
           (await getTokens(false, true, deploymentTypes))
         ) {

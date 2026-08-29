@@ -30,7 +30,7 @@ async function confirmChange(
   }
   if (!process.stdin.isTTY) {
     printMessage(
-      '\nRefusing to prompt for confirmation without an interactive terminal. Pass -y/--yes to proceed non-interactively.',
+      '\nRefusing to prompt for confirmation without an interactive terminal. Use -y/--yes to proceed non-interactively.',
       'error'
     );
     return false;
@@ -128,8 +128,8 @@ export async function installFeatureCli(
     }
     if (
       !(await confirmChange(
-        `\nThis will install the "${featureId}" feature on this tenant. This is IRREVERSIBLE through self-service: uninstalling or disabling a feature once installed requires contacting Ping support and rolling back the tenant.`,
-        `\nInstall feature "${featureId}"? This cannot be undone through Frodo or the console. Continue? (y|n):`,
+        `This installs the "${featureId}" feature. This cannot be undone. Uninstalling or disabling a feature requires contacting Ping support and rolling back the environment.`,
+        `Install feature "${featureId}"? This cannot be undone. Continue? (y|n):`,
         skipConfirmation
       ))
     ) {

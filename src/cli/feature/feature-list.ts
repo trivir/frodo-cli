@@ -1,8 +1,10 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
+import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { listFeatures } from '../../ops/FeatureOps';
+import c from '../../utils/ColorTheme';
 import { verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
@@ -22,6 +24,14 @@ export default function setup() {
   program
     .description('List features.')
     .addOption(new Option('-l, --long', 'Long with all fields.').default(false))
+    .addHelpText(
+      'after',
+      `Usage Examples:\n` +
+        `  List features and their install status:\n` +
+        c.cyanBright(`  $ frodo feature list ${s.amBaseUrl}\n`) +
+        `  List features with their installed and available versions:\n` +
+        c.cyanBright(`  $ frodo feature list --long ${s.connId}\n`)
+    )
     .action(
       // implement command logic inside action handler
       async (host, user, password, options, command) => {

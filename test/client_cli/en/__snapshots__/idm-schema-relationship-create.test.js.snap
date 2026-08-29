@@ -25,24 +25,22 @@ Arguments:
   password                        Password.
 
 Options:
-  --description <text>            Display description.
+  --description <text>            Property description.
   --label <text>                  Resource collection label. Defaults to a
                                   title-cased version of --target-object.
   --many                          This is a to-many (array) relationship.
   --not-validate                  Skip target-existence validation on write.
                                   Default: validated.
-  --not-viewable                  Hide this property from views. Default:
+  --not-viewable                  Hide this property in the UI. Default:
                                   viewable.
   --notify                        Notify the target object of relationship
                                   changes. Default: false.
   --notify-self                   Notify this object of relationship changes.
                                   Default: false.
-  -o, --managed-object <type>     Managed object type. E.g.
-                                  "alpha_aiagentprivilege".
-  -p, --property <name>           Relationship property name. E.g. "agent".
+  -o, --managed-object <type>     Managed object type.
+  -p, --property <name>           Relationship property name.
   --query-fields <csv>            Comma-separated list of fields to fetch from
-                                  the target object. E.g.
-                                  "userName,givenName,sn".
+                                  the target object.
   --query-filter <filter>         Query filter applied against the target
                                   object. Default: "true" (match all).
   --return-by-default             Return this property by default on reads.
@@ -64,14 +62,11 @@ Options:
                                   relationship.
   --reverse-title <text>          Reverse side display title. Defaults to a
                                   title-cased version of --reverse-property.
-  --searchable                    Mark the property searchable. Omitted from the
-                                  definition (server default applies) if not
-                                  passed.
+  --searchable                    Mark the property searchable in the UI.
   --single                        This is a to-one (single) relationship.
-  --sort-keys <csv>               Comma-separated list of sort keys. Omitted
-                                  from the definition if not passed.
+  --sort-keys <csv>               Comma-separated list of sort keys.
   --target-object <type>          Managed object type this relationship points
-                                  to. E.g. "alpha_aiagent".
+                                  to.
   --title <text>                  Display title. Defaults to a title-cased
                                   version of the property name.
   --user-editable                 Allow end users to edit this property.

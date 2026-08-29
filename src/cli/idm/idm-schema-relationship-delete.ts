@@ -1,8 +1,10 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
+import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { deleteManagedObjectSchemaRelationshipPropertyCli } from '../../ops/IdmOps';
+import c from '../../utils/ColorTheme';
 import { verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
@@ -26,13 +28,13 @@ export default function setup() {
     .addOption(
       new Option(
         '-o, --managed-object <type>',
-        'Managed object type. E.g. "alpha_aiagentprivilege".'
+        'Managed object type.'
       ).makeOptionMandatory()
     )
     .addOption(
       new Option(
         '-p, --property <name>',
-        'Relationship property name. E.g. "agent".'
+        'Relationship property name.'
       ).makeOptionMandatory()
     )
     .addOption(
@@ -41,11 +43,18 @@ export default function setup() {
         "Also delete the reverse side, inferred from this property's own current definition. Errors if no reverse relationship is configured."
       )
     )
-    .addOption(
-      new Option(
-        '-y, --yes',
-        'Answer y/yes to the schema-change confirmation prompt.'
-      )
+    .addOption(new Option('-y, --yes', 'Answer y/yes to all prompts.'))
+    .addHelpText(
+      'after',
+      `Usage Examples:\n` +
+        `  Delete the "${s.relationshipPropertyName}" relationship:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema relationship delete -o ${s.managedObjectType} -p ${s.relationshipPropertyName} -y ${s.amBaseUrl}\n`
+        ) +
+        `  Delete it on both sides, including the auto-created reverse "${s.reverseRelationshipPropertyName}" property:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema relationship delete -o ${s.managedObjectType} -p ${s.relationshipPropertyName} --with-reverse -y ${s.connId}\n`
+        )
     )
     .action(
       // implement command logic inside action handler

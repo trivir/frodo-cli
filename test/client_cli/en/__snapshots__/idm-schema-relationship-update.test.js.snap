@@ -25,17 +25,16 @@ Arguments:
   password                        Password.
 
 Options:
-  --description <text>            Change the display description.
+  --description <text>            Change the property description.
   --label <text>                  Change the resource collection label.
   --many                          Change to a to-many (array) relationship.
   --not-validate                  Skip target-existence validation on write.
-  --not-viewable                  Hide this property from views.
+  --not-viewable                  Hide this property in the UI.
   --notify                        Notify the target object of relationship
                                   changes.
   --notify-self                   Notify this object of relationship changes.
-  -o, --managed-object <type>     Managed object type. E.g.
-                                  "alpha_aiagentprivilege".
-  -p, --property <name>           Relationship property name. E.g. "agent".
+  -o, --managed-object <type>     Managed object type.
+  -p, --property <name>           Relationship property name.
   --query-fields <csv>            Change the comma-separated list of fields
                                   fetched from the target object.
   --query-filter <filter>         Change the query filter applied against the
@@ -44,7 +43,7 @@ Options:
   --reverse-property-name <name>  Change the reverse property name this
                                   relationship points back at on
                                   --target-object.
-  --searchable                    Mark the property searchable.
+  --searchable                    Mark the property searchable in the UI.
   --single                        Change to a to-one (single) relationship.
   --sort-keys <csv>               Change the comma-separated list of sort keys.
   --target-object <type>          Change the managed object type this
@@ -55,8 +54,7 @@ Options:
                                   overrides to the reverse side, inferred from
                                   this property's own current definition. Errors
                                   if no reverse relationship is configured.
-  -y, --yes                       Answer y/yes to the schema-change confirmation
-                                  prompt.
+  -y, --yes                       Answer y/yes to all prompts.
   -h, --help                      Help
   -hh, --help-more                Help with all options.
   -hhh, --help-all                Help with all options, environment variables,

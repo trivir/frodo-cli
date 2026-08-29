@@ -1,11 +1,14 @@
-import { frodo, FrodoError } from '@rockcarver/frodo-lib';
+import {
+  frodo,
+  FrodoError,
+  type ManagedObjectSchemaRelationshipPropertyFields as RelationshipPropertyFields,
+} from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
+import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
-import {
-  type RelationshipPropertyFields,
-  updateManagedObjectSchemaRelationshipPropertyCli,
-} from '../../ops/IdmOps';
+import { updateManagedObjectSchemaRelationshipPropertyCli } from '../../ops/IdmOps';
+import c from '../../utils/ColorTheme';
 import { printError, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
@@ -36,13 +39,13 @@ export default function setup() {
     .addOption(
       new Option(
         '-o, --managed-object <type>',
-        'Managed object type. E.g. "alpha_aiagentprivilege".'
+        'Managed object type.'
       ).makeOptionMandatory()
     )
     .addOption(
       new Option(
         '-p, --property <name>',
-        'Relationship property name. E.g. "agent".'
+        'Relationship property name.'
       ).makeOptionMandatory()
     )
     .addOption(
@@ -65,7 +68,7 @@ export default function setup() {
     )
     .addOption(new Option('--title <text>', 'Change the display title.'))
     .addOption(
-      new Option('--description <text>', 'Change the display description.')
+      new Option('--description <text>', 'Change the property description.')
     )
     .addOption(
       new Option('--label <text>', 'Change the resource collection label.')
@@ -91,11 +94,13 @@ export default function setup() {
     .addOption(
       new Option('--notify-self', 'Notify this object of relationship changes.')
     )
-    .addOption(new Option('--searchable', 'Mark the property searchable.'))
+    .addOption(
+      new Option('--searchable', 'Mark the property searchable in the UI.')
+    )
     .addOption(
       new Option('--user-editable', 'Allow end users to edit this property.')
     )
-    .addOption(new Option('--not-viewable', 'Hide this property from views.'))
+    .addOption(new Option('--not-viewable', 'Hide this property in the UI.'))
     .addOption(
       new Option('--not-validate', 'Skip target-existence validation on write.')
     )
@@ -117,11 +122,30 @@ export default function setup() {
         "Also apply the same explicitly-passed field overrides to the reverse side, inferred from this property's own current definition. Errors if no reverse relationship is configured."
       )
     )
-    .addOption(
-      new Option(
-        '-y, --yes',
-        'Answer y/yes to the schema-change confirmation prompt.'
-      )
+    .addOption(new Option('-y, --yes', 'Answer y/yes to all prompts.'))
+    .addHelpText(
+      'after',
+      `Usage Examples:\n` +
+        `  Update the "${s.relationshipPropertyName}" relationship's description:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema relationship update -o ${s.managedObjectType} -p ${s.relationshipPropertyName} --description "The user piloting this hovercraft" -y ${s.amBaseUrl}\n`
+        ) +
+        `  Update it on both sides, including the auto-created reverse "${s.reverseRelationshipPropertyName}" property:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema relationship update -o ${s.managedObjectType} -p ${s.relationshipPropertyName} --description "The user piloting this hovercraft" --with-reverse -y ${s.connId}\n`
+        ) +
+        `  Change it from a to-one to a to-many relationship:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema relationship update -o ${s.managedObjectType} -p ${s.relationshipPropertyName} --many -y ${s.connId}\n`
+        ) +
+        `  Update its query filter, sort order, and turn on change notifications, in one call:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema relationship update -o ${s.managedObjectType} -p ${s.relationshipPropertyName} --query-filter 'accountStatus eq "active"' --sort-keys sn --notify -y ${s.connId}\n`
+        ) +
+        `  Re-point it at a different managed object type:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema relationship update -o ${s.managedObjectType} -p ${s.relationshipPropertyName} --target-object alpha_role --query-fields name -y ${s.connId}\n`
+        )
     )
     .action(
       // implement command logic inside action handler

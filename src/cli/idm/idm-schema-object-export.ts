@@ -1,12 +1,14 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
+import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import {
   exportConfigEntityToFile,
   exportManagedObjectToFile,
   warnAboutOfflineConnectorServers,
 } from '../../ops/IdmOps';
+import c from '../../utils/ColorTheme';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
@@ -36,14 +38,11 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all IDM configuration managed objects into separate JSON files in directory -D.'
+        'Export all managed object schema definitions into separate JSON files in directory -D.'
       )
     )
     .addOption(
-      new Option(
-        '-i, --individual-object <name>',
-        'Export an individual managed object by specifying an objects name. E.g. "alpha_user", "bravo_role", etc. If specified, -a and -A are ignored.'
-      )
+      new Option('-o, --managed-object <type>', 'Managed object type.')
     )
     .addOption(
       new Option(
@@ -54,7 +53,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-N, --no-metadata',
-        'Does not include metadata in the export file.'
+        'Do not include metadata in the export file.'
       )
     )
     .addOption(
@@ -62,6 +61,26 @@ export default function setup() {
         '-x, --no-extract',
         'Do not extract and save idm scripts to separate files. Ignored with -a and -A.'
       ).default(true, 'true')
+    )
+    .addHelpText(
+      'after',
+      `Usage Examples:\n` +
+        `  Export the "${s.managedObjectTitle}" managed object type:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema object export -o ${s.managedObjectType} ${s.amBaseUrl}\n`
+        ) +
+        `  Export it to a specific file:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema object export -o ${s.managedObjectType} -f ${s.managedObjectType}.managed.object.json ${s.connId}\n`
+        ) +
+        `  Export every managed object type into a single file:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema object export -a -f all-managed-objects.json ${s.connId}\n`
+        ) +
+        `  Export every managed object type into separate files, one per type:\n` +
+        c.cyanBright(
+          `  $ frodo idm schema object export -A -D ./managed-objects ${s.connId}\n`
+        )
     )
     .action(
       // implement command logic inside action handler
@@ -81,16 +100,16 @@ export default function setup() {
         const directoryMessage = state.getDirectory()
           ? ` into separate files in ${state.getDirectory()}`
           : '';
-        // -i, --individual-object <name>
+        // -o, --managed-object <type>
         if (
-          options.individualObject &&
+          options.managedObject &&
           (await getTokens(false, true, deploymentTypes))
         ) {
           verboseMessage(
-            `Exporting managed object "${options.individualObject}"${envMessage}${fileMessage}...`
+            `Exporting managed object "${options.managedObject}"${envMessage}${fileMessage}...`
           );
           const outcome = await exportManagedObjectToFile(
-            options.individualObject,
+            options.managedObject,
             options.file,
             options.extract
           );

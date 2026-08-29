@@ -49,12 +49,12 @@
 /*
 // Cloud
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idm schema object import -D test/e2e/exports/all-separate/cloud/global/idm/managed
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idm schema object import -i -f test/e2e/exports/all-separate/cloud/global/idm/managed/alpha_user.managed.json
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idm schema object import -o -f test/e2e/exports/all-separate/cloud/global/idm/managed/alpha_user.managed.json
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo idm schema object import -f test/e2e/exports/all/all.managed.json
 // Forgeops
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo idm schema object import -D test/e2e/exports/all-separate/forgeops/global/idm/managed -m forgeops
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo idm schema object import -f test/e2e/exports/all-separate/forgeops/global/idm/managed/managed.idm.json -m forgeops
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo idm schema object import -i -f test/e2e/exports/all-separate/forgeops/global/idm/managed/groovy/groovy.managed.json -m forgeops
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo idm schema object import -o -f test/e2e/exports/all-separate/forgeops/global/idm/managed/groovy/groovy.managed.json -m forgeops
 */
 import { getEnv, testFail } from './utils/TestUtils';
 import { connection as c , forgeops_connection as fc} from './utils/TestConfig';
@@ -91,8 +91,8 @@ describe('frodo idm import', () => {
     await testFail(CMD, env);
   });
 
-  test(`"frodo idm schema object import -i -f ${managedObjectsExportDirectory}/${alphaUserFile}": should refuse to import just the alpha user managed object ${managedObjectsExportDirectory}/${alphaUserFile} without -y`, async () => {
-    const CMD = `frodo idm schema object import -i -f ${managedObjectsExportDirectory}/${alphaUserFile}`;
+  test(`"frodo idm schema object import -o -f ${managedObjectsExportDirectory}/${alphaUserFile}": should refuse to import just the alpha user managed object ${managedObjectsExportDirectory}/${alphaUserFile} without -y`, async () => {
+    const CMD = `frodo idm schema object import -o -f ${managedObjectsExportDirectory}/${alphaUserFile}`;
     await testFail(CMD, env);
   });
 
@@ -113,8 +113,8 @@ describe('frodo idm import', () => {
     await testFail(CMD, forgeopsEnv);
   });
 
-  test(`"frodo idm schema object import -i -f ${forgeopsManagedObjectsExportDirectory}/groovy/groovy.managed.json -m forgeops": should refuse to import just the groovy managed object from '${forgeopsManagedObjectsExportDirectory}/groovy/groovy.managed.json' without -y.`, async () => {
-    const CMD = `frodo idm schema object import -i -f ${forgeopsManagedObjectsExportDirectory}/groovy/groovy.managed.json -m forgeops`;
+  test(`"frodo idm schema object import -o -f ${forgeopsManagedObjectsExportDirectory}/groovy/groovy.managed.json -m forgeops": should refuse to import just the groovy managed object from '${forgeopsManagedObjectsExportDirectory}/groovy/groovy.managed.json' without -y.`, async () => {
+    const CMD = `frodo idm schema object import -o -f ${forgeopsManagedObjectsExportDirectory}/groovy/groovy.managed.json -m forgeops`;
     await testFail(CMD, forgeopsEnv);
   });
 });

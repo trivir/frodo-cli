@@ -25,8 +25,11 @@ Arguments:
 
 Options:
   --json                       Output in JSON format.
-  -o, --managed-object <type>  Managed object type. E.g. "alpha_user".
-  -p, --property <name>        Schema property name. E.g. "custom_merchantId".
+  -o, --managed-object <type>  Managed object type.
+  -p, --property <name>        Property name.
+  --sub-property <path>        Dot-path to a nested property, relative to -p.
+                               Requires every level but the last to be of type
+                               object.
   -h, --help                   Help
   -hh, --help-more             Help with all options.
   -hhh, --help-all             Help with all options, environment variables, and

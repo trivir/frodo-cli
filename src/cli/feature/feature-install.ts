@@ -1,8 +1,10 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
+import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { installFeatureCli } from '../../ops/FeatureOps';
+import c from '../../utils/ColorTheme';
 import { verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
@@ -22,16 +24,16 @@ export default function setup() {
       'Install a feature. IRREVERSIBLE: uninstalling or disabling a feature once installed requires contacting Ping support and rolling back the tenant.'
     )
     .addOption(
-      new Option(
-        '-i, --feature-id <id>',
-        'Feature id. E.g. "aiagent", "groups".'
-      ).makeOptionMandatory()
+      new Option('-i, --feature-id <id>', 'Feature id.').makeOptionMandatory()
     )
-    .addOption(
-      new Option(
-        '-y, --yes',
-        'Answer y/yes to the install confirmation prompt.'
-      )
+    .addOption(new Option('-y, --yes', 'Answer y/yes to all prompts.'))
+    .addHelpText(
+      'after',
+      `Usage Examples:\n` +
+        `  Install the "${s.featureId}" feature:\n` +
+        c.cyanBright(
+          `  $ frodo feature install -i ${s.featureId} -y ${s.amBaseUrl}\n`
+        )
     )
     .action(
       // implement command logic inside action handler

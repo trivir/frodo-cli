@@ -22,8 +22,8 @@ Arguments:
 Deployment: Cloud-only
 
 Options:
-  -i, --feature-id <id>  Feature id. E.g. "aiagent", "groups".
-  -y, --yes              Answer y/yes to the install confirmation prompt.
+  -i, --feature-id <id>  Feature id.
+  -y, --yes              Answer y/yes to all prompts.
   -h, --help             Help
   -hh, --help-more       Help with all options.
   -hhh, --help-all       Help with all options, environment variables, and usage

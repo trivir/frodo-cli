@@ -3,7 +3,7 @@ import { Option } from 'commander';
 
 import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
-import { deleteManagedObjectSchemaPropertyCli } from '../../ops/IdmOps';
+import { exportManagedObjectSchemaRelationshipPropertyToFile } from '../../ops/IdmOps';
 import c from '../../utils/ColorTheme';
 import { verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
@@ -18,13 +18,13 @@ const deploymentTypes = [
 
 export default function setup() {
   const program = new FrodoCommand(
-    'frodo idm schema property delete',
+    'frodo idm schema relationship export',
     [],
     deploymentTypes
   );
 
   program
-    .description('Delete IDM managed object property schema definition.')
+    .description('Export IDM managed object relationship schema definition.')
     .addOption(
       new Option(
         '-o, --managed-object <type>',
@@ -34,26 +34,16 @@ export default function setup() {
     .addOption(
       new Option(
         '-p, --property <name>',
-        'Property name.'
+        'Relationship property name.'
       ).makeOptionMandatory()
     )
-    .addOption(
-      new Option(
-        '--sub-property <path>',
-        'Delete a nested property, as a dot-path relative to -p.'
-      )
-    )
-    .addOption(new Option('-y, --yes', 'Answer y/yes to all prompts.'))
+    .addOption(new Option('-f, --file [file]', 'Export file.'))
     .addHelpText(
       'after',
       `Usage Examples:\n` +
-        `  Delete the "${s.propertyName}" property:\n` +
+        `  Export the "${s.relationshipPropertyName}" relationship:\n` +
         c.cyanBright(
-          `  $ frodo idm schema property delete -o ${s.managedObjectType} -p ${s.propertyName} -y ${s.amBaseUrl}\n`
-        ) +
-        `  Delete just the "${s.subPropertyName}" sub-property nested inside "${s.objectPropertyName}":\n` +
-        c.cyanBright(
-          `  $ frodo idm schema property delete -o ${s.managedObjectType} -p ${s.objectPropertyName} --sub-property ${s.subPropertyName} -y ${s.connId}\n`
+          `  $ frodo idm schema relationship export -o ${s.managedObjectType} -p ${s.relationshipPropertyName} ${s.amBaseUrl}\n`
         )
     )
     .action(
@@ -68,18 +58,16 @@ export default function setup() {
           command
         );
         if (await getTokens(false, true, deploymentTypes)) {
-          const path = options.subProperty
-            ? `${options.property}.${options.subProperty}`
-            : options.property;
+          const fileMessage = options.file ? ` into ${options.file}` : '';
           verboseMessage(
-            `Deleting schema property "${path}" from "${options.managedObject}"...`
+            `Exporting relationship "${options.property}" on "${options.managedObject}"${fileMessage}...`
           );
-          const outcome = await deleteManagedObjectSchemaPropertyCli(
-            options.managedObject,
-            options.property,
-            options.yes,
-            options.subProperty
-          );
+          const outcome =
+            await exportManagedObjectSchemaRelationshipPropertyToFile(
+              options.managedObject,
+              options.property,
+              options.file
+            );
           if (!outcome) process.exitCode = 1;
         } else {
           process.exitCode = 1;

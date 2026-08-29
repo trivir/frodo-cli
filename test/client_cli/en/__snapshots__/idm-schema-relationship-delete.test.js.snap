@@ -24,14 +24,12 @@ Arguments:
   password                     Password.
 
 Options:
-  -o, --managed-object <type>  Managed object type. E.g.
-                               "alpha_aiagentprivilege".
-  -p, --property <name>        Relationship property name. E.g. "agent".
+  -o, --managed-object <type>  Managed object type.
+  -p, --property <name>        Relationship property name.
   --with-reverse               Also delete the reverse side, inferred from this
                                property's own current definition. Errors if no
                                reverse relationship is configured.
-  -y, --yes                    Answer y/yes to the schema-change confirmation
-                               prompt.
+  -y, --yes                    Answer y/yes to all prompts.
   -h, --help                   Help
   -hh, --help-more             Help with all options.
   -hhh, --help-all             Help with all options, environment variables, and

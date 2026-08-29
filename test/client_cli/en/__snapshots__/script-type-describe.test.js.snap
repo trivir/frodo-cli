@@ -23,7 +23,7 @@ Arguments:
   password                 Password.
 
 Options:
-  -c, --context <context>  Scripting context id. E.g. "SCRIPTED_DECISION_NODE".
+  -c, --context <context>  Scripting context id.
   --json                   Output in JSON format.
   -h, --help               Help
   -hh, --help-more         Help with all options.

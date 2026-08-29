@@ -25,8 +25,8 @@ Arguments:
 
 Options:
   --json                       Output in JSON format.
-  -o, --managed-object <type>  Managed object type. E.g.
-                               "alpha_aiagentprivilege".
+  -l, --long                   Long with all fields. (default: false)
+  -o, --managed-object <type>  Managed object type.
   -h, --help                   Help
   -hh, --help-more             Help with all options.
   -hhh, --help-all             Help with all options, environment variables, and

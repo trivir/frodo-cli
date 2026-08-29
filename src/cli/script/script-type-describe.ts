@@ -1,7 +1,9 @@
 import { Option } from 'commander';
 
+import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { describeScriptBindings } from '../../ops/ScriptOps';
+import c from '../../utils/ColorTheme';
 import { printMessage, verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
@@ -15,10 +17,22 @@ export default function setup() {
     .addOption(
       new Option(
         '-c, --context <context>',
-        'Scripting context id. E.g. "SCRIPTED_DECISION_NODE".'
+        'Scripting context id.'
       ).makeOptionMandatory()
     )
     .addOption(new Option('--json', 'Output in JSON format.'))
+    .addHelpText(
+      'after',
+      `Usage Examples:\n` +
+        `  Describe the bindings available to scripted decision node scripts:\n` +
+        c.cyanBright(
+          `  $ frodo script type describe -c SCRIPTED_DECISION_NODE ${s.amBaseUrl}\n`
+        ) +
+        `  Describe them in JSON format:\n` +
+        c.cyanBright(
+          `  $ frodo script type describe -c SCRIPTED_DECISION_NODE --json ${s.connId}\n`
+        )
+    )
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {
