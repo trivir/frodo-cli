@@ -59,7 +59,7 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/a
 import { getEnv, testFail } from './utils/TestUtils';
 import { connection as c , forgeops_connection as fc} from './utils/TestConfig';
 
-process.env['FRODO_MOCK'] = '1';
+process.env['FRODO_MOCK'] ||= '1';
 const env = getEnv(c);
 const forgeopsEnv = getEnv(fc);
 
@@ -82,6 +82,11 @@ const allManagedPath = 'test/e2e/exports/all/all.managed.json';
 // require fresh recordings from a live tenant, which these mocked tests
 // don't have. That's tracked as follow-up work for whoever next has live
 // tenant access, not something these tests can produce on their own.
+// When that follow-up is done, the successful (-y) import must target a
+// custom managed object type, not a built-in one like alpha_user or
+// groovy — import actually writes/mutates schema, and doing that against
+// a built-in type in the shared test tenant risks corrupting it. Export
+// tests are read-only and safe against any type, including built-in ones.
 describe('frodo idm import', () => {
 
   // Cloud Tests

@@ -3,15 +3,15 @@
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema object create -o alpha_frodoE2ETestWidget --title 'Frodo E2E Test Widget' -y": should create the new managed-object type 1`] = `""`;
 
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema object create -o alpha_frodoE2ETestWidget --title 'Frodo E2E Test Widget' -y": should create the new managed-object type 2`] = `
-"This creates the SCHEMA of a new managed-object type "alpha_frodoE2ETestWidget", not just its configuration.
-✔ Created managed object type alpha_frodoE2ETestWidget"
+"This creates the new managed object type "alpha_frodoE2ETestWidget".
+✔ Created managed object type "alpha_frodoE2ETestWidget"."
 `;
 
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema object describe -o alpha_frodoE2ETestWidget --json": should describe the new type's own metadata 1`] = `
 "{
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "Frodo E2E Test Widget",
-  "icon": "fa-asterisk",
+  "mat-icon": "widgets",
   "type": "object",
   "properties": {
     "_id": {
@@ -30,11 +30,16 @@ exports[`frodo idm schema object lifecycle (create type -> add property -> updat
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema object describe -o alpha_frodoE2ETestWidget --json": should describe the new type's own metadata 2`] = `""`;
 
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema object describe -o alpha_frodoE2ETestWidget": should reflect the updated title 1`] = `
-"name                     │alpha_frodoE2ETestWidget       
-title                    │Frodo E2E Test Widget (Updated)
-icon                     │fa-asterisk                    
-propertyCount            │1                              
-relationshipPropertyCount│0"
+"Frodo E2E Test Widget (Updated) (alpha_frodoE2ETestWidget)
+
+icon: widgets
+
+Properties
+
+Name│Title│Type  │NUL│REQ│SRH│UED│VIW
+_id │Id   │string│no │no │no │no │yes
+
+NUL=Nullable, REQ=Required, SRH=Searchable, UED=User Editable, VIW=Viewable"
 `;
 
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema object describe -o alpha_frodoE2ETestWidget": should reflect the updated title 2`] = `""`;
@@ -42,62 +47,52 @@ exports[`frodo idm schema object lifecycle (create type -> add property -> updat
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema object update -o alpha_frodoE2ETestWidget --title 'Frodo E2E Test Widget (Updated)' -y": should update the type's title 1`] = `""`;
 
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema object update -o alpha_frodoE2ETestWidget --title 'Frodo E2E Test Widget (Updated)' -y": should update the type's title 2`] = `
-"This updates the SCHEMA of managed-object type "alpha_frodoE2ETestWidget", not just its configuration.
-
+"This updates the managed object type "alpha_frodoE2ETestWidget".
 Current:
 {
   "title": "Frodo E2E Test Widget",
-  "icon": "fa-asterisk"
+  "icon": "widgets"
 }
-
 Proposed:
 {
   "title": "Frodo E2E Test Widget (Updated)",
-  "icon": "fa-asterisk"
+  "icon": "widgets"
 }
-✔ Updated managed object type alpha_frodoE2ETestWidget"
+✔ Updated managed object type "alpha_frodoE2ETestWidget"."
 `;
 
-exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property create -o alpha_frodoE2ETestWidget -p widgetSize -f test/e2e/test-data/idm-schema-object-lifecycle/widgetSize.property.create.json": should add a new schema property 1`] = `""`;
+exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property create -o alpha_frodoE2ETestWidget -p widgetSize --property-type number --title 'Widget Size' --user-editable": should add a new schema property 1`] = `""`;
 
-exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property create -o alpha_frodoE2ETestWidget -p widgetSize -f test/e2e/test-data/idm-schema-object-lifecycle/widgetSize.property.create.json": should add a new schema property 2`] = `"✔ Created schema property widgetSize on alpha_frodoE2ETestWidget"`;
+exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property create -o alpha_frodoE2ETestWidget -p widgetSize --property-type number --title 'Widget Size' --user-editable": should add a new schema property 2`] = `"✔ Created property "widgetSize" on "alpha_frodoE2ETestWidget"."`;
 
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property delete -o alpha_frodoE2ETestWidget -p widgetSize -y": should remove the property 1`] = `""`;
 
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property delete -o alpha_frodoE2ETestWidget -p widgetSize -y": should remove the property 2`] = `
-"This will permanently remove the following schema property definition from managed type "alpha_frodoE2ETestWidget":
-{
-  "type": "integer",
-  "title": "Widget Size",
-  "description": "The widget's size, updated by the lifecycle e2e test to add this description and make the property searchable.",
-  "viewable": true,
-  "searchable": true,
-  "userEditable": true
-}
-
-This removes the property from the schema only — it does not purge any values already stored for it on existing records.
-✔ Deleted schema property widgetSize from alpha_frodoE2ETestWidget"
+"This permanently deletes property "widgetSize" from managed object type "alpha_frodoE2ETestWidget".
+✔ Deleted property "widgetSize" from "alpha_frodoE2ETestWidget"."
 `;
 
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property describe -o alpha_frodoE2ETestWidget -p widgetSize --json": should reflect the updated property definition 1`] = `
 "{
-  "type": "integer",
+  "type": "number",
   "title": "Widget Size",
   "description": "The widget's size, updated by the lifecycle e2e test to add this description and make the property searchable.",
   "viewable": true,
-  "searchable": true,
-  "userEditable": true
+  "userEditable": true,
+  "returnByDefault": false,
+  "searchable": true
 }"
 `;
 
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property describe -o alpha_frodoE2ETestWidget -p widgetSize --json": should reflect the updated property definition 2`] = `""`;
 
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property describe -o alpha_frodoE2ETestWidget -p widgetSize": should describe the new property 1`] = `
-"type        │integer    
-title       │Widget Size
-viewable    │true       
-searchable  │false      
-userEditable│true"
+"Widget Size (widgetSize)
+
+type           │number
+viewable       │true  
+userEditable   │true  
+returnByDefault│false"
 `;
 
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property describe -o alpha_frodoE2ETestWidget -p widgetSize": should describe the new property 2`] = `""`;
@@ -112,40 +107,34 @@ exports[`frodo idm schema object lifecycle (create type -> add property -> updat
     Message: No schema found for managed/alpha_frodoE2ETestWidget"
 `;
 
-exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property list -o alpha_frodoE2ETestWidget": should be back to only the base properties 1`] = `
-"Name│Type  │Title│Required│Searchable│User Editable│Viewable
-_id │string│Id   │no      │no        │no           │no"
-`;
+exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property list -o alpha_frodoE2ETestWidget": should be back to only the base properties 1`] = `"_id"`;
 
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property list -o alpha_frodoE2ETestWidget": should be back to only the base properties 2`] = `""`;
 
-exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property list -o alpha_frodoE2ETestWidget": should list the new type's base properties 1`] = `
-"Name│Type  │Title│Required│Searchable│User Editable│Viewable
-_id │string│Id   │no      │no        │no           │no"
-`;
+exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property list -o alpha_frodoE2ETestWidget": should list the new type's base properties 1`] = `"_id"`;
 
 exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property list -o alpha_frodoE2ETestWidget": should list the new type's base properties 2`] = `""`;
 
-exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property update -o alpha_frodoE2ETestWidget -p widgetSize -f test/e2e/test-data/idm-schema-object-lifecycle/widgetSize.property.update.json -y": should update the property, previewing current vs. proposed 1`] = `""`;
+exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property update -o alpha_frodoE2ETestWidget -p widgetSize --description '...' --searchable -y": should update the property, previewing current vs. proposed 1`] = `""`;
 
-exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property update -o alpha_frodoE2ETestWidget -p widgetSize -f test/e2e/test-data/idm-schema-object-lifecycle/widgetSize.property.update.json -y": should update the property, previewing current vs. proposed 2`] = `
+exports[`frodo idm schema object lifecycle (create type -> add property -> update property -> remove property -> delete type) "frodo idm schema property update -o alpha_frodoE2ETestWidget -p widgetSize --description '...' --searchable -y": should update the property, previewing current vs. proposed 2`] = `
 "Current:
 {
-  "type": "integer",
+  "type": "number",
   "title": "Widget Size",
   "viewable": true,
-  "searchable": false,
-  "userEditable": true
+  "userEditable": true,
+  "returnByDefault": false
 }
-
 Proposed:
 {
-  "type": "integer",
+  "type": "number",
   "title": "Widget Size",
   "description": "The widget's size, updated by the lifecycle e2e test to add this description and make the property searchable.",
   "viewable": true,
-  "searchable": true,
-  "userEditable": true
+  "userEditable": true,
+  "returnByDefault": false,
+  "searchable": true
 }
-✔ Updated schema property widgetSize on alpha_frodoE2ETestWidget"
+✔ Updated property "widgetSize" on "alpha_frodoE2ETestWidget"."
 `;

@@ -177,10 +177,10 @@ exports[`frodo idm schema relationship lifecycle (single-side, then bidirectiona
 exports[`frodo idm schema relationship lifecycle (single-side, then bidirectional across two types) "frodo idm schema relationship describe -o alpha_frodoE2ERelTestA -p singleLinkB --json": should reflect the updated title 2`] = `""`;
 
 exports[`frodo idm schema relationship lifecycle (single-side, then bidirectional across two types) "frodo idm schema relationship describe -o alpha_frodoE2ERelTestB -p bidiLinkedAs": should reflect the update on the reverse side 1`] = `
-"alpha_frodoE2ERelTestB.bidiLinkedAs:
+"bidiLinkedAs (alpha_frodoE2ERelTestB.bidiLinkedAs)
+
 _id                         │bidiLinkedAs                                                                        
 type                        │array                                                                               
-title                       │bidiLinkedAs                                                                        
 description                 │Bidirectional link                                                                  
 viewable                    │true                                                                                
 userEditable                │false                                                                               
@@ -237,9 +237,6 @@ exports[`frodo idm schema relationship lifecycle (single-side, then bidirectiona
 
 exports[`frodo idm schema relationship lifecycle (single-side, then bidirectional across two types) "frodo idm schema relationship list -o alpha_frodoE2ERelTestA --json": should be back to no relationship properties 2`] = `""`;
 
-exports[`frodo idm schema relationship lifecycle (single-side, then bidirectional across two types) "frodo idm schema relationship list -o alpha_frodoE2ERelTestA": should list the single-side relationship property 1`] = `
-"Name       │Title        │Many│Target                
-singleLinkB│Single Link B│no  │alpha_frodoE2ERelTestB"
-`;
+exports[`frodo idm schema relationship lifecycle (single-side, then bidirectional across two types) "frodo idm schema relationship list -o alpha_frodoE2ERelTestA": should list the single-side relationship property 1`] = `"singleLinkB"`;
 
 exports[`frodo idm schema relationship lifecycle (single-side, then bidirectional across two types) "frodo idm schema relationship list -o alpha_frodoE2ERelTestA": should list the single-side relationship property 2`] = `""`;
