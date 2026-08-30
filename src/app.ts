@@ -39,6 +39,7 @@ import script from './cli/script/script';
 import secretstore from './cli/secretstore/secretstore';
 import server from './cli/server/server';
 import service from './cli/service/service';
+import settings from './cli/settings/settings';
 import shell from './cli/shell/shell';
 import theme from './cli/theme/theme';
 import {
@@ -47,6 +48,7 @@ import {
   printMessage,
   verboseMessage,
 } from './utils/Console';
+import { activatePersistedTheme } from './utils/ThemeConfig';
 import { getVersions } from './utils/Version';
 
 const { initConnectionProfiles } = frodo.conn;
@@ -63,6 +65,7 @@ process.argv = normalizeExpandedHelpArgv(process.argv);
     state.setErrorHandler(printError);
     state.setDebugHandler(debugMessage);
     state.setVerboseHandler(verboseMessage);
+    activatePersistedTheme();
 
     const program = new FrodoStubCommand('frodo').version(
       await getVersions(false),
@@ -109,6 +112,7 @@ process.argv = normalizeExpandedHelpArgv(process.argv);
     program.addCommand(secretstore());
     program.addCommand(server());
     program.addCommand(service());
+    program.addCommand(settings());
     program.addCommand(shell().helpGroup(utilitiesCommandsHeading));
     program.addCommand(theme());
     // enable sample command template.

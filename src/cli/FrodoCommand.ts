@@ -15,6 +15,7 @@ import {
   updateProgressIndicator,
   verboseMessage,
 } from '../utils/Console.js';
+import { activatePersistedTheme } from '../utils/ThemeConfig.js';
 
 // Frodo constants
 const constants = frodo.utils.constants;
@@ -1927,6 +1928,7 @@ export class FrodoStubCommand extends Command {
     state.setCreateProgressHandler(createProgressIndicator);
     state.setUpdateProgressHandler(updateProgressIndicator);
     state.setStopProgressHandler(stopProgressIndicator);
+    activatePersistedTheme();
 
     // shutdown handlers
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

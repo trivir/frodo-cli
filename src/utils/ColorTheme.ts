@@ -75,6 +75,50 @@ const CLI_ADDITIONS: Record<'dark' | 'light', CliOnlyColors> = {
 type CliThemeApi = Record<CliIntent, (text: unknown) => string> &
   ((strings: TemplateStringsArray, ...values: unknown[]) => string);
 
+/**
+ * Every named ANSI color a custom theme file (see `ThemeConfig.ts`) can
+ * reference by name. Exported so `ThemeConfig.ts` can validate a theme
+ * file's `colors` mapping without itself needing to import `tinyrainbow`.
+ */
+export const HUE_NAME_TO_FUNCTION: Record<string, (text: unknown) => string> = {
+  black: c.black,
+  red: c.red,
+  green: c.green,
+  yellow: c.yellow,
+  blue: c.blue,
+  magenta: c.magenta,
+  cyan: c.cyan,
+  white: c.white,
+  blackBright: c.blackBright,
+  redBright: c.redBright,
+  greenBright: c.greenBright,
+  yellowBright: c.yellowBright,
+  blueBright: c.blueBright,
+  magentaBright: c.magentaBright,
+  cyanBright: c.cyanBright,
+  whiteBright: c.whiteBright,
+  bold: c.bold,
+  dim: c.dim,
+};
+
+// A custom theme's per-intent color overrides, applied on top of the
+// resolved base (dark/light) theme -- set once at startup via
+// `applyCustomThemeOverrides` (see `app.ts`/`shell.ts`, fed by
+// `ThemeConfig.getActiveThemeDefinition()`), consulted by every getter
+// below before falling through to the base/CLI-default color. A custom
+// theme therefore only needs to specify the intents it wants to change.
+let customOverrides: Partial<Record<CliIntent, (text: unknown) => string>> = {};
+
+export function applyCustomThemeOverrides(
+  colors: Partial<Record<CliIntent, string>>
+): void {
+  customOverrides = {};
+  for (const [intent, hueName] of Object.entries(colors)) {
+    const fn = HUE_NAME_TO_FUNCTION[hueName];
+    if (fn) customOverrides[intent as CliIntent] = fn;
+  }
+}
+
 function currentCliAdditions(): CliOnlyColors {
   return CLI_ADDITIONS[resolveThemeMode(state)];
 }
@@ -95,16 +139,23 @@ const themeTag = (strings: TemplateStringsArray, ...values: unknown[]) =>
 // resulting *value* instead of the getter, freezing the theme at module
 // load time -- defineProperties keeps them live, re-resolved on every read
 // (matching frodo-lib's own ColorTheme.ts, which has the same requirement).
+function intent(
+  name: CliIntent,
+  fallback: () => (text: unknown) => string
+): { get: () => (text: unknown) => string; enumerable: true } {
+  return { get: () => customOverrides[name] ?? fallback(), enumerable: true };
+}
+
 const theme = themeTag as CliThemeApi;
 Object.defineProperties(theme, {
-  error: { get: () => libTheme(state).error, enumerable: true },
-  warning: { get: () => libTheme(state).warning, enumerable: true },
-  command: { get: () => libTheme(state).command, enumerable: true },
-  emphasis: { get: () => libTheme(state).emphasis, enumerable: true },
-  heading: { get: () => c.bold, enumerable: true },
-  positive: { get: () => currentCliAdditions().positive, enumerable: true },
-  muted: { get: () => currentCliAdditions().muted, enumerable: true },
-  debug: { get: () => currentCliAdditions().debug, enumerable: true },
+  error: intent('error', () => libTheme(state).error),
+  warning: intent('warning', () => libTheme(state).warning),
+  command: intent('command', () => libTheme(state).command),
+  emphasis: intent('emphasis', () => libTheme(state).emphasis),
+  heading: intent('heading', () => c.bold),
+  positive: intent('positive', () => currentCliAdditions().positive),
+  muted: intent('muted', () => currentCliAdditions().muted),
+  debug: intent('debug', () => currentCliAdditions().debug),
 });
 
 export default theme;

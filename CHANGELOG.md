@@ -3,6 +3,13 @@
 ## Unreleased
 
 ### Added
+- Added a `frodo settings` command for managing local frodo CLI preferences (distinct from `frodo config`/`config-manager`, which manage remote Ping/AIC configuration), with `theme` as its first category:
+  - `frodo settings theme list`
+  - `frodo settings theme show`
+  - `frodo settings theme set <name>`
+  - `frodo settings` and `frodo settings theme` (called with no subcommand) launch an arrow-key interactive picker instead of printing help.
+
+  Color themes are discoverable files in `~/.frodo/themes/` (JSON, one file per theme), not a single opaque settings blob -- the built-in `dark`/`light` themes are always guaranteed-readable (computed via `TerminalContrastFilter`, resolved from code, never from disk), and get written there as illustrative, forkable reference copies a user can copy under a new name and edit into a real custom theme (overriding only the intents they want to change; anything unspecified falls back to the active base mode). The active choice persists in `~/.frodo/Theme.json`, with `FRODO_COLOR_THEME` still taking precedence over it, same as before.
 - Adopted frodo-lib's new semantic color-intent theme (`error`/`warning`/`command`/`emphasis`), replacing frodo-cli's own previous non-semantic fix (a flat `*Bright`-to-plain remap in `ColorTheme.ts`) for the same underlying problem: `tinyrainbow`'s bright ANSI colors are unreadable on light-background terminals. Added frodo-cli-specific intents on top (`heading`, `positive`, `muted`, `debug`), each color chosen via frodo-lib's new objective `TerminalContrastFilter` (a WCAG contrast-ratio check) rather than by eye, and migrated all ~500 of frodo-cli's own call sites from raw hue names (`c.cyanBright(...)`) to the matching semantic name (`c.command(...)`, `c.heading(...)`, etc.) so no code outside `ColorTheme.ts` references a literal color anymore. Also caught and fixed two latent bugs the stricter typing surfaced: `printMessage(msg, 'success')` and `printMessage(msg, 'warning')` (a typo for `'warn'`) were both silently falling through to plain, uncolored text, since neither matched any of `printMessage`'s actual case values.
   - Added a real `MessageType` union type for `printMessage`'s `type` parameter (previously an unenforced string), plus canonical `infoMessage`/`warnMessage`/`errorMessage`/`successMessage` wrapper functions mirroring the existing `verboseMessage`/`debugMessage` pattern. `printMessage`/`printError` keep their existing names and signatures otherwise -- `printError` remains distinct, since it understands and formats an actual `Error`/`FrodoError` object, unlike `errorMessage`'s arbitrary error-styled string.
 - Added new commands to manage IDM tenant-configuration features (Cloud only) (ca2f90a9):

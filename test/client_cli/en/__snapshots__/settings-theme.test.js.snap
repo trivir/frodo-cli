@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CLI help interface for 'settings theme list' should be expected english 1`] = `
+"Usage: frodo settings theme list [options]
+
+List available color themes.
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+"
+`;
+
+exports[`CLI help interface for 'settings theme set' should be expected english 1`] = `
+"Usage: frodo settings theme set [options] <name>
+
+Set the active color theme.
+
+Arguments:
+  name              Name of the theme to activate.
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+"
+`;
+
+exports[`CLI help interface for 'settings theme show' should be expected english 1`] = `
+"Usage: frodo settings theme show [options]
+
+Show the active color theme and a preview of each intent's color.
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+"
+`;
+
+exports[`CLI help interface for 'settings theme' should be expected english 1`] = `
+"Usage: frodo settings theme [options] [command]
+
+Manage the CLI color theme.
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+
+Commands:
+  list              List available color themes.
+  set               Set the active color theme.
+  show              Show the active color theme and a preview of each intent's
+                    color.
+"
+`;
