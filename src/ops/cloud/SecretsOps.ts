@@ -86,15 +86,15 @@ export async function listSecrets(
   let fullExport = null;
   const headers = long
     ? [
-        c.cyanBright('Id'),
-        { hAlign: 'right', content: c.cyanBright('Active\nVersion') },
-        { hAlign: 'right', content: c.cyanBright('Loaded\nVersion') },
-        c.cyanBright('Status'),
-        c.cyanBright('Description'),
-        c.cyanBright('Modifier'),
-        c.cyanBright('Modified (UTC)'),
+        c.heading('Id'),
+        { hAlign: 'right', content: c.command('Active\nVersion') },
+        { hAlign: 'right', content: c.command('Loaded\nVersion') },
+        c.heading('Status'),
+        c.heading('Description'),
+        c.heading('Modifier'),
+        c.heading('Modified (UTC)'),
       ]
-    : [c.cyanBright('Id')];
+    : [c.heading('Id')];
   if (usage) {
     try {
       fullExport = await getFullExportConfig(file);
@@ -104,7 +104,7 @@ export async function listSecrets(
     }
     //Delete secrets from full export so they aren't mistakenly used for determining usage
     delete fullExport.global.secret;
-    headers.push(c.cyanBright('Used'));
+    headers.push(c.heading('Used'));
   }
   const table = createTable(headers);
   for (const secret of secrets) {
@@ -124,8 +124,8 @@ export async function listSecrets(
           { hAlign: 'right', content: secret.activeVersion },
           { hAlign: 'right', content: secret.loadedVersion },
           secret.loaded
-            ? (c.greenBright('loaded') as any)
-            : (c.redBright('unloaded') as any),
+            ? (c.positive('loaded') as any)
+            : (c.muted('unloaded') as any),
           wordwrap(secret.description, 40),
           lastChangedBy,
           new Date(secret.lastChangeDate).toUTCString(),
@@ -135,8 +135,8 @@ export async function listSecrets(
       const locations = getIdLocations(fullExport, secret._id, true);
       values.push(
         locations.length > 0
-          ? `${c.greenBright('yes')} (${locations.length === 1 ? `at` : `${locations.length} uses, including:`} ${locations[0]})`
-          : c.redBright('no')
+          ? `${c.positive('yes')} (${locations.length === 1 ? `at` : `${locations.length} uses, including:`} ${locations[0]})`
+          : c.muted('no')
       );
     }
     table.push(values);
@@ -347,21 +347,21 @@ export async function listSecretVersions(
       return true;
     }
     const table = createTable([
-      { hAlign: 'right', content: c.cyanBright('Version') },
-      c.cyanBright('Status'),
-      c.cyanBright('Loaded'),
-      c.cyanBright('Created'),
+      { hAlign: 'right', content: c.heading('Version') },
+      c.heading('Status'),
+      c.heading('Loaded'),
+      c.heading('Created'),
     ]);
     const statusMap = {
-      ENABLED: c.greenBright('active'),
-      DISABLED: c.redBright('inactive'),
-      DESTROYED: c.redBright('deleted'),
+      ENABLED: c.positive('active'),
+      DISABLED: c.muted('inactive'),
+      DESTROYED: c.muted('deleted'),
     };
     for (const version of versions) {
       table.push([
         { hAlign: 'right', content: version.version },
         statusMap[version.status],
-        version.loaded ? c.greenBright('loaded') : c.redBright('unloaded'),
+        version.loaded ? c.positive('loaded') : c.muted('unloaded'),
         new Date(version.createDate).toLocaleString(),
       ]);
     }
@@ -407,19 +407,16 @@ export async function describeSecret(
       printMessage(secret, 'data');
     } else {
       const table = createKeyValueTable();
-      table.push([c.cyanBright('Name'), secret._id]);
-      table.push([c.cyanBright('Active Version'), secret.activeVersion]);
-      table.push([c.cyanBright('Loaded Version'), secret.loadedVersion]);
+      table.push([c.heading('Name'), secret._id]);
+      table.push([c.heading('Active Version'), secret.activeVersion]);
+      table.push([c.heading('Loaded Version'), secret.loadedVersion]);
       table.push([
-        c.cyanBright('Status'),
-        secret.loaded ? c.greenBright('loaded') : c.redBright('unloaded'),
+        c.heading('Status'),
+        secret.loaded ? c.positive('loaded') : c.muted('unloaded'),
       ]);
+      table.push([c.heading('Description'), wordwrap(secret.description, 60)]);
       table.push([
-        c.cyanBright('Description'),
-        wordwrap(secret.description, 60),
-      ]);
-      table.push([
-        c.cyanBright('Modified'),
+        c.heading('Modified'),
         new Date(secret.lastChangeDate).toLocaleString(),
       ]);
       let lastChangedBy = secret.lastChangedBy;
@@ -430,16 +427,13 @@ export async function describeSecret(
       } catch {
         // ignore
       }
-      table.push([c.cyanBright('Modifier'), lastChangedBy]);
-      table.push([c.cyanBright('Modifier UUID'), secret.lastChangedBy]);
-      table.push([c.cyanBright('Encoding'), secret.encoding]);
-      table.push([
-        c.cyanBright('Use In Placeholders'),
-        secret.useInPlaceholders,
-      ]);
+      table.push([c.heading('Modifier'), lastChangedBy]);
+      table.push([c.heading('Modifier UUID'), secret.lastChangedBy]);
+      table.push([c.heading('Encoding'), secret.encoding]);
+      table.push([c.heading('Use In Placeholders'), secret.useInPlaceholders]);
       if (usage) {
         table.push([
-          c.cyanBright(`Usage Locations (${secret.locations.length} total)`),
+          c.heading(`Usage Locations (${secret.locations.length} total)`),
           secret.locations.length > 0 ? secret.locations[0] : '',
         ]);
         for (let i = 1; i < secret.locations.length; i++) {
@@ -500,7 +494,7 @@ export async function exportSecretToFile(
     );
     stopProgressIndicator(
       spinnerId,
-      `Exported ${c.cyanBright(secretId)} to ${c.cyanBright(filePath)}.`,
+      `Exported ${c.heading(secretId)} to ${c.heading(filePath)}.`,
       'success'
     );
     debugMessage(

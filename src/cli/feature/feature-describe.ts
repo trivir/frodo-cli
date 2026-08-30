@@ -28,7 +28,7 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Describe the "${s.featureId}" feature:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo feature describe -i ${s.featureId} ${s.amBaseUrl}\n`
         )
     )

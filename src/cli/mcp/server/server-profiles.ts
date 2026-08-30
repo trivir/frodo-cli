@@ -14,13 +14,13 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  List all available MCP skill profiles:\n` +
-        c.cyanBright(`  $ frodo mcp server profiles\n`) +
+        c.command(`  $ frodo mcp server profiles\n`) +
         `  Inspect profile impact with current default policy:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo mcp server info --profile authentication && frodo mcp server info --profile managed-objects\n`
         ) +
         `  Compare profiles with skill listing:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo mcp server skills --profile journey-dev --limit 25\n`
         )
     )

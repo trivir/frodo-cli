@@ -46,15 +46,15 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Create the "${s.managedObjectTitle}" managed object type:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema object create -o ${s.managedObjectType} --title "${s.managedObjectTitle}" --icon ${s.managedObjectIcon} -y ${s.amBaseUrl}\n`
         ) +
         `  Create it without --icon, falling back to a generic icon:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema object create -o ${s.managedObjectType} --title "${s.managedObjectTitle}" -y ${s.connId}\n`
         ) +
         `  Create it with a description:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema object create -o ${s.managedObjectType} --title "${s.managedObjectTitle}" --description "A hovercraft owned by the fleet" -y ${s.connId}\n`
         )
     )

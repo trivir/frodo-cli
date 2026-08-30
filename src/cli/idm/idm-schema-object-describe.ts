@@ -41,15 +41,15 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Describe the "${s.managedObjectTitle}" managed object type:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema object describe -o ${s.managedObjectType} ${s.amBaseUrl}\n`
         ) +
         `  Describe it in JSON format:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema object describe -o ${s.managedObjectType} --json ${s.connId}\n`
         ) +
         `  Also expand nested object properties inline, by dot-path:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema object describe -o ${s.managedObjectType} -r ${s.connId}\n`
         )
     )

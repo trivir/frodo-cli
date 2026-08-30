@@ -990,7 +990,7 @@ export async function describeManagedObjectSchemaProperty(
       return true;
     }
     const nameLabel = path.join('.');
-    const header = c.bold(
+    const header = c.heading(
       property.title ? `${property.title} (${nameLabel})` : nameLabel
     );
     const isObjectContainer = property.type === 'object' && property.properties;
@@ -1020,7 +1020,7 @@ export async function describeManagedObjectSchemaProperty(
         const table = createTable(PROPERTY_ONLY_TABLE_COLUMNS);
         pushPropertyTableRows(table, childRows, false);
         sections.push(
-          `${c.bold('Properties')}\n\n${table.toString()}\n\n${PROPERTY_TABLE_KEY}`
+          `${c.heading('Properties')}\n\n${table.toString()}\n\n${PROPERTY_TABLE_KEY}`
         );
       }
     }
@@ -1028,9 +1028,11 @@ export async function describeManagedObjectSchemaProperty(
       const scriptSections = scriptKeys.map((key) => {
         const script = property[key] as
           { type?: string; source?: string } | undefined;
-        return `${c.bold(key)} (${script?.type || 'text/javascript'}):\n\n${(script?.source || '').trimEnd()}`;
+        return `${c.heading(key)} (${script?.type || 'text/javascript'}):\n\n${(script?.source || '').trimEnd()}`;
       });
-      sections.push(`${c.bold('Scripts')}\n\n${scriptSections.join('\n\n')}`);
+      sections.push(
+        `${c.heading('Scripts')}\n\n${scriptSections.join('\n\n')}`
+      );
     }
     printMessage(sections.join('\n\n'), 'data');
     return true;
@@ -1492,7 +1494,7 @@ export async function describeManagedObjectSchemaRelationshipProperty(
       const fields = Object.fromEntries(
         Object.entries(relationshipProperty).filter(([key]) => key !== 'title')
       );
-      return `${c.bold(label)}\n\n${createObjectTable(fields).toString()}`;
+      return `${c.heading(label)}\n\n${createObjectTable(fields).toString()}`;
     };
     const sections = [
       describeRelationship(`${type}.${propertyName}`, property),
@@ -2101,19 +2103,21 @@ export async function describeManagedObjectType(
       'mat-icon'
     ] as string | undefined;
     const sections = [
-      c.bold(schema.title ? `${schema.title} (${type})` : type),
+      c.heading(schema.title ? `${schema.title} (${type})` : type),
       matIcon ? `icon: ${matIcon}` : undefined,
     ].filter(Boolean);
     if (propertyRows.length > 0) {
       const propertiesTable = createTable(PROPERTY_ONLY_TABLE_COLUMNS);
       pushPropertyTableRows(propertiesTable, propertyRows, false);
-      sections.push(`${c.bold('Properties')}\n\n${propertiesTable.toString()}`);
+      sections.push(
+        `${c.heading('Properties')}\n\n${propertiesTable.toString()}`
+      );
     }
     if (relationshipRows.length > 0) {
       const relationshipsTable = createTable(PROPERTY_TABLE_COLUMNS);
       pushPropertyTableRows(relationshipsTable, relationshipRows);
       sections.push(
-        `${c.bold('Relationships')}\n\n${relationshipsTable.toString()}`
+        `${c.heading('Relationships')}\n\n${relationshipsTable.toString()}`
       );
     }
     sections.push(PROPERTY_TABLE_KEY);

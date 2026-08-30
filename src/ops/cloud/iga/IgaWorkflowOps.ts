@@ -69,9 +69,9 @@ export async function listWorkflows(long: boolean = false): Promise<boolean> {
       table.push([
         `${workflow.id}`,
         workflow.name,
-        workflowGroup.draft ? c.greenBright('true') : c.redBright('false'),
-        workflowGroup.published ? c.greenBright('true') : c.redBright('false'),
-        workflow.mutable ? c.greenBright('true') : c.redBright('false'),
+        workflowGroup.draft ? c.positive('true') : c.muted('false'),
+        workflowGroup.published ? c.positive('true') : c.muted('false'),
+        workflow.mutable ? c.positive('true') : c.muted('false'),
       ]);
     }
     printMessage(table.toString(), 'data');
@@ -117,19 +117,19 @@ export async function describeWorkflow(
         'data'
       );
       const table = createKeyValueTable();
-      table.push([c.cyanBright('Id'), workflow.id]);
-      table.push([c.cyanBright('Name'), workflow.name]);
-      table.push([c.cyanBright('Display Name'), workflow.displayName]);
-      table.push([c.cyanBright('Description'), workflow.description]);
-      if (workflow.type) table.push([c.cyanBright('Type'), workflow.type]);
-      table.push([c.cyanBright('Status'), workflow.status]);
+      table.push([c.heading('Id'), workflow.id]);
+      table.push([c.heading('Name'), workflow.name]);
+      table.push([c.heading('Display Name'), workflow.displayName]);
+      table.push([c.heading('Description'), workflow.description]);
+      if (workflow.type) table.push([c.heading('Type'), workflow.type]);
+      table.push([c.heading('Status'), workflow.status]);
       table.push([
-        c.cyanBright('Mutable'),
-        workflow.mutable ? c.greenBright('true') : c.redBright('false'),
+        c.heading('Mutable'),
+        workflow.mutable ? c.positive('true') : c.muted('false'),
       ]);
       table.push([
-        c.cyanBright('ChildType'),
-        workflow.childType ? c.greenBright('true') : c.redBright('false'),
+        c.heading('ChildType'),
+        workflow.childType ? c.positive('true') : c.muted('false'),
       ]);
       getTableRowsFromArray(
         table,

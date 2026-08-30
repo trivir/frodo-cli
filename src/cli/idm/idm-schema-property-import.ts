@@ -45,7 +45,7 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Import the "${s.propertyName}" property:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema property import -o ${s.managedObjectType} -p ${s.propertyName} -f ${s.managedObjectType}-${s.propertyName}.managed.property.json -y ${s.amBaseUrl}\n`
         )
     )

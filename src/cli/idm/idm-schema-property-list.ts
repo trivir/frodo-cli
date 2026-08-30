@@ -50,19 +50,19 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  List the "${s.managedObjectTitle}" type's schema properties:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema property list -o ${s.managedObjectType} ${s.amBaseUrl}\n`
         ) +
         `  List them with all fields:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema property list -o ${s.managedObjectType} --long ${s.connId}\n`
         ) +
         `  List them in JSON format:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema property list -o ${s.managedObjectType} --json ${s.connId}\n`
         ) +
         `  List the "${s.objectPropertyName}" object property's own children instead:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema property list -o ${s.managedObjectType} -p ${s.objectPropertyName} --long ${s.connId}\n`
         )
     )

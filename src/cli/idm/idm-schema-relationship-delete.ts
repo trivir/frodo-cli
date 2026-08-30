@@ -48,11 +48,11 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Delete the "${s.relationshipPropertyName}" relationship:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema relationship delete -o ${s.managedObjectType} -p ${s.relationshipPropertyName} -y ${s.amBaseUrl}\n`
         ) +
         `  Delete it on both sides, including the auto-created reverse "${s.reverseRelationshipPropertyName}" property:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema relationship delete -o ${s.managedObjectType} -p ${s.relationshipPropertyName} --with-reverse -y ${s.connId}\n`
         )
     )

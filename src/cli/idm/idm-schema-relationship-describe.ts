@@ -47,11 +47,11 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Describe the "${s.relationshipPropertyName}" relationship:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema relationship describe -o ${s.managedObjectType} -p ${s.relationshipPropertyName} ${s.amBaseUrl}\n`
         ) +
         `  Describe both sides, including the auto-created reverse "${s.reverseRelationshipPropertyName}" property, in JSON format:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema relationship describe -o ${s.managedObjectType} -p ${s.relationshipPropertyName} --with-reverse --json ${s.connId}\n`
         )
     )

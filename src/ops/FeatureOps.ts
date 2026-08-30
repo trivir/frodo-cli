@@ -52,8 +52,8 @@ export async function listFeatures(long: boolean = false): Promise<boolean> {
         table.push([
           feature._id,
           feature.installedVersion
-            ? c.greenBright(feature.installedVersion)
-            : c.gray('not installed'),
+            ? c.positive(feature.installedVersion)
+            : c.muted('not installed'),
           (feature.availableVersions || []).join(', '),
         ]);
       }
@@ -99,7 +99,7 @@ export async function validateFeature(featureId: string): Promise<boolean> {
   try {
     const result = await validateIdmFeature(featureId);
     printMessage(
-      `${result.success ? c.greenBright('Valid') : c.redBright('Invalid')}: ${result.message}`,
+      `${result.success ? c.positive('Valid') : c.muted('Invalid')}: ${result.message}`,
       'data'
     );
     return true;

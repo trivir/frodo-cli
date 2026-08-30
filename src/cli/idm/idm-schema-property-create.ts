@@ -159,31 +159,31 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Add the "${s.propertyName}" property to the "${s.managedObjectTitle}" type:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema property create -o ${s.managedObjectType} -p ${s.propertyName} --property-type number --title "Max Crew" --required ${s.amBaseUrl}\n`
         ) +
         `  Add a searchable array-of-strings property:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema property create -o ${s.managedObjectType} -p ${s.arrayPropertyName} --property-type string --array --title "Call Signs" --searchable ${s.connId}\n`
         ) +
         `  Add an (initially empty) object property, to hold sub-properties:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema property create -o ${s.managedObjectType} -p ${s.objectPropertyName} --property-type object --title "Cabin" ${s.connId}\n`
         ) +
         `  Add a sub-property nested inside that object property:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema property create -o ${s.managedObjectType} -p ${s.objectPropertyName} --sub-property ${s.subPropertyName} --property-type number --title "Seat Count" ${s.connId}\n`
         ) +
         `  Add an enumerated property with a default value:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema property create -o ${s.managedObjectType} -p custom_status --property-type string --enum "active,retired" --enum-titles "Active,Retired" --default active ${s.connId}\n`
         ) +
         `  Add a script-derived virtual property, computed on read:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema property create -o ${s.managedObjectType} -p custom_isFlightworthy --property-type boolean --on-retrieve-script isFlightworthy.onRetrieve.js ${s.connId}\n`
         ) +
         `  Add a relationship-derived virtual property (RDVP), flattened across the to-many "${s.manyRelationshipPropertyName}" relationship:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema property create -o ${s.managedObjectType} -p custom_crewNames --property-type string --array --derive-from-relationship ${s.manyRelationshipPropertyName} --derive-fields sn --flatten ${s.connId}\n`
         )
     )

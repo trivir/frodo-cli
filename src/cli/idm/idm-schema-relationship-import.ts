@@ -45,7 +45,7 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Import the "${s.relationshipPropertyName}" relationship:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema relationship import -o ${s.managedObjectType} -p ${s.relationshipPropertyName} -f ${s.managedObjectType}-${s.relationshipPropertyName}.managed.relationship.json -y ${s.amBaseUrl}\n`
         )
     )

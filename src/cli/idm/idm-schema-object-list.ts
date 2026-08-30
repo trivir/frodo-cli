@@ -32,11 +32,11 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  List every managed object type:\n` +
-        c.cyanBright(`  $ frodo idm schema object list ${s.amBaseUrl}\n`) +
+        c.command(`  $ frodo idm schema object list ${s.amBaseUrl}\n`) +
         `  List them with all fields:\n` +
-        c.cyanBright(`  $ frodo idm schema object list --long ${s.connId}\n`) +
+        c.command(`  $ frodo idm schema object list --long ${s.connId}\n`) +
         `  List them in JSON format:\n` +
-        c.cyanBright(`  $ frodo idm schema object list --json ${s.connId}\n`)
+        c.command(`  $ frodo idm schema object list --json ${s.connId}\n`)
     )
     .action(
       // implement command logic inside action handler

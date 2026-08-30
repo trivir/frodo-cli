@@ -28,9 +28,9 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  List features and their install status:\n` +
-        c.cyanBright(`  $ frodo feature list ${s.amBaseUrl}\n`) +
+        c.command(`  $ frodo feature list ${s.amBaseUrl}\n`) +
         `  List features with their installed and available versions:\n` +
-        c.cyanBright(`  $ frodo feature list --long ${s.connId}\n`)
+        c.command(`  $ frodo feature list --long ${s.connId}\n`)
     )
     .action(
       // implement command logic inside action handler

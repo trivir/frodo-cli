@@ -30,15 +30,15 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Show human-readable output and login using AM base URL, username, and password (note the quotes around password to allow special characters):\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo info ${s.amBaseUrl} ${s.username} '${s.password}'\n`
         ) +
         `  Show human-readable output and login using a connection profile (identified by the full AM base URL):\n` +
-        c.cyanBright(`  $ frodo info ${s.amBaseUrl}\n`) +
+        c.command(`  $ frodo info ${s.amBaseUrl}\n`) +
         `  Show human-readable output and login using a connection profile (identified by a unique substring of the AM base URL or a saved alias):\n` +
-        c.cyanBright(`  $ frodo info ${s.connId}\n`) +
+        c.command(`  $ frodo info ${s.connId}\n`) +
         `  Show JSON output and login using the AM base URL's unique substring to identify the connection profile:\n` +
-        c.cyanBright(`  $ frodo info --json ${s.connId}\n`)
+        c.command(`  $ frodo info --json ${s.connId}\n`)
     )
     .action(async (host, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(host, user, password, options, command);

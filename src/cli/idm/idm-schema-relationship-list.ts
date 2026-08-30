@@ -38,15 +38,15 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  List the "${s.managedObjectTitle}" type's relationship properties:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema relationship list -o ${s.managedObjectType} ${s.amBaseUrl}\n`
         ) +
         `  List them with all fields:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema relationship list -o ${s.managedObjectType} --long ${s.connId}\n`
         ) +
         `  List them in JSON format:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema relationship list -o ${s.managedObjectType} --json ${s.connId}\n`
         )
     )

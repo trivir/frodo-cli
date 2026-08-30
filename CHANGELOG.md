@@ -3,6 +3,8 @@
 ## Unreleased
 
 ### Added
+- Adopted frodo-lib's new semantic color-intent theme (`error`/`warning`/`command`/`emphasis`), replacing frodo-cli's own previous non-semantic fix (a flat `*Bright`-to-plain remap in `ColorTheme.ts`) for the same underlying problem: `tinyrainbow`'s bright ANSI colors are unreadable on light-background terminals. Added frodo-cli-specific intents on top (`heading`, `positive`, `muted`, `debug`), each color chosen via frodo-lib's new objective `TerminalContrastFilter` (a WCAG contrast-ratio check) rather than by eye, and migrated all ~500 of frodo-cli's own call sites from raw hue names (`c.cyanBright(...)`) to the matching semantic name (`c.command(...)`, `c.heading(...)`, etc.) so no code outside `ColorTheme.ts` references a literal color anymore. Also caught and fixed two latent bugs the stricter typing surfaced: `printMessage(msg, 'success')` and `printMessage(msg, 'warning')` (a typo for `'warn'`) were both silently falling through to plain, uncolored text, since neither matched any of `printMessage`'s actual case values.
+  - Added a real `MessageType` union type for `printMessage`'s `type` parameter (previously an unenforced string), plus canonical `infoMessage`/`warnMessage`/`errorMessage`/`successMessage` wrapper functions mirroring the existing `verboseMessage`/`debugMessage` pattern. `printMessage`/`printError` keep their existing names and signatures otherwise -- `printError` remains distinct, since it understands and formats an actual `Error`/`FrodoError` object, unlike `errorMessage`'s arbitrary error-styled string.
 - Added new commands to manage IDM tenant-configuration features (Cloud only) (ca2f90a9):
   - `frodo feature list`
   - `frodo feature describe`

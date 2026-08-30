@@ -37,7 +37,7 @@ const {
  * @returns {string} a one-line description
  */
 export function getOneLineDescription(cotObj: CircleOfTrustSkeleton): string {
-  const description = `[${c.cyanBright(cotObj._id)}]`;
+  const description = `[${c.heading(cotObj._id)}]`;
   return description;
 }
 
@@ -86,10 +86,10 @@ export async function listCirclesOfTrust(
       return true;
     } else {
       const table = createTable([
-        c.cyanBright('Name'),
-        c.cyanBright('Description'),
-        c.cyanBright('Status'),
-        c.cyanBright('Trusted Providers'),
+        c.heading('Name'),
+        c.heading('Description'),
+        c.heading('Status'),
+        c.heading('Trusted Providers'),
       ]);
       cotList.forEach((cot) => {
         table.push([

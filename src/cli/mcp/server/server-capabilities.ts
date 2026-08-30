@@ -119,17 +119,17 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Show skills for default policy/profile:\n` +
-        c.cyanBright(`  $ frodo mcp server skills\n`) +
+        c.command(`  $ frodo mcp server skills\n`) +
         `  Show read-only skills for authentication profile:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo mcp server skills --policy read-only --profile authentication\n`
         ) +
         `  Show mutating authn.journey skills only:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo mcp server skills --domain authn --object-type Journey --operation-type update\n`
         ) +
         `  Export filtered skills as JSON:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo mcp server skills --policy admin --include-domains authn idm --limit 200 --json\n`
         )
     );

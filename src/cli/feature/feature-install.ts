@@ -31,7 +31,7 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Install the "${s.featureId}" feature:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo feature install -i ${s.featureId} -y ${s.amBaseUrl}\n`
         )
     )

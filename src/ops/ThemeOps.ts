@@ -43,9 +43,9 @@ const {
  * @returns {string} a one-line description
  */
 export function getOneLineDescription(themeObj: ThemeSkeleton): string {
-  const description = `[${c.cyanBright(themeObj._id)}] ${themeObj.name}${
+  const description = `[${c.heading(themeObj._id)}] ${themeObj.name}${
     themeObj.linkedTrees
-      ? ' (' + c.cyanBright(themeObj.linkedTrees.join(', ')) + ')'
+      ? ' (' + c.heading(themeObj.linkedTrees.join(', ')) + ')'
       : ''
   }`;
   return description;
@@ -86,21 +86,21 @@ export async function listThemes(long: boolean = false): Promise<boolean> {
     if (!long) {
       themeList.forEach((theme) => {
         printMessage(
-          `${theme.isDefault ? c.cyanBright(theme.name) : theme.name}`,
+          `${theme.isDefault ? c.heading(theme.name) : theme.name}`,
           'data'
         );
       });
     } else {
       const table = createTable([
-        c.cyanBright('Name'),
-        c.cyanBright('Id'),
-        c.cyanBright('Default'),
+        c.heading('Name'),
+        c.heading('Id'),
+        c.heading('Default'),
       ]);
       themeList.forEach((theme) => {
         table.push([
           `${theme.name}`,
           `${theme._id}`,
-          `${theme.isDefault ? c.greenBright('Yes') : ''}`,
+          `${theme.isDefault ? c.positive('Yes') : ''}`,
         ]);
       });
       printMessage(table.toString(), 'data');

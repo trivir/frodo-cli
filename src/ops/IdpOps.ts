@@ -32,7 +32,7 @@ const { getFilePath, getWorkingDirectory } = frodo.utils;
  * @returns {string} a one-line description
  */
 export function getOneLineDescription(socialIdpObj: SocialIdpSkeleton): string {
-  const description = `[${c.cyanBright(socialIdpObj._id)}] ${socialIdpObj._type._id}`;
+  const description = `[${c.heading(socialIdpObj._id)}] ${socialIdpObj._type._id}`;
   return description;
 }
 
@@ -108,7 +108,7 @@ export async function exportSocialIdentityProviderToFile(
     saveJsonToFile(fileData, filePath, includeMeta);
     stopProgressIndicator(
       indicatorId,
-      `Exported ${c.cyanBright(providerId)} to ${c.cyanBright(filePath)}.`
+      `Exported ${c.heading(providerId)} to ${c.heading(filePath)}.`
     );
     debugMessage(`cli.IdpOps.exportSocialIdentityProviderToFile: end`);
     return true;

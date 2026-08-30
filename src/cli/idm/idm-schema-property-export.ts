@@ -42,7 +42,7 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Export the "${s.propertyName}" property:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema property export -o ${s.managedObjectType} -p ${s.propertyName} ${s.amBaseUrl}\n`
         )
     )

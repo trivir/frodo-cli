@@ -42,11 +42,11 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Delete the "${s.managedObjectTitle}" managed object type:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema object delete -o ${s.managedObjectType} -y ${s.amBaseUrl}\n`
         ) +
         `  Delete it even though its record count can't be confirmed:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema object delete -o ${s.managedObjectType} -y -F ${s.connId}\n`
         )
     )

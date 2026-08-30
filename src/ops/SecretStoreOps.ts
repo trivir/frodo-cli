@@ -66,7 +66,7 @@ export async function listSecretStores(
           store._type.name,
           mappings
             ? mappings.map((m) => m.secretId).join('\n')
-            : c.redBright('N/A'),
+            : c.muted('N/A'),
         ]);
       }
       printMessage(table.toString(), 'data');
@@ -142,9 +142,7 @@ export async function listSecretStoreMappingAliases(
         table.push([
           alias,
           // The first one is always active
-          active && !(active = false)
-            ? c.greenBright('true')
-            : c.redBright('false'),
+          active && !(active = false) ? c.positive('true') : c.muted('false'),
         ]);
       }
       printMessage(table.toString(), 'data');
@@ -180,13 +178,13 @@ export async function describeSecretStore(
     secretStoreTypeId = secretStore._type._id || secretStoreTypeId;
     const schema = await readSecretStoreSchema(secretStoreTypeId, global);
     const table = createKeyValueTable();
-    table.push([c.cyanBright('Id'), secretStoreId]);
-    table.push([c.cyanBright('Type'), secretStoreTypeId]);
+    table.push([c.heading('Id'), secretStoreId]);
+    table.push([c.heading('Type'), secretStoreTypeId]);
     for (const [key, info] of Object.entries(schema.properties).sort(
       // This sorts the properties in ascending order (see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#parameters)
       (p1, p2) => p1[1].propertyOrder - p2[1].propertyOrder
     )) {
-      table.push([c.cyanBright(info.title) as any, secretStore[key]]);
+      table.push([c.heading(info.title) as any, secretStore[key]]);
     }
     printMessage(table.toString(), 'data');
     if (!canSecretStoreHaveMappings(secretStoreTypeId)) return true;

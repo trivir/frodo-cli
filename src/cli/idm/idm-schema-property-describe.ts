@@ -47,19 +47,19 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Describe the "${s.propertyName}" property:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema property describe -o ${s.managedObjectType} -p ${s.propertyName} ${s.amBaseUrl}\n`
         ) +
         `  Describe it in JSON format:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema property describe -o ${s.managedObjectType} -p ${s.propertyName} --json ${s.connId}\n`
         ) +
         `  Describe the "${s.objectPropertyName}" object property -- its properties table renders automatically:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema property describe -o ${s.managedObjectType} -p ${s.objectPropertyName} ${s.connId}\n`
         ) +
         `  Describe the "${s.subPropertyName}" sub-property directly, by dot-path:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo idm schema property describe -o ${s.managedObjectType} -p ${s.objectPropertyName} --sub-property ${s.subPropertyName} ${s.connId}\n`
         )
     )

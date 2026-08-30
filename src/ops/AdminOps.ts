@@ -1178,21 +1178,21 @@ export async function generateRfc7523AuthZGrantArtefacts(
           : `\nIn AM, create an OAuth2 client in the ${state.getRealm()} realm with the following information:`
       );
       const client = createKeyValueTable();
-      client.push([c.cyanBright('Client ID'), clientId]);
-      client.push([c.cyanBright('Client Name'), clientId]);
+      client.push([c.heading('Client ID'), clientId]);
+      client.push([c.heading('Client Name'), clientId]);
       client.push([
-        c.cyanBright('Scopes'),
+        c.heading('Scopes'),
         (
           artefacts.client.coreOAuth2ClientConfig.scopes as Writable<string[]>
         ).value.join(', '),
       ]);
       client.push([
-        c.cyanBright('Client Type'),
+        c.heading('Client Type'),
         (artefacts.client.coreOAuth2ClientConfig.clientType as Writable<string>)
           .value,
       ]);
       client.push([
-        c.cyanBright('Grant Types'),
+        c.heading('Grant Types'),
         (
           artefacts.client.advancedOAuth2ClientConfig.grantTypes as Writable<
             string[]
@@ -1200,28 +1200,28 @@ export async function generateRfc7523AuthZGrantArtefacts(
         ).value.join(', '),
       ]);
       client.push([
-        c.cyanBright('Implied Consent'),
+        c.heading('Implied Consent'),
         (
           artefacts.client.advancedOAuth2ClientConfig
             .isConsentImplied as Writable<boolean>
         ).value,
       ]);
       client.push([
-        c.cyanBright('Token Endpoint Authentication '),
+        c.heading('Token Endpoint Authentication '),
         (
           artefacts.client.advancedOAuth2ClientConfig
             .tokenEndpointAuthMethod as Writable<string>
         ).value,
       ]);
       client.push([
-        c.cyanBright('Public Key Selector'),
+        c.heading('Public Key Selector'),
         (
           artefacts.client.signEncOAuth2ClientConfig
             .publicKeyLocation as Writable<string>
         ).value,
       ]);
       client.push([
-        c.cyanBright('JWKS (Public Key)'),
+        c.heading('JWKS (Public Key)'),
         options.save ? `${jwksFile}` : 'See below',
       ]);
       printMessage(`\n${client.toString()}`);
@@ -1232,13 +1232,13 @@ export async function generateRfc7523AuthZGrantArtefacts(
           : `\nIn AM, create a trusted issuer in the ${state.getRealm()} realm with the following information:`
       );
       const issuer = createKeyValueTable();
-      issuer.push([c.cyanBright('Name'), artefacts.issuer._id]);
+      issuer.push([c.heading('Name'), artefacts.issuer._id]);
       issuer.push([
-        c.cyanBright('JWT Issuer'),
+        c.heading('JWT Issuer'),
         (artefacts.issuer.issuer as Writable<string>).value,
       ]);
       issuer.push([
-        c.cyanBright('Allowed Subjects              '),
+        c.heading('Allowed Subjects              '),
         (artefacts.issuer.allowedSubjects as Writable<string[]>)?.value.length
           ? (
               artefacts.issuer.allowedSubjects as Writable<string[]>
@@ -1246,14 +1246,14 @@ export async function generateRfc7523AuthZGrantArtefacts(
           : `Any ${state.getRealm()} realm user`,
       ]);
       issuer.push([
-        c.cyanBright('JWKS (Public Key)'),
+        c.heading('JWKS (Public Key)'),
         options.save ? `${jwksFile}` : 'See below',
       ]);
       printMessage(`\n${issuer.toString()}`);
       if (!options.save) {
-        printMessage(c.cyanBright('\nJWK (Private Key)'));
+        printMessage(c.command('\nJWK (Private Key)'));
         printMessage(stringify(artefacts.jwk));
-        printMessage(c.cyanBright('\nJWKS (Public Key)'));
+        printMessage(c.command('\nJWKS (Public Key)'));
         printMessage(stringify(artefacts.jwks));
       }
     }
@@ -1396,10 +1396,10 @@ export async function executeRfc7523AuthZGrantFlow(
   if (json) {
     printMessage(tokenResponse, 'data');
   } else {
-    printMessage(c.cyanBright('\nAccess Token'));
+    printMessage(c.command('\nAccess Token'));
     printMessage(tokenResponse.access_token);
     if (tokenResponse.id_token) {
-      printMessage(c.cyanBright('\nIdentity Token'));
+      printMessage(c.command('\nIdentity Token'));
       printMessage(tokenResponse.id_token);
     }
   }

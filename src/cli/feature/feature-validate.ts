@@ -28,7 +28,7 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Validate whether the "${s.featureId}" feature is installable:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo feature validate -i ${s.featureId} ${s.amBaseUrl}\n`
         )
     )

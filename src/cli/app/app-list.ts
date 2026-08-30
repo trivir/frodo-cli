@@ -26,18 +26,18 @@ export default function setup() {
     )
     .addHelpText(
       'after',
-      c.yellowBright(`Important Note:\n`) +
-        `  The ${c.cyanBright('frodo app')} command to manage OAuth2 clients in v1.x has been renamed to ${c.cyanBright('frodo oauth client')} in v2.x\n` +
-        `  The ${c.cyanBright('frodo app')} command in v2.x manages the new applications created using the new application templates in ForgeRock Identity Cloud. To manage oauth clients, use the ${c.cyanBright('frodo oauth client')} command.\n\n` +
+      c.warning(`Important Note:\n`) +
+        `  The ${c.command('frodo app')} command to manage OAuth2 clients in v1.x has been renamed to ${c.command('frodo oauth client')} in v2.x\n` +
+        `  The ${c.command('frodo app')} command in v2.x manages the new applications created using the new application templates in ForgeRock Identity Cloud. To manage oauth clients, use the ${c.command('frodo oauth client')} command.\n\n` +
         `Usage Examples:\n` +
         `  List applications using AM base URL, username, and password (note the quotes around password to allow special characters):\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo app list ${s.amBaseUrl} ${s.username} '${s.password}'\n`
         ) +
         `  List applications using a connection profile (identified by the full AM base URL):\n` +
-        c.cyanBright(`  $ frodo app list ${s.amBaseUrl}\n`) +
+        c.command(`  $ frodo app list ${s.amBaseUrl}\n`) +
         `  List applications using a connection profile (identified by a unique substring of the AM base URL or a saved alias):\n` +
-        c.cyanBright(`  $ frodo app list ${s.connId}\n`)
+        c.command(`  $ frodo app list ${s.connId}\n`)
     )
     .action(
       // implement command logic inside action handler

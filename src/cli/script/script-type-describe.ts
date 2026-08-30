@@ -25,11 +25,11 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Describe the bindings available to scripted decision node scripts:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo script type describe -c SCRIPTED_DECISION_NODE ${s.amBaseUrl}\n`
         ) +
         `  Describe them in JSON format:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo script type describe -c SCRIPTED_DECISION_NODE --json ${s.connId}\n`
         )
     )
