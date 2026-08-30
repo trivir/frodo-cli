@@ -250,7 +250,7 @@ export async function listScripts(
       values.push(
         locations.length > 0
           ? `${c.positive('yes')} (${locations.length === 1 ? `at` : `${locations.length} uses, including:`} ${locations[0]})`
-          : c.muted('no')
+          : c.error('no')
       );
     }
     table.push(values);
@@ -313,7 +313,7 @@ export async function describeScript(
       table.push([c.heading('Description'), script.description]);
       table.push([
         c.heading('Default'),
-        script.default ? c.positive('true') : c.muted('false'),
+        script.default ? c.positive('true') : c.error('false'),
       ]);
       table.push([c.heading('Evaluator Version'), script.evaluatorVersion]);
       const scriptWrapLength = 80;

@@ -654,11 +654,11 @@ type PropertyTableRow = {
   path: string;
   type: string;
   title: string;
-  nullable: string;
-  required: string;
-  searchable: string;
-  userEditable: string;
-  viewable: string;
+  nullable: 'yes' | 'no';
+  required: 'yes' | 'no';
+  searchable: 'yes' | 'no';
+  userEditable: 'yes' | 'no';
+  viewable: 'yes' | 'no';
   target: string;
   isRelationship: boolean;
 };
@@ -857,6 +857,10 @@ const PROPERTY_TABLE_KEY =
   'NUL=Nullable, REQ=Required, SRH=Searchable, UED=User Editable, VIW=Viewable';
 
 /** Pushes {@link PropertyTableRow}s onto a table already headed with {@link PROPERTY_TABLE_COLUMNS} (from {@link createTable}); pass `includeTarget: false` for a table headed with {@link PROPERTY_ONLY_TABLE_COLUMNS} instead. */
+function flag(value: 'yes' | 'no'): string {
+  return value === 'yes' ? c.positive(value) : c.error(value);
+}
+
 function pushPropertyTableRows(
   table: ReturnType<typeof createTable>,
   rows: PropertyTableRow[],
@@ -869,11 +873,11 @@ function pushPropertyTableRows(
     }
     cells.push(
       row.type,
-      row.nullable,
-      row.required,
-      row.searchable,
-      row.userEditable,
-      row.viewable
+      flag(row.nullable),
+      flag(row.required),
+      flag(row.searchable),
+      flag(row.userEditable),
+      flag(row.viewable)
     );
     table.push(cells);
   });

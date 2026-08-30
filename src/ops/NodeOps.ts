@@ -141,9 +141,9 @@ export async function listCustomNodes(long: boolean = false): Promise<boolean> {
         table.push([
           wordwrap(node.displayName, 25, '  '),
           node._id,
-          numJourneys ? c.positive(String(numJourneys)) : c.muted('0'),
-          numInstances ? c.positive(String(numInstances)) : c.muted('0'),
-          node.errorOutcome ? c.positive('enabled') : c.muted('disabled'),
+          numJourneys ? c.positive(String(numJourneys)) : c.error('0'),
+          numInstances ? c.positive(String(numInstances)) : c.error('0'),
+          node.errorOutcome ? c.positive('enabled') : c.error('disabled'),
           wordwrap(node.description, 30),
         ]);
       }
@@ -209,12 +209,12 @@ export async function describeCustomNode(
       propTable.push([c.heading('Description'), prop.description]);
       propTable.push([
         c.heading('Required'),
-        prop.required ? c.positive('true') : c.muted('false'),
+        prop.required ? c.positive('true') : c.error('false'),
       ]);
       propTable.push([c.heading('Type'), prop.type]);
       propTable.push([
         c.heading('Multivalued'),
-        prop.multivalued ? c.positive('true') : c.muted('false'),
+        prop.multivalued ? c.positive('true') : c.error('false'),
       ]);
       if (prop.defaultValue) {
         getTableRowsFromArray(
@@ -319,12 +319,12 @@ export async function describeNodeType(
       if (prop.required !== undefined)
         propTable.push([
           c.heading('Required'),
-          prop.required ? c.positive('true') : c.muted('false'),
+          prop.required ? c.positive('true') : c.error('false'),
         ]);
       if (prop.multivalued !== undefined)
         propTable.push([
           c.heading('Multivalued'),
-          prop.multivalued ? c.positive('true') : c.muted('false'),
+          prop.multivalued ? c.positive('true') : c.error('false'),
         ]);
       if (prop.defaultValue !== undefined)
         getTableRowsFromArray(

@@ -10,17 +10,20 @@ import c from 'tinyrainbow';
  * frodo-cli's own semantic intents, layered on top of frodo-lib's base set
  * (`error`, `warning`, `command`, `emphasis`) with the CLI-specific roles
  * the call-site audit surfaced:
- * - `heading` -- section/table-column labels. Uses `bold`, not a hue --
- *   this was already the codebase's own convention for describe-view
- *   section titles (`IdmOps.ts`), and unlike a color, bold text has no
- *   background-contrast concern, so it needs no per-theme distinction.
+ * - `heading` -- section/table-column labels. Always bold (unlike a hue,
+ *   weight has no background-contrast concern), *plus* a hue where the
+ *   palette has room for one: `whiteBright` on dark, comfortably clearing
+ *   21:1 on black and left unclaimed by every other intent. On light there
+ *   is no room left -- the same scarcity `positive` runs into below -- so
+ *   `heading` stays bold-only there, not a color choice so much as what
+ *   the palette allows.
  * - `positive` -- true/active/enabled/valid status values.
- * - `muted` -- shared by two things that both want to look de-emphasized
- *   rather than alarming: table borders/secondary text, and
- *   negative/inactive/false status values (treating "off" as a quieter
- *   state, not an error -- not a merge to eventually split, a deliberate
- *   choice given how few AA-readable colors are available on a light
- *   background).
+ * - `muted` -- table borders and other secondary decoration/text that's
+ *   deliberately meant to look quiet, not a status value -- status values
+ *   that read as "off" use `error` instead (see frodo-lib's `Intent`),
+ *   since a describe/list table rendering at all already means the
+ *   command didn't fail, so reusing `error`'s color for "inactive" doesn't
+ *   actually collide with a real error in practice.
  * - `debug` -- frodo-cli's own debug-output type, distinct from `command`.
  *
  * This is the only file in frodo-cli allowed to reference `tinyrainbow`
@@ -32,7 +35,7 @@ export type CliIntent = LibIntent | 'heading' | 'positive' | 'muted' | 'debug';
 // `Formatter` type -- callers routinely color values whose static type is
 // wider than `string` (e.g. a status field typed as `string | number | ...`).
 type CliOnlyColors = Record<
-  'positive' | 'muted' | 'debug',
+  'heading' | 'positive' | 'muted' | 'debug',
   (text: unknown) => string
 >;
 
@@ -43,6 +46,7 @@ type CliOnlyColors = Record<
  * black.
  */
 const DARK_ADDITIONS: CliOnlyColors = {
+  heading: (text: unknown) => c.bold(c.whiteBright(text)),
   positive: c.greenBright,
   muted: c.blackBright,
   debug: c.white,
@@ -53,15 +57,17 @@ const DARK_ADDITIONS: CliOnlyColors = {
  * same scarcity frodo-lib's base palette did: only 5 of the 16 standard
  * ANSI colors clear 4.5:1 against white at all, and frodo-lib's base theme
  * already spends all 5 on `error`/`warning`/`command`/`emphasis`. There is
- * no 6th distinct AA-compliant (4.5:1) color left for `positive`, so it
- * falls back to plain (unstyled) text rather than reusing another intent's
- * color and risking a misleading visual association. `muted` and `debug`
- * are checked against WCAG's looser 3:1 threshold instead -- appropriate
- * for both, since neither is meant to be primary reading content -- which
- * `blackBright` (gray) and `magentaBright` (distinct from `warning`'s
- * plain `magenta`) clear.
+ * no 6th distinct AA-compliant (4.5:1) color left for `heading` or
+ * `positive`, so both fall back to plain (unstyled, or bold-only for
+ * `heading`) text rather than reusing another intent's color and risking a
+ * misleading visual association. `muted` and `debug` are checked against
+ * WCAG's looser 3:1 threshold instead -- appropriate for both, since
+ * neither is meant to be primary reading content -- which `blackBright`
+ * (gray) and `magentaBright` (distinct from `warning`'s plain `magenta`)
+ * clear.
  */
 const LIGHT_ADDITIONS: CliOnlyColors = {
+  heading: c.bold,
   positive: (text: unknown) => String(text),
   muted: c.blackBright,
   debug: c.magentaBright,
@@ -152,7 +158,7 @@ Object.defineProperties(theme, {
   warning: intent('warning', () => libTheme(state).warning),
   command: intent('command', () => libTheme(state).command),
   emphasis: intent('emphasis', () => libTheme(state).emphasis),
-  heading: intent('heading', () => c.bold),
+  heading: intent('heading', () => currentCliAdditions().heading),
   positive: intent('positive', () => currentCliAdditions().positive),
   muted: intent('muted', () => currentCliAdditions().muted),
   debug: intent('debug', () => currentCliAdditions().debug),

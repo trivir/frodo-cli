@@ -117,7 +117,7 @@ export async function listJourneys(long: boolean = false): Promise<boolean> {
           table.push([
             `${treeExport.tree._id}`,
             treeExport.tree.enabled === false
-              ? c.muted('disabled')
+              ? c.error('disabled')
               : c.positive('enabled'),
             treeExport.tree.innerTreeOnly ? c.warning('yes') : c.positive('no'),
             treeExport.tree.mustRun ? c.warning('yes') : c.positive('no'),
@@ -695,7 +695,7 @@ export async function describeJourney(
     printMessage(
       `\nStatus\n${
         journeyData.tree.enabled === false
-          ? c.muted('disabled')
+          ? c.error('disabled')
           : c.positive('enabled')
       }`
     );
@@ -703,15 +703,15 @@ export async function describeJourney(
     // Journey flags
     printMessage(
       `\nFlags\n- Inner Tree Only: ${
-        journeyData.tree.innerTreeOnly ? c.positive('true') : c.muted('false')
+        journeyData.tree.innerTreeOnly ? c.positive('true') : c.error('false')
       }\n- Must Run: ${
-        journeyData.tree.mustRun ? c.positive('true') : c.muted('false')
+        journeyData.tree.mustRun ? c.positive('true') : c.error('false')
       }\n- No Session: ${
-        journeyData.tree.noSession ? c.positive('true') : c.muted('false')
+        journeyData.tree.noSession ? c.positive('true') : c.error('false')
       }\n- Transactional Only: ${
         journeyData.tree.transactionalOnly
           ? c.positive('true')
-          : c.muted('false')
+          : c.error('false')
       }`
     );
 

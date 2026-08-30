@@ -75,8 +75,8 @@ export async function listMappings(long: boolean = false): Promise<boolean> {
           mapping.displayName,
           mapping.source,
           mapping.target,
-          mapping.consentRequired ? c.positive('yes') : c.muted('no'),
-          isLegacyMapping(mapping._id) ? c.positive('yes') : c.muted('no'),
+          mapping.consentRequired ? c.positive('yes') : c.error('no'),
+          isLegacyMapping(mapping._id) ? c.positive('yes') : c.error('no'),
         ]);
       }
       printMessage(table.toString(), 'data');

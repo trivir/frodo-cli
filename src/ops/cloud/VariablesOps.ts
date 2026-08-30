@@ -136,7 +136,7 @@ export async function listVariables(
               : variable.value,
             40
           ),
-          variable.loaded ? c.positive('loaded') : c.muted('unloaded'),
+          variable.loaded ? c.positive('loaded') : c.error('unloaded'),
           wordwrap(variable.description, 40),
           state.getUseBearerTokenForAmApis()
             ? variable.lastChangedBy
@@ -151,7 +151,7 @@ export async function listVariables(
       values.push(
         locations.length > 0
           ? `${c.positive('yes')} (${locations.length === 1 ? `at` : `${locations.length} uses, including:`} ${locations[0]})`
-          : c.muted('no')
+          : c.error('no')
       );
     }
     table.push(values);
@@ -380,7 +380,7 @@ export async function describeVariable(
       table.push([c.heading('Type'), variable.expressionType]);
       table.push([
         c.heading('Status'),
-        variable.loaded ? c.positive('loaded') : c.muted('unloaded'),
+        variable.loaded ? c.positive('loaded') : c.error('unloaded'),
       ]);
       table.push([
         c.heading('Description'),
