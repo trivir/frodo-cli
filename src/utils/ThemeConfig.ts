@@ -67,16 +67,17 @@ const BUILT_IN_REFERENCE_DEFINITIONS: Record<
  * code-driven defaults; these are well-designed *presets*, at the same
  * trust level as a theme a user writes themselves. Unlike `dark`/`light`,
  * they're only ever read from their materialized file (see
- * `getActiveThemeDefinition`), so editing or deleting them behaves exactly
- * like editing or deleting any other custom theme.
+ * `getActiveThemeDefinition`), so editing them actually changes their
+ * colors, and deleting the file behaves like deleting any other custom
+ * theme (falls back to `dark` if it was active).
  *
- * `light-regular` exists because the light background is the real
+ * `light-relaxed` exists because the light background is the real
  * casualty of strict AA: only 5 of the 16 standard ANSI colors clear 4.5:1
  * on white at all, so `light`'s `positive` has no color whatsoever. Relaxed
  * to a ~2:1 floor, `green` (2.16:1) becomes reachable -- nothing else does;
  * yellow (1.70) and cyan (1.98) stay well under 2:1 no matter how far the
  * threshold is pushed, since their own luminance is close to white's.
- * `dark-regular` doesn't have a scarcity problem to solve (`dark` already
+ * `dark-relaxed` doesn't have a scarcity problem to solve (`dark` already
  * uses the full *Bright palette, all comfortably clearing 4.5:1 on black)
  * -- it exists for symmetry and a different, more muted aesthetic, using
  * each intent's plain (non-Bright) counterpart wherever that still clears
@@ -84,13 +85,13 @@ const BUILT_IN_REFERENCE_DEFINITIONS: Record<
  * black, too low to use at any reasonable floor.
  */
 const BUNDLED_ADDITIONAL_DEFINITIONS: Record<
-  'dark-regular' | 'light-regular',
+  'dark-relaxed' | 'light-relaxed',
   ThemeDefinition
 > = {
-  'dark-regular': {
-    name: 'dark-regular',
+  'dark-relaxed': {
+    name: 'dark-relaxed',
     description:
-      'A more muted alternative to "dark" for dark-background terminals -- same intents, plain (non-Bright) hues wherever contrast allows. This file is a reference copy -- editing it has no effect; copy it to a new file with a different name to make a custom theme.',
+      'A more muted alternative to "dark" for dark-background terminals, at a relaxed (~4:1) contrast floor instead of strict WCAG AA -- same intents, plain (non-Bright) hues wherever that contrast allows. This file is a starting point: editing it changes this theme\'s colors; copy it to a new file with a different name instead to make a separate custom theme.',
     mode: 'dark',
     colors: {
       error: 'redBright',
@@ -103,10 +104,10 @@ const BUNDLED_ADDITIONAL_DEFINITIONS: Record<
       debug: 'white',
     },
   },
-  'light-regular': {
-    name: 'light-regular',
+  'light-relaxed': {
+    name: 'light-relaxed',
     description:
-      'A less strict alternative to "light" for light-background terminals, adding a color for positive/active values that the stricter WCAG AA floor can\'t fit. This file is a reference copy -- editing it has no effect; copy it to a new file with a different name to make a custom theme.',
+      'A relaxed-contrast (~2:1 floor) alternative to "light" for light-background terminals, adding a color for positive/active values that the stricter WCAG AA floor can\'t fit. This file is a starting point: editing it changes this theme\'s colors; copy it to a new file with a different name instead to make a separate custom theme.',
     mode: 'light',
     colors: {
       error: 'red',
