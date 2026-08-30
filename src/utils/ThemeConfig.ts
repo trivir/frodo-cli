@@ -60,6 +60,67 @@ const BUILT_IN_REFERENCE_DEFINITIONS: Record<
   },
 };
 
+/**
+ * Two more bundled themes, computed the same rigorous way as `dark`/`light`
+ * (see TerminalContrast.ts) but at a relaxed contrast floor rather than
+ * strict WCAG AA (4.5:1) -- `dark`/`light` stay the two unbreakable,
+ * code-driven defaults; these are well-designed *presets*, at the same
+ * trust level as a theme a user writes themselves. Unlike `dark`/`light`,
+ * they're only ever read from their materialized file (see
+ * `getActiveThemeDefinition`), so editing or deleting them behaves exactly
+ * like editing or deleting any other custom theme.
+ *
+ * `light-regular` exists because the light background is the real
+ * casualty of strict AA: only 5 of the 16 standard ANSI colors clear 4.5:1
+ * on white at all, so `light`'s `positive` has no color whatsoever. Relaxed
+ * to a ~2:1 floor, `green` (2.16:1) becomes reachable -- nothing else does;
+ * yellow (1.70) and cyan (1.98) stay well under 2:1 no matter how far the
+ * threshold is pushed, since their own luminance is close to white's.
+ * `dark-regular` doesn't have a scarcity problem to solve (`dark` already
+ * uses the full *Bright palette, all comfortably clearing 4.5:1 on black)
+ * -- it exists for symmetry and a different, more muted aesthetic, using
+ * each intent's plain (non-Bright) counterpart wherever that still clears
+ * a ~4:1 floor. `error` stays `redBright`: plain `red` is only 3.60:1 on
+ * black, too low to use at any reasonable floor.
+ */
+const BUNDLED_ADDITIONAL_DEFINITIONS: Record<
+  'dark-regular' | 'light-regular',
+  ThemeDefinition
+> = {
+  'dark-regular': {
+    name: 'dark-regular',
+    description:
+      'A more muted alternative to "dark" for dark-background terminals -- same intents, plain (non-Bright) hues wherever contrast allows. This file is a reference copy -- editing it has no effect; copy it to a new file with a different name to make a custom theme.',
+    mode: 'dark',
+    colors: {
+      error: 'redBright',
+      warning: 'yellow',
+      command: 'cyan',
+      emphasis: 'magenta',
+      heading: 'bold',
+      positive: 'green',
+      muted: 'blackBright',
+      debug: 'white',
+    },
+  },
+  'light-regular': {
+    name: 'light-regular',
+    description:
+      'A less strict alternative to "light" for light-background terminals, adding a color for positive/active values that the stricter WCAG AA floor can\'t fit. This file is a reference copy -- editing it has no effect; copy it to a new file with a different name to make a custom theme.',
+    mode: 'light',
+    colors: {
+      error: 'red',
+      warning: 'magenta',
+      command: 'blueBright',
+      emphasis: 'blue',
+      heading: 'bold',
+      positive: 'green',
+      muted: 'blackBright',
+      debug: 'magentaBright',
+    },
+  },
+};
+
 function getThemesDir(): string {
   return path.join(getConfigPath(), FRODO_THEME_DEFINITIONS_DIRNAME);
 }
@@ -79,7 +140,11 @@ export function ensureBuiltInThemeFiles(): void {
   const dir = getThemesDir();
   try {
     fs.mkdirSync(dir, { recursive: true });
-    for (const def of Object.values(BUILT_IN_REFERENCE_DEFINITIONS)) {
+    const allBundled = [
+      ...Object.values(BUILT_IN_REFERENCE_DEFINITIONS),
+      ...Object.values(BUNDLED_ADDITIONAL_DEFINITIONS),
+    ];
+    for (const def of allBundled) {
       const filePath = path.join(dir, `${def.name}.json`);
       if (!fs.existsSync(filePath)) {
         fs.writeFileSync(filePath, JSON.stringify(def, null, 2));
