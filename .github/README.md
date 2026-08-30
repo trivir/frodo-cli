@@ -587,14 +587,16 @@ frodo info example-use1-staging
 
 ### Settings
 
-`frodo settings` manages local frodo CLI preferences -- separate from connection profiles above, and from `frodo config`/`config-manager`, which manage remote Ping/AIC configuration. `theme` is the first settings category, letting you pick a color theme suited to your terminal (colors optimized for a dark background can be hard to read on a light one, and vice versa):
+`frodo settings` manages local frodo CLI preferences -- separate from connection profiles above, and from `frodo config`/`config-manager`, which manage remote Ping/AIC configuration. `theme` is the first settings category, letting you pick a color theme suited to your terminal. A theme is two independent preferences: a **background** (`dark`, `light`, `blue`, `yellow`, or auto-detected from your terminal) and a **contrast** level (`high-contrast`, `regular`, or `vibrant` -- the default, the most colorful option each background supports):
 
 ```console
 $ frodo settings theme list
-$ frodo settings theme set light
+$ frodo settings theme background light
+$ frodo settings theme contrast high-contrast
+$ frodo settings theme detect
 ```
 
-Run `frodo settings` or `frodo settings theme` with no further arguments for an interactive picker. Themes are plain JSON files under `~/.frodo/themes/` -- copy the built-in `dark.json`/`light.json` reference files there under a new name to define your own.
+Run `frodo settings` or `frodo settings theme` with no further arguments for an interactive picker (Escape backs out a level instead of requiring Ctrl+C). `frodo settings theme show` renders a realistic sample of frodo-cli output in the active theme -- the quickest way to check whether it actually works on your terminal. Themes are plain JSON files under `~/.frodo/themes/` -- copy one there under a new name to define your own.
 
 ### cli options
 
