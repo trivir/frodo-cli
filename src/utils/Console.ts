@@ -644,7 +644,7 @@ function addRows(object, depth, level, table, keyMap) {
         table.push([
           {
             hAlign: 'right',
-            content: keyMap[key] ? c.muted(keyMap[key]) : c.muted(key),
+            content: keyMap[key] ? c.heading(keyMap[key]) : c.heading(key),
           },
           object[key],
         ]);
