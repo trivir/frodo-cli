@@ -59,7 +59,8 @@
   "jest": {
     "testTimeout": 120000,
     "testMatch": [
-      "**/?(*.)(test).js"
+      "**/?(*.)(test).js",
+      "**/?(*.)(test).ts"
     ],
     "extensionsToTreatAsEsm": [
       ".ts"
