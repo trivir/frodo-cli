@@ -69,9 +69,9 @@ export async function listWorkflows(long: boolean = false): Promise<boolean> {
       table.push([
         `${workflow.id}`,
         workflow.name,
-        workflowGroup.draft ? c.positive('true') : c.error('false'),
-        workflowGroup.published ? c.positive('true') : c.error('false'),
-        workflow.mutable ? c.positive('true') : c.error('false'),
+        workflowGroup.draft ? c.positive('true') : c.negative('false'),
+        workflowGroup.published ? c.positive('true') : c.negative('false'),
+        workflow.mutable ? c.positive('true') : c.negative('false'),
       ]);
     }
     printMessage(table.toString(), 'data');
@@ -125,11 +125,11 @@ export async function describeWorkflow(
       table.push([c.heading('Status'), workflow.status]);
       table.push([
         c.heading('Mutable'),
-        workflow.mutable ? c.positive('true') : c.error('false'),
+        workflow.mutable ? c.positive('true') : c.negative('false'),
       ]);
       table.push([
         c.heading('ChildType'),
-        workflow.childType ? c.positive('true') : c.error('false'),
+        workflow.childType ? c.positive('true') : c.negative('false'),
       ]);
       getTableRowsFromArray(
         table,

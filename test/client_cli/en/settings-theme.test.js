@@ -22,3 +22,23 @@ test("CLI help interface for 'settings theme set' should be expected english", a
   const { stdout } = await exec('frodo settings theme set --help');
   expect(stdout).toMatchSnapshot();
 });
+
+test("CLI help interface for 'settings theme background' should be expected english", async () => {
+  const { stdout } = await exec('frodo settings theme background --help');
+  expect(stdout).toMatchSnapshot();
+});
+
+test("CLI help interface for 'settings theme contrast' should be expected english", async () => {
+  const { stdout } = await exec('frodo settings theme contrast --help');
+  expect(stdout).toMatchSnapshot();
+});
+
+test("CLI help interface for 'settings theme detect' should be expected english", async () => {
+  const { stdout } = await exec('frodo settings theme detect --help');
+  expect(stdout).toMatchSnapshot();
+});
+
+test("CLI help interface for 'settings theme autodetect' should be expected english", async () => {
+  const { stdout } = await exec('frodo settings theme autodetect --help');
+  expect(stdout).toMatchSnapshot();
+});

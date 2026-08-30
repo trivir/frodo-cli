@@ -125,7 +125,7 @@ export async function listSecrets(
           { hAlign: 'right', content: secret.loadedVersion },
           secret.loaded
             ? (c.positive('loaded') as any)
-            : (c.error('unloaded') as any),
+            : (c.negative('unloaded') as any),
           wordwrap(secret.description, 40),
           lastChangedBy,
           new Date(secret.lastChangeDate).toUTCString(),
@@ -136,7 +136,7 @@ export async function listSecrets(
       values.push(
         locations.length > 0
           ? `${c.positive('yes')} (${locations.length === 1 ? `at` : `${locations.length} uses, including:`} ${locations[0]})`
-          : c.error('no')
+          : c.negative('no')
       );
     }
     table.push(values);
@@ -354,14 +354,14 @@ export async function listSecretVersions(
     ]);
     const statusMap = {
       ENABLED: c.positive('active'),
-      DISABLED: c.error('inactive'),
-      DESTROYED: c.error('deleted'),
+      DISABLED: c.negative('inactive'),
+      DESTROYED: c.negative('deleted'),
     };
     for (const version of versions) {
       table.push([
         { hAlign: 'right', content: version.version },
         statusMap[version.status],
-        version.loaded ? c.positive('loaded') : c.error('unloaded'),
+        version.loaded ? c.positive('loaded') : c.negative('unloaded'),
         new Date(version.createDate).toLocaleString(),
       ]);
     }
@@ -412,7 +412,7 @@ export async function describeSecret(
       table.push([c.heading('Loaded Version'), secret.loadedVersion]);
       table.push([
         c.heading('Status'),
-        secret.loaded ? c.positive('loaded') : c.error('unloaded'),
+        secret.loaded ? c.positive('loaded') : c.negative('unloaded'),
       ]);
       table.push([c.heading('Description'), wordwrap(secret.description, 60)]);
       table.push([

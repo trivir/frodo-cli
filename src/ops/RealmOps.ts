@@ -50,7 +50,7 @@ export async function listRealms(long = false) {
         table.push([
           realmConfig._id,
           realmConfig.name,
-          realmConfig.active ? c.positive('active') : c.error('inactive'),
+          realmConfig.active ? c.positive('active') : c.negative('inactive'),
           realmConfig.aliases.join('\n'),
           realmConfig.parentPath,
         ]);
@@ -340,7 +340,7 @@ export async function describeRealm(realm: string) {
     table.push([c.heading('Name'), realmConfig.name]);
     table.push([
       c.heading('Status'),
-      realmConfig.active ? c.positive('active') : c.error('inactive'),
+      realmConfig.active ? c.positive('active') : c.negative('inactive'),
     ]);
     table.push([c.heading('Custom Domains'), realmConfig.aliases.join('\n')]);
     table.push([c.heading('Parent'), realmConfig.parentPath]);
@@ -373,7 +373,7 @@ export async function addCustomDomain(realm: string, domain: string) {
         table.push([c.heading('Name'), realmConfig.name]);
         table.push([
           c.heading('Status'),
-          realmConfig.active ? c.positive('active') : c.error('inactive'),
+          realmConfig.active ? c.positive('active') : c.negative('inactive'),
         ]);
         table.push([
           c.heading('Custom Domains'),
@@ -410,7 +410,7 @@ export async function removeCustomDomain(realm: string, domain: string) {
         table.push([c.heading('Name'), realmConfig.name]);
         table.push([
           c.heading('Status'),
-          realmConfig.active ? c.positive('active') : c.error('inactive'),
+          realmConfig.active ? c.positive('active') : c.negative('inactive'),
         ]);
         table.push([
           c.heading('Custom Domains'),

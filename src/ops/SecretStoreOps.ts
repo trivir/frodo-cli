@@ -66,7 +66,7 @@ export async function listSecretStores(
           store._type.name,
           mappings
             ? mappings.map((m) => m.secretId).join('\n')
-            : c.error('N/A'),
+            : c.negative('N/A'),
         ]);
       }
       printMessage(table.toString(), 'data');
@@ -142,7 +142,9 @@ export async function listSecretStoreMappingAliases(
         table.push([
           alias,
           // The first one is always active
-          active && !(active = false) ? c.positive('true') : c.error('false'),
+          active && !(active = false)
+            ? c.positive('true')
+            : c.negative('false'),
         ]);
       }
       printMessage(table.toString(), 'data');

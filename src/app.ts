@@ -48,7 +48,10 @@ import {
   printMessage,
   verboseMessage,
 } from './utils/Console';
-import { activatePersistedTheme } from './utils/ThemeConfig';
+import {
+  activatePersistedTheme,
+  ensureThemeDetectedIfNeeded,
+} from './utils/ThemeConfig';
 import { getVersions } from './utils/Version';
 
 const { initConnectionProfiles } = frodo.conn;
@@ -65,6 +68,7 @@ process.argv = normalizeExpandedHelpArgv(process.argv);
     state.setErrorHandler(printError);
     state.setDebugHandler(debugMessage);
     state.setVerboseHandler(verboseMessage);
+    await ensureThemeDetectedIfNeeded();
     activatePersistedTheme();
 
     const program = new FrodoStubCommand('frodo').version(

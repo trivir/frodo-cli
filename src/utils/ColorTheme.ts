@@ -11,33 +11,55 @@ import c from 'tinyrainbow';
  * (`error`, `warning`, `command`, `emphasis`) with the CLI-specific roles
  * the call-site audit surfaced:
  * - `heading` -- section/table-column labels. Always bold (unlike a hue,
- *   weight has no background-contrast concern), *plus* a hue where the
- *   palette has room for one: `whiteBright` on dark, comfortably clearing
- *   21:1 on black and left unclaimed by every other intent. On light there
- *   is no room left -- the same scarcity `positive` runs into below -- so
- *   `heading` stays bold-only there, not a color choice so much as what
- *   the palette allows.
- * - `positive` -- true/active/enabled/valid status values.
+ *   weight has no background-contrast concern), *plus* a hue: `blueBright`
+ *   on dark, `magentaBright` on light. Both compute below the normal-text
+ *   4.5:1 AA floor (4.43:1 and 3.14:1 respectively) but clear WCAG's own
+ *   3:1 large-text/bold threshold -- headings are always bold, so they're
+ *   entitled to that lower bar. Picked specifically because they're
+ *   visually distinct from a plain, unstyled foreground: `whiteBright` was
+ *   tried first and technically passed AA (21:1 on black), but most
+ *   dark-terminal profiles already default their unstyled foreground to
+ *   white/near-white, so bold+whiteBright rendered indistinguishably from
+ *   plain bold text -- a color choice that passes contrast math but fails
+ *   the actual point of adding a color.
+ * - `positive` -- status values that are good/active/enabled/true-in-a-
+ *   good-sense.
+ * - `negative` -- status values that are bad/inactive/disabled/false-in-a-
+ *   bad-sense. Distinct from frodo-lib's `error`, which reports that an
+ *   operation actually failed -- a `disabled: true` field in a describe
+ *   table isn't an error, so it shouldn't have to borrow that intent's
+ *   name to get colored. On the strict `dark`/`light` themes, which have
+ *   no spare AA-clean hue left, `negative` resolves to the same color as
+ *   `error` (same "two intents, one color" reasoning already accepted
+ *   below for `error` itself), but themes with more room can give it a
+ *   genuinely distinct hue.
  * - `muted` -- table borders and other secondary decoration/text that's
- *   deliberately meant to look quiet, not a status value -- status values
- *   that read as "off" use `error` instead (see frodo-lib's `Intent`),
- *   since a describe/list table rendering at all already means the
- *   command didn't fail, so reusing `error`'s color for "inactive" doesn't
- *   actually collide with a real error in practice.
+ *   deliberately meant to look quiet -- not a status value at all (see
+ *   `negative` above for status values that read as "off").
  * - `debug` -- frodo-cli's own debug-output type, distinct from `command`.
  *
  * This is the only file in frodo-cli allowed to reference `tinyrainbow`
  * directly (enforced by an ESLint rule), same as before.
  */
-export type CliIntent = LibIntent | 'heading' | 'positive' | 'muted' | 'debug';
+export type CliIntent =
+  LibIntent | 'heading' | 'positive' | 'negative' | 'muted' | 'debug';
 
 // `unknown` input, matching frodo-lib's base theme and tinyrainbow's own
 // `Formatter` type -- callers routinely color values whose static type is
 // wider than `string` (e.g. a status field typed as `string | number | ...`).
 type CliOnlyColors = Record<
-  'heading' | 'positive' | 'muted' | 'debug',
+  'heading' | 'positive' | 'negative' | 'muted' | 'debug',
   (text: unknown) => string
 >;
+
+// Genuinely no color -- distinct from simply omitting an intent from a
+// theme file's `colors` map, which falls through to that intent's
+// dark/light default instead (untested against a background that isn't
+// dark or light). Needed for a background this constrained: on `blue`'s
+// high-contrast tier, only one hue clears strict AA at all, and forcing a
+// second, semantically-wrong hue (or silently inheriting `light`'s
+// defaults, unvalidated against blue) is worse than plain text.
+const plain = (text: unknown) => String(text);
 
 /**
  * Built the same way as frodo-lib's base palette -- via
@@ -45,9 +67,14 @@ type CliOnlyColors = Record<
  * dark-background color here clears 4.5:1 (WCAG AA normal text) against
  * black.
  */
+// `heading`'s bold weight is applied unconditionally by its getter below,
+// not baked into this hue function -- that keeps "heading is always bold"
+// true even when a custom theme file supplies its own hue for `heading`
+// via a plain, unwrapped hue name (see `HUE_NAME_TO_FUNCTION`).
 const DARK_ADDITIONS: CliOnlyColors = {
-  heading: (text: unknown) => c.bold(c.whiteBright(text)),
+  heading: c.blueBright,
   positive: c.greenBright,
+  negative: c.redBright,
   muted: c.blackBright,
   debug: c.white,
 };
@@ -55,20 +82,28 @@ const DARK_ADDITIONS: CliOnlyColors = {
 /**
  * Same objective process for the light background -- and it runs into the
  * same scarcity frodo-lib's base palette did: only 5 of the 16 standard
- * ANSI colors clear 4.5:1 against white at all, and frodo-lib's base theme
- * already spends all 5 on `error`/`warning`/`command`/`emphasis`. There is
- * no 6th distinct AA-compliant (4.5:1) color left for `heading` or
- * `positive`, so both fall back to plain (unstyled, or bold-only for
- * `heading`) text rather than reusing another intent's color and risking a
- * misleading visual association. `muted` and `debug` are checked against
- * WCAG's looser 3:1 threshold instead -- appropriate for both, since
- * neither is meant to be primary reading content -- which `blackBright`
- * (gray) and `magentaBright` (distinct from `warning`'s plain `magenta`)
+ * ANSI colors clear 4.5:1 (normal-text AA) against white at all, and
+ * frodo-lib's base theme already spends all 5 on
+ * `error`/`warning`/`command`/`emphasis`. There is no 6th distinct
+ * normal-text-AA color left, so `positive` falls back to plain (unstyled)
+ * text rather than reusing another intent's color and risking a misleading
+ * visual association. `heading` doesn't need the full 4.5:1 bar, though --
+ * it's always bold, so WCAG's looser 3:1 large-text threshold applies
+ * instead, which `magentaBright` clears (3.14:1); it collides with
+ * `debug`'s color below, accepted for the same reason `negative` colliding
+ * with `error` is accepted -- a debug line and a table header don't
+ * practically co-occur. `muted`, `debug`, and `negative` are all checked
+ * against that same looser 3:1 threshold -- appropriate, since none of
+ * them is meant to be primary reading content on its own -- which
+ * `blackBright` (gray), `magentaBright`, and `red` (4.00:1, actually
+ * clears even the normal-text bar, but reused here to mirror `error`
+ * exactly rather than introduce a distinct hue with no room to spare)
  * clear.
  */
 const LIGHT_ADDITIONS: CliOnlyColors = {
-  heading: c.bold,
-  positive: (text: unknown) => String(text),
+  heading: c.magentaBright,
+  positive: plain,
+  negative: c.red,
   muted: c.blackBright,
   debug: c.magentaBright,
 };
@@ -105,6 +140,7 @@ export const HUE_NAME_TO_FUNCTION: Record<string, (text: unknown) => string> = {
   whiteBright: c.whiteBright,
   bold: c.bold,
   dim: c.dim,
+  none: plain,
 };
 
 // A custom theme's per-intent color overrides, applied on top of the
@@ -152,14 +188,34 @@ function intent(
   return { get: () => customOverrides[name] ?? fallback(), enumerable: true };
 }
 
+// `heading` is always bold, regardless of whether its hue comes from the
+// built-in fallback or a custom theme file's override -- a theme only ever
+// supplies the hue (see DARK_ADDITIONS/LIGHT_ADDITIONS above and
+// HUE_NAME_TO_FUNCTION), never the weight, so this can't be expressed via
+// the generic `intent()` helper, which would let an override silently drop
+// the bold wrapping.
+function boldHeadingIntent(): {
+  get: () => (text: unknown) => string;
+  enumerable: true;
+} {
+  return {
+    get: () => {
+      const hue = customOverrides.heading ?? currentCliAdditions().heading;
+      return (text: unknown) => c.bold(hue(text));
+    },
+    enumerable: true,
+  };
+}
+
 const theme = themeTag as CliThemeApi;
 Object.defineProperties(theme, {
   error: intent('error', () => libTheme(state).error),
   warning: intent('warning', () => libTheme(state).warning),
   command: intent('command', () => libTheme(state).command),
   emphasis: intent('emphasis', () => libTheme(state).emphasis),
-  heading: intent('heading', () => currentCliAdditions().heading),
+  heading: boldHeadingIntent(),
   positive: intent('positive', () => currentCliAdditions().positive),
+  negative: intent('negative', () => currentCliAdditions().negative),
   muted: intent('muted', () => currentCliAdditions().muted),
   debug: intent('debug', () => currentCliAdditions().debug),
 });

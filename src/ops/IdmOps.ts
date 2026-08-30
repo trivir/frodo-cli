@@ -858,7 +858,7 @@ const PROPERTY_TABLE_KEY =
 
 /** Pushes {@link PropertyTableRow}s onto a table already headed with {@link PROPERTY_TABLE_COLUMNS} (from {@link createTable}); pass `includeTarget: false` for a table headed with {@link PROPERTY_ONLY_TABLE_COLUMNS} instead. */
 function flag(value: 'yes' | 'no'): string {
-  return value === 'yes' ? c.positive(value) : c.error(value);
+  return value === 'yes' ? c.positive(value) : c.negative(value);
 }
 
 function pushPropertyTableRows(

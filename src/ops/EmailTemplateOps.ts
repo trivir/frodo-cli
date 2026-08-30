@@ -139,7 +139,7 @@ export async function listEmailTemplates(
         `${emailTemplate.displayName ? emailTemplate.displayName : ''}`,
         // Status
         emailTemplate.enabled === false
-          ? c.error('disabled')
+          ? c.negative('disabled')
           : c.positive('enabled'),
         // Locale(s)
         `${emailTemplate.defaultLocale}${

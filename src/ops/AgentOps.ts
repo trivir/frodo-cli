@@ -123,7 +123,7 @@ export async function listAgents(
         const status = resolveAgentStatus(agent);
         table.push([
           agent._id,
-          status === 'Active' ? c.positive('Active') : c.error(status),
+          status === 'Active' ? c.positive('Active') : c.negative(status),
           agent._type.name,
         ]);
       }
@@ -156,7 +156,7 @@ export async function listIdentityGatewayAgents(
           agent._id,
           agent.status === 'Active'
             ? c.positive('Active')
-            : c.error(agent.status),
+            : c.negative(agent.status),
         ]);
       }
       printMessage(table.toString(), 'data');
@@ -186,7 +186,7 @@ export async function listJavaAgents(long: boolean = false): Promise<boolean> {
           agent._id,
           agent['globalJ2EEAgentConfig']['status'] === 'Active'
             ? c.positive('Active')
-            : c.error(agent['globalJ2EEAgentConfig']['status']),
+            : c.negative(agent['globalJ2EEAgentConfig']['status']),
         ]);
       }
       printMessage(table.toString(), 'data');
@@ -216,7 +216,7 @@ export async function listWebAgents(long: boolean = false): Promise<boolean> {
           agent._id,
           agent['globalWebAgentConfig']['status'] === 'Active'
             ? c.positive('Active')
-            : c.error(agent['globalWebAgentConfig']['status']),
+            : c.negative(agent['globalWebAgentConfig']['status']),
         ]);
       }
       printMessage(table.toString(), 'data');
@@ -1464,7 +1464,7 @@ export async function listAIAgents(long: boolean = false): Promise<boolean> {
         const status = resolveAgentStatus(agent);
         table.push([
           agent._id,
-          status === 'Active' ? c.positive('Active') : c.error(status),
+          status === 'Active' ? c.positive('Active') : c.negative(status),
         ]);
       }
       printMessage(table.toString(), 'data');
@@ -1707,7 +1707,7 @@ export async function describeAIAgent(
     table.push(['Agent Id', agent._id]);
     table.push([
       'Status',
-      status === 'Active' ? c.positive('Active') : c.error(status),
+      status === 'Active' ? c.positive('Active') : c.negative(status),
     ]);
     table.push(['Type', agent._type.name]);
     return table.toString();
@@ -1741,7 +1741,7 @@ export async function describeIdentityGatewayAgent(
     table.push(['Agent Id', targetAgent._id]);
     table.push([
       'Status',
-      status === 'Active' ? c.positive('Active') : c.error(status),
+      status === 'Active' ? c.positive('Active') : c.negative(status),
     ]);
     table.push(['Type', targetAgent._type.name]);
     return table.toString();
@@ -1775,7 +1775,7 @@ export async function describeJavaAgent(
     table.push(['Agent Id', targetAgent._id]);
     table.push([
       'Status',
-      status === 'Active' ? c.positive('Active') : c.error(status),
+      status === 'Active' ? c.positive('Active') : c.negative(status),
     ]);
     table.push(['Type', targetAgent._type.name]);
     return table.toString();
@@ -1809,7 +1809,7 @@ export async function describeWebAgent(
     table.push(['Agent Id', targetAgent._id]);
     table.push([
       'Status',
-      status === 'Active' ? c.positive('Active') : c.error(status),
+      status === 'Active' ? c.positive('Active') : c.negative(status),
     ]);
     table.push(['Type', targetAgent._type.name]);
     return table.toString();
@@ -1845,7 +1845,7 @@ export async function describeAgent(
     table.push(['Agent Id', targetAgent._id]);
     table.push([
       'Status',
-      status === 'Active' ? c.positive('Active') : c.error(status),
+      status === 'Active' ? c.positive('Active') : c.negative(status),
     ]);
     table.push(['Type', targetAgent._type.name]);
     return table.toString();
@@ -1875,7 +1875,7 @@ export async function describeAgents(
       const status = resolveAgentStatus(agent);
       table.push([
         agent._id,
-        status === 'Active' ? c.positive('Active') : c.error(status),
+        status === 'Active' ? c.positive('Active') : c.negative(status),
         agent._type.name,
       ]);
     }
