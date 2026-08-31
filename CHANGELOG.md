@@ -2,11 +2,13 @@
 
 ## Unreleased
 
+## [v4.9.0] - 2026-08-31
+
 ### Added
 - Added a `frodo settings` command for managing local frodo CLI preferences (distinct from `frodo config`/`config-manager`, which manage remote Ping/AIC configuration), with `theme` as its first category:
-  - `frodo settings theme list`
+- Introduced a `frodo settings` command for managing local frodo CLI preferences, with `theme` as its first category. This includes commands for listing, showing, setting, and detecting themes, as well as an interactive picker for theme selection. Twelve bundled themes are available, each computed for optimal contrast based on terminal background color. Themes are stored as discoverable JSON files, allowing for user customization. The active preferences persist in `~/.frodo/Theme.json` (#901c5ac5).
   - `frodo settings theme show` -- the active theme, a per-intent color swatch table, and a realistic sample of frodo-cli output (an object table, a schema-property table, a status table, and every message type) rendered in it, the practical way to judge whether a theme actually works on a given terminal background.
-  - `frodo settings theme set <name>`
+- Added a `negative` intent for styling bad/inactive/disabled status values, distinct from `error`, and applied it across multiple call sites (#baed6ac3).
   - `frodo settings theme background <name>` / `frodo settings theme contrast <tier>` -- the theme model is two independent preferences, not one flat name: `background` (`dark`/`light`/`blue`/`yellow`) and `contrast` (`high-contrast`/`regular`/`vibrant`, default `vibrant`), combined into a theme name (`<background>` for `high-contrast`, `<background>-<contrast>` otherwise). `set <name>` still works, parsing a recognized combined name into both preferences.
   - `frodo settings theme detect` -- best-effort terminal-background auto-detection (OSC 11), setting only the `background` preference; `contrast` is never touched by detection. Runs automatically once, only the first time no background has ever been chosen; `detect` re-runs it on demand (e.g. after switching terminals), and `frodo settings theme autodetect on|off` disables it entirely.
   - `frodo settings` and `frodo settings theme` (called with no subcommand) launch an interactive picker -- a two-step background-then-contrast flow for `theme`, including an "Auto-detect from my terminal" entry -- built on a custom Escape-aware prompt (the packaged `@inquirer/select` has no Escape keybinding at all) so Escape backs out a level (contrast step back to background step) instead of requiring Ctrl+C; `settings` itself skips its own category menu when there's only one category (still just Theme) rather than showing a single-item menu with nowhere further to back out to.
@@ -16,55 +18,55 @@
 - Adopted frodo-lib's new semantic color-intent theme (`error`/`warning`/`command`/`emphasis`), replacing frodo-cli's own previous non-semantic fix (a flat `*Bright`-to-plain remap in `ColorTheme.ts`) for the same underlying problem: `tinyrainbow`'s bright ANSI colors are unreadable on light-background terminals. Added frodo-cli-specific intents on top (`heading`, `positive`, `muted`, `debug`), each color chosen via frodo-lib's new objective `TerminalContrastFilter` (a WCAG contrast-ratio check) rather than by eye, and migrated all ~500 of frodo-cli's own call sites from raw hue names (`c.cyanBright(...)`) to the matching semantic name (`c.command(...)`, `c.heading(...)`, etc.) so no code outside `ColorTheme.ts` references a literal color anymore. Also caught and fixed two latent bugs the stricter typing surfaced: `printMessage(msg, 'success')` and `printMessage(msg, 'warning')` (a typo for `'warn'`) were both silently falling through to plain, uncolored text, since neither matched any of `printMessage`'s actual case values.
   - Added a real `MessageType` union type for `printMessage`'s `type` parameter (previously an unenforced string), plus canonical `infoMessage`/`warnMessage`/`errorMessage`/`successMessage` wrapper functions mirroring the existing `verboseMessage`/`debugMessage` pattern. `printMessage`/`printError` keep their existing names and signatures otherwise -- `printError` remains distinct, since it understands and formats an actual `Error`/`FrodoError` object, unlike `errorMessage`'s arbitrary error-styled string.
 - Added new commands to manage IDM tenant-configuration features (Cloud only) (ca2f90a9):
-  - `frodo feature list`
-  - `frodo feature describe`
-  - `frodo feature validate`
-  - `frodo feature install`
+- Adopted frodo-lib's new semantic color-intent theme, replacing previous color mappings. Added frodo-cli-specific intents and migrated call sites to use semantic names, improving readability on light-background terminals (#32ea91b3).
+- Added `frodo script type describe` to print the bindings exposed to scripts running in a given AM scripting context (ca2f90a9).
+- Restructured `frodo idm schema` to promote `property` to a sibling of `object` and added a new `frodo idm schema relationship` command tree for managing relationship schemas (8776bd5f).
+- Added new commands for managing IDM schema objects, properties, and relationships, including create, update, delete, export, import, and list operations. These commands now support flags for detailed configuration, replacing previous JSON payload methods (49393042).
 
   `install` is confirmation-gated with an explicit irreversibility warning and is a no-op if the feature is already installed.
 - Added `frodo script type describe` to print the bindings (available objects/APIs) exposed to scripts running in a given AM scripting context (ca2f90a9).
 - Restructured `frodo idm schema`: promoted `property` to a sibling of `object` (`frodo idm schema property ...` instead of `frodo idm schema object property ...`).
 - Added a new `frodo idm schema relationship` command tree (any deployment that runs IDM -- Cloud and ForgeOps), backed by IDM's dedicated v2 relationship-schema API:
-  - `frodo idm schema relationship describe`
-  - `frodo idm schema relationship create`
-  - `frodo idm schema relationship update`
-  - `frodo idm schema relationship delete`
+- Added `--sub-property <path>` for managing nested properties of a `type: object` property, allowing for detailed schema manipulation (49393042).
+- Added `-l, --long` to list commands for detailed output, matching the CLI's convention (49393042).
+- Enhanced `frodo idm schema object describe` with `-r, --recursive` for expanded nested property details and improved table formatting (49393042).
+- Added `frodo script type list` to discover script types, supporting `-l, --long` for detailed output (49393042).
 
   Includes bidirectional (two-managed-object-type) relationship support -- `create --reverse-property` auto-creates the reverse side in the same write; `update`/`delete --with-reverse` infer the reverse side's identity from the property's own existing definition.
 - Added new commands filling gaps left when the `object`/`relationship` trees were first built (`property` already had both):
-  - `frodo idm schema object describe`
-  - `frodo idm schema object list`
-  - `frodo idm schema relationship list`
+- Added `--description <text>` to `frodo idm schema object create/update` for setting type descriptions (49393042).
+- Shortened and standardized help text across `frodo idm schema` and `frodo feature` command families for consistency and clarity (49393042).
+- Revised usage examples for `frodo idm schema` commands, adding more detailed scenarios and flag combinations (49393042).
 
   `relationship`'s dedicated v2 API has no bulk-list endpoint, so `relationship list` falls back to a whole-type schema read filtered to relationship-typed properties.
 - `frodo idm schema object create`/`update` are now flags-only (`-o`/`--title`/`--icon`), matching `relationship`'s design, instead of taking a `-f/--file` JSON payload -- `export`/`import` remain the file-based round-trip path. `create` seeds a minimal type (just the `_id` property, a populated `order` array, and a default icon if `--icon` isn't passed) since custom properties are added afterward via `property create`/`relationship create`, which already keep `order`/`required` in sync.
 - `frodo idm schema property create`/`update` now take flags (`--property-type`, `--array`, `--title`, `--description`, `--required`, `--searchable`, `--user-editable`, `--not-viewable`, `--return-by-default`) instead of a `-f/--file` JSON payload, matching `object`/`relationship`'s design; `--property-type` supports every type the Admin UI's picker offers (string/number/boolean/date/time/datetime/duration/object).
 - Added new commands as the file-based round-trip path the `property create`/`update` flags above displace:
-  - `frodo idm schema property export`
-  - `frodo idm schema property import`
+- Changed `frodo idm schema object export/import` flag from `-i, --individual-object` to `-o, --managed-object` for consistency (49393042).
+- Updated `frodo idm schema object create/update` to use `mat-icon` instead of `icon` for setting icons, aligning with the Ping Identity Platform's Admin UI requirements (49393042).
 
   `import` is also the only way to give a new `object` property its own nested sub-properties in one write, since the flags only build a flat definition.
 - Added new commands giving `relationship` the same file-based round-trip commands `object`/`property` already have:
-  - `frodo idm schema relationship export`
-  - `frodo idm schema relationship import`
+- Refactored schema property and relationship handling to use frodo-lib functions, improving maintainability without changing behavior (49393042).
+- Updated usage examples to use short connection-profile aliases for clarity in repeated examples (49393042).
 - Added `--sub-property <path>` for managing nested properties of a `type: object` property, a dot-path relative to `-p`/`--property` (e.g. `--sub-property geo` with `-p address` targets `address.geo`):
-  - `frodo idm schema property create --sub-property <path>`
-  - `frodo idm schema property update --sub-property <path>`
-  - `frodo idm schema property delete --sub-property <path>`
-  - `frodo idm schema property describe --sub-property <path>`
-  - `frodo idm schema property list --sub-property <path>`
+- Promoted MCP Server documentation to its own top-level section in the README for better visibility (49393042).
+- Corrected exit code handling across CLI commands to ensure non-zero exit codes on errors (28ccff3c).
+- Fixed `heading` color for dark themes to ensure visibility against terminal backgrounds (4ffe9826).
+- Restored color expressiveness lost in the semantic migration, ensuring consistent and readable output (b41817da).
+- Resolved issues with terminal-background auto-detection to improve theme matching accuracy (baed6ac3).
 
   Every path segment but the last must already exist and be `type: object`; `list` alone takes an optional `-p` (with `--sub-property` relative to it) since it has no other property target.
 - Added `-l, --long`, matching the rest of the CLI's list-command convention: names only, one per line, by default; `-l` prints the full table instead, using the same columns/abbreviations as the corresponding describe command:
-  - `frodo idm schema object list -l`
-  - `frodo idm schema property list -l`
-  - `frodo idm schema relationship list -l`
+- Fixed `frodo idm schema relationship` to support ForgeOps deployments, correcting previous assumptions about API availability (52ee6c2a).
+- Ensured `frodo idm schema relationship create/update/delete` waits for full propagation of writes to avoid race conditions (52ee6c2a).
+- Improved `frodo idm schema object describe` output formatting, including cardinality and target details for relationships (49393042).
 
   `property list -l`/`relationship list -l` reuse `property describe`/`object describe`'s row-building, including cardinality and the extra reverse-lookup reads for `relationship list -l`. `--json` is unaffected by `-l` on all three.
 - `frodo idm schema object list -l` now also shows Icon, Properties, and Relationships columns -- all counted from the same single bulk `managed` config-entity read `list` already does, so no extra API calls. Properties and Relationships are each shown as `total/required` (e.g. `4/1`) rather than a separate Required column, since a required entry can be either a property or a relationship; the numerator is right-padded to the widest one in its column so the `/` lines up down the column. That bulk read doesn't include IDM's auto-injected `_meta`/`_notifications` relationship properties (those only appear via the dedicated per-type schema read `object describe`/`relationship list` use), so a type's Properties/Relationships counts here can run up to 2 low relative to those commands -- accepted in exchange for staying on one read instead of one per type.
 - Added `-r, --recursive` to `frodo idm schema object describe`. It now prints `Title (name)` (or just `name` with no title), the icon on its own line if configured, a `Properties` table, and (only if the type has any) a separate `Relationships` table -- previously just a property/relationship-property count. Flat by default, `-r` expands nested `type: object` properties inline using dot-path row names (e.g. `address.street`) that are valid `--sub-property` values. Both tables abbreviate their flag columns (`REQ`/`SRH`/`UED`/`VIW`), with a key line printed underneath (a blank line separating it from the table); `Properties` omits the Target column, which only `Relationships` needs, placed right after Title. `--json` is unaffected by `-r` -- always the complete definition. `property describe` leads the same way (`Title (name)`, or just the dot-path if untitled), then -- always, no flag needed -- a `Properties` table of a `type: object` property's own children (full nested tree, dot-path rows), then, for a virtual property, a `Scripts` section with each `onRetrieve`/`onStore` script's source printed verbatim instead of mangled into the generic field table one line per row. The `Title (name)`/`Properties`/`Relationships`/`Scripts` headings are bold (the table column headers keep their existing color-coding, unchanged). `frodo idm schema relationship describe`'s non-recursive output now leads the same way (`Title (name.path)`, bold, `title` no longer duplicated in the field table below it; the reverse side, with `--with-reverse`, is suffixed ` (reverse)`).
 - Added new flags to `frodo idm schema property create`/`update` for default values, enumerated properties, and virtual properties:
-  - `--default <value>`
+- Removed `integer` from `frodo idm schema property create/update --property-type` choices, aligning with supported types (49393042).
   - `--enum <csv>`
   - `--enum-titles <csv>`
   - `--on-retrieve-script <file>`
