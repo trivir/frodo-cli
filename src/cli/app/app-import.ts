@@ -56,26 +56,26 @@ export default function setup() {
     )
     .addHelpText(
       'after',
-      c.yellowBright(`Important Note:\n`) +
-        `  The ${c.cyanBright('frodo app')} command to manage OAuth2 clients in v1.x has been renamed to ${c.cyanBright('frodo oauth client')} in v2.x\n` +
-        `  The ${c.cyanBright('frodo app')} command in v2.x manages the new applications created using the new application templates in ForgeRock Identity Cloud. To manage oauth clients, use the ${c.cyanBright('frodo oauth client')} command.\n\n` +
+      c.warning(`Important Note:\n`) +
+        `  The ${c.command('frodo app')} command to manage OAuth2 clients in v1.x has been renamed to ${c.command('frodo oauth client')} in v2.x\n` +
+        `  The ${c.command('frodo app')} command in v2.x manages the new applications created using the new application templates in ForgeRock Identity Cloud. To manage oauth clients, use the ${c.command('frodo oauth client')} command.\n\n` +
         `Usage Examples:\n` +
         `  Import all applications from a single export file using a connection profile:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo app import -a -f ./allAlphaApplications.application.json ${s.connId}\n`
         ) +
         `  Import the first application from a single export file:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo app import -f ./allAlphaApplications.application.json ${s.connId}\n`
         ) +
         `  Import all applications from separate export files:\n` +
-        c.cyanBright(`  $ frodo app import -A ${s.connId}\n`) +
+        c.command(`  $ frodo app import -A ${s.connId}\n`) +
         `  Import all applications without dependencies from a single export file:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo app import --no-deps -a -f ./allAlphaApplications.application.json ${s.connId}\n`
         ) +
         `  Import only the application 'myApp' from a file with an export file containing multiple applications:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo app import -i myApp -f ./allAlphaApplications.application.json ${s.connId}\n`
         )
     )
@@ -153,8 +153,8 @@ export default function setup() {
         // unrecognized combination of options or no options
         else {
           printMessage('Unrecognized combination of options or no options...');
-          program.help();
           process.exitCode = 1;
+          program.help();
         }
       }
       // end command logic inside action handler

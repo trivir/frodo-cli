@@ -3,7 +3,7 @@
 exports[`CLI help interface for 'idm schema object' should be expected english 1`] = `
 "Usage: frodo idm schema object [options] [command]
 
-Manage IDM managed-object configuration (schema, notifications, etc.).
+Manage IDM managed object schema definitions.
 
 Options:
   -h, --help        Help
@@ -12,25 +12,13 @@ Options:
                     examples.
 
 Commands:
-  create            Create a new managed-object type from a file. The type name
-                    comes from the file's own "name" field. Refuses if that type
-                    already exists. Prompts for confirmation before creating,
-                    unless -y/--yes is passed.
-  delete            Delete a managed-object type entirely, schema included.
-                    Every existing record of that type becomes orphaned. Refuses
-                    if the type has existing records, or if the record count
-                    can't be confirmed, unless -F/--force is also passed.
-                    Prompts for confirmation, unless -y/--yes is passed.
-  export            Export IDM managed-object configuration (schema,
-                    notifications, etc.).
+  create            Create IDM managed object schema definition.
+  delete            Delete IDM managed object schema definition.
+  describe          Describe IDM managed object schema definition.
+  export            Export IDM managed object schema definition.
   help              display help for command
-  import            Import IDM managed-object configuration (schema,
-                    notifications, etc.). Prompts for confirmation before
-                    importing schema changes, unless -y/--yes is passed.
-  property          Manage individual managed-object schema properties.
-  update            Update an existing managed-object type from a file. The type
-                    name comes from the file's own "name" field. Refuses if that
-                    type does not exist. Prompts for confirmation before
-                    updating schema-bearing changes, unless -y/--yes is passed.
+  import            Import IDM managed object schema definition.
+  list              List IDM managed object schema definitions.
+  update            Update IDM managed object schema definition.
 "
 `;

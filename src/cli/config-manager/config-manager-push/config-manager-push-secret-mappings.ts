@@ -40,8 +40,8 @@ export default function setup() {
           'The -n/--name option requires a realm argument to be specified.',
           'error'
         );
-        program.help();
         process.exitCode = 1;
+        program.help();
         return;
       }
 

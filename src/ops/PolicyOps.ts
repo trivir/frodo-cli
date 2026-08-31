@@ -58,7 +58,7 @@ export async function listPolicies(long: boolean = false): Promise<boolean> {
         table.push([
           `${policy._id}`,
           `${policy.description}`,
-          policy.active ? c.greenBright('active') : c.redBright('inactive'),
+          policy.active ? c.positive('active') : c.negative('inactive'),
         ]);
       }
       printMessage(table.toString(), 'data');
@@ -94,7 +94,7 @@ export async function listPoliciesByPolicySet(
         table.push([
           `${policy._id}`,
           `${policy.description}`,
-          policy.active ? c.greenBright('active') : c.redBright('inactive'),
+          policy.active ? c.positive('active') : c.negative('inactive'),
         ]);
       }
       printMessage(table.toString(), 'data');

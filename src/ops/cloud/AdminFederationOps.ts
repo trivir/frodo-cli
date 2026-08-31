@@ -71,7 +71,7 @@ export async function exportAdminFederationProviderToFile(
     saveJsonToFile(fileData, filePath, includeMeta);
     stopProgressIndicator(
       indicatorId,
-      `Exported ${c.cyanBright(providerId)} to ${c.cyanBright(filePath)}.`
+      `Exported ${c.heading(providerId)} to ${c.heading(filePath)}.`
     );
     outcome = true;
   } catch (err) {

@@ -72,17 +72,32 @@ function text(message: string | object, newline = true) {
 }
 
 /**
+ * Output a message in the "positive" color to stderr
+ * @param {Object} message the message
+ */
+function success(message: string | object, newline = true) {
+  if (!message) return;
+  if (typeof message === 'object') {
+    writeObjectToStderr(message, 3, c.positive);
+  } else if (newline) {
+    console.error(c.positive(message));
+  } else {
+    process.stderr.write(c.positive(message));
+  }
+}
+
+/**
  * Output a message in cyan to stderr
  * @param {Object} message the message
  */
 function info(message: string | object, newline = true) {
   if (!message) return;
   if (typeof message === 'object') {
-    writeObjectToStderr(message, 3, c.cyanBright);
+    writeObjectToStderr(message, 3, c.command);
   } else if (newline) {
-    console.error(c.cyanBright(message));
+    console.error(c.command(message));
   } else {
-    process.stderr.write(c.cyanBright(message));
+    process.stderr.write(c.command(message));
   }
 }
 
@@ -93,11 +108,11 @@ function info(message: string | object, newline = true) {
 function warn(message: string | object, newline = true) {
   if (!message) return;
   if (typeof message === 'object') {
-    writeObjectToStderr(message, 3, c.yellowBright);
+    writeObjectToStderr(message, 3, c.warning);
   } else if (newline) {
-    console.error(c.yellowBright(message));
+    console.error(c.warning(message));
   } else {
-    process.stderr.write(c.yellowBright(message));
+    process.stderr.write(c.warning(message));
   }
 }
 
@@ -108,11 +123,11 @@ function warn(message: string | object, newline = true) {
 function error(message: string | object, newline = true) {
   if (!message) return;
   if (typeof message === 'object') {
-    writeObjectToStderr(message, 3, c.redBright);
+    writeObjectToStderr(message, 3, c.error);
   } else if (newline) {
-    console.error(c.redBright(message));
+    console.error(c.error(message));
   } else {
-    process.stderr.write(c.redBright(message));
+    process.stderr.write(c.error(message));
   }
 }
 
@@ -123,11 +138,11 @@ function error(message: string | object, newline = true) {
 function debug(message: string | object, newline = true) {
   if (!message) return;
   if (typeof message === 'object') {
-    writeObjectToStderr(message, 6, c.magentaBright);
+    writeObjectToStderr(message, 6, c.debug);
   } else if (newline) {
-    console.error(c.magentaBright(message));
+    console.error(c.debug(message));
   } else {
-    process.stderr.write(c.magentaBright(message));
+    process.stderr.write(c.debug(message));
   }
 }
 
@@ -137,7 +152,7 @@ function debug(message: string | object, newline = true) {
  */
 function curlirize(message: string) {
   if (!message) return;
-  c.cyanBright(printMessage(message));
+  printMessage(c.command(message));
 }
 
 /**
@@ -173,16 +188,38 @@ export function curlirizeMessage(message) {
   }
 }
 
+export type MessageType =
+  'data' | 'text' | 'info' | 'warn' | 'error' | 'success';
+
 /**
  * Prints a string message to console
  *
  * @param {string} message The string message to print
- * @param {string} [type=text] "text", "info", "warn", "error" or "data". All but
- * type="data" will be written to stderr.
+ * @param {MessageType} [type=text] All but type="data" will be written to stderr.
  * @param {boolean} [newline=true] Whether to add a newline at the end of message
  *
  */
-export function printMessage(message, type = 'text', newline = true) {
+// Two overloads: the first gives normal call sites real MessageType checking
+// (catching e.g. a stray 'warning' that was silently falling through to
+// plain text instead of hitting the 'warn' case); the second, looser
+// `type?: string` signature exists only so `printMessage` itself stays
+// assignable to frodo-lib's `state.setPrintHandler`, whose handler contract
+// predates (and is shared by non-CLI consumers who can't use) this type.
+export function printMessage(
+  message: string | object,
+  type?: MessageType,
+  newline?: boolean
+): void;
+export function printMessage(
+  message: string | object,
+  type?: string,
+  newline?: boolean
+): void;
+export function printMessage(
+  message: string | object,
+  type: string = 'text',
+  newline = true
+) {
   if (indicators.size > 0) {
     logUpdateStderr.clear();
   }
@@ -203,6 +240,9 @@ export function printMessage(message, type = 'text', newline = true) {
     case 'error':
       error(message, newline);
       break;
+    case 'success':
+      success(message, newline);
+      break;
     default:
       text(message, newline);
   }
@@ -211,6 +251,41 @@ export function printMessage(message, type = 'text', newline = true) {
   if (indicators.size > 0) {
     renderProgressIndicators();
   }
+}
+
+/**
+ * Prints a message with the "info" type. Thin, canonical wrapper around
+ * `printMessage(message, 'info')`, mirroring `verboseMessage`/`debugMessage`.
+ */
+export function infoMessage(message: string | object, newline = true) {
+  printMessage(message, 'info', newline);
+}
+
+/**
+ * Prints a message with the "warn" type. Thin, canonical wrapper around
+ * `printMessage(message, 'warn')`, mirroring `verboseMessage`/`debugMessage`.
+ */
+export function warnMessage(message: string | object, newline = true) {
+  printMessage(message, 'warn', newline);
+}
+
+/**
+ * Prints a message with the "error" type. Thin, canonical wrapper around
+ * `printMessage(message, 'error')`, mirroring `verboseMessage`/`debugMessage`.
+ * Distinct from `printError(error, message?)` below, which understands and
+ * formats an actual `Error`/`FrodoError` object -- this is for an arbitrary
+ * error-styled string with no underlying Error object.
+ */
+export function errorMessage(message: string | object, newline = true) {
+  printMessage(message, 'error', newline);
+}
+
+/**
+ * Prints a message with the "success" type. Thin, canonical wrapper around
+ * `printMessage(message, 'success')`, mirroring `verboseMessage`/`debugMessage`.
+ */
+export function successMessage(message: string | object, newline = true) {
+  printMessage(message, 'success', newline);
 }
 
 /**
@@ -272,14 +347,14 @@ function renderProgressIndicators() {
 
       const filledBar = '█'.repeat(filledWidth);
       const emptyBar = '░'.repeat(emptyWidth);
-      const bar = c.cyanBright(`[${filledBar}${emptyBar}]`);
+      const bar = c.command(`[${filledBar}${emptyBar}]`);
 
-      const stats = c.dim(`${percent}% | ${ind.current}/${ind.total}`);
+      const stats = c.muted(`${percent}% | ${ind.current}/${ind.total}`);
       const msg = ind.message ? ` ${ind.message}` : '';
       lines.push(`${bar} ${stats}${msg}`);
     } else {
       const frame = ind.spinner.frames[ind.frame % ind.spinner.frames.length];
-      const spinnerIcon = c.cyanBright(frame);
+      const spinnerIcon = c.command(frame);
       const msg = ind.message ? ` ${ind.message}` : '';
 
       lines.push(`${spinnerIcon}${msg}`);
@@ -416,19 +491,20 @@ export function stopProgressIndicator(
     switch (status) {
       case 'success':
         statusIcon = '✔';
-        colorFn = c.greenBright;
+        colorFn = c.positive;
         break;
       case 'warn':
         statusIcon = '⚠';
-        colorFn = c.yellowBright;
+        colorFn = c.warning;
         break;
       case 'fail':
         statusIcon = '✖';
-        colorFn = c.redBright;
+        colorFn = c.error;
         break;
       default:
         statusIcon = '•';
-        colorFn = c.whiteBright;
+      // colorFn stays the identity function -- "no particular status"
+      // genuinely means no styling, not a color needing its own intent.
     }
     const finalMsg = message || ind.message;
     if (finalMsg) {
@@ -465,7 +541,7 @@ export function cleanupProgressIndicators() {
  */
 export function createTable(head) {
   const table = new Table({
-    head: head.map((h) => (typeof h === 'string' ? c.cyanBright(h) : h)),
+    head: head.map((h) => (typeof h === 'string' ? c.heading(h) : h)),
     chars: {
       top: '',
       'top-mid': '',
@@ -481,7 +557,7 @@ export function createTable(head) {
       'mid-mid': '',
       right: '',
       'right-mid': '',
-      middle: c.gray('│'),
+      middle: c.muted('│'),
     },
     style: { 'padding-left': 0, 'padding-right': 0, head: [], border: [] },
   });
@@ -509,7 +585,7 @@ export function createKeyValueTable() {
       'mid-mid': '',
       right: '',
       'right-mid': '',
-      middle: c.gray('│'),
+      middle: c.muted('│'),
     },
     style: { 'padding-left': 0, 'padding-right': 0, head: [], border: [] },
     wordWrap: true,
@@ -561,14 +637,14 @@ function addRows(object, depth, level, table, keyMap) {
     if (Object(object[key]) !== object[key]) {
       if (level === 1) {
         table.push([
-          keyMap[key] ? c.cyanBright(keyMap[key]) : c.cyanBright(key),
+          keyMap[key] ? c.heading(keyMap[key]) : c.heading(key),
           object[key],
         ]);
       } else {
         table.push([
           {
             hAlign: 'right',
-            content: keyMap[key] ? c.gray(keyMap[key]) : c.gray(key),
+            content: keyMap[key] ? c.heading(keyMap[key]) : c.heading(key),
           },
           object[key],
         ]);
@@ -583,7 +659,7 @@ function addRows(object, depth, level, table, keyMap) {
         if (level < 3) indention = `\n${indention}`;
         table.push([
           indention.concat(
-            keyMap[key] ? c.cyanBright(keyMap[key]) : c.cyanBright(key)
+            keyMap[key] ? c.heading(keyMap[key]) : c.heading(key)
           ),
           '',
         ]);
@@ -623,7 +699,7 @@ export function createObjectTable(object, keyMap = {}) {
       'mid-mid': '',
       right: '',
       'right-mid': '',
-      middle: c.gray('│'),
+      middle: c.muted('│'),
     },
     style: { 'padding-left': 0, 'padding-right': 0, head: [], border: [] },
   });
@@ -642,7 +718,7 @@ export function getTableRowsFromArray(
   rowName: string,
   array: string[]
 ): void {
-  table.push([c.cyanBright(rowName), array.length > 0 ? array[0] : '']);
+  table.push([c.heading(rowName), array.length > 0 ? array[0] : '']);
   for (let i = 1; i < array.length; ++i) {
     table.push(['', array[i]]);
   }

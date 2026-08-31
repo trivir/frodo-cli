@@ -70,8 +70,8 @@ export default function setup() {
             'Please refer to the help message for more information.',
           'error'
         );
-        program.help();
         process.exitCode = 1;
+        program.help();
       }
     });
 

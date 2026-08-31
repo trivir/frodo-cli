@@ -87,15 +87,13 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Show canonical MCP tools for the default policy/profile:\n` +
-        c.cyanBright(`  $ frodo mcp server tools\n`) +
+        c.command(`  $ frodo mcp server tools\n`) +
         `  Show canonical tools under read-only policy:\n` +
-        c.cyanBright(`  $ frodo mcp server tools --policy read-only\n`) +
+        c.command(`  $ frodo mcp server tools --policy read-only\n`) +
         `  Show canonical tools for selected domains:\n` +
-        c.cyanBright(
-          `  $ frodo mcp server tools --include-domains authn idm\n`
-        ) +
+        c.command(`  $ frodo mcp server tools --include-domains authn idm\n`) +
         `  Export canonical tool metadata as JSON:\n` +
-        c.cyanBright(`  $ frodo mcp server tools --json\n`)
+        c.command(`  $ frodo mcp server tools --json\n`)
     )
     .action(async (host, username, password, options, command) => {
       command.handleDefaultArgsAndOpts(

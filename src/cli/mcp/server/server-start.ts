@@ -151,25 +151,21 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Start MCP server over stdio with default profile and policy:\n` +
-        c.cyanBright(`  $ frodo mcp server start\n`) +
+        c.command(`  $ frodo mcp server start\n`) +
         `  Validate composition only (no transport start):\n` +
-        c.cyanBright(`  $ frodo mcp server start --dry-run\n`) +
+        c.command(`  $ frodo mcp server start --dry-run\n`) +
         `  Start HTTP transport with explicit bind host/port:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo mcp server start --transport http --bind-host 127.0.0.1 --port 6277\n`
         ) +
         `  Start read-only skills surface for authentication scope:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo mcp server start --policy read-only --profile authentication\n`
         ) +
         `  Start with selected domains only:\n` +
-        c.cyanBright(
-          `  $ frodo mcp server start --include-domains authn idm\n`
-        ) +
+        c.command(`  $ frodo mcp server start --include-domains authn idm\n`) +
         `  Start authenticated as a username whose password is already saved in a connection profile for this host (no password on the command line):\n` +
-        c.cyanBright(
-          `  $ frodo mcp server start ${s.amBaseUrl} ${s.username}\n`
-        )
+        c.command(`  $ frodo mcp server start ${s.amBaseUrl} ${s.username}\n`)
     )
     .action(async (host, username, password, options, command) => {
       command.handleDefaultArgsAndOpts(

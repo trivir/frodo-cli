@@ -1,8 +1,10 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
+import * as s from '../../help/SampleData';
 import { getTokens } from '../../ops/AuthenticateOps';
 import { deleteManagedObjectTypeCli } from '../../ops/IdmOps';
+import c from '../../utils/ColorTheme';
 import { verboseMessage } from '../../utils/Console';
 import { FrodoCommand } from '../FrodoCommand';
 
@@ -22,26 +24,31 @@ export default function setup() {
   );
 
   program
-    .description(
-      "Delete a managed-object type entirely, schema included. Every existing record of that type becomes orphaned. Refuses if the type has existing records, or if the record count can't be confirmed, unless -F/--force is also passed. Prompts for confirmation, unless -y/--yes is passed."
-    )
+    .description('Delete IDM managed object schema definition.')
     .addOption(
       new Option(
         '-o, --managed-object <type>',
-        'Managed object type to delete. E.g. "alpha_customType".'
+        'Managed object type.'
       ).makeOptionMandatory()
     )
-    .addOption(
-      new Option(
-        '-y, --yes',
-        'Answer y/yes to the schema-change confirmation prompt.'
-      )
-    )
+    .addOption(new Option('-y, --yes', 'Answer y/yes to all prompts.'))
     .addOption(
       new Option(
         '-F, --force',
         "Delete even if the type has existing records, or if the record count can't be confirmed."
       )
+    )
+    .addHelpText(
+      'after',
+      `Usage Examples:\n` +
+        `  Delete the "${s.managedObjectTitle}" managed object type:\n` +
+        c.command(
+          `  $ frodo idm schema object delete -o ${s.managedObjectType} -y ${s.amBaseUrl}\n`
+        ) +
+        `  Delete it even though its record count can't be confirmed:\n` +
+        c.command(
+          `  $ frodo idm schema object delete -o ${s.managedObjectType} -y -F ${s.connId}\n`
+        )
     )
     .action(
       // implement command logic inside action handler

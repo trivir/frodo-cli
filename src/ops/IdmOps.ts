@@ -1,9 +1,23 @@
-import { frodo, FrodoError } from '@rockcarver/frodo-lib';
-import { type IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 import {
-  type ManagedObjectSchema,
-  type ManagedObjectSchemaProperty,
-} from '@rockcarver/frodo-lib/types/api/ManagedObjectApi';
+  buildManagedObjectSchemaPropertyPayload as buildSchemaPropertyPayload,
+  buildManagedObjectSchemaRelationshipPropertyPayload as buildRelationshipPropertyPayload,
+  extractManagedObjectSchemaPropertyFields as extractSchemaPropertyFields,
+  extractManagedObjectSchemaRelationshipPropertyFields as extractRelationshipFields,
+  frodo,
+  FrodoError,
+  inferManagedObjectSchemaRelationshipReverseIdentity as inferReverseIdentity,
+  type ManagedObjectSchemaPropertyFields as SchemaPropertyFields,
+  type ManagedObjectSchemaRelationshipPropertyFields as RelationshipPropertyFields,
+  type ManagedObjectSchemaRelationshipReverseFields as RelationshipReverseCreateFields,
+  navigatePropertyPath,
+  navigateToPropertyContainer,
+  parseSubPropertyPath,
+  type PropertyContainer,
+  setSchemaProperty,
+  toManagedObjectSchemaRelationshipReverseFields as toReverseDescriptorFields,
+} from '@rockcarver/frodo-lib';
+import { type IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
+import { type ManagedObjectSchema } from '@rockcarver/frodo-lib/types/api/ManagedObjectApi';
 import { type ConfigEntityExportInterface } from '@rockcarver/frodo-lib/types/ops/IdmConfigOps';
 import {
   MappingSkeleton,
@@ -13,6 +27,7 @@ import fs from 'fs';
 import path from 'path';
 import yesno from 'yesno';
 
+import c from '../utils/ColorTheme';
 import {
   extractDataToFile,
   getExtractedData,
@@ -50,11 +65,20 @@ const {
   importConfigEntities,
   readSubConfigEntity,
   importSubConfigEntity,
-  removeSubConfigEntity,
 } = frodo.idm.config;
-const { queryManagedObjects, countManagedObjects: countManagedObjectsOfType } =
-  frodo.idm.managed;
-const { readManagedObjectSchema } = frodo.idm.managed.schema;
+const { countManagedObjects: countManagedObjectsOfType } = frodo.idm.managed;
+const {
+  readManagedObjectSchema,
+  updateManagedObjectSchemaProperty,
+  createManagedObjectSchemaFlatProperty,
+  updateManagedObjectSchemaFlatProperty,
+  removeManagedObjectSchemaFlatProperty,
+  createManagedObjectSchemaRelationshipProperty: createRelationshipPropertyLib,
+  updateManagedObjectSchemaRelationshipProperty: updateRelationshipPropertyLib,
+  removeManagedObjectSchemaRelationshipProperty: removeRelationshipPropertyLib,
+  readManagedObjectSchemaRelationshipPropertyOrNull:
+    tryReadRelationshipProperty,
+} = frodo.idm.managed.schema;
 const { testConnectorServers } = frodo.idm.system;
 
 type MatchResult = { path: string; source: string; type: string };
@@ -596,18 +620,6 @@ export async function importManagedObjectFromFile(
 }
 
 /**
- * Read and parse a local JSON file (e.g. a schema property definition or a
- * full managed-object type definition).
- * @param {string} file file to read
- * @return {unknown} the parsed JSON content
- */
-function readJsonFile(file: string): unknown {
-  const filePath = getFilePath(file);
-  const fileData = fs.readFileSync(filePath, 'utf8');
-  return JSON.parse(fileData);
-}
-
-/**
  * Prints a warning and asks for confirmation before a schema-affecting
  * change, unless skipConfirmation is set. Refuses (rather than hanging on a
  * readline call with nowhere to read from) if stdin isn't an interactive
@@ -629,7 +641,7 @@ async function confirmChange(
   }
   if (!process.stdin.isTTY) {
     printMessage(
-      '\nRefusing to prompt for confirmation without an interactive terminal. Pass -y/--yes to proceed non-interactively.',
+      '\nRefusing to prompt for confirmation without an interactive terminal. Use -y/--yes to proceed non-interactively.',
       'error'
     );
     return false;
@@ -637,119 +649,287 @@ async function confirmChange(
   return yesno({ question });
 }
 
+/** One row of a property table: `path` is the property's dot-path (just its own name, when not nested under --recursive). */
+type PropertyTableRow = {
+  path: string;
+  type: string;
+  title: string;
+  nullable: 'yes' | 'no';
+  required: 'yes' | 'no';
+  searchable: 'yes' | 'no';
+  userEditable: 'yes' | 'no';
+  viewable: 'yes' | 'no';
+  target: string;
+  isRelationship: boolean;
+};
+
 /**
- * Checks whether a managed object type is currently defined, by reading the
- * whole `managed` config entity and checking membership. Deliberately does
- * not infer absence from a caught read failure — a transient/permission
- * failure reading the whole `managed` entity must not be misclassified as
- * "type not found" (the exact anti-pattern behind the tracker's
- * isNotFound/create-fallback finding); any such failure propagates instead.
- * @param {string} type managed object type name
- * @return {Promise<boolean>} a promise that resolves to true if the type exists
+ * Renders a property's own JSON-Schema `type` as a table-friendly label,
+ * applying the format substitution (date/time/datetime/duration). IDM
+ * represents a nullable scalar as `type: [x, "null"]` rather than a plain
+ * string; the nullability itself is surfaced separately via the NUL column
+ * (see {@link isNullableProperty}) so this only ever returns the non-null
+ * type name(s) -- joined with ` | ` in the unlikely case of more than one.
  */
-async function managedObjectTypeExists(type: string): Promise<boolean> {
-  const managedConfig = (await frodo.idm.config.readConfigEntity(
-    'managed'
-  )) as IdObjectSkeletonInterface & { objects?: ObjectSkeleton[] };
-  return (managedConfig.objects || []).some((object) => object.name === type);
+function describeCoreType(core: Record<string, unknown>): string {
+  if (Array.isArray(core.type)) {
+    const nonNull = core.type.filter((t) => t !== 'null').map(String);
+    return nonNull.length > 0 ? nonNull.join(' | ') : 'null';
+  }
+  return core?.type === 'string' && typeof core.format === 'string'
+    ? core.format
+    : String(core?.type);
+}
+
+/** The property (or, for an array property, its item), unwrapped once so callers can inspect its own `type`/`resourceCollection`/etc. */
+function corePropertyDefinition(
+  property: Record<string, unknown>
+): Record<string, unknown> {
+  return (property.type === 'array' ? property.items : property) as Record<
+    string,
+    unknown
+  >;
+}
+
+/** True if the property (or its item type, for an array property) is a relationship. */
+function isRelationshipProperty(property: Record<string, unknown>): boolean {
+  return corePropertyDefinition(property)?.type === 'relationship';
 }
 
 /**
- * Sets or replaces a schema property definition on a managed-object type
- * config (as returned by readSubConfigEntity('managed', type)), keeping the
- * top-level schema.required/order arrays in sync.
+ * Renders a relationship property's cardinality as `<this>:<other>`, e.g.
+ * `1:n` for a single-valued relationship whose reverse side is an array, or
+ * `n:-` for an array-valued relationship with no reverse configured. Both
+ * sides come straight from the property's own definition -- no extra read
+ * of the target type's schema is needed, since IDM embeds the reverse
+ * side's own shape directly at `resourceCollection[0].reverseProperty`.
  */
-function setSchemaProperty(
-  typeConfig: ManagedObjectTypeConfig,
-  propertyName: string,
-  propertyData: ManagedObjectSchemaProperty
+function relationshipCardinality(property: Record<string, unknown>): string {
+  const core = corePropertyDefinition(property);
+  const thisSide = property.type === 'array' ? 'n' : '1';
+  if (!core.reverseRelationship) {
+    return `${thisSide}:-`;
+  }
+  const resourceCollection = core.resourceCollection as
+    Array<{ reverseProperty?: { type?: string } }> | undefined;
+  const reverseType = resourceCollection?.[0]?.reverseProperty?.type;
+  const otherSide =
+    reverseType === 'array' ? 'n' : reverseType === 'relationship' ? '1' : '-';
+  return `${thisSide}:${otherSide}`;
+}
+
+/** Renders a property's Type-column value: a cardinality notation (e.g. `1:n`) for a relationship, its scalar type (e.g. `string`, `object[]`) otherwise. */
+function describePropertyType(property: Record<string, unknown>): string {
+  if (isRelationshipProperty(property)) {
+    return relationshipCardinality(property);
+  }
+  const array = property.type === 'array';
+  const baseType = describeCoreType(corePropertyDefinition(property));
+  return array ? `${baseType}[]` : baseType;
+}
+
+/** True if the property's own JSON-Schema `type` is IDM's nullable-scalar array form, `type: [x, "null"]`. */
+function isNullableProperty(property: Record<string, unknown>): boolean {
+  const core = corePropertyDefinition(property);
+  return Array.isArray(core?.type) && core.type.includes('null');
+}
+
+/** The target managed-object type of a relationship property, or '' if the property isn't a relationship. */
+function relationshipTarget(property: Record<string, unknown>): string {
+  const core = corePropertyDefinition(property);
+  if (core?.type !== 'relationship') {
+    return '';
+  }
+  const resourceCollection = core.resourceCollection as
+    Array<{ path?: string }> | undefined;
+  return resourceCollection?.[0]?.path?.replace(/^managed\//, '') || '';
+}
+
+/**
+ * Flattens a property container into table rows, sorted by name. With
+ * `recursive`, nested `type: object` properties are expanded inline
+ * underneath their parent, using DOT-PATH names (e.g. `address.street`)
+ * rather than indentation -- so a row's `path` is always a valid
+ * `--sub-property` value.
+ */
+function collectPropertyRows(
+  properties: Record<string, Record<string, unknown>>,
+  required: Set<string>,
+  recursive: boolean,
+  prefix = ''
+): PropertyTableRow[] {
+  const rows: PropertyTableRow[] = [];
+  Object.entries(properties || {})
+    .sort(([a], [b]) => a.localeCompare(b))
+    .forEach(([name, property]) => {
+      const path = prefix ? `${prefix}.${name}` : name;
+      rows.push({
+        path,
+        type: describePropertyType(property),
+        title: (property.title as string) || '',
+        nullable: isNullableProperty(property) ? 'yes' : 'no',
+        required: required.has(name) ? 'yes' : 'no',
+        searchable: property.searchable ? 'yes' : 'no',
+        userEditable: property.userEditable ? 'yes' : 'no',
+        viewable: property.viewable === false ? 'no' : 'yes',
+        target: relationshipTarget(property),
+        isRelationship: isRelationshipProperty(property),
+      });
+      const array = property.type === 'array';
+      const core = (array ? property.items : property) as Record<
+        string,
+        unknown
+      >;
+      if (recursive && core?.type === 'object' && core.properties) {
+        rows.push(
+          ...collectPropertyRows(
+            core.properties as Record<string, Record<string, unknown>>,
+            new Set((core.required as string[]) || []),
+            recursive,
+            path
+          )
+        );
+      }
+    });
+  return rows;
+}
+
+/**
+ * Refines each relationship row's cardinality using IDM's dedicated v2
+ * relationship-schema API, which embeds the reverse side's own shape at
+ * `resourceCollection[0].reverseProperty` -- unlike the whole-type schema
+ * read {@link collectPropertyRows} normally works from, which only knows a
+ * reverse relationship exists (`reverseRelationship: true`), not its
+ * cardinality. One extra read per top-level relationship row (parallelized,
+ * skipped for a nested --sub-property row -- and for a nested relationship
+ * row, if one somehow exists -- since the v2 API only addresses top-level
+ * properties); a failed read (e.g. IDM too old for the v2 API) or a nested
+ * row keeps that row's original, less-precise cardinality rather than
+ * failing the whole describe.
+ */
+async function resolveRelationshipCardinalities(
+  type: string,
+  rows: PropertyTableRow[]
+): Promise<PropertyTableRow[]> {
+  return Promise.all(
+    rows.map(async (row) => {
+      if (!row.isRelationship || row.path.includes('.')) {
+        return row;
+      }
+      try {
+        const property = await tryReadRelationshipProperty(type, row.path);
+        return property
+          ? { ...row, type: relationshipCardinality(property) }
+          : row;
+      } catch {
+        return row;
+      }
+    })
+  );
+}
+
+/** Column headers for a {@link PropertyTableRow} table -- the flag columns are abbreviated to keep the table narrow; see {@link PROPERTY_TABLE_KEY} for what they mean. */
+const PROPERTY_TABLE_COLUMNS = [
+  'Name',
+  'Title',
+  'Target',
+  'Type',
+  'NUL',
+  'REQ',
+  'SRH',
+  'UED',
+  'VIW',
+];
+
+/**
+ * {@link PROPERTY_TABLE_COLUMNS} without the Target column -- for `object
+ * describe`'s Properties table (relationships get their own Relationships
+ * table) and for `property describe`, which never shows Target even when
+ * describing a relationship-typed property: Target is relationship-specific
+ * and `relationship describe` is the dedicated command for that.
+ */
+const PROPERTY_ONLY_TABLE_COLUMNS = PROPERTY_TABLE_COLUMNS.filter(
+  (column) => column !== 'Target'
+);
+
+/** Printed once below a {@link PROPERTY_TABLE_COLUMNS} table, spelling out its abbreviated flag columns. */
+const PROPERTY_TABLE_KEY =
+  'NUL=Nullable, REQ=Required, SRH=Searchable, UED=User Editable, VIW=Viewable';
+
+/** Pushes {@link PropertyTableRow}s onto a table already headed with {@link PROPERTY_TABLE_COLUMNS} (from {@link createTable}); pass `includeTarget: false` for a table headed with {@link PROPERTY_ONLY_TABLE_COLUMNS} instead. */
+function flag(value: 'yes' | 'no'): string {
+  return value === 'yes' ? c.positive(value) : c.negative(value);
+}
+
+function pushPropertyTableRows(
+  table: ReturnType<typeof createTable>,
+  rows: PropertyTableRow[],
+  includeTarget: boolean = true
 ): void {
-  if (!typeConfig.schema) {
-    throw new FrodoError(
-      `Managed type "${typeConfig.name}" has no schema definition`
+  rows.forEach((row) => {
+    const cells = [row.path, row.title];
+    if (includeTarget) {
+      cells.push(row.target);
+    }
+    cells.push(
+      row.type,
+      flag(row.nullable),
+      flag(row.required),
+      flag(row.searchable),
+      flag(row.userEditable),
+      flag(row.viewable)
     );
-  }
-  typeConfig.schema.properties = {
-    ...typeConfig.schema.properties,
-    [propertyName]: propertyData,
-  };
-  const required = new Set(typeConfig.schema.required || []);
-  if ((propertyData as { required?: boolean }).required) {
-    required.add(propertyName);
-  } else {
-    required.delete(propertyName);
-  }
-  typeConfig.schema.required = Array.from(required);
-  if (!(typeConfig.schema.order || []).includes(propertyName)) {
-    typeConfig.schema.order = [
-      ...(typeConfig.schema.order || []),
-      propertyName,
-    ];
-  }
+    table.push(cells);
+  });
 }
 
 /**
- * Removes a schema property definition (and its required/order bookkeeping)
- * from a managed-object type config.
- */
-function removeSchemaProperty(
-  typeConfig: ManagedObjectTypeConfig,
-  propertyName: string
-): void {
-  if (!typeConfig.schema) {
-    return;
-  }
-  const properties = { ...typeConfig.schema.properties };
-  delete properties[propertyName];
-  typeConfig.schema.properties = properties;
-  typeConfig.schema.required = (typeConfig.schema.required || []).filter(
-    (name) => name !== propertyName
-  );
-  typeConfig.schema.order = (typeConfig.schema.order || []).filter(
-    (name) => name !== propertyName
-  );
-}
-
-/**
- * List the schema properties of a managed object type.
+ * List the schema properties of a managed object type -- or, if
+ * `subProperty` is given (a dot-path, e.g. `"profile.address"`), the
+ * immediate children of that nested `type: object` property instead. Name
+ * only by default, one per line; `long` prints the full property table
+ * instead (same columns/abbreviations as `property describe`).
  * @param {string} type managed object type, e.g. alpha_user
- * @param {boolean} json true to print raw JSON instead of a table
+ * @param {boolean} json true to print raw JSON instead of a table -- always the complete definitions, regardless of `long`
+ * @param {boolean} long true to print the full property table instead of just names
+ * @param {string} [subProperty] dot-path to a nested object property whose own children to list, instead of the type's top-level properties
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function listManagedObjectSchemaProperties(
   type: string,
-  json: boolean = false
+  json: boolean = false,
+  long: boolean = false,
+  subProperty?: string
 ): Promise<boolean> {
   try {
     const schema = await readManagedObjectSchema(type);
+    const container = subProperty
+      ? navigateToPropertyContainer(
+          schema as unknown as PropertyContainer,
+          parseSubPropertyPath(subProperty)
+        )
+      : (schema as unknown as PropertyContainer);
     if (json) {
-      printMessage(JSON.stringify(schema.properties, null, 2), 'data');
+      printMessage(JSON.stringify(container.properties, null, 2), 'data');
       return true;
     }
-    const table = createTable([
-      'Name',
-      'Type',
-      'Title',
-      'Required',
-      'Searchable',
-      'User Editable',
-      'Viewable',
-    ]);
-    const required = new Set(schema.required || []);
-    Object.entries(schema.properties || {})
-      .sort(([a], [b]) => a.localeCompare(b))
-      .forEach(([name, property]) => {
-        table.push([
-          name,
-          property.type,
-          property.title || '',
-          required.has(name) ? 'yes' : 'no',
-          property.searchable ? 'yes' : 'no',
-          property.userEditable ? 'yes' : 'no',
-          property.viewable ? 'yes' : 'no',
-        ]);
-      });
-    printMessage(table.toString(), 'data');
+    if (!long) {
+      Object.keys(container.properties || {})
+        .sort()
+        .forEach((name) => printMessage(name, 'data'));
+      return true;
+    }
+    const rows = await resolveRelationshipCardinalities(
+      type,
+      collectPropertyRows(
+        container.properties || {},
+        new Set(container.required || []),
+        false
+      )
+    );
+    const table = createTable(PROPERTY_ONLY_TABLE_COLUMNS);
+    pushPropertyTableRows(table, rows, false);
+    printMessage(`${table.toString()}\n\n${PROPERTY_TABLE_KEY}`, 'data');
     return true;
   } catch (error) {
     printError(error);
@@ -758,24 +938,53 @@ export async function listManagedObjectSchemaProperties(
 }
 
 /**
- * Describe a single schema property of a managed object type.
+ * Describe a single schema property of a managed object type -- or, with
+ * `subProperty`, a nested property reached via that dot-path. Prints the
+ * property's own fields first; then, if it's a `type: object` property with
+ * any children, the same dot-path-rowed properties table `object describe`
+ * uses (always, not gated behind a flag -- a `type: object` property's
+ * children are exactly the useful part of describing it); then, if it's a
+ * virtual property with an `onRetrieve`/`onStore` script, the script's
+ * source printed verbatim rather than mangled into the generic field table
+ * one line per row.
+ *
+ * Reads via the raw `managed` config entity (like `create`/`update`), not
+ * the dedicated per-type schema endpoint `object describe`/`property list`
+ * use -- confirmed live that the latter silently omits a virtual
+ * property's `onRetrieve`/`onStore` script, so this is the one describe
+ * path that can actually show it.
  * @param {string} type managed object type, e.g. alpha_user
  * @param {string} propertyName schema property name, e.g. custom_merchantId
- * @param {boolean} json true to print raw JSON instead of a table
+ * @param {boolean} json true to print raw JSON instead of a table -- always the complete definition
+ * @param {string} [subProperty] dot-path to a nested property beneath propertyName, e.g. "address.street"
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function describeManagedObjectSchemaProperty(
   type: string,
   propertyName: string,
-  json: boolean = false
+  json: boolean = false,
+  subProperty?: string
 ): Promise<boolean> {
   try {
-    const schema = await readManagedObjectSchema(type);
-    const property = schema.properties?.[propertyName];
+    const typeConfig = (await readSubConfigEntity(
+      'managed',
+      type
+    )) as ManagedObjectTypeConfig;
+    if (!typeConfig.schema) {
+      throw new FrodoError(
+        `Managed object type "${type}" has no schema definition.`
+      );
+    }
+    const path = [propertyName, ...parseSubPropertyPath(subProperty)];
+    const { container, propertyName: leafName } = navigatePropertyPath(
+      typeConfig.schema as unknown as PropertyContainer,
+      path
+    );
+    const property = container.properties?.[leafName];
     if (!property) {
       printError(
         new FrodoError(
-          `Schema property "${propertyName}" not found on managed type "${type}"`
+          `Property "${path.join('.')}" not found on managed object type "${type}".`
         )
       );
       return false;
@@ -784,7 +993,52 @@ export async function describeManagedObjectSchemaProperty(
       printMessage(JSON.stringify(property, null, 2), 'data');
       return true;
     }
-    printMessage(createObjectTable(property).toString(), 'data');
+    const nameLabel = path.join('.');
+    const header = c.heading(
+      property.title ? `${property.title} (${nameLabel})` : nameLabel
+    );
+    const isObjectContainer = property.type === 'object' && property.properties;
+    const scriptKeys = ['onRetrieve', 'onStore'].filter((key) => property[key]);
+    const omit = [
+      'title',
+      ...scriptKeys,
+      ...(isObjectContainer ? ['properties', 'order', 'required'] : []),
+    ];
+    const displayFields = Object.fromEntries(
+      Object.entries(property).filter(([key]) => !omit.includes(key))
+    );
+    const sections = [
+      `${header}\n\n${createObjectTable(displayFields).toString()}`,
+    ];
+    if (isObjectContainer) {
+      const childRows = await resolveRelationshipCardinalities(
+        type,
+        collectPropertyRows(
+          property.properties as Record<string, Record<string, unknown>>,
+          new Set((property.required as string[]) || []),
+          true,
+          nameLabel
+        )
+      );
+      if (childRows.length > 0) {
+        const table = createTable(PROPERTY_ONLY_TABLE_COLUMNS);
+        pushPropertyTableRows(table, childRows, false);
+        sections.push(
+          `${c.heading('Properties')}\n\n${table.toString()}\n\n${PROPERTY_TABLE_KEY}`
+        );
+      }
+    }
+    if (scriptKeys.length > 0) {
+      const scriptSections = scriptKeys.map((key) => {
+        const script = property[key] as
+          { type?: string; source?: string } | undefined;
+        return `${c.heading(key)} (${script?.type || 'text/javascript'}):\n\n${(script?.source || '').trimEnd()}`;
+      });
+      sections.push(
+        `${c.heading('Scripts')}\n\n${scriptSections.join('\n\n')}`
+      );
+    }
+    printMessage(sections.join('\n\n'), 'data');
     return true;
   } catch (error) {
     printError(error);
@@ -793,46 +1047,44 @@ export async function describeManagedObjectSchemaProperty(
 }
 
 /**
- * Create a new schema property on a managed object type. Refuses if a
- * property with that name already exists (use update instead). Applies to
+ * Create a new schema property on a managed object type -- or, with
+ * `subProperty`, a nested property inside an existing `type: object`
+ * property reached via that dot-path. Refuses if a property with that name
+ * already exists at the target location (use update instead). Applies to
  * any deployment type — this reads and rewrites the whole type definition,
- * the same mechanism `frodo idm schema object export/import` already use,
- * regardless of the new property's type (relationship properties included).
+ * the same mechanism `frodo idm schema object export/import` already use.
+ * These flags only cover a flat property definition; giving a new object
+ * property its own nested sub-properties in one shot still needs the
+ * file-based `property export`/`import` round trip.
  * @param {string} type managed object type, e.g. alpha_user
  * @param {string} propertyName schema property name, e.g. custom_merchantId
- * @param {string} file file containing the property definition to create
+ * @param {SchemaPropertyFields} fields the property's field values
+ * @param {string} [subProperty] dot-path to nest the new property under an existing object property beneath propertyName, e.g. "address.street"
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function createManagedObjectSchemaProperty(
   type: string,
   propertyName: string,
-  file: string
+  fields: SchemaPropertyFields,
+  subProperty?: string
 ): Promise<boolean> {
   let indicatorId: string;
+  const path = [propertyName, ...parseSubPropertyPath(subProperty)];
   try {
-    const propertyData = readJsonFile(file) as ManagedObjectSchemaProperty;
-    const typeConfig = (await readSubConfigEntity(
-      'managed',
-      type
-    )) as ManagedObjectTypeConfig;
-    if (typeConfig.schema?.properties?.[propertyName]) {
-      printError(
-        new FrodoError(
-          `Schema property "${propertyName}" already exists on managed type "${type}". Use update instead.`
-        )
-      );
-      return false;
-    }
-    setSchemaProperty(typeConfig, propertyName, propertyData);
     indicatorId = createProgressIndicator(
       'indeterminate',
       0,
-      `Creating schema property ${propertyName} on ${type}...`
+      `Creating property "${path.join('.')}" on "${type}"...`
     );
-    await importSubConfigEntity('managed', typeConfig, { validate: false });
+    await createManagedObjectSchemaFlatProperty(
+      type,
+      propertyName,
+      fields,
+      subProperty
+    );
     stopProgressIndicator(
       indicatorId,
-      `Created schema property ${propertyName} on ${type}`,
+      `Created property "${path.join('.')}" on "${type}".`,
       'success'
     );
     return true;
@@ -840,7 +1092,7 @@ export async function createManagedObjectSchemaProperty(
     if (indicatorId) {
       stopProgressIndicator(
         indicatorId,
-        `Error creating schema property ${propertyName} on ${type}.`,
+        `Error creating property "${path.join('.')}" on "${type}".`,
         'fail'
       );
     }
@@ -850,58 +1102,87 @@ export async function createManagedObjectSchemaProperty(
 }
 
 /**
- * Update an existing schema property on a managed object type. Refuses if
- * the property doesn't exist (use create instead). Prints a Current/
- * Proposed diff and prompts for confirmation unless skipConfirmation is set.
+ * Update an existing schema property on a managed object type -- or, with
+ * `subProperty`, a nested property reached via that dot-path. Refuses if
+ * the property doesn't exist (use create instead). Only the fields whose
+ * flags are passed change; everything else keeps its current value. Prints
+ * a Current/Proposed diff and prompts for confirmation unless
+ * skipConfirmation is set.
  * @param {string} type managed object type, e.g. alpha_user
  * @param {string} propertyName schema property name, e.g. custom_merchantId
- * @param {string} file file containing the updated property definition
+ * @param {Partial<SchemaPropertyFields>} changedFields only the explicitly-passed field overrides
  * @param {boolean} skipConfirmation true to skip the confirmation prompt
+ * @param {string} [subProperty] dot-path to a nested property beneath propertyName, e.g. "address.street"
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function updateManagedObjectSchemaPropertyCli(
   type: string,
   propertyName: string,
-  file: string,
-  skipConfirmation: boolean = false
+  changedFields: Partial<SchemaPropertyFields>,
+  skipConfirmation: boolean = false,
+  subProperty?: string
 ): Promise<boolean> {
   let indicatorId: string;
+  const path = [propertyName, ...parseSubPropertyPath(subProperty)];
   try {
-    const propertyData = readJsonFile(file) as ManagedObjectSchemaProperty;
+    // A confirm-before-write diff needs the current/proposed definitions up
+    // front, before frodo-lib's own read-modify-write runs -- so this reads
+    // the type once here purely to build that preview (discarded after),
+    // then lets updateManagedObjectSchemaFlatProperty do its own independent
+    // read-modify-write for the actual change.
     const typeConfig = (await readSubConfigEntity(
       'managed',
       type
     )) as ManagedObjectTypeConfig;
-    const current = typeConfig.schema?.properties?.[propertyName];
+    if (!typeConfig.schema) {
+      throw new FrodoError(
+        `Managed object type "${type}" has no schema definition.`
+      );
+    }
+    const { container, propertyName: leafName } = navigatePropertyPath(
+      typeConfig.schema as unknown as PropertyContainer,
+      path
+    );
+    const current = container.properties?.[leafName];
     if (!current) {
       printError(
         new FrodoError(
-          `Schema property "${propertyName}" not found on managed type "${type}". Use create instead.`
+          `Property "${path.join('.')}" not found on managed object type "${type}". Use create instead.`
         )
       );
       return false;
     }
-    const warning = `\nCurrent:\n${JSON.stringify(current, null, 2)}\n\nProposed:\n${JSON.stringify(propertyData, null, 2)}`;
+    const overrides = pruneUndefined(changedFields);
+    const mergedFields = {
+      ...extractSchemaPropertyFields(current),
+      ...overrides,
+    };
+    const propertyData = buildSchemaPropertyPayload(leafName, mergedFields);
+    const warning = `Current:\n${JSON.stringify(current, null, 2)}\nProposed:\n${JSON.stringify(propertyData, null, 2)}`;
     if (
       !(await confirmChange(
         warning,
-        `\nUpdate schema property "${propertyName}" on managed type "${type}"? This affects every existing and future record of that type. Continue? (y|n):`,
+        `Update property "${path.join('.')}" on managed object type "${type}"? This affects every instance of that type. Continue? (y|n):`,
         skipConfirmation
       ))
     ) {
       printMessage('Update aborted.', 'warn');
       return false;
     }
-    setSchemaProperty(typeConfig, propertyName, propertyData);
     indicatorId = createProgressIndicator(
       'indeterminate',
       0,
-      `Updating schema property ${propertyName} on ${type}...`
+      `Updating property "${path.join('.')}" on "${type}"...`
     );
-    await importSubConfigEntity('managed', typeConfig, { validate: false });
+    await updateManagedObjectSchemaFlatProperty(
+      type,
+      propertyName,
+      changedFields,
+      subProperty
+    );
     stopProgressIndicator(
       indicatorId,
-      `Updated schema property ${propertyName} on ${type}`,
+      `Updated property "${path.join('.')}" on "${type}".`,
       'success'
     );
     return true;
@@ -909,7 +1190,7 @@ export async function updateManagedObjectSchemaPropertyCli(
     if (indicatorId) {
       stopProgressIndicator(
         indicatorId,
-        `Error updating schema property ${propertyName} on ${type}.`,
+        `Error updating property "${path.join('.')}" on "${type}".`,
         'fail'
       );
     }
@@ -919,54 +1200,193 @@ export async function updateManagedObjectSchemaPropertyCli(
 }
 
 /**
- * Delete a schema property from a managed object type. Prompts for
- * confirmation unless skipConfirmation is set.
+ * Export a single schema property definition to a local file. Available on
+ * any deployment type -- reads the whole type definition (via the raw
+ * `managed` config entity, not the dedicated per-type schema endpoint,
+ * which silently omits a virtual property's `onRetrieve`/`onStore` script)
+ * and extracts the one property, the same mechanism `property
+ * describe`/`create`/`update` already use.
  * @param {string} type managed object type, e.g. alpha_user
  * @param {string} propertyName schema property name, e.g. custom_merchantId
- * @param {boolean} skipConfirmation true to skip the confirmation prompt
+ * @param {string} [file] export file; defaults to a generated filename
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
-export async function deleteManagedObjectSchemaPropertyCli(
+export async function exportManagedObjectSchemaPropertyToFile(
   type: string,
   propertyName: string,
-  skipConfirmation: boolean = false
+  file?: string
 ): Promise<boolean> {
-  let indicatorId: string;
   try {
     const typeConfig = (await readSubConfigEntity(
       'managed',
       type
     )) as ManagedObjectTypeConfig;
-    const current = typeConfig.schema?.properties?.[propertyName];
-    if (!current) {
+    const property = typeConfig.schema?.properties?.[propertyName];
+    if (!property) {
       printError(
         new FrodoError(
-          `Schema property "${propertyName}" not found on managed type "${type}"`
+          `Property "${propertyName}" not found on managed object type "${type}".`
         )
       );
       return false;
     }
-    const warning = `\nThis will permanently remove the following schema property definition from managed type "${type}":\n${JSON.stringify(current, null, 2)}\n\nThis removes the property from the schema only — it does not purge any values already stored for it on existing records.`;
+    const fileName =
+      file || getTypedFilename(`${type}-${propertyName}`, 'managed.property');
+    saveJsonToFile(property, getFilePath(fileName, true), false);
+    return true;
+  } catch (error) {
+    printError(
+      error,
+      `Error exporting property "${propertyName}" on "${type}"`
+    );
+  }
+  return false;
+}
+
+/**
+ * Import a single schema property definition from a local file, creating it
+ * if it doesn't already exist or overwriting it (with confirmation, unless
+ * skipConfirmation is set) if it does. The file's content is written
+ * verbatim, unlike `create`/`update`, which build the definition from flags
+ * -- this is the escape hatch for property shapes those flags can't express
+ * (e.g. a `type: object` property with nested sub-properties).
+ * @param {string} type managed object type, e.g. alpha_user
+ * @param {string} propertyName schema property name, e.g. custom_merchantId
+ * @param {string} file file containing the property definition to import
+ * @param {boolean} skipConfirmation true to skip the confirmation prompt when overwriting an existing property
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function importManagedObjectSchemaPropertyFromFile(
+  type: string,
+  propertyName: string,
+  file: string,
+  skipConfirmation: boolean = false
+): Promise<boolean> {
+  let indicatorId: string;
+  let filePath: string;
+  try {
+    filePath = getFilePath(file);
+    const propertyData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    const typeConfig = (await readSubConfigEntity(
+      'managed',
+      type
+    )) as ManagedObjectTypeConfig;
+    if (!typeConfig.schema) {
+      throw new FrodoError(
+        `Managed object type "${type}" has no schema definition.`
+      );
+    }
+    const current = typeConfig.schema.properties?.[propertyName];
+    if (current) {
+      const warning = `Current:\n${JSON.stringify(current, null, 2)}\nProposed:\n${JSON.stringify(propertyData, null, 2)}`;
+      if (
+        !(await confirmChange(
+          warning,
+          `Import property "${propertyName}" on managed object type "${type}", overwriting its current definition? This affects every instance of that type. Continue? (y|n):`,
+          skipConfirmation
+        ))
+      ) {
+        printMessage('Import aborted.', 'warn');
+        return false;
+      }
+    }
+    setSchemaProperty(
+      typeConfig.schema as unknown as PropertyContainer,
+      propertyName,
+      propertyData
+    );
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      `Importing property "${propertyName}" on "${type}" from ${filePath}...`
+    );
+    await importSubConfigEntity('managed', typeConfig, { validate: false });
+    stopProgressIndicator(
+      indicatorId,
+      `Imported property "${propertyName}" on "${type}".`,
+      'success'
+    );
+    return true;
+  } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        `Error importing property "${propertyName}" on "${type}".`,
+        'fail'
+      );
+    }
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Delete a schema property from a managed object type -- or, with
+ * `subProperty`, a nested property reached via that dot-path. Prompts for
+ * confirmation unless skipConfirmation is set.
+ * @param {string} type managed object type, e.g. alpha_user
+ * @param {string} propertyName schema property name, e.g. custom_merchantId
+ * @param {boolean} skipConfirmation true to skip the confirmation prompt
+ * @param {string} [subProperty] dot-path to a nested property beneath propertyName, e.g. "address.street"
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function deleteManagedObjectSchemaPropertyCli(
+  type: string,
+  propertyName: string,
+  skipConfirmation: boolean = false,
+  subProperty?: string
+): Promise<boolean> {
+  let indicatorId: string;
+  const path = [propertyName, ...parseSubPropertyPath(subProperty)];
+  try {
+    // See updateManagedObjectSchemaPropertyCli's comment: this read is only
+    // to confirm the property exists before prompting, and is discarded --
+    // removeManagedObjectSchemaFlatProperty does its own read-modify-write.
+    const typeConfig = (await readSubConfigEntity(
+      'managed',
+      type
+    )) as ManagedObjectTypeConfig;
+    if (!typeConfig.schema) {
+      throw new FrodoError(
+        `Managed object type "${type}" has no schema definition.`
+      );
+    }
+    const { container, propertyName: leafName } = navigatePropertyPath(
+      typeConfig.schema as unknown as PropertyContainer,
+      path
+    );
+    if (!container.properties?.[leafName]) {
+      printError(
+        new FrodoError(
+          `Property "${path.join('.')}" not found on managed object type "${type}"`
+        )
+      );
+      return false;
+    }
+    const warning = `This permanently deletes property "${path.join('.')}" from managed object type "${type}".`;
     if (
       !(await confirmChange(
         warning,
-        `\nDelete schema property "${propertyName}" from managed type "${type}"? This affects every existing and future record of that type. Continue? (y|n):`,
+        `Delete property "${path.join('.')}" from managed object type "${type}"? This affects every instance of that type. Continue? (y|n):`,
         skipConfirmation
       ))
     ) {
       printMessage('Delete aborted.', 'warn');
       return false;
     }
-    removeSchemaProperty(typeConfig, propertyName);
     indicatorId = createProgressIndicator(
       'indeterminate',
       0,
-      `Deleting schema property ${propertyName} from ${type}...`
+      `Deleting property "${path.join('.')}" from "${type}"...`
     );
-    await importSubConfigEntity('managed', typeConfig, { validate: false });
+    await removeManagedObjectSchemaFlatProperty(
+      type,
+      propertyName,
+      subProperty
+    );
     stopProgressIndicator(
       indicatorId,
-      `Deleted schema property ${propertyName} from ${type}`,
+      `Deleted property "${path.join('.')}" from "${type}".`,
       'success'
     );
     return true;
@@ -974,7 +1394,7 @@ export async function deleteManagedObjectSchemaPropertyCli(
     if (indicatorId) {
       stopProgressIndicator(
         indicatorId,
-        `Error deleting schema property ${propertyName} from ${type}.`,
+        `Error deleting property "${path.join('.')}" from "${type}".`,
         'fail'
       );
     }
@@ -983,52 +1403,162 @@ export async function deleteManagedObjectSchemaPropertyCli(
   return false;
 }
 
+/** Drops keys whose value is `undefined`, so a partial CLI-flag object only overrides what was actually passed. */
+function pruneUndefined<T extends Record<string, unknown>>(obj: T): Partial<T> {
+  const result: Partial<T> = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (value !== undefined) {
+      (result as Record<string, unknown>)[key] = value;
+    }
+  }
+  return result;
+}
+
 /**
- * Create a new managed object type from a file. The type name comes from
- * the file's own `name` field. Refuses if a type with that name already
- * exists (use update instead). Prompts for confirmation, reusing the same
- * schema-change gate `frodo idm schema object import` already uses, unless
- * skipConfirmation is set.
- * @param {string} file file containing the full type definition (schema included), including its `name`
- * @param {boolean} skipConfirmation true to skip the confirmation prompt
+ * Describe a single relationship schema property of a managed object type,
+ * via the dedicated v2 API (requires IDM 7.5+; Cloud always qualifies). `withReverse` also reads and displays
+ * the reverse side, inferred from the forward property's own definition.
+ * @param {string} type managed object type, e.g. alpha_aiagentprivilege
+ * @param {string} propertyName relationship property name, e.g. agent
+ * @param {boolean} json true to print raw JSON instead of a table
+ * @param {boolean} withReverse true to also read and display the reverse side
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
-export async function createManagedObjectType(
-  file: string,
-  skipConfirmation: boolean = false
+export async function describeManagedObjectSchemaRelationshipProperty(
+  type: string,
+  propertyName: string,
+  json: boolean = false,
+  withReverse: boolean = false
 ): Promise<boolean> {
-  let indicatorId: string;
-  let type: string;
   try {
-    const typeConfig = readJsonFile(file) as ManagedObjectTypeConfig;
-    type = typeConfig.name;
-    if (
-      !(await confirmChange(
-        `\nThis creates the SCHEMA of a new managed-object type "${type}", not just its configuration.`,
-        '\nSchema changes affect every existing and future record of that managed-object type. Continue? (y|n):',
-        skipConfirmation
-      ))
-    ) {
-      printMessage('Create aborted.', 'warn');
-      return false;
-    }
-    if (await managedObjectTypeExists(type)) {
+    const property = await tryReadRelationshipProperty(type, propertyName);
+    if (!property) {
       printError(
         new FrodoError(
-          `Managed type "${type}" already exists. Use update instead.`
+          `Relationship "${propertyName}" not found on managed object type "${type}".`
         )
       );
       return false;
     }
+    let reverse:
+      | {
+          type: string;
+          propertyName: string;
+          property: Record<string, unknown>;
+        }
+      | undefined;
+    if (withReverse) {
+      const identity = inferReverseIdentity(property);
+      if (!identity) {
+        printError(
+          new FrodoError(
+            `Relationship "${propertyName}" on managed object type "${type}" has no reverse relationship configured.`
+          )
+        );
+        return false;
+      }
+      const reverseProperty = await tryReadRelationshipProperty(
+        identity.type,
+        identity.propertyName
+      );
+      if (!reverseProperty) {
+        printError(
+          new FrodoError(
+            `Reverse relationship "${identity.propertyName}" not found on managed object type "${identity.type}".`
+          )
+        );
+        return false;
+      }
+      reverse = { ...identity, property: reverseProperty };
+    }
+    if (json) {
+      printMessage(
+        JSON.stringify(
+          reverse
+            ? {
+                [type]: { [propertyName]: property },
+                [reverse.type]: { [reverse.propertyName]: reverse.property },
+              }
+            : property,
+          null,
+          2
+        ),
+        'data'
+      );
+      return true;
+    }
+    const describeRelationship = (
+      name: string,
+      relationshipProperty: Record<string, unknown>,
+      suffix?: string
+    ): string => {
+      const title = relationshipProperty.title as string | undefined;
+      const label =
+        (title ? `${title} (${name})` : name) + (suffix ? ` ${suffix}` : '');
+      const fields = Object.fromEntries(
+        Object.entries(relationshipProperty).filter(([key]) => key !== 'title')
+      );
+      return `${c.heading(label)}\n\n${createObjectTable(fields).toString()}`;
+    };
+    const sections = [
+      describeRelationship(`${type}.${propertyName}`, property),
+    ];
+    if (reverse) {
+      sections.push(
+        describeRelationship(
+          `${reverse.type}.${reverse.propertyName}`,
+          reverse.property,
+          '(reverse)'
+        )
+      );
+    }
+    printMessage(sections.join('\n\n'), 'data');
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Create a new relationship schema property, via IDM's dedicated v2 schema
+ * API (requires IDM 7.5+; Cloud always qualifies). Refuses if a
+ * property with that name already exists (use update
+ * instead). When `reverse` is given, the reverse side on
+ * `fields.targetObject` is auto-created by the server in the same write --
+ * see {@link buildReversePropertyDescriptor} -- rather than through a
+ * separate CLI-side write; live-confirmed to work for all four single/many
+ * combinations on both sides. Note the server does not honor a custom
+ * reverse title/description (it always uses the raw property name for
+ * both), even though `--reverse-title`/`--reverse-description` are threaded
+ * through in case that changes.
+ * @param {string} type managed object type, e.g. alpha_aiagentprivilege
+ * @param {string} propertyName relationship property name, e.g. agent
+ * @param {RelationshipPropertyFields} fields the forward side's field values
+ * @param {RelationshipReverseCreateFields} [reverse] the reverse side's field values, if creating both sides
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function createManagedObjectSchemaRelationshipProperty(
+  type: string,
+  propertyName: string,
+  fields: RelationshipPropertyFields,
+  reverse?: RelationshipReverseCreateFields
+): Promise<boolean> {
+  let indicatorId: string;
+  try {
     indicatorId = createProgressIndicator(
       'indeterminate',
       0,
-      `Creating managed object type ${type}...`
+      reverse
+        ? `Creating relationship "${propertyName}" on "${type}", with reverse relationship "${reverse.propertyName}" on "${fields.targetObject}"...`
+        : `Creating relationship "${propertyName}" on "${type}"...`
     );
-    await importSubConfigEntity('managed', typeConfig, { validate: false });
+    await createRelationshipPropertyLib(type, propertyName, fields, reverse);
     stopProgressIndicator(
       indicatorId,
-      `Created managed object type ${type}`,
+      reverse
+        ? `Created relationship "${propertyName}" on "${type}", with reverse relationship "${reverse.propertyName}" auto-created on "${fields.targetObject}".`
+        : `Created relationship "${propertyName}" on "${type}".`,
       'success'
     );
     return true;
@@ -1036,7 +1566,7 @@ export async function createManagedObjectType(
     if (indicatorId) {
       stopProgressIndicator(
         indicatorId,
-        `Error creating managed object type ${type}.`,
+        `Error creating relationship "${propertyName}" on "${type}".`,
         'fail'
       );
     }
@@ -1046,51 +1576,130 @@ export async function createManagedObjectType(
 }
 
 /**
- * Update an existing managed object type from a file. The type name comes
- * from the file's own `name` field. Refuses if the type doesn't exist (use
- * create instead). Prompts for confirmation, reusing the same schema-change
- * gate `frodo idm schema object import` already uses, unless
- * skipConfirmation is set.
- * @param {string} file file containing the updated type definition, including its `name`
+ * Update an existing relationship schema property, via IDM's dedicated v2
+ * schema API (requires IDM 7.5+; Cloud always qualifies). Refuses
+ * if the property doesn't exist (use create
+ * instead). Only the fields present in `changedFields` change; everything
+ * else keeps its current value. `withReverse` infers the reverse side from
+ * the forward property's own current definition (no separate identity
+ * flags needed) and applies the same explicit overrides to it too; no
+ * automatic rollback if the reverse write fails after the forward side
+ * already succeeded.
+ * @param {string} type managed object type, e.g. alpha_aiagentprivilege
+ * @param {string} propertyName relationship property name, e.g. agent
+ * @param {Partial<RelationshipPropertyFields>} changedFields only the explicitly-passed field overrides
  * @param {boolean} skipConfirmation true to skip the confirmation prompt
+ * @param {boolean} withReverse true to also update the inferred reverse side
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
-export async function updateManagedObjectTypeCli(
-  file: string,
-  skipConfirmation: boolean = false
+export async function updateManagedObjectSchemaRelationshipPropertyCli(
+  type: string,
+  propertyName: string,
+  changedFields: Partial<RelationshipPropertyFields>,
+  skipConfirmation: boolean = false,
+  withReverse: boolean = false
 ): Promise<boolean> {
   let indicatorId: string;
-  let type: string;
   try {
-    const typeConfig = readJsonFile(file) as ManagedObjectTypeConfig;
-    type = typeConfig.name;
-    const names = getSchemaBearingObjectNames([typeConfig]);
+    // A confirm-before-write diff needs the current/proposed definition(s)
+    // up front, before frodo-lib's own read-modify-write runs -- so this
+    // preview is built here (and discarded), then
+    // updateManagedObjectSchemaRelationshipProperty does its own
+    // independent read-modify-write for the actual change (see the
+    // analogous comment on updateManagedObjectSchemaPropertyCli).
+    const current = await tryReadRelationshipProperty(type, propertyName);
+    if (!current) {
+      printError(
+        new FrodoError(
+          `Relationship "${propertyName}" not found on managed object type "${type}". Use create instead.`
+        )
+      );
+      return false;
+    }
+    // A configured reverse side's descriptor must be re-supplied on every
+    // write, not just when --with-reverse asks to also change its fields --
+    // see toReverseDescriptorFields. So the reverse side is fetched whenever
+    // one exists, regardless of --with-reverse.
+    const reverseIdentity = inferReverseIdentity(current);
+    if (withReverse && !reverseIdentity) {
+      printError(
+        new FrodoError(
+          `Relationship "${propertyName}" on managed object type "${type}" has no reverse relationship configured; --with-reverse cannot be used.`
+        )
+      );
+      return false;
+    }
+    let reverseCurrent: Record<string, unknown> | null = null;
+    if (reverseIdentity) {
+      reverseCurrent = await tryReadRelationshipProperty(
+        reverseIdentity.type,
+        reverseIdentity.propertyName
+      );
+      if (!reverseCurrent) {
+        printError(
+          new FrodoError(
+            `Reverse relationship "${reverseIdentity.propertyName}" not found on managed object type "${reverseIdentity.type}".`
+          )
+        );
+        return false;
+      }
+    }
+    const overrides = pruneUndefined(changedFields);
+    const mergedForwardFields = {
+      ...extractRelationshipFields(current),
+      ...overrides,
+    };
+    const mergedReverseFields =
+      reverseCurrent && reverseIdentity
+        ? withReverse
+          ? { ...extractRelationshipFields(reverseCurrent), ...overrides }
+          : extractRelationshipFields(reverseCurrent)
+        : undefined;
+    const forwardPayload = buildRelationshipPropertyPayload(
+      propertyName,
+      mergedForwardFields,
+      mergedReverseFields && reverseIdentity
+        ? toReverseDescriptorFields(
+            reverseIdentity.propertyName,
+            mergedReverseFields
+          )
+        : undefined
+    );
+    let warning = `Current (${type}.${propertyName}):\n${JSON.stringify(current, null, 2)}\nProposed:\n${JSON.stringify(forwardPayload, null, 2)}`;
+    if (withReverse && mergedReverseFields && reverseIdentity) {
+      const reversePayload = buildRelationshipPropertyPayload(
+        reverseIdentity.propertyName,
+        mergedReverseFields,
+        toReverseDescriptorFields(propertyName, mergedForwardFields)
+      );
+      warning += `\nCurrent (${reverseIdentity.type}.${reverseIdentity.propertyName}, reverse):\n${JSON.stringify(reverseCurrent, null, 2)}\nProposed:\n${JSON.stringify(reversePayload, null, 2)}`;
+    }
     if (
-      names.length > 0 &&
       !(await confirmChange(
-        `\nThis import defines the SCHEMA of managed-object type "${type}", not just its configuration.`,
-        '\nSchema changes affect every existing and future record of that managed-object type. Continue? (y|n):',
+        warning,
+        `Update relationship "${propertyName}" on managed object type "${type}"${withReverse ? ' and its reverse side' : ''}? This affects every instance of that type. Continue? (y|n):`,
         skipConfirmation
       ))
     ) {
       printMessage('Update aborted.', 'warn');
       return false;
     }
-    if (!(await managedObjectTypeExists(type))) {
-      printError(
-        new FrodoError(`Managed type "${type}" not found. Use create instead.`)
-      );
-      return false;
-    }
     indicatorId = createProgressIndicator(
       'indeterminate',
       0,
-      `Updating managed object type ${type}...`
+      withReverse
+        ? `Updating relationship "${propertyName}" on "${type}" and its reverse side...`
+        : `Updating relationship "${propertyName}" on "${type}"...`
     );
-    await importSubConfigEntity('managed', typeConfig, { validate: false });
+    await updateRelationshipPropertyLib(
+      type,
+      propertyName,
+      changedFields,
+      withReverse
+    );
     stopProgressIndicator(
       indicatorId,
-      `Updated managed object type ${type}`,
+      `Updated relationship "${propertyName}" on "${type}".`,
       'success'
     );
     return true;
@@ -1098,10 +1707,610 @@ export async function updateManagedObjectTypeCli(
     if (indicatorId) {
       stopProgressIndicator(
         indicatorId,
-        `Error updating managed object type ${type}.`,
+        `Error updating relationship "${propertyName}" on "${type}".`,
         'fail'
       );
     }
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Export a single relationship schema property definition to a local file,
+ * via IDM's dedicated v2 schema API (requires IDM 7.5+; Cloud always
+ * qualifies). Exports the named side only -- the reverse side, if any, is
+ * exported separately by naming it directly.
+ * @param {string} type managed object type, e.g. alpha_aiagentprivilege
+ * @param {string} propertyName relationship property name, e.g. agent
+ * @param {string} [file] export file; defaults to a generated filename
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function exportManagedObjectSchemaRelationshipPropertyToFile(
+  type: string,
+  propertyName: string,
+  file?: string
+): Promise<boolean> {
+  try {
+    const property = await tryReadRelationshipProperty(type, propertyName);
+    if (!property) {
+      printError(
+        new FrodoError(
+          `Relationship "${propertyName}" not found on managed object type "${type}".`
+        )
+      );
+      return false;
+    }
+    const fileName =
+      file ||
+      getTypedFilename(`${type}-${propertyName}`, 'managed.relationship');
+    saveJsonToFile(property, getFilePath(fileName, true), false);
+    return true;
+  } catch (error) {
+    printError(
+      error,
+      `Error exporting relationship "${propertyName}" on "${type}"`
+    );
+  }
+  return false;
+}
+
+/**
+ * Import a single relationship schema property definition from a local
+ * file, via IDM's dedicated v2 schema API (requires IDM 7.5+; Cloud always
+ * qualifies), creating it if it doesn't already exist or overwriting it
+ * (with confirmation, unless skipConfirmation is set) if it does. The
+ * file's content is written verbatim, unlike `create`/`update`, which build
+ * the definition from flags -- this is the escape hatch for relationship
+ * shapes those flags can't express. Imports the named side only; the
+ * reverse side, if any, needs its own separate import.
+ * @param {string} type managed object type, e.g. alpha_aiagentprivilege
+ * @param {string} propertyName relationship property name, e.g. agent
+ * @param {string} file file containing the relationship property definition to import
+ * @param {boolean} skipConfirmation true to skip the confirmation prompt when overwriting an existing relationship
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function importManagedObjectSchemaRelationshipPropertyFromFile(
+  type: string,
+  propertyName: string,
+  file: string,
+  skipConfirmation: boolean = false
+): Promise<boolean> {
+  let indicatorId: string;
+  let filePath: string;
+  try {
+    filePath = getFilePath(file);
+    const propertyData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    const current = await tryReadRelationshipProperty(type, propertyName);
+    if (current) {
+      const warning = `Current:\n${JSON.stringify(current, null, 2)}\nProposed:\n${JSON.stringify(propertyData, null, 2)}`;
+      if (
+        !(await confirmChange(
+          warning,
+          `Import relationship "${propertyName}" on managed object type "${type}", overwriting its current definition? This affects every instance of that type. Continue? (y|n):`,
+          skipConfirmation
+        ))
+      ) {
+        printMessage('Import aborted.', 'warn');
+        return false;
+      }
+    }
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      `Importing relationship "${propertyName}" on "${type}" from ${filePath}...`
+    );
+    await updateManagedObjectSchemaProperty(type, propertyName, propertyData);
+    stopProgressIndicator(
+      indicatorId,
+      `Imported relationship "${propertyName}" on "${type}".`,
+      'success'
+    );
+    return true;
+  } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        `Error importing relationship "${propertyName}" on "${type}".`,
+        'fail'
+      );
+    }
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Delete a relationship schema property, via IDM's dedicated v2 schema API
+ * (requires IDM 7.5+; Cloud always qualifies). `withReverse`
+ * infers the reverse side from the forward property's
+ * own current definition (no separate identity flags needed) and deletes
+ * it first, then the forward side, so a failed second delete leaves the
+ * explicitly-named side as the one still consistently present.
+ * @param {string} type managed object type, e.g. alpha_aiagentprivilege
+ * @param {string} propertyName relationship property name, e.g. agent
+ * @param {boolean} skipConfirmation true to skip the confirmation prompt
+ * @param {boolean} withReverse true to also delete the inferred reverse side
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function deleteManagedObjectSchemaRelationshipPropertyCli(
+  type: string,
+  propertyName: string,
+  skipConfirmation: boolean = false,
+  withReverse: boolean = false
+): Promise<boolean> {
+  let indicatorId: string;
+  try {
+    // See updateManagedObjectSchemaRelationshipPropertyCli's comment: this
+    // preview is only to build the confirm warning, and is discarded --
+    // removeManagedObjectSchemaRelationshipProperty does its own
+    // independent read(s)/delete(s).
+    const current = await tryReadRelationshipProperty(type, propertyName);
+    if (!current) {
+      printError(
+        new FrodoError(
+          `Relationship "${propertyName}" not found on managed object type "${type}"`
+        )
+      );
+      return false;
+    }
+    let reverseIdentity: { type: string; propertyName: string } | null = null;
+    let reverseCurrent: Record<string, unknown> | null = null;
+    if (withReverse) {
+      reverseIdentity = inferReverseIdentity(current);
+      if (!reverseIdentity) {
+        printError(
+          new FrodoError(
+            `Relationship "${propertyName}" on managed object type "${type}" has no reverse relationship configured; --with-reverse cannot be used.`
+          )
+        );
+        return false;
+      }
+      reverseCurrent = await tryReadRelationshipProperty(
+        reverseIdentity.type,
+        reverseIdentity.propertyName
+      );
+      if (!reverseCurrent) {
+        printError(
+          new FrodoError(
+            `Reverse relationship "${reverseIdentity.propertyName}" not found on managed object type "${reverseIdentity.type}".`
+          )
+        );
+        return false;
+      }
+    }
+    let warning = `This permanently removes the relationship "${propertyName}" from managed object type "${type}":\n${JSON.stringify(current, null, 2)}`;
+    if (withReverse && reverseCurrent && reverseIdentity) {
+      warning += `\n...and its reverse relationship, from managed object type "${reverseIdentity.type}":\n${JSON.stringify(reverseCurrent, null, 2)}`;
+    }
+    warning += `\nThis removes the relationship definition only.`;
+    if (
+      !(await confirmChange(
+        warning,
+        `Delete relationship "${propertyName}" from managed object type "${type}"${withReverse ? ' and its reverse side' : ''}? This affects every instance of that type. Continue? (y|n):`,
+        skipConfirmation
+      ))
+    ) {
+      printMessage('Delete aborted.', 'warn');
+      return false;
+    }
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      withReverse
+        ? `Deleting relationship "${propertyName}" from "${type}" and its reverse side...`
+        : `Deleting relationship "${propertyName}" from "${type}"...`
+    );
+    await removeRelationshipPropertyLib(type, propertyName, withReverse);
+    stopProgressIndicator(
+      indicatorId,
+      `Deleted relationship "${propertyName}" from "${type}".`,
+      'success'
+    );
+    return true;
+  } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        `Error deleting relationship "${propertyName}" from "${type}".`,
+        'fail'
+      );
+    }
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Create a new managed object type. Refuses if a type with that name
+ * already exists (use update instead). Prompts for confirmation, reusing
+ * the same schema-change gate `frodo idm schema object import` already
+ * uses, unless skipConfirmation is set.
+ * @param {string} type managed object type, e.g. alpha_widget
+ * @param {string} title display title for the new type
+ * @param {string} [icon] display icon; defaults to a generic icon if not passed
+ * @param {string} [description] display description; omitted from the definition if not passed
+ * @param {boolean} skipConfirmation true to skip the confirmation prompt
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function createManagedObjectType(
+  type: string,
+  title: string,
+  icon: string | undefined,
+  description: string | undefined,
+  skipConfirmation: boolean = false
+): Promise<boolean> {
+  let indicatorId: string;
+  try {
+    if (
+      !(await confirmChange(
+        `This creates the new managed object type "${type}".`,
+        'Schema changes affect every instance of this managed object type. Continue? (y|n):',
+        skipConfirmation
+      ))
+    ) {
+      printMessage('Create aborted.', 'warn');
+      return false;
+    }
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      `Creating managed object type "${type}"...`
+    );
+    await frodo.idm.managed.schema.createManagedObjectType(type, {
+      title,
+      icon,
+      description,
+    });
+    stopProgressIndicator(
+      indicatorId,
+      `Created managed object type "${type}".`,
+      'success'
+    );
+    return true;
+  } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        `Error creating managed object type "${type}".`,
+        'fail'
+      );
+    }
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Update an existing managed object type. Refuses if the type doesn't
+ * exist (use create instead). Only the fields whose flags are passed
+ * change; everything else keeps its current value. Prints a
+ * current/proposed preview and prompts for confirmation, unless
+ * skipConfirmation is set.
+ * @param {string} type managed object type, e.g. alpha_widget
+ * @param {{title?: string, icon?: string, description?: string}} changedFields only the explicitly-passed field overrides
+ * @param {boolean} skipConfirmation true to skip the confirmation prompt
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function updateManagedObjectTypeCli(
+  type: string,
+  changedFields: { title?: string; icon?: string; description?: string },
+  skipConfirmation: boolean = false
+): Promise<boolean> {
+  let indicatorId: string;
+  try {
+    // A confirm-before-write diff needs the current/proposed metadata up
+    // front, before frodo-lib's own read-modify-write runs -- so this reads
+    // the type once here purely to build that preview (discarded after),
+    // then lets updateManagedObjectType do its own independent
+    // read-modify-write for the actual change (see the analogous comment on
+    // updateManagedObjectSchemaPropertyCli).
+    const typeConfig = (await readSubConfigEntity(
+      'managed',
+      type
+    )) as ManagedObjectTypeConfig;
+    if (!typeConfig.schema) {
+      printError(
+        new FrodoError(
+          `Managed object type "${type}" not found. Use create instead.`
+        )
+      );
+      return false;
+    }
+    const schemaRecord = typeConfig.schema as unknown as Record<
+      string,
+      unknown
+    >;
+    const current = {
+      title: typeConfig.schema.title,
+      icon: schemaRecord['mat-icon'] as string | undefined,
+      description: schemaRecord.description as string | undefined,
+    };
+    const proposed = {
+      title: changedFields.title ?? current.title,
+      icon: changedFields.icon ?? current.icon,
+      description: changedFields.description ?? current.description,
+    };
+    const warning = `This updates the managed object type "${type}".\nCurrent:\n${JSON.stringify(current, null, 2)}\nProposed:\n${JSON.stringify(proposed, null, 2)}`;
+    if (
+      !(await confirmChange(
+        warning,
+        'Schema changes affect every instance of this managed object type. Continue? (y|n):',
+        skipConfirmation
+      ))
+    ) {
+      printMessage('Update aborted.', 'warn');
+      return false;
+    }
+    indicatorId = createProgressIndicator(
+      'indeterminate',
+      0,
+      `Updating managed object type "${type}"...`
+    );
+    await frodo.idm.managed.schema.updateManagedObjectType(type, changedFields);
+    stopProgressIndicator(
+      indicatorId,
+      `Updated managed object type "${type}".`,
+      'success'
+    );
+    return true;
+  } catch (error) {
+    if (indicatorId) {
+      stopProgressIndicator(
+        indicatorId,
+        `Error updating managed object type "${type}".`,
+        'fail'
+      );
+    }
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Describe a single managed object type: its own metadata (name/title/icon)
+ * plus a Properties table and, if the type has any, a Relationships table
+ * (which -- unlike Properties -- keeps the Target column). Flat by default
+ * -- one row per top-level property; with `recursive`, nested `type: object`
+ * properties expand inline, named by dot-path (e.g. `address.street`),
+ * matching exactly what `--sub-property` on the property commands accepts.
+ * @param {string} type managed object type, e.g. alpha_user or user
+ * @param {boolean} json true to print raw JSON instead of a table -- always the complete definition, regardless of `recursive`
+ * @param {boolean} recursive true to expand nested object properties inline in the table
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function describeManagedObjectType(
+  type: string,
+  json: boolean = false,
+  recursive: boolean = false
+): Promise<boolean> {
+  try {
+    const schema = await readManagedObjectSchema(type);
+    if (json) {
+      printMessage(JSON.stringify(schema, null, 2), 'data');
+      return true;
+    }
+    const rows = await resolveRelationshipCardinalities(
+      type,
+      collectPropertyRows(
+        (schema.properties || {}) as unknown as Record<
+          string,
+          Record<string, unknown>
+        >,
+        new Set(schema.required || []),
+        recursive
+      )
+    );
+    const propertyRows = rows.filter((row) => !row.isRelationship);
+    const relationshipRows = rows.filter((row) => row.isRelationship);
+    const matIcon = (schema as unknown as Record<string, unknown>)[
+      'mat-icon'
+    ] as string | undefined;
+    const sections = [
+      c.heading(schema.title ? `${schema.title} (${type})` : type),
+      matIcon ? `icon: ${matIcon}` : undefined,
+    ].filter(Boolean);
+    if (propertyRows.length > 0) {
+      const propertiesTable = createTable(PROPERTY_ONLY_TABLE_COLUMNS);
+      pushPropertyTableRows(propertiesTable, propertyRows, false);
+      sections.push(
+        `${c.heading('Properties')}\n\n${propertiesTable.toString()}`
+      );
+    }
+    if (relationshipRows.length > 0) {
+      const relationshipsTable = createTable(PROPERTY_TABLE_COLUMNS);
+      pushPropertyTableRows(relationshipsTable, relationshipRows);
+      sections.push(
+        `${c.heading('Relationships')}\n\n${relationshipsTable.toString()}`
+      );
+    }
+    sections.push(PROPERTY_TABLE_KEY);
+    printMessage(sections.join('\n\n'), 'data');
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * List every managed object type defined on the tenant. A single read of
+ * the whole `managed` config entity already contains every type's
+ * `{name, schema}`, so no per-type follow-up read is needed -- Properties
+ * and Relationships (each shown as `total/required`) are both counted from
+ * that same local schema, no extra reads. Name only by default, one per
+ * line; `long` prints a table (Name/Title/Icon/Properties/Relationships)
+ * instead. Unlike `frodo idm count`, this never reflects actual record
+ * counts.
+ *
+ * Known gap, accepted for staying on a single free read rather than one
+ * read per type: the bulk `managed` config entity doesn't include IDM's
+ * auto-injected `_meta`/`_notifications` relationship properties, which
+ * only appear via the dedicated per-type schema read `object
+ * describe`/`relationship list` use -- so a type's Properties/Relationships
+ * counts here can undercount by up to 2 relative to those commands.
+ * @param {boolean} json true to print raw JSON instead of a table -- always the complete list, regardless of `long`
+ * @param {boolean} long true to print the full table instead of just names
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function listManagedObjectTypes(
+  json: boolean = false,
+  long: boolean = false
+): Promise<boolean> {
+  try {
+    const managedConfig = (await frodo.idm.config.readConfigEntity(
+      'managed'
+    )) as IdObjectSkeletonInterface & { objects?: ManagedObjectTypeConfig[] };
+    const objects = managedConfig.objects || [];
+    if (json) {
+      printMessage(
+        JSON.stringify(
+          objects.map((object) => object.name),
+          null,
+          2
+        ),
+        'data'
+      );
+      return true;
+    }
+    const sorted = objects.slice().sort((a, b) => a.name.localeCompare(b.name));
+    if (!long) {
+      sorted.forEach((object) => printMessage(object.name, 'data'));
+      return true;
+    }
+    const counts = sorted.map((object) => {
+      const required = new Set(object.schema?.required || []);
+      let propertyCount = 0;
+      let requiredPropertyCount = 0;
+      let relationshipCount = 0;
+      let requiredRelationshipCount = 0;
+      Object.entries(object.schema?.properties || {}).forEach(
+        ([name, property]) => {
+          if (
+            isRelationshipProperty(
+              property as unknown as Record<string, unknown>
+            )
+          ) {
+            relationshipCount++;
+            if (required.has(name)) {
+              requiredRelationshipCount++;
+            }
+          } else {
+            propertyCount++;
+            if (required.has(name)) {
+              requiredPropertyCount++;
+            }
+          }
+        }
+      );
+      return {
+        object,
+        propertyCount,
+        requiredPropertyCount,
+        relationshipCount,
+        requiredRelationshipCount,
+      };
+    });
+    // Right-align just the numerator to the widest one in its column, so the "/" lines up across rows -- a plain right-aligned cell wouldn't, since it pads the whole "total/required" string as one block.
+    const propertyWidth = Math.max(
+      ...counts.map((c) => String(c.propertyCount).length)
+    );
+    const relationshipWidth = Math.max(
+      ...counts.map((c) => String(c.relationshipCount).length)
+    );
+    const table = createTable([
+      'Name',
+      'Title',
+      'Icon',
+      'Properties',
+      'Relationships',
+    ]);
+    counts.forEach(
+      ({
+        object,
+        propertyCount,
+        requiredPropertyCount,
+        relationshipCount,
+        requiredRelationshipCount,
+      }) => {
+        table.push([
+          object.name,
+          object.schema?.title || '',
+          ((object.schema as unknown as Record<string, unknown>)?.[
+            'mat-icon'
+          ] as string) || '',
+          `${String(propertyCount).padStart(propertyWidth)}/${requiredPropertyCount}`,
+          `${String(relationshipCount).padStart(relationshipWidth)}/${requiredRelationshipCount}`,
+        ]);
+      }
+    );
+    printMessage(
+      `${table.toString()}\n\nProperties/Relationships shown as total/required.`,
+      'data'
+    );
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * List the relationship schema properties of a managed object type --
+ * fills the gap noted when the dedicated v2 relationship-schema API was
+ * first exposed via `frodo idm schema relationship`: that API is
+ * single-property GET/PUT/DELETE only, no bulk listing, so this falls back
+ * to the same whole-type schema read `property list` already uses,
+ * filtered to relationship-typed properties. Name only by default, one per
+ * line; `long` prints the full relationship table instead (same
+ * columns/abbreviations, including cardinality, as `object describe`'s
+ * Relationships table).
+ * @param {string} type managed object type, e.g. alpha_user
+ * @param {boolean} json true to print raw JSON instead of a table -- always the complete definitions, regardless of `long`
+ * @param {boolean} long true to print the full relationship table instead of just names
+ * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
+ */
+export async function listManagedObjectSchemaRelationshipProperties(
+  type: string,
+  json: boolean = false,
+  long: boolean = false
+): Promise<boolean> {
+  try {
+    const schema = await readManagedObjectSchema(type);
+    const entries = Object.entries(schema.properties || {}).filter(
+      ([, property]) =>
+        isRelationshipProperty(property as unknown as Record<string, unknown>)
+    );
+    if (json) {
+      printMessage(
+        JSON.stringify(Object.fromEntries(entries), null, 2),
+        'data'
+      );
+      return true;
+    }
+    if (!long) {
+      entries
+        .map(([name]) => name)
+        .sort()
+        .forEach((name) => printMessage(name, 'data'));
+      return true;
+    }
+    const rows = await resolveRelationshipCardinalities(
+      type,
+      collectPropertyRows(
+        Object.fromEntries(entries) as unknown as Record<
+          string,
+          Record<string, unknown>
+        >,
+        new Set(schema.required || []),
+        false
+      )
+    );
+    const table = createTable(PROPERTY_TABLE_COLUMNS);
+    pushPropertyTableRows(table, rows);
+    printMessage(`${table.toString()}\n\n${PROPERTY_TABLE_KEY}`, 'data');
+    return true;
+  } catch (error) {
     printError(error);
   }
   return false;
@@ -1159,7 +2368,7 @@ export async function deleteManagedObjectTypeCli(
     if (recordCount === undefined && !force) {
       printError(
         new FrodoError(
-          `Could not confirm whether managed type "${type}" has existing records. Pass -F/--force to delete anyway.`
+          `Unable to confirm number of existing "${type}" instances. Use -F/--force to delete.`
         )
       );
       return false;
@@ -1167,38 +2376,34 @@ export async function deleteManagedObjectTypeCli(
     if (recordCount !== undefined && recordCount > 0 && !force) {
       printError(
         new FrodoError(
-          `Refusing: managed type "${type}" has ${recordCount} existing record(s). Pass -F/--force to delete anyway.`
+          `${recordCount} existing "${type}" instance(s). Use -F/--force to delete.`
         )
       );
       return false;
     }
-    const recordCountMessage =
-      recordCount === undefined
-        ? ' (record count could not be confirmed)'
-        : `, which has ${recordCount} existing record(s)`;
     if (
       !(await confirmChange(
-        `\nThis will permanently delete the SCHEMA of managed-object type "${type}"${recordCountMessage}. Every existing record of this type becomes orphaned.`,
-        `\nDelete managed-object type "${type}"? This cannot be undone through Frodo. Continue? (y|n):`,
+        `This permanently deletes managed object type "${type}".`,
+        `Delete managed object type "${type}"? This cannot be undone. Continue? (y|n):`,
         skipConfirmation
       ))
     ) {
       printMessage('Delete aborted.', 'warn');
       return false;
     }
-    // No separate existence pre-check: removeSubConfigEntity does its own
+    // No separate existence pre-check: removeManagedObjectType does its own
     // single read of the whole 'managed' config entity and throws its own
     // not-found error if the type is missing, so a second read here would
     // be a redundant round-trip.
     indicatorId = createProgressIndicator(
       'indeterminate',
       0,
-      `Deleting managed object type ${type}...`
+      `Deleting managed object type "${type}"...`
     );
-    await removeSubConfigEntity('managed', type, { validate: false });
+    await frodo.idm.managed.schema.removeManagedObjectType(type);
     stopProgressIndicator(
       indicatorId,
-      `Deleted managed object type ${type}`,
+      `Deleted managed object type "${type}".`,
       'success'
     );
     return true;
@@ -1206,7 +2411,7 @@ export async function deleteManagedObjectTypeCli(
     if (indicatorId) {
       stopProgressIndicator(
         indicatorId,
-        `Error deleting managed object type ${type}.`,
+        `Error deleting managed object type "${type}".`,
         'fail'
       );
     }
@@ -1264,8 +2469,8 @@ export async function importAllConfigEntitiesFromFiles(
  */
 export async function countManagedObjects(type: string): Promise<boolean> {
   try {
-    const result = await queryManagedObjects(type);
-    printMessage(`${type}: ${result.length}`, 'data');
+    const result = await countManagedObjectsOfType(type);
+    printMessage(`${type}: ${result}`, 'data');
     return true;
   } catch (error) {
     printError(error);

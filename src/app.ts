@@ -12,6 +12,7 @@ import conn from './cli/conn/conn';
 import directConfigSession from './cli/dcc/dcc';
 import email from './cli/email/email';
 import esv from './cli/esv/esv';
+import feature from './cli/feature/feature';
 // enable sample command template.
 // import something from './cli/_template/something';
 import {
@@ -38,6 +39,7 @@ import script from './cli/script/script';
 import secretstore from './cli/secretstore/secretstore';
 import server from './cli/server/server';
 import service from './cli/service/service';
+import settings from './cli/settings/settings';
 import shell from './cli/shell/shell';
 import theme from './cli/theme/theme';
 import {
@@ -46,6 +48,10 @@ import {
   printMessage,
   verboseMessage,
 } from './utils/Console';
+import {
+  activatePersistedTheme,
+  ensureThemeDetectedIfNeeded,
+} from './utils/ThemeConfig';
 import { getVersions } from './utils/Version';
 
 const { initConnectionProfiles } = frodo.conn;
@@ -62,6 +68,8 @@ process.argv = normalizeExpandedHelpArgv(process.argv);
     state.setErrorHandler(printError);
     state.setDebugHandler(debugMessage);
     state.setVerboseHandler(verboseMessage);
+    await ensureThemeDetectedIfNeeded();
+    activatePersistedTheme();
 
     const program = new FrodoStubCommand('frodo').version(
       await getVersions(false),
@@ -89,6 +97,7 @@ process.argv = normalizeExpandedHelpArgv(process.argv);
     program.addCommand(directConfigSession());
     program.addCommand(email());
     program.addCommand(esv());
+    program.addCommand(feature());
     program.addCommand(idm());
     program.addCommand(idp());
     program.addCommand(iga());
@@ -107,6 +116,7 @@ process.argv = normalizeExpandedHelpArgv(process.argv);
     program.addCommand(secretstore());
     program.addCommand(server());
     program.addCommand(service());
+    program.addCommand(settings().helpGroup(utilitiesCommandsHeading));
     program.addCommand(shell().helpGroup(utilitiesCommandsHeading));
     program.addCommand(theme());
     // enable sample command template.

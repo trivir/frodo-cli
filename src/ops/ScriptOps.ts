@@ -61,6 +61,7 @@ const {
   deleteScriptByName,
   deleteScripts,
 } = frodo.script;
+const { readScriptBindings, readScriptTypes } = frodo.scriptType;
 
 const langMap = { JAVASCRIPT: 'JavaScript', GROOVY: 'Groovy' };
 
@@ -146,7 +147,7 @@ function filterTypedScriptExport(
  * @returns {string} a one-line description
  */
 export function getOneLineDescription(scriptObj: ScriptSkeleton): string {
-  const description = `[${c.cyanBright(scriptObj._id)}] ${scriptObj.context} - ${scriptObj.name}`;
+  const description = `[${c.heading(scriptObj._id)}] ${scriptObj.context} - ${scriptObj.name}`;
   return description;
 }
 
@@ -248,8 +249,8 @@ export async function listScripts(
       );
       values.push(
         locations.length > 0
-          ? `${c.greenBright('yes')} (${locations.length === 1 ? `at` : `${locations.length} uses, including:`} ${locations[0]})`
-          : c.redBright('no')
+          ? `${c.positive('yes')} (${locations.length === 1 ? `at` : `${locations.length} uses, including:`} ${locations[0]})`
+          : c.negative('no')
       );
     }
     table.push(values);
@@ -302,29 +303,29 @@ export async function describeScript(
       printMessage(script, 'data');
     } else {
       const table = createKeyValueTable();
-      table.push([c.cyanBright('Id'), script._id]);
-      table.push([c.cyanBright('Name'), script.name]);
-      table.push([c.cyanBright('Language'), langMap[script.language]]);
+      table.push([c.heading('Id'), script._id]);
+      table.push([c.heading('Name'), script.name]);
+      table.push([c.heading('Language'), langMap[script.language]]);
       table.push([
-        c.cyanBright('Context'),
+        c.heading('Context'),
         titleCase(script.context.split('_').join(' ')),
       ]);
-      table.push([c.cyanBright('Description'), script.description]);
+      table.push([c.heading('Description'), script.description]);
       table.push([
-        c.cyanBright('Default'),
-        script.default ? c.greenBright('true') : c.redBright('false'),
+        c.heading('Default'),
+        script.default ? c.positive('true') : c.negative('false'),
       ]);
-      table.push([c.cyanBright('Evaluator Version'), script.evaluatorVersion]);
+      table.push([c.heading('Evaluator Version'), script.evaluatorVersion]);
       const scriptWrapLength = 80;
       const wrapRegex = new RegExp(`.{1,${scriptWrapLength + 1}}`, 'g');
       const scriptParts = script.script.match(wrapRegex);
-      table.push([c.cyanBright('Script (Base 64)'), scriptParts[0]]);
+      table.push([c.heading('Script (Base 64)'), scriptParts[0]]);
       for (let i = 1; i < scriptParts.length; i++) {
         table.push(['', scriptParts[i]]);
       }
       if (usage) {
         table.push([
-          c.cyanBright(`Usage Locations (${script.locations.length} total)`),
+          c.heading(`Usage Locations (${script.locations.length} total)`),
           script.locations.length > 0 ? script.locations[0] : '',
         ]);
         for (let i = 1; i < script.locations.length; i++) {
@@ -333,6 +334,85 @@ export async function describeScript(
       }
       printMessage(table.toString(), 'data');
     }
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * List every scripting context, i.e. the valid `-c/--context` values for
+ * `script type describe` (the context's own `_id`, e.g.
+ * `SCRIPTED_DECISION_NODE`). Name only by default, one per line; `long`
+ * prints a Name/Languages/Hidden table instead. A context marked hidden
+ * (e.g. `NODE_DESIGNER`) is an internal one the platform doesn't surface in
+ * its own UI, not one `describe` refuses to read -- included either way.
+ * @param {boolean} json true to print raw JSON instead of a table -- always the complete list, regardless of `long`
+ * @param {boolean} long true to print a Name/Languages/Hidden table instead of just names
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
+export async function listScriptTypes(
+  json = false,
+  long = false
+): Promise<boolean> {
+  try {
+    const types = await readScriptTypes();
+    const sorted = types.slice().sort((a, b) => a._id.localeCompare(b._id));
+    if (json) {
+      printMessage(JSON.stringify(sorted, null, 2), 'data');
+      return true;
+    }
+    if (!long) {
+      sorted.forEach((type) => printMessage(type._id, 'data'));
+      return true;
+    }
+    const table = createTable(['Name', 'Languages', 'Hidden']);
+    sorted.forEach((type) => {
+      table.push([
+        type._id,
+        (type.languages || []).join(', '),
+        type.isHidden ? 'yes' : 'no',
+      ]);
+    });
+    printMessage(table.toString(), 'data');
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+  return false;
+}
+
+/**
+ * Describe the bindings (available objects/APIs) exposed to scripts running
+ * in a given scripting context, e.g. what httpClient/idRepository/logger
+ * methods a SCRIPTED_DECISION_NODE script can call.
+ * @param {string} context scripting context id, e.g. SCRIPTED_DECISION_NODE
+ * @param {boolean} json output the full binding definitions as JSON instead of a summary table
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
+export async function describeScriptBindings(
+  context: string,
+  json = false
+): Promise<boolean> {
+  try {
+    const bindings = await readScriptBindings(context);
+    if (json) {
+      printMessage(JSON.stringify(bindings, null, 2), 'data');
+      return true;
+    }
+    const table = createTable(['Name', 'Java Class', 'Elements']);
+    bindings
+      .slice()
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .forEach((binding) => {
+        table.push([
+          binding.name,
+          binding.javaClass,
+          String(binding.elements?.length ?? 0),
+        ]);
+      });
+    printMessage(table.toString(), 'data');
     return true;
   } catch (error) {
     printError(error);

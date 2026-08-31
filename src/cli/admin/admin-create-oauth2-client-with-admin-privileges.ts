@@ -107,8 +107,8 @@ export default function setup() {
               style: { 'padding-left': 0, 'padding-right': 0 },
               wordWrap: true,
             });
-            table.push([c.cyanBright('Client ID'), clientId]);
-            table.push([c.cyanBright('Client Secret'), clientSecret]);
+            table.push([c.heading('Client ID'), clientId]);
+            table.push([c.heading('Client Secret'), clientSecret]);
             if (options.llt) {
               try {
                 const response = await createLongLivedToken(
@@ -119,9 +119,9 @@ export default function setup() {
                   options.lltTtl
                 );
                 if (options.lltEsv)
-                  table.push([c.cyanBright('Secret Name'), response.secret]);
-                table.push([c.cyanBright('Scope'), response.scope]);
-                table.push([c.cyanBright('Expires'), response.expires_on]);
+                  table.push([c.heading('Secret Name'), response.secret]);
+                table.push([c.heading('Scope'), response.scope]);
+                table.push([c.heading('Expires'), response.expires_on]);
                 printMessage(table.toString());
                 if (options.lltEsv === false) {
                   printMessage(`\nBearer token:`, 'info');

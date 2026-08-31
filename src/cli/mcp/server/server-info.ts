@@ -108,17 +108,15 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Show default MCP server info:\n` +
-        c.cyanBright(`  $ frodo mcp server info\n`) +
+        c.command(`  $ frodo mcp server info\n`) +
         `  Show info for read-only authentication scope:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo mcp server info --policy read-only --profile authentication\n`
         ) +
         `  Show info for selected domains only:\n` +
-        c.cyanBright(
-          `  $ frodo mcp server info --include-domains authn idm\n`
-        ) +
+        c.command(`  $ frodo mcp server info --include-domains authn idm\n`) +
         `  Export info payload as JSON:\n` +
-        c.cyanBright(`  $ frodo mcp server info --json\n`)
+        c.command(`  $ frodo mcp server info --json\n`)
     );
 
   program.action((options) => {

@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CLI help interface for 'feature' should be expected english 1`] = `
+"Usage: frodo feature [options] [command]
+
+Manage features (e.g. groups, aiagent, am/2fa/profiles).
+
+Deployment: Cloud-only
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+
+Commands:
+  help              display help for command
+
+  (Cloud-only):
+  describe          Describe feature.
+  install           Install a feature. IRREVERSIBLE: uninstalling or disabling a
+                    feature once installed requires contacting Ping support and
+                    rolling back the tenant.
+  list              List features.
+  validate          Validate whether a feature is installable.
+"
+`;

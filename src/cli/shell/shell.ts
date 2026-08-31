@@ -102,7 +102,7 @@ async function startRepl(allowAwait = false, host?: string) {
     const text =
       typeof message === 'object'
         ? util.inspect(message, { depth: 6, colors: true })
-        : c.magentaBright(String(message));
+        : c.debug(String(message));
     replServer.output.write(text + '\n');
   });
   state.setVerboseHandler((message) => {
@@ -111,7 +111,7 @@ async function startRepl(allowAwait = false, host?: string) {
   });
   state.setCurlirizeHandler((message) => {
     if (!message || !state.getCurlirize()) return;
-    replServer.output.write(c.blueBright(String(message)) + '\n');
+    replServer.output.write(c.command(String(message)) + '\n');
   });
 
   // Inject the help() function, which surfaces type signatures and JSDoc from
@@ -290,13 +290,13 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Launch a frodo shell using explicit login parameters:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo shell ${s.amBaseUrl} ${s.realm} ${s.username} '${s.password}'\n`
         ) +
         `  Launch a frodo shell using a connection profile (identified by the full AM base URL):\n` +
-        c.cyanBright(`  $ frodo shell ${s.amBaseUrl}\n`) +
+        c.command(`  $ frodo shell ${s.amBaseUrl}\n`) +
         `  Launch a frodo shell using a connection profile (identified by a unique substring of the AM base URL or a saved alias):\n` +
-        c.cyanBright(`  $ frodo shell ${s.connId}\n`)
+        c.command(`  $ frodo shell ${s.connId}\n`)
     )
     .addOption(
       new Option(

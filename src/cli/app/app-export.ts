@@ -61,22 +61,22 @@ export default function setup() {
     )
     .addHelpText(
       'after',
-      c.yellowBright(`Important Note:\n`) +
-        `  The ${c.cyanBright('frodo app')} command to manage OAuth2 clients in v1.x has been renamed to ${c.cyanBright('frodo oauth client')} in v2.x\n` +
-        `  The ${c.cyanBright('frodo app')} command in v2.x manages the new applications created using the new application templates in ForgeRock Identity Cloud. To manage oauth clients, use the ${c.cyanBright('frodo oauth client')} command.\n\n` +
+      c.warning(`Important Note:\n`) +
+        `  The ${c.command('frodo app')} command to manage OAuth2 clients in v1.x has been renamed to ${c.command('frodo oauth client')} in v2.x\n` +
+        `  The ${c.command('frodo app')} command in v2.x manages the new applications created using the new application templates in ForgeRock Identity Cloud. To manage oauth clients, use the ${c.command('frodo oauth client')} command.\n\n` +
         `Usage Examples:\n` +
         `  Export all applications to a single export file with an auto-generated filename using a connection profile:\n` +
-        c.cyanBright(`  $ frodo app export -a ${s.connId}\n`) +
+        c.command(`  $ frodo app export -a ${s.connId}\n`) +
         `  Export the first application to a single export file with a custom filename:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo app export -f ./allMyApplications.application.json ${s.connId}\n`
         ) +
         `  Export all applications to separate export files with an auto-generated filenames:\n` +
-        c.cyanBright(`  $ frodo app export -A ${s.connId}\n`) +
+        c.command(`  $ frodo app export -A ${s.connId}\n`) +
         `  Export all applications without dependencies to a single export file:\n` +
-        c.cyanBright(`  $ frodo app export --no-deps -a ${s.connId}\n`) +
+        c.command(`  $ frodo app export --no-deps -a ${s.connId}\n`) +
         `  Export the application 'myApp' to a file with an auto-generated filename of 'myApp.application.json':\n` +
-        c.cyanBright(`  $ frodo app export -i myApp ${s.connId}\n`)
+        c.command(`  $ frodo app export -i myApp ${s.connId}\n`)
     )
     .action(
       // implement command logic inside action handler
@@ -140,8 +140,8 @@ export default function setup() {
           verboseMessage(
             'Unrecognized combination of options or no options...'
           );
-          program.help();
           process.exitCode = 1;
+          program.help();
         }
       }
       // end command logic inside action handler

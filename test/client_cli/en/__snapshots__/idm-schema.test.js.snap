@@ -13,7 +13,8 @@ Options:
 
 Commands:
   help              display help for command
-  object            Manage IDM managed-object configuration (schema,
-                    notifications, etc.).
+  object            Manage IDM managed object schema definitions.
+  property          Manage IDM managed object property schema definitions.
+  relationship      Manage IDM relationship schema definitions.
 "
 `;

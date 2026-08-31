@@ -117,20 +117,14 @@ export async function listJourneys(long: boolean = false): Promise<boolean> {
           table.push([
             `${treeExport.tree._id}`,
             treeExport.tree.enabled === false
-              ? c.redBright('disabled')
-              : c.greenBright('enabled'),
-            treeExport.tree.innerTreeOnly
-              ? c.yellowBright('yes')
-              : c.greenBright('no'),
-            treeExport.tree.mustRun
-              ? c.yellowBright('yes')
-              : c.greenBright('no'),
-            treeExport.tree.noSession
-              ? c.yellowBright('yes')
-              : c.greenBright('no'),
+              ? c.negative('disabled')
+              : c.positive('enabled'),
+            treeExport.tree.innerTreeOnly ? c.warning('yes') : c.positive('no'),
+            treeExport.tree.mustRun ? c.warning('yes') : c.positive('no'),
+            treeExport.tree.noSession ? c.warning('yes') : c.positive('no'),
             treeExport.tree.transactionalOnly
-              ? c.yellowBright('yes')
-              : c.greenBright('no'),
+              ? c.warning('yes')
+              : c.positive('no'),
             treeExport.tree.identityResource
               ? treeExport.tree.identityResource
               : '',
@@ -197,7 +191,7 @@ export async function exportJourneyToFile(
     saveJsonToFile(fileData, filePath, includeMeta);
     stopProgressIndicator(
       spinnerId,
-      `Exported ${c.cyanBright(journeyId)} to ${c.cyanBright(filePath)}.`,
+      `Exported ${c.heading(journeyId)} to ${c.heading(filePath)}.`,
       'success'
     );
     return true;
@@ -550,7 +544,7 @@ export async function importJourneysFromFiles(
       } else {
         printMessage(
           `Skipping unsupported journey file format: ${file}`,
-          'warning'
+          'warn'
         );
       }
     }
@@ -573,7 +567,7 @@ export async function importJourneysFromFiles(
  * @returns {string} a one-line description
  */
 export function getOneLineDescription(treeObj: TreeSkeleton): string {
-  const description = `[${c.cyanBright(treeObj._id)}]`;
+  const description = `[${c.heading(treeObj._id)}]`;
   return description;
 }
 
@@ -608,7 +602,7 @@ function describeTreeDescendents(
       .fill(' ')
       .join('');
     const [tree] = Object.keys(descendents);
-    printMessage(`${indent}- ${c.cyanBright(tree)}`, 'data');
+    printMessage(`${indent}- ${c.heading(tree)}`, 'data');
     for (const descendent of descendents[tree]) {
       describeTreeDescendents(descendent, depth + 1);
     }
@@ -701,27 +695,23 @@ export async function describeJourney(
     printMessage(
       `\nStatus\n${
         journeyData.tree.enabled === false
-          ? c.redBright('disabled')
-          : c.greenBright('enabled')
+          ? c.negative('disabled')
+          : c.positive('enabled')
       }`
     );
 
     // Journey flags
     printMessage(
       `\nFlags\n- Inner Tree Only: ${
-        journeyData.tree.innerTreeOnly
-          ? c.greenBright('true')
-          : c.redBright('false')
+        journeyData.tree.innerTreeOnly ? c.warning('true') : c.positive('false')
       }\n- Must Run: ${
-        journeyData.tree.mustRun ? c.greenBright('true') : c.redBright('false')
+        journeyData.tree.mustRun ? c.warning('true') : c.positive('false')
       }\n- No Session: ${
-        journeyData.tree.noSession
-          ? c.greenBright('true')
-          : c.redBright('false')
+        journeyData.tree.noSession ? c.warning('true') : c.positive('false')
       }\n- Transactional Only: ${
         journeyData.tree.transactionalOnly
-          ? c.greenBright('true')
-          : c.redBright('false')
+          ? c.warning('true')
+          : c.positive('false')
       }`
     );
 
@@ -755,7 +745,7 @@ export async function describeJourney(
         'data'
       );
       for (const [nodeType, count] of Object.entries(nodeTypeMap)) {
-        printMessage(`- ${String(count)} [${c.cyanBright(nodeType)}]`, 'data');
+        printMessage(`- ${String(count)} [${c.heading(nodeType)}]`, 'data');
       }
     }
 

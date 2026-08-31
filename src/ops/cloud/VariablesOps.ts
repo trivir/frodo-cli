@@ -105,14 +105,14 @@ export async function listVariables(
   let fullExport = null;
   const headers = long
     ? [
-        c.cyanBright('Id'),
-        c.cyanBright('Value'),
-        c.cyanBright('Status'),
-        c.cyanBright('Description'),
-        c.cyanBright('Modifier'),
-        c.cyanBright('Modified (UTC)'),
+        c.heading('Id'),
+        c.heading('Value'),
+        c.heading('Status'),
+        c.heading('Description'),
+        c.heading('Modifier'),
+        c.heading('Modified (UTC)'),
       ]
-    : [c.cyanBright('Id')];
+    : [c.heading('Id')];
   if (usage) {
     try {
       fullExport = await getFullExportConfig(file);
@@ -123,7 +123,7 @@ export async function listVariables(
     }
     //Delete variables from full export so they aren't mistakenly used for determining usage
     delete fullExport.global.variable;
-    headers.push(c.cyanBright('Used'));
+    headers.push(c.heading('Used'));
   }
   const table = createTable(headers);
   for (const variable of variables) {
@@ -136,7 +136,7 @@ export async function listVariables(
               : variable.value,
             40
           ),
-          variable.loaded ? c.greenBright('loaded') : c.redBright('unloaded'),
+          variable.loaded ? c.positive('loaded') : c.negative('unloaded'),
           wordwrap(variable.description, 40),
           state.getUseBearerTokenForAmApis()
             ? variable.lastChangedBy
@@ -150,8 +150,8 @@ export async function listVariables(
       const locations = getIdLocations(fullExport, variable._id, true);
       values.push(
         locations.length > 0
-          ? `${c.greenBright('yes')} (${locations.length === 1 ? `at` : `${locations.length} uses, including:`} ${locations[0]})`
-          : c.redBright('no')
+          ? `${c.positive('yes')} (${locations.length === 1 ? `at` : `${locations.length} uses, including:`} ${locations[0]})`
+          : c.negative('no')
       );
     }
     table.push(values);
@@ -367,9 +367,9 @@ export async function describeVariable(
       printMessage(variable, 'data');
     } else {
       const table = createKeyValueTable();
-      table.push([c.cyanBright('Name'), variable._id]);
+      table.push([c.heading('Name'), variable._id]);
       table.push([
-        c.cyanBright('Value'),
+        c.heading('Value'),
         wordwrap(
           variable.valueBase64
             ? decodeBase64(variable.valueBase64)
@@ -377,17 +377,17 @@ export async function describeVariable(
           40
         ),
       ]);
-      table.push([c.cyanBright('Type'), variable.expressionType]);
+      table.push([c.heading('Type'), variable.expressionType]);
       table.push([
-        c.cyanBright('Status'),
-        variable.loaded ? c.greenBright('loaded') : c.redBright('unloaded'),
+        c.heading('Status'),
+        variable.loaded ? c.positive('loaded') : c.negative('unloaded'),
       ]);
       table.push([
-        c.cyanBright('Description'),
+        c.heading('Description'),
         wordwrap(variable.description, 60),
       ]);
       table.push([
-        c.cyanBright('Modified'),
+        c.heading('Modified'),
         new Date(variable.lastChangeDate).toLocaleString(),
       ]);
       let modifierName: string;
@@ -399,12 +399,12 @@ export async function describeVariable(
         // ignore
       }
       if (modifierName && modifierName !== variable.lastChangedBy) {
-        table.push([c.cyanBright('Modifier'), modifierName]);
+        table.push([c.heading('Modifier'), modifierName]);
       }
-      table.push([c.cyanBright('Modifier UUID'), variable.lastChangedBy]);
+      table.push([c.heading('Modifier UUID'), variable.lastChangedBy]);
       if (usage) {
         table.push([
-          c.cyanBright(`Usage Locations (${variable.locations.length} total)`),
+          c.heading(`Usage Locations (${variable.locations.length} total)`),
           variable.locations.length > 0 ? variable.locations[0] : '',
         ]);
         for (let i = 1; i < variable.locations.length; i++) {
@@ -462,13 +462,13 @@ export async function exportVariableToFile(
     updateProgressIndicator(indicatorId, `Exported variable ${variableId}`);
     stopProgressIndicator(
       indicatorId,
-      `Exported ${c.cyanBright(variableId)} to ${c.cyanBright(filePath)}.`
+      `Exported ${c.heading(variableId)} to ${c.heading(filePath)}.`
     );
     return true;
   } catch (error) {
     stopProgressIndicator(
       indicatorId,
-      `Error exporting variable ${c.cyanBright(variableId)} to ${c.cyanBright(filePath)}`,
+      `Error exporting variable ${c.heading(variableId)} to ${c.heading(filePath)}`,
       'fail'
     );
     printError(error);
@@ -522,7 +522,7 @@ export async function exportVariablesToFile(
   } catch {
     stopProgressIndicator(
       spinnerId,
-      `Error exporting variables to ${c.cyanBright(getFilePath(file))}`,
+      `Error exporting variables to ${c.heading(getFilePath(file))}`,
       'fail'
     );
   }

@@ -56,7 +56,7 @@ function getFileDataTemplate() {
 export function getOneLineDescription(
   templateObj: EmailTemplateSkeleton
 ): string {
-  const description = `[${c.cyanBright(templateObj._id.split('/')[1])}] ${
+  const description = `[${c.heading(templateObj._id.split('/')[1])}] ${
     templateObj.displayName ? templateObj.displayName : ''
   } - ${
     templateObj.defaultLocale
@@ -124,12 +124,12 @@ export async function listEmailTemplates(
     }
   } else {
     const table = createTable([
-      c.cyanBright('Id'),
-      c.cyanBright('Name'),
-      c.cyanBright('Status'),
-      c.cyanBright('Locale(s)'),
-      c.cyanBright('From'),
-      c.cyanBright('Subject'),
+      c.heading('Id'),
+      c.heading('Name'),
+      c.heading('Status'),
+      c.heading('Locale(s)'),
+      c.heading('From'),
+      c.heading('Subject'),
     ]);
     for (const emailTemplate of emailTemplates) {
       table.push([
@@ -139,8 +139,8 @@ export async function listEmailTemplates(
         `${emailTemplate.displayName ? emailTemplate.displayName : ''}`,
         // Status
         emailTemplate.enabled === false
-          ? c.redBright('disabled')
-          : c.greenBright('enabled'),
+          ? c.negative('disabled')
+          : c.positive('enabled'),
         // Locale(s)
         `${emailTemplate.defaultLocale}${
           Object.keys(emailTemplate.subject).length > 1
@@ -191,7 +191,7 @@ export async function exportEmailTemplateToFile(
     saveJsonToFile(fileData, filePath, includeMeta);
     stopProgressIndicator(
       indicatorId,
-      `Exported ${c.cyanBright(templateId)} to ${c.cyanBright(filePath)}.`
+      `Exported ${c.heading(templateId)} to ${c.heading(filePath)}.`
     );
     return true;
   } catch (error) {

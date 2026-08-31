@@ -56,7 +56,7 @@ export function getOneLineDescription(
       roles.push(value);
     }
   }
-  const description = `[${c.cyanBright(saml2ProviderObj.entityId)}]${
+  const description = `[${c.heading(saml2ProviderObj.entityId)}]${
     ' (' + saml2ProviderObj.entityLocation
   }${roles.length ? ' ' + roles.join(', ') + ')' : ')'}`;
   return description;
@@ -109,9 +109,9 @@ export async function listSaml2Providers(
       return true;
     } else {
       const table = createTable([
-        c.cyanBright('Entity Id'),
-        c.cyanBright('Location'),
-        c.cyanBright('Role(s)'),
+        c.heading('Entity Id'),
+        c.heading('Location'),
+        c.heading('Role(s)'),
       ]);
       for (const provider of providerList) {
         table.push([
@@ -183,7 +183,7 @@ export async function exportSaml2MetadataToFile(
     updateProgressIndicator(indicatorId, `Exported provider ${entityId}`);
     stopProgressIndicator(
       indicatorId,
-      `Exported ${c.cyanBright(entityId)} metadata to ${c.cyanBright(filePath)}.`
+      `Exported ${c.heading(entityId)} metadata to ${c.heading(filePath)}.`
     );
     return true;
   } catch (error) {
@@ -229,7 +229,7 @@ export async function exportSaml2ProviderToFile(
     updateProgressIndicator(indicatorId, `Exported provider ${entityId}`);
     stopProgressIndicator(
       indicatorId,
-      `Exported ${c.cyanBright(entityId)} to ${c.cyanBright(filePath)}.`
+      `Exported ${c.heading(entityId)} to ${c.heading(filePath)}.`
     );
     debugMessage(
       `cli.Saml2Ops.exportSaml2ProviderToFile: end [entityId=${entityId}, file=${filePath}]`

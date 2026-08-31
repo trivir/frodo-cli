@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CLI help interface for 'script type' should be expected english 1`] = `
+"Usage: frodo script type [options] [command]
+
+Manage scripting contexts (script types).
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+
+Commands:
+  describe          Describe the bindings (available objects/APIs, e.g.
+                    httpClient, idRepository) exposed to scripts running in a
+                    given scripting context.
+  help              display help for command
+  list              List scripting contexts.
+"
+`;

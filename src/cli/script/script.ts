@@ -4,6 +4,7 @@ import DescribeCmd from './script-describe.js';
 import ExportCmd from './script-export.js';
 import ImportCmd from './script-import.js';
 import ListCmd from './script-list.js';
+import TypeCmd from './script-type.js';
 
 export default function setup() {
   const program = new FrodoStubCommand('script').description('Manage scripts.');
@@ -17,6 +18,8 @@ export default function setup() {
   program.addCommand(ImportCmd().name('import'));
 
   program.addCommand(DeleteCmd().name('delete'));
+
+  program.addCommand(TypeCmd().name('type'));
 
   return program;
 }

@@ -47,14 +47,14 @@ export default function setup() {
     )
     .addHelpText(
       'after',
-      c.yellowBright(`Important Note:\n`) +
-        `  The ${c.cyanBright('frodo app')} command to manage OAuth2 clients in v1.x has been renamed to ${c.cyanBright('frodo oauth client')} in v2.x\n` +
-        `  The ${c.cyanBright('frodo app')} command in v2.x manages the new applications created using the new application templates in ForgeRock Identity Cloud. To manage oauth clients, use the ${c.cyanBright('frodo oauth client')} command.\n\n` +
+      c.warning(`Important Note:\n`) +
+        `  The ${c.command('frodo app')} command to manage OAuth2 clients in v1.x has been renamed to ${c.command('frodo oauth client')} in v2.x\n` +
+        `  The ${c.command('frodo app')} command in v2.x manages the new applications created using the new application templates in ForgeRock Identity Cloud. To manage oauth clients, use the ${c.command('frodo oauth client')} command.\n\n` +
         `Usage Examples:\n` +
         `  Delete application 'myApp':\n` +
-        c.cyanBright(`  $ frodo app delete -i 'myApp' ${s.amBaseUrl}\n`) +
+        c.command(`  $ frodo app delete -i 'myApp' ${s.amBaseUrl}\n`) +
         `  Delete all applications:\n` +
-        c.cyanBright(`  $ frodo app delete -a ${s.connId}\n`)
+        c.command(`  $ frodo app delete -a ${s.connId}\n`)
     )
     .action(
       // implement command logic inside action handler
@@ -94,8 +94,8 @@ export default function setup() {
           verboseMessage(
             'Unrecognized combination of options or no options...'
           );
-          program.help();
           process.exitCode = 1;
+          program.help();
         }
       }
       // end command logic inside action handler

@@ -117,8 +117,8 @@ export default function setup() {
           verboseMessage(
             'Unrecognized combination of options or no options...'
           );
-          program.help();
           process.exitCode = 1;
+          program.help();
         }
       }
       // end command logic inside action handler

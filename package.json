@@ -59,7 +59,8 @@
   "jest": {
     "testTimeout": 120000,
     "testMatch": [
-      "**/?(*.)(test).js"
+      "**/?(*.)(test).js",
+      "**/?(*.)(test).ts"
     ],
     "extensionsToTreatAsEsm": [
       ".ts"
@@ -116,10 +117,12 @@
     ]
   },
   "devDependencies": {
+    "@inquirer/core": "^12.0.1",
+    "@inquirer/select": "^5.2.3",
     "@modelcontextprotocol/client": "^2.0.0",
     "@modelcontextprotocol/node": "^2.0.0",
     "@modelcontextprotocol/server": "^2.0.0",
-    "@rockcarver/frodo-lib": "4.5.0",
+    "@rockcarver/frodo-lib": "4.6.0",
     "@types/colors": "^1.2.1",
     "@types/fs-extra": "^11.0.1",
     "@types/jest": "^29.2.3",

@@ -1,0 +1,150 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CLI help interface for 'settings theme autodetect' should be expected english 1`] = `
+"Usage: frodo settings theme autodetect [options] [state]
+
+Enable or disable one-time terminal-background auto-detection on first run. Run
+with no argument to show the current setting.
+
+Arguments:
+  state             Either "on" or "off".
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+"
+`;
+
+exports[`CLI help interface for 'settings theme background' should be expected english 1`] = `
+"Usage: frodo settings theme background [options] <name>
+
+Set the background color preference (your contrast preference is unaffected).
+
+Arguments:
+  name              Background to use. One of: dark, light, blue, yellow.
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+"
+`;
+
+exports[`CLI help interface for 'settings theme contrast' should be expected english 1`] = `
+"Usage: frodo settings theme contrast [options] <tier>
+
+Set the contrast preference (your background preference is unaffected).
+"vibrant" is the default -- the most colorful option each background supports;
+"high-contrast" always clears strict WCAG AA.
+
+Arguments:
+  tier              Contrast level to use. One of: high-contrast, regular,
+                    vibrant.
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+"
+`;
+
+exports[`CLI help interface for 'settings theme detect' should be expected english 1`] = `
+"Usage: frodo settings theme detect [options]
+
+Detect this terminal's actual background color and set it as your background
+preference (your contrast preference is unaffected). Run this again any time
+you've switched terminals or changed your terminal's colors -- detection
+otherwise only ever runs automatically once, the first time no background has
+been chosen yet.
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+"
+`;
+
+exports[`CLI help interface for 'settings theme list' should be expected english 1`] = `
+"Usage: frodo settings theme list [options]
+
+List available color themes.
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+"
+`;
+
+exports[`CLI help interface for 'settings theme set' should be expected english 1`] = `
+"Usage: frodo settings theme set [options] <name>
+
+Set the active color theme.
+
+Arguments:
+  name              Name of the theme to activate.
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+"
+`;
+
+exports[`CLI help interface for 'settings theme show' should be expected english 1`] = `
+"Usage: frodo settings theme show [options]
+
+Show the active color theme, a preview of each intent's color, and a sample of
+realistic frodo-cli output (tables, messages) -- the best way to check whether a
+theme actually works on your terminal's background.
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+"
+`;
+
+exports[`CLI help interface for 'settings theme' should be expected english 1`] = `
+"Usage: frodo settings theme [options] [command]
+
+Manage the CLI color theme.
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+
+Commands:
+  autodetect        Enable or disable one-time terminal-background
+                    auto-detection on first run. Run with no argument to show
+                    the current setting.
+  background        Set the background color preference (your contrast
+                    preference is unaffected).
+  contrast          Set the contrast preference (your background preference is
+                    unaffected). "vibrant" is the default -- the most colorful
+                    option each background supports; "high-contrast" always
+                    clears strict WCAG AA.
+  detect            Detect this terminal's actual background color and set it as
+                    your background preference (your contrast preference is
+                    unaffected). Run this again any time you've switched
+                    terminals or changed your terminal's colors -- detection
+                    otherwise only ever runs automatically once, the first time
+                    no background has been chosen yet.
+  list              List available color themes.
+  set               Set the active color theme.
+  show              Show the active color theme, a preview of each intent's
+                    color, and a sample of realistic frodo-cli output (tables,
+                    messages) -- the best way to check whether a theme actually
+                    works on your terminal's background.
+"
+`;

@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CLI help interface for 'idm schema property' should be expected english 1`] = `
+"Usage: frodo idm schema property [options] [command]
+
+Manage IDM managed object property schema definitions.
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+
+Commands:
+  create            Create IDM managed object property schema definition.
+  delete            Delete IDM managed object property schema definition.
+  describe          Describe IDM managed object property schema definition.
+  export            Export IDM managed object property schema definition.
+  help              display help for command
+  import            Import IDM managed object property schema definition.
+  list              List IDM managed object property schema definitions.
+  update            Update IDM managed object property schema definition.
+"
+`;

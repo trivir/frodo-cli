@@ -22799,11 +22799,11 @@ exports[`frodo idm schema object export "frodo idm schema object export -a": sho
 }
 `;
 
-exports[`frodo idm schema object export "frodo idm schema object export -i alpha_group -D testDir5": should export the alpha_group managed object into a file named "alpha_group.managed.json" in the directory "testDir5" 1`] = `0`;
+exports[`frodo idm schema object export "frodo idm schema object export -o alpha_group -D testDir5": should export the alpha_group managed object into a file named "alpha_group.managed.json" in the directory "testDir5" 1`] = `0`;
 
-exports[`frodo idm schema object export "frodo idm schema object export -i alpha_group -D testDir5": should export the alpha_group managed object into a file named "alpha_group.managed.json" in the directory "testDir5" 2`] = `""`;
+exports[`frodo idm schema object export "frodo idm schema object export -o alpha_group -D testDir5": should export the alpha_group managed object into a file named "alpha_group.managed.json" in the directory "testDir5" 2`] = `""`;
 
-exports[`frodo idm schema object export "frodo idm schema object export -i alpha_group -D testDir5": should export the alpha_group managed object into a file named "alpha_group.managed.json" in the directory "testDir5": testDir5/alpha_group.managed.json 1`] = `
+exports[`frodo idm schema object export "frodo idm schema object export -o alpha_group -D testDir5": should export the alpha_group managed object into a file named "alpha_group.managed.json" in the directory "testDir5": testDir5/alpha_group.managed.json 1`] = `
 {
   "name": "alpha_group",
   "schema": {
@@ -22817,6 +22817,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "description",
       "condition",
       "members",
+      "aiagentprivileges",
     ],
     "properties": {
       "_id": {
@@ -22835,6 +22836,56 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
         "usageDescription": "",
         "userEditable": false,
         "viewable": false,
+      },
+      "aiagentprivileges": {
+        "description": "AI Agent Privileges assigned to this group",
+        "items": {
+          "id": "urn:jsonschema:org:forgerock:openidm:managed:api:Group:aiagentprivileges:items",
+          "notifySelf": false,
+          "properties": {
+            "_ref": {
+              "description": "References a relationship from a managed object",
+              "type": "string",
+            },
+            "_refProperties": {
+              "description": "Supports metadata within the relationship",
+              "properties": {
+                "_id": {
+                  "description": "_refProperties object ID",
+                  "type": "string",
+                },
+              },
+              "title": "Group Members Items _refProperties",
+              "type": "object",
+            },
+          },
+          "resourceCollection": [
+            {
+              "label": "AI Agent Privilege",
+              "notify": true,
+              "path": "managed/alpha_aiagentprivilege",
+              "query": {
+                "fields": [
+                  "description",
+                  "agentID",
+                ],
+                "queryFilter": "true",
+              },
+            },
+          ],
+          "reversePropertyName": "subjectGroups",
+          "reverseRelationship": true,
+          "title": "Group Agent Privilege Items",
+          "type": "relationship",
+          "validate": true,
+        },
+        "policies": [],
+        "returnByDefault": false,
+        "searchable": false,
+        "title": "Agent Privileges",
+        "type": "array",
+        "userEditable": false,
+        "viewable": true,
       },
       "condition": {
         "description": "A filter for conditionally assigned members",
@@ -22861,6 +22912,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
         "description": "Group Members",
         "items": {
           "id": "urn:jsonschema:org:forgerock:openidm:managed:api:Group:members:items",
+          "notifySelf": true,
           "properties": {
             "_ref": {
               "description": "References a relationship from a managed object",
@@ -22905,6 +22957,9 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
           "type": "relationship",
           "validate": true,
         },
+        "notifyRelationships": [
+          "aiagentprivileges",
+        ],
         "policies": [],
         "returnByDefault": false,
         "searchable": false,
@@ -22943,11 +22998,11 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
 }
 `;
 
-exports[`frodo idm schema object export "frodo idm schema object export -i alpha_role -f test2.file.json -D testDir4": should export the alpha_role managed object into a file named "test2.file.json" in the directory "testDir4" 1`] = `0`;
+exports[`frodo idm schema object export "frodo idm schema object export -o alpha_role -f test2.file.json -D testDir4": should export the alpha_role managed object into a file named "test2.file.json" in the directory "testDir4" 1`] = `0`;
 
-exports[`frodo idm schema object export "frodo idm schema object export -i alpha_role -f test2.file.json -D testDir4": should export the alpha_role managed object into a file named "test2.file.json" in the directory "testDir4" 2`] = `""`;
+exports[`frodo idm schema object export "frodo idm schema object export -o alpha_role -f test2.file.json -D testDir4": should export the alpha_role managed object into a file named "test2.file.json" in the directory "testDir4" 2`] = `""`;
 
-exports[`frodo idm schema object export "frodo idm schema object export -i alpha_role -f test2.file.json -D testDir4": should export the alpha_role managed object into a file named "test2.file.json" in the directory "testDir4": testDir4/test2.file.json 1`] = `
+exports[`frodo idm schema object export "frodo idm schema object export -o alpha_role -f test2.file.json -D testDir4": should export the alpha_role managed object into a file named "test2.file.json" in the directory "testDir4": testDir4/test2.file.json 1`] = `
 {
   "name": "alpha_role",
   "schema": {
@@ -22987,6 +23042,10 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
             "_refProperties": {
               "description": "Supports metadata within the relationship",
               "properties": {
+                "_accountType": {
+                  "description": "Account type",
+                  "type": "string",
+                },
                 "_id": {
                   "description": "_refProperties object ID",
                   "type": "string",
@@ -23036,6 +23095,10 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
             "_refProperties": {
               "description": "Supports metadata within the relationship",
               "properties": {
+                "_accountType": {
+                  "description": "Account type",
+                  "type": "string",
+                },
                 "_id": {
                   "description": "_refProperties object ID",
                   "type": "string",
@@ -23189,11 +23252,11 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
 }
 `;
 
-exports[`frodo idm schema object export "frodo idm schema object export -i alpha_user": should export the alpha_user managed object into a file named "alpha_user.managed.json" 1`] = `0`;
+exports[`frodo idm schema object export "frodo idm schema object export -o alpha_user": should export the alpha_user managed object into a file named "alpha_user.managed.json" 1`] = `0`;
 
-exports[`frodo idm schema object export "frodo idm schema object export -i alpha_user": should export the alpha_user managed object into a file named "alpha_user.managed.json" 2`] = `""`;
+exports[`frodo idm schema object export "frodo idm schema object export -o alpha_user": should export the alpha_user managed object into a file named "alpha_user.managed.json" 2`] = `""`;
 
-exports[`frodo idm schema object export "frodo idm schema object export -i alpha_user": should export the alpha_user managed object into a file named "alpha_user.managed.json": alpha_user.managed.json 1`] = `
+exports[`frodo idm schema object export "frodo idm schema object export -o alpha_user": should export the alpha_user managed object into a file named "alpha_user.managed.json": alpha_user.managed.json 1`] = `
 {
   "lastSync": {
     "effectiveAssignmentsProperty": "effectiveAssignments",
@@ -23243,11 +23306,28 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "memberOfOrg",
       "memberOfOrgIDs",
       "ownerOfApp",
+      "passwordLastChangedTime",
+      "passwordExpirationTime",
       "frIndexedString1",
       "frIndexedString2",
       "frIndexedString3",
       "frIndexedString4",
       "frIndexedString5",
+      "frIndexedString6",
+      "frIndexedString7",
+      "frIndexedString8",
+      "frIndexedString9",
+      "frIndexedString10",
+      "frIndexedString11",
+      "frIndexedString12",
+      "frIndexedString13",
+      "frIndexedString14",
+      "frIndexedString15",
+      "frIndexedString16",
+      "frIndexedString17",
+      "frIndexedString18",
+      "frIndexedString19",
+      "frIndexedString20",
       "frUnindexedString1",
       "frUnindexedString2",
       "frUnindexedString3",
@@ -23284,6 +23364,11 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "frUnindexedInteger4",
       "frUnindexedInteger5",
       "assignedDashboard",
+      "devicePrintProfiles",
+      "deviceProfiles",
+      "oathDeviceProfiles",
+      "pushDeviceProfiles",
+      "webauthnDeviceProfiles",
     ],
     "properties": {
       "_id": {
@@ -23309,7 +23394,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
         "default": "active",
         "description": "Status",
         "isPersonal": false,
-        "searchable": true,
+        "searchable": false,
         "title": "Status",
         "type": "string",
         "usageDescription": "",
@@ -23390,8 +23475,16 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
             "_refProperties": {
               "description": "Supports metadata within the relationship",
               "properties": {
+                "_accountType": {
+                  "description": "Account type",
+                  "type": "string",
+                },
                 "_id": {
                   "description": "_refProperties object ID",
+                  "type": "string",
+                },
+                "_uniqueId": {
+                  "description": "Unique identifier",
                   "type": "string",
                 },
               },
@@ -23470,6 +23563,10 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
             "_refProperties": {
               "description": "Supports metadata within the relationship",
               "properties": {
+                "_accountType": {
+                  "description": "Account type",
+                  "type": "string",
+                },
                 "_grantType": {
                   "description": "Grant Type",
                   "label": "Grant Type",
@@ -23477,6 +23574,10 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
                 },
                 "_id": {
                   "description": "_refProperties object ID",
+                  "type": "string",
+                },
+                "_uniqueId": {
+                  "description": "Unique identifier",
                   "type": "string",
                 },
               },
@@ -23572,8 +23673,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
         "default": "{{givenName}} {{sn}}",
         "description": "Common Name",
         "isPersonal": true,
-        "scope": "private",
-        "searchable": false,
+        "searchable": true,
         "title": "Common Name",
         "type": "string",
         "userEditable": false,
@@ -23592,7 +23692,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
             "properties": {
               "consentDate": {
                 "description": "Consent Date",
-                "searchable": true,
+                "searchable": false,
                 "title": "Consent Date",
                 "type": "string",
                 "userEditable": true,
@@ -23600,7 +23700,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
               },
               "mapping": {
                 "description": "Mapping",
-                "searchable": true,
+                "searchable": false,
                 "title": "Mapping",
                 "type": "string",
                 "userEditable": true,
@@ -23637,9 +23737,36 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "description": {
         "description": "Description",
         "isPersonal": false,
-        "searchable": true,
+        "searchable": false,
         "title": "Description",
         "type": "string",
+        "usageDescription": "",
+        "userEditable": true,
+        "viewable": true,
+      },
+      "devicePrintProfiles": {
+        "description": "Device Print Profiles Information",
+        "isPersonal": false,
+        "items": {
+          "title": "Profile",
+          "type": "string",
+        },
+        "searchable": false,
+        "title": "Device Print Profiles",
+        "type": "array",
+        "userEditable": true,
+        "viewable": true,
+      },
+      "deviceProfiles": {
+        "description": "Device Profiles",
+        "isPersonal": false,
+        "items": {
+          "title": "Profile",
+          "type": "string",
+        },
+        "searchable": false,
+        "title": "Device Profiles",
+        "type": "array",
         "usageDescription": "",
         "userEditable": true,
         "viewable": true,
@@ -23740,6 +23867,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "frIndexedDate1": {
         "description": "Generic Indexed Date 1",
         "isPersonal": false,
+        "searchable": true,
         "title": "Generic Indexed Date 1",
         "type": "string",
         "usageDescription": "",
@@ -23749,6 +23877,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "frIndexedDate2": {
         "description": "Generic Indexed Date 2",
         "isPersonal": false,
+        "searchable": true,
         "title": "Generic Indexed Date 2",
         "type": "string",
         "usageDescription": "",
@@ -23758,6 +23887,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "frIndexedDate3": {
         "description": "Generic Indexed Date 3",
         "isPersonal": false,
+        "searchable": true,
         "title": "Generic Indexed Date 3",
         "type": "string",
         "usageDescription": "",
@@ -23767,6 +23897,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "frIndexedDate4": {
         "description": "Generic Indexed Date 4",
         "isPersonal": false,
+        "searchable": true,
         "title": "Generic Indexed Date 4",
         "type": "string",
         "usageDescription": "",
@@ -23776,6 +23907,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "frIndexedDate5": {
         "description": "Generic Indexed Date 5",
         "isPersonal": false,
+        "searchable": true,
         "title": "Generic Indexed Date 5",
         "type": "string",
         "usageDescription": "",
@@ -23785,6 +23917,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "frIndexedInteger1": {
         "description": "Generic Indexed Integer 1",
         "isPersonal": false,
+        "searchable": true,
         "title": "Generic Indexed Integer 1",
         "type": "number",
         "usageDescription": "",
@@ -23794,6 +23927,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "frIndexedInteger2": {
         "description": "Generic Indexed Integer 2",
         "isPersonal": false,
+        "searchable": true,
         "title": "Generic Indexed Integer 2",
         "type": "number",
         "usageDescription": "",
@@ -23803,6 +23937,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "frIndexedInteger3": {
         "description": "Generic Indexed Integer 3",
         "isPersonal": false,
+        "searchable": true,
         "title": "Generic Indexed Integer 3",
         "type": "number",
         "usageDescription": "",
@@ -23812,6 +23947,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "frIndexedInteger4": {
         "description": "Generic Indexed Integer 4",
         "isPersonal": false,
+        "searchable": true,
         "title": "Generic Indexed Integer 4",
         "type": "number",
         "usageDescription": "",
@@ -23821,6 +23957,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "frIndexedInteger5": {
         "description": "Generic Indexed Integer 5",
         "isPersonal": false,
+        "searchable": true,
         "title": "Generic Indexed Integer 5",
         "type": "number",
         "usageDescription": "",
@@ -23833,6 +23970,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
         "items": {
           "type": "string",
         },
+        "searchable": true,
         "title": "Generic Indexed Multivalue 1",
         "type": "array",
         "usageDescription": "",
@@ -23845,6 +23983,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
         "items": {
           "type": "string",
         },
+        "searchable": true,
         "title": "Generic Indexed Multivalue 2",
         "type": "array",
         "usageDescription": "",
@@ -23857,6 +23996,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
         "items": {
           "type": "string",
         },
+        "searchable": true,
         "title": "Generic Indexed Multivalue 3",
         "type": "array",
         "usageDescription": "",
@@ -23869,6 +24009,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
         "items": {
           "type": "string",
         },
+        "searchable": true,
         "title": "Generic Indexed Multivalue 4",
         "type": "array",
         "usageDescription": "",
@@ -23881,6 +24022,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
         "items": {
           "type": "string",
         },
+        "searchable": true,
         "title": "Generic Indexed Multivalue 5",
         "type": "array",
         "usageDescription": "",
@@ -23890,7 +24032,108 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "frIndexedString1": {
         "description": "Generic Indexed String 1",
         "isPersonal": false,
+        "searchable": true,
         "title": "Generic Indexed String 1",
+        "type": "string",
+        "usageDescription": "",
+        "userEditable": true,
+        "viewable": true,
+      },
+      "frIndexedString10": {
+        "description": "Generic Indexed String 10",
+        "isPersonal": false,
+        "searchable": true,
+        "title": "Generic Indexed String 10",
+        "type": "string",
+        "usageDescription": "",
+        "userEditable": true,
+        "viewable": true,
+      },
+      "frIndexedString11": {
+        "description": "Generic Indexed String 11",
+        "isPersonal": false,
+        "searchable": true,
+        "title": "Generic Indexed String 11",
+        "type": "string",
+        "usageDescription": "",
+        "userEditable": true,
+        "viewable": true,
+      },
+      "frIndexedString12": {
+        "description": "Generic Indexed String 12",
+        "isPersonal": false,
+        "searchable": true,
+        "title": "Generic Indexed String 12",
+        "type": "string",
+        "usageDescription": "",
+        "userEditable": true,
+        "viewable": true,
+      },
+      "frIndexedString13": {
+        "description": "Generic Indexed String 13",
+        "isPersonal": false,
+        "searchable": true,
+        "title": "Generic Indexed String 13",
+        "type": "string",
+        "usageDescription": "",
+        "userEditable": true,
+        "viewable": true,
+      },
+      "frIndexedString14": {
+        "description": "Generic Indexed String 14",
+        "isPersonal": false,
+        "searchable": true,
+        "title": "Generic Indexed String 14",
+        "type": "string",
+        "usageDescription": "",
+        "userEditable": true,
+        "viewable": true,
+      },
+      "frIndexedString15": {
+        "description": "Generic Indexed String 15",
+        "isPersonal": false,
+        "searchable": true,
+        "title": "Generic Indexed String 15",
+        "type": "string",
+        "usageDescription": "",
+        "userEditable": true,
+        "viewable": true,
+      },
+      "frIndexedString16": {
+        "description": "Generic Indexed String 16",
+        "isPersonal": false,
+        "searchable": true,
+        "title": "Generic Indexed String 16",
+        "type": "string",
+        "usageDescription": "",
+        "userEditable": true,
+        "viewable": true,
+      },
+      "frIndexedString17": {
+        "description": "Generic Indexed String 17",
+        "isPersonal": false,
+        "searchable": true,
+        "title": "Generic Indexed String 17",
+        "type": "string",
+        "usageDescription": "",
+        "userEditable": true,
+        "viewable": true,
+      },
+      "frIndexedString18": {
+        "description": "Generic Indexed String 18",
+        "isPersonal": false,
+        "searchable": true,
+        "title": "Generic Indexed String 18",
+        "type": "string",
+        "usageDescription": "",
+        "userEditable": true,
+        "viewable": true,
+      },
+      "frIndexedString19": {
+        "description": "Generic Indexed String 19",
+        "isPersonal": false,
+        "searchable": true,
+        "title": "Generic Indexed String 19",
         "type": "string",
         "usageDescription": "",
         "userEditable": true,
@@ -23899,7 +24142,18 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "frIndexedString2": {
         "description": "Generic Indexed String 2",
         "isPersonal": false,
+        "searchable": true,
         "title": "Generic Indexed String 2",
+        "type": "string",
+        "usageDescription": "",
+        "userEditable": true,
+        "viewable": true,
+      },
+      "frIndexedString20": {
+        "description": "Generic Indexed String 20",
+        "isPersonal": false,
+        "searchable": true,
+        "title": "Generic Indexed String 20",
         "type": "string",
         "usageDescription": "",
         "userEditable": true,
@@ -23908,6 +24162,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "frIndexedString3": {
         "description": "Generic Indexed String 3",
         "isPersonal": false,
+        "searchable": true,
         "title": "Generic Indexed String 3",
         "type": "string",
         "usageDescription": "",
@@ -23917,6 +24172,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "frIndexedString4": {
         "description": "Generic Indexed String 4",
         "isPersonal": false,
+        "searchable": true,
         "title": "Generic Indexed String 4",
         "type": "string",
         "usageDescription": "",
@@ -23926,7 +24182,48 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "frIndexedString5": {
         "description": "Generic Indexed String 5",
         "isPersonal": false,
+        "searchable": true,
         "title": "Generic Indexed String 5",
+        "type": "string",
+        "usageDescription": "",
+        "userEditable": true,
+        "viewable": true,
+      },
+      "frIndexedString6": {
+        "description": "Generic Indexed String 6",
+        "isPersonal": false,
+        "searchable": true,
+        "title": "Generic Indexed String 6",
+        "type": "string",
+        "usageDescription": "",
+        "userEditable": true,
+        "viewable": true,
+      },
+      "frIndexedString7": {
+        "description": "Generic Indexed String 7",
+        "isPersonal": false,
+        "searchable": true,
+        "title": "Generic Indexed String 7",
+        "type": "string",
+        "usageDescription": "",
+        "userEditable": true,
+        "viewable": true,
+      },
+      "frIndexedString8": {
+        "description": "Generic Indexed String 8",
+        "isPersonal": false,
+        "searchable": true,
+        "title": "Generic Indexed String 8",
+        "type": "string",
+        "usageDescription": "",
+        "userEditable": true,
+        "viewable": true,
+      },
+      "frIndexedString9": {
+        "description": "Generic Indexed String 9",
+        "isPersonal": false,
+        "searchable": true,
+        "title": "Generic Indexed String 9",
         "type": "string",
         "usageDescription": "",
         "userEditable": true,
@@ -24170,6 +24467,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
             {
               "conditionalAssociationField": "condition",
               "label": "Group",
+              "notify": true,
               "path": "managed/alpha_group",
               "query": {
                 "fields": [
@@ -24382,6 +24680,19 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
         "userEditable": false,
         "viewable": false,
       },
+      "oathDeviceProfiles": {
+        "description": "Oath Device Profiles",
+        "isPersonal": false,
+        "items": {
+          "title": "Profile",
+          "type": "string",
+        },
+        "searchable": false,
+        "title": "Oath Device Profiles",
+        "type": "array",
+        "userEditable": true,
+        "viewable": true,
+      },
       "ownerOfApp": {
         "items": {
           "properties": {
@@ -24482,6 +24793,22 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
         "userEditable": true,
         "viewable": false,
       },
+      "passwordExpirationTime": {
+        "description": "Password Expiration Time",
+        "searchable": true,
+        "title": "Password Expiration Time",
+        "type": "string",
+        "userEditable": false,
+        "viewable": true,
+      },
+      "passwordLastChangedTime": {
+        "description": "Password Last Changed Time",
+        "searchable": true,
+        "title": "Password Last Changed Time",
+        "type": "string",
+        "userEditable": false,
+        "viewable": true,
+      },
       "postalAddress": {
         "description": "Address 1",
         "isPersonal": true,
@@ -24528,12 +24855,25 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
       "profileImage": {
         "description": "Profile Image",
         "isPersonal": true,
-        "searchable": true,
+        "searchable": false,
         "title": "Profile Image",
         "type": "string",
         "usageDescription": "",
         "userEditable": true,
         "viewable": false,
+      },
+      "pushDeviceProfiles": {
+        "description": "Push Device Profiles",
+        "isPersonal": false,
+        "items": {
+          "title": "Profile",
+          "type": "string",
+        },
+        "searchable": false,
+        "title": "Push Device Profiles",
+        "type": "array",
+        "userEditable": true,
+        "viewable": true,
       },
       "reports": {
         "description": "Direct Reports",
@@ -24663,6 +25003,7 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
         "description": "Telephone Number",
         "isPersonal": true,
         "pattern": "^\\+?([0-9\\- \\(\\)])*$",
+        "searchable": true,
         "title": "Telephone Number",
         "type": "string",
         "usageDescription": "",
@@ -24705,6 +25046,19 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
         "userEditable": true,
         "viewable": true,
       },
+      "webauthnDeviceProfiles": {
+        "description": "Web AuthN Device Profiles",
+        "isPersonal": false,
+        "items": {
+          "title": "Profile",
+          "type": "string",
+        },
+        "searchable": false,
+        "title": "Web AuthN Device Profiles",
+        "type": "array",
+        "userEditable": true,
+        "viewable": true,
+      },
     },
     "required": [
       "userName",
@@ -24719,11 +25073,11 @@ exports[`frodo idm schema object export "frodo idm schema object export -i alpha
 }
 `;
 
-exports[`frodo idm schema object export "frodo idm schema object export -i bravo_assignment -f test2.file.json": should export the bravo_assignment managed object into a file named "test2.file.json" 1`] = `0`;
+exports[`frodo idm schema object export "frodo idm schema object export -o bravo_assignment -f test2.file.json": should export the bravo_assignment managed object into a file named "test2.file.json" 1`] = `0`;
 
-exports[`frodo idm schema object export "frodo idm schema object export -i bravo_assignment -f test2.file.json": should export the bravo_assignment managed object into a file named "test2.file.json" 2`] = `""`;
+exports[`frodo idm schema object export "frodo idm schema object export -o bravo_assignment -f test2.file.json": should export the bravo_assignment managed object into a file named "test2.file.json" 2`] = `""`;
 
-exports[`frodo idm schema object export "frodo idm schema object export -i bravo_assignment -f test2.file.json": should export the bravo_assignment managed object into a file named "test2.file.json": test2.file.json 1`] = `
+exports[`frodo idm schema object export "frodo idm schema object export -o bravo_assignment -f test2.file.json": should export the bravo_assignment managed object into a file named "test2.file.json": test2.file.json 1`] = `
 {
   "attributeEncryption": {},
   "name": "bravo_assignment",
@@ -24842,6 +25196,10 @@ exports[`frodo idm schema object export "frodo idm schema object export -i bravo
             "_refProperties": {
               "description": "Supports metadata within the relationship",
               "properties": {
+                "_accountType": {
+                  "description": "Account type",
+                  "type": "string",
+                },
                 "_grantType": {
                   "description": "Grant Type",
                   "label": "Grant Type",
@@ -24849,6 +25207,10 @@ exports[`frodo idm schema object export "frodo idm schema object export -i bravo
                 },
                 "_id": {
                   "description": "_refProperties object ID",
+                  "type": "string",
+                },
+                "_uniqueId": {
+                  "description": "Unique identifier",
                   "type": "string",
                 },
               },
@@ -24902,6 +25264,10 @@ exports[`frodo idm schema object export "frodo idm schema object export -i bravo
             "_refProperties": {
               "description": "Supports metadata within the relationship",
               "properties": {
+                "_accountType": {
+                  "description": "Account type",
+                  "type": "string",
+                },
                 "_id": {
                   "description": "_refProperties object ID",
                   "type": "string",
@@ -24963,1648 +25329,6 @@ exports[`frodo idm schema object export "frodo idm schema object export -i bravo
       "mapping",
     ],
     "title": "Bravo realm - Assignment",
-    "type": "object",
-  },
-}
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts 1`] = `0`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts 2`] = `""`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.items.array.onRetrieve.groovy 1`] = `
-"// Test Groovy onRetrieve script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.items.array.onStore.groovy 1`] = `
-"// Test Groovy onStore script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.items.array.onValidate.groovy 1`] = `
-"// Test Groovy onValidate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.items.object.object.object.onRetrieve.groovy 1`] = `
-"// Test Groovy onRetrieve script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.items.object.object.object.onStore.groovy 1`] = `
-"// Test Groovy onStore script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.items.object.object.object.onValidate.groovy 1`] = `
-"// Test Groovy onValidate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.items.object.object.onRetrieve.groovy 1`] = `
-"// Test Groovy onRetrieve script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.items.object.object.onStore.groovy 1`] = `
-"// Test Groovy onStore script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.items.object.object.onValidate.groovy 1`] = `
-"// Test Groovy onValidate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.items.object.object.string.onRetrieve.groovy 1`] = `
-"// Test Groovy onRetrieve script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.items.object.object.string.onStore.groovy 1`] = `
-"// Test Groovy onStore script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.items.object.object.string.onValidate.groovy 1`] = `
-"// Test Groovy onValidate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.items.object.onRetrieve.groovy 1`] = `
-"// Test Groovy onRetrieve script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.items.object.onStore.groovy 1`] = `
-"// Test Groovy onStore script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.items.object.onValidate.groovy 1`] = `
-"// Test Groovy onValidate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.items.object.string.onRetrieve.groovy 1`] = `
-"// Test Groovy onRetrieve script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.items.object.string.onStore.groovy 1`] = `
-"// Test Groovy onStore script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.items.object.string.onValidate.groovy 1`] = `
-"// Test Groovy onValidate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.onRetrieve.groovy 1`] = `
-"// Test Groovy onRetrieve script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.onStore.groovy 1`] = `
-"// Test Groovy onStore script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/array.onValidate.groovy 1`] = `
-"// Test Groovy onValidate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/groovy.managed.json 1`] = `
-{
-  "name": "groovy",
-  "onCreate": {
-    "globals": {},
-    "source": "file://onCreate.groovy",
-    "type": "groovy",
-  },
-  "onDelete": {
-    "globals": {},
-    "source": "file://onDelete.groovy",
-    "type": "groovy",
-  },
-  "onRead": {
-    "globals": {},
-    "source": "file://onRead.groovy",
-    "type": "groovy",
-  },
-  "onRetrieve": {
-    "globals": {},
-    "source": "file://onRetrieve.groovy",
-    "type": "groovy",
-  },
-  "onStore": {
-    "globals": {},
-    "source": "file://onStore.groovy",
-    "type": "groovy",
-  },
-  "onSync": {
-    "globals": {},
-    "source": "file://onSync.groovy",
-    "type": "groovy",
-  },
-  "onUpdate": {
-    "globals": {},
-    "source": "file://onUpdate.groovy",
-    "type": "groovy",
-  },
-  "onValidate": {
-    "globals": {},
-    "source": "file://onValidate.groovy",
-    "type": "groovy",
-  },
-  "postCreate": {
-    "globals": {},
-    "source": "file://postCreate.groovy",
-    "type": "groovy",
-  },
-  "postDelete": {
-    "globals": {},
-    "source": "file://postDelete.groovy",
-    "type": "groovy",
-  },
-  "postUpdate": {
-    "globals": {},
-    "source": "file://postUpdate.groovy",
-    "type": "groovy",
-  },
-  "schema": {
-    "$schema": "http://forgerock.org/json-schema#",
-    "description": "Managed object that contains Groovy scripts",
-    "icon": "fa-music",
-    "mat-icon": "",
-    "order": [
-      "object",
-      "string",
-      "boolean",
-      "number",
-      "array",
-    ],
-    "properties": {
-      "array": {
-        "description": null,
-        "isVirtual": false,
-        "items": {
-          "order": [
-            "array",
-            "object",
-          ],
-          "properties": {
-            "array": {
-              "description": null,
-              "isVirtual": false,
-              "items": {
-                "type": "boolean",
-              },
-              "onRetrieve": {
-                "globals": {},
-                "source": "file://array.items.array.onRetrieve.groovy",
-                "type": "groovy",
-              },
-              "onStore": {
-                "globals": {},
-                "source": "file://array.items.array.onStore.groovy",
-                "type": "groovy",
-              },
-              "onValidate": {
-                "globals": {},
-                "source": "file://array.items.array.onValidate.groovy",
-                "type": "groovy",
-              },
-              "searchable": false,
-              "title": "Array",
-              "type": "array",
-              "userEditable": true,
-              "viewable": true,
-            },
-            "object": {
-              "description": null,
-              "isVirtual": false,
-              "nullable": false,
-              "onRetrieve": {
-                "globals": {},
-                "source": "file://array.items.object.onRetrieve.groovy",
-                "type": "groovy",
-              },
-              "onStore": {
-                "globals": {},
-                "source": "file://array.items.object.onStore.groovy",
-                "type": "groovy",
-              },
-              "onValidate": {
-                "globals": {},
-                "source": "file://array.items.object.onValidate.groovy",
-                "type": "groovy",
-              },
-              "order": [
-                "object",
-                "string",
-              ],
-              "properties": {
-                "object": {
-                  "description": null,
-                  "isVirtual": false,
-                  "nullable": false,
-                  "onRetrieve": {
-                    "globals": {},
-                    "source": "file://array.items.object.object.onRetrieve.groovy",
-                    "type": "groovy",
-                  },
-                  "onStore": {
-                    "globals": {},
-                    "source": "file://array.items.object.object.onStore.groovy",
-                    "type": "groovy",
-                  },
-                  "onValidate": {
-                    "globals": {},
-                    "source": "file://array.items.object.object.onValidate.groovy",
-                    "type": "groovy",
-                  },
-                  "order": [
-                    "object",
-                    "string",
-                  ],
-                  "properties": {
-                    "object": {
-                      "description": null,
-                      "isVirtual": false,
-                      "onRetrieve": {
-                        "globals": {},
-                        "source": "file://array.items.object.object.object.onRetrieve.groovy",
-                        "type": "groovy",
-                      },
-                      "onStore": {
-                        "globals": {},
-                        "source": "file://array.items.object.object.object.onStore.groovy",
-                        "type": "groovy",
-                      },
-                      "onValidate": {
-                        "globals": {},
-                        "source": "file://array.items.object.object.object.onValidate.groovy",
-                        "type": "groovy",
-                      },
-                      "order": [],
-                      "properties": {},
-                      "required": [],
-                      "searchable": false,
-                      "title": "Object",
-                      "type": "object",
-                      "userEditable": true,
-                      "viewable": true,
-                    },
-                    "string": {
-                      "description": null,
-                      "format": null,
-                      "isVirtual": false,
-                      "onRetrieve": {
-                        "globals": {},
-                        "source": "file://array.items.object.object.string.onRetrieve.groovy",
-                        "type": "groovy",
-                      },
-                      "onStore": {
-                        "globals": {},
-                        "source": "file://array.items.object.object.string.onStore.groovy",
-                        "type": "groovy",
-                      },
-                      "onValidate": {
-                        "globals": {},
-                        "source": "file://array.items.object.object.string.onValidate.groovy",
-                        "type": "groovy",
-                      },
-                      "searchable": false,
-                      "title": "String",
-                      "type": "string",
-                      "userEditable": true,
-                      "viewable": true,
-                    },
-                  },
-                  "required": [],
-                  "searchable": false,
-                  "title": "Object",
-                  "type": "object",
-                  "userEditable": true,
-                  "viewable": true,
-                },
-                "string": {
-                  "description": null,
-                  "format": null,
-                  "isVirtual": false,
-                  "onRetrieve": {
-                    "globals": {},
-                    "source": "file://array.items.object.string.onRetrieve.groovy",
-                    "type": "groovy",
-                  },
-                  "onStore": {
-                    "globals": {},
-                    "source": "file://array.items.object.string.onStore.groovy",
-                    "type": "groovy",
-                  },
-                  "onValidate": {
-                    "globals": {},
-                    "source": "file://array.items.object.string.onValidate.groovy",
-                    "type": "groovy",
-                  },
-                  "searchable": false,
-                  "title": "String",
-                  "type": "string",
-                  "userEditable": true,
-                  "viewable": true,
-                },
-              },
-              "required": [
-                "object",
-              ],
-              "searchable": false,
-              "title": "Object",
-              "type": "object",
-              "userEditable": true,
-              "viewable": true,
-            },
-          },
-          "required": [
-            "array",
-            "object",
-          ],
-          "type": "object",
-        },
-        "nullable": false,
-        "onRetrieve": {
-          "globals": {},
-          "source": "file://array.onRetrieve.groovy",
-          "type": "groovy",
-        },
-        "onStore": {
-          "globals": {},
-          "source": "file://array.onStore.groovy",
-          "type": "groovy",
-        },
-        "onValidate": {
-          "globals": {},
-          "source": "file://array.onValidate.groovy",
-          "type": "groovy",
-        },
-        "searchable": false,
-        "title": "Array",
-        "type": "array",
-        "userEditable": true,
-        "viewable": true,
-      },
-      "boolean": {
-        "searchable": false,
-        "title": "Boolean",
-        "type": "boolean",
-        "userEditable": true,
-        "viewable": true,
-      },
-      "number": {
-        "searchable": false,
-        "title": "Number",
-        "type": "number",
-        "userEditable": true,
-        "viewable": true,
-      },
-      "object": {
-        "description": null,
-        "isVirtual": false,
-        "nullable": false,
-        "onRetrieve": {
-          "globals": {},
-          "source": "file://object.onRetrieve.groovy",
-          "type": "groovy",
-        },
-        "onStore": {
-          "globals": {},
-          "source": "file://object.onStore.groovy",
-          "type": "groovy",
-        },
-        "onValidate": {
-          "globals": {},
-          "source": "file://object.onValidate.groovy",
-          "type": "groovy",
-        },
-        "order": [
-          "object",
-          "array",
-          "string",
-          "number",
-        ],
-        "properties": {
-          "array": {
-            "description": null,
-            "isVirtual": false,
-            "items": {
-              "items": {
-                "items": {
-                  "order": [
-                    "array",
-                    "object",
-                  ],
-                  "properties": {
-                    "array": {
-                      "description": null,
-                      "isVirtual": false,
-                      "items": {
-                        "order": [
-                          "string",
-                          "number",
-                        ],
-                        "properties": {
-                          "number": {
-                            "description": null,
-                            "format": null,
-                            "isVirtual": false,
-                            "onRetrieve": {
-                              "globals": {},
-                              "source": "file://object.array.items.items.items.array.items.number.onRetrieve.groovy",
-                              "type": "groovy",
-                            },
-                            "onValidate": {
-                              "globals": {},
-                              "source": "file://object.array.items.items.items.array.items.number.onValidate.groovy",
-                              "type": "groovy",
-                            },
-                            "searchable": false,
-                            "title": "Number",
-                            "type": "string",
-                            "userEditable": true,
-                            "viewable": true,
-                          },
-                          "string": {
-                            "description": null,
-                            "format": null,
-                            "isVirtual": false,
-                            "onRetrieve": {
-                              "globals": {},
-                              "source": "file://object.array.items.items.items.array.items.string.onRetrieve.groovy",
-                              "type": "groovy",
-                            },
-                            "onStore": {
-                              "globals": {},
-                              "source": "file://object.array.items.items.items.array.items.string.onStore.groovy",
-                              "type": "groovy",
-                            },
-                            "onValidate": {
-                              "globals": {},
-                              "source": "file://object.array.items.items.items.array.items.string.onValidate.groovy",
-                              "type": "groovy",
-                            },
-                            "searchable": false,
-                            "title": "String",
-                            "type": "string",
-                            "userEditable": true,
-                            "viewable": true,
-                          },
-                        },
-                        "required": [],
-                        "type": "object",
-                      },
-                      "nullable": false,
-                      "onRetrieve": {
-                        "globals": {},
-                        "source": "file://object.array.items.items.items.array.onRetrieve.groovy",
-                        "type": "groovy",
-                      },
-                      "onStore": {
-                        "globals": {},
-                        "source": "file://object.array.items.items.items.array.onStore.groovy",
-                        "type": "groovy",
-                      },
-                      "onValidate": {
-                        "globals": {},
-                        "source": "file://object.array.items.items.items.array.onValidate.groovy",
-                        "type": "groovy",
-                      },
-                      "searchable": false,
-                      "title": "Array",
-                      "type": "array",
-                      "userEditable": true,
-                      "viewable": true,
-                    },
-                    "object": {
-                      "description": null,
-                      "isVirtual": false,
-                      "onRetrieve": {
-                        "globals": {},
-                        "source": "file://object.array.items.items.items.object.onRetrieve.groovy",
-                        "type": "groovy",
-                      },
-                      "onValidate": {
-                        "globals": {},
-                        "source": "file://object.array.items.items.items.object.onValidate.groovy",
-                        "type": "groovy",
-                      },
-                      "order": [],
-                      "properties": {},
-                      "required": [],
-                      "searchable": false,
-                      "title": "Object",
-                      "type": "object",
-                      "userEditable": true,
-                      "viewable": true,
-                    },
-                  },
-                  "required": [],
-                  "type": "object",
-                },
-                "type": "array",
-              },
-              "type": "array",
-            },
-            "nullable": false,
-            "onRetrieve": {
-              "globals": {},
-              "source": "file://object.array.onRetrieve.groovy",
-              "type": "groovy",
-            },
-            "onStore": {
-              "globals": {},
-              "source": "file://object.array.onStore.groovy",
-              "type": "groovy",
-            },
-            "onValidate": {
-              "globals": {},
-              "source": "file://object.array.onValidate.groovy",
-              "type": "groovy",
-            },
-            "searchable": false,
-            "title": "Array",
-            "type": "array",
-            "userEditable": true,
-            "viewable": true,
-          },
-          "number": {
-            "searchable": false,
-            "title": "Number",
-            "type": "number",
-            "userEditable": true,
-            "viewable": true,
-          },
-          "object": {
-            "description": null,
-            "isVirtual": false,
-            "nullable": false,
-            "onRetrieve": {
-              "globals": {},
-              "source": "file://object.object.onRetrieve.groovy",
-              "type": "groovy",
-            },
-            "onStore": {
-              "globals": {},
-              "source": "file://object.object.onStore.groovy",
-              "type": "groovy",
-            },
-            "onValidate": {
-              "globals": {},
-              "source": "file://object.object.onValidate.groovy",
-              "type": "groovy",
-            },
-            "order": [
-              "object",
-              "string",
-            ],
-            "properties": {
-              "object": {
-                "description": null,
-                "isVirtual": false,
-                "onRetrieve": {
-                  "globals": {},
-                  "source": "file://object.object.object.onRetrieve.groovy",
-                  "type": "groovy",
-                },
-                "onStore": {
-                  "globals": {},
-                  "source": "file://object.object.object.onStore.groovy",
-                  "type": "groovy",
-                },
-                "onValidate": {
-                  "globals": {},
-                  "source": "file://object.object.object.onValidate.groovy",
-                  "type": "groovy",
-                },
-                "order": [],
-                "properties": {},
-                "required": [],
-                "searchable": false,
-                "title": "Object",
-                "type": "object",
-                "userEditable": true,
-                "viewable": true,
-              },
-              "string": {
-                "description": null,
-                "format": null,
-                "isVirtual": false,
-                "onRetrieve": {
-                  "globals": {},
-                  "source": "file://object.object.string.onRetrieve.groovy",
-                  "type": "groovy",
-                },
-                "onStore": {
-                  "globals": {},
-                  "source": "file://object.object.string.onStore.groovy",
-                  "type": "groovy",
-                },
-                "onValidate": {
-                  "globals": {},
-                  "source": "file://object.object.string.onValidate.groovy",
-                  "type": "groovy",
-                },
-                "searchable": false,
-                "title": "String",
-                "type": "string",
-                "userEditable": true,
-                "viewable": true,
-              },
-            },
-            "required": [],
-            "searchable": false,
-            "title": "Object",
-            "type": "object",
-            "userEditable": true,
-            "viewable": true,
-          },
-          "string": {
-            "searchable": false,
-            "title": "String",
-            "type": "string",
-            "userEditable": true,
-            "viewable": true,
-          },
-        },
-        "required": [
-          "object",
-          "array",
-        ],
-        "searchable": false,
-        "title": "Object",
-        "type": "object",
-        "userEditable": true,
-        "viewable": true,
-      },
-      "string": {
-        "searchable": false,
-        "title": "String",
-        "type": "string",
-        "userEditable": true,
-        "viewable": true,
-      },
-    },
-    "required": [
-      "array",
-      "object",
-    ],
-    "title": "Groovy",
-    "type": "object",
-  },
-}
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.array.items.items.items.array.items.number.onRetrieve.groovy 1`] = `
-"// Test Groovy onRetrieve script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.array.items.items.items.array.items.number.onValidate.groovy 1`] = `
-"// Test Groovy onValidate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.array.items.items.items.array.items.string.onRetrieve.groovy 1`] = `
-"// Test Groovy onRetrieve script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.array.items.items.items.array.items.string.onStore.groovy 1`] = `
-"// Test Groovy onStore script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.array.items.items.items.array.items.string.onValidate.groovy 1`] = `
-"// Test Groovy onValidate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.array.items.items.items.array.onRetrieve.groovy 1`] = `
-"// Test Groovy onRetrieve script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.array.items.items.items.array.onStore.groovy 1`] = `
-"// Test Groovy onStore script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.array.items.items.items.array.onValidate.groovy 1`] = `
-"// Test Groovy onValidate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.array.items.items.items.object.onRetrieve.groovy 1`] = `
-"// Test Groovy onRetrieve script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.array.items.items.items.object.onValidate.groovy 1`] = `
-"// Test Groovy onValidate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.array.onRetrieve.groovy 1`] = `
-"// Test Groovy onRetrieve script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.array.onStore.groovy 1`] = `
-"// Test Groovy onStore script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.array.onValidate.groovy 1`] = `
-"// Test Groovy onValidate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.object.object.onRetrieve.groovy 1`] = `
-"// Test Groovy onRetrieve script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.object.object.onStore.groovy 1`] = `
-"// Test Groovy onStore script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.object.object.onValidate.groovy 1`] = `
-"// Test Groovy onValidate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.object.onRetrieve.groovy 1`] = `
-"// Test Groovy onRetrieve script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.object.onStore.groovy 1`] = `
-"// Test Groovy onStore script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.object.onValidate.groovy 1`] = `
-"// Test Groovy onValidate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.object.string.onRetrieve.groovy 1`] = `
-"// Test Groovy onRetrieve script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.object.string.onStore.groovy 1`] = `
-"// Test Groovy onStore script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.object.string.onValidate.groovy 1`] = `
-"// Test Groovy onValidate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.onRetrieve.groovy 1`] = `
-"// Test Groovy onRetrieve script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.onStore.groovy 1`] = `
-"// Test Groovy onStore script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/object.onValidate.groovy 1`] = `
-"// Test Groovy onValidate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/onCreate.groovy 1`] = `
-"// Test Groovy onCreate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/onDelete.groovy 1`] = `
-"// Test Groovy onDelete script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/onRead.groovy 1`] = `
-"// Test Groovy onRead script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/onRetrieve.groovy 1`] = `
-"// Test Groovy onRetrieve script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/onStore.groovy 1`] = `
-"// Test Groovy onStore script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/onSync.groovy 1`] = `
-"// Test Groovy onSync script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/onUpdate.groovy 1`] = `
-"// Test Groovy onUpdate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/onValidate.groovy 1`] = `
-"// Test Groovy onValidate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/postCreate.groovy 1`] = `
-"// Test Groovy postCreate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/postDelete.groovy 1`] = `
-"// Test Groovy postDelete script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -i groovy -D managedSchemaTestDir7 -m forgeops": should export groovy object with extracted idm scripts: managedSchemaTestDir7/groovy/postUpdate.groovy 1`] = `
-"// Test Groovy postUpdate script
-println "Hello World!"
-"
-`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -xi groovy -D managedSchemaTestDir8 -m forgeops": should export groovy object without extracted idm scripts 1`] = `0`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -xi groovy -D managedSchemaTestDir8 -m forgeops": should export groovy object without extracted idm scripts 2`] = `""`;
-
-exports[`frodo idm schema object export "frodo idm schema object export -xi groovy -D managedSchemaTestDir8 -m forgeops": should export groovy object without extracted idm scripts: managedSchemaTestDir8/groovy.managed.json 1`] = `
-{
-  "name": "groovy",
-  "onCreate": {
-    "globals": {},
-    "source": "// Test Groovy onCreate script
-println "Hello World!"
-",
-    "type": "groovy",
-  },
-  "onDelete": {
-    "globals": {},
-    "source": "// Test Groovy onDelete script
-println "Hello World!"
-",
-    "type": "groovy",
-  },
-  "onRead": {
-    "globals": {},
-    "source": "// Test Groovy onRead script
-println "Hello World!"
-",
-    "type": "groovy",
-  },
-  "onRetrieve": {
-    "globals": {},
-    "source": "// Test Groovy onRetrieve script
-println "Hello World!"
-",
-    "type": "groovy",
-  },
-  "onStore": {
-    "globals": {},
-    "source": "// Test Groovy onStore script
-println "Hello World!"
-",
-    "type": "groovy",
-  },
-  "onSync": {
-    "globals": {},
-    "source": "// Test Groovy onSync script
-println "Hello World!"
-",
-    "type": "groovy",
-  },
-  "onUpdate": {
-    "globals": {},
-    "source": "// Test Groovy onUpdate script
-println "Hello World!"
-",
-    "type": "groovy",
-  },
-  "onValidate": {
-    "globals": {},
-    "source": "// Test Groovy onValidate script
-println "Hello World!"
-",
-    "type": "groovy",
-  },
-  "postCreate": {
-    "globals": {},
-    "source": "// Test Groovy postCreate script
-println "Hello World!"
-",
-    "type": "groovy",
-  },
-  "postDelete": {
-    "globals": {},
-    "source": "// Test Groovy postDelete script
-println "Hello World!"
-",
-    "type": "groovy",
-  },
-  "postUpdate": {
-    "globals": {},
-    "source": "// Test Groovy postUpdate script
-println "Hello World!"
-",
-    "type": "groovy",
-  },
-  "schema": {
-    "$schema": "http://forgerock.org/json-schema#",
-    "description": "Managed object that contains Groovy scripts",
-    "icon": "fa-music",
-    "mat-icon": "",
-    "order": [
-      "object",
-      "string",
-      "boolean",
-      "number",
-      "array",
-    ],
-    "properties": {
-      "array": {
-        "description": null,
-        "isVirtual": false,
-        "items": {
-          "order": [
-            "array",
-            "object",
-          ],
-          "properties": {
-            "array": {
-              "description": null,
-              "isVirtual": false,
-              "items": {
-                "type": "boolean",
-              },
-              "onRetrieve": {
-                "globals": {},
-                "source": "// Test Groovy onRetrieve script
-println "Hello World!"
-",
-                "type": "groovy",
-              },
-              "onStore": {
-                "globals": {},
-                "source": "// Test Groovy onStore script
-println "Hello World!"
-",
-                "type": "groovy",
-              },
-              "onValidate": {
-                "globals": {},
-                "source": "// Test Groovy onValidate script
-println "Hello World!"
-",
-                "type": "groovy",
-              },
-              "searchable": false,
-              "title": "Array",
-              "type": "array",
-              "userEditable": true,
-              "viewable": true,
-            },
-            "object": {
-              "description": null,
-              "isVirtual": false,
-              "nullable": false,
-              "onRetrieve": {
-                "globals": {},
-                "source": "// Test Groovy onRetrieve script
-println "Hello World!"
-",
-                "type": "groovy",
-              },
-              "onStore": {
-                "globals": {},
-                "source": "// Test Groovy onStore script
-println "Hello World!"
-",
-                "type": "groovy",
-              },
-              "onValidate": {
-                "globals": {},
-                "source": "// Test Groovy onValidate script
-println "Hello World!"
-",
-                "type": "groovy",
-              },
-              "order": [
-                "object",
-                "string",
-              ],
-              "properties": {
-                "object": {
-                  "description": null,
-                  "isVirtual": false,
-                  "nullable": false,
-                  "onRetrieve": {
-                    "globals": {},
-                    "source": "// Test Groovy onRetrieve script
-println "Hello World!"
-",
-                    "type": "groovy",
-                  },
-                  "onStore": {
-                    "globals": {},
-                    "source": "// Test Groovy onStore script
-println "Hello World!"
-",
-                    "type": "groovy",
-                  },
-                  "onValidate": {
-                    "globals": {},
-                    "source": "// Test Groovy onValidate script
-println "Hello World!"
-",
-                    "type": "groovy",
-                  },
-                  "order": [
-                    "object",
-                    "string",
-                  ],
-                  "properties": {
-                    "object": {
-                      "description": null,
-                      "isVirtual": false,
-                      "onRetrieve": {
-                        "globals": {},
-                        "source": "// Test Groovy onRetrieve script
-println "Hello World!"
-",
-                        "type": "groovy",
-                      },
-                      "onStore": {
-                        "globals": {},
-                        "source": "// Test Groovy onStore script
-println "Hello World!"
-",
-                        "type": "groovy",
-                      },
-                      "onValidate": {
-                        "globals": {},
-                        "source": "// Test Groovy onValidate script
-println "Hello World!"
-",
-                        "type": "groovy",
-                      },
-                      "order": [],
-                      "properties": {},
-                      "required": [],
-                      "searchable": false,
-                      "title": "Object",
-                      "type": "object",
-                      "userEditable": true,
-                      "viewable": true,
-                    },
-                    "string": {
-                      "description": null,
-                      "format": null,
-                      "isVirtual": false,
-                      "onRetrieve": {
-                        "globals": {},
-                        "source": "// Test Groovy onRetrieve script
-println "Hello World!"
-",
-                        "type": "groovy",
-                      },
-                      "onStore": {
-                        "globals": {},
-                        "source": "// Test Groovy onStore script
-println "Hello World!"
-",
-                        "type": "groovy",
-                      },
-                      "onValidate": {
-                        "globals": {},
-                        "source": "// Test Groovy onValidate script
-println "Hello World!"
-",
-                        "type": "groovy",
-                      },
-                      "searchable": false,
-                      "title": "String",
-                      "type": "string",
-                      "userEditable": true,
-                      "viewable": true,
-                    },
-                  },
-                  "required": [],
-                  "searchable": false,
-                  "title": "Object",
-                  "type": "object",
-                  "userEditable": true,
-                  "viewable": true,
-                },
-                "string": {
-                  "description": null,
-                  "format": null,
-                  "isVirtual": false,
-                  "onRetrieve": {
-                    "globals": {},
-                    "source": "// Test Groovy onRetrieve script
-println "Hello World!"
-",
-                    "type": "groovy",
-                  },
-                  "onStore": {
-                    "globals": {},
-                    "source": "// Test Groovy onStore script
-println "Hello World!"
-",
-                    "type": "groovy",
-                  },
-                  "onValidate": {
-                    "globals": {},
-                    "source": "// Test Groovy onValidate script
-println "Hello World!"
-",
-                    "type": "groovy",
-                  },
-                  "searchable": false,
-                  "title": "String",
-                  "type": "string",
-                  "userEditable": true,
-                  "viewable": true,
-                },
-              },
-              "required": [
-                "object",
-              ],
-              "searchable": false,
-              "title": "Object",
-              "type": "object",
-              "userEditable": true,
-              "viewable": true,
-            },
-          },
-          "required": [
-            "array",
-            "object",
-          ],
-          "type": "object",
-        },
-        "nullable": false,
-        "onRetrieve": {
-          "globals": {},
-          "source": "// Test Groovy onRetrieve script
-println "Hello World!"
-",
-          "type": "groovy",
-        },
-        "onStore": {
-          "globals": {},
-          "source": "// Test Groovy onStore script
-println "Hello World!"
-",
-          "type": "groovy",
-        },
-        "onValidate": {
-          "globals": {},
-          "source": "// Test Groovy onValidate script
-println "Hello World!"
-",
-          "type": "groovy",
-        },
-        "searchable": false,
-        "title": "Array",
-        "type": "array",
-        "userEditable": true,
-        "viewable": true,
-      },
-      "boolean": {
-        "searchable": false,
-        "title": "Boolean",
-        "type": "boolean",
-        "userEditable": true,
-        "viewable": true,
-      },
-      "number": {
-        "searchable": false,
-        "title": "Number",
-        "type": "number",
-        "userEditable": true,
-        "viewable": true,
-      },
-      "object": {
-        "description": null,
-        "isVirtual": false,
-        "nullable": false,
-        "onRetrieve": {
-          "globals": {},
-          "source": "// Test Groovy onRetrieve script
-println "Hello World!"
-",
-          "type": "groovy",
-        },
-        "onStore": {
-          "globals": {},
-          "source": "// Test Groovy onStore script
-println "Hello World!"
-",
-          "type": "groovy",
-        },
-        "onValidate": {
-          "globals": {},
-          "source": "// Test Groovy onValidate script
-println "Hello World!"
-",
-          "type": "groovy",
-        },
-        "order": [
-          "object",
-          "array",
-          "string",
-          "number",
-        ],
-        "properties": {
-          "array": {
-            "description": null,
-            "isVirtual": false,
-            "items": {
-              "items": {
-                "items": {
-                  "order": [
-                    "array",
-                    "object",
-                  ],
-                  "properties": {
-                    "array": {
-                      "description": null,
-                      "isVirtual": false,
-                      "items": {
-                        "order": [
-                          "string",
-                          "number",
-                        ],
-                        "properties": {
-                          "number": {
-                            "description": null,
-                            "format": null,
-                            "isVirtual": false,
-                            "onRetrieve": {
-                              "globals": {},
-                              "source": "// Test Groovy onRetrieve script
-println "Hello World!"
-",
-                              "type": "groovy",
-                            },
-                            "onValidate": {
-                              "globals": {},
-                              "source": "// Test Groovy onValidate script
-println "Hello World!"
-",
-                              "type": "groovy",
-                            },
-                            "searchable": false,
-                            "title": "Number",
-                            "type": "string",
-                            "userEditable": true,
-                            "viewable": true,
-                          },
-                          "string": {
-                            "description": null,
-                            "format": null,
-                            "isVirtual": false,
-                            "onRetrieve": {
-                              "globals": {},
-                              "source": "// Test Groovy onRetrieve script
-println "Hello World!"
-",
-                              "type": "groovy",
-                            },
-                            "onStore": {
-                              "globals": {},
-                              "source": "// Test Groovy onStore script
-println "Hello World!"
-",
-                              "type": "groovy",
-                            },
-                            "onValidate": {
-                              "globals": {},
-                              "source": "// Test Groovy onValidate script
-println "Hello World!"
-",
-                              "type": "groovy",
-                            },
-                            "searchable": false,
-                            "title": "String",
-                            "type": "string",
-                            "userEditable": true,
-                            "viewable": true,
-                          },
-                        },
-                        "required": [],
-                        "type": "object",
-                      },
-                      "nullable": false,
-                      "onRetrieve": {
-                        "globals": {},
-                        "source": "// Test Groovy onRetrieve script
-println "Hello World!"
-",
-                        "type": "groovy",
-                      },
-                      "onStore": {
-                        "globals": {},
-                        "source": "// Test Groovy onStore script
-println "Hello World!"
-",
-                        "type": "groovy",
-                      },
-                      "onValidate": {
-                        "globals": {},
-                        "source": "// Test Groovy onValidate script
-println "Hello World!"
-",
-                        "type": "groovy",
-                      },
-                      "searchable": false,
-                      "title": "Array",
-                      "type": "array",
-                      "userEditable": true,
-                      "viewable": true,
-                    },
-                    "object": {
-                      "description": null,
-                      "isVirtual": false,
-                      "onRetrieve": {
-                        "globals": {},
-                        "source": "// Test Groovy onRetrieve script
-println "Hello World!"
-",
-                        "type": "groovy",
-                      },
-                      "onValidate": {
-                        "globals": {},
-                        "source": "// Test Groovy onValidate script
-println "Hello World!"
-",
-                        "type": "groovy",
-                      },
-                      "order": [],
-                      "properties": {},
-                      "required": [],
-                      "searchable": false,
-                      "title": "Object",
-                      "type": "object",
-                      "userEditable": true,
-                      "viewable": true,
-                    },
-                  },
-                  "required": [],
-                  "type": "object",
-                },
-                "type": "array",
-              },
-              "type": "array",
-            },
-            "nullable": false,
-            "onRetrieve": {
-              "globals": {},
-              "source": "// Test Groovy onRetrieve script
-println "Hello World!"
-",
-              "type": "groovy",
-            },
-            "onStore": {
-              "globals": {},
-              "source": "// Test Groovy onStore script
-println "Hello World!"
-",
-              "type": "groovy",
-            },
-            "onValidate": {
-              "globals": {},
-              "source": "// Test Groovy onValidate script
-println "Hello World!"
-",
-              "type": "groovy",
-            },
-            "searchable": false,
-            "title": "Array",
-            "type": "array",
-            "userEditable": true,
-            "viewable": true,
-          },
-          "number": {
-            "searchable": false,
-            "title": "Number",
-            "type": "number",
-            "userEditable": true,
-            "viewable": true,
-          },
-          "object": {
-            "description": null,
-            "isVirtual": false,
-            "nullable": false,
-            "onRetrieve": {
-              "globals": {},
-              "source": "// Test Groovy onRetrieve script
-println "Hello World!"
-",
-              "type": "groovy",
-            },
-            "onStore": {
-              "globals": {},
-              "source": "// Test Groovy onStore script
-println "Hello World!"
-",
-              "type": "groovy",
-            },
-            "onValidate": {
-              "globals": {},
-              "source": "// Test Groovy onValidate script
-println "Hello World!"
-",
-              "type": "groovy",
-            },
-            "order": [
-              "object",
-              "string",
-            ],
-            "properties": {
-              "object": {
-                "description": null,
-                "isVirtual": false,
-                "onRetrieve": {
-                  "globals": {},
-                  "source": "// Test Groovy onRetrieve script
-println "Hello World!"
-",
-                  "type": "groovy",
-                },
-                "onStore": {
-                  "globals": {},
-                  "source": "// Test Groovy onStore script
-println "Hello World!"
-",
-                  "type": "groovy",
-                },
-                "onValidate": {
-                  "globals": {},
-                  "source": "// Test Groovy onValidate script
-println "Hello World!"
-",
-                  "type": "groovy",
-                },
-                "order": [],
-                "properties": {},
-                "required": [],
-                "searchable": false,
-                "title": "Object",
-                "type": "object",
-                "userEditable": true,
-                "viewable": true,
-              },
-              "string": {
-                "description": null,
-                "format": null,
-                "isVirtual": false,
-                "onRetrieve": {
-                  "globals": {},
-                  "source": "// Test Groovy onRetrieve script
-println "Hello World!"
-",
-                  "type": "groovy",
-                },
-                "onStore": {
-                  "globals": {},
-                  "source": "// Test Groovy onStore script
-println "Hello World!"
-",
-                  "type": "groovy",
-                },
-                "onValidate": {
-                  "globals": {},
-                  "source": "// Test Groovy onValidate script
-println "Hello World!"
-",
-                  "type": "groovy",
-                },
-                "searchable": false,
-                "title": "String",
-                "type": "string",
-                "userEditable": true,
-                "viewable": true,
-              },
-            },
-            "required": [],
-            "searchable": false,
-            "title": "Object",
-            "type": "object",
-            "userEditable": true,
-            "viewable": true,
-          },
-          "string": {
-            "searchable": false,
-            "title": "String",
-            "type": "string",
-            "userEditable": true,
-            "viewable": true,
-          },
-        },
-        "required": [
-          "object",
-          "array",
-        ],
-        "searchable": false,
-        "title": "Object",
-        "type": "object",
-        "userEditable": true,
-        "viewable": true,
-      },
-      "string": {
-        "searchable": false,
-        "title": "String",
-        "type": "string",
-        "userEditable": true,
-        "viewable": true,
-      },
-    },
-    "required": [
-      "array",
-      "object",
-    ],
-    "title": "Groovy",
     "type": "object",
   },
 }

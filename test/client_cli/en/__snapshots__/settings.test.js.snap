@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CLI help interface for 'settings' should be expected english 1`] = `
+"Usage: frodo settings [options] [command]
+
+Manage CLI settings.
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+
+Commands:
+  theme             Manage the CLI color theme.
+"
+`;

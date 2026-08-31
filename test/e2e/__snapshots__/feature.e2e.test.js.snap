@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo feature (list/describe/validate) "frodo feature describe -i groups": should describe the groups feature 1`] = `
+"{
+  "_id": "groups",
+  "installedVersion": "1",
+  "availableVersions": [
+    "1"
+  ]
+}"
+`;
+
+exports[`frodo feature (list/describe/validate) "frodo feature describe -i groups": should describe the groups feature 2`] = `""`;
+
+exports[`frodo feature (list/describe/validate) "frodo feature list": should list tenant-configuration features 1`] = `
+"groups
+request/access (not installed)
+aiagent
+am/2fa/profiles (not installed)
+audit/activity/watchedFields/wildcard
+certification/entitlement (not installed)
+indexed/strings/6thru20
+password/timestamps"
+`;
+
+exports[`frodo feature (list/describe/validate) "frodo feature list": should list tenant-configuration features 2`] = `""`;
+
+exports[`frodo feature (list/describe/validate) "frodo feature validate -i groups": should report already-installed as invalid to (re-)install 1`] = `"Invalid: Validate complete. Managed configuration for alpha_user and bravo_user must NOT already define the groups or effectiveGroups properties. Managed configuration must NOT already define the alpha_group or bravo_group objects. Repo.ds configuration for alpha_user and bravo_user genericMapping must NOT already define the groups or effectiveGroups properties.Resources must NOT already exist in the repository for: alpha_group."`;
+
+exports[`frodo feature (list/describe/validate) "frodo feature validate -i groups": should report already-installed as invalid to (re-)install 2`] = `""`;

@@ -62,11 +62,11 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  List policy presets with recommendations:\n` +
-        c.cyanBright(`  $ frodo mcp server policies\n`) +
+        c.command(`  $ frodo mcp server policies\n`) +
         `  Export policy presets as JSON:\n` +
-        c.cyanBright(`  $ frodo mcp server policies --json\n`) +
+        c.command(`  $ frodo mcp server policies --json\n`) +
         `  Compare policy impact on skills:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo mcp server info --policy read-only && frodo mcp server info --policy admin\n`
         )
     );

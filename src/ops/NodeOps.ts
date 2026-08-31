@@ -62,7 +62,7 @@ export function getOneLineDescription(
   nodeObj: NodeSkeleton,
   nodeRef?: NodeRefSkeletonInterface | InnerNodeRefSkeletonInterface
 ): string {
-  const description = `[${c.cyanBright(nodeObj._id)}] ${nodeObj._type._id}${
+  const description = `[${c.heading(nodeObj._id)}] ${nodeObj._type._id}${
     nodeRef ? ' - ' + nodeRef?.displayName : ''
   }`;
   return description;
@@ -141,11 +141,9 @@ export async function listCustomNodes(long: boolean = false): Promise<boolean> {
         table.push([
           wordwrap(node.displayName, 25, '  '),
           node._id,
-          numJourneys ? c.greenBright(String(numJourneys)) : c.redBright('0'),
-          numInstances ? c.greenBright(String(numInstances)) : c.redBright('0'),
-          node.errorOutcome
-            ? c.greenBright('enabled')
-            : c.redBright('disabled'),
+          numJourneys ? c.positive(String(numJourneys)) : c.negative('0'),
+          numInstances ? c.positive(String(numInstances)) : c.negative('0'),
+          node.errorOutcome ? c.positive('enabled') : c.negative('disabled'),
           wordwrap(node.description, 30),
         ]);
       }
@@ -187,10 +185,10 @@ export async function describeCustomNode(
       return true;
     }
     const nodeTable = createKeyValueTable();
-    nodeTable.push([c.cyanBright('Id'), node._id]);
-    nodeTable.push([c.cyanBright('Service Name'), node.serviceName]);
-    nodeTable.push([c.cyanBright('Display Name'), node.displayName]);
-    nodeTable.push([c.cyanBright('Description'), node.description]);
+    nodeTable.push([c.heading('Id'), node._id]);
+    nodeTable.push([c.heading('Service Name'), node.serviceName]);
+    nodeTable.push([c.heading('Display Name'), node.displayName]);
+    nodeTable.push([c.heading('Description'), node.description]);
     getTableRowsFromArray(nodeTable, 'Inputs', node.inputs);
     getTableRowsFromArray(nodeTable, 'Outputs', node.outputs);
     const outcomes = node.outcomes;
@@ -206,17 +204,17 @@ export async function describeCustomNode(
     printMessage('\nProperties', 'data');
     for (const [name, prop] of Object.entries(node.properties)) {
       const propTable = createKeyValueTable();
-      propTable.push([c.cyanBright('Name'), name]);
-      propTable.push([c.cyanBright('Title'), prop.title]);
-      propTable.push([c.cyanBright('Description'), prop.description]);
+      propTable.push([c.heading('Name'), name]);
+      propTable.push([c.heading('Title'), prop.title]);
+      propTable.push([c.heading('Description'), prop.description]);
       propTable.push([
-        c.cyanBright('Required'),
-        prop.required ? c.greenBright('true') : c.redBright('false'),
+        c.heading('Required'),
+        prop.required ? c.positive('true') : c.negative('false'),
       ]);
-      propTable.push([c.cyanBright('Type'), prop.type]);
+      propTable.push([c.heading('Type'), prop.type]);
       propTable.push([
-        c.cyanBright('Multivalued'),
-        prop.multivalued ? c.greenBright('true') : c.redBright('false'),
+        c.heading('Multivalued'),
+        prop.multivalued ? c.positive('true') : c.negative('false'),
       ]);
       if (prop.defaultValue) {
         getTableRowsFromArray(
@@ -313,20 +311,20 @@ export async function describeNodeType(
     }
     for (const [name, prop] of Object.entries(properties)) {
       const propTable = createKeyValueTable();
-      propTable.push([c.cyanBright('Name'), name]);
-      if (prop.title) propTable.push([c.cyanBright('Title'), prop.title]);
+      propTable.push([c.heading('Name'), name]);
+      if (prop.title) propTable.push([c.heading('Title'), prop.title]);
       if (prop.description)
-        propTable.push([c.cyanBright('Description'), prop.description]);
-      if (prop.type) propTable.push([c.cyanBright('Type'), prop.type]);
+        propTable.push([c.heading('Description'), prop.description]);
+      if (prop.type) propTable.push([c.heading('Type'), prop.type]);
       if (prop.required !== undefined)
         propTable.push([
-          c.cyanBright('Required'),
-          prop.required ? c.greenBright('true') : c.redBright('false'),
+          c.heading('Required'),
+          prop.required ? c.positive('true') : c.negative('false'),
         ]);
       if (prop.multivalued !== undefined)
         propTable.push([
-          c.cyanBright('Multivalued'),
-          prop.multivalued ? c.greenBright('true') : c.redBright('false'),
+          c.heading('Multivalued'),
+          prop.multivalued ? c.positive('true') : c.negative('false'),
         ]);
       if (prop.defaultValue !== undefined)
         getTableRowsFromArray(

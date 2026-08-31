@@ -36,15 +36,15 @@ export default function setup() {
       'after',
       `Usage Examples:\n` +
         `  Example command one with params and explanation what it does:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo something ${s.amBaseUrl} ${s.username} '${s.password}'\n`
         ) +
         `  Example command two with params and explanation what it does:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo something --sa-id ${s.saId} --sa-jwk-file ${s.saJwkFile} ${s.amBaseUrl}\n`
         ) +
         `  Example command three with params and explanation what it does:\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo something --sa-id ${s.saId} --sa-jwk-file ${s.saJwkFile} ${s.connId}\n`
         )
     )

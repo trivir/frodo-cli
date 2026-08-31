@@ -88,23 +88,23 @@ export default function setup() {
     )
     .addHelpText(
       'after',
-      c.greenBright(`How Frodo handles secrets:\n`) +
-        c.greenBright(
+      c.positive(`How Frodo handles secrets:\n`) +
+        c.positive(
           `  Frodo supports exporting and importing of ESV secret values. To leave stuartship of secret values with the cloud environment where they belong, frodo always encrypts values using either encryption keys from the source environment (default) or the target environment (--target parameter). Frodo never exports secrets in the clear.\n\n`
         ) +
         `Usage Examples:\n` +
         `  Restore global and active realm configuration including active secret values from a single file (Note: config export must have been performed using the --include-active-values option):\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo config import -a -f Alpha.everything.json --include-active-values ${s.connId}\n`
         ) +
         `  Restore global and active realm configuration including active secret values from separate files in a directory structure (Note: config export must have been performed using the --include-active-values option):\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo config import -A -D ${s.connId}-backup --include-active-values ${s.connId}\n`
         ) +
         `  Import global and active realm configuration including active secret values, wich were exported from another environment using the --include-active-values option but without using the --target parameter, therefore requiring the --source parameter on import:\n` +
         `  The --source parameter instructs frodo to decrypt the secret values during import using the source environment, which was used to encrypt them.\n` +
         `  Using the --source parameter, the source environment must be available at the time of import and the person performing the import must have a connection profile for the source environment.\n` +
-        c.cyanBright(
+        c.command(
           `  $ frodo config import -a -f Alpha.everything.json --include-active-values --source ${s.connId} ${s.connId2}\n`
         )
     )
@@ -122,8 +122,8 @@ export default function setup() {
         // Require --file -f for all function
         if (options.all && !options.file) {
           printMessage('-f or --file required when using -a or --all', 'error');
-          program.help();
           process.exitCode = 1;
+          program.help();
         }
         // --all -a
         else if (options.all && (await getTokens())) {
@@ -146,8 +146,8 @@ export default function setup() {
             '-D or --directory required when using -A or --all-separate',
             'error'
           );
-          program.help();
           process.exitCode = 1;
+          program.help();
         }
         // --all-separate -A
         else if (options.allSeparate && (await getTokens())) {
@@ -188,8 +188,8 @@ export default function setup() {
           verboseMessage(
             'Unrecognized combination of options or no options...'
           );
-          program.help();
           process.exitCode = 1;
+          program.help();
         }
       }
       // end command logic inside action handler
