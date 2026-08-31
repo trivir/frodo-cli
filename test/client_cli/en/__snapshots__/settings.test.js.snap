@@ -3,8 +3,7 @@
 exports[`CLI help interface for 'settings' should be expected english 1`] = `
 "Usage: frodo settings [options] [command]
 
-Manage local frodo CLI settings (not remote Ping/AIC configuration -- see "frodo
-config"/"frodo config-manager" for that).
+Manage CLI settings.
 
 Options:
   -h, --help        Help

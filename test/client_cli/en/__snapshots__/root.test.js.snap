@@ -39,9 +39,6 @@ Commands:
   secretstore                       Manage secret stores.
   server                            Manage servers.
   service                           Manage AM services.
-  settings                          Manage local frodo CLI settings (not remote
-                                    Ping/AIC configuration -- see "frodo
-                                    config"/"frodo config-manager" for that).
   theme                             Manage themes.
 
   (Cloud-only):
@@ -58,6 +55,7 @@ Utilities:
   conn|connection                   Manage connection profiles.
   mcp                               [Experimental] Manage Model Context Protocol
                                     (MCP) integrations.
+  settings                          Manage CLI settings.
   shell                             [Experimental] Launch the frodo interactive
                                     shell.
 "
