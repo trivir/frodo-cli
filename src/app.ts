@@ -116,7 +116,7 @@ process.argv = normalizeExpandedHelpArgv(process.argv);
     program.addCommand(secretstore());
     program.addCommand(server());
     program.addCommand(service());
-    program.addCommand(settings());
+    program.addCommand(settings().helpGroup(utilitiesCommandsHeading));
     program.addCommand(shell().helpGroup(utilitiesCommandsHeading));
     program.addCommand(theme());
     // enable sample command template.

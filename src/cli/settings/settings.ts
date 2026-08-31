@@ -20,7 +20,7 @@ const CATEGORIES: { name: string; run: () => Promise<boolean> }[] = [
 
 export default function setup() {
   const program = new FrodoStubCommand('settings').description(
-    'Manage local frodo CLI settings (not remote Ping/AIC configuration -- see "frodo config"/"frodo config-manager" for that).'
+    'Manage CLI settings.'
   );
 
   program.addCommand(ThemeCmd().name('theme'));
