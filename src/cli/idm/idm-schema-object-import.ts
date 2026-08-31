@@ -121,8 +121,12 @@ export default function setup() {
             '-D, --directory or -f, --file required to import managed objects',
             'error'
           );
-          program.help();
+          // `program.help()` calls `process.exit()` internally, reading
+          // whatever `process.exitCode` already is at that point (defaulting
+          // to 0) -- it must be set *before* this call, not after, or the
+          // command silently exits 0 despite the error just printed.
           process.exitCode = 1;
+          program.help();
         } // -o, --managed-object
         else if (
           options.managedObject &&
@@ -202,8 +206,10 @@ export default function setup() {
             'Unrecognized combination of options or no options...',
             'error'
           );
-          program.help();
+          // See the matching comment above -- `process.exitCode` must be set
+          // before `program.help()`, which reads it when it force-exits.
           process.exitCode = 1;
+          program.help();
         }
       }
       // end command logic inside action handler

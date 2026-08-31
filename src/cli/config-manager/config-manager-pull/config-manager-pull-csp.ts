@@ -67,8 +67,8 @@ export default function setup() {
           'Unrecognized combination of options or no options...',
           'error'
         );
-        program.help();
         process.exitCode = 1;
+        program.help();
       }
     });
 

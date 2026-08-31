@@ -122,8 +122,8 @@ export default function setup() {
         // Require --file -f for all function
         if (options.all && !options.file) {
           printMessage('-f or --file required when using -a or --all', 'error');
-          program.help();
           process.exitCode = 1;
+          program.help();
         }
         // --all -a
         else if (options.all && (await getTokens())) {
@@ -146,8 +146,8 @@ export default function setup() {
             '-D or --directory required when using -A or --all-separate',
             'error'
           );
-          program.help();
           process.exitCode = 1;
+          program.help();
         }
         // --all-separate -A
         else if (options.allSeparate && (await getTokens())) {
@@ -188,8 +188,8 @@ export default function setup() {
           verboseMessage(
             'Unrecognized combination of options or no options...'
           );
-          program.help();
           process.exitCode = 1;
+          program.help();
         }
       }
       // end command logic inside action handler

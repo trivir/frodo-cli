@@ -41,8 +41,8 @@ export default function setup() {
           `Error getting tokens from the host: ${host}. Make sure to connect to the host using frodo conn save command.`,
           'error'
         );
-        program.help();
         process.exitCode = 1;
+        program.help();
       }
     });
 

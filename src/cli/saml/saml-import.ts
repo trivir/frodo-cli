@@ -105,8 +105,8 @@ export default function setup() {
         // unrecognized combination of options or no options
         else {
           printMessage('Unrecognized combination of options or no options...');
-          program.help();
           process.exitCode = 1;
+          program.help();
         }
       }
       // end program logic inside action handler

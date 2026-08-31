@@ -64,8 +64,8 @@ export default function setup() {
           printMessage(
             'Provide --variable-id and either one or both of --value and --description.'
           );
-          program.help();
           process.exitCode = 1;
+          program.help();
         }
       }
       // end command logic inside action handler

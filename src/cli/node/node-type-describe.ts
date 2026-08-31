@@ -73,8 +73,8 @@ export default function setup() {
           'Provide exactly one of -t, --node-type (standard node type) or -i/-n, --node-id/--node-name (custom node) to describe a node type',
           'error'
         );
-        program.help();
         process.exitCode = 1;
+        program.help();
       }
     });
 
