@@ -2,11 +2,22 @@ import { frodo, state } from '@rockcarver/frodo-lib';
 import { ScriptSkeleton } from '@rockcarver/frodo-lib/types/api/ScriptApi';
 import fs from 'fs';
 
-import { printError, verboseMessage } from '../utils/Console';
-import { realmList, safeFileName } from '../utils/FrConfig';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+  verboseMessage,
+} from '../utils/Console';
+import { fileFilter, realmList, safeFileName } from '../utils/FrConfig';
 
-const { getFilePath, saveJsonToFile, decodeBase64, saveTextToFile } =
-  frodo.utils;
+const {
+  getFilePath,
+  saveJsonToFile,
+  decodeBase64,
+  saveTextToFile,
+  readJsonFile,
+} = frodo.utils;
+const { DEFAULT_REALM_KEY } = frodo.utils.constants;
 const { readScripts, readScriptByName, importScripts } = frodo.script;
 
 type ByName = { scriptName: string };
@@ -233,32 +244,81 @@ export async function configManagerExportScriptsAll(
  */
 export async function configManagerImportScripts(
   realm?: string,
-  name?: string
+  name?: string,
+  filenameFilter?: string
 ): Promise<boolean> {
+  const indicatorId = createProgressIndicator(
+    'indeterminate',
+    0,
+    'Importing scripts...'
+  );
+
   try {
     const realmsDir = getFilePath('realms/');
-    const realms: string[] = realm
-      ? [realm]
-      : fs
-          .readdirSync(realmsDir, { withFileTypes: true })
-          .filter((entry) => entry.isDirectory())
-          .map((entry) => entry.name);
+    const realms: string[] =
+      realm && realm !== DEFAULT_REALM_KEY
+        ? [realm === '/' ? 'root' : realm]
+        : fs
+            .readdirSync(realmsDir, { withFileTypes: true })
+            .filter((entry) => entry.isDirectory())
+            .map((entry) => entry.name);
+    let scriptNotFound = Boolean(name);
 
     for (const realm of realms) {
-      state.setRealm(realm);
+      const realmName = realm === 'root' ? '/' : realm;
+
+      if (name && realms.length !== 1) {
+        stopProgressIndicator(
+          indicatorId,
+          'For a named script, specify a single realm',
+          'fail'
+        );
+        return false;
+      }
+
+      if (
+        realmName === '/' &&
+        state.getDeploymentType() ===
+          frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY
+      )
+        continue;
+
+      state.setRealm(realmName);
 
       const configDir = getFilePath(`realms/${realm}/scripts/scripts-config/`);
-
-      const configFiles = name ? [name] : fs.readdirSync(configDir);
-
+      if (!fs.existsSync(configDir)) {
+        console.warn(
+          `Warning: no script config defined in realm ${realm}. ` +
+            `Expecting directory ${configDir}`
+        );
+        continue;
+      }
+      const configFiles = fs
+        .readdirSync(configDir)
+        .filter((file) => file.endsWith('.json'));
       const scripts = { script: {} };
 
       for (const file of configFiles) {
         try {
           const configPath = `${configDir}/${file}`;
-          if (!fs.existsSync(configPath)) continue;
-          const importData = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-          if (name && importData.script.name !== name) continue;
+          const importData = readJsonFile(configPath) as any;
+
+          if (!fileFilter(importData.script.file, filenameFilter)) {
+            continue;
+          }
+
+          if (!importData.name || importData.name.trim() === '') {
+            stopProgressIndicator(
+              indicatorId,
+              `Script ${importData._id} must have a valid (non-blank) name!`,
+              'fail'
+            );
+            return false;
+          }
+
+          if (name && importData.name !== name) continue;
+          scriptNotFound = false;
+
           const fullScriptPath = getFilePath(
             `realms/${realm}/scripts/${importData.script.file}`
           );
@@ -270,12 +330,26 @@ export async function configManagerImportScripts(
         }
       }
 
+      if (Object.keys(scripts.script).length === 0) {
+        continue;
+      }
       await importScripts(null, null, scripts);
     }
 
+    if (name && scriptNotFound) {
+      console.warn(`Script "${name}" not found`);
+    }
+
+    stopProgressIndicator(
+      indicatorId,
+      'Finished importing scripts.',
+      'success'
+    );
+
     return true;
   } catch (error) {
-    printError(error);
+    stopProgressIndicator(indicatorId, 'Error importing scripts', 'fail');
+    printError(error, 'Error importing scripts.');
     return false;
   }
 }

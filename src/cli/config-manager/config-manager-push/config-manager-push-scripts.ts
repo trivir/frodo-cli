@@ -13,7 +13,13 @@ export default function setup() {
     .addOption(
       new Option(
         '-n, --name <name>',
-        'Script name, import only specified endpoint'
+        'Script name, import only the specified script'
+      )
+    )
+    .addOption(
+      new Option(
+        '-f, --filenameFilter <filenameFilter>',
+        'Filename Filter (combine multiples using comma, use ~ prefix on entry for wildcard match)'
       )
     );
 
@@ -27,10 +33,14 @@ export default function setup() {
       command
     );
 
-    const getTokensIsSuccessful = await getTokens(false, true);
+    const getTokensIsSuccessful = await getTokens();
     if (!getTokensIsSuccessful) process.exit(1);
     verboseMessage('Importing scripts');
-    const outcome = await configManagerImportScripts(realm, options.name);
+    const outcome = await configManagerImportScripts(
+      realm,
+      options.name,
+      options.filenameFilter
+    );
     if (!outcome) process.exitCode = 1;
   });
 
