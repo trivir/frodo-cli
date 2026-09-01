@@ -544,7 +544,26 @@ function readThemeSettings(): ThemeSettings {
 }
 
 function writeThemeSettings(settings: ThemeSettings): void {
-  fs.writeFileSync(getActiveThemeFilePath(), JSON.stringify(settings, null, 2));
+  try {
+    // A fresh system has no ~/.frodo yet, and this can be its first write
+    // (first-run auto-detection persists a background before anything else
+    // creates the directory -- app.ts runs detection before
+    // `activatePersistedTheme`/`ensureBuiltInThemeFiles` and long before
+    // frodo-lib's own `initConnectionProfiles`/`initTokenCache`). Create the
+    // directory so a first-ever write can't crash with a raw ENOENT.
+    fs.mkdirSync(getConfigPath(), { recursive: true });
+    fs.writeFileSync(
+      getActiveThemeFilePath(),
+      JSON.stringify(settings, null, 2)
+    );
+  } catch (e) {
+    // Losing a theme preference is not fatal: report it and let startup
+    // continue with the defaults (matching `ensureBuiltInThemeFiles`).
+    printMessage(
+      `Error saving theme settings to ${getActiveThemeFilePath()} (${e.message})`,
+      'error'
+    );
+  }
 }
 
 export function getActiveBackground(): Background {
