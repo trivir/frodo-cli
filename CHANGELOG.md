@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## [v4.9.1] - 2026-09-01
+
+### Fixed
+- Ensure theme settings persist on first run by creating config directory (#675).
+
 ## [v4.9.0] - 2026-08-31
 
 ### Added
