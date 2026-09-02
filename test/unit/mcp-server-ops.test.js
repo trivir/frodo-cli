@@ -892,8 +892,8 @@ describe('registerServerCrashHandlers', () => {
   // Registration is guarded by process.listenerCount('uncaughtException')
   // === 0, so these tests assert the guard, the dispose contract, and the
   // crash-line shape. The uncaughtException exit(1) path cannot run inside
-  // the jest worker (it would kill the suite); a spawned-child dist test
-  // exercises it against the built dist instead.
+  // the jest worker (it would kill the suite); the spawned-child test
+  // (FRODO_MCP_CRASH_TEST) exercises it against the built dist instead.
   // Unhandled promise rejections are deliberately NOT registered here:
   // FrodoCommand's constructor installs a global unhandledRejection handler
   // before any transport start path runs, so rejections in server mode are
@@ -1668,6 +1668,87 @@ describe('launcher signal forwarding', () => {
       );
       expect(code ?? signal).not.toBeNull();
       // Port released: a fresh bind on the same port must succeed.
+      const rebind = await new Promise((resolve, reject) => {
+        const server = http.createServer();
+        server.on('error', reject);
+        server.listen(port, '127.0.0.1', () => server.close(() => resolve(true)));
+      });
+      expect(rebind).toBe(true);
+    } finally {
+      if (child.exitCode === null && child.signalCode === null) {
+        child.kill('SIGKILL');
+      }
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// UncaughtException crash path, end to end (FRODO_MCP_CRASH_TEST probe)
+// ---------------------------------------------------------------------------
+
+describe('uncaughtException crash path (spawned child)', () => {
+  // The uncaughtException handler exits the process (by contract), so it
+  // cannot be exercised inside the jest worker. FRODO_MCP_CRASH_TEST=1 (a
+  // test/debug-only env hook documented in docs/MCP_CLIENT_SETUP.md) makes
+  // the HTTP server throw an uncaught exception shortly after listening, so
+  // the full path — one timestamped crash line, best-effort port release,
+  // exit 1 — runs in the real compiled dist against the real launch wrapper.
+  // Skipped when dist is absent (the launcher-test pattern).
+  const { spawn } = childProcess;
+  const fs = fsPromise;
+  const os = osPromise;
+  const path = pathPromise;
+  const launchPath = path.resolve('dist/launch.cjs');
+  const hasDist = fs.existsSync(launchPath);
+
+  const cond = (name, fn) => (hasDist ? test(name, fn, 60000) : test.skip(name, fn));
+
+  cond('an uncaught exception logs one crash line, exits 1, and releases the port', async () => {
+    const port = await getFreePort();
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mcp-crash-'));
+    const profilesPath = path.join(tmpDir, 'Connections.json');
+    fs.writeFileSync(profilesPath, JSON.stringify({}));
+    const child = spawn(
+      process.execPath,
+      [launchPath, 'mcp', 'server', 'start', '--transport', 'http', '--port', String(port)],
+      {
+        stdio: ['ignore', 'pipe', 'pipe'],
+        env: {
+          ...process.env,
+          FRODO_TEST: '1',
+          NO_COLOR: '1',
+          FRODO_CONNECTION_PROFILES_PATH: profilesPath,
+          FRODO_MCP_CRASH_TEST: '1',
+        },
+      }
+    );
+    let stderr = '';
+    child.stderr.on('data', (chunk) => {
+      stderr += chunk.toString('utf8');
+    });
+    try {
+      const [code, signal] = await new Promise((resolve) => {
+        const timer = setTimeout(() => resolve([null, 'timeout']), 45000);
+        child.once('exit', (c, s) => {
+          clearTimeout(timer);
+          resolve([c, s]);
+        });
+      });
+      // The crash handler's deliberate exit(1): the process must not be
+      // killed by an unhandled signal or left running to the timeout.
+      expect([code, signal]).not.toEqual([null, 'timeout']);
+      expect(code).toBe(1);
+      // One timestamped crash line, naming the probe error.
+      const crashLines = stderr
+        .split('\n')
+        .filter((line) => line.includes('uncaughtException: Error:'));
+      expect(crashLines.length).toBe(1);
+      expect(crashLines[0]).toMatch(/\d{4}-\d{2}-\d{2}T/);
+      expect(crashLines[0]).toContain('FRODO_MCP_CRASH_TEST uncaught exception probe');
+      // Port released by the best-effort beforeExit close: a fresh bind on
+      // the same port must succeed (a supervisor restart must not hit
+      // EADDRINUSE against our own corpse).
       const rebind = await new Promise((resolve, reject) => {
         const server = http.createServer();
         server.on('error', reject);

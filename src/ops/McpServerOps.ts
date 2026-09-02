@@ -789,6 +789,18 @@ export async function startHttpTransport(
         `MCP HTTP server (pid ${process.pid}) listening on http://${bindHost}:${port}/mcp`,
         'info'
       );
+      // Test/debug-only crash hook: when FRODO_MCP_CRASH_TEST=1, throw an
+      // uncaught exception shortly after the listener is up so the
+      // uncaughtException crash path (crash line, best-effort port release,
+      // exit 1) can be exercised end to end in a spawned child — the path
+      // cannot run inside a jest worker without killing the suite. Never
+      // set in production; documented as test/debug-only in
+      // docs/MCP_CLIENT_SETUP.md.
+      if (process.env.FRODO_MCP_CRASH_TEST === '1') {
+        setTimeout(() => {
+          throw new Error('FRODO_MCP_CRASH_TEST uncaught exception probe');
+        }, 25);
+      }
     });
 
     httpServer.on('error', async (err) => {
