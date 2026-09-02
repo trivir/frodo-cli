@@ -18,18 +18,21 @@
  * calls may additionally override realm per request.
  */
 
+import { createHash, timingSafeEqual } from 'node:crypto';
 import {
   createServer,
   type IncomingMessage,
   type ServerResponse,
 } from 'node:http';
+import { isIP } from 'node:net';
 
 import {
-  localhostHostValidation,
+  hostHeaderValidation,
   localhostOriginValidation,
   NodeStreamableHTTPServerTransport,
 } from '@modelcontextprotocol/node';
 import {
+  localhostAllowedHostnames,
   McpServer,
   PROTOCOL_VERSION_META_KEY,
   ToolAnnotations,
@@ -58,6 +61,20 @@ import {
 // ---------------------------------------------------------------------------
 // Internal constants
 // ---------------------------------------------------------------------------
+
+// Era gate: modern (2026-07-28) protocol revisions begin here. Revision
+// identifiers are ISO dates, so lexicographic comparison orders them
+// chronologically (mirrors the SDK's isModernProtocolVersion).
+const FIRST_MODERN_PROTOCOL_VERSION = '2026-07-28';
+
+// The methods whose body carries a value the `Mcp-Name` header must mirror,
+// and which body field supplies it (SEP-2243 Standard Request Headers,
+// `Required For` column — mirrors the SDK's MCP_NAME_HEADER_SOURCE map).
+const MCP_NAME_HEADER_SOURCE: Record<string, string> = {
+  'tools/call': 'name',
+  'prompts/get': 'name',
+  'resources/read': 'uri',
+};
 
 // Zod v4 schema shapes reused for canonical hybrid and special tools.
 const MAX_INLINE_RESULT_BYTES = 256 * 1024;
@@ -450,30 +467,154 @@ export async function startStdioTransport(
   serveStdio(() => buildMcpServer(service, startupInfo));
 }
 
+/** Runtime configuration for the HTTP transport. */
+export type McpHttpTransportOptions = {
+  /**
+   * Extra `Host` header values to accept beyond the default localhost set
+   * (`localhost`, `127.0.0.1`, `[::1]`). Needed whenever the server is
+   * reached through a different hostname, e.g. `host.docker.internal` from a
+   * bridge-network container on the same machine.
+   */
+  allowedHosts?: string[];
+  /**
+   * Bearer token required on `POST /mcp` requests when configured. `GET
+   * /health` stays unauthenticated. Never logged.
+   */
+  authToken?: string;
+};
+
+/**
+ * Computes the effective `Host` header allow-list for the HTTP transport.
+ *
+ * The default localhost set (the SDK's `localhostAllowedHostnames()`) is
+ * always included so the zero-config local case behaves exactly as before;
+ * `allowedHosts` extends it. When binding a non-loopback interface,
+ * `host.docker.internal` is auto-included — the standard Docker Desktop /
+ * Linux `host-gateway` alias a bridge-network container uses to reach a
+ * server on the host itself (the containerized AI gateway deployment model).
+ *
+ * Exported so the default/extension/auto-alias composition has direct unit
+ * coverage without spinning up a real listener.
+ */
+export function computeHttpAllowedHosts(
+  bindHost: string,
+  allowedHosts?: string[]
+): string[] {
+  const effective = new Set(localhostAllowedHostnames());
+  for (const host of allowedHosts ?? []) {
+    if (host) {
+      effective.add(host);
+    }
+  }
+  if (!isLoopbackBindHost(bindHost)) {
+    effective.add('host.docker.internal');
+  }
+  return [...effective];
+}
+
+/**
+ * Whether a bind host only exposes the server to the local machine.
+ *
+ * Loopback means the loopback interface (any `127.x.y.z` address or `[::1]`)
+ * or `localhost` itself. Bind hosts that cannot be parsed as addresses
+ * (hostnames) are treated as non-loopback — the safe default for a guard
+ * that decides whether a bearer token may be skipped.
+ */
+export function isLoopbackBindHost(bindHost: string): boolean {
+  if (!bindHost) {
+    return false;
+  }
+  const normalized = bindHost.toLowerCase();
+  if (
+    normalized === 'localhost' ||
+    normalized === '::1' ||
+    normalized === '[::1]'
+  ) {
+    return true;
+  }
+  const family = isIP(bindHost);
+  if (family === 6) {
+    return normalized === '::1';
+  }
+  if (family === 4) {
+    return normalized.startsWith('127.');
+  }
+  // Hostname (or wildcard like `0.0.0.0` is already an IP, handled above as
+  // non-loopback): a name can resolve to anything, so treat as non-loopback.
+  return false;
+}
+
+/**
+ * Verifies an HTTP `Authorization` header against the configured bearer
+ * token, timing-safely.
+ *
+ * Comparison runs over SHA-256 digests so `crypto.timingSafeEqual` can be
+ * used regardless of the two lengths (it throws on unequal byte lengths),
+ * without leaking the token length through early exits.
+ *
+ * Exported for direct unit coverage of the parsing and comparison rules —
+ * silently accepting a malformed header shape would be a security bug, and
+ * the 401 path below is exactly where that would live.
+ *
+ * @param authorization Raw `Authorization` header value.
+ * @param authToken The configured bearer token.
+ * @returns true when the header authenticates the request.
+ */
+export function verifyMcpBearerAuthorization(
+  authorization: string | undefined,
+  authToken: string
+): boolean {
+  if (!authorization || !authToken) {
+    return false;
+  }
+  const [scheme, ...rest] = authorization.trim().split(/\s+/);
+  const token = rest.join(' ');
+  if (!scheme || scheme.toLowerCase() !== 'bearer' || !token) {
+    return false;
+  }
+  const provided = createHash('sha256').update(token, 'utf8').digest();
+  const expected = createHash('sha256').update(authToken, 'utf8').digest();
+  return timingSafeEqual(provided, expected);
+}
+
 /**
  * Starts a stateless MCP HTTP server using the Streamable HTTP transport.
  *
  * The MCP endpoint is `POST /mcp`. A `GET /health` endpoint is provided for
- * liveness probing. Host and origin are validated for localhost safety.
+ * liveness probing. The `Host` header is validated against an allow-list
+ * (localhost set plus any configured extras) and the `Origin` header against
+ * the localhost set; when `options.authToken` is set, `POST /mcp` also
+ * requires a matching `Authorization: Bearer` header.
  *
- * The function resolves when the server is stopped via SIGTERM or SIGINT.
+ * The function resolves when the server is stopped via SIGTERM, SIGINT,
+ * SIGHUP, or SIGQUIT (the SSH-session survival signals — closing the terminal
+ * that launched a long-lived HTTP server must release the port), resolves
+ * with `process.exitCode = 1` after one actionable message when the port is
+ * already in use (the deliberate-exit path — rejecting would double-print
+ * through the global unhandledRejection handler), and rejects on other
+ * server errors.
  *
  * @param service Fully composed MCP service.
  * @param bindHost Host interface to bind (e.g. `"127.0.0.1"`).
  * @param port TCP port to listen on.
+ * @param startupInfo Startup logger context.
+ * @param options Transport configuration (Host allow-list, bearer token).
  */
 export async function startHttpTransport(
   service: McpService,
   bindHost: string,
   port: number,
-  startupInfo?: McpServerStartupInfo
+  startupInfo?: McpServerStartupInfo,
+  options?: McpHttpTransportOptions
 ): Promise<void> {
   const mcpServer = buildMcpServer(service, startupInfo);
   const transport = new NodeStreamableHTTPServerTransport({
     sessionIdGenerator: undefined,
   });
   await mcpServer.connect(transport);
-  const validateHost = localhostHostValidation();
+  const validateHost = hostHeaderValidation(
+    computeHttpAllowedHosts(bindHost, options?.allowedHosts)
+  );
   const validateOrigin = localhostOriginValidation();
 
   const httpServer = createServer(
@@ -484,7 +625,8 @@ export async function startHttpTransport(
           res,
           transport,
           validateHost,
-          validateOrigin
+          validateOrigin,
+          options?.authToken
         );
       } catch (err) {
         printMessage(
@@ -507,15 +649,43 @@ export async function startHttpTransport(
     });
 
     httpServer.on('error', (err) => {
+      if ((err as NodeJS.ErrnoException).code === 'EADDRINUSE') {
+        // One actionable line, then a deliberate exit (exit code 1 via
+        // exitCode, promise resolved) — rejecting would surface through the
+        // global unhandledRejection handler in FrodoCommand.ts and print a
+        // second, noisier "please report this unhandled error" block for a
+        // completely expected condition.
+        printMessage(
+          `MCP HTTP server: port ${port} on ${bindHost} is already in use — ` +
+            `another frodo mcp server (or other process) is likely listening. ` +
+            `Find it: lsof -iTCP:${port} -sTCP:LISTEN. ` +
+            `Use --port <other> or stop the incumbent.`,
+          'error'
+        );
+        process.exitCode = 1;
+        resolve();
+        return;
+      }
       printMessage(`MCP HTTP server error: ${err.message}`, 'error');
       reject(err);
     });
 
     const shutdown = () => {
+      // Stop accepting connections immediately, then force-close any
+      // keep-alive sockets so the port is released deterministically even
+      // when a client (or gateway) holds an idle persistent connection —
+      // closeIdleConnections is what makes SIGHUP from a closing SSH
+      // session actually free the port.
+      httpServer.closeIdleConnections?.();
       httpServer.close(() => resolve());
     };
+    // SIGHUP (terminal closed) and SIGQUIT (Ctrl+\) join SIGTERM/SIGINT so
+    // closing the SSH session that launched the server releases the port
+    // instead of orphaning the listener.
     process.once('SIGTERM', shutdown);
     process.once('SIGINT', shutdown);
+    process.once('SIGHUP', shutdown);
+    process.once('SIGQUIT', shutdown);
   });
 }
 
@@ -531,9 +701,11 @@ async function handleHttpRequest(
   res: ServerResponse,
   transport: NodeStreamableHTTPServerTransport,
   validateHost: (req: IncomingMessage, res: ServerResponse) => boolean,
-  validateOrigin: (req: IncomingMessage, res: ServerResponse) => boolean
+  validateOrigin: (req: IncomingMessage, res: ServerResponse) => boolean,
+  authToken?: string
 ): Promise<void> {
-  // Health probe
+  // Health probe — deliberately unauthenticated: liveness probes must not
+  // need secrets, and the body leaks only `{ status: 'ok' }`.
   if (req.method === 'GET' && req.url === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ status: 'ok' }));
@@ -552,6 +724,30 @@ async function handleHttpRequest(
   if (req.method !== 'POST') {
     res.writeHead(405).end('Method not allowed');
     return;
+  }
+
+  // Bearer-token gate (SEP-2243-adjacent): enforced on every /mcp request
+  // whenever a token is configured, loopback or not. /health above stays
+  // open. The WWW-Authenticate challenge matches the SDK's own
+  // bearerAuthChallengeResponse shape for invalid/missing tokens.
+  if (authToken !== undefined) {
+    const authorization = getSingleHeaderValue(req, 'authorization');
+    if (!verifyMcpBearerAuthorization(authorization, authToken)) {
+      writeJsonRpcErrorResponse(
+        res,
+        401,
+        {
+          jsonrpc: '2.0',
+          id: null,
+          error: {
+            code: -32001,
+            message: 'Unauthorized: a valid bearer token is required.',
+          },
+        },
+        { 'WWW-Authenticate': 'Bearer error="invalid_token"' }
+      );
+      return;
+    }
   }
 
   // Parse body for POST
@@ -627,101 +823,212 @@ function readJsonBody(req: IncomingMessage): Promise<unknown> {
 }
 
 /**
- * Validates required MCP request metadata headers against request-body values.
+ * Validates MCP request metadata headers against the request body,
+ * era-conditionally.
  *
- * Returns a spec-aligned HeaderMismatch (-32020) error when required headers
- * are missing or disagree with body metadata.
+ * 2026-era (SEP-2243) clients send an `MCP-Protocol-Version` header plus a
+ * per-request `_meta` envelope claim, and `Mcp-Method`/`Mcp-Name` headers
+ * mirroring the body; those requests get the full header cross-checks.
+ * 2025-era clients (LiteLLM defaults to 2025-11-25, Kong gateways ship
+ * 2025-06-18) send none of that — requiring the modern headers on them used
+ * to 400 every request at frodo's HTTP layer before the SDK handshake ever
+ * ran. Era is therefore inferred per request, mirroring the SDK's
+ * `classifyInboundRequest` body-primary semantics:
+ *
+ * - An `initialize` request is legacy-handshake traffic by definition (the
+ *   modern era has no initialize), unless it carries a `_meta` envelope
+ *   claim naming a modern revision.
+ * - A body `_meta` envelope claim classifies the request into the era its
+ *   revision belongs to; a header naming a different revision than the
+ *   claim is a mismatch.
+ * - A modern (`>= 2026-07-28`) `MCP-Protocol-Version` header on a request
+ *   without an envelope claim is invalid (-32602) — the SDK's
+ *   `modern-header-without-claim` cell. Notifications are exempt: they
+ *   carry no envelope claim under the current spec, so a modern header on a
+ *   claim-less notification is accepted with only cross-checks applied.
+ * - Legacy traffic requires none of the modern headers, and stray
+ *   `Mcp-Method`/`Mcp-Name` headers on legacy requests are ignored (SDK
+ *   parity — never enforced on legacy traffic).
+ *
+ * Returns a spec-aligned error when a rule fires: -32020 (HeaderMismatch)
+ * for header/body disagreements, -32602 (invalid params) for a modern
+ * header without the envelope claim it must accompany. Null when the
+ * request may proceed.
  */
 export function validateHttpRequestMetadata(
   req: IncomingMessage,
   body: unknown
-): HeaderMismatchHttpError | null {
+): MetadataValidationHttpError | null {
   const requestId = extractRequestId(body);
   const headerProtocolVersion = getSingleHeaderValue(
     req,
     'mcp-protocol-version'
   );
   const bodyProtocolVersion = extractBodyProtocolVersion(body);
+  const bodyMethod = extractBodyMethod(body);
+  const isNotification = isJsonRpcNotification(body);
 
-  if (!headerProtocolVersion) {
-    return buildHeaderMismatchError(
+  const envelopeClaim = extractEnvelopeClaim(body);
+  const headerIsModern = isModernProtocolVersion(headerProtocolVersion);
+
+  // `initialize` precedence rule (SDK parity): only a valid modern envelope
+  // claim overrides the legacy-handshake classification.
+  if (
+    bodyMethod === 'initialize' &&
+    !(envelopeClaim.hasClaim && isModernProtocolVersion(envelopeClaim.version))
+  ) {
+    if (headerIsModern) {
+      return buildMetadataValidationError(
+        requestId,
+        HEADER_MISMATCH_ERROR_CODE,
+        'Bad Request: the request headers and body disagree: an initialize request (legacy handshake) was sent with a modern MCP-Protocol-Version header',
+        {
+          mismatch: { header: headerProtocolVersion, body: 'initialize' },
+        }
+      );
+    }
+    return null;
+  }
+
+  if (isNotification) {
+    // Notifications carry no envelope claim under the current spec and are
+    // never required to carry the modern headers; present ones are only
+    // cross-checked (SDK parity).
+    if (
+      envelopeClaim.hasClaim &&
+      headerProtocolVersion !== undefined &&
+      envelopeClaim.version !== undefined &&
+      headerProtocolVersion !== envelopeClaim.version
+    ) {
+      return buildHeaderMismatchError(requestId, {
+        headerProtocolVersion,
+        bodyProtocolVersion: envelopeClaim.version,
+      });
+    }
+    const headerMethod = getSingleHeaderValue(req, 'mcp-method');
+    if (
+      headerMethod !== undefined &&
+      bodyMethod !== undefined &&
+      headerMethod !== bodyMethod
+    ) {
+      return buildHeaderMismatchError(requestId, {
+        headerMethod,
+        bodyMethod,
+      });
+    }
+    return null;
+  }
+
+  if (envelopeClaim.hasClaim) {
+    if (
+      headerProtocolVersion !== undefined &&
+      envelopeClaim.version !== undefined &&
+      headerProtocolVersion !== envelopeClaim.version
+    ) {
+      return buildHeaderMismatchError(requestId, {
+        headerProtocolVersion,
+        bodyProtocolVersion: envelopeClaim.version,
+      });
+    }
+    if (!isModernProtocolVersion(envelopeClaim.version)) {
+      // A claim naming a pre-2026 revision classifies legacy-era traffic.
+      return null;
+    }
+    return validateModernRequestMetadata(
+      req,
+      body,
       requestId,
-      'Missing required MCP-Protocol-Version header.',
-      { header: 'mcp-protocol-version' }
+      headerProtocolVersion,
+      bodyProtocolVersion,
+      bodyMethod
     );
+  }
+
+  if (headerIsModern) {
+    // Modern header without the envelope claim: the SDK's
+    // modern-header-without-claim cell (-32602, invalid params).
+    const params = getRequestParams(body);
+    const missing = params?._meta ? [PROTOCOL_VERSION_META_KEY] : ['_meta'];
+    return buildMetadataValidationError(
+      requestId,
+      INVALID_PARAMS_ERROR_CODE,
+      `Invalid params: the MCP-Protocol-Version header names protocol revision ${headerProtocolVersion}, but the request is missing the required per-request envelope key(s): ${missing.join(', ')}`,
+      { envelope: { missing } }
+    );
+  }
+
+  // No claim, no modern header: legacy traffic — modern headers not required.
+  return null;
+}
+
+/**
+ * Full SEP-2243 checks for a modern-classified request: the
+ * `MCP-Protocol-Version` header must be present and agree with the body's
+ * envelope claim, the `Mcp-Method` header must be present and agree with the
+ * JSON-RPC method, and the `Mcp-Name` header must be present and agree with
+ * the body value it mirrors for the methods that have one.
+ */
+function validateModernRequestMetadata(
+  req: IncomingMessage,
+  body: unknown,
+  requestId: string | number | null,
+  headerProtocolVersion: string | undefined,
+  bodyProtocolVersion: string | undefined,
+  bodyMethod: string | undefined
+): MetadataValidationHttpError | null {
+  if (!headerProtocolVersion) {
+    return buildHeaderMismatchError(requestId, {
+      header: 'mcp-protocol-version',
+    });
   }
   if (!bodyProtocolVersion) {
-    return buildHeaderMismatchError(
-      requestId,
-      'Missing required _meta protocol version in request body.',
-      { field: '_meta.protocolVersion' }
-    );
+    return buildHeaderMismatchError(requestId, {
+      field: '_meta.protocolVersion',
+    });
   }
   if (headerProtocolVersion !== bodyProtocolVersion) {
-    return buildHeaderMismatchError(
-      requestId,
-      'MCP-Protocol-Version header does not match request body metadata.',
-      {
-        headerProtocolVersion,
-        bodyProtocolVersion,
-      }
-    );
+    return buildHeaderMismatchError(requestId, {
+      headerProtocolVersion,
+      bodyProtocolVersion,
+    });
   }
 
   const headerMethod = getSingleHeaderValue(req, 'mcp-method');
-  const bodyMethod = extractBodyMethod(body);
   if (!headerMethod) {
-    return buildHeaderMismatchError(
-      requestId,
-      'Missing required Mcp-Method header.',
-      { header: 'mcp-method' }
-    );
+    return buildHeaderMismatchError(requestId, { header: 'mcp-method' });
   }
   if (!bodyMethod) {
-    return buildHeaderMismatchError(
-      requestId,
-      'Missing request method in JSON-RPC body.',
-      { field: 'method' }
-    );
+    return buildHeaderMismatchError(requestId, { field: 'method' });
   }
   if (headerMethod !== bodyMethod) {
-    return buildHeaderMismatchError(
-      requestId,
-      'Mcp-Method header does not match JSON-RPC method.',
-      {
-        headerMethod,
-        bodyMethod,
-      }
-    );
+    return buildHeaderMismatchError(requestId, {
+      headerMethod,
+      bodyMethod,
+    });
   }
 
-  if (methodRequiresMcpName(bodyMethod)) {
+  const sourceField = MCP_NAME_HEADER_SOURCE[bodyMethod];
+  if (sourceField !== undefined) {
     const headerName = getSingleHeaderValue(req, 'mcp-name');
-    const bodyName = extractBodyName(body);
+    const bodyName = extractBodyName(bodyMethod, body);
     if (!headerName) {
-      return buildHeaderMismatchError(
-        requestId,
-        `Missing required Mcp-Name header for method '${bodyMethod}'.`,
-        { header: 'mcp-name', method: bodyMethod }
-      );
+      return buildHeaderMismatchError(requestId, {
+        header: 'mcp-name',
+        method: bodyMethod,
+      });
     }
     if (!bodyName) {
-      return buildHeaderMismatchError(
-        requestId,
-        `Missing request name in JSON-RPC params for method '${bodyMethod}'.`,
-        { field: 'params.name', method: bodyMethod }
-      );
+      return buildHeaderMismatchError(requestId, {
+        field: `params.${sourceField}`,
+        method: bodyMethod,
+      });
     }
     if (headerName !== bodyName) {
-      return buildHeaderMismatchError(
-        requestId,
-        'Mcp-Name header does not match request params.name.',
-        {
-          headerName,
-          bodyName,
-          method: bodyMethod,
-        }
-      );
+      return buildHeaderMismatchError(requestId, {
+        headerName,
+        bodyName,
+        method: bodyMethod,
+      });
     }
   }
 
@@ -738,27 +1045,35 @@ type UnsupportedVersionHttpError = {
   };
 };
 
-type HeaderMismatchHttpError = {
+type MetadataValidationHttpError = {
   statusCode: 400;
   requestId: string | number | null;
   error: {
-    code: -32020;
+    /** -32020 (HeaderMismatch) or -32602 (invalid params). */
+    code: number;
     message: string;
     data?: unknown;
   };
 };
 
 const HEADER_MISMATCH_ERROR_CODE = -32020 as const;
+const INVALID_PARAMS_ERROR_CODE = -32602 as const;
 
 function getUnsupportedProtocolVersionError(
   req: IncomingMessage,
   body: unknown
 ): UnsupportedVersionHttpError | null {
-  const headerProtocolVersion =
-    typeof req.headers['mcp-protocol-version'] === 'string'
-      ? req.headers['mcp-protocol-version']
-      : undefined;
-  const bodyProtocolVersion = extractBodyProtocolVersion(body);
+  const headerProtocolVersion = getSingleHeaderValue(
+    req,
+    'mcp-protocol-version'
+  );
+  // A 2025-era `initialize` names its version at `params.protocolVersion`
+  // (the handshake itself carries no `_meta` envelope), so the body check
+  // must read that top-level field too — otherwise a supported-version
+  // initialize would be falsely rejected here before the transport's own
+  // version negotiation answers it properly.
+  const bodyProtocolVersion =
+    extractBodyProtocolVersion(body) ?? extractInitializeProtocolVersion(body);
   const requestedProtocolVersion = headerProtocolVersion ?? bodyProtocolVersion;
 
   if (!requestedProtocolVersion) {
@@ -786,14 +1101,52 @@ function getUnsupportedProtocolVersionError(
 
 function buildHeaderMismatchError(
   requestId: string | number | null,
+  data?: unknown
+): MetadataValidationHttpError {
+  return buildMetadataValidationError(
+    requestId,
+    HEADER_MISMATCH_ERROR_CODE,
+    buildHeaderMismatchMessage(data),
+    data
+  );
+}
+
+/**
+ * Renders the SDK's cross-check-mismatch wording ("the request headers and
+ * body disagree: <reason>") from the mismatch descriptor, keeping every
+ * rejection self-explanatory without callers repeating boilerplate.
+ */
+function buildHeaderMismatchMessage(data: unknown): string {
+  const mismatch =
+    data && typeof data === 'object'
+      ? (data as { mismatch?: Record<string, unknown> }).mismatch
+      : undefined;
+  const entries = Object.entries(mismatch ?? {});
+  if (entries.length === 0) {
+    // Presence errors name the absent header/field directly.
+    if (data && typeof data === 'object' && 'header' in data) {
+      return `Missing required ${(data as { header: string }).header} header.`;
+    }
+    if (data && typeof data === 'object' && 'field' in data) {
+      return `Missing required ${(data as { field: string }).field} in request body.`;
+    }
+    return 'Bad Request: the request headers and body disagree.';
+  }
+  const [key, value] = entries[0];
+  return `Bad Request: the request headers and body disagree: ${key} ${value}`;
+}
+
+function buildMetadataValidationError(
+  requestId: string | number | null,
+  code: typeof HEADER_MISMATCH_ERROR_CODE | typeof INVALID_PARAMS_ERROR_CODE,
   message: string,
   data?: unknown
-): HeaderMismatchHttpError {
+): MetadataValidationHttpError {
   return {
     statusCode: 400,
     requestId,
     error: {
-      code: HEADER_MISMATCH_ERROR_CODE,
+      code,
       message,
       data,
     },
@@ -822,24 +1175,75 @@ function extractBodyMethod(body: unknown): string | undefined {
   return typeof method === 'string' ? method : undefined;
 }
 
-function extractBodyName(body: unknown): string | undefined {
+/**
+ * The body value the `Mcp-Name` header mirrors for `method` (`params.name`
+ * or `params.uri` per SEP-2243), when it is a string.
+ */
+function extractBodyName(method: string, body: unknown): string | undefined {
+  const params = getRequestParams(body);
+  const sourceField = MCP_NAME_HEADER_SOURCE[method];
+  if (!params || sourceField === undefined) {
+    return undefined;
+  }
+  const name = (params as Record<string, unknown>)[sourceField];
+  return typeof name === 'string' ? name : undefined;
+}
+
+function getRequestParams(body: unknown): Record<string, unknown> | undefined {
   if (!body || typeof body !== 'object') {
     return undefined;
   }
   const params = (body as Record<string, unknown>).params;
-  if (!params || typeof params !== 'object') {
-    return undefined;
-  }
-  const name = (params as Record<string, unknown>).name;
-  return typeof name === 'string' ? name : undefined;
+  return params && typeof params === 'object' && !Array.isArray(params)
+    ? (params as Record<string, unknown>)
+    : undefined;
 }
 
-function methodRequiresMcpName(method: string): boolean {
+function isJsonRpcNotification(body: unknown): boolean {
   return (
-    method === 'tools/call' ||
-    method === 'resources/read' ||
-    method === 'prompts/get'
+    body !== null &&
+    typeof body === 'object' &&
+    !Array.isArray(body) &&
+    typeof (body as Record<string, unknown>).method === 'string' &&
+    !('id' in (body as Record<string, unknown>))
   );
+}
+
+/**
+ * The per-request envelope claim carried in the body's `params._meta`: a
+ * request claims the envelope mechanism by having the reserved
+ * protocol-version key present, regardless of value well-formedness (SDK
+ * `hasEnvelopeClaim` parity — a malformed claim is a validation error, never
+ * a silent fallback to legacy handling).
+ */
+function extractEnvelopeClaim(body: unknown): {
+  hasClaim: boolean;
+  version: string | undefined;
+} {
+  const params = getRequestParams(body);
+  const meta = params?._meta;
+  if (!meta || typeof meta !== 'object' || Array.isArray(meta)) {
+    return { hasClaim: false, version: undefined };
+  }
+  const hasClaim = PROTOCOL_VERSION_META_KEY in meta;
+  const version = (meta as Record<string, unknown>)[PROTOCOL_VERSION_META_KEY];
+  return {
+    hasClaim,
+    version: typeof version === 'string' ? version : undefined,
+  };
+}
+
+function isModernProtocolVersion(version: string | undefined): boolean {
+  return version !== undefined && version >= FIRST_MODERN_PROTOCOL_VERSION;
+}
+
+/**
+ * The protocol version named by a 2025-era `initialize` handshake at
+ * `params.protocolVersion`.
+ */
+function extractInitializeProtocolVersion(body: unknown): string | undefined {
+  const protocolVersion = getRequestParams(body)?.protocolVersion;
+  return typeof protocolVersion === 'string' ? protocolVersion : undefined;
 }
 
 function extractBodyProtocolVersion(body: unknown): string | undefined {
@@ -891,9 +1295,13 @@ function writeJsonRpcErrorResponse(
       message: string;
       data?: unknown;
     };
-  }
+  },
+  extraHeaders?: Record<string, string>
 ): void {
-  res.writeHead(statusCode, { 'Content-Type': 'application/json' });
+  res.writeHead(statusCode, {
+    'Content-Type': 'application/json',
+    ...extraHeaders,
+  });
   res.end(safeJsonStringify(payload));
 }
 
