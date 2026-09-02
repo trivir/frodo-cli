@@ -14,6 +14,8 @@ import {
   type McpLogLevel,
 } from '../../../ops/McpLogger.js';
 import {
+  computeHttpAllowedHosts,
+  isLoopbackBindHost,
   McpServerStartupInfo,
   resolveFrodoForMcpRequest,
   startHttpTransport,
@@ -22,6 +24,7 @@ import {
 import c from '../../../utils/ColorTheme';
 import { printMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
+import { resolveMcpAuthTokenValue } from './server-auth';
 import { type McpPolicyPreset, resolvePolicySelection } from './server-policy';
 
 type McpProfileName =
@@ -52,6 +55,16 @@ type McpStartOptions = {
   bindHost?: string;
   /** Bind port for HTTP transport. */
   port?: string;
+  /** Extra Host header values accepted by the HTTP transport. */
+  allowedHosts?: string[];
+  /** Bearer token required on /mcp requests (CLI flag; env fallback). */
+  mcpAuthToken?: string;
+  /**
+   * Escape hatch permitting a non-loopback bind without a bearer token.
+   * Explicitly named because it exposes tenant operations to anything that
+   * can reach the port.
+   */
+  allowUnauthenticated?: boolean;
   /** Build and validate service composition without launching transport. */
   dryRun?: boolean;
   /** Print startup summary as JSON. */
@@ -59,6 +72,19 @@ type McpStartOptions = {
   /** MCP protocol logging threshold. */
   mcpLogLevel: McpLogLevel;
 };
+
+/**
+ * Resolves the effective HTTP bearer token: the CLI flag wins over the
+ * `FRODO_MCP_AUTH_TOKEN` environment fallback, since the environment keeps
+ * the secret out of process listings (`ps`) while the flag exists for parity
+ * and testing.
+ */
+function resolveMcpAuthToken(opts: McpStartOptions): string | undefined {
+  return resolveMcpAuthTokenValue(
+    opts.mcpAuthToken,
+    process.env.FRODO_MCP_AUTH_TOKEN
+  );
+}
 
 /**
  * MCP server start command.
@@ -135,6 +161,24 @@ export default function setup() {
     )
     .addOption(
       new Option(
+        '--allowed-hosts <host...>',
+        'Extra Host header values the HTTP transport accepts, extending the default localhost set (localhost, 127.0.0.1, [::1]). host.docker.internal is added automatically when binding a non-loopback host.'
+      )
+    )
+    .addOption(
+      new Option(
+        '--mcp-auth-token <secret>',
+        'Bearer token required on /mcp requests. Falls back to the FRODO_MCP_AUTH_TOKEN environment variable, which keeps the secret out of process listings. Required when binding a non-loopback host.'
+      )
+    )
+    .addOption(
+      new Option(
+        '--allow-unauthenticated',
+        'Allow binding a non-loopback host without a bearer token. Anything that can reach the port can then drive tenant operations with the startup credentials.'
+      ).default(false)
+    )
+    .addOption(
+      new Option(
         '--dry-run',
         'Build and validate MCP service composition, then exit.'
       ).default(false)
@@ -157,6 +201,14 @@ export default function setup() {
         `  Start HTTP transport with explicit bind host/port:\n` +
         c.command(
           `  $ frodo mcp server start --transport http --bind-host 127.0.0.1 --port 6277\n`
+        ) +
+        `  Start HTTP transport for a containerized gateway on this machine (bridge-network containers reach the host via host.docker.internal, which is accepted automatically on a non-loopback bind; a bearer token is required):\n` +
+        c.command(
+          `  $ frodo mcp server start --transport http --bind-host 0.0.0.0 --port 6277 --mcp-auth-token <secret>\n`
+        ) +
+        `  Accept additional client hostnames (extends the localhost default):\n` +
+        c.command(
+          `  $ frodo mcp server start --transport http --allowed-hosts mcp.example.internal\n`
         ) +
         `  Start read-only skills surface for authentication scope:\n` +
         c.command(
@@ -191,6 +243,19 @@ export default function setup() {
       const opts = options as McpStartOptions;
       if (opts.json && !opts.dryRun) {
         throw new Error('--json is only supported with --dry-run.');
+      }
+      const transport = opts.transport ?? 'stdio';
+      const authToken =
+        transport === 'http' ? resolveMcpAuthToken(opts) : undefined;
+      if (
+        transport === 'http' &&
+        !isLoopbackBindHost(opts.bindHost ?? '127.0.0.1') &&
+        !authToken &&
+        !opts.allowUnauthenticated
+      ) {
+        throw new Error(
+          `Refusing to start the MCP HTTP server on non-loopback bind host '${opts.bindHost}' without a bearer token: anything that can reach the port could drive tenant operations with these startup credentials. Pass --mcp-auth-token <secret> (or set FRODO_MCP_AUTH_TOKEN), or --allow-unauthenticated to accept the risk explicitly.`
+        );
       }
       const logger = new McpLogger(opts.mcpLogLevel);
       if (state.getHost()) {
@@ -236,6 +301,21 @@ export default function setup() {
         http: {
           bindHost: opts.bindHost,
           port: Number(opts.port),
+          // Never the token value itself — summaries and logs are shipped to
+          // MCP clients as protocol-level messages.
+          allowedHosts:
+            transport === 'http'
+              ? computeHttpAllowedHosts(
+                  opts.bindHost ?? '127.0.0.1',
+                  opts.allowedHosts
+                )
+              : undefined,
+          auth:
+            transport === 'http'
+              ? authToken
+                ? ('on' as const)
+                : ('off' as const)
+              : undefined,
         },
         authMode: inferAuthModeFromState(),
         host: activeHost,
@@ -268,7 +348,6 @@ export default function setup() {
 
       logStartupSummary(logger, startupSummary);
       const startupInfo: McpServerStartupInfo = { logger };
-      const transport = opts.transport ?? 'stdio';
       if (transport === 'stdio') {
         await startStdioTransport(service, startupInfo);
       } else {
@@ -276,7 +355,11 @@ export default function setup() {
           service,
           opts.bindHost ?? '127.0.0.1',
           Number(opts.port ?? '6277'),
-          startupInfo
+          startupInfo,
+          {
+            allowedHosts: opts.allowedHosts,
+            authToken,
+          }
         );
       }
     });
@@ -288,7 +371,12 @@ type StartupSummary = {
   policy: string;
   profile: McpProfileName;
   transport?: 'stdio' | 'http';
-  http: { bindHost?: string; port: number };
+  http: {
+    bindHost?: string;
+    port: number;
+    allowedHosts?: string[];
+    auth?: 'on' | 'off';
+  };
   authMode: 'service-account' | 'admin-account' | 'state-config';
   host?: string;
   deploymentType: string;
@@ -305,6 +393,10 @@ function formatStartupMessages(summary: StartupSummary): string[] {
     `Profile: ${summary.profile}`,
     `Transport: ${summary.transport}`,
     `Auth mode: ${summary.authMode}`,
+    ...(summary.http.allowedHosts
+      ? [`HTTP allowed hosts: ${summary.http.allowedHosts.join(', ')}`]
+      : []),
+    ...(summary.http.auth ? [`HTTP auth: ${summary.http.auth}`] : []),
     `Tools: ${summary.toolCounts.total} total (${summary.toolCounts.canonical} canonical, ${summary.toolCounts.discovery} discovery)`,
     `Backing skills: ${summary.skillCount}`,
     `Import/export exposed: export=${summary.importExportExposed.export}, import=${summary.importExportExposed.import}`,
