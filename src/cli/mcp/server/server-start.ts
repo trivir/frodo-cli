@@ -162,7 +162,7 @@ export default function setup() {
     .addOption(
       new Option(
         '--allowed-hosts <host...>',
-        'Extra Host header values the HTTP transport accepts, extending the default localhost set (localhost, 127.0.0.1, [::1]). host.docker.internal is added automatically when binding a non-loopback host.'
+        'Extra Host header values the HTTP transport accepts, extending the default localhost set (localhost, 127.0.0.1, [::1]). host.docker.internal is added automatically when binding a non-loopback host. Variadic: it swallows everything after it, so put positional arguments before it or separate them with --.'
       )
     )
     .addOption(
