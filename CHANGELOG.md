@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Added
+- Stabilized the `frodo mcp server start` HTTP transport (`--transport http`) so an MCP gateway running in a Docker container on the same host can reach it without changing the gateway's image or network model; every gate is frodo-side configuration:
+  - `SIGHUP` (terminal closed) and `SIGQUIT` (Ctrl+\) now join `SIGTERM`/`SIGINT` in the graceful-shutdown wiring, and shutdown force-closes idle keep-alive sockets before releasing the port -- closing the SSH session that launched a long-lived HTTP server no longer orphans the listener holding the port.
+  - `EADDRINUSE` prints one actionable message (find the incumbent with `lsof -iTCP:<port> -sTCP:LISTEN`, use `--port <other>` or stop it) and exits with code 1, instead of doubling the error through the global unhandled-rejection printer.
+  - `--allowed-hosts <host...>` extends the default `Host` header allow-list (`localhost`, `127.0.0.1`, `[::1]`) with extra client hostnames; `host.docker.internal` is accepted automatically whenever the bind host is non-loopback (the standard bridge-network container alias for the host machine).
+  - `--mcp-auth-token <secret>` (with the `FRODO_MCP_AUTH_TOKEN` environment fallback, preferred so the secret stays out of process listings) requires a matching `Authorization: Bearer` header on every MCP request, timing-safely compared; `GET /health` stays unauthenticated for liveness probes. Binding a non-loopback host without a token refuses to start unless `--allow-unauthenticated` is passed explicitly; loopback binds without a token behave exactly as before.
+  - Request-metadata headers (`MCP-Protocol-Version`, `Mcp-Method`, `Mcp-Name`) are now validated era-conditionally: current-protocol clients get the full header/body cross-checks as before, while earlier-era gateways (LiteLLM defaults to protocol revision 2025-11-25; Kong shipped 2025-06-18) are no longer 400'd at frodo's HTTP layer for headers their protocol era never sends -- the incident behind the original containerized-gateway connection failure.
+
 ## [v4.9.1] - 2026-09-01
 
 ### Fixed
