@@ -115,5 +115,24 @@ services:
 
 The gateway then connects to `http://host.docker.internal:6277/mcp` with `Authorization: Bearer <secret>` on every request. No change to the gateway's image or network model is needed: opening the three gates (non-loopback bind, the `host.docker.internal` Host alias -- automatic --, and the token) is all frodo-side configuration.
 
-Older gateway stacks (LiteLLM defaults to protocol revision 2025-11-25; Kong shipped 2025-06-18) speak an earlier MCP protocol era without the 2026 request-metadata headers. Frodo detects the era per request and applies the matching rules, so those clients work without configuration. A request is only rejected at this layer for a genuinely unsupported protocol version, a malformed `_meta` envelope claim (a claim key that is present but does not carry a protocol-version string, answered `400 -32602` exactly as the MCP SDK answers it), or an empty JSON-RPC batch (`400 -32600`).
+### Observability (PID, heartbeat, crash lines)
+
+The HTTP server is long-lived and usually watched remotely, so its log carries the basics a remote operator needs:
+
+- The startup line names the server PID: `MCP HTTP server (pid 12345) listening on http://...` -- pair it with `lsof -iTCP:<port> -sTCP:LISTEN` when sorting out who holds a port.
+- A liveness heartbeat is logged every 15 minutes (`heartbeat: MCP HTTP server still listening on ...`) so a silent process can be told apart from a hung one.
+- Signals are logged as they arrive (`shutdown: received SIGHUP, shutting down MCP HTTP server`), so a remotely triggered shutdown leaves a record of why the server went down.
+- If the port is already taken, the `EADDRINUSE` message probes the incumbent's `/health` endpoint: when something answers, the message says an MCP server is already serving on that port; otherwise it falls back to the generic "another process is likely listening" wording with the `lsof` discovery hint. Either way the process exits with code 1.
+- Process-level crashes in server mode log one timestamped line each (event `crash`): an uncaught exception logs the error and first stack frame, releases the port best-effort, and exits with code 1 (a supervisor should restart it); an unhandled rejection logs and keeps serving -- a rejected promise in one tool call must not take down a healthy listener.
+- Every request's path through the gates is visible at `--mcp-log-level debug` (`http` event: arrival with method/URL/remote address, the deciding gate and value on each rejection -- including which gate rejected an unauthorized POST, without ever logging the Authorization header's contents -- and one acceptance line before the SDK transport answers). At the default `info` level the per-request lines stay quiet.
+
+Note for `frodo`'s own launcher: signals delivered to only the `frodo` wrapper process (`launch.cjs`) -- a closing SSH session sending SIGHUP to the session leader, or `kill <wrapper-pid>` -- are forwarded to the actual CLI child, and a wrapper that exits for any other reason takes the child down with it. Without that forwarding, a long-running HTTP server could outlive its parent and keep holding the port with nobody watching it.
+
+### Protocol-era handling (request metadata and batches)
+
+Older gateway stacks (LiteLLM defaults to protocol revision 2025-11-25; Kong shipped 2025-06-18) speak an earlier MCP protocol era without the 2026 request-metadata headers. Frodo detects the era per request and applies the matching rules, so those clients work without configuration. A request is only rejected at this layer for a genuinely unsupported protocol version, or for one of these SDK-parity validation cells (each answered exactly as the MCP SDK's own HTTP entry answers it):
+
+- an invalid `_meta` envelope (400 -32602): a request claiming the 2026-07-28 per-request envelope must carry BOTH required envelope keys -- the protocol-version claim (a string) AND `io.modelcontextprotocol/clientCapabilities` (a present object). A claim naming any revision without the capabilities key is rejected `envelope-invalid` (`io.modelcontextprotocol/clientCapabilities: missing`), not silently served. The one carve-out, matching the SDK: an `initialize` whose claim lacks the capabilities key is still treated as the legacy handshake and answered normally.
+- an empty JSON-RPC batch (`[]`) or a batch containing any element with an envelope claim (400 -32600, `batch-with-modern-element`) -- the 2026 per-request envelope has no batch semantics, and the SDK rejects on claim presence whatever the claim's validity or era.
+- a modern `MCP-Protocol-Version` header on a request without a complete envelope (400 -32602, listing every missing envelope key), or a header/body disagreement (400 -32020).
 
