@@ -670,7 +670,16 @@ export async function startHttpTransport(
       reject(err);
     });
 
-    const shutdown = () => {
+    const shutdown = (signal: NodeJS.Signals) => {
+      // One terse line per received signal: when shutdown is triggered
+      // remotely (SSH hangup, orchestrator stop), the log is the only
+      // record of which signal caused it.
+      const signalLog = `received ${signal}, shutting down MCP HTTP server`;
+      if (startupInfo) {
+        startupInfo.logger.info('shutdown', signalLog);
+      } else {
+        printMessage(signalLog, 'info');
+      }
       // Stop accepting connections immediately, then force-close any
       // keep-alive sockets so the port is released deterministically even
       // when a client (or gateway) holds an idle persistent connection —
@@ -756,6 +765,22 @@ async function handleHttpRequest(
     body = await readJsonBody(req);
   } catch {
     res.writeHead(400).end('Invalid JSON body');
+    return;
+  }
+
+  // Empty JSON-RPC batch (SDK `classifyBatch` parity): the hand-wired
+  // transport would silently answer 202 for an array with no elements, so
+  // reject it here the way the SDK's own classifier does. Non-empty batches
+  // keep their current behavior (forwarded to the transport).
+  if (Array.isArray(body) && body.length === 0) {
+    writeJsonRpcErrorResponse(res, 400, {
+      jsonrpc: '2.0',
+      id: null,
+      error: {
+        code: INVALID_REQUEST_ERROR_CODE,
+        message: EMPTY_BATCH_ERROR_MESSAGE,
+      },
+    });
     return;
   }
 
@@ -852,8 +877,10 @@ function readJsonBody(req: IncomingMessage): Promise<unknown> {
  *
  * Returns a spec-aligned error when a rule fires: -32020 (HeaderMismatch)
  * for header/body disagreements, -32602 (invalid params) for a modern
- * header without the envelope claim it must accompany. Null when the
- * request may proceed.
+ * header without the envelope claim it must accompany and for a
+ * present-but-malformed envelope claim (SDK `envelope-invalid` parity — a
+ * malformed claim is a validation error, never a silent fallback to legacy
+ * handling). Null when the request may proceed.
  */
 export function validateHttpRequestMetadata(
   req: IncomingMessage,
@@ -893,7 +920,16 @@ export function validateHttpRequestMetadata(
   if (isNotification) {
     // Notifications carry no envelope claim under the current spec and are
     // never required to carry the modern headers; present ones are only
-    // cross-checked (SDK parity).
+    // cross-checked (SDK parity). A present-but-malformed claim still
+    // rejects (SDK `notification-envelope-invalid` parity): notifications
+    // get the same never-silently-legacy rule as requests.
+    const malformedClaimError = buildMalformedClaimError(
+      envelopeClaim,
+      requestId
+    );
+    if (malformedClaimError) {
+      return malformedClaimError;
+    }
     if (
       envelopeClaim.hasClaim &&
       headerProtocolVersion !== undefined &&
@@ -920,6 +956,17 @@ export function validateHttpRequestMetadata(
   }
 
   if (envelopeClaim.hasClaim) {
+    // A present claim whose value is not a string is malformed, not
+    // claim-less: rejecting here (SDK `envelope-invalid` parity) is what
+    // keeps a bad value from downgrading the request to legacy handling
+    // with every modern cross-check silently skipped.
+    const malformedClaimError = buildMalformedClaimError(
+      envelopeClaim,
+      requestId
+    );
+    if (malformedClaimError) {
+      return malformedClaimError;
+    }
     if (
       headerProtocolVersion !== undefined &&
       envelopeClaim.version !== undefined &&
@@ -1049,7 +1096,7 @@ type MetadataValidationHttpError = {
   statusCode: 400;
   requestId: string | number | null;
   error: {
-    /** -32020 (HeaderMismatch) or -32602 (invalid params). */
+    /** -32020 (HeaderMismatch), -32602 (invalid params), or -32600 (InvalidRequest). */
     code: number;
     message: string;
     data?: unknown;
@@ -1058,6 +1105,10 @@ type MetadataValidationHttpError = {
 
 const HEADER_MISMATCH_ERROR_CODE = -32020 as const;
 const INVALID_PARAMS_ERROR_CODE = -32602 as const;
+const INVALID_REQUEST_ERROR_CODE = -32600 as const;
+
+// The SDK's `empty-batch` cell wording (classifyBatch).
+const EMPTY_BATCH_ERROR_MESSAGE = 'Bad Request: empty JSON-RPC batch';
 
 function getUnsupportedProtocolVersionError(
   req: IncomingMessage,
@@ -1138,7 +1189,10 @@ function buildHeaderMismatchMessage(data: unknown): string {
 
 function buildMetadataValidationError(
   requestId: string | number | null,
-  code: typeof HEADER_MISMATCH_ERROR_CODE | typeof INVALID_PARAMS_ERROR_CODE,
+  code:
+    | typeof HEADER_MISMATCH_ERROR_CODE
+    | typeof INVALID_PARAMS_ERROR_CODE
+    | typeof INVALID_REQUEST_ERROR_CODE,
   message: string,
   data?: unknown
 ): MetadataValidationHttpError {
@@ -1210,27 +1264,82 @@ function isJsonRpcNotification(body: unknown): boolean {
 }
 
 /**
+ * The -32602 shape of the SDK's `envelope-invalid` cell: a `_meta` envelope
+ * claim that is present but not a string, so it names no protocol revision.
+ * The message and `data.envelope` issue mirror the SDK's wording for the
+ * claim key itself
+ * (`Invalid _meta envelope for protocol revision 2026-07-28: <key>: <problem>`).
+ *
+ * The schema-level details of the full envelope (the `clientInfo`/
+ * `clientCapabilities` keys the 2026-07-28 envelope also requires) are
+ * deliberately NOT validated here — that is the deferred option-(b) scope
+ * (full modern envelope shape validation); only the claim key's own
+ * well-formedness is enforced, the minimum needed so a bad value can never
+ * downgrade a request to legacy handling.
+ */
+function buildMalformedClaimError(
+  envelopeClaim: {
+    hasClaim: boolean;
+    version: string | undefined;
+    receivedType: string | undefined;
+  },
+  requestId: string | number | null
+): MetadataValidationHttpError | null {
+  if (!envelopeClaim.hasClaim || envelopeClaim.version !== undefined) {
+    return null;
+  }
+  const problem = `Invalid input: expected string, received ${envelopeClaim.receivedType}`;
+  return buildMetadataValidationError(
+    requestId,
+    INVALID_PARAMS_ERROR_CODE,
+    `Invalid _meta envelope for protocol revision ${FIRST_MODERN_PROTOCOL_VERSION}: ` +
+      `${PROTOCOL_VERSION_META_KEY}: ${problem}`,
+    { envelope: { key: PROTOCOL_VERSION_META_KEY, problem } }
+  );
+}
+
+/**
  * The per-request envelope claim carried in the body's `params._meta`: a
  * request claims the envelope mechanism by having the reserved
  * protocol-version key present, regardless of value well-formedness (SDK
  * `hasEnvelopeClaim` parity — a malformed claim is a validation error, never
  * a silent fallback to legacy handling).
+ *
+ * `version` is the claim value when it is a string; `receivedType` carries
+ * the JSON type name of a non-string claim value (mirroring zod's
+ * `received <type>` wording) so the malformed-claim rejection can render the
+ * SDK's exact `envelope-invalid` problem text.
  */
 function extractEnvelopeClaim(body: unknown): {
   hasClaim: boolean;
   version: string | undefined;
+  receivedType: string | undefined;
 } {
   const params = getRequestParams(body);
   const meta = params?._meta;
   if (!meta || typeof meta !== 'object' || Array.isArray(meta)) {
-    return { hasClaim: false, version: undefined };
+    return { hasClaim: false, version: undefined, receivedType: undefined };
   }
   const hasClaim = PROTOCOL_VERSION_META_KEY in meta;
-  const version = (meta as Record<string, unknown>)[PROTOCOL_VERSION_META_KEY];
+  const raw = (meta as Record<string, unknown>)[PROTOCOL_VERSION_META_KEY];
   return {
     hasClaim,
-    version: typeof version === 'string' ? version : undefined,
+    version: typeof raw === 'string' ? raw : undefined,
+    // A present non-string claim is the only case that ever reaches the
+    // malformed-claim rejection, so this type name is only rendered there.
+    receivedType: typeof raw === 'string' ? undefined : describeJsonType(raw),
   };
+}
+
+/** JSON value's type name, in zod's `expected string, received <type>` wording. */
+function describeJsonType(value: unknown): string {
+  if (value === null) {
+    return 'null';
+  }
+  if (Array.isArray(value)) {
+    return 'array';
+  }
+  return typeof value;
 }
 
 function isModernProtocolVersion(version: string | undefined): boolean {

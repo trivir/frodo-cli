@@ -24,6 +24,7 @@ import {
 import c from '../../../utils/ColorTheme';
 import { printMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
+import { resolveMcpAuthTokenValue } from './server-auth';
 import { type McpPolicyPreset, resolvePolicySelection } from './server-policy';
 
 type McpProfileName =
@@ -79,11 +80,10 @@ type McpStartOptions = {
  * and testing.
  */
 function resolveMcpAuthToken(opts: McpStartOptions): string | undefined {
-  if (opts.mcpAuthToken) {
-    return opts.mcpAuthToken;
-  }
-  const fromEnv = process.env.FRODO_MCP_AUTH_TOKEN;
-  return fromEnv ? fromEnv : undefined;
+  return resolveMcpAuthTokenValue(
+    opts.mcpAuthToken,
+    process.env.FRODO_MCP_AUTH_TOKEN
+  );
 }
 
 /**

@@ -115,5 +115,5 @@ services:
 
 The gateway then connects to `http://host.docker.internal:6277/mcp` with `Authorization: Bearer <secret>` on every request. No change to the gateway's image or network model is needed: opening the three gates (non-loopback bind, the `host.docker.internal` Host alias -- automatic --, and the token) is all frodo-side configuration.
 
-Older gateway stacks (LiteLLM defaults to protocol revision 2025-11-25; Kong shipped 2025-06-18) speak an earlier MCP protocol era without the 2026 request-metadata headers. Frodo detects the era per request and applies the matching rules, so those clients work without configuration; only a genuinely unsupported protocol version is rejected.
+Older gateway stacks (LiteLLM defaults to protocol revision 2025-11-25; Kong shipped 2025-06-18) speak an earlier MCP protocol era without the 2026 request-metadata headers. Frodo detects the era per request and applies the matching rules, so those clients work without configuration. A request is only rejected at this layer for a genuinely unsupported protocol version, a malformed `_meta` envelope claim (a claim key that is present but does not carry a protocol-version string, answered `400 -32602` exactly as the MCP SDK answers it), or an empty JSON-RPC batch (`400 -32600`).
 
