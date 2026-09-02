@@ -290,27 +290,31 @@ function describeCrash(kind: string, error: unknown): string {
 }
 
 /**
- * Registers process-level crash handlers scoped to the MCP server lifetime.
+ * Registers the process-level `uncaughtException` crash handler scoped to
+ * the MCP server lifetime.
  *
- * The CLI's global `unhandledRejection` handler lives in FrodoCommand.ts and
- * is intentionally shared by every command; these handlers are the
- * server-mode additions and are registered ONLY from the transport start
- * paths. Like FrodoCommand's, each registration is guarded by
- * `process.listenerCount(name) === 0` so repeated starts (and test workers)
- * never stack handlers.
+ * Unhandled promise rejections are NOT registered here: FrodoCommand's
+ * constructor (src/cli/FrodoCommand.ts) installs a global
+ * `unhandledRejection` handler during command-tree assembly — strictly
+ * before any transport start path runs — so a `listenerCount === 0` guard
+ * for rejections could never pass on a CLI path, and registering
+ * unconditionally would stack a second handler behind FrodoCommand's (which
+ * logs the rejection and sets `process.exitCode = 1`). Rejections in server
+ * mode are therefore owned by FrodoCommand's global handler, unchanged: they
+ * are logged (the "please report this unhandled error" block) and set exit
+ * code 1, while the server keeps serving. This handler covers the event
+ * FrodoCommand does not handle: an uncaughtException, which nothing else
+ * registers.
  *
- * - `uncaughtException`: log one crash line, best-effort close the server
- *   (`options.beforeExit`), then `process.exit(1)` — an uncaught exception
- *   means the process is in an unknown state; a clean exit lets the
- *   supervisor (launch wrapper, systemd, container runtime) restart it.
- * - `unhandledRejection`: log and continue. A rejected promise somewhere in
- *   a tool call must not tear down a server that is still healthy and
- *   serving other requests. Unlike FrodoCommand's global handler this does
- *   NOT poison `process.exitCode`: the server keeps running, so a non-zero
- *   exit code would misreport a live process as failed (e.g. to a container
- *   orchestrator).
+ * Registration is guarded by `process.listenerCount('uncaughtException')
+ * === 0` so repeated starts (and test workers) never stack handlers.
  *
- * Returns a dispose function that removes the handlers it registered (a
+ * On an uncaughtException: log one crash line, best-effort close the server
+ * (`options.beforeExit`), then `process.exit(1)` — an uncaught exception
+ * means the process is in an unknown state; a clean exit lets the
+ * supervisor (launch wrapper, systemd, container runtime) restart it.
+ *
+ * Returns a dispose function that removes the handler it registered (a
  * no-op when the guard skipped registration) — for tests.
  */
 export function registerServerCrashHandlers(
@@ -326,9 +330,7 @@ export function registerServerCrashHandlers(
     }
   };
 
-  const added: Array<
-    ['uncaughtException' | 'unhandledRejection', (arg: unknown) => void]
-  > = [];
+  const added: Array<['uncaughtException', (arg: unknown) => void]> = [];
 
   if (!process.listenerCount('uncaughtException')) {
     const onUncaughtException = (error: unknown): void => {
@@ -345,20 +347,6 @@ export function registerServerCrashHandlers(
     };
     process.on('uncaughtException', onUncaughtException);
     added.push(['uncaughtException', onUncaughtException]);
-  }
-
-  if (!process.listenerCount('unhandledRejection')) {
-    const onUnhandledRejection = (reason: unknown): void => {
-      logCrash('unhandledRejection', reason);
-      // Log-and-continue, deliberately: the server keeps serving. No
-      // exitCode poisoning either — this process is a long-lived server, and
-      // a non-zero exit code on a healthy listener reads as a crash to
-      // whatever supervisor launched it. (FrodoCommand's global handler,
-      // which normally wins the listenerCount guard on CLI paths, keeps its
-      // own exitCode semantics — untouched by this scoped registration.)
-    };
-    process.on('unhandledRejection', onUnhandledRejection);
-    added.push(['unhandledRejection', onUnhandledRejection]);
   }
 
   return () => {
@@ -809,7 +797,12 @@ export async function startHttpTransport(
         // exitCode, promise resolved) — rejecting would surface through the
         // global unhandledRejection handler in FrodoCommand.ts and print a
         // second, noisier "please report this unhandled error" block for a
-        // completely expected condition.
+        // completely expected condition. The same teardown the shutdown
+        // path runs (heartbeat clear + crash-handler dispose) runs here too:
+        // a resolved-but-poisoned-exitCode process should not keep a
+        // heartbeat timer or process-level handlers registered.
+        clearInterval(heartbeat);
+        disposeCrashHandlers();
         const incumbent = await probeHttpServerHealth(port);
         printMessage(
           `MCP HTTP server: port ${port} on ${bindHost} is already in use — ` +
@@ -925,8 +918,12 @@ async function handleHttpRequest(
   debug?: (message: string) => void
 ): Promise<void> {
   // Arrival line: even 404s and health probes are visible at debug level.
+  // The path only, never the query string: the URL is logged before any
+  // routing decision, and a caller that put secret material in a query
+  // parameter (`/mcp?token=...`) must not see it echoed into the log.
+  const routePath = req.url?.split('?')[0] ?? '';
   debug?.(
-    `${req.method} ${req.url} from ${req.socket?.remoteAddress ?? 'unknown'}`
+    `${req.method} ${routePath} from ${req.socket?.remoteAddress ?? 'unknown'}`
   );
   // Route matching ignores the query string: a request to `/mcp?x=y` names
   // the same endpoint (RFC 9110 — the query is not part of the path). The
@@ -934,7 +931,6 @@ async function handleHttpRequest(
   // the widened auth surface below stays in lockstep (the bearer gate keys
   // on the same route, so widening it widens the authed surface identically
   // — no change in exposure).
-  const routePath = req.url?.split('?')[0] ?? '';
 
   // Health probe — deliberately unauthenticated: liveness probes must not
   // need secrets, and the body leaks only `{ status: 'ok' }`.
@@ -1067,9 +1063,7 @@ async function handleHttpRequest(
     !accept.includes('application/json') ||
     !accept.includes('text/event-stream')
   ) {
-    debug?.(
-      `rejected: 406 Accept header ${String(req.headers.accept) ?? '(none)'}`
-    );
+    debug?.(`rejected: 406 Accept header ${req.headers.accept ?? '(none)'}`);
     res
       .writeHead(406)
       .end(
@@ -1162,11 +1156,11 @@ function readJsonBody(req: IncomingMessage): Promise<unknown> {
  *   claim is a mismatch.
  * - A modern (`>= 2026-07-28`) `MCP-Protocol-Version` header on a request
  *   without an envelope claim is invalid (-32602) — the SDK's
- *   `modern-header-without-claim` cell. Notifications are exempt: they
- *   carry no envelope claim under the current spec, so a modern header on a
- *   claim-less notification is accepted with only cross-checks applied.
+ *   `modern-header-without-claim` cell. Notifications get the SDK's
+ *   narrower `classifyNotificationBody` semantics instead (see the
+ *   notification branch below): only the claim's string-ness is validated.
  * - Legacy traffic requires none of the modern headers, and stray
- *   `Mcp-Method`/`Mcp-Name` headers on legacy requests are ignored (SDK
+ *   `Mcp-Method`/`Mcp-Name` headers on legacy traffic are ignored (SDK
  *   parity — never enforced on legacy traffic).
  *
  * Returns a spec-aligned error when a rule fires: -32020 (HeaderMismatch)
@@ -1219,12 +1213,26 @@ export function validateHttpRequestMetadata(
   }
 
   if (isNotification) {
-    // Notifications carry no envelope claim under the current spec and are
-    // never required to carry the modern headers; present ones are only
-    // cross-checked (SDK parity). A present-but-invalid claim still rejects
-    // (SDK `notification-envelope-invalid` parity): notifications get the
-    // same never-silently-legacy rule as requests.
-    const malformedClaimError = buildEnvelopeInvalidError(
+    // Notifications mirror the SDK's `classifyNotificationBody` exactly,
+    // which is NARROWER than the request path's envelope validation (both
+    // verified live against classifyInboundRequest):
+    //
+    // - A string claim names the notification's era and requires NO
+    //   capabilities key: the SDK serves a claimed notification without
+    //   `clientCapabilities` (kind=modern, revision from the claim — modern
+    //   and legacy-dated claims alike). Only the claim's presence and the
+    //   string-ness of its value are checked.
+    // - A present claim with a NON-STRING value is the one invalid shape:
+    //   -32602 `notification-envelope-invalid`, keyed on the claim key's
+    //   own problem (the SDK's `.find(key === PROTOCOL_VERSION_META_KEY)` —
+    //   a caps issue beside a non-string claim is never reported).
+    // - The header/body version cross-check applies whenever a header names
+    //   a different revision than the claim (modern OR legacy-dated claim).
+    // - The Mcp-Method cross-check applies only when the notification
+    //   classifies modern; on a legacy-dated or claim-less notification a
+    //   mismatched Mcp-Method header is ignored (SDK parity — verified
+    //   live: both classify served, not rejected).
+    const malformedClaimError = buildNotificationEnvelopeInvalidError(
       envelopeClaim,
       requestId
     );
@@ -1243,7 +1251,17 @@ export function validateHttpRequestMetadata(
       });
     }
     const headerMethod = getSingleHeaderValue(req, 'mcp-method');
+    // The method cross-check fires only for modern-classified
+    // notifications: a modern-claim notification (whatever the header says)
+    // or a claim-less notification under a modern header. A legacy-dated
+    // claim, or a claim-less notification without a modern header,
+    // classifies legacy-era and ignores a stray Mcp-Method header — SDK
+    // parity (verified live: both shapes serve, not reject).
+    const notificationClassifiesModern = envelopeClaim.hasClaim
+      ? isModernProtocolVersion(envelopeClaim.version)
+      : headerIsModern;
     if (
+      notificationClassifiesModern &&
       headerMethod !== undefined &&
       bodyMethod !== undefined &&
       headerMethod !== bodyMethod
@@ -1669,6 +1687,40 @@ function buildEnvelopeInvalidError(
   );
 }
 
+/**
+ * The notification-path twin of {@linkcode buildEnvelopeInvalidError},
+ * mirroring the SDK's `notification-envelope-invalid` cell exactly: the
+ * claim key's OWN issue is reported — `.find(key ===
+ * PROTOCOL_VERSION_META_KEY)` in the SDK — and nothing else. A claimed
+ * notification with a non-string claim value is the one rejected shape
+ * (-32602, the claim key's type error); a valid string claim requires no
+ * capabilities key and is never rejected here (the SDK serves claimed
+ * notifications with no capabilities key at all — verified live).
+ */
+function buildNotificationEnvelopeInvalidError(
+  envelopeClaim: {
+    hasClaim: boolean;
+    version: string | undefined;
+    receivedType: string | undefined;
+    meta: Record<string, unknown> | undefined;
+  },
+  requestId: string | number | null
+): MetadataValidationHttpError | null {
+  if (!envelopeClaim.hasClaim || envelopeClaim.version !== undefined) {
+    return null;
+  }
+  const problem = `Invalid input: expected string, received ${envelopeClaim.receivedType}`;
+  return buildMetadataValidationError(
+    requestId,
+    INVALID_PARAMS_ERROR_CODE,
+    `Invalid _meta envelope for protocol revision ${FIRST_MODERN_PROTOCOL_VERSION}: ` +
+      `${PROTOCOL_VERSION_META_KEY}: ${problem}`,
+    {
+      envelope: { key: PROTOCOL_VERSION_META_KEY, problem },
+    }
+  );
+}
+
 type EnvelopeIssue = { key: string; problem: string };
 
 /**
@@ -1690,18 +1742,21 @@ function firstEnvelopeIssue(
   // violation of a PRESENT key, so it only surfaces after the capabilities
   // key's own missing check — the SDK answers a claimed `_meta` carrying a
   // number revision and no capabilities key with
-  // `clientCapabilities: missing`, not the claim's type error.
+  // `clientCapabilities: missing`, not the claim's type error (verified
+  // live: validateEnvelopeMeta({protocolVersion: 12345}) returns
+  // [clientCapabilities: missing, protocolVersion: type-error] and
+  // classifyInboundRequest reports the FIRST issue).
   if (!(PROTOCOL_VERSION_META_KEY in meta)) {
     return { key: PROTOCOL_VERSION_META_KEY, problem: 'missing' };
+  }
+  if (!(CLIENT_CAPABILITIES_META_KEY in meta)) {
+    return { key: CLIENT_CAPABILITIES_META_KEY, problem: 'missing' };
   }
   if (version === undefined) {
     return {
       key: PROTOCOL_VERSION_META_KEY,
       problem: `Invalid input: expected string, received ${describeJsonType(meta[PROTOCOL_VERSION_META_KEY])}`,
     };
-  }
-  if (!(CLIENT_CAPABILITIES_META_KEY in meta)) {
-    return { key: CLIENT_CAPABILITIES_META_KEY, problem: 'missing' };
   }
   // Present-but-non-object capabilities are schema violations (zod wording).
   const caps = meta[CLIENT_CAPABILITIES_META_KEY];

@@ -650,6 +650,38 @@ describe('validateHttpRequestMetadata', () => {
     expect(validateHttpRequestMetadata(fakeReq(), body)).toBeNull();
   });
 
+  test('reports clientCapabilities: missing FIRST for a compound shape (non-string claim, no caps) — SDK missing-keys-first order', () => {
+    // SDK parity (verified live against classifyInboundRequest +
+    // validateEnvelopeMeta): a claimed _meta carrying a number revision and
+    // no capabilities key answers `clientCapabilities: missing` — the
+    // missing-keys check runs before the present keys' schema validation —
+    // not the claim's type error. The comment above firstEnvelopeIssue
+    // always described this order; the check order now matches it.
+    const body = {
+      jsonrpc: '2.0',
+      id: 9,
+      method: 'tools/call',
+      params: { name: 'x', _meta: { [META_KEY]: 12345 } },
+    };
+    const err = validateHttpRequestMetadata(fakeReq(), body);
+    expect(err.error.code).toBe(-32602);
+    expect(err.error.message).toBe(
+      `Invalid _meta envelope for protocol revision 2026-07-28: ${CAPS_KEY}: missing`
+    );
+    expect(err.error.data).toEqual({
+      envelope: { key: CAPS_KEY, problem: 'missing' },
+    });
+    // And the same shape under a modern header stays the caps-missing cell.
+    const withHeader = validateHttpRequestMetadata(
+      fakeReq({ 'mcp-protocol-version': '2026-07-28' }),
+      body
+    );
+    expect(withHeader.error.code).toBe(-32602);
+    expect(withHeader.error.message).toBe(
+      `Invalid _meta envelope for protocol revision 2026-07-28: ${CAPS_KEY}: missing`
+    );
+  });
+
   test.each([
     [12345, 'number'],
     [{ nested: true }, 'object'],
@@ -657,17 +689,23 @@ describe('validateHttpRequestMetadata', () => {
     [true, 'boolean'],
     [['2026-07-28'], 'array'],
   ])(
-    'rejects a present-but-non-string envelope claim (%p) with the SDK envelope-invalid shape',
+    'rejects a present-but-non-string envelope claim (%p) with the SDK envelope-invalid shape (when the envelope is otherwise complete)',
     (claimValue, receivedType) => {
       // Before the malformed-claim fix, this body silently downgraded to
       // legacy handling: hasClaim=true but version=undefined made
       // isModernProtocolVersion(undefined) false, skipping every modern
-      // cross-check. SDK parity: envelope-invalid, 400 -32602.
+      // cross-check. SDK parity: envelope-invalid, 400 -32602. The type
+      // error only surfaces once the envelope is otherwise complete (the
+      // capabilities key present) — see the compound-shape cell above for
+      // the missing-caps-first ordering.
       const body = {
         jsonrpc: '2.0',
-        id: 9,
+        id: 10,
         method: 'tools/call',
-        params: { name: 'x', _meta: { [META_KEY]: claimValue } },
+        params: {
+          name: 'x',
+          _meta: { [META_KEY]: claimValue, [CAPS_KEY]: {} },
+        },
       };
       const err = validateHttpRequestMetadata(fakeReq(), body);
       expect(err.error.code).toBe(-32602);
@@ -684,7 +722,11 @@ describe('validateHttpRequestMetadata', () => {
     }
   );
 
-  test('rejects a malformed claim on a notification (notification-envelope-invalid parity)', () => {
+  test('rejects a non-string claim on a notification (notification-envelope-invalid parity, the only notification envelope rejection)', () => {
+    // SDK classifyNotificationBody parity (verified live): a notification
+    // whose claim value is not a string is rejected -32602 with the CLAIM
+    // KEY's type error — the .find(key === PROTOCOL_VERSION_META_KEY)
+    // lookup means a missing capabilities key is never reported here.
     const body = {
       jsonrpc: '2.0',
       method: 'notifications/initialized',
@@ -695,6 +737,61 @@ describe('validateHttpRequestMetadata', () => {
     expect(err.error.message).toBe(
       `Invalid _meta envelope for protocol revision 2026-07-28: ${META_KEY}: Invalid input: expected string, received object`
     );
+    expect(err.error.data).toEqual({
+      envelope: {
+        key: META_KEY,
+        problem: 'Invalid input: expected string, received object',
+      },
+    });
+  });
+
+  test.each([
+    ['a modern claim', '2026-07-28'],
+    ['a legacy-dated claim', '2025-06-18'],
+  ])(
+    'serves a notification carrying %s with NO clientCapabilities key (SDK classifyNotificationBody parity)',
+    (_label, claimValue) => {
+      // Verified live against classifyInboundRequest: claimed notifications
+      // require ONLY a string claim — no capabilities key (kind=modern,
+      // messageKind=notification, whatever the claim's revision). The old
+      // full-envelope check rejected these -32602; the SDK serves them.
+      const body = {
+        jsonrpc: '2.0',
+        method: 'notifications/initialized',
+        params: { _meta: { [META_KEY]: claimValue } },
+      };
+      expect(validateHttpRequestMetadata(fakeReq(), body)).toBeNull();
+    }
+  );
+
+  test('notification header/body version cross-check fires on a claim (SDK notification-header-body-version-mismatch parity)', () => {
+    // Verified live: a notification whose claim names a different revision
+    // than the header is a -32020 mismatch, whatever era the claim names.
+    const body = {
+      jsonrpc: '2.0',
+      method: 'notifications/initialized',
+      params: { _meta: { [META_KEY]: '2025-06-18' } },
+    };
+    const err = validateHttpRequestMetadata(
+      fakeReq({ 'mcp-protocol-version': '2026-07-28' }),
+      body
+    );
+    expect(err.error.code).toBe(-32020);
+  });
+
+  test('ignores a mismatched Mcp-Method header on a legacy-era notification (SDK parity)', () => {
+    // Verified live (classifyNotificationBody): the method cross-check
+    // fires only for modern-classified notifications — a legacy-dated
+    // claim, or a claim-less notification with no modern header, serves
+    // despite a stray Mcp-Method header.
+    const body = {
+      jsonrpc: '2.0',
+      method: 'notifications/initialized',
+      params: { _meta: { [META_KEY]: '2025-06-18' } },
+    };
+    expect(
+      validateHttpRequestMetadata(fakeReq({ 'mcp-method': 'tools/call' }), body)
+    ).toBeNull();
   });
 
   test('still legacy-accepts an initialize with a malformed claim and no modern header (SDK precedence)', () => {
@@ -730,12 +827,16 @@ describe('validateHttpRequestMetadata', () => {
   test('rejects a malformed claim even when a modern header would otherwise pair with it', () => {
     // The regression cell from review: a modern header + non-string claim
     // must not skip the modern checks, and the claim's own malformedness is
-    // the error that fires.
+    // the error that fires (with the capabilities key present, so the
+    // type error is the first issue — see the compound-shape cell).
     const body = {
       jsonrpc: '2.0',
-      id: 10,
+      id: 12,
       method: 'tools/call',
-      params: { name: 'x', _meta: { [META_KEY]: 12345 } },
+      params: {
+        name: 'x',
+        _meta: { [META_KEY]: 12345, [CAPS_KEY]: {} },
+      },
     };
     const err = validateHttpRequestMetadata(
       fakeReq({ 'mcp-protocol-version': '2026-07-28' }),
@@ -788,11 +889,16 @@ describe('validateHttpRequestMetadata', () => {
 // ---------------------------------------------------------------------------
 
 describe('registerServerCrashHandlers', () => {
-  // Registrations are guarded by process.listenerCount(name) === 0, so these
-  // tests assert the guard, the dispose contract, and the log-and-continue
-  // semantics. The uncaughtException exit(1) path cannot run inside the jest
-  // worker (it would kill the suite); the dist smoke test exercises it
-  // against a spawned child process instead.
+  // Registration is guarded by process.listenerCount('uncaughtException')
+  // === 0, so these tests assert the guard, the dispose contract, and the
+  // crash-line shape. The uncaughtException exit(1) path cannot run inside
+  // the jest worker (it would kill the suite); a spawned-child dist test
+  // exercises it against the built dist instead.
+  // Unhandled promise rejections are deliberately NOT registered here:
+  // FrodoCommand's constructor installs a global unhandledRejection handler
+  // before any transport start path runs, so rejections in server mode are
+  // owned by FrodoCommand (logged + exitCode 1) — a scoped registration
+  // could only ever stack behind it.
   let savedExitCode;
 
   beforeEach(() => {
@@ -803,9 +909,8 @@ describe('registerServerCrashHandlers', () => {
     process.exitCode = savedExitCode;
   });
 
-  test('registers exactly one handler of each kind when none exist', () => {
+  test('registers exactly one uncaughtException handler when none exist', () => {
     const beforeException = process.listenerCount('uncaughtException');
-    const beforeRejection = process.listenerCount('unhandledRejection');
     const dispose = registerServerCrashHandlers();
     if (beforeException === 0) {
       expect(process.listenerCount('uncaughtException')).toBe(1);
@@ -814,15 +919,23 @@ describe('registerServerCrashHandlers', () => {
       // transport's) suppresses the scoped registration entirely.
       expect(process.listenerCount('uncaughtException')).toBe(beforeException);
     }
-    if (beforeRejection === 0) {
-      expect(process.listenerCount('unhandledRejection')).toBe(1);
-    } else {
-      expect(process.listenerCount('unhandledRejection')).toBe(beforeRejection);
-    }
     dispose();
   });
 
-  test('dispose removes exactly the handlers it added (re-start re-registers cleanly)', () => {
+  test('never registers an unhandledRejection handler (FrodoCommand owns rejections)', () => {
+    // FrodoCommand's constructor registers the global unhandledRejection
+    // handler during command-tree assembly — before any startHttpTransport
+    // call — so the old listenerCount-guarded rejection registration was
+    // dead code on every CLI path (review finding). The scoped handler
+    // covers only uncaughtException; a rejection inside the jest worker
+    // reaches FrodoCommand's handler, not this one.
+    const beforeRejection = process.listenerCount('unhandledRejection');
+    const dispose = registerServerCrashHandlers();
+    expect(process.listenerCount('unhandledRejection')).toBe(beforeRejection);
+    dispose();
+  });
+
+  test('dispose removes exactly the handler it added (re-start re-registers cleanly)', () => {
     const beforeException = process.listenerCount('uncaughtException');
     const beforeRejection = process.listenerCount('unhandledRejection');
     const dispose = registerServerCrashHandlers();
@@ -834,52 +947,40 @@ describe('registerServerCrashHandlers', () => {
     expect(process.listenerCount('uncaughtException')).toBe(beforeException);
   });
 
-  test('skips registration when a handler already exists (FrodoCommand guard parity)', () => {
+  test('skips registration when an uncaughtException handler already exists (guard parity)', () => {
     const fake = () => {};
-    process.on('unhandledRejection', fake);
-    const countBefore = process.listenerCount('unhandledRejection');
+    process.on('uncaughtException', fake);
+    const countBefore = process.listenerCount('uncaughtException');
     const dispose = registerServerCrashHandlers();
-    expect(process.listenerCount('unhandledRejection')).toBe(countBefore);
-    process.off('unhandledRejection', fake);
+    expect(process.listenerCount('uncaughtException')).toBe(countBefore);
+    process.off('uncaughtException', fake);
     dispose();
-  });
-
-  test('an unhandledRejection is logged and does not poison the exit code', () => {
-    // Log-and-continue is the locked semantics: a rejected promise somewhere
-    // in a tool call must not tear down a healthy server, and must not make
-    // a live listener report itself failed. The crash line goes through the
-    // captured printMessage (no startupInfo in unit tests).
-    const exitCodeBefore = process.exitCode;
-    const dispose = registerServerCrashHandlers();
-    try {
-      // Notify the handler without invoking other listeners' rejections:
-      // process.emit dispatches to all registered handlers, including any
-      // from previously started transports in this worker — all of them are
-      // log-only by contract, so the emit is safe.
-      process.emit('unhandledRejection', new Error('probe-rejection'));
-      expect(process.exitCode).not.toBe(1);
-      const crashLines = printed.filter(
-        (p) => p.type === 'error' && p.msg.includes('unhandledRejection')
-      );
-      expect(crashLines.length).toBeGreaterThanOrEqual(1);
-      expect(crashLines.some((p) => p.msg.includes('probe-rejection'))).toBe(true);
-      // Crash lines are timestamped and carry the first stack frame.
-      expect(crashLines[0].msg).toMatch(/\d{4}-\d{2}-\d{2}T/);
-      expect(crashLines[0].msg).toContain('(at ');
-    } finally {
-      process.exitCode = exitCodeBefore;
-      dispose();
-    }
   });
 
   test('the crash line carries name, message, and first stack frame', () => {
+    // The crash-line shape is shared by every crash log; exercised through
+    // the uncaughtException handler itself (registered here when the worker
+    // has none, so emitting dispatches only to handlers this suite added —
+    // all log-and-continue in the worker because process.exit is stubbed
+    // below; a real exit(1) would kill the suite).
+    const exitSpy = jest
+      .spyOn(process, 'exit')
+      .mockImplementation(() => undefined);
     const dispose = registerServerCrashHandlers();
-    printed.length = 0;
-    process.emit('unhandledRejection', new TypeError('typed-probe'));
-    const line = printed.find((p) => p.msg.includes('typed-probe'));
-    expect(line.msg).toContain('TypeError: typed-probe');
-    expect(line.msg).toMatch(/\(at .+/);
-    dispose();
+    try {
+      process.emit('uncaughtException', new TypeError('typed-probe'));
+      const line = printed.find((p) => p.msg.includes('typed-probe'));
+      expect(line).toBeDefined();
+      expect(line.type).toBe('error');
+      expect(line.msg).toContain('TypeError: typed-probe');
+      expect(line.msg).toMatch(/\d{4}-\d{2}-\d{2}T/);
+      expect(line.msg).toMatch(/\(at .+/);
+      // The deliberate exit is part of the contract.
+      expect(exitSpy).toHaveBeenCalledWith(1);
+    } finally {
+      exitSpy.mockRestore();
+      dispose();
+    }
   });
 });
 
@@ -1000,10 +1101,14 @@ describe('startHttpTransport', () => {
     expect(payload.result.serverInfo.name).toBe('frodo-mcp');
   }, 30000);
 
-  test('rejects a malformed (non-string) envelope claim with 400 -32602 end to end', async () => {
-    // The QA reproduction: before the fix this POST returned 202 with no
-    // body (silently downgraded to legacy handling); now it is the SDK's
-    // envelope-invalid answer.
+  test('rejects a compound envelope shape (non-string claim, no caps) with caps-missing first, end to end (SDK parity)', async () => {
+    // The QA reproduction, updated to the SDK's missing-keys-first order:
+    // before this fix a claimed _meta carrying a number revision and no
+    // capabilities key answered the claim's type error; the SDK reports
+    // `clientCapabilities: missing` (verified live: validateEnvelopeMeta
+    // lists the missing key first and classifyInboundRequest reports the
+    // first issue). A non-string claim WITH the capabilities key still
+    // answers the type error (the sibling unit cell covers that shape).
     const port = await getFreePort();
     currentDone = startServer('127.0.0.1', port);
     await waitForListening('127.0.0.1', port);
@@ -1022,14 +1127,66 @@ describe('startHttpTransport', () => {
     const payload = JSON.parse(res.text);
     expect(payload.error.code).toBe(-32602);
     expect(payload.error.message).toBe(
-      'Invalid _meta envelope for protocol revision 2026-07-28: io.modelcontextprotocol/protocolVersion: Invalid input: expected string, received number'
+      'Invalid _meta envelope for protocol revision 2026-07-28: io.modelcontextprotocol/clientCapabilities: missing'
     );
     expect(payload.error.data).toEqual({
       envelope: {
-        key: 'io.modelcontextprotocol/protocolVersion',
-        problem: 'Invalid input: expected string, received number',
+        key: 'io.modelcontextprotocol/clientCapabilities',
+        problem: 'missing',
       },
     });
+  }, 30000);
+
+  test('serves a claimed notification without clientCapabilities (SDK classifyNotificationBody parity)', async () => {
+    // Verified live: the SDK serves a notification whose envelope claim
+    // names any revision with no capabilities key (kind=modern,
+    // messageKind=notification). The old full-envelope check answered
+    // -32602 for these; notifications get only the claim-string semantics.
+    const port = await getFreePort();
+    currentDone = startServer('127.0.0.1', port);
+    await waitForListening('127.0.0.1', port);
+    const res = await rawRequest(
+      port,
+      'POST',
+      '/mcp',
+      JSON_HEADERS,
+      JSON.stringify({
+        jsonrpc: '2.0',
+        method: 'notifications/initialized',
+        params: {
+          _meta: { [META]: '2026-07-28' },
+        },
+      })
+    );
+    // The SDK transport answers a notification with 202 and no body.
+    expect(res.status).toBe(202);
+  }, 30000);
+
+  test('rejects a non-string claim on a notification with 400 -32602 (claim-key problem, SDK parity)', async () => {
+    // The one notification envelope rejection the SDK has: a claim whose
+    // value is not a string, keyed on the claim key's own type error.
+    const port = await getFreePort();
+    currentDone = startServer('127.0.0.1', port);
+    await waitForListening('127.0.0.1', port);
+    const res = await rawRequest(
+      port,
+      'POST',
+      '/mcp',
+      JSON_HEADERS,
+      JSON.stringify({
+        jsonrpc: '2.0',
+        method: 'notifications/initialized',
+        params: {
+          _meta: { [META]: { nested: 1 } },
+        },
+      })
+    );
+    expect(res.status).toBe(400);
+    const payload = JSON.parse(res.text);
+    expect(payload.error.code).toBe(-32602);
+    expect(payload.error.message).toBe(
+      `Invalid _meta envelope for protocol revision 2026-07-28: ${META}: Invalid input: expected string, received object`
+    );
   }, 30000);
 
   test('SIGHUP and SIGQUIT release the listener, log the signal, and resolve the promise', async () => {
@@ -1252,7 +1409,7 @@ describe('startHttpTransport', () => {
           element,
         ])
       );
-      expect(res.status).toBe(400); // label checked via per-case messages below
+      expect(res.status).toBe(400);
       const payload = JSON.parse(res.text);
       expect(payload.error.code).toBe(-32600);
       expect(payload.error.message).toBe(
@@ -1406,7 +1563,7 @@ describe('startHttpTransport', () => {
     );
     expect(debugLines().some((p) => p.msg.includes('accepted from'))).toBe(true);
     expect(
-      debugLines().some((p) => p.msg.includes('POST /mcp?') || p.msg.includes('POST /mcp from'))
+      debugLines().some((p) => p.msg.includes('POST /mcp from'))
     ).toBe(true);
 
     // Host rejection: a bad Host header is named by the gate line.
@@ -1420,6 +1577,25 @@ describe('startHttpTransport', () => {
     expect(badHost.status).toBe(403);
     expect(
       debugLines().some((p) => p.msg.includes('rejected: invalid Host header'))
+    ).toBe(true);
+
+    // The arrival line logs the route path only: a caller that puts secret
+    // material in a query parameter must not see it echoed into the log.
+    await rawRequest(
+      port,
+      'POST',
+      '/mcp?token=supersecret&correlationId=x',
+      { ...JSON_HEADERS, authorization: 'Bearer tok123' },
+      body
+    );
+    const arrivalWithQuery = debugLines().find((p) =>
+      p.msg.includes('token=supersecret')
+    );
+    expect(arrivalWithQuery).toBeUndefined();
+    expect(
+      debugLines().some(
+        (p) => p.msg.includes('POST /mcp from') && !p.msg.includes('?')
+      )
     ).toBe(true);
   }, 30000);
 
