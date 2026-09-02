@@ -291,6 +291,74 @@ describe('verifyMcpBearerAuthorization', () => {
     // A longer string sharing the prefix must not authenticate either.
     expect(verifyMcpBearerAuthorization('Bearer testsecret-extra', 'testsecret')).toBe(false);
   });
+
+  test('rejects the duplicate-header folding shape (first value wins in node:http)', () => {
+    // node:http folds repeated Authorization headers into a single
+    // comma-joined header value — except `authorization`, which is on
+    // node's single-value header list, so the SERVER sees only the FIRST
+    // value (verified against a live node:http server). The joined form
+    // below is therefore only reachable at this helper's own boundary (a
+    // reverse proxy that joins duplicates before forwarding); asserting it
+    // documents the failure mode: whatever reaches the timing-safe compare
+    // must match the token exactly, and a folded string never does.
+    expect(
+      verifyMcpBearerAuthorization('Bearer testsecret, Bearer other', 'testsecret')
+    ).toBe(false);
+    expect(
+      verifyMcpBearerAuthorization('Bearer testsecret, Bearer testsecret', 'testsecret')
+    ).toBe(false);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Bearer-token resolution (CLI flag / env fallback)
+// ---------------------------------------------------------------------------
+
+describe('resolveMcpAuthTokenValue', () => {
+  const ENV_NAME = 'FRODO_MCP_AUTH_TOKEN';
+  let savedEnv;
+  let resolveMcpAuthTokenValue;
+
+  beforeAll(async () => {
+    // server-auth.ts is dependency-free, so this import needs no mocks.
+    ({ resolveMcpAuthTokenValue } = await import(
+      '../../src/cli/mcp/server/server-auth.ts'
+    ));
+  });
+
+  beforeEach(() => {
+    savedEnv = process.env[ENV_NAME];
+    delete process.env[ENV_NAME];
+  });
+
+  afterEach(() => {
+    if (savedEnv === undefined) {
+      delete process.env[ENV_NAME];
+    } else {
+      process.env[ENV_NAME] = savedEnv;
+    }
+  });
+
+  test('prefers the flag over the environment variable', () => {
+    process.env[ENV_NAME] = 'env-token';
+    expect(resolveMcpAuthTokenValue('flag-token', process.env[ENV_NAME])).toBe('flag-token');
+  });
+
+  test('falls back to the environment variable', () => {
+    process.env[ENV_NAME] = 'env-token';
+    expect(resolveMcpAuthTokenValue(undefined, process.env[ENV_NAME])).toBe('env-token');
+  });
+
+  test('treats an empty string as unset (flag and env)', () => {
+    // An empty bearer token would be enforceable yet trivially guessable;
+    // resolution must yield undefined so the startup refusal for non-loopback
+    // binds and the "no token configured" path both see it as absent rather
+    // than enforcing a zero-length secret.
+    expect(resolveMcpAuthTokenValue('', undefined)).toBeUndefined();
+    expect(resolveMcpAuthTokenValue(undefined, '')).toBeUndefined();
+    // An empty flag does not shadow a set env var (falsy, so env is read).
+    expect(resolveMcpAuthTokenValue('', 'env-token')).toBe('env-token');
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -524,6 +592,149 @@ describe('validateHttpRequestMetadata', () => {
     };
     expect(validateHttpRequestMetadata(fakeReq(), body)).toBeNull();
   });
+
+  test('passes a string non-modern claim like 2025-11-25 (legacy-accepted, the LiteLLM default)', () => {
+    // The claim value is well-formed for the claim mechanism (a string); the
+    // full 2026 envelope schema (clientCapabilities etc.) is deliberately
+    // deferred (option-b scope). A present string claim naming a pre-2026
+    // revision classifies legacy-era traffic and is accepted.
+    const body = {
+      jsonrpc: '2.0',
+      id: 8,
+      method: 'tools/call',
+      params: { name: 'frodo_discover', _meta: { [META_KEY]: '2025-11-25' } },
+    };
+    expect(validateHttpRequestMetadata(fakeReq(), body)).toBeNull();
+  });
+
+  test.each([
+    [12345, 'number'],
+    [{ nested: true }, 'object'],
+    [null, 'null'],
+    [true, 'boolean'],
+    [['2026-07-28'], 'array'],
+  ])(
+    'rejects a present-but-non-string envelope claim (%p) with the SDK envelope-invalid shape',
+    (claimValue, receivedType) => {
+      // Before the malformed-claim fix, this body silently downgraded to
+      // legacy handling: hasClaim=true but version=undefined made
+      // isModernProtocolVersion(undefined) false, skipping every modern
+      // cross-check. SDK parity: envelope-invalid, 400 -32602.
+      const body = {
+        jsonrpc: '2.0',
+        id: 9,
+        method: 'tools/call',
+        params: { name: 'x', _meta: { [META_KEY]: claimValue } },
+      };
+      const err = validateHttpRequestMetadata(fakeReq(), body);
+      expect(err.error.code).toBe(-32602);
+      expect(err.statusCode).toBe(400);
+      expect(err.error.message).toBe(
+        `Invalid _meta envelope for protocol revision 2026-07-28: ${META_KEY}: Invalid input: expected string, received ${receivedType}`
+      );
+      expect(err.error.data).toEqual({
+        envelope: {
+          key: META_KEY,
+          problem: `Invalid input: expected string, received ${receivedType}`,
+        },
+      });
+    }
+  );
+
+  test('rejects a malformed claim on a notification (notification-envelope-invalid parity)', () => {
+    const body = {
+      jsonrpc: '2.0',
+      method: 'notifications/initialized',
+      params: { _meta: { [META_KEY]: { nested: 1 } } },
+    };
+    const err = validateHttpRequestMetadata(fakeReq(), body);
+    expect(err.error.code).toBe(-32602);
+    expect(err.error.message).toBe(
+      `Invalid _meta envelope for protocol revision 2026-07-28: ${META_KEY}: Invalid input: expected string, received object`
+    );
+  });
+
+  test('still legacy-accepts an initialize with a malformed claim and no modern header (SDK precedence)', () => {
+    // The SDK's initialize precedence rule checks a VALID modern envelope
+    // claim; a malformed claim keeps the legacy-handshake classification
+    // (verified against classifyInboundRequest) — frodo must not start
+    // rejecting legacy-era initialize traffic over a stray _meta key.
+    const body = {
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'initialize',
+      params: { protocolVersion: '2025-06-18', _meta: { [META_KEY]: 12345 } },
+    };
+    expect(validateHttpRequestMetadata(fakeReq(), body)).toBeNull();
+  });
+
+  test('still rejects an initialize with a malformed claim and a modern header (-32020 precedence)', () => {
+    // initialize-with-modern-header is the first rejection on the SDK's
+    // ladder for this shape — the malformed claim never gets to win.
+    const body = {
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'initialize',
+      params: { protocolVersion: '2025-06-18', _meta: { [META_KEY]: 12345 } },
+    };
+    const err = validateHttpRequestMetadata(
+      fakeReq({ 'mcp-protocol-version': '2026-07-28' }),
+      body
+    );
+    expect(err.error.code).toBe(-32020);
+  });
+
+  test('rejects a malformed claim even when a modern header would otherwise pair with it', () => {
+    // The regression cell from review: a modern header + non-string claim
+    // must not skip the modern checks, and the claim's own malformedness is
+    // the error that fires.
+    const body = {
+      jsonrpc: '2.0',
+      id: 10,
+      method: 'tools/call',
+      params: { name: 'x', _meta: { [META_KEY]: 12345 } },
+    };
+    const err = validateHttpRequestMetadata(
+      fakeReq({ 'mcp-protocol-version': '2026-07-28' }),
+      body
+    );
+    expect(err.error.code).toBe(-32602);
+    expect(err.error.message).toContain('Invalid input: expected string, received number');
+  });
+
+  test.each([
+    ['a string _meta', 'not-an-object'],
+    ['a null _meta', null],
+    ['an array _meta', ['2026-07-28']],
+    ['a number _meta', 7],
+  ])(
+    'treats params._meta that is %s as claim-less (no false -32602, no false -32020)',
+    (_label, metaValue) => {
+      // getRequestParams guards _meta to a plain object; a non-object _meta
+      // carries no envelope claim at all, so with no modern header this is
+      // legacy traffic — never the malformed-claim rejection (the claim key
+      // is not even reachable inside a non-object _meta).
+      const body = {
+        jsonrpc: '2.0',
+        id: 11,
+        method: 'tools/call',
+        params: { name: 'x', _meta: metaValue },
+      };
+      expect(validateHttpRequestMetadata(fakeReq(), body)).toBeNull();
+      // And with a modern header it is the modern-header-without-claim
+      // cell (-32602), not a malformed-claim error. A present-but-non-object
+      // _meta means the envelope mechanism was attempted, so the missing key
+      // named is the reserved claim key; a null _meta gets '_meta'.
+      const withHeader = validateHttpRequestMetadata(
+        fakeReq({ 'mcp-protocol-version': '2026-07-28' }),
+        body
+      );
+      expect(withHeader.error.code).toBe(-32602);
+      expect(withHeader.error.data).toEqual({
+        envelope: { missing: metaValue ? [META_KEY] : ['_meta'] },
+      });
+    }
+  );
 });
 
 // ---------------------------------------------------------------------------
@@ -550,7 +761,7 @@ describe('startHttpTransport', () => {
       // object, so real OS signals never reach handlers registered in tests
       // (the worker just dies). Emitting dispatches to the registered
       // handlers synchronously, exactly what the shutdown closure needs.
-      process.emit('SIGTERM');
+      process.emit('SIGTERM', 'SIGTERM');
       await done;
     }
   }
@@ -607,14 +818,86 @@ describe('startHttpTransport', () => {
     expect(res.text).toContain('-32022');
   }, 30000);
 
-  test('SIGHUP and SIGQUIT release the listener and resolve the promise', async () => {
+  test('rejects an empty JSON-RPC batch with 400 -32600 (SDK empty-batch parity)', async () => {
+    // Before the fix the hand-wired transport silently answered 202 for [].
+    const port = await getFreePort();
+    currentDone = startServer('127.0.0.1', port);
+    await waitForListening('127.0.0.1', port);
+    const res = await rawRequest(port, 'POST', '/mcp', JSON_HEADERS, '[]');
+    expect(res.status).toBe(400);
+    const payload = JSON.parse(res.text);
+    expect(payload.error.code).toBe(-32600);
+    expect(payload.error.message).toBe('Bad Request: empty JSON-RPC batch');
+    expect(payload.id).toBeNull();
+  }, 30000);
+
+  test('forwards a non-empty legacy JSON-RPC batch to the transport (existing behavior)', async () => {
+    // classifyBatch parity: only the empty array is a batch-shaped
+    // rejection; a batch of legacy elements keeps reaching the transport,
+    // which answers the initialize element itself.
+    const port = await getFreePort();
+    currentDone = startServer('127.0.0.1', port);
+    await waitForListening('127.0.0.1', port);
+    const initialize = JSON.parse(legacyInitializeBody());
+    const res = await rawRequest(port, 'POST', '/mcp', JSON_HEADERS, JSON.stringify([initialize]));
+    expect(res.status).toBe(200);
+    const dataLine = res.text.split('\n').find((l) => l.startsWith('data: '));
+    const payload = JSON.parse(dataLine.replace(/^data: /, ''));
+    expect(payload.result.serverInfo.name).toBe('frodo-mcp');
+  }, 30000);
+
+  test('rejects a malformed (non-string) envelope claim with 400 -32602 end to end', async () => {
+    // The QA reproduction: before the fix this POST returned 202 with no
+    // body (silently downgraded to legacy handling); now it is the SDK's
+    // envelope-invalid answer.
+    const port = await getFreePort();
+    currentDone = startServer('127.0.0.1', port);
+    await waitForListening('127.0.0.1', port);
+    const body = JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'tools/call',
+      params: {
+        name: 'frodo_discover',
+        arguments: {},
+        _meta: { 'io.modelcontextprotocol/protocolVersion': 12345 },
+      },
+    });
+    const res = await rawRequest(port, 'POST', '/mcp', JSON_HEADERS, body);
+    expect(res.status).toBe(400);
+    const payload = JSON.parse(res.text);
+    expect(payload.error.code).toBe(-32602);
+    expect(payload.error.message).toBe(
+      'Invalid _meta envelope for protocol revision 2026-07-28: io.modelcontextprotocol/protocolVersion: Invalid input: expected string, received number'
+    );
+    expect(payload.error.data).toEqual({
+      envelope: {
+        key: 'io.modelcontextprotocol/protocolVersion',
+        problem: 'Invalid input: expected string, received number',
+      },
+    });
+  }, 30000);
+
+  test('SIGHUP and SIGQUIT release the listener, log the signal, and resolve the promise', async () => {
     for (const signal of ['SIGHUP', 'SIGQUIT']) {
       const port = await getFreePort();
       printed.length = 0;
       const done = startHttpTransport({ listTools: () => [] }, '127.0.0.1', port);
       await waitForListening('127.0.0.1', port);
-      process.emit(signal);
+      // Emit with the signal name: a real OS signal delivers the name to
+      // signal handlers, but a bare process.emit('SIGHUP') passes no
+      // argument (Node 24), so the name must be passed explicitly here.
+      process.emit(signal, signal);
       await done;
+      // Signal receipt is logged (the only record of WHY the server went
+      // down when shutdown is triggered remotely). At-least-one rather than
+      // exactly-one: jest's shared worker process has accumulated shutdown
+      // handlers from every transport this suite started, so one emit
+      // dispatches to all of them (each logs its own line).
+      const signalLines = printed.filter(
+        (p) => p.type === 'info' && p.msg === `received ${signal}, shutting down MCP HTTP server`
+      );
+      expect(signalLines.length).toBeGreaterThanOrEqual(1);
       // Port released: a fresh bind on the same port must succeed.
       const rebind = await new Promise((resolve, reject) => {
         const server = http.createServer();
