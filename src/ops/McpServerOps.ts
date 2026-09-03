@@ -1001,6 +1001,21 @@ export async function startHttpTransport(
       resolvedPort = (httpServer.address() as AddressInfo).port;
       const listeningLine = `MCP HTTP server (pid ${process.pid}) listening on http://${bindHost}:${resolvedPort}/mcp`;
       printMessage(listeningLine, 'info');
+      // One cheap staleness note before the lockfile is overwritten: a
+      // previous run that died without cleanup (crash without the best-effort
+      // removal, kill -9, reboot) leaves a lockfile naming a dead PID, and the
+      // operator who later wonders why `stop` says "stale lockfile" deserves
+      // the matching line at start. Read-fail-tolerant by construction (the
+      // reader returns null for missing/unreadable/malformed), and
+      // race-tolerant: a concurrent writer's record is only consulted for
+      // liveness, never modified here — the write below is the overwrite.
+      const staleLockfile = readMcpHttpLockfile(resolvedPort);
+      if (staleLockfile && !isPidAlive(staleLockfile.pid)) {
+        printMessage(
+          `MCP HTTP server: overwriting stale lockfile for port ${resolvedPort} (recorded pid ${staleLockfile.pid} is not running).`,
+          'warn'
+        );
+      }
       // The PID lockfile is written only once the listener is actually up:
       // a record naming this process must not outlive a start that never
       // bound the port. Best-effort — a read-only config dir must not fail

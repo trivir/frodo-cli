@@ -2175,6 +2175,50 @@ describe('HTTP transport lockfile + resolved port', () => {
     expect(fs.existsSync(lockPath)).toBe(false);
   }, 30000);
 
+  test('a start over a dead-PID lockfile warns stale, serves, and rewrites the record with a live PID', async () => {
+    // The scenario: a previous server crashed without the best-effort
+    // lockfile removal (kill -9, reboot) and left its record behind. The new
+    // start must not be blocked by it — but it must say so, and the rewritten
+    // lockfile must name the NEW process, or `frodo mcp server stop` would
+    // SIGTERM a ghost. (A live-PID lockfile instead leads to EADDRINUSE —
+    // covered implicitly by the EADDRINUSE cells — so only the dead-PID path
+    // is reachable in-process.)
+    const port = await getFreePort();
+    const lockPath = path.join(tmpConfigDir, `mcp-http-${port}.pid`);
+    fs.writeFileSync(
+      lockPath,
+      JSON.stringify({
+        pid: 2147483000, // implausible PID: liveness check fails
+        port,
+        bindHost: '127.0.0.1',
+        startedAt: '2026-01-01T00:00:00.000Z',
+      })
+    );
+    printed.length = 0;
+    startServerOn(port, {});
+    await waitForListening('127.0.0.1', port);
+    try {
+      // One warn line naming the port and the dead PID.
+      const staleNotes = printed.filter((p) =>
+        p.msg.includes('stale lockfile for port')
+      );
+      expect(staleNotes).toHaveLength(1);
+      expect(staleNotes[0].type).toBe('warn');
+      expect(staleNotes[0].msg).toContain(String(port));
+      expect(staleNotes[0].msg).toContain('2147483000');
+      // The server is actually up (waitForListening already connected, and a
+      // health probe doubles as the sanity check).
+      const health = await rawRequest(port, 'GET', '/health');
+      expect(health.status).toBe(200);
+      // The lockfile was rewritten with the live writer's PID.
+      const record = JSON.parse(fs.readFileSync(lockPath, 'utf8'));
+      expect(record.pid).toBe(process.pid);
+    } finally {
+      await shutdownTransport();
+    }
+    expect(fs.existsSync(lockPath)).toBe(false);
+  }, 30000);
+
   test('the listening line prints the OS-resolved port for --port 0, and the lockfile uses it', async () => {
     // The known wrong-print: requesting port 0 (or --port auto) used to echo
     // the REQUESTED port (0) in the listening line; the line must carry the
