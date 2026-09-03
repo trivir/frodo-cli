@@ -355,10 +355,15 @@ export default function setup() {
         transport: opts.transport,
         http: {
           bindHost: opts.bindHost,
-          // The dry-run summary shows the literal option value ('auto' or a
-          // number); only the live startup learns the OS-resolved port (the
-          // listening line and the lockfile carry it).
-          port: parseMcpHttpPortOption(opts.port),
+          // The dry-run summary shows the literal option value: 'auto' as the
+          // string the operator typed (not the internal 0 it resolves to),
+          // else the parsed number. Only the live startup learns the
+          // OS-resolved port (the listening line and the lockfile carry it).
+          port: opts.dryRun
+            ? ((/^\s*auto\s*$/i.test(opts.port ?? '')
+                ? 'auto'
+                : parseMcpHttpPortOption(opts.port)) as number | 'auto')
+            : parseMcpHttpPortOption(opts.port),
           // Never the token value itself — summaries and logs are shipped to
           // MCP clients as protocol-level messages.
           allowedHosts:
@@ -433,7 +438,9 @@ type StartupSummary = {
   transport?: 'stdio' | 'http';
   http: {
     bindHost?: string;
-    port: number;
+    // The port the summary reports: the resolved number on a live start, the
+    // parsed option value (or the literal 'auto') on a dry run.
+    port: number | 'auto';
     allowedHosts?: string[];
     auth?: 'on' | 'off';
   };
