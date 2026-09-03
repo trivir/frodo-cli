@@ -1765,6 +1765,275 @@ describe('uncaughtException crash path (spawned child)', () => {
 });
 
 // ---------------------------------------------------------------------------
+// `mcp server stop` against spawned dist children (the real CLI + lockfile +
+// stop command, end to end). The stop command signals a process by PID, which
+// cannot be exercised in-process, so like the launcher/crash cells above this
+// suite drives the compiled dist and is skipped when dist is absent. Every
+// cell gets its own temp FRODO_CONFIG_PATH (the lockfile lives there) and
+// kills its spawned server in finally.
+// ---------------------------------------------------------------------------
+
+describe('mcp server stop (spawned dist)', () => {
+  const { spawn } = childProcess;
+  const fs = fsPromise;
+  const os = osPromise;
+  const path = pathPromise;
+  const launchPath = path.resolve('dist/launch.cjs');
+  const hasDist = fs.existsSync(launchPath);
+
+  const cond = (name, fn) => (hasDist ? test(name, fn, 60000) : test.skip(name, fn));
+
+  /**
+   * Spawns `dist/launch.cjs mcp server start --transport http` on `port`
+   * with a per-cell temp config dir (the lockfile lives at
+   * $FRODO_CONFIG_PATH/mcp-http-<port>.pid) and resolves once the listening
+   * line confirms the resolved port. Returns the child plus a cleanup
+   * function every caller must run in finally.
+   */
+  async function spawnServer(port, configDir, extraArgs = []) {
+    const profilesPath = path.join(configDir, 'Connections.json');
+    fs.writeFileSync(profilesPath, JSON.stringify({}));
+    const child = spawn(
+      process.execPath,
+      [
+        launchPath,
+        'mcp', 'server', 'start',
+        '--transport', 'http',
+        '--port', String(port),
+        ...extraArgs,
+      ],
+      {
+        stdio: ['ignore', 'pipe', 'pipe'],
+        env: {
+          ...process.env,
+          FRODO_TEST: '1',
+          NO_COLOR: '1',
+          FRODO_CONNECTION_PROFILES_PATH: profilesPath,
+          FRODO_CONFIG_PATH: configDir,
+        },
+      }
+    );
+    let stdout = '';
+    child.stdout.on('data', (chunk) => {
+      stdout += chunk.toString('utf8');
+    });
+    let stderr = '';
+    child.stderr.on('data', (chunk) => {
+      stderr += chunk.toString('utf8');
+    });
+    if (port > 0) {
+      await waitForListening('127.0.0.1', port, 30000);
+    }
+    return { child, stdout, stderr, getStdout: () => stdout, getStderr: () => stderr };
+  }
+
+  /** The child's combined output so far (printMessage writes to stderr). */
+  function allOutput(spawned) {
+    return spawned.getStdout() + spawned.getStderr();
+  }
+
+  /** Runs a `dist/launch.cjs mcp server stop` invocation to completion. */
+  function runStop(port, configDir) {
+    return new Promise((resolve, reject) => {
+      const child = spawn(
+        process.execPath,
+        [launchPath, 'mcp', 'server', 'stop', '--port', String(port)],
+        {
+          stdio: ['ignore', 'pipe', 'pipe'],
+          env: { ...process.env, FRODO_TEST: '1', NO_COLOR: '1', FRODO_CONFIG_PATH: configDir },
+        }
+      );
+      let out = '';
+      child.stdout.on('data', (chunk) => {
+        out += chunk.toString('utf8');
+      });
+      let err = '';
+      child.stderr.on('data', (chunk) => {
+        err += chunk.toString('utf8');
+      });
+      const timer = setTimeout(() => {
+        child.kill('SIGKILL');
+        reject(new Error(`stop on port ${port} timed out`));
+      }, 30000);
+      child.once('exit', (code, signal) => {
+        clearTimeout(timer);
+        resolve({ code, signal, output: out + err });
+      });
+    });
+  }
+
+  /** Polls until the port refuses connections (server gone) or deadline. */
+  async function waitForPortClosed(port, deadlineMs = 15000) {
+    const started = Date.now();
+    const tryClose = () =>
+      new Promise((resolve) => {
+        const socket = net.connect(port, '127.0.0.1');
+        socket.once('connect', () => {
+          socket.destroy();
+          resolve(false);
+        });
+        socket.once('error', () => resolve(true));
+      });
+    while (Date.now() < started + deadlineMs) {
+      if (await tryClose()) {
+        return;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    throw new Error(`port ${port} is still accepting connections`);
+  }
+
+  /**
+   * Reap-then-cleanup for the spawned server: a stop that succeeded already
+   * ended the process, so kill() here only matters on failure paths.
+   */
+  function killChild(child) {
+    if (child && child.exitCode === null && child.signalCode === null) {
+      child.kill('SIGKILL');
+    }
+  }
+
+  cond('stop happy path: exit 0, lockfile gone, port rebindable, process gone', async () => {
+    const port = await getFreePort();
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mcp-stop-'));
+    let server;
+    try {
+      const spawned = await spawnServer(port, tmpDir);
+      server = spawned.child;
+      const lockPath = path.join(tmpDir, `mcp-http-${port}.pid`);
+      expect(fs.existsSync(lockPath)).toBe(true);
+
+      const stop = await runStop(port, tmpDir);
+      expect(stop.code).toBe(0);
+      expect(stop.output).toContain(`port ${port} released`);
+      // Lockfile gone after the confirmed death.
+      expect(fs.existsSync(lockPath)).toBe(false);
+      // Port actually released: a fresh bind must succeed.
+      await waitForPortClosed(port);
+      const rebind = await new Promise((resolve, reject) => {
+        const s = http.createServer();
+        s.on('error', reject);
+        s.listen(port, '127.0.0.1', () => s.close(() => resolve(true)));
+      });
+      expect(rebind).toBe(true);
+      // The signaled process exits (its graceful shutdown runs).
+      await new Promise((resolve) => {
+        if (server.exitCode !== null || server.signalCode !== null) {
+          resolve();
+        } else {
+          server.once('exit', resolve);
+        }
+      });
+    } finally {
+      killChild(server);
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  cond('stop with no lockfile: exit 1 with the helpful message', async () => {
+    const port = await getFreePort();
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mcp-stop-no-'));
+    try {
+      const stop = await runStop(port, tmpDir);
+      expect(stop.code).toBe(1);
+      expect(stop.output).toContain(`No MCP HTTP server lockfile for port ${port}`);
+      expect(stop.output).toContain('was it started with --transport http?');
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  cond('stop on a stale lockfile (dead PID): exit 0, lockfile removed, stale message', async () => {
+    const port = await getFreePort();
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mcp-stop-stale-'));
+    try {
+      const lockPath = path.join(tmpDir, `mcp-http-${port}.pid`);
+      // A dead writer: an implausible PID the liveness check cannot find.
+      fs.writeFileSync(
+        lockPath,
+        JSON.stringify({
+          pid: 2147483000,
+          port,
+          bindHost: '127.0.0.1',
+          startedAt: '2026-01-01T00:00:00.000Z',
+        })
+      );
+      const stop = await runStop(port, tmpDir);
+      expect(stop.code).toBe(0);
+      expect(stop.output).toContain('Stale lockfile');
+      expect(stop.output).toContain('2147483000');
+      expect(stop.output).toContain('Lockfile removed');
+      expect(fs.existsSync(lockPath)).toBe(false);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  cond('--port auto: resolved port printed, /health answers, stop on the resolved port exits 0', async () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mcp-stop-auto-'));
+    let server;
+    let resolvedPort;
+    try {
+      const spawned = await spawnServer('auto', tmpDir);
+      server = spawned.child;
+      // The listening line (printMessage -> stderr) carries the OS-resolved
+      // port; the lockfile is keyed on it, which is how stop finds the
+      // server.
+      const listening = await new Promise((resolve, reject) => {
+        const started = Date.now();
+        const poll = () => {
+          const match = allOutput(spawned).match(/listening on http:\/\/127\.0\.0\.1:(\d+)\/mcp/);
+          if (match) {
+            resolve(Number(match[1]));
+            return;
+          }
+          if (Date.now() > started + 30000) {
+            reject(new Error(`listening line never appeared; output: ${allOutput(spawned)}`));
+            return;
+          }
+          setTimeout(poll, 50);
+        };
+        poll();
+      });
+      resolvedPort = listening;
+      expect(resolvedPort).toBeGreaterThan(0);
+      expect(resolvedPort).not.toBe(6277);
+      // Lockfile keyed on the RESOLVED port (not on 'auto' / 0), and
+      // connectable on the printed port.
+      expect(
+        fs.existsSync(path.join(tmpDir, `mcp-http-${resolvedPort}.pid`))
+      ).toBe(true);
+      const health = await new Promise((resolve, reject) => {
+        const req = httpRequest(
+          { host: '127.0.0.1', port: resolvedPort, method: 'GET', path: '/health', timeout: 5000 },
+          (res) => {
+            res.resume();
+            resolve(res.statusCode);
+          }
+        );
+        req.on('timeout', () => {
+          req.destroy();
+          reject(new Error('health probe timed out'));
+        });
+        req.on('error', reject);
+        req.end();
+      });
+      expect(health).toBe(200);
+
+      const stop = await runStop(resolvedPort, tmpDir);
+      expect(stop.code).toBe(0);
+      expect(stop.output).toContain(`port ${resolvedPort} released`);
+      expect(
+        fs.existsSync(path.join(tmpDir, `mcp-http-${resolvedPort}.pid`))
+      ).toBe(false);
+    } finally {
+      killChild(server);
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Bounded request body (frodo transport policy: 413 before buffering and
 // mid-stream) and the concurrency cap (429 + Retry-After, queue-less)
 // ---------------------------------------------------------------------------

@@ -924,11 +924,14 @@ export async function startHttpTransport(
                 code: TRANSPORT_LIMIT_ERROR_CODE,
                 message:
                   `Payload Too Large: the request body exceeds the configured limit ` +
-                  `of ${err.receivedBytes ?? options?.maxBodySizeBytes ?? DEFAULT_MCP_HTTP_MAX_BODY_SIZE_BYTES} bytes ` +
-                  `(server max body size is ${
+                  `of ${
                     options?.maxBodySizeBytes ??
                     DEFAULT_MCP_HTTP_MAX_BODY_SIZE_BYTES
-                  } bytes). Raise it with --max-body-size <bytes> or FRODO_MCP_MAX_BODY_SIZE.`,
+                  } bytes` +
+                  (err.receivedBytes !== undefined
+                    ? ` (received ${err.receivedBytes} bytes)`
+                    : '') +
+                  `. Raise it with --max-body-size <bytes> or FRODO_MCP_MAX_BODY_SIZE.`,
                 data: {
                   limitBytes:
                     options?.maxBodySizeBytes ??
@@ -1496,8 +1499,10 @@ async function handleHttpRequest(
  * stop being buffered immediately and the promise rejects mid-stream, so a
  * Content-Length-less chunked upload cannot grow the buffer without bound
  * either (the Content-Length pre-check in handleHttpRequest only covers
- * requests that declare a length). `receivedBytes` is capped at the limit in
- * the error so the 413's `data` never overstates what was buffered.
+ * requests that declare a length). The reported `receivedBytes` is the byte
+ * count actually observed up to and including the chunk that tripped the cap
+ * (never more — the stream is not read past that point — and only equal to
+ * the limit in the single-chunk-overshoot corner).
  */
 function readJsonBody(
   req: IncomingMessage,
@@ -1529,7 +1534,13 @@ function readJsonBody(
       }
       totalBytes += chunk.length;
       if (totalBytes > maxBytes) {
-        rejectTooLarge(maxBytes);
+        // Report what was actually OBSERVED, not the cap: at this point
+        // totalBytes is the first total that crossed the limit (the chunk
+        // that tripped it included), which is honest and — for the common
+        // small-overshoot case — close to the body's true size. (The old
+        // behavior reported `maxBytes` here, which named the limit twice —
+        // once as `receivedBytes`, once as `limitBytes`.)
+        rejectTooLarge(totalBytes);
         return;
       }
       chunks.push(chunk);
