@@ -1,0 +1,23 @@
+# Keep the build context to what the Dockerfile actually copies: manifests +
+# tsconfig + src. Everything else (the 200MB+ node_modules, the 11MB dist
+# from local dev builds, tests, docs, the polaris workspace) stays out of
+# `docker build`'s transfer and cache keys.
+node_modules
+dist
+coverage
+test
+docs
+tools
+.github
+.git
+.polaris
+.vscode
+.eslintcache
+.eslintcache.*
+*.log
+npm-debug.log*
+testResults.json
+.claude
+.vscode
+Dockerfile
+docker

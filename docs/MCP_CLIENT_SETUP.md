@@ -115,6 +115,25 @@ services:
 
 The gateway then connects to `http://host.docker.internal:6277/mcp` with `Authorization: Bearer <secret>` on every request. No change to the gateway's image or network model is needed: opening the three gates (non-loopback bind, the `host.docker.internal` Host alias -- automatic --, and the token) is all frodo-side configuration.
 
+### Running frodo's MCP server itself in Docker (`Dockerfile`, `docker/docker-compose.yml`)
+
+The repository ships a `Dockerfile` (multi-stage: `node:24-slim` build stage running `npm run build:only`, then a slim runtime stage containing only the self-contained `dist/` bundle -- the bundle compiles every dependency in, so the runtime image needs no `node_modules`) and an example compose stack in `docker/docker-compose.yml`. Build and run:
+
+```console
+FRODO_MCP_AUTH_TOKEN=<secret> docker compose -f docker/docker-compose.yml up -d --build
+```
+
+The compose service mounts your saved `~/.frodo/Connections.json` read-only, binds the server on `0.0.0.0:6277` inside a user-defined bridge network (`mcpnet`), and healthchecks `GET /health` with a node one-liner (the slim base image has no wget/curl). A gateway co-located on the same network dials frodo by service DNS name -- `http://frodo-mcp:6277/mcp` -- with no host-gateway alias and no published port needed; the commented-out `gateway` block in the compose file shows the shape. The image runs as the non-root `node` user, `ENTRYPOINT` is `dist/launch.cjs` (the signal-forwarding wrapper, so `docker stop` performs the graceful shutdown), and the connection-profile volume is the only state.
+
+### Operational hygiene: stop, lockfile, port auto, body/concurrency limits
+
+- **`frodo mcp server stop`** stops a running HTTP server cleanly: SIGTERM first (the server's own graceful shutdown runs -- log line, lockfile removal, port release), then, after 10 seconds, `--force` sends SIGKILL. It finds the process through the PID lockfile (`~/.frodo/mcp-http-<port>.pid`, honoring `FRODO_CONFIG_PATH`), refuses to signal a process that demonstrably is not frodo (PID-reuse guard, best-effort: `/proc/<pid>/cmdline` on Linux, `ps` elsewhere), removes stale lockfiles (recorded PID no longer alive) as a success, and exits 1 with a message when there is no lockfile for the port.
+- **PID lockfile**: after a successful `listen()`, the transport writes `~/.frodo/mcp-http-<port>.pid` (`{pid, port, bindHost, startedAt}`); it is removed on every shutdown signal and on the crash path. A start that finds an existing lockfile naming a live PID reports that PID in its `EADDRINUSE` message (`frodo mcp server stop --port <port>`), and a dead PID is reported stale and overwritten. Additive: servers started before this change work exactly as before, just without the lockfile.
+- **`--port auto`** binds an OS-assigned ephemeral port; the listening line, heartbeat, startup summary log, and lockfile all report the RESOLVED port (this also fixes the long-standing wrong-print where `--port 0` echoed `0`). A dry run still shows the literal option value.
+- **`--max-body-size <bytes>`** (default 1048576 = 1 MiB; env `FRODO_MCP_MAX_BODY_SIZE`) bounds the accepted request body -- enforced as a `Content-Length` pre-check (reject before reading a byte) and as an accumulation cap for chunked/unannounced bodies. Over-limit requests are answered `413` with a JSON-RPC error (`-32000`) naming the limit and the option that raises it, and the socket is closed so the unread remainder is dropped. This is frodo transport policy, not MCP protocol behavior; the default is ~2.5x the largest payload observed in QA gateway crawls.
+- **`--max-concurrent-requests <n>`** (default 64; env `FRODO_MCP_MAX_CONCURRENT_REQUESTS`) caps concurrent MCP handler executions; over-cap requests get an immediate `429` with `Retry-After: 1` (queue-less reject -- the client's/gateway's retry policy is the queue). The cap counts handler executions, not held sockets: a slow SSE stream mid-write still occupies a slot until its handler resolves.
+- **`FRODO_MCP_HEARTBEAT_INTERVAL_MS`** overrides the 15-minute liveness heartbeat (clamped to a minimum of 1000 ms; invalid values keep the default). No CLI flag by design -- the use case is making the interval verifiable from a container/service definition.
+
 ### Observability (PID, heartbeat, crash lines)
 
 The HTTP server is long-lived and usually watched remotely, so its log carries the basics a remote operator needs:
