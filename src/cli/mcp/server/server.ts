@@ -4,6 +4,7 @@ import infoCmd from './server-info.js';
 import policiesCmd from './server-policies.js';
 import profilesCmd from './server-profiles.js';
 import startCmd from './server-start.js';
+import stopCmd from './server-stop.js';
 import toolsCmd from './server-tools.js';
 
 /**
@@ -15,6 +16,7 @@ export default function setup() {
     .withStability('experimental');
 
   program.addCommand(startCmd().name('start'));
+  program.addCommand(stopCmd().name('stop'));
   program.addCommand(profilesCmd().name('profiles'));
   program.addCommand(policiesCmd().name('policies'));
   program.addCommand(infoCmd().name('info'));
