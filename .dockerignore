@@ -18,6 +18,5 @@ tools
 npm-debug.log*
 testResults.json
 .claude
-.vscode
 Dockerfile
 docker

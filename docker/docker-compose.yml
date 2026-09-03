@@ -51,6 +51,11 @@ services:
         "--transport", "http",
         "--bind-host", "0.0.0.0",
         "--port", "6277",
+        # The gateway dials by service DNS name, so its Host header is
+        # `frodo-mcp:6277` — that name must be in the allow-list or the
+        # Host-header gate answers 403 before auth is ever consulted. If you
+        # rename the service/container, allow that name instead.
+        "--allowed-hosts", "frodo-mcp",
       ]
     healthcheck:
       # node:24-slim has no wget/curl; a node one-liner probes /health
@@ -82,6 +87,9 @@ services:
   #     # The MCP endpoint as the gateway dials it: service DNS name on mcpnet.
   #     FRODO_MCP_URL: http://frodo-mcp:6277/mcp
   #     FRODO_MCP_AUTH_TOKEN: ${FRODO_MCP_AUTH_TOKEN}
+  #     # The `frodo-mcp` Host header this URL produces is already allowed by
+  #     # the frodo-mcp service's --allowed-hosts flag above; if you rename
+  #     # the service, update both.
   #   depends_on:
   #     frodo-mcp:
   #       condition: service_healthy
