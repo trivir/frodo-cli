@@ -48,26 +48,32 @@
 
 /*
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull test
-
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am FRODO_USERNAME=wrong FRODO_PASSWORD=wrong FRODO_TEST_NAME='invalid_credentials' frodo config-manager pull test
 */
 
 
-import { getEnv } from './utils/TestUtils';
+import { getEnv, testSuccess, testFail } from './utils/TestUtils';
 import { connection as c } from './utils/TestConfig';
-import cp from 'child_process';
-import { promisify } from 'util';
+
 
 process.env['FRODO_MOCK'] = '1';
 process.env['FRODO_CONNECTION_PROFILES_PATH'] =
   './test/e2e/env/Connections.json';
-const env = getEnv(c);
-const exec = promisify(cp.exec);
 
-describe('frodo config-manager pulls', () => {
+describe('frodo config-manager pull test', () => {
   test('"frodo config-manager pull test": should receive access tokens"', async () => {
-      const CMD = `frodo config-manager pull test`;
-      const output = await exec(CMD, env);
-      expect(output.stdout).toMatchSnapshot();
-      expect(output.stderr).toMatchSnapshot();
-    });
+    const env = getEnv(c);
+    const CMD = `frodo config-manager pull test`;
+    await testSuccess(CMD, env);
+  });
+  test('"frodo config-manager pull test": should fail connection with invalid credentials"', async () => {
+    const CMD = `frodo config-manager pull test`;
+    const env = getEnv(c);
+    env.env.FRODO_TEST_NAME = 'invalid_credentials';
+    env.env.FRODO_PASSWORD = 'wrong';
+    env.env.FRODO_USERNAME = 'wrong';
+    delete env.env.FRODO_SA_ID;
+    delete env.env.FRODO_SA_JWK;
+    await testFail(CMD, env);
+  });
 });

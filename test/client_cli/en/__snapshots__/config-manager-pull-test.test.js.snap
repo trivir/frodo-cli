@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CLI help interface for 'config-manager push test' should be expected english 1`] = `
-"Usage: frodo config-manager push test [options] [host] [realm] [username] [password]
+exports[`CLI help interface for 'config-manager pull test' should be expected english 1`] = `
+"Usage: frodo config-manager pull test [options] [host] [realm] [username] [password]
 
 [Experimental] Test connection and authentication.
 

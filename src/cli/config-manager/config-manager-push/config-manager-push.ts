@@ -1,3 +1,4 @@
+import Test from '../../conn/conn-test';
 import { FrodoStubCommand } from '../../FrodoCommand';
 import AccessConfig from './config-manager-push-access-config';
 import Audit from './config-manager-push-audit';
@@ -26,7 +27,6 @@ import Schedules from './config-manager-push-schedules';
 import SecretMappings from './config-manager-push-secret-mappings';
 import ServiceObjects from './config-manager-push-service-objects';
 import TermsAndConditions from './config-manager-push-terms-and-conditions';
-import Test from '../../conn/conn-test';
 import Themes from './config-manager-push-themes';
 import UiConfig from './config-manager-push-ui-config';
 import Variables from './config-manager-push-variables';
