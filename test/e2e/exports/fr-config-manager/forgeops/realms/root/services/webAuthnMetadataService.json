@@ -1,0 +1,11 @@
+{
+  "_id": "",
+  "_rev": "1983511530",
+  "_type": {
+    "_id": "webAuthnMetadataService",
+    "collection": false,
+    "name": "WebAuthn Metadata Service"
+  },
+  "enforceRevocationCheck": false,
+  "fidoMetadataServiceUris": []
+}

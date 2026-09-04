@@ -1,0 +1,10 @@
+{
+  "_id": "",
+  "_rev": "1386279405",
+  "_type": {
+    "_id": "transaction",
+    "collection": false,
+    "name": "Transaction Authentication Service"
+  },
+  "timeToLive": "180"
+}
