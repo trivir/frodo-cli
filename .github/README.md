@@ -726,6 +726,95 @@ frodo mcp server start my-tenant
 
 For instructions on configuring a specific MCP client (VS Code Copilot, Claude Code, Claude Desktop, and others) to connect to this server, see the [MCP client setup guide](../docs/MCP_CLIENT_SETUP.md).
 
+### One tool surface, many skills
+
+Whatever the configuration, a connected client always sees the same five tools: `frodo_discover` (one-time bootstrap: target, deployment type, object families), `frodo_find_skills` (rank the skills that fit a task, auto-executing a unique read-only recommendation by default), `frodo_describe_skill` (one skill's full contract), `frodo_dispatch_read_only` (run a read-only skill), and `frodo_dispatch` (run a mutating skill). What `--policy` and `--profile` control is the skill layer underneath: which of frodo's capabilities those tools are allowed to discover and dispatch. A policy narrows what the client can *do*; a profile narrows what it gets to do *it to*. Use `frodo mcp server info --policy <preset> --profile <profile>` to see the resulting counts for an exact combination, `frodo mcp server skills` to browse the active skills, and `frodo mcp server policies` / `frodo mcp server profiles` to list the registries.
+
+### Policies (`--policy`)
+
+A policy is the safety posture applied to every skill before it can be exposed: it filters by operation type (create, read, update, delete, search, list, count, export, import) and by risk class (low, medium, high, critical -- the blast radius of the operation). Every preset except `admin` also denies critical-risk skills outright, because some read-shaped operations (e.g. service-account reads) return material that should not reach a client even in an otherwise read-only session.
+
+| Policy | Default | Can do | Cannot do | Tools (canonical + discovery) | Active skills / inventory |
+|--------|---------|--------|-----------|-------------------------------|---------------------------|
+| `read-only` | | count, read, search, list | create, update, delete, import, export; critical-risk skills; special skills | 5 (4 + 1) | 189 / 679 |
+| `agentic` | yes | create, count, read, update, search, list; special skills | delete, import, export; critical-risk skills | 5 (4 + 1) | 332 / 679 |
+| `standard` | | everything `agentic` allows, plus export | delete, import; critical-risk skills | 5 (4 + 1) | 418 / 679 |
+| `admin` | | every operation and risk class, including special skills | nothing | 5 (4 + 1) | 679 / 679 |
+
+Counts measured with the default `all` profile and no tenant connection (`frodo mcp server info --policy <preset> --profile all`); they scale down with a narrower profile, so check `info` for your exact combination. "Inventory" is the profile's unfiltered skill pool; "active skills" is what survives the policy and backs the tools (frodo reports the same number as "backing skills"). The five-tool surface is fixed at every policy -- `frodo_dispatch` stays registered even under `read-only`; it just has no mutating skills to reach.
+
+The default is `agentic`: the `standard` posture (which permits data *export* for operator-led maintenance) with `export` additionally denied, so an autonomous assistant can make progress with create/update flows but can neither destroy anything, nor bulk-import, nor bulk-extract tenant data. `read-only` is for audits, inventory, and least-privilege sessions; `standard` for operator-led maintenance that needs extraction but keeps destructive paths guarded; `admin` removes all built-in restrictions and should only run in trusted sessions with change control. `agentic`, `standard`, and `admin` also include frodo's "special" skills (operations outside the CRUD vocabulary, e.g. recon cancellation and signing-key generation); `read-only` excludes them.
+
+### Profiles (`--profile`)
+
+A profile scopes the surface by *subject area* instead of by danger: it selects the skills that concern one administrative responsibility and hides the rest. Where a policy protects the tenant from the client, a profile protects the client's context -- a journey engineer's assistant does not need IDM reconciliation skills in its search space. Profiles compose freely with policies (`--policy read-only --profile authentication` is exactly what it sounds like).
+
+| Profile | Default | Scopes the surface to | Typical use | Active skills / inventory (agentic policy) |
+|---------|---------|------------------------|-------------|--------------------------------------------|
+| `all` | yes | every non-disabled domain -- the full derived universe | broad agent sessions; exploratory work | 332 / 679 |
+| `authentication` | | journeys, nodes, OAuth/OIDC, login, sessions (`authn`, `oauth2oidc`, `login`, `session`) | end-to-end authentication administration | 42 / 86 |
+| `journey-dev` | | journey engineering only: journeys, nodes, journey settings (`authn.journey`, `authn.node`, `authn.settings`) | building and tuning login journeys | 26 / 42 |
+| `authorization` | | access control, policy sets, resource types, roles, user-adjacent operations (`authz`, `role`, `user`) | access-control administration | 25 / 63 |
+| `federation` | | SAML, WS-Federation, admin federation (`saml2`, `cloud.adminFed`, `cloud.wsfed`) | trust and federation configuration | 36 / 236 |
+| `iga` | | certifications, events, glossary, request forms/types, workflows (`cloud.iga`) | identity-governance operations | 31 / 212 |
+| `apps` | | application lifecycle, SSO/provisioning apps, AI-agent app workflows (`app`, `cloud.env.enableAIAgentFeature`, `cloud.feature`) | app onboarding and access-app workflows | 10 / 229 |
+| `managed-objects` | | IDM object model and lifecycle: managed objects, mappings, recon, connectors, organization, config, system, script (`idm.*`) | identity data modeling and synchronization | 60 / 118 |
+
+Counts use the default `agentic` policy and no tenant connection (`frodo mcp server info --profile <profile>`); the pool behind each profile (the inventory number) is larger than what a policy activates. Internal frodo domains (`state`, `cache`, `factory`, `utils`) are never exposed by any profile -- `--include-domains` and `--exclude-domains` override the profile's top-level domain selection, and `--include-utils` affects the inventory pool only; no profile or policy exposes utils skills.
+
+### Deployment modes
+
+The server runs in one of two modes, selected with `--transport` (default `stdio`).
+
+#### Developer client (stdio) -- the recommended default
+
+In the default mode the MCP client itself launches `frodo mcp server start` as a subprocess and talks to it over stdin/stdout, once per client session. Nothing listens on the network at all: the server exists only while the client session exists, runs with the user's own saved [connection profile](#connection-profiles), and is gone when the client closes. This is the right mode for a single developer working from their own machine, and it is why it is the default -- there is no port to protect, no process to supervise, and nothing for anyone else to reach.
+
+```json
+{
+  "mcpServers": {
+    "frodo": {
+      "command": "frodo",
+      "args": ["mcp", "server", "start", "my-tenant"]
+    }
+  }
+}
+```
+
+The exact config file and schema differ per client (VS Code uses a `servers` key and an explicit `"type": "stdio"`; Claude Code uses `claude mcp add`) -- the [MCP client setup guide](../docs/MCP_CLIENT_SETUP.md) has copy-paste snippets for each. Extra scoping is just more arguments, e.g. `["mcp", "server", "start", "--policy", "read-only", "--profile", "journey-dev", "my-tenant"]`.
+
+#### Shared server (HTTP transport)
+
+For a server that outlives one client session -- a gateway that several clients or agents share, or a container that cannot spawn processes on your host -- start it yourself as a long-running process over the HTTP transport:
+
+```console
+frodo mcp server start --transport http --bind-host 0.0.0.0 --port 6277 --mcp-auth-token <secret>
+```
+
+The flags that matter:
+
+- `--transport http` -- serve `POST /mcp` (MCP) and `GET /health` (liveness) instead of stdio.
+- `--bind-host` -- interface to bind. Default `127.0.0.1` (local machine only); `0.0.0.0` or a LAN address exposes the port and is what triggers the token requirement below.
+- `--port` -- default `6277`; `--port auto` lets the OS pick an ephemeral port and reports the resolved value.
+- `--mcp-auth-token <secret>` -- bearer token required on every `/mcp` request. Prefer the `FRODO_MCP_AUTH_TOKEN` environment variable for anything long-lived (keeps the secret out of `ps`); the flag wins if both are set. Required when binding a non-loopback host.
+- `--allowed-hosts <host...>` -- extra `Host` header values to accept, extending the localhost default (see the security model below). Variadic: it swallows everything after it, so put positional arguments before it or separate them with `--`.
+
+The canonical shared-server story is an AI gateway in a Docker container on the same machine: the container dials the host via `host.docker.internal` (accepted automatically on a non-loopback bind), frodo binds non-loopback with a token, and the gateway authenticates with the same secret. The repo also ships a `Dockerfile` and compose stack for running frodo's MCP server itself in Docker. The [client setup guide's HTTP transport section](../docs/MCP_CLIENT_SETUP.md#running-the-http-transport) walks through all of it, including the compose fragments, `frodo mcp server stop`, the PID lockfile, and the operational knobs (`--max-body-size`, `--max-concurrent-requests`, heartbeat) -- the README gives the pattern, that guide gives the detail.
+
+### HTTP transport security model
+
+The HTTP transport is built on an explicit layered model; nothing is exposed without deliberate configuration:
+
+- **Loopback-only by default.** The server binds `127.0.0.1:6277`, reachable only from the machine it runs on.
+- **DNS-rebinding-safe Host and Origin validation.** Every request's `Host` and `Origin` headers are validated against the localhost set (`localhost`, `127.0.0.1`, `[::1]`); a foreign Host header -- the shape a DNS-rebinding attack produces -- is answered `403` before the MCP endpoint is touched. `--allowed-hosts` *extends* the set, and `host.docker.internal` is added automatically to the Host allow-list (the Origin check stays localhost-only) whenever the bind host is non-loopback, so a bridge-network container can reach the host without weakening the default.
+- **Leaving loopback requires a token.** Binding a non-loopback host without `--mcp-auth-token` (or `FRODO_MCP_AUTH_TOKEN`) **refuses to start**; `--allow-unauthenticated` is the explicitly named escape hatch for accepting that risk.
+- **Bearer auth on `/mcp` only.** When a token is configured, every `POST /mcp` must carry a matching `Authorization: Bearer` header -- compared timing-safely over SHA-256 digests -- and failures get `401` with a `WWW-Authenticate: Bearer` challenge. `GET /health` stays open for liveness probes (it can only ever answer `{"status":"ok"}`). The token value is never logged or echoed; startup summaries report only `HTTP auth: on`.
+- **Bounded request handling.** Request bodies are capped at 1 MiB (`--max-body-size`, env `FRODO_MCP_MAX_BODY_SIZE`) -- enforced as a `Content-Length` pre-check and a mid-stream accumulation cap; over-limit requests are answered `413` with a JSON-RPC error and the socket is closed. Concurrent handler executions are capped at 64 (`--max-concurrent-requests`, env `FRODO_MCP_MAX_CONCURRENT_REQUESTS`) -- over-cap requests get `429` with `Retry-After: 1` rather than queueing.
+- **Stateless operation.** The transport keeps no sessions -- there is no session state to hijack, and every request is evaluated on its own merits: Host/Origin gates, then the bearer check when configured.
+- **The port is privileged.** The server authenticates to the tenant once at startup (with the [connection profile](#connection-profiles) credentials -- typically an admin account or service account), and every MCP request it accepts executes with those credentials. Treat a listening MCP HTTP port accordingly: keep it on loopback unless something specific needs otherwise, require a token for any non-loopback bind, and keep it off untrusted networks. The design makes the safe path the default path -- loopback needs no setup, and the port cannot leave loopback without an explicit token (or an explicit `--allow-unauthenticated`).
+
+Request metadata headers are validated era-conditionally: current-protocol clients get the full header cross-checks, while earlier-era gateways (e.g. LiteLLM's default 2025-11-25 revision) are not 400'd for headers their protocol era never sends.
+
 The server authenticates before accepting MCP requests and uses Frodo's detected or explicitly overridden deployment type when ranking skills. Cloud and ForgeOps deployments prefer `frodo.idm.managed` for user management, while classic deployments prefer `frodo.user`. When the deployment is known, incompatible skills are hidden from `frodo_find_skills` by default; pass `includeIncompatible: true` for diagnostics. Direct incompatible dispatch remains rejected before invocation.
 
 For Cloud and ForgeOps, startup performs a bounded, best-effort hydration of tenant managed-object type names. Semantic queries such as `count users`, `users/groups`, or a native type such as `alpha_user` can then find managed-object skills; matching concrete types are returned in a bounded `matchedObjectTypes` list. Hydration failures fall back to static skill metadata. `frodo_discover` reports the sanitized active host and MCP profile so clients do not need to inspect local MCP configuration.

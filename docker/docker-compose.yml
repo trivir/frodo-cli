@@ -1,0 +1,99 @@
+# Example compose stack for the frodo MCP HTTP server in a container.
+#
+# This file is an EXAMPLE, not a deployment manifest: copy it (or the
+# `frodo-mcp` service block) and adjust the volume mount and env before use.
+# The commented-out gateway block at the bottom shows the co-location pattern
+# the containerized-gateway setup exists for: both services on one
+# user-defined bridge network, the gateway dialing frodo by service DNS name.
+#
+# Build from the repository root (the build context is ..):
+#   docker build -t frodo-mcp .
+#   docker compose -f docker/docker-compose.yml up -d
+#
+# Prerequisites:
+# - A saved connection profile for your tenant, mounted into the container
+#   (FRODO_CONNECTION_PROFILES_PATH below). The file can be read-only: the
+#   MCP server only reads it at startup.
+# - FRODO_MCP_AUTH_TOKEN set to the same secret the gateway sends; binding
+#   0.0.0.0 (non-loopback) without a token refuses to start by design.
+
+services:
+  frodo-mcp:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    image: frodo-mcp:latest
+    container_name: frodo-mcp
+    restart: unless-stopped
+    networks:
+      - mcpnet
+    ports:
+      # Optional: expose to the host for non-container clients. The gateway
+      # below does NOT need this — it reaches frodo over the shared network.
+      - "127.0.0.1:6277:6277"
+    environment:
+      # Bearer token required on /mcp (same secret as the gateway's).
+      FRODO_MCP_AUTH_TOKEN: ${FRODO_MCP_AUTH_TOKEN:?set FRODO_MCP_AUTH_TOKEN in your shell or an .env file}
+      # Saved connection profile (mounted read-only below) so the server
+      # starts without credentials on the command line.
+      FRODO_CONNECTION_PROFILES_PATH: /home/node/.frodo/Connections.json
+      # Optional frodo-side knobs (defaults shown):
+      # FRODO_MCP_MAX_BODY_SIZE: "1048576"          # 1 MiB
+      # FRODO_MCP_MAX_CONCURRENT_REQUESTS: "64"
+      # FRODO_MCP_HEARTBEAT_INTERVAL_MS: "900000"
+      # FRODO_LOG_LEVEL / FRODO_DEBUG are honored by the underlying lib.
+    volumes:
+      # Your saved connection profiles, read-only:
+      - ${HOME}/.frodo/Connections.json:/home/node/.frodo/Connections.json:ro
+    command:
+      [
+        "mcp", "server", "start",
+        "--transport", "http",
+        "--bind-host", "0.0.0.0",
+        "--port", "6277",
+        # The gateway dials by service DNS name, so its Host header is
+        # `frodo-mcp:6277` — that name must be in the allow-list or the
+        # Host-header gate answers 403 before auth is ever consulted. If you
+        # rename the service/container, allow that name instead.
+        "--allowed-hosts", "frodo-mcp",
+      ]
+    healthcheck:
+      # node:24-slim has no wget/curl; a node one-liner probes /health
+      # (unauthenticated by design — liveness probes must not need secrets).
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:6277/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # ---------------------------------------------------------------------------
+  # Commented-out example: an MCP gateway co-located on the same network,
+  # dialing frodo by service DNS name. Uncomment and fill in the image/config
+  # for your gateway; note there is no ports: mapping needed here — the
+  # user-defined network is the transport.
+  # ---------------------------------------------------------------------------
+  # gateway:
+  #   image: <your-gateway-image>
+  #   restart: unless-stopped
+  #   networks:
+  #     - mcpnet
+  #   environment:
+  #     # The MCP endpoint as the gateway dials it: service DNS name on mcpnet.
+  #     FRODO_MCP_URL: http://frodo-mcp:6277/mcp
+  #     FRODO_MCP_AUTH_TOKEN: ${FRODO_MCP_AUTH_TOKEN}
+  #     # The `frodo-mcp` Host header this URL produces is already allowed by
+  #     # the frodo-mcp service's --allowed-hosts flag above; if you rename
+  #     # the service, update both.
+  #   depends_on:
+  #     frodo-mcp:
+  #       condition: service_healthy
+
+networks:
+  mcpnet:
+    driver: bridge
