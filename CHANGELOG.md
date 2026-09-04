@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [v4.10.0] - 2026-09-04
+
 ### Added
 - Stabilized the `frodo mcp server start` HTTP transport (`--transport http`) so an MCP gateway running in a Docker container on the same host can reach it without changing the gateway's image or network model; every gate is frodo-side configuration:
   - `SIGHUP` (terminal closed) and `SIGQUIT` (Ctrl+\) now join `SIGTERM`/`SIGINT` in the graceful-shutdown wiring, and shutdown force-closes idle keep-alive sockets before releasing the port -- closing the SSH session that launched a long-lived HTTP server no longer orphans the listener holding the port.
@@ -15,6 +17,20 @@
   - Per-request gate observability at `--mcp-log-level debug` (`http` event): every request's arrival (method, URL, remote address), its fate at each gate (route miss, Host/Origin, 405, 401 -- the Authorization header's PRESENCE is logged, never its contents --, 400, 406, metadata/protocol-version/batch rejections) and one acceptance line before the SDK transport answers. At the default `info` level these lines stay quiet; the point is telling "requests arrive and are rejected at a gate" apart from "requests never arrive".
   - Operational hygiene for long-running deployments: `frodo mcp server stop` stops a running HTTP server via its PID lockfile (`~/.frodo/mcp-http-<port>.pid`, honoring `FRODO_CONFIG_PATH`; written after a successful listen, removed on every shutdown signal and on the crash path) -- SIGTERM first with a 10-second wait, `--force` for SIGKILL, stale lockfiles cleaned as a success, a best-effort PID-reuse guard refusing to signal a process that demonstrably is not frodo, and a clear exit 1 when no lockfile exists for the port. A start over a dead-PID lockfile logs a one-line stale note (`overwriting stale lockfile for port N (recorded pid P is not running)`) before overwriting it. `--port auto` binds an OS-assigned ephemeral port and the listening line/heartbeat/lockfile all report the RESOLVED port (also fixing `--port 0` printing the requested `0`; a literal `--port 0` now falls back to the default 6277 like other invalid values instead of binding ephemeral -- use `--port auto` for that). The dry-run summary reports the literal option value (`"port": "auto"` rather than the internal `0`) since no port is bound on a dry run. `--max-body-size <bytes>` (default 1 MiB; `FRODO_MCP_MAX_BODY_SIZE`) bounds request bodies with a `Content-Length` pre-check plus a mid-stream accumulation cap, answering `413` with a JSON-RPC `-32000` error naming the limit and closing the socket (the mid-stream path's `receivedBytes` reports the bytes actually observed up to the cap, not the limit itself); `--max-concurrent-requests <n>` (default 64; `FRODO_MCP_MAX_CONCURRENT_REQUESTS`) rejects over-cap handler executions with `429` + `Retry-After: 1` (queue-less; the cap counts handler executions, so a slow SSE stream holds its slot until its handler resolves); `FRODO_MCP_HEARTBEAT_INTERVAL_MS` overrides the liveness heartbeat (clamped >= 1000 ms, invalid keeps the 15-minute default). All defaults are generous (1 MiB is ~2.5x the largest observed QA payload; 64 far above observed load) and every knob is opt-in, so existing deployments are unaffected.
   - Container packaging: a multi-stage `Dockerfile` (node:24-slim build running `npm run build:only`, then a slim runtime stage with only the self-contained `dist/` bundle -- zero runtime `node_modules` -- running as the non-root `node` user with `launch.cjs` as ENTRYPOINT so `docker stop` performs the graceful shutdown) and an example `docker/docker-compose.yml` (bridge network `mcpnet`, read-only `Connections.json` mount, node-one-liner `/health` healthcheck, `restart: unless-stopped`, `--allowed-hosts frodo-mcp` so the co-located gateway's service-DNS-name `Host` header passes the Host gate, and a commented-out co-located-gateway service dialing `http://frodo-mcp:6277/mcp` by service DNS name). Documented in `docs/MCP_CLIENT_SETUP.md`.
+
+- Graceful shutdown now includes `SIGHUP` and `SIGQUIT` signals, force-closes idle sockets, and logs shutdown signals (`SIGTERM`/`SIGINT`/`SIGHUP`/`SIGQUIT`) for traceability. (commit 6d6f2916)
+  - Improved error handling for `EADDRINUSE`, providing actionable messages and exit codes. (commit 6d6f2916)
+  - Extended `--allowed-hosts` to include extra client hostnames, automatically accepting `host.docker.internal` for non-loopback binds. (commit 6d6f2916)
+  - Introduced `--mcp-auth-token` for secure requests, with an environment variable fallback. Unauthenticated binds require explicit allowance. (commit 6d6f2916)
+  - Enhanced request validation to accommodate different protocol eras, preventing silent downgrades and ensuring SDK parity. (commit 6d6f2916)
+  - Improved observability with server PID logging, liveness heartbeats, and detailed request processing logs at `--mcp-log-level debug`. (commit 6d6f2916)
+  - Operational hygiene improvements include a `frodo mcp server stop` command, lockfile management, and support for ephemeral ports with `--port auto`. (commit 6d6f2916)
+  - Added container packaging with a multi-stage `Dockerfile` and example `docker-compose.yml`, supporting non-root execution and graceful shutdown. (commit 6d6f2916)
+
+### Fixed
+- Corrected the dry-run summary to report the literal 'auto' port instead of the internal `0`. (commit c9906c56)
+- Log a note when starting over a stale lockfile to indicate overwriting a dead record. (commit 06d344b4)
+- Allow the compose gateway's service DNS name in the Host gate to facilitate containerized deployments. (commit 8e62327e)
 
 ## [v4.9.1] - 2026-09-01
 
