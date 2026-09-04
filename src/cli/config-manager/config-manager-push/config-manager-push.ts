@@ -22,6 +22,7 @@ import OrgPrivileges from './config-manager-push-org-privileges';
 import PasswordPolicy from './config-manager-push-password-policy';
 import RemoteServers from './config-manager-push-remote-servers';
 import Restart from './config-manager-push-restart';
+import Saml from './config-manager-push-saml';
 import Schedules from './config-manager-push-schedules';
 import SecretMappings from './config-manager-push-secret-mappings';
 import ServiceObjects from './config-manager-push-service-objects';
@@ -64,6 +65,7 @@ export default function setup() {
   program.addCommand(Restart().name('restart'));
   program.addCommand(Journeys().name('journeys'));
   program.addCommand(Variables().name('variables'));
+  program.addCommand(Saml().name('saml'));
 
   return program;
 }
