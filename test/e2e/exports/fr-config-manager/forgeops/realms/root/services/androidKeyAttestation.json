@@ -1,0 +1,10 @@
+{
+  "_id": "",
+  "_rev": "667165239",
+  "_type": {
+    "_id": "androidKeyAttestation",
+    "collection": false,
+    "name": "Android Key Attestation"
+  },
+  "crlUrl": "https://android.googleapis.com/attestation/status"
+}
