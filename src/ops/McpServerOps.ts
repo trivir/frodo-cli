@@ -18,18 +18,23 @@
  * calls may additionally override realm per request.
  */
 
+import { createHash, timingSafeEqual } from 'node:crypto';
 import {
   createServer,
   type IncomingMessage,
+  request as httpRequest,
   type ServerResponse,
 } from 'node:http';
+import type { AddressInfo } from 'node:net';
+import { isIP } from 'node:net';
 
 import {
-  localhostHostValidation,
+  hostHeaderValidation,
   localhostOriginValidation,
   NodeStreamableHTTPServerTransport,
 } from '@modelcontextprotocol/node';
 import {
+  localhostAllowedHostnames,
   McpServer,
   PROTOCOL_VERSION_META_KEY,
   ToolAnnotations,
@@ -49,6 +54,13 @@ import { z } from 'zod';
 import { printMessage } from '../utils/Console.js';
 import { McpLogger, type McpProtocolLogLevel } from './McpLogger.js';
 import {
+  getMcpHttpLockfilePath,
+  isPidAlive,
+  readMcpHttpLockfile,
+  removeMcpHttpLockfile,
+  writeMcpHttpLockfile,
+} from './McpServerLockfile.js';
+import {
   MCP_SERVER_DISCOVERY_INSTRUCTIONS,
   MCP_SERVER_NAME,
   MCP_SERVER_VERSION,
@@ -58,6 +70,20 @@ import {
 // ---------------------------------------------------------------------------
 // Internal constants
 // ---------------------------------------------------------------------------
+
+// Era gate: modern (2026-07-28) protocol revisions begin here. Revision
+// identifiers are ISO dates, so lexicographic comparison orders them
+// chronologically (mirrors the SDK's isModernProtocolVersion).
+const FIRST_MODERN_PROTOCOL_VERSION = '2026-07-28';
+
+// The methods whose body carries a value the `Mcp-Name` header must mirror,
+// and which body field supplies it (SEP-2243 Standard Request Headers,
+// `Required For` column — mirrors the SDK's MCP_NAME_HEADER_SOURCE map).
+const MCP_NAME_HEADER_SOURCE: Record<string, string> = {
+  'tools/call': 'name',
+  'prompts/get': 'name',
+  'resources/read': 'uri',
+};
 
 // Zod v4 schema shapes reused for canonical hybrid and special tools.
 const MAX_INLINE_RESULT_BYTES = 256 * 1024;
@@ -243,6 +269,212 @@ export type McpServerStartupInfo = {
   /** Dedicated logger containing buffered startup records. */
   logger: McpLogger;
 };
+
+// How often the long-running HTTP server logs a liveness heartbeat. A silent
+// long-lived process is indistinguishable from a hung one in remote logs; the
+// heartbeat is the "still alive" counter-evidence. unref()ed so it never
+// blocks process exit, and cleared on shutdown.
+const MCP_HTTP_HEARTBEAT_INTERVAL_MS = 15 * 60 * 1000;
+
+// The smallest heartbeat period an operator can configure. A sub-second
+// heartbeat is never what an operator wants — at that rate the log is noise,
+// and a mistaken value (seconds-vs-milliseconds confusion) would flood
+// whatever ships these logs.
+const MIN_HEARTBEAT_INTERVAL_MS = 1000;
+
+/**
+ * The effective liveness heartbeat interval: the injectable option wins
+ * (tests drive real-timer lifecycle cells with sub-second periods), then the
+ * `FRODO_MCP_HEARTBEAT_INTERVAL_MS` environment override (the
+ * operator-verifiability use case — an env var shows up in the
+ * container/service definition, no CLI flag), which is clamped to at least
+ * {@linkcode MIN_HEARTBEAT_INTERVAL_MS}; invalid or non-positive values fall
+ * back to the 15-minute default. Exported for direct unit coverage of the
+ * precedence and clamping rules.
+ */
+export function resolveMcpHttpHeartbeatInterval(
+  optionValueMs?: number,
+  envValue?: string
+): number {
+  if (optionValueMs !== undefined && Number.isFinite(optionValueMs)) {
+    return optionValueMs;
+  }
+  if (envValue !== undefined && envValue !== '') {
+    const parsed = Number(envValue);
+    if (Number.isFinite(parsed) && parsed > 0) {
+      return Math.max(parsed, MIN_HEARTBEAT_INTERVAL_MS);
+    }
+  }
+  return MCP_HTTP_HEARTBEAT_INTERVAL_MS;
+}
+
+// Frodo transport policy, not an SDK-parity cell: the largest single request
+// body accepted on POST /mcp. Unbounded reads let one malformed or hostile
+// client pin server memory (the SDK's own Node adapter relies on the host
+// framework for exactly this bound). The default is deliberately generous —
+// the largest payloads observed in QA gateway crawls were ~400 KB, so 1 MiB
+// is ~2.5x headroom — and raisable per deployment via --max-body-size /
+// FRODO_MCP_MAX_BODY_SIZE.
+export const DEFAULT_MCP_HTTP_MAX_BODY_SIZE_BYTES = 1024 * 1024;
+
+// Frodo transport policy, not an SDK-parity cell: the maximum number of
+// request handler executions in flight at once. Over-limit requests get an
+// immediate 429 (queue-less reject — the gateway's retry policy is the queue),
+// so a burst cannot pile unbounded work onto one process. The default is far
+// above any observed gateway load; raisable via --max-concurrent-requests /
+// FRODO_MCP_MAX_CONCURRENT_REQUESTS.
+export const DEFAULT_MCP_HTTP_MAX_CONCURRENT_REQUESTS = 64;
+
+// The JSON-RPC error code for frodo's own transport-policy rejections (body
+// size, concurrency). Outside the JSON-RPC reserved range (-32768..-32000 is
+// "Reserved for implementation-defined server-errors"), which is exactly what
+// a transport-level policy rejection is.
+const TRANSPORT_LIMIT_ERROR_CODE = -32000 as const;
+
+/**
+ * A POST /mcp body that exceeded the configured size limit, either at the
+ * `Content-Length` pre-check (nothing was read) or mid-stream (accumulation
+ * stopped at the limit). Carrying the observed byte count keeps the 413
+ * response concrete without ever echoing body contents.
+ */
+class McpHttpBodyTooLargeError extends Error {
+  /** Bytes seen (mid-stream) or declared (Content-Length), when known. */
+  readonly receivedBytes: number | undefined;
+
+  constructor(message: string, receivedBytes?: number) {
+    super(message);
+    this.name = 'McpHttpBodyTooLargeError';
+    this.receivedBytes = receivedBytes;
+  }
+}
+
+/**
+ * Queue-less concurrency limiter for POST /mcp handler executions.
+ *
+ * `tryAcquire` is synchronous on purpose: the bound is a hard ceiling with an
+ * immediate `429` for whoever does not fit (documented transport policy — the
+ * client's/gateway's retry policy is the queue, and `Retry-After: 1` tells it
+ * when), not a queue that would let a burst pile invisible work onto the
+ * process. A slot is held from just before the request body is read until the
+ * handler's response is fully written (for a tool call, that includes the SSE
+ * stream staying open while the tool executes) — so the cap counts in-flight
+ * handler *executions*, not merely held sockets, and a slow stream keeps its
+ * slot until its handler resolves.
+ */
+class McpHttpConcurrencyLimiter {
+  private inFlight = 0;
+
+  constructor(readonly max: number) {}
+
+  /**
+   * Takes a slot when one is free, returns false when the caller must be
+   * rejected with `429`.
+   */
+  tryAcquire(): boolean {
+    if (this.inFlight >= this.max) {
+      return false;
+    }
+    this.inFlight += 1;
+    return true;
+  }
+
+  release(): void {
+    this.inFlight = Math.max(0, this.inFlight - 1);
+  }
+
+  get load(): number {
+    return this.inFlight;
+  }
+}
+
+/**
+ * Renders one crash-log line: a timestamp, the event kind, the error's name
+ * and message, and the first stack frame (where in frodo it blew up) — the
+ * minimum an operator needs before reaching for a debugger.
+ */
+function describeCrash(kind: string, error: unknown): string {
+  const name = error instanceof Error ? error.name : typeof error;
+  const message = error instanceof Error ? error.message : String(error);
+  const frame =
+    error instanceof Error
+      ? error.stack
+          ?.split('\n')
+          .map((line) => line.trim())
+          .find((line) => line.startsWith('at '))
+      : undefined;
+  return (
+    `${new Date().toISOString()} ${kind}: ${name}: ${message}` +
+    (frame ? ` (${frame})` : '')
+  );
+}
+
+/**
+ * Registers the process-level `uncaughtException` crash handler scoped to
+ * the MCP server lifetime.
+ *
+ * Unhandled promise rejections are NOT registered here: FrodoCommand's
+ * constructor (src/cli/FrodoCommand.ts) installs a global
+ * `unhandledRejection` handler during command-tree assembly — strictly
+ * before any transport start path runs — so a `listenerCount === 0` guard
+ * for rejections could never pass on a CLI path, and registering
+ * unconditionally would stack a second handler behind FrodoCommand's (which
+ * logs the rejection and sets `process.exitCode = 1`). Rejections in server
+ * mode are therefore owned by FrodoCommand's global handler, unchanged: they
+ * are logged (the "please report this unhandled error" block) and set exit
+ * code 1, while the server keeps serving. This handler covers the event
+ * FrodoCommand does not handle: an uncaughtException, which nothing else
+ * registers.
+ *
+ * Registration is guarded by `process.listenerCount('uncaughtException')
+ * === 0` so repeated starts (and test workers) never stack handlers.
+ *
+ * On an uncaughtException: log one crash line, best-effort close the server
+ * (`options.beforeExit`), then `process.exit(1)` — an uncaught exception
+ * means the process is in an unknown state; a clean exit lets the
+ * supervisor (launch wrapper, systemd, container runtime) restart it.
+ *
+ * Returns a dispose function that removes the handler it registered (a
+ * no-op when the guard skipped registration) — for tests.
+ */
+export function registerServerCrashHandlers(
+  startupInfo?: McpServerStartupInfo,
+  options?: { beforeExit?: () => void }
+): () => void {
+  const logCrash = (kind: string, error: unknown): void => {
+    const line = describeCrash(kind, error);
+    if (startupInfo) {
+      startupInfo.logger.error('crash', line);
+    } else {
+      printMessage(line, 'error');
+    }
+  };
+
+  const added: Array<['uncaughtException', (arg: unknown) => void]> = [];
+
+  if (!process.listenerCount('uncaughtException')) {
+    const onUncaughtException = (error: unknown): void => {
+      logCrash('uncaughtException', error);
+      try {
+        // An uncaughtException can leave the HTTP port bound; best-effort
+        // release it before the deliberate exit so a supervisor restart
+        // doesn't hit EADDRINUSE against our own corpse.
+        options?.beforeExit?.();
+      } catch {
+        // The exit below must not be held hostage by a failing cleanup.
+      }
+      process.exit(1);
+    };
+    process.on('uncaughtException', onUncaughtException);
+    added.push(['uncaughtException', onUncaughtException]);
+  }
+
+  return () => {
+    for (const [name, handler] of added) {
+      process.off(name, handler as () => void);
+    }
+    added.length = 0;
+  };
+}
 
 // ---------------------------------------------------------------------------
 // Server builder
@@ -447,46 +679,272 @@ export async function startStdioTransport(
   service: McpService,
   startupInfo?: McpServerStartupInfo
 ): Promise<void> {
+  // The stdio server lives for the process lifetime, so its crash handlers
+  // do too — the dispose function is intentionally not kept (a live stdio
+  // server never un-registers).
+  registerServerCrashHandlers(startupInfo);
   serveStdio(() => buildMcpServer(service, startupInfo));
+}
+
+/** Runtime configuration for the HTTP transport. */
+export type McpHttpTransportOptions = {
+  /**
+   * Extra `Host` header values to accept beyond the default localhost set
+   * (`localhost`, `127.0.0.1`, `[::1]`). Needed whenever the server is
+   * reached through a different hostname, e.g. `host.docker.internal` from a
+   * bridge-network container on the same machine.
+   */
+  allowedHosts?: string[];
+  /**
+   * Bearer token required on `POST /mcp` requests when configured. `GET
+   * /health` stays unauthenticated. Never logged.
+   */
+  authToken?: string;
+  /**
+   * Liveness heartbeat interval in milliseconds. Defaults to
+   * {@linkcode MCP_HTTP_HEARTBEAT_INTERVAL_MS} (15 minutes). Exposed so
+   * tests can exercise the emission/clearing lifecycle against real timers
+   * without waiting a quarter hour.
+   */
+  heartbeatIntervalMs?: number;
+  /**
+   * Maximum accepted request body size in bytes on POST /mcp. Defaults to
+   * {@linkcode DEFAULT_MCP_HTTP_MAX_BODY_SIZE_BYTES} (1 MiB). Enforced both
+   * as a `Content-Length` pre-check (reject before reading a byte) and as an
+   * accumulation cap inside the body reader (reject mid-stream on overflow).
+   * Over-limit requests are answered `413` with a JSON-RPC error naming the
+   * limit and the option that raises it.
+   */
+  maxBodySizeBytes?: number;
+  /**
+   * Maximum concurrent POST /mcp handler executions before new requests are
+   * rejected with `429` + `Retry-After: 1` (queue-less reject — the client's
+   * retry policy is the queue). Defaults to
+   * {@linkcode DEFAULT_MCP_HTTP_MAX_CONCURRENT_REQUESTS} (64). Counts handler
+   * executions, not held sockets: a slow SSE stream mid-write still occupies a
+   * slot until its handler resolves.
+   */
+  maxConcurrentRequests?: number;
+};
+
+/**
+ * Computes the effective `Host` header allow-list for the HTTP transport.
+ *
+ * The default localhost set (the SDK's `localhostAllowedHostnames()`) is
+ * always included so the zero-config local case behaves exactly as before;
+ * `allowedHosts` extends it. When binding a non-loopback interface,
+ * `host.docker.internal` is auto-included — the standard Docker Desktop /
+ * Linux `host-gateway` alias a bridge-network container uses to reach a
+ * server on the host itself (the containerized AI gateway deployment model).
+ *
+ * Exported so the default/extension/auto-alias composition has direct unit
+ * coverage without spinning up a real listener.
+ */
+export function computeHttpAllowedHosts(
+  bindHost: string,
+  allowedHosts?: string[]
+): string[] {
+  const effective = new Set(localhostAllowedHostnames());
+  for (const host of allowedHosts ?? []) {
+    if (host) {
+      effective.add(host);
+    }
+  }
+  if (!isLoopbackBindHost(bindHost)) {
+    effective.add('host.docker.internal');
+  }
+  return [...effective];
+}
+
+/**
+ * Whether a bind host only exposes the server to the local machine.
+ *
+ * Loopback means the loopback interface (any `127.x.y.z` address or `[::1]`)
+ * or `localhost` itself. Bind hosts that cannot be parsed as addresses
+ * (hostnames) are treated as non-loopback — the safe default for a guard
+ * that decides whether a bearer token may be skipped.
+ */
+export function isLoopbackBindHost(bindHost: string): boolean {
+  if (!bindHost) {
+    return false;
+  }
+  const normalized = bindHost.toLowerCase();
+  if (
+    normalized === 'localhost' ||
+    normalized === '::1' ||
+    normalized === '[::1]'
+  ) {
+    return true;
+  }
+  const family = isIP(bindHost);
+  if (family === 6) {
+    return normalized === '::1';
+  }
+  if (family === 4) {
+    return normalized.startsWith('127.');
+  }
+  // Hostname (or wildcard like `0.0.0.0` is already an IP, handled above as
+  // non-loopback): a name can resolve to anything, so treat as non-loopback.
+  return false;
+}
+
+/**
+ * Verifies an HTTP `Authorization` header against the configured bearer
+ * token, timing-safely.
+ *
+ * Comparison runs over SHA-256 digests so `crypto.timingSafeEqual` can be
+ * used regardless of the two lengths (it throws on unequal byte lengths),
+ * without leaking the token length through early exits.
+ *
+ * Exported for direct unit coverage of the parsing and comparison rules —
+ * silently accepting a malformed header shape would be a security bug, and
+ * the 401 path below is exactly where that would live.
+ *
+ * @param authorization Raw `Authorization` header value.
+ * @param authToken The configured bearer token.
+ * @returns true when the header authenticates the request.
+ */
+export function verifyMcpBearerAuthorization(
+  authorization: string | undefined,
+  authToken: string
+): boolean {
+  if (!authorization || !authToken) {
+    return false;
+  }
+  const [scheme, ...rest] = authorization.trim().split(/\s+/);
+  const token = rest.join(' ');
+  if (!scheme || scheme.toLowerCase() !== 'bearer' || !token) {
+    return false;
+  }
+  const provided = createHash('sha256').update(token, 'utf8').digest();
+  const expected = createHash('sha256').update(authToken, 'utf8').digest();
+  return timingSafeEqual(provided, expected);
 }
 
 /**
  * Starts a stateless MCP HTTP server using the Streamable HTTP transport.
  *
  * The MCP endpoint is `POST /mcp`. A `GET /health` endpoint is provided for
- * liveness probing. Host and origin are validated for localhost safety.
+ * liveness probing. The `Host` header is validated against an allow-list
+ * (localhost set plus any configured extras) and the `Origin` header against
+ * the localhost set; when `options.authToken` is set, `POST /mcp` also
+ * requires a matching `Authorization: Bearer` header.
  *
- * The function resolves when the server is stopped via SIGTERM or SIGINT.
+ * The function resolves when the server is stopped via SIGTERM, SIGINT,
+ * SIGHUP, or SIGQUIT (the SSH-session survival signals — closing the terminal
+ * that launched a long-lived HTTP server must release the port), resolves
+ * with `process.exitCode = 1` after one actionable message when the port is
+ * already in use (the deliberate-exit path — rejecting would double-print
+ * through the global unhandledRejection handler), and rejects on other
+ * server errors.
+ *
+ * After a successful `listen()` a PID lockfile
+ * (`<config dir>/mcp-http-<resolved port>.pid`, see
+ * {@linkcode writeMcpHttpLockfile}) records `{pid, port, bindHost, startedAt}`
+ * so `frodo mcp server stop` can find and stop this server; it is removed on
+ * every shutdown signal and best-effort on the crash path.
  *
  * @param service Fully composed MCP service.
  * @param bindHost Host interface to bind (e.g. `"127.0.0.1"`).
- * @param port TCP port to listen on.
+ * @param port TCP port to listen on (0 binds an OS-assigned port — the
+ *   resolved port is printed and used for the lockfile).
+ * @param startupInfo Startup logger context.
+ * @param options Transport configuration (Host allow-list, bearer token,
+ *   body/concurrency limits).
  */
 export async function startHttpTransport(
   service: McpService,
   bindHost: string,
   port: number,
-  startupInfo?: McpServerStartupInfo
+  startupInfo?: McpServerStartupInfo,
+  options?: McpHttpTransportOptions
 ): Promise<void> {
+  // The port actually bound: the OS assigns it when `port` is 0, and the
+  // listen callback records it (AddressInfo.port). Every user-visible
+  // mention — listening line, heartbeat, lockfile name, shutdown removal —
+  // uses the resolved value; the requested value is only what listen() was
+  // asked for.
+  let resolvedPort = port;
   const mcpServer = buildMcpServer(service, startupInfo);
   const transport = new NodeStreamableHTTPServerTransport({
     sessionIdGenerator: undefined,
   });
   await mcpServer.connect(transport);
-  const validateHost = localhostHostValidation();
+  const validateHost = hostHeaderValidation(
+    computeHttpAllowedHosts(bindHost, options?.allowedHosts)
+  );
   const validateOrigin = localhostOriginValidation();
+  const limiter = new McpHttpConcurrencyLimiter(
+    options?.maxConcurrentRequests ?? DEFAULT_MCP_HTTP_MAX_CONCURRENT_REQUESTS
+  );
 
   const httpServer = createServer(
     async (req: IncomingMessage, res: ServerResponse) => {
+      // Per-request gate observability: every arrival/gate decision logs at
+      // debug level only (default 'info' stays quiet). printMessage fallback
+      // mirrors the shutdown-log pattern for the startupInfo-less tests.
+      const debugLog = (message: string): void => {
+        if (startupInfo) {
+          startupInfo.logger.debug('http', message);
+        } else {
+          printMessage(message, 'debug');
+        }
+      };
       try {
         await handleHttpRequest(
           req,
           res,
           transport,
           validateHost,
-          validateOrigin
+          validateOrigin,
+          options?.authToken,
+          options?.maxBodySizeBytes ?? DEFAULT_MCP_HTTP_MAX_BODY_SIZE_BYTES,
+          limiter,
+          debugLog
         );
       } catch (err) {
+        // The body-limit rejection travels this same path by design (a throw
+        // from the reader): answer 413 with the JSON-RPC error shape and
+        // destroy the socket so the unread remainder of the body is dropped
+        // instead of sitting in a keep-alive connection. Everything else
+        // stays the generic 500.
+        if (err instanceof McpHttpBodyTooLargeError) {
+          debugLog?.(
+            `rejected: body too large (${err.receivedBytes ?? 'unknown'} bytes, limit ${
+              options?.maxBodySizeBytes ?? DEFAULT_MCP_HTTP_MAX_BODY_SIZE_BYTES
+            })`
+          );
+          writeJsonRpcErrorResponse(
+            res,
+            413,
+            {
+              jsonrpc: '2.0',
+              id: null,
+              error: {
+                code: TRANSPORT_LIMIT_ERROR_CODE,
+                message:
+                  `Payload Too Large: the request body exceeds the configured limit ` +
+                  `of ${
+                    options?.maxBodySizeBytes ??
+                    DEFAULT_MCP_HTTP_MAX_BODY_SIZE_BYTES
+                  } bytes` +
+                  (err.receivedBytes !== undefined
+                    ? ` (received ${err.receivedBytes} bytes)`
+                    : '') +
+                  `. Raise it with --max-body-size <bytes> or FRODO_MCP_MAX_BODY_SIZE.`,
+                data: {
+                  limitBytes:
+                    options?.maxBodySizeBytes ??
+                    DEFAULT_MCP_HTTP_MAX_BODY_SIZE_BYTES,
+                  receivedBytes: err.receivedBytes,
+                },
+              },
+            },
+            { Connection: 'close' }
+          );
+          res.on('finish', () => req.socket.destroy());
+          return;
+        }
         printMessage(
           `MCP HTTP handler error: ${err instanceof Error ? err.message : String(err)}`,
           'error'
@@ -498,24 +956,175 @@ export async function startHttpTransport(
     }
   );
 
+  // Server-mode crash handlers: registered only from the MCP server start
+  // path (never from FrodoCommand), self-guarded against stacking, and
+  // disposed when the transport stops so a later re-start re-registers
+  // cleanly.
+  const disposeCrashHandlers = registerServerCrashHandlers(startupInfo, {
+    beforeExit: () => {
+      // Best-effort lockfile removal on the crash path: an uncaughtException
+      // exit leaves no shutdown signal to run the graceful cleanup, so the
+      // crash path does it — a supervisor restart must not find a lockfile
+      // naming the dead PID and read it as a live incumbent. (The PID
+      // liveness check would eventually classify it stale, but only after a
+      // misleading EADDRINUSE message.)
+      removeMcpHttpLockfile(resolvedPort);
+      httpServer.closeIdleConnections?.();
+      httpServer.close();
+    },
+  });
+
+  // Liveness heartbeat: one line every MCP_HTTP_HEARTBEAT_INTERVAL_MS so a
+  // remote operator can tell a hung server from a healthy one. unref()ed —
+  // the timer must never be the thing keeping the process alive — and
+  // cleared on shutdown.
+  const heartbeat = setInterval(
+    () => {
+      const line = `MCP HTTP server still listening on http://${bindHost}:${resolvedPort}/mcp (pid ${process.pid})`;
+      if (startupInfo) {
+        startupInfo.logger.info('heartbeat', line);
+      } else {
+        printMessage(line, 'info');
+      }
+    },
+    resolveMcpHttpHeartbeatInterval(
+      options?.heartbeatIntervalMs,
+      process.env.FRODO_MCP_HEARTBEAT_INTERVAL_MS
+    )
+  );
+
+  heartbeat.unref();
+
   return new Promise<void>((resolve, reject) => {
     httpServer.listen(port, bindHost, () => {
-      printMessage(
-        `MCP HTTP server listening on http://${bindHost}:${port}/mcp`,
-        'info'
-      );
+      // The resolved port, not the requested one: with `--port auto` (or a
+      // literal 0) the OS assigns the port, and the printed URL is what an
+      // operator points a client at — printing the requested 0 (or 'auto')
+      // is the long-standing wrong-print this fixes.
+      resolvedPort = (httpServer.address() as AddressInfo).port;
+      const listeningLine = `MCP HTTP server (pid ${process.pid}) listening on http://${bindHost}:${resolvedPort}/mcp`;
+      printMessage(listeningLine, 'info');
+      // One cheap staleness note before the lockfile is overwritten: a
+      // previous run that died without cleanup (crash without the best-effort
+      // removal, kill -9, reboot) leaves a lockfile naming a dead PID, and the
+      // operator who later wonders why `stop` says "stale lockfile" deserves
+      // the matching line at start. Read-fail-tolerant by construction (the
+      // reader returns null for missing/unreadable/malformed), and
+      // race-tolerant: a concurrent writer's record is only consulted for
+      // liveness, never modified here — the write below is the overwrite.
+      const staleLockfile = readMcpHttpLockfile(resolvedPort);
+      if (staleLockfile && !isPidAlive(staleLockfile.pid)) {
+        printMessage(
+          `MCP HTTP server: overwriting stale lockfile for port ${resolvedPort} (recorded pid ${staleLockfile.pid} is not running).`,
+          'warn'
+        );
+      }
+      // The PID lockfile is written only once the listener is actually up:
+      // a record naming this process must not outlive a start that never
+      // bound the port. Best-effort — a read-only config dir must not fail
+      // the start (the lockfile is an operational aid, not a gate).
+      if (
+        !writeMcpHttpLockfile({
+          pid: process.pid,
+          port: resolvedPort,
+          bindHost,
+          startedAt: new Date().toISOString(),
+        })
+      ) {
+        printMessage(
+          `MCP HTTP server: could not write the PID lockfile at ${getMcpHttpLockfilePath(resolvedPort)}; 'frodo mcp server stop' will not find this server by it.`,
+          'warn'
+        );
+      }
+      // Test/debug-only crash hook: when FRODO_MCP_CRASH_TEST=1, throw an
+      // uncaught exception shortly after the listener is up so the
+      // uncaughtException crash path (crash line, best-effort port release,
+      // exit 1) can be exercised end to end in a spawned child — the path
+      // cannot run inside a jest worker without killing the suite. Never
+      // set in production; documented as test/debug-only in
+      // docs/MCP_CLIENT_SETUP.md.
+      if (process.env.FRODO_MCP_CRASH_TEST === '1') {
+        setTimeout(() => {
+          throw new Error('FRODO_MCP_CRASH_TEST uncaught exception probe');
+        }, 25);
+      }
     });
 
-    httpServer.on('error', (err) => {
+    httpServer.on('error', async (err) => {
+      if ((err as NodeJS.ErrnoException).code === 'EADDRINUSE') {
+        // One actionable line, then a deliberate exit (exit code 1 via
+        // exitCode, promise resolved) — rejecting would surface through the
+        // global unhandledRejection handler in FrodoCommand.ts and print a
+        // second, noisier "please report this unhandled error" block for a
+        // completely expected condition. The same teardown the shutdown
+        // path runs (heartbeat clear + crash-handler dispose) runs here too:
+        // a resolved-but-poisoned-exitCode process should not keep a
+        // heartbeat timer or process-level handlers registered.
+        clearInterval(heartbeat);
+        disposeCrashHandlers();
+        // No lockfile removal here: this process never wrote one (the
+        // write happens only after a successful listen), and the
+        // incumbent's lockfile is the incumbent's to manage.
+        const incumbent = await probeHttpServerHealth(port);
+        // When a lockfile for this port names a live PID, that PID is the
+        // incumbent — name it directly so `frodo mcp server stop` (or a
+        // manual kill) needs no lsof round trip. The health-probe wording
+        // stays as the fallback for a squatter with no lockfile.
+        const incumbentLockfile = readMcpHttpLockfile(port);
+        const incumbentPid =
+          incumbentLockfile && isPidAlive(incumbentLockfile.pid)
+            ? incumbentLockfile.pid
+            : undefined;
+        printMessage(
+          `MCP HTTP server: port ${port} on ${bindHost} is already in use — ` +
+            (incumbentPid !== undefined
+              ? `a process is already listening (pid ${incumbentPid}, from the lockfile). Stop it: frodo mcp server stop --port ${port}. `
+              : incumbent
+                ? `another MCP server is answering on this port (a health probe succeeded). `
+                : `another frodo mcp server (or other process) is likely listening. `) +
+            `Find it: lsof -iTCP:${port} -sTCP:LISTEN. ` +
+            `Use --port <other> or stop the incumbent.`,
+          'error'
+        );
+        process.exitCode = 1;
+        resolve();
+        return;
+      }
       printMessage(`MCP HTTP server error: ${err.message}`, 'error');
       reject(err);
     });
 
-    const shutdown = () => {
+    const shutdown = (signal: NodeJS.Signals) => {
+      // One terse line per received signal: when shutdown is triggered
+      // remotely (SSH hangup, orchestrator stop), the log is the only
+      // record of which signal caused it.
+      const signalLog = `received ${signal}, shutting down MCP HTTP server`;
+      if (startupInfo) {
+        startupInfo.logger.info('shutdown', signalLog);
+      } else {
+        printMessage(signalLog, 'info');
+      }
+      clearInterval(heartbeat);
+      disposeCrashHandlers();
+      // The lockfile must go before the promise resolves: a supervisor that
+      // restarts the server immediately must not read a stale record naming
+      // a PID about to exit.
+      removeMcpHttpLockfile(resolvedPort);
+      // Stop accepting connections immediately, then force-close any
+      // keep-alive sockets so the port is released deterministically even
+      // when a client (or gateway) holds an idle persistent connection —
+      // closeIdleConnections is what makes SIGHUP from a closing SSH
+      // session actually free the port.
+      httpServer.closeIdleConnections?.();
       httpServer.close(() => resolve());
     };
+    // SIGHUP (terminal closed) and SIGQUIT (Ctrl+\) join SIGTERM/SIGINT so
+    // closing the SSH session that launched the server releases the port
+    // instead of orphaning the listener.
     process.once('SIGTERM', shutdown);
     process.once('SIGINT', shutdown);
+    process.once('SIGHUP', shutdown);
+    process.once('SIGQUIT', shutdown);
   });
 }
 
@@ -524,204 +1133,715 @@ export async function startHttpTransport(
 // ---------------------------------------------------------------------------
 
 /**
+ * Best-effort liveness probe against a likely incumbent on `127.0.0.1:port`
+ * (used by the EADDRINUSE path). Resolves true only when an HTTP server
+ * answers `GET /health` within the timeout — a plain TCP connect would also
+ * succeed for a dead-but-listening socket or any non-HTTP squatter, which
+ * would overstate what is on the port. Never rejects: a probe failure just
+ * means "no evidence of an MCP server", the pre-existing message.
+ */
+async function probeHttpServerHealth(
+  port: number,
+  timeoutMs = 500
+): Promise<boolean> {
+  return new Promise((resolve) => {
+    let settled = false;
+    const settle = (value: boolean): void => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      req.destroy();
+      resolve(value);
+    };
+    const req = httpRequest(
+      {
+        host: '127.0.0.1',
+        port,
+        method: 'GET',
+        path: '/health',
+        timeout: timeoutMs,
+      },
+      (res) => {
+        res.resume();
+        settle(res.statusCode === 200);
+      }
+    );
+    req.on('timeout', () => settle(false));
+    req.on('error', () => settle(false));
+    req.end();
+  });
+}
+
+/**
  * Routes a single HTTP request to the appropriate MCP transport handler.
+ *
+ * Every gate decision is logged at DEBUG level (`http` event) so an operator
+ * running `--mcp-log-level debug` can tell "requests arrive and are rejected
+ * at a gate" apart from "requests never arrive" — the incident behind this
+ * logging: a gateway reported Unauthorized at initialize while frodo's
+ * console showed nothing, leaving the two causes indistinguishable. Default
+ * (`info`) level stays quiet; never logged: Authorization header values or
+ * any token material (header PRESENCE is fine, contents never are), request
+ * bodies (only the body's JSON-RPC method name, which carries no secrets).
+ *
+ * Frodo transport-policy limits run alongside the protocol gates: the
+ * `Content-Length` pre-check rejects an over-limit body before a byte is
+ * read, and POST handler executions acquire a concurrency slot (see
+ * {@linkcode McpHttpConcurrencyLimiter}) — over-limit requests get `429` +
+ * `Retry-After: 1` without being queued.
  */
 async function handleHttpRequest(
   req: IncomingMessage,
   res: ServerResponse,
   transport: NodeStreamableHTTPServerTransport,
   validateHost: (req: IncomingMessage, res: ServerResponse) => boolean,
-  validateOrigin: (req: IncomingMessage, res: ServerResponse) => boolean
+  validateOrigin: (req: IncomingMessage, res: ServerResponse) => boolean,
+  authToken: string | undefined,
+  maxBodySizeBytes: number,
+  limiter: McpHttpConcurrencyLimiter,
+  debug: ((message: string) => void) | undefined
 ): Promise<void> {
-  // Health probe
-  if (req.method === 'GET' && req.url === '/health') {
+  // Arrival line: even 404s and health probes are visible at debug level.
+  // The path only, never the query string: the URL is logged before any
+  // routing decision, and a caller that put secret material in a query
+  // parameter (`/mcp?token=...`) must not see it echoed into the log.
+  const routePath = req.url?.split('?')[0] ?? '';
+  debug?.(
+    `${req.method} ${routePath} from ${req.socket?.remoteAddress ?? 'unknown'}`
+  );
+  // Route matching ignores the query string: a request to `/mcp?x=y` names
+  // the same endpoint (RFC 9110 — the query is not part of the path). The
+  // health probe keeps its exact match; it has no query-bearing caller and
+  // the widened auth surface below stays in lockstep (the bearer gate keys
+  // on the same route, so widening it widens the authed surface identically
+  // — no change in exposure).
+
+  // Health probe — deliberately unauthenticated: liveness probes must not
+  // need secrets, and the body leaks only `{ status: 'ok' }`.
+  if (req.method === 'GET' && routePath === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ status: 'ok' }));
     return;
   }
 
-  if (req.url !== '/mcp') {
+  if (routePath !== '/mcp') {
+    debug?.(`rejected: 404 ${routePath} is not the MCP endpoint`);
     res.writeHead(404).end('Not found');
     return;
   }
 
-  if (!validateHost(req, res) || !validateOrigin(req, res)) {
+  // Each validator writes its own 403 response when it rejects, so call each
+  // at most once; the debug line names which gate and what it saw.
+  const hostOk = validateHost(req, res);
+  if (!hostOk) {
+    debug?.(`rejected: invalid Host header ${req.headers.host ?? '(none)'}`);
+    return;
+  }
+  if (!validateOrigin(req, res)) {
+    debug?.(
+      `rejected: invalid Origin header ${req.headers.origin ?? '(none)'}`
+    );
     return;
   }
 
   if (req.method !== 'POST') {
+    debug?.(`rejected: 405 ${req.method} on ${routePath}`);
     res.writeHead(405).end('Method not allowed');
     return;
   }
 
-  // Parse body for POST
-  let body: unknown;
-  try {
-    body = await readJsonBody(req);
-  } catch {
-    res.writeHead(400).end('Invalid JSON body');
-    return;
-  }
-
-  // Enforce dual Accept header (MCP spec requirement)
-  const accept = (req.headers['accept'] ?? '').toLowerCase();
-  if (
-    !accept.includes('application/json') ||
-    !accept.includes('text/event-stream')
-  ) {
-    res
-      .writeHead(406)
-      .end(
-        'Not Acceptable: Client must accept both application/json and text/event-stream'
+  // Bearer-token gate (SEP-2243-adjacent): enforced on every /mcp request
+  // whenever a token is configured, loopback or not. /health above stays
+  // open. The WWW-Authenticate challenge matches the SDK's own
+  // bearerAuthChallengeResponse shape for invalid/missing tokens.
+  if (authToken !== undefined) {
+    const authorization = getSingleHeaderValue(req, 'authorization');
+    if (!verifyMcpBearerAuthorization(authorization, authToken)) {
+      // Presence only, never contents: whether an Authorization header was
+      // sent is operationally useful (missing vs wrong token), its value is
+      // secret material and must never reach a log line.
+      debug?.(
+        authorization === undefined
+          ? 'rejected: unauthorized (no Authorization header)'
+          : 'rejected: unauthorized (Authorization header did not verify)'
       );
-    return;
+      writeJsonRpcErrorResponse(
+        res,
+        401,
+        {
+          jsonrpc: '2.0',
+          id: null,
+          error: {
+            code: -32001,
+            message: 'Unauthorized: a valid bearer token is required.',
+          },
+        },
+        { 'WWW-Authenticate': 'Bearer error="invalid_token"' }
+      );
+      return;
+    }
   }
 
-  const metadataValidationError = validateHttpRequestMetadata(req, body);
-  if (metadataValidationError) {
-    writeJsonRpcErrorResponse(res, metadataValidationError.statusCode, {
-      jsonrpc: '2.0',
-      id: metadataValidationError.requestId,
-      error: {
-        code: metadataValidationError.error.code,
-        message: metadataValidationError.error.message,
-        data: metadataValidationError.error.data,
+  // Concurrency gate (frodo transport policy, queue-less): taken AFTER auth
+  // so an unauthenticated flood cannot occupy slots just by being rejected
+  // for the token, but BEFORE any body read so an over-cap request never
+  // buffers its payload at all. Non-POST requests (health probes, 404/405
+  // paths) never take a slot — they answer from the wire alone.
+  if (req.method === 'POST' && !limiter.tryAcquire()) {
+    debug?.(
+      `rejected: 429 server busy (${limiter.load} in-flight, cap ${limiter.max})`
+    );
+    writeJsonRpcErrorResponse(
+      res,
+      429,
+      {
+        jsonrpc: '2.0',
+        id: null,
+        error: {
+          code: TRANSPORT_LIMIT_ERROR_CODE,
+          message:
+            `Server busy: the MCP server already has ${limiter.max} requests in flight ` +
+            `(server max concurrent requests is ${limiter.max}). ` +
+            'Retry after a short delay (queue-less reject — gateways retry).',
+          data: {
+            maxConcurrentRequests: limiter.max,
+            inFlight: limiter.load,
+          },
+        },
       },
-    });
+      { 'Retry-After': '1' }
+    );
     return;
   }
 
-  const protocolVersionError = getUnsupportedProtocolVersionError(req, body);
-  if (protocolVersionError) {
-    writeJsonRpcErrorResponse(res, protocolVersionError.statusCode, {
-      jsonrpc: '2.0',
-      id: protocolVersionError.requestId,
-      error: {
-        code: protocolVersionError.error.code,
-        message: protocolVersionError.error.message,
-        data: protocolVersionError.error.data,
-      },
-    });
-    return;
-  }
+  // Content-Length pre-check: reject an over-limit declared body BEFORE any
+  // byte is buffered. (Requests without Content-Length — chunked uploads —
+  // are covered by the accumulation cap inside readJsonBody.) A lying
+  // Content-Length smaller than the truth still gets caught mid-stream by
+  // that cap.
+  //
+  // From the slot acquisition to the response's last byte — including the
+  // Content-Length rejection, the body parse (success, invalid-JSON 400, AND
+  // the mid-stream 413 rethrow), every protocol-gate rejection, and the
+  // transport call — the slot is held; the single finally below releases it
+  // on every exit path. (The invalid-JSON return must release too: a
+  // malformed-JSON flood would otherwise hold slots forever, shrinking the
+  // effective cap to zero one bad request at a time.)
+  try {
+    if (req.method === 'POST') {
+      const contentLengthHeader = getSingleHeaderValue(req, 'content-length');
+      if (contentLengthHeader !== undefined) {
+        const declared = Number(contentLengthHeader);
+        if (Number.isFinite(declared) && declared > maxBodySizeBytes) {
+          debug?.(
+            `rejected: 413 Content-Length ${declared} exceeds limit ${maxBodySizeBytes}`
+          );
+          writeJsonRpcErrorResponse(
+            res,
+            413,
+            {
+              jsonrpc: '2.0',
+              id: null,
+              error: {
+                code: TRANSPORT_LIMIT_ERROR_CODE,
+                message:
+                  `Payload Too Large: Content-Length ${contentLengthHeader} exceeds the ` +
+                  `configured limit of ${maxBodySizeBytes} bytes. Raise it with ` +
+                  `--max-body-size <bytes> or FRODO_MCP_MAX_BODY_SIZE.`,
+                data: {
+                  limitBytes: maxBodySizeBytes,
+                  receivedBytes: declared,
+                },
+              },
+            },
+            { Connection: 'close' }
+          );
+          res.on('finish', () => req.socket.destroy());
+          return;
+        }
+      }
+    }
 
-  await transport.handleRequest(req, res, body);
+    // Parse body for POST
+    let body: unknown;
+    try {
+      body = await readJsonBody(req, maxBodySizeBytes);
+    } catch (err) {
+      // The over-limit rejection is rethrown for the caller's 413 path (it
+      // needs socket teardown this function should not own); anything else is
+      // the pre-existing 400.
+      if (err instanceof McpHttpBodyTooLargeError) {
+        throw err;
+      }
+      debug?.('rejected: invalid JSON body');
+      res.writeHead(400).end('Invalid JSON body');
+      return;
+    }
+
+    // Empty JSON-RPC batch (SDK `classifyBatch` parity): the hand-wired
+    // transport would silently answer 202 for an array with no elements, so
+    // reject it here the way the SDK's own classifier does.
+    if (Array.isArray(body) && body.length === 0) {
+      debug?.('rejected: empty JSON-RPC batch');
+      const rejection = buildMetadataValidationError(
+        null,
+        INVALID_REQUEST_ERROR_CODE,
+        EMPTY_BATCH_ERROR_MESSAGE
+      );
+      writeJsonRpcErrorResponse(res, rejection.statusCode, {
+        jsonrpc: '2.0',
+        id: rejection.requestId,
+        error: {
+          code: rejection.error.code,
+          message: rejection.error.message,
+          data: rejection.error.data,
+        },
+      });
+      return;
+    }
+
+    // Batch carrying a modern envelope claim on any element (SDK
+    // `classifyBatch` `batch-with-modern-element` parity): the per-request
+    // envelope mechanism has no batch semantics in the 2026 era, so the SDK
+    // rejects a batch containing ANY claimed element — presence-only check,
+    // the claim's validity (or era) is never consulted. The check precedes
+    // metadata validation on purpose: element-level classification never
+    // happens for a forwarded batch, so the claim would otherwise be silently
+    // ignored.
+    if (Array.isArray(body) && body.some(hasEnvelopeClaim)) {
+      debug?.('rejected: batch carries a per-request envelope claim');
+      const rejection = buildMetadataValidationError(
+        null,
+        INVALID_REQUEST_ERROR_CODE,
+        BATCH_WITH_MODERN_ELEMENT_ERROR_MESSAGE
+      );
+      writeJsonRpcErrorResponse(res, rejection.statusCode, {
+        jsonrpc: '2.0',
+        id: rejection.requestId,
+        error: {
+          code: rejection.error.code,
+          message: rejection.error.message,
+          data: rejection.error.data,
+        },
+      });
+      return;
+    }
+
+    // Enforce dual Accept header (MCP spec requirement)
+    const accept = (req.headers['accept'] ?? '').toLowerCase();
+    if (
+      !accept.includes('application/json') ||
+      !accept.includes('text/event-stream')
+    ) {
+      debug?.(`rejected: 406 Accept header ${req.headers.accept ?? '(none)'}`);
+      res
+        .writeHead(406)
+        .end(
+          'Not Acceptable: Client must accept both application/json and text/event-stream'
+        );
+      return;
+    }
+
+    const metadataValidationError = validateHttpRequestMetadata(req, body);
+    if (metadataValidationError) {
+      debug?.(
+        `rejected: metadata gate ${metadataValidationError.error.code} (${metadataValidationError.error.message})`
+      );
+      writeJsonRpcErrorResponse(res, metadataValidationError.statusCode, {
+        jsonrpc: '2.0',
+        id: metadataValidationError.requestId,
+        error: {
+          code: metadataValidationError.error.code,
+          message: metadataValidationError.error.message,
+          data: metadataValidationError.error.data,
+        },
+      });
+      return;
+    }
+
+    const protocolVersionError = getUnsupportedProtocolVersionError(req, body);
+    if (protocolVersionError) {
+      const errorData = protocolVersionError.error.data as
+        { requested?: string } | undefined;
+      debug?.(
+        `rejected: unsupported protocol version ${errorData?.requested ?? '(unnamed)'}`
+      );
+      writeJsonRpcErrorResponse(res, protocolVersionError.statusCode, {
+        jsonrpc: '2.0',
+        id: protocolVersionError.requestId,
+        error: {
+          code: protocolVersionError.error.code,
+          message: protocolVersionError.error.message,
+          data: protocolVersionError.error.data,
+        },
+      });
+      return;
+    }
+
+    // All gates passed — the one acceptance line, with the body's JSON-RPC
+    // method (not the body itself; method names carry no secrets and make the
+    // accepted traffic pattern readable).
+    debug?.(
+      `POST /mcp accepted from ${req.socket?.remoteAddress ?? 'unknown'}${extractBodyMethod(body) ? ` (${extractBodyMethod(body)})` : ''}`
+    );
+    await transport.handleRequest(req, res, body);
+  } finally {
+    limiter.release();
+  }
 }
 
 /**
- * Reads and parses the JSON body from an incoming HTTP request.
+ * Reads and parses the JSON body from an incoming HTTP request, refusing to
+ * buffer past `maxBytes`.
+ *
+ * The accumulation cap is what makes the read bounded: chunks past the limit
+ * stop being buffered immediately and the promise rejects mid-stream, so a
+ * Content-Length-less chunked upload cannot grow the buffer without bound
+ * either (the Content-Length pre-check in handleHttpRequest only covers
+ * requests that declare a length). The reported `receivedBytes` is the byte
+ * count actually observed up to and including the chunk that tripped the cap
+ * (never more — the stream is not read past that point — and only equal to
+ * the limit in the single-chunk-overshoot corner).
  */
-function readJsonBody(req: IncomingMessage): Promise<unknown> {
+function readJsonBody(
+  req: IncomingMessage,
+  maxBytes: number
+): Promise<unknown> {
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = [];
-    req.on('data', (chunk: Buffer) => chunks.push(chunk));
+    let totalBytes = 0;
+    let settled = false;
+    const rejectTooLarge = (receivedBytes: number): void => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      // Stop buffering; the remaining stream data is discarded (the caller
+      // destroys the socket after answering 413 — there is nothing useful
+      // left to read).
+      req.pause();
+      reject(
+        new McpHttpBodyTooLargeError(
+          `Request body exceeded the ${maxBytes}-byte limit`,
+          receivedBytes
+        )
+      );
+    };
+    req.on('data', (chunk: Buffer) => {
+      if (settled) {
+        return;
+      }
+      totalBytes += chunk.length;
+      if (totalBytes > maxBytes) {
+        // Report what was actually OBSERVED, not the cap: at this point
+        // totalBytes is the first total that crossed the limit (the chunk
+        // that tripped it included), which is honest and — for the common
+        // small-overshoot case — close to the body's true size. (The old
+        // behavior reported `maxBytes` here, which named the limit twice —
+        // once as `receivedBytes`, once as `limitBytes`.)
+        rejectTooLarge(totalBytes);
+        return;
+      }
+      chunks.push(chunk);
+    });
     req.on('end', () => {
+      if (settled) {
+        return;
+      }
+      settled = true;
       try {
         resolve(JSON.parse(Buffer.concat(chunks).toString('utf8')));
       } catch (err) {
         reject(err);
       }
     });
-    req.on('error', reject);
+    req.on('error', (err) => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      reject(err);
+    });
   });
 }
 
 /**
- * Validates required MCP request metadata headers against request-body values.
+ * Validates MCP request metadata headers against the request body,
+ * era-conditionally.
  *
- * Returns a spec-aligned HeaderMismatch (-32020) error when required headers
- * are missing or disagree with body metadata.
+ * 2026-era (SEP-2243) clients send an `MCP-Protocol-Version` header plus a
+ * per-request `_meta` envelope claim, and `Mcp-Method`/`Mcp-Name` headers
+ * mirroring the body; those requests get the full header cross-checks.
+ * 2025-era clients (LiteLLM defaults to 2025-11-25, Kong gateways ship
+ * 2025-06-18) send none of that — requiring the modern headers on them used
+ * to 400 every request at frodo's HTTP layer before the SDK handshake ever
+ * ran. Era is therefore inferred per request, mirroring the SDK's
+ * `classifyInboundRequest` body-primary semantics:
+ *
+ * - An `initialize` request is legacy-handshake traffic by definition (the
+ *   modern era has no initialize), unless it carries a `_meta` envelope
+ *   claim naming a modern revision.
+ * - A body `_meta` envelope claim classifies the request into the era its
+ *   revision belongs to; a header naming a different revision than the
+ *   claim is a mismatch.
+ * - A modern (`>= 2026-07-28`) `MCP-Protocol-Version` header on a request
+ *   without an envelope claim is invalid (-32602) — the SDK's
+ *   `modern-header-without-claim` cell. Notifications get the SDK's
+ *   narrower `classifyNotificationBody` semantics instead (see the
+ *   notification branch below): only the claim's string-ness is validated.
+ * - Legacy traffic requires none of the modern headers, and stray
+ *   `Mcp-Method`/`Mcp-Name` headers on legacy traffic are ignored (SDK
+ *   parity — never enforced on legacy traffic).
+ *
+ * Returns a spec-aligned error when a rule fires: -32020 (HeaderMismatch)
+ * for header/body disagreements, -32602 (invalid params) for a modern
+ * header without the envelope claim it must accompany and for a
+ * present-but-malformed envelope claim (SDK `envelope-invalid` parity — a
+ * malformed claim is a validation error, never a silent fallback to legacy
+ * handling). Null when the request may proceed.
  */
 export function validateHttpRequestMetadata(
   req: IncomingMessage,
   body: unknown
-): HeaderMismatchHttpError | null {
+): MetadataValidationHttpError | null {
   const requestId = extractRequestId(body);
   const headerProtocolVersion = getSingleHeaderValue(
     req,
     'mcp-protocol-version'
   );
   const bodyProtocolVersion = extractBodyProtocolVersion(body);
+  const bodyMethod = extractBodyMethod(body);
+  const isNotification = isJsonRpcNotification(body);
 
-  if (!headerProtocolVersion) {
-    return buildHeaderMismatchError(
-      requestId,
-      'Missing required MCP-Protocol-Version header.',
-      { header: 'mcp-protocol-version' }
+  const envelopeClaim = extractEnvelopeClaim(body);
+  const headerIsModern = isModernProtocolVersion(headerProtocolVersion);
+
+  // `initialize` precedence rule (SDK parity — `carriesValidModernEnvelopeClaim`):
+  // only a VALID modern envelope claim (the claim key carries a modern
+  // revision string AND the envelope passes `validateEnvelopeMeta`, i.e. the
+  // required client-capabilities key is present) overrides the
+  // legacy-handshake classification. A modern claim missing the capabilities
+  // key is an invalid envelope, and per the SDK an initialize carrying one
+  // stays legacy traffic (verified live: an initialize with
+  // `_meta{protocolVersion:'2026-07-28'}` and no capabilities key classifies
+  // `legacy`, reason `initialize` — not `envelope-invalid`).
+  if (
+    bodyMethod === 'initialize' &&
+    !carriesValidModernEnvelopeClaim(envelopeClaim)
+  ) {
+    if (headerIsModern) {
+      return buildMetadataValidationError(
+        requestId,
+        HEADER_MISMATCH_ERROR_CODE,
+        'Bad Request: the request headers and body disagree: an initialize request (legacy handshake) was sent with a modern MCP-Protocol-Version header',
+        {
+          mismatch: { header: headerProtocolVersion, body: 'initialize' },
+        }
+      );
+    }
+    return null;
+  }
+
+  if (isNotification) {
+    // Notifications mirror the SDK's `classifyNotificationBody` exactly,
+    // which is NARROWER than the request path's envelope validation (both
+    // verified live against classifyInboundRequest):
+    //
+    // - A string claim names the notification's era and requires NO
+    //   capabilities key: the SDK serves a claimed notification without
+    //   `clientCapabilities` (kind=modern, revision from the claim — modern
+    //   and legacy-dated claims alike). Only the claim's presence and the
+    //   string-ness of its value are checked.
+    // - A present claim with a NON-STRING value is the one invalid shape:
+    //   -32602 `notification-envelope-invalid`, keyed on the claim key's
+    //   own problem (the SDK's `.find(key === PROTOCOL_VERSION_META_KEY)` —
+    //   a caps issue beside a non-string claim is never reported).
+    // - The header/body version cross-check applies whenever a header names
+    //   a different revision than the claim (modern OR legacy-dated claim).
+    // - The Mcp-Method cross-check applies only when the notification
+    //   classifies modern; on a legacy-dated or claim-less notification a
+    //   mismatched Mcp-Method header is ignored (SDK parity — verified
+    //   live: both classify served, not rejected).
+    const malformedClaimError = buildNotificationEnvelopeInvalidError(
+      envelopeClaim,
+      requestId
     );
+    if (malformedClaimError) {
+      return malformedClaimError;
+    }
+    if (
+      envelopeClaim.hasClaim &&
+      headerProtocolVersion !== undefined &&
+      envelopeClaim.version !== undefined &&
+      headerProtocolVersion !== envelopeClaim.version
+    ) {
+      return buildHeaderMismatchError(requestId, {
+        headerProtocolVersion,
+        bodyProtocolVersion: envelopeClaim.version,
+      });
+    }
+    const headerMethod = getSingleHeaderValue(req, 'mcp-method');
+    // The method cross-check fires only for modern-classified
+    // notifications: a modern-claim notification (whatever the header says)
+    // or a claim-less notification under a modern header. A legacy-dated
+    // claim, or a claim-less notification without a modern header,
+    // classifies legacy-era and ignores a stray Mcp-Method header — SDK
+    // parity (verified live: both shapes serve, not reject).
+    const notificationClassifiesModern = envelopeClaim.hasClaim
+      ? isModernProtocolVersion(envelopeClaim.version)
+      : headerIsModern;
+    if (
+      notificationClassifiesModern &&
+      headerMethod !== undefined &&
+      bodyMethod !== undefined &&
+      headerMethod !== bodyMethod
+    ) {
+      return buildHeaderMismatchError(requestId, {
+        headerMethod,
+        bodyMethod,
+      });
+    }
+    return null;
+  }
+
+  if (envelopeClaim.hasClaim) {
+    // A present claim whose value is not a string is malformed, not
+    // claim-less: rejecting here (SDK `envelope-invalid` parity) is what
+    // keeps a bad value from downgrading the request to legacy handling
+    // with every modern cross-check silently skipped. The full envelope
+    // shape is validated here too (the SDK's `validateEnvelopeMeta` parity —
+    // see buildEnvelopeInvalidError): a modern claim without the required
+    // client-capabilities key is an invalid envelope, not claim-less
+    // traffic.
+    const malformedClaimError = buildEnvelopeInvalidError(
+      envelopeClaim,
+      requestId
+    );
+    if (malformedClaimError) {
+      return malformedClaimError;
+    }
+    if (
+      headerProtocolVersion !== undefined &&
+      envelopeClaim.version !== undefined &&
+      headerProtocolVersion !== envelopeClaim.version
+    ) {
+      return buildHeaderMismatchError(requestId, {
+        headerProtocolVersion,
+        bodyProtocolVersion: envelopeClaim.version,
+      });
+    }
+    if (!isModernProtocolVersion(envelopeClaim.version)) {
+      // A claim naming a pre-2026 revision classifies legacy-era traffic.
+      return null;
+    }
+    return validateModernRequestMetadata(
+      req,
+      body,
+      requestId,
+      headerProtocolVersion,
+      bodyProtocolVersion,
+      bodyMethod
+    );
+  }
+
+  if (headerIsModern) {
+    // Modern header without the envelope claim: the SDK's
+    // modern-header-without-claim cell (-32602, invalid params). The missing
+    // key list names every required envelope key absent from the claim's
+    // `_meta` (SDK `validateEnvelopeMeta` parity: a `_meta` that already
+    // carries the claim key but lacks the capabilities key lists BOTH; a
+    // claim-less `_meta` lists just the claim key; no `_meta` lists '_meta').
+    const params = getRequestParams(body);
+    const meta =
+      params?._meta &&
+      typeof params._meta === 'object' &&
+      !Array.isArray(params._meta)
+        ? (params._meta as Record<string, unknown>)
+        : undefined;
+    const missing = meta
+      ? REQUIRED_ENVELOPE_KEYS.filter((key) => !(key in meta))
+      : ['_meta'];
+    return buildMetadataValidationError(
+      requestId,
+      INVALID_PARAMS_ERROR_CODE,
+      `Invalid params: the MCP-Protocol-Version header names protocol revision ${headerProtocolVersion}, but the request is missing the required per-request envelope key(s): ${missing.join(', ')}`,
+      { envelope: { missing } }
+    );
+  }
+
+  // No claim, no modern header: legacy traffic — modern headers not required.
+  return null;
+}
+
+/**
+ * Full SEP-2243 checks for a modern-classified request: the
+ * `MCP-Protocol-Version` header must be present and agree with the body's
+ * envelope claim, the `Mcp-Method` header must be present and agree with the
+ * JSON-RPC method, and the `Mcp-Name` header must be present and agree with
+ * the body value it mirrors for the methods that have one.
+ */
+function validateModernRequestMetadata(
+  req: IncomingMessage,
+  body: unknown,
+  requestId: string | number | null,
+  headerProtocolVersion: string | undefined,
+  bodyProtocolVersion: string | undefined,
+  bodyMethod: string | undefined
+): MetadataValidationHttpError | null {
+  if (!headerProtocolVersion) {
+    return buildHeaderMismatchError(requestId, {
+      header: 'mcp-protocol-version',
+    });
   }
   if (!bodyProtocolVersion) {
-    return buildHeaderMismatchError(
-      requestId,
-      'Missing required _meta protocol version in request body.',
-      { field: '_meta.protocolVersion' }
-    );
+    return buildHeaderMismatchError(requestId, {
+      field: '_meta.protocolVersion',
+    });
   }
   if (headerProtocolVersion !== bodyProtocolVersion) {
-    return buildHeaderMismatchError(
-      requestId,
-      'MCP-Protocol-Version header does not match request body metadata.',
-      {
-        headerProtocolVersion,
-        bodyProtocolVersion,
-      }
-    );
+    return buildHeaderMismatchError(requestId, {
+      headerProtocolVersion,
+      bodyProtocolVersion,
+    });
   }
 
   const headerMethod = getSingleHeaderValue(req, 'mcp-method');
-  const bodyMethod = extractBodyMethod(body);
   if (!headerMethod) {
-    return buildHeaderMismatchError(
-      requestId,
-      'Missing required Mcp-Method header.',
-      { header: 'mcp-method' }
-    );
+    return buildHeaderMismatchError(requestId, { header: 'mcp-method' });
   }
   if (!bodyMethod) {
-    return buildHeaderMismatchError(
-      requestId,
-      'Missing request method in JSON-RPC body.',
-      { field: 'method' }
-    );
+    return buildHeaderMismatchError(requestId, { field: 'method' });
   }
   if (headerMethod !== bodyMethod) {
-    return buildHeaderMismatchError(
-      requestId,
-      'Mcp-Method header does not match JSON-RPC method.',
-      {
-        headerMethod,
-        bodyMethod,
-      }
-    );
+    return buildHeaderMismatchError(requestId, {
+      headerMethod,
+      bodyMethod,
+    });
   }
 
-  if (methodRequiresMcpName(bodyMethod)) {
+  const sourceField = MCP_NAME_HEADER_SOURCE[bodyMethod];
+  if (sourceField !== undefined) {
     const headerName = getSingleHeaderValue(req, 'mcp-name');
-    const bodyName = extractBodyName(body);
+    const bodyName = extractBodyName(bodyMethod, body);
     if (!headerName) {
-      return buildHeaderMismatchError(
-        requestId,
-        `Missing required Mcp-Name header for method '${bodyMethod}'.`,
-        { header: 'mcp-name', method: bodyMethod }
-      );
+      return buildHeaderMismatchError(requestId, {
+        header: 'mcp-name',
+        method: bodyMethod,
+      });
     }
     if (!bodyName) {
-      return buildHeaderMismatchError(
-        requestId,
-        `Missing request name in JSON-RPC params for method '${bodyMethod}'.`,
-        { field: 'params.name', method: bodyMethod }
-      );
+      return buildHeaderMismatchError(requestId, {
+        field: `params.${sourceField}`,
+        method: bodyMethod,
+      });
     }
     if (headerName !== bodyName) {
-      return buildHeaderMismatchError(
-        requestId,
-        'Mcp-Name header does not match request params.name.',
-        {
-          headerName,
-          bodyName,
-          method: bodyMethod,
-        }
-      );
+      return buildHeaderMismatchError(requestId, {
+        headerName,
+        bodyName,
+        method: bodyMethod,
+      });
     }
   }
 
@@ -738,27 +1858,68 @@ type UnsupportedVersionHttpError = {
   };
 };
 
-type HeaderMismatchHttpError = {
+type MetadataValidationHttpError = {
   statusCode: 400;
   requestId: string | number | null;
   error: {
-    code: -32020;
+    /** -32020 (HeaderMismatch), -32602 (invalid params), or -32600 (InvalidRequest). */
+    code: number;
     message: string;
     data?: unknown;
   };
 };
 
 const HEADER_MISMATCH_ERROR_CODE = -32020 as const;
+const INVALID_PARAMS_ERROR_CODE = -32602 as const;
+const INVALID_REQUEST_ERROR_CODE = -32600 as const;
+
+// The keys the 2026-07-28 per-request envelope requires (SDK parity — the
+// SDK's REQUIRED_ENVELOPE_KEYS; verified via `validateEnvelopeMeta`).
+const CLIENT_CAPABILITIES_META_KEY =
+  'io.modelcontextprotocol/clientCapabilities';
+const REQUIRED_ENVELOPE_KEYS = [
+  PROTOCOL_VERSION_META_KEY,
+  CLIENT_CAPABILITIES_META_KEY,
+];
+
+// The SDK's `empty-batch` / `batch-with-modern-element` cell wordings
+// (classifyBatch).
+const EMPTY_BATCH_ERROR_MESSAGE = 'Bad Request: empty JSON-RPC batch';
+const BATCH_WITH_MODERN_ELEMENT_ERROR_MESSAGE =
+  'Bad Request: JSON-RPC batches may not contain requests for protocol revision 2026-07-28 or later';
+
+/**
+ * Whether a single JSON-RPC message carries the per-request envelope claim
+ * (the reserved protocol-version `_meta` key is present, regardless of value
+ * well-formedness) — the SDK's `hasEnvelopeClaim` predicate, mirrored here
+ * for the batch-element pre-scan.
+ */
+function hasEnvelopeClaim(element: unknown): boolean {
+  const meta = getRequestParams(element)?._meta;
+  return (
+    meta !== undefined &&
+    meta !== null &&
+    typeof meta === 'object' &&
+    !Array.isArray(meta) &&
+    PROTOCOL_VERSION_META_KEY in (meta as Record<string, unknown>)
+  );
+}
 
 function getUnsupportedProtocolVersionError(
   req: IncomingMessage,
   body: unknown
 ): UnsupportedVersionHttpError | null {
-  const headerProtocolVersion =
-    typeof req.headers['mcp-protocol-version'] === 'string'
-      ? req.headers['mcp-protocol-version']
-      : undefined;
-  const bodyProtocolVersion = extractBodyProtocolVersion(body);
+  const headerProtocolVersion = getSingleHeaderValue(
+    req,
+    'mcp-protocol-version'
+  );
+  // A 2025-era `initialize` names its version at `params.protocolVersion`
+  // (the handshake itself carries no `_meta` envelope), so the body check
+  // must read that top-level field too — otherwise a supported-version
+  // initialize would be falsely rejected here before the transport's own
+  // version negotiation answers it properly.
+  const bodyProtocolVersion =
+    extractBodyProtocolVersion(body) ?? extractInitializeProtocolVersion(body);
   const requestedProtocolVersion = headerProtocolVersion ?? bodyProtocolVersion;
 
   if (!requestedProtocolVersion) {
@@ -786,14 +1947,70 @@ function getUnsupportedProtocolVersionError(
 
 function buildHeaderMismatchError(
   requestId: string | number | null,
+  data?: unknown
+): MetadataValidationHttpError {
+  return buildMetadataValidationError(
+    requestId,
+    HEADER_MISMATCH_ERROR_CODE,
+    buildHeaderMismatchMessage(data),
+    data
+  );
+}
+
+/**
+ * Renders the SDK's cross-check-mismatch wording ("the request headers and
+ * body disagree: <reason>") from the mismatch descriptor, keeping every
+ * rejection self-explanatory without callers repeating boilerplate.
+ *
+ * The generic fallthrough renders header names exactly as sent on the wire
+ * (`mcp-protocol-version` — node:http lowercases them), but the origin/main
+ * message set capitalized the header names (`MCP-Protocol-Version`,
+ * `Mcp-Method`, `Mcp-Name`); the well-known presence errors restore that
+ * capitalization so existing log-greps and tests keep matching.
+ */
+function buildHeaderMismatchMessage(data: unknown): string {
+  const mismatch =
+    data && typeof data === 'object'
+      ? (data as { mismatch?: Record<string, unknown> }).mismatch
+      : undefined;
+  const entries = Object.entries(mismatch ?? {});
+  if (entries.length === 0) {
+    // Presence errors name the absent header/field directly.
+    if (data && typeof data === 'object' && 'header' in data) {
+      const header = (data as { header: string }).header;
+      return `Missing required ${HEADER_DISPLAY_NAMES[header] ?? header} header.`;
+    }
+    if (data && typeof data === 'object' && 'field' in data) {
+      return `Missing required ${(data as { field: string }).field} in request body.`;
+    }
+    return 'Bad Request: the request headers and body disagree.';
+  }
+  const [key, value] = entries[0];
+  return `Bad Request: the request headers and body disagree: ${key} ${value}`;
+}
+
+// Wire-case spellings of the well-known metadata headers, used in the
+// -32020 presence messages (origin/main parity).
+const HEADER_DISPLAY_NAMES: Record<string, string> = {
+  'mcp-protocol-version': 'MCP-Protocol-Version',
+  'mcp-method': 'Mcp-Method',
+  'mcp-name': 'Mcp-Name',
+};
+
+function buildMetadataValidationError(
+  requestId: string | number | null,
+  code:
+    | typeof HEADER_MISMATCH_ERROR_CODE
+    | typeof INVALID_PARAMS_ERROR_CODE
+    | typeof INVALID_REQUEST_ERROR_CODE,
   message: string,
   data?: unknown
-): HeaderMismatchHttpError {
+): MetadataValidationHttpError {
   return {
     statusCode: 400,
     requestId,
     error: {
-      code: HEADER_MISMATCH_ERROR_CODE,
+      code,
       message,
       data,
     },
@@ -822,24 +2039,252 @@ function extractBodyMethod(body: unknown): string | undefined {
   return typeof method === 'string' ? method : undefined;
 }
 
-function extractBodyName(body: unknown): string | undefined {
+/**
+ * The body value the `Mcp-Name` header mirrors for `method` (`params.name`
+ * or `params.uri` per SEP-2243), when it is a string.
+ */
+function extractBodyName(method: string, body: unknown): string | undefined {
+  const params = getRequestParams(body);
+  const sourceField = MCP_NAME_HEADER_SOURCE[method];
+  if (!params || sourceField === undefined) {
+    return undefined;
+  }
+  const name = (params as Record<string, unknown>)[sourceField];
+  return typeof name === 'string' ? name : undefined;
+}
+
+function getRequestParams(body: unknown): Record<string, unknown> | undefined {
   if (!body || typeof body !== 'object') {
     return undefined;
   }
   const params = (body as Record<string, unknown>).params;
-  if (!params || typeof params !== 'object') {
-    return undefined;
-  }
-  const name = (params as Record<string, unknown>).name;
-  return typeof name === 'string' ? name : undefined;
+  return params && typeof params === 'object' && !Array.isArray(params)
+    ? (params as Record<string, unknown>)
+    : undefined;
 }
 
-function methodRequiresMcpName(method: string): boolean {
+function isJsonRpcNotification(body: unknown): boolean {
   return (
-    method === 'tools/call' ||
-    method === 'resources/read' ||
-    method === 'prompts/get'
+    body !== null &&
+    typeof body === 'object' &&
+    !Array.isArray(body) &&
+    typeof (body as Record<string, unknown>).method === 'string' &&
+    !('id' in (body as Record<string, unknown>))
   );
+}
+
+/**
+ * The -32602 shape of the SDK's `envelope-invalid` cell: a `_meta` envelope
+ * that is present (the claim key exists) but violates the 2026-07-28
+ * envelope schema. The message and `data.envelope` issue mirror the SDK's
+ * wording (`Invalid _meta envelope for protocol revision 2026-07-28:
+ * <key>: <problem>`), reporting the FIRST issue in the SDK's stable order:
+ * missing required keys first (`problem: 'missing'`, in
+ * `REQUIRED_ENVELOPE_KEYS` order), then schema violations inside present
+ * keys.
+ *
+ * The SDK requires `io.modelcontextprotocol/clientCapabilities` (a present
+ * object) alongside the claim key on every claimed request — verified live
+ * against `classifyInboundRequest`/`validateEnvelopeMeta`. This closes the
+ * claim-only-modern acceptance gap: a modern-era claim without the
+ * capabilities key is an invalid envelope, never silently served. The only
+ * schema details checked here are the two required keys' presence/types —
+ * deeper capability-shape validation stays with the SDK (frodo forwards the
+ * request body untouched once this gate passes; the SDK's dispatch re-runs
+ * its own envelope check on the modern path).
+ */
+function buildEnvelopeInvalidError(
+  envelopeClaim: {
+    hasClaim: boolean;
+    version: string | undefined;
+    receivedType: string | undefined;
+    meta: Record<string, unknown> | undefined;
+  },
+  requestId: string | number | null
+): MetadataValidationHttpError | null {
+  if (!envelopeClaim.hasClaim) {
+    return null;
+  }
+  const issue = firstEnvelopeIssue(envelopeClaim.meta, envelopeClaim.version);
+  if (!issue) {
+    return null;
+  }
+  return buildMetadataValidationError(
+    requestId,
+    INVALID_PARAMS_ERROR_CODE,
+    `Invalid _meta envelope for protocol revision ${FIRST_MODERN_PROTOCOL_VERSION}: ` +
+      `${issue.key}: ${issue.problem}`,
+    { envelope: { key: issue.key, problem: issue.problem } }
+  );
+}
+
+/**
+ * The notification-path twin of {@linkcode buildEnvelopeInvalidError},
+ * mirroring the SDK's `notification-envelope-invalid` cell exactly: the
+ * claim key's OWN issue is reported — `.find(key ===
+ * PROTOCOL_VERSION_META_KEY)` in the SDK — and nothing else. A claimed
+ * notification with a non-string claim value is the one rejected shape
+ * (-32602, the claim key's type error); a valid string claim requires no
+ * capabilities key and is never rejected here (the SDK serves claimed
+ * notifications with no capabilities key at all — verified live).
+ */
+function buildNotificationEnvelopeInvalidError(
+  envelopeClaim: {
+    hasClaim: boolean;
+    version: string | undefined;
+    receivedType: string | undefined;
+    meta: Record<string, unknown> | undefined;
+  },
+  requestId: string | number | null
+): MetadataValidationHttpError | null {
+  if (!envelopeClaim.hasClaim || envelopeClaim.version !== undefined) {
+    return null;
+  }
+  const problem = `Invalid input: expected string, received ${envelopeClaim.receivedType}`;
+  return buildMetadataValidationError(
+    requestId,
+    INVALID_PARAMS_ERROR_CODE,
+    `Invalid _meta envelope for protocol revision ${FIRST_MODERN_PROTOCOL_VERSION}: ` +
+      `${PROTOCOL_VERSION_META_KEY}: ${problem}`,
+    {
+      envelope: { key: PROTOCOL_VERSION_META_KEY, problem },
+    }
+  );
+}
+
+type EnvelopeIssue = { key: string; problem: string };
+
+/**
+ * The first `validateEnvelopeMeta` issue for a claimed `_meta` object, in
+ * the SDK's stable order (verified live): MISSING required keys first — the
+ * reserved protocol-version key, then the client-capabilities key — and only
+ * then schema violations inside present keys. Null when the envelope is
+ * well-formed.
+ */
+function firstEnvelopeIssue(
+  meta: Record<string, unknown> | undefined,
+  version: string | undefined
+): EnvelopeIssue | null {
+  if (!meta) {
+    return null;
+  }
+  // Missing keys first (SDK `validateEnvelopeMeta` order): the claim key,
+  // then the capabilities key. A non-string claim value is a schema
+  // violation of a PRESENT key, so it only surfaces after the capabilities
+  // key's own missing check — the SDK answers a claimed `_meta` carrying a
+  // number revision and no capabilities key with
+  // `clientCapabilities: missing`, not the claim's type error (verified
+  // live: validateEnvelopeMeta({protocolVersion: 12345}) returns
+  // [clientCapabilities: missing, protocolVersion: type-error] and
+  // classifyInboundRequest reports the FIRST issue).
+  if (!(PROTOCOL_VERSION_META_KEY in meta)) {
+    return { key: PROTOCOL_VERSION_META_KEY, problem: 'missing' };
+  }
+  if (!(CLIENT_CAPABILITIES_META_KEY in meta)) {
+    return { key: CLIENT_CAPABILITIES_META_KEY, problem: 'missing' };
+  }
+  if (version === undefined) {
+    return {
+      key: PROTOCOL_VERSION_META_KEY,
+      problem: `Invalid input: expected string, received ${describeJsonType(meta[PROTOCOL_VERSION_META_KEY])}`,
+    };
+  }
+  // Present-but-non-object capabilities are schema violations (zod wording).
+  const caps = meta[CLIENT_CAPABILITIES_META_KEY];
+  if (caps === null || typeof caps !== 'object' || Array.isArray(caps)) {
+    return {
+      key: CLIENT_CAPABILITIES_META_KEY,
+      problem: `Invalid input: expected object, received ${describeJsonType(caps)}`,
+    };
+  }
+  return null;
+}
+
+/**
+ * The per-request envelope claim carried in the body's `params._meta`: a
+ * request claims the envelope mechanism by having the reserved
+ * protocol-version key present, regardless of value well-formedness (SDK
+ * `hasEnvelopeClaim` parity — a malformed claim is a validation error, never
+ * a silent fallback to legacy handling).
+ *
+ * `version` is the claim value when it is a string; `receivedType` carries
+ * the JSON type name of a non-string claim value (mirroring zod's
+ * `received <type>` wording) so the malformed-claim rejection can render the
+ * SDK's exact `envelope-invalid` problem text; `meta` is the claimed
+ * `_meta` object itself for full envelope-shape validation.
+ */
+function extractEnvelopeClaim(body: unknown): {
+  hasClaim: boolean;
+  version: string | undefined;
+  receivedType: string | undefined;
+  meta: Record<string, unknown> | undefined;
+} {
+  const params = getRequestParams(body);
+  const meta = params?._meta;
+  if (!meta || typeof meta !== 'object' || Array.isArray(meta)) {
+    return {
+      hasClaim: false,
+      version: undefined,
+      receivedType: undefined,
+      meta: undefined,
+    };
+  }
+  const metaObject = meta as Record<string, unknown>;
+  const hasClaim = PROTOCOL_VERSION_META_KEY in metaObject;
+  const raw = metaObject[PROTOCOL_VERSION_META_KEY];
+  return {
+    hasClaim,
+    version: typeof raw === 'string' ? raw : undefined,
+    // A present non-string claim is the only case that ever reaches the
+    // malformed-claim rejection, so this type name is only rendered there.
+    receivedType: typeof raw === 'string' ? undefined : describeJsonType(raw),
+    meta: metaObject,
+  };
+}
+
+/** JSON value's type name, in zod's `expected string, received <type>` wording. */
+function describeJsonType(value: unknown): string {
+  if (value === null) {
+    return 'null';
+  }
+  if (Array.isArray(value)) {
+    return 'array';
+  }
+  return typeof value;
+}
+
+function isModernProtocolVersion(version: string | undefined): boolean {
+  return version !== undefined && version >= FIRST_MODERN_PROTOCOL_VERSION;
+}
+
+/**
+ * Whether the envelope claim is both well-formed (a string revision) AND
+ * names a modern revision AND the full envelope passes shape validation —
+ * the SDK's `carriesValidModernEnvelopeClaim` predicate. Only such a claim
+ * overrides the `initialize` ⇒ legacy-handshake rule; a claim missing the
+ * client-capabilities key is invalid and never overrides.
+ */
+function carriesValidModernEnvelopeClaim(envelopeClaim: {
+  hasClaim: boolean;
+  version: string | undefined;
+  meta: Record<string, unknown> | undefined;
+}): boolean {
+  if (
+    !envelopeClaim.hasClaim ||
+    !isModernProtocolVersion(envelopeClaim.version)
+  ) {
+    return false;
+  }
+  return firstEnvelopeIssue(envelopeClaim.meta, envelopeClaim.version) === null;
+}
+
+/**
+ * The protocol version named by a 2025-era `initialize` handshake at
+ * `params.protocolVersion`.
+ */
+function extractInitializeProtocolVersion(body: unknown): string | undefined {
+  const protocolVersion = getRequestParams(body)?.protocolVersion;
+  return typeof protocolVersion === 'string' ? protocolVersion : undefined;
 }
 
 function extractBodyProtocolVersion(body: unknown): string | undefined {
@@ -891,9 +2336,13 @@ function writeJsonRpcErrorResponse(
       message: string;
       data?: unknown;
     };
-  }
+  },
+  extraHeaders?: Record<string, string>
 ): void {
-  res.writeHead(statusCode, { 'Content-Type': 'application/json' });
+  res.writeHead(statusCode, {
+    'Content-Type': 'application/json',
+    ...extraHeaders,
+  });
   res.end(safeJsonStringify(payload));
 }
 
