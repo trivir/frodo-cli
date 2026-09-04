@@ -1,0 +1,12 @@
+{
+  "_id": "Server 1",
+  "_type": {
+    "_id": "serverConfigs",
+    "collection": true,
+    "name": "serverConfigs"
+  },
+  "jwtExpiration": 30,
+  "secretLabelIdentifier": "secret",
+  "serverUrl": "test.com",
+  "skewAllowance": 0
+}

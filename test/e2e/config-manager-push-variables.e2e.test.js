@@ -62,8 +62,8 @@ process.env['FRODO_MOCK'] = '1';
 const cloudEnv = getEnv(c);
 
 const allDirectory = "test/e2e/exports/fr-config-manager/cloud";
-const envDir1 = "test/e2e/exports/fr-config-manager/cloud/fr-test.env"
-const envDir2 = "test/e2e/exports/fr-config-manager/cloud/fr-test-2.env"
+const envDir1 = "test/e2e/env/configManager1.env"
+const envDir2 = "test/e2e/env/configManager2.env"
 
 describe('Should import variables into cloud', () => {
     test(`"frodo config-manager push variables -E ESV_FR_VAR_TEST_2="20" -E ESV_FR_VAR_TEST='this is a test' -D ${allDirectory} ": should import two variables into cloud"`, async () => {

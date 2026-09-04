@@ -1,0 +1,13 @@
+{
+  "_id": "",
+  "_rev": "-736760492",
+  "_type": {
+    "_id": "amSessionPropertyWhitelist",
+    "collection": false,
+    "name": "Session Property Whitelist Service"
+  },
+  "sessionPropertyWhitelist": [
+    "AMCtxId"
+  ],
+  "whitelistedQueryProperties": []
+}

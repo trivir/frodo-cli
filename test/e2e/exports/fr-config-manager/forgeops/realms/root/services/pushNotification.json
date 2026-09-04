@@ -1,0 +1,17 @@
+{
+  "_id": "",
+  "_rev": "-611670500",
+  "_type": {
+    "_id": "pushNotification",
+    "collection": false,
+    "name": "Push Notification Service"
+  },
+  "accessKey": "abcde",
+  "appleEndpoint": "apns",
+  "delegateFactory": "org.forgerock.openam.services.push.sns.SnsHttpDelegateFactory",
+  "googleEndpoint": "gcm",
+  "mdCacheSize": 10000,
+  "mdConcurrency": 16,
+  "mdDuration": 120,
+  "region": "us-east-1"
+}

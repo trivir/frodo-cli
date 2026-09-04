@@ -187,6 +187,7 @@ exports[`frodo script describe "frodo script describe -un shared": should descri
 • Exported 40 scriptTypes.
 • Exported 2 secrets.
 • Exported 2 global services.
+• Exported 1 telemetry exporters.
 • Exported 12 variables.
 • Exported 0 / realm SAML2 providers.
 • Exported 0 / realm agent groups.
