@@ -25,6 +25,11 @@ import c from '../../../utils/ColorTheme';
 import { printMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 import { resolveMcpAuthTokenValue } from './server-auth';
+import {
+  parseMcpHttpPortOption,
+  resolveMcpHttpMaxBodySize,
+  resolveMcpHttpMaxConcurrentRequests,
+} from './server-limits';
 import { type McpPolicyPreset, resolvePolicySelection } from './server-policy';
 
 type McpProfileName =
@@ -65,6 +70,10 @@ type McpStartOptions = {
    * can reach the port.
    */
   allowUnauthenticated?: boolean;
+  /** Max accepted POST /mcp body size in bytes (CLI flag; env fallback). */
+  maxBodySize?: string;
+  /** Max concurrent POST /mcp handler executions (CLI flag; env fallback). */
+  maxConcurrentRequests?: string;
   /** Build and validate service composition without launching transport. */
   dryRun?: boolean;
   /** Print startup summary as JSON. */
@@ -155,9 +164,10 @@ export default function setup() {
       )
     )
     .addOption(
-      new Option('--port <port>', 'Bind port for HTTP transport.').default(
-        '6277'
-      )
+      new Option(
+        '--port <port>',
+        "Bind port for HTTP transport, or 'auto' to let the OS assign an ephemeral port (the resolved port is printed and used for the lockfile)."
+      ).default('6277')
     )
     .addOption(
       new Option(
@@ -176,6 +186,18 @@ export default function setup() {
         '--allow-unauthenticated',
         'Allow binding a non-loopback host without a bearer token. Anything that can reach the port can then drive tenant operations with the startup credentials.'
       ).default(false)
+    )
+    .addOption(
+      new Option(
+        '--max-body-size <bytes>',
+        `Maximum accepted request body size in bytes on POST /mcp (default 1048576 = 1 MiB; frodo transport policy, not part of the MCP protocol). Oversized requests are rejected with HTTP 413 before being buffered. Falls back to the FRODO_MCP_MAX_BODY_SIZE environment variable.`
+      )
+    )
+    .addOption(
+      new Option(
+        '--max-concurrent-requests <n>',
+        `Maximum concurrent MCP request handler executions before new requests are rejected with HTTP 429 and Retry-After: 1 (default 64; frodo transport policy). Falls back to the FRODO_MCP_MAX_CONCURRENT_REQUESTS environment variable.`
+      )
     )
     .addOption(
       new Option(
@@ -247,6 +269,39 @@ export default function setup() {
       const transport = opts.transport ?? 'stdio';
       const authToken =
         transport === 'http' ? resolveMcpAuthToken(opts) : undefined;
+      // Transport-policy limits (HTTP only): resolved before the refusal
+      // check so an operator who mistyped either value sees the fallback
+      // note in the log regardless of what happens later in startup.
+      let maxBodySizeBytes: number | undefined;
+      let maxConcurrentRequests: number | undefined;
+      if (transport === 'http') {
+        const warnInvalidLimit =
+          (name: string) => (invalid: { flag?: string; env?: string }) => {
+            const parts = [];
+            if (invalid.flag !== undefined) {
+              parts.push(`--${name} '${invalid.flag}'`);
+            }
+            if (invalid.env !== undefined) {
+              parts.push(
+                `${name === 'max-body-size' ? 'FRODO_MCP_MAX_BODY_SIZE' : 'FRODO_MCP_MAX_CONCURRENT_REQUESTS'}='${invalid.env}'`
+              );
+            }
+            printMessage(
+              `Ignoring invalid MCP HTTP transport limit ${parts.join(' and ')}; using the documented default.`,
+              'warn'
+            );
+          };
+        maxBodySizeBytes = resolveMcpHttpMaxBodySize(
+          opts.maxBodySize,
+          process.env.FRODO_MCP_MAX_BODY_SIZE,
+          warnInvalidLimit('max-body-size')
+        );
+        maxConcurrentRequests = resolveMcpHttpMaxConcurrentRequests(
+          opts.maxConcurrentRequests,
+          process.env.FRODO_MCP_MAX_CONCURRENT_REQUESTS,
+          warnInvalidLimit('max-concurrent-requests')
+        );
+      }
       if (
         transport === 'http' &&
         !isLoopbackBindHost(opts.bindHost ?? '127.0.0.1') &&
@@ -300,7 +355,15 @@ export default function setup() {
         transport: opts.transport,
         http: {
           bindHost: opts.bindHost,
-          port: Number(opts.port),
+          // The dry-run summary shows the literal option value: 'auto' as the
+          // string the operator typed (not the internal 0 it resolves to),
+          // else the parsed number. Only the live startup learns the
+          // OS-resolved port (the listening line and the lockfile carry it).
+          port: opts.dryRun
+            ? ((/^\s*auto\s*$/i.test(opts.port ?? '')
+                ? 'auto'
+                : parseMcpHttpPortOption(opts.port)) as number | 'auto')
+            : parseMcpHttpPortOption(opts.port),
           // Never the token value itself — summaries and logs are shipped to
           // MCP clients as protocol-level messages.
           allowedHosts:
@@ -354,11 +417,13 @@ export default function setup() {
         await startHttpTransport(
           service,
           opts.bindHost ?? '127.0.0.1',
-          Number(opts.port ?? '6277'),
+          parseMcpHttpPortOption(opts.port),
           startupInfo,
           {
             allowedHosts: opts.allowedHosts,
             authToken,
+            maxBodySizeBytes,
+            maxConcurrentRequests,
           }
         );
       }
@@ -373,7 +438,9 @@ type StartupSummary = {
   transport?: 'stdio' | 'http';
   http: {
     bindHost?: string;
-    port: number;
+    // The port the summary reports: the resolved number on a live start, the
+    // parsed option value (or the literal 'auto') on a dry run.
+    port: number | 'auto';
     allowedHosts?: string[];
     auth?: 'on' | 'off';
   };

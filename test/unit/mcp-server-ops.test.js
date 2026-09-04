@@ -1763,3 +1763,919 @@ describe('uncaughtException crash path (spawned child)', () => {
     }
   });
 });
+
+// ---------------------------------------------------------------------------
+// `mcp server stop` against spawned dist children (the real CLI + lockfile +
+// stop command, end to end). The stop command signals a process by PID, which
+// cannot be exercised in-process, so like the launcher/crash cells above this
+// suite drives the compiled dist and is skipped when dist is absent. Every
+// cell gets its own temp FRODO_CONFIG_PATH (the lockfile lives there) and
+// kills its spawned server in finally.
+// ---------------------------------------------------------------------------
+
+describe('mcp server stop (spawned dist)', () => {
+  const { spawn } = childProcess;
+  const fs = fsPromise;
+  const os = osPromise;
+  const path = pathPromise;
+  const launchPath = path.resolve('dist/launch.cjs');
+  const hasDist = fs.existsSync(launchPath);
+
+  const cond = (name, fn) => (hasDist ? test(name, fn, 60000) : test.skip(name, fn));
+
+  /**
+   * Spawns `dist/launch.cjs mcp server start --transport http` on `port`
+   * with a per-cell temp config dir (the lockfile lives at
+   * $FRODO_CONFIG_PATH/mcp-http-<port>.pid) and resolves once the listening
+   * line confirms the resolved port. Returns the child plus a cleanup
+   * function every caller must run in finally.
+   */
+  async function spawnServer(port, configDir, extraArgs = []) {
+    const profilesPath = path.join(configDir, 'Connections.json');
+    fs.writeFileSync(profilesPath, JSON.stringify({}));
+    const child = spawn(
+      process.execPath,
+      [
+        launchPath,
+        'mcp', 'server', 'start',
+        '--transport', 'http',
+        '--port', String(port),
+        ...extraArgs,
+      ],
+      {
+        stdio: ['ignore', 'pipe', 'pipe'],
+        env: {
+          ...process.env,
+          FRODO_TEST: '1',
+          NO_COLOR: '1',
+          FRODO_CONNECTION_PROFILES_PATH: profilesPath,
+          FRODO_CONFIG_PATH: configDir,
+        },
+      }
+    );
+    let stdout = '';
+    child.stdout.on('data', (chunk) => {
+      stdout += chunk.toString('utf8');
+    });
+    let stderr = '';
+    child.stderr.on('data', (chunk) => {
+      stderr += chunk.toString('utf8');
+    });
+    if (port > 0) {
+      await waitForListening('127.0.0.1', port, 30000);
+    }
+    return { child, stdout, stderr, getStdout: () => stdout, getStderr: () => stderr };
+  }
+
+  /** The child's combined output so far (printMessage writes to stderr). */
+  function allOutput(spawned) {
+    return spawned.getStdout() + spawned.getStderr();
+  }
+
+  /** Runs a `dist/launch.cjs mcp server stop` invocation to completion. */
+  function runStop(port, configDir) {
+    return new Promise((resolve, reject) => {
+      const child = spawn(
+        process.execPath,
+        [launchPath, 'mcp', 'server', 'stop', '--port', String(port)],
+        {
+          stdio: ['ignore', 'pipe', 'pipe'],
+          env: { ...process.env, FRODO_TEST: '1', NO_COLOR: '1', FRODO_CONFIG_PATH: configDir },
+        }
+      );
+      let out = '';
+      child.stdout.on('data', (chunk) => {
+        out += chunk.toString('utf8');
+      });
+      let err = '';
+      child.stderr.on('data', (chunk) => {
+        err += chunk.toString('utf8');
+      });
+      const timer = setTimeout(() => {
+        child.kill('SIGKILL');
+        reject(new Error(`stop on port ${port} timed out`));
+      }, 30000);
+      child.once('exit', (code, signal) => {
+        clearTimeout(timer);
+        resolve({ code, signal, output: out + err });
+      });
+    });
+  }
+
+  /** Polls until the port refuses connections (server gone) or deadline. */
+  async function waitForPortClosed(port, deadlineMs = 15000) {
+    const started = Date.now();
+    const tryClose = () =>
+      new Promise((resolve) => {
+        const socket = net.connect(port, '127.0.0.1');
+        socket.once('connect', () => {
+          socket.destroy();
+          resolve(false);
+        });
+        socket.once('error', () => resolve(true));
+      });
+    while (Date.now() < started + deadlineMs) {
+      if (await tryClose()) {
+        return;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    throw new Error(`port ${port} is still accepting connections`);
+  }
+
+  /**
+   * Reap-then-cleanup for the spawned server: a stop that succeeded already
+   * ended the process, so kill() here only matters on failure paths.
+   */
+  function killChild(child) {
+    if (child && child.exitCode === null && child.signalCode === null) {
+      child.kill('SIGKILL');
+    }
+  }
+
+  cond('stop happy path: exit 0, lockfile gone, port rebindable, process gone', async () => {
+    const port = await getFreePort();
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mcp-stop-'));
+    let server;
+    try {
+      const spawned = await spawnServer(port, tmpDir);
+      server = spawned.child;
+      const lockPath = path.join(tmpDir, `mcp-http-${port}.pid`);
+      expect(fs.existsSync(lockPath)).toBe(true);
+
+      const stop = await runStop(port, tmpDir);
+      expect(stop.code).toBe(0);
+      expect(stop.output).toContain(`port ${port} released`);
+      // Lockfile gone after the confirmed death.
+      expect(fs.existsSync(lockPath)).toBe(false);
+      // Port actually released: a fresh bind must succeed.
+      await waitForPortClosed(port);
+      const rebind = await new Promise((resolve, reject) => {
+        const s = http.createServer();
+        s.on('error', reject);
+        s.listen(port, '127.0.0.1', () => s.close(() => resolve(true)));
+      });
+      expect(rebind).toBe(true);
+      // The signaled process exits (its graceful shutdown runs).
+      await new Promise((resolve) => {
+        if (server.exitCode !== null || server.signalCode !== null) {
+          resolve();
+        } else {
+          server.once('exit', resolve);
+        }
+      });
+    } finally {
+      killChild(server);
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  cond('stop with no lockfile: exit 1 with the helpful message', async () => {
+    const port = await getFreePort();
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mcp-stop-no-'));
+    try {
+      const stop = await runStop(port, tmpDir);
+      expect(stop.code).toBe(1);
+      expect(stop.output).toContain(`No MCP HTTP server lockfile for port ${port}`);
+      expect(stop.output).toContain('was it started with --transport http?');
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  cond('stop on a stale lockfile (dead PID): exit 0, lockfile removed, stale message', async () => {
+    const port = await getFreePort();
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mcp-stop-stale-'));
+    try {
+      const lockPath = path.join(tmpDir, `mcp-http-${port}.pid`);
+      // A dead writer: an implausible PID the liveness check cannot find.
+      fs.writeFileSync(
+        lockPath,
+        JSON.stringify({
+          pid: 2147483000,
+          port,
+          bindHost: '127.0.0.1',
+          startedAt: '2026-01-01T00:00:00.000Z',
+        })
+      );
+      const stop = await runStop(port, tmpDir);
+      expect(stop.code).toBe(0);
+      expect(stop.output).toContain('Stale lockfile');
+      expect(stop.output).toContain('2147483000');
+      expect(stop.output).toContain('Lockfile removed');
+      expect(fs.existsSync(lockPath)).toBe(false);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  cond('--port auto: resolved port printed, /health answers, stop on the resolved port exits 0', async () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mcp-stop-auto-'));
+    let server;
+    let resolvedPort;
+    try {
+      const spawned = await spawnServer('auto', tmpDir);
+      server = spawned.child;
+      // The listening line (printMessage -> stderr) carries the OS-resolved
+      // port; the lockfile is keyed on it, which is how stop finds the
+      // server.
+      const listening = await new Promise((resolve, reject) => {
+        const started = Date.now();
+        const poll = () => {
+          const match = allOutput(spawned).match(/listening on http:\/\/127\.0\.0\.1:(\d+)\/mcp/);
+          if (match) {
+            resolve(Number(match[1]));
+            return;
+          }
+          if (Date.now() > started + 30000) {
+            reject(new Error(`listening line never appeared; output: ${allOutput(spawned)}`));
+            return;
+          }
+          setTimeout(poll, 50);
+        };
+        poll();
+      });
+      resolvedPort = listening;
+      expect(resolvedPort).toBeGreaterThan(0);
+      expect(resolvedPort).not.toBe(6277);
+      // Lockfile keyed on the RESOLVED port (not on 'auto' / 0), and
+      // connectable on the printed port.
+      expect(
+        fs.existsSync(path.join(tmpDir, `mcp-http-${resolvedPort}.pid`))
+      ).toBe(true);
+      const health = await new Promise((resolve, reject) => {
+        const req = httpRequest(
+          { host: '127.0.0.1', port: resolvedPort, method: 'GET', path: '/health', timeout: 5000 },
+          (res) => {
+            res.resume();
+            resolve(res.statusCode);
+          }
+        );
+        req.on('timeout', () => {
+          req.destroy();
+          reject(new Error('health probe timed out'));
+        });
+        req.on('error', reject);
+        req.end();
+      });
+      expect(health).toBe(200);
+
+      const stop = await runStop(resolvedPort, tmpDir);
+      expect(stop.code).toBe(0);
+      expect(stop.output).toContain(`port ${resolvedPort} released`);
+      expect(
+        fs.existsSync(path.join(tmpDir, `mcp-http-${resolvedPort}.pid`))
+      ).toBe(false);
+    } finally {
+      killChild(server);
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Bounded request body (frodo transport policy: 413 before buffering and
+// mid-stream) and the concurrency cap (429 + Retry-After, queue-less)
+// ---------------------------------------------------------------------------
+
+describe('transport limits (body size + concurrency)', () => {
+  beforeEach(() => {
+    printed.length = 0;
+  });
+
+  afterEach(async () => {
+    await shutdownTransport();
+  });
+
+  // Re-declared here so this suite is self-contained within the file's
+  // existing scope (the startHttpTransport describe keeps its own copies).
+  let currentDone = null;
+  async function shutdownTransport() {
+    if (currentDone) {
+      const done = currentDone;
+      currentDone = null;
+      process.emit('SIGTERM', 'SIGTERM');
+      await done;
+    }
+  }
+
+  function startServerWith(port, options) {
+    currentDone = startHttpTransport(
+      { listTools: () => [] },
+      '127.0.0.1',
+      port,
+      undefined,
+      options
+    );
+    return currentDone;
+  }
+
+  /**
+   * Connects a raw socket to the test server. Every socket returned here has
+   * a noop 'error' handler installed up front: the 413 paths destroy the
+   * socket after responding (deliberately RSTing any unread body), and an
+   * unhandled 'error' event on a jest worker's socket kills the whole run —
+   * exactly the hang this suite once spent an afternoon on.
+   */
+  async function connectRaw(port) {
+    return new Promise((resolve, reject) => {
+      const s = net.connect(port, '127.0.0.1');
+      s.once('error', () => {
+        // Suppress: resolve-time errors are handled per test below; later
+        // errors (RST after a 413) are expected and ignorable.
+      });
+      s.once('connect', () => resolve(s));
+      s.once('error', reject);
+    });
+  }
+
+  test('413 on a Content-Length over the default limit, before any body byte is buffered', async () => {
+    const port = await getFreePort();
+    startServerWith(port, {});
+    await waitForListening('127.0.0.1', port);
+    // Declare 1 MiB + 1 bytes: over the default cap, but only ~1.5 MiB is
+    // actually sent (smaller than a giant allocation; the pre-check fires on
+    // the header, so even a partial send is enough).
+    const overLimit = 1024 * 1024 + 1;
+    const res = await rawRequest(port, 'POST', '/mcp', {
+      ...JSON_HEADERS,
+      'content-length': String(overLimit),
+    }, 'x'.repeat(64));
+    expect(res.status).toBe(413);
+    const payload = JSON.parse(res.text);
+    expect(payload.error.code).toBe(-32000);
+    expect(payload.error.message).toContain('--max-body-size');
+    expect(payload.error.message).toContain('FRODO_MCP_MAX_BODY_SIZE');
+    expect(payload.error.data.limitBytes).toBe(1024 * 1024);
+    expect(payload.error.data.receivedBytes).toBe(overLimit);
+  }, 30000);
+
+  test('413 arrives mid-stream while a chunked over-limit body is still being sent', async () => {
+    const port = await getFreePort();
+    startServerWith(port, { maxBodySizeBytes: 32 });
+    await waitForListening('127.0.0.1', port);
+    // The strongest form of the mid-stream guarantee: the 413 must come
+    // back while the body is STILL ARRIVING — before the sender has finished
+    // (the terminal 0-length chunk is deliberately never sent, and the two
+    // sent chunks are separated in time so the cap trips between them).
+    // (A lying Content-Length combined with chunked framing is rejected by
+    // node's HTTP parser itself with a flat 400 — that never reaches frodo's
+    // handler; chunked-only is the shape where the accumulation cap is the
+    // only guard.)
+    const socket = await connectRaw(port);
+    let got413 = false;
+    socket.on('data', (chunk) => {
+      if (chunk.toString('utf8').includes('413')) {
+        got413 = true;
+      }
+    });
+    socket.write(
+      'POST /mcp HTTP/1.1\r\n' +
+        'Host: 127.0.0.1\r\n' +
+        'Content-Type: application/json\r\n' +
+        'Accept: application/json, text/event-stream\r\n' +
+        'Transfer-Encoding: chunked\r\n' +
+        '\r\n'
+    );
+    // Chunk 1 (40 bytes, over the 32-byte cap by itself).
+    const chunk = 'z'.repeat(40);
+    socket.write(`${chunk.length.toString(16)}\r\n${chunk}\r\n`);
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    expect(got413).toBe(true);
+    // The socket is destroyed server-side after the 413 (Connection: close).
+    socket.destroy();
+  }, 30000);
+
+  test('a chunked body without Content-Length is also capped mid-stream', async () => {
+    const port = await getFreePort();
+    startServerWith(port, { maxBodySizeBytes: 32 });
+    await waitForListening('127.0.0.1', port);
+    // Write through the raw socket with a Content-Length of 0 and keep the
+    // body coming: node:http server treats a Content-Length: 0 POST with
+    // extra bytes as a body without a usable declared length, so the
+    // accumulation cap is the only guard. (A plain chunked request is
+    // achievable the same way.)
+    const socket = await connectRaw(port);
+    const responseText = await new Promise((resolve) => {
+      let text = '';
+      socket.on('data', (chunk) => {
+        text += chunk.toString('utf8');
+        if (text.includes('\r\n\r\n') && (text.includes('413') || text.length > 200)) {
+          socket.end();
+          resolve(text);
+        }
+      });
+      socket.write(
+        'POST /mcp HTTP/1.1\r\n' +
+          'Host: 127.0.0.1\r\n' +
+          'Content-Type: application/json\r\n' +
+          'Accept: application/json, text/event-stream\r\n' +
+          'Transfer-Encoding: chunked\r\n' +
+          '\r\n'
+      );
+      // Two 40-byte chunks: 80 total, over the 32-byte cap, no declared length.
+      const chunk = 'z'.repeat(40);
+      socket.write(`${chunk.length.toString(16)}\r\n${chunk}\r\n`);
+      socket.write(`${chunk.length.toString(16)}\r\n${chunk}\r\n`);
+    });
+    expect(responseText).toContain(' 413 ');
+    expect(responseText).toContain('-32000');
+    socket.destroy();
+  }, 30000);
+
+  test('under-limit request is served normally (default unchanged behavior)', async () => {
+    const port = await getFreePort();
+    startServerWith(port, {});
+    await waitForListening('127.0.0.1', port);
+    const res = await rawRequest(port, 'POST', '/mcp', JSON_HEADERS, legacyInitializeBody());
+    expect(res.status).toBe(200);
+    const dataLine = res.text.split('\n').find((l) => l.startsWith('data: '));
+    expect(JSON.parse(dataLine.replace(/^data: /, '')).result.serverInfo.name).toBe('frodo-mcp');
+  }, 30000);
+
+  test('a configured maxBodySizeBytes overrides the default both ways', async () => {
+    // A smaller cap rejects a body the default would accept.
+    const smallPort = await getFreePort();
+    startServerWith(smallPort, { maxBodySizeBytes: 16 });
+    await waitForListening('127.0.0.1', smallPort);
+    const rejected = await rawRequest(smallPort, 'POST', '/mcp', JSON_HEADERS, legacyInitializeBody());
+    expect(rejected.status).toBe(413);
+    expect(JSON.parse(rejected.text).error.data.limitBytes).toBe(16);
+    await shutdownTransport();
+
+    // A larger cap accepts a body over the default 1 MiB.
+    const bigPort = await getFreePort();
+    startServerWith(bigPort, { maxBodySizeBytes: 2 * 1024 * 1024 });
+    await waitForListening('127.0.0.1', bigPort);
+    const big = legacyInitializeBody();
+    const ok = await rawRequest(bigPort, 'POST', '/mcp', JSON_HEADERS, big);
+    expect(ok.status).toBe(200);
+  }, 30000);
+
+  test('429 with Retry-After when the concurrency cap is saturated; under-cap requests unaffected', async () => {
+    const port = await getFreePort();
+    startServerWith(port, { maxConcurrentRequests: 1 });
+    await waitForListening('127.0.0.1', port);
+
+    // The first request must HOLD the only slot while the second one runs,
+    // so it cannot go through rawRequest (an initialize's SSE handler
+    // finishes on its own once the response is written, and rawRequest also
+    // destroys the socket). A request whose body is only PARTIALLY sent
+    // keeps its handler awaiting readJsonBody — the slot is genuinely in
+    // flight. The second request then arrives while the first is stalled.
+    const stalled = await connectRaw(port);
+    // Declare 200 bytes, send only half: the handler awaits the rest.
+    stalled.write(
+      `POST /mcp HTTP/1.1\r\nHost: 127.0.0.1\r\nContent-Type: application/json\r\nAccept: application/json, text/event-stream\r\nContent-Length: 200\r\n\r\n${'a'.repeat(100)}`
+    );
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
+    // While that slot is held, the next request must bounce 429.
+    const second = await rawRequest(port, 'POST', '/mcp', JSON_HEADERS, legacyInitializeBody());
+    expect(second.status).toBe(429);
+    expect(second.headers['retry-after']).toBe('1');
+    const payload = JSON.parse(second.text);
+    expect(payload.error.code).toBe(-32000);
+    expect(payload.error.message).toContain('Server busy');
+    expect(payload.error.data.maxConcurrentRequests).toBe(1);
+
+    // Release the slot (complete the stalled body), then the next request
+    // is served: the cap counts in-flight executions, not cumulative
+    // traffic.
+    stalled.end('a'.repeat(100));
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    const third = await rawRequest(port, 'POST', '/mcp', JSON_HEADERS, legacyInitializeBody());
+    expect(third.status).toBe(200);
+    stalled.destroy();
+  }, 30000);
+
+  test('health probes and non-POST routes never take a concurrency slot', async () => {
+    const port = await getFreePort();
+    startServerWith(port, { maxConcurrentRequests: 1 });
+    await waitForListening('127.0.0.1', port);
+    // Hold the only slot with a partially-sent body (see the 429 cell).
+    const stalled = await connectRaw(port);
+    stalled.write(
+      `POST /mcp HTTP/1.1\r\nHost: 127.0.0.1\r\nContent-Type: application/json\r\nAccept: application/json, text/event-stream\r\nContent-Length: 200\r\n\r\n${'a'.repeat(100)}`
+    );
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    // /health and 404s answer while the only slot is held.
+    const health = await rawRequest(port, 'GET', '/health');
+    expect(health.status).toBe(200);
+    const notFound = await rawRequest(port, 'GET', '/other');
+    expect(notFound.status).toBe(404);
+    stalled.destroy();
+  }, 30000);
+
+  test('the 429 counts handler executions and the slot frees after the response completes', async () => {
+    // Non-SSE rejection paths (metadata gate) also hold + release slots.
+    const port = await getFreePort();
+    startServerWith(port, { maxConcurrentRequests: 1 });
+    await waitForListening('127.0.0.1', port);
+    // An empty batch is rejected 400 without touching the transport: the
+    // slot must be released by the time the next request runs.
+    const batch = await rawRequest(port, 'POST', '/mcp', JSON_HEADERS, '[]');
+    expect(batch.status).toBe(400);
+    const next = await rawRequest(port, 'POST', '/mcp', JSON_HEADERS, legacyInitializeBody());
+    expect(next.status).toBe(200);
+  }, 30000);
+});
+
+// ---------------------------------------------------------------------------
+// Transport-limit option resolution (server-limits.ts: flag-over-env,
+// invalid-means-default)
+// ---------------------------------------------------------------------------
+
+describe('transport limit resolution (server-limits)', () => {
+  const BODY_ENV = 'FRODO_MCP_MAX_BODY_SIZE';
+  const CONCURRENCY_ENV = 'FRODO_MCP_MAX_CONCURRENT_REQUESTS';
+  let savedBody;
+  let savedConcurrency;
+  let resolveMcpHttpMaxBodySize;
+  let resolveMcpHttpMaxConcurrentRequests;
+  let parsePositiveIntOptionValue;
+
+  beforeAll(async () => {
+    ({ resolveMcpHttpMaxBodySize, resolveMcpHttpMaxConcurrentRequests, parsePositiveIntOptionValue } = await import(
+      '../../src/cli/mcp/server/server-limits.ts'
+    ));
+  });
+
+  beforeEach(() => {
+    savedBody = process.env[BODY_ENV];
+    savedConcurrency = process.env[CONCURRENCY_ENV];
+    delete process.env[BODY_ENV];
+    delete process.env[CONCURRENCY_ENV];
+  });
+
+  afterEach(() => {
+    if (savedBody === undefined) {
+      delete process.env[BODY_ENV];
+    } else {
+      process.env[BODY_ENV] = savedBody;
+    }
+    if (savedConcurrency === undefined) {
+      delete process.env[CONCURRENCY_ENV];
+    } else {
+      process.env[CONCURRENCY_ENV] = savedConcurrency;
+    }
+  });
+
+  test('defaults apply when neither flag nor env is set', () => {
+    expect(resolveMcpHttpMaxBodySize(undefined, undefined)).toBe(1024 * 1024);
+    expect(resolveMcpHttpMaxConcurrentRequests(undefined, undefined)).toBe(64);
+  });
+
+  test('flag wins over env, matching the auth-token precedence rule', () => {
+    expect(resolveMcpHttpMaxBodySize('4096', '8192')).toBe(4096);
+    expect(resolveMcpHttpMaxConcurrentRequests('8', '16')).toBe(8);
+  });
+
+  test('env applies when no flag is set', () => {
+    expect(resolveMcpHttpMaxBodySize(undefined, '8192')).toBe(8192);
+    expect(resolveMcpHttpMaxConcurrentRequests(undefined, '16')).toBe(16);
+  });
+
+  test.each([
+    ['0'],
+    ['-1'],
+    ['abc'],
+    ['12.5'],
+    [''],
+    ['Infinity'],
+    ['NaN'],
+  ])('invalid value %p falls back to the default and reports the ignored channel', (bad) => {
+    // A zero/negative/garbage limit must never disable the cap entirely.
+    const invalids = [];
+    const bodySize = resolveMcpHttpMaxBodySize(bad, undefined, (invalid) => invalids.push(invalid));
+    expect(bodySize).toBe(1024 * 1024);
+    expect(invalids).toEqual([{ flag: bad, env: undefined }]);
+    // Same via the env channel.
+    const invalidsEnv = [];
+    expect(resolveMcpHttpMaxConcurrentRequests(undefined, bad, (invalid) => invalidsEnv.push(invalid))).toBe(64);
+    expect(invalidsEnv).toEqual([{ flag: undefined, env: bad }]);
+  });
+
+  test('an invalid flag does not shadow a valid env value', () => {
+    expect(resolveMcpHttpMaxBodySize('abc', '4096')).toBe(4096);
+    expect(resolveMcpHttpMaxConcurrentRequests('abc', '8')).toBe(8);
+  });
+
+  test('parsePositiveIntOptionValue rejects zero/negative/non-integer input', () => {
+    expect(parsePositiveIntOptionValue('100')).toBe(100);
+    expect(parsePositiveIntOptionValue('0')).toBeUndefined();
+    expect(parsePositiveIntOptionValue('-5')).toBeUndefined();
+    expect(parsePositiveIntOptionValue('3.14')).toBeUndefined();
+    expect(parsePositiveIntOptionValue(undefined)).toBeUndefined();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// PID lockfile, resolved-port printing, --port auto, heartbeat env override
+// ---------------------------------------------------------------------------
+
+describe('HTTP transport lockfile + resolved port', () => {
+  const fs = fsPromise;
+  const os = osPromise;
+  const path = pathPromise;
+  let tmpConfigDir;
+  let savedConfigPath;
+  let savedHeartbeatEnv;
+
+  beforeEach(() => {
+    printed.length = 0;
+    tmpConfigDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mcp-lockfile-'));
+    savedConfigPath = process.env.FRODO_CONFIG_PATH;
+    process.env.FRODO_CONFIG_PATH = tmpConfigDir;
+    savedHeartbeatEnv = process.env.FRODO_MCP_HEARTBEAT_INTERVAL_MS;
+    delete process.env.FRODO_MCP_HEARTBEAT_INTERVAL_MS;
+  });
+
+  afterEach(async () => {
+    await shutdownTransport();
+    if (savedConfigPath === undefined) {
+      delete process.env.FRODO_CONFIG_PATH;
+    } else {
+      process.env.FRODO_CONFIG_PATH = savedConfigPath;
+    }
+    if (savedHeartbeatEnv === undefined) {
+      delete process.env.FRODO_MCP_HEARTBEAT_INTERVAL_MS;
+    } else {
+      process.env.FRODO_MCP_HEARTBEAT_INTERVAL_MS = savedHeartbeatEnv;
+    }
+    fs.rmSync(tmpConfigDir, { recursive: true, force: true });
+  });
+
+  let currentDone = null;
+  async function shutdownTransport() {
+    if (currentDone) {
+      const done = currentDone;
+      currentDone = null;
+      process.emit('SIGTERM', 'SIGTERM');
+      await done;
+    }
+  }
+
+  function startServerOn(port, options) {
+    currentDone = startHttpTransport(
+      { listTools: () => [] },
+      '127.0.0.1',
+      port,
+      undefined,
+      options
+    );
+    return currentDone;
+  }
+
+  test('writes the lockfile on listen with the record shape, removes it on shutdown', async () => {
+    const port = await getFreePort();
+    startServerOn(port, {});
+    await waitForListening('127.0.0.1', port);
+    const lockPath = path.join(tmpConfigDir, `mcp-http-${port}.pid`);
+    expect(fs.existsSync(lockPath)).toBe(true);
+    const record = JSON.parse(fs.readFileSync(lockPath, 'utf8'));
+    expect(record.pid).toBe(process.pid);
+    expect(record.port).toBe(port);
+    expect(record.bindHost).toBe('127.0.0.1');
+    expect(record.startedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+    // Shutdown (SIGTERM — one of the four signals; the other three share the
+    // same shutdown closure) removes it.
+    await shutdownTransport();
+    expect(fs.existsSync(lockPath)).toBe(false);
+  }, 30000);
+
+  test('a start over a dead-PID lockfile warns stale, serves, and rewrites the record with a live PID', async () => {
+    // The scenario: a previous server crashed without the best-effort
+    // lockfile removal (kill -9, reboot) and left its record behind. The new
+    // start must not be blocked by it — but it must say so, and the rewritten
+    // lockfile must name the NEW process, or `frodo mcp server stop` would
+    // SIGTERM a ghost. (A live-PID lockfile instead leads to EADDRINUSE —
+    // covered implicitly by the EADDRINUSE cells — so only the dead-PID path
+    // is reachable in-process.)
+    const port = await getFreePort();
+    const lockPath = path.join(tmpConfigDir, `mcp-http-${port}.pid`);
+    fs.writeFileSync(
+      lockPath,
+      JSON.stringify({
+        pid: 2147483000, // implausible PID: liveness check fails
+        port,
+        bindHost: '127.0.0.1',
+        startedAt: '2026-01-01T00:00:00.000Z',
+      })
+    );
+    printed.length = 0;
+    startServerOn(port, {});
+    await waitForListening('127.0.0.1', port);
+    try {
+      // One warn line naming the port and the dead PID.
+      const staleNotes = printed.filter((p) =>
+        p.msg.includes('stale lockfile for port')
+      );
+      expect(staleNotes).toHaveLength(1);
+      expect(staleNotes[0].type).toBe('warn');
+      expect(staleNotes[0].msg).toContain(String(port));
+      expect(staleNotes[0].msg).toContain('2147483000');
+      // The server is actually up (waitForListening already connected, and a
+      // health probe doubles as the sanity check).
+      const health = await rawRequest(port, 'GET', '/health');
+      expect(health.status).toBe(200);
+      // The lockfile was rewritten with the live writer's PID.
+      const record = JSON.parse(fs.readFileSync(lockPath, 'utf8'));
+      expect(record.pid).toBe(process.pid);
+    } finally {
+      await shutdownTransport();
+    }
+    expect(fs.existsSync(lockPath)).toBe(false);
+  }, 30000);
+
+  test('the listening line prints the OS-resolved port for --port 0, and the lockfile uses it', async () => {
+    // The known wrong-print: requesting port 0 (or --port auto) used to echo
+    // the REQUESTED port (0) in the listening line; the line must carry the
+    // port the OS actually assigned, and the lockfile must be keyed on it.
+    printed.length = 0;
+    startServerOn(0, {});
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    const listening = printed.find((p) => p.msg.includes('listening on'));
+    expect(listening).toBeDefined();
+    const match = listening.msg.match(/http:\/\/127\.0\.0\.1:(\d+)\/mcp/);
+    expect(match).not.toBeNull();
+    const resolvedPort = Number(match[1]);
+    expect(resolvedPort).toBeGreaterThan(0);
+    // Connectable on the printed (resolved) port.
+    await waitForListening('127.0.0.1', resolvedPort);
+    // Lockfile keyed on the resolved port, not on 0.
+    expect(fs.existsSync(path.join(tmpConfigDir, 'mcp-http-0.pid'))).toBe(false);
+    expect(fs.existsSync(path.join(tmpConfigDir, `mcp-http-${resolvedPort}.pid`))).toBe(true);
+  }, 30000);
+
+  test('FRODO_MCP_HEARTBEAT_INTERVAL_MS overrides the interval (clamped to >= 1000ms)', async () => {
+    const port = await getFreePort();
+    printed.length = 0;
+    // env=50 clamps to the 1s floor: the first beat must fire at ~1000ms —
+    // well before the 15-minute default ever could, which is exactly what
+    // the override is for (operator-verifiable liveness cadence).
+    process.env.FRODO_MCP_HEARTBEAT_INTERVAL_MS = '50';
+    startServerOn(port, {});
+    await waitForListening('127.0.0.1', port);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const beats = printed.filter((p) => p.msg.includes('still listening'));
+      expect(beats.length).toBeGreaterThanOrEqual(1);
+    } finally {
+      await shutdownTransport();
+    }
+  }, 30000);
+
+  test('an invalid FRODO_MCP_HEARTBEAT_INTERVAL_MS falls back to the 15-minute default (no rapid beats)', async () => {
+    const port = await getFreePort();
+    printed.length = 0;
+    process.env.FRODO_MCP_HEARTBEAT_INTERVAL_MS = 'garbage';
+    startServerOn(port, {});
+    await waitForListening('127.0.0.1', port);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 250));
+      // With the 15-minute default, no beat can have fired in 250ms.
+      expect(printed.filter((p) => p.msg.includes('still listening'))).toHaveLength(0);
+    } finally {
+      await shutdownTransport();
+    }
+  }, 30000);
+});
+
+// ---------------------------------------------------------------------------
+// Lockfile + identity helpers (McpServerLockfile.ts, dependency-free)
+// ---------------------------------------------------------------------------
+
+describe('McpServerLockfile helpers', () => {
+  const fs = fsPromise;
+  const os = osPromise;
+  const path = pathPromise;
+  let tmpConfigDir;
+  let savedConfigPath;
+  let lock;
+
+  beforeAll(async () => {
+    lock = await import('../../src/ops/McpServerLockfile.ts');
+  });
+
+  beforeEach(() => {
+    tmpConfigDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mcp-lock-'));
+    savedConfigPath = process.env.FRODO_CONFIG_PATH;
+    process.env.FRODO_CONFIG_PATH = tmpConfigDir;
+  });
+
+  afterEach(() => {
+    if (savedConfigPath === undefined) {
+      delete process.env.FRODO_CONFIG_PATH;
+    } else {
+      process.env.FRODO_CONFIG_PATH = savedConfigPath;
+    }
+    fs.rmSync(tmpConfigDir, { recursive: true, force: true });
+  });
+
+  test('write/read round-trips the record and honors FRODO_CONFIG_PATH', () => {
+    const ok = lock.writeMcpHttpLockfile({
+      pid: 4242,
+      port: 6277,
+      bindHost: '127.0.0.1',
+      startedAt: '2026-09-02T00:00:00.000Z',
+    });
+    expect(ok).toBe(true);
+    expect(lock.getMcpHttpLockfilePath(6277)).toBe(
+      path.join(tmpConfigDir, 'mcp-http-6277.pid')
+    );
+    expect(lock.readMcpHttpLockfile(6277)).toEqual({
+      pid: 4242,
+      port: 6277,
+      bindHost: '127.0.0.1',
+      startedAt: '2026-09-02T00:00:00.000Z',
+    });
+  });
+
+  test('a missing or malformed lockfile reads as null, never throws', () => {
+    expect(lock.readMcpHttpLockfile(9999)).toBeNull();
+    fs.writeFileSync(path.join(tmpConfigDir, 'mcp-http-9998.pid'), 'not json{');
+    expect(lock.readMcpHttpLockfile(9998)).toBeNull();
+    fs.writeFileSync(path.join(tmpConfigDir, 'mcp-http-9997.pid'), '{"port":1}');
+    expect(lock.readMcpHttpLockfile(9997)).toBeNull();
+  });
+
+  test('isPidAlive is true for our own pid and false for an implausible one', () => {
+    expect(lock.isPidAlive(process.pid)).toBe(true);
+    expect(lock.isPidAlive(2147483000)).toBe(false);
+  });
+
+  test('removeMcpHttpLockfile is a safe no-op for a missing file', () => {
+    expect(() => lock.removeMcpHttpLockfile(12345)).not.toThrow();
+  });
+
+  test('verifyMcpProcessIdentity classifies a frodo child as frodo (PID-reuse guard)', async () => {
+    // A real node process running our own module: its argv contains node and
+    // a jest path — NOT a frodo entrypoint, so the guard must flag it as
+    // "not frodo" on Linux (/proc) or via ps on macOS.
+    const { spawn } = childProcess;
+    const sleeper = spawn(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], {
+      stdio: 'ignore',
+    });
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      const identity = lock.verifyMcpProcessIdentity(sleeper.pid);
+      expect(identity.verified).toBe(true);
+      expect(identity.looksLikeFrodo).toBe(false);
+    } finally {
+      sleeper.kill('SIGKILL');
+    }
+  });
+});
+
+describe('port option resolution (parseMcpHttpPortOption)', () => {
+  let parseMcpHttpPortOption;
+
+  beforeAll(async () => {
+    ({ parseMcpHttpPortOption } = await import(
+      '../../src/cli/mcp/server/server-limits.ts'
+    ));
+  });
+
+  test("resolves 'auto' (any case) to 0 for an OS-assigned port", () => {
+    expect(parseMcpHttpPortOption('auto')).toBe(0);
+    expect(parseMcpHttpPortOption('AUTO')).toBe(0);
+    expect(parseMcpHttpPortOption('Auto')).toBe(0);
+  });
+
+  test('passes through valid ports and falls back to 6277 otherwise', () => {
+    expect(parseMcpHttpPortOption('8443')).toBe(8443);
+    expect(parseMcpHttpPortOption('6277')).toBe(6277);
+    expect(parseMcpHttpPortOption(undefined)).toBe(6277);
+    expect(parseMcpHttpPortOption('')).toBe(6277);
+    expect(parseMcpHttpPortOption('0')).toBe(6277);
+    expect(parseMcpHttpPortOption('-1')).toBe(6277);
+    expect(parseMcpHttpPortOption('70000')).toBe(6277);
+    expect(parseMcpHttpPortOption('abc')).toBe(6277);
+  });
+});
+
+describe('heartbeat interval resolution (resolveMcpHttpHeartbeatInterval)', () => {
+  let resolveMcpHttpHeartbeatInterval;
+
+  beforeAll(async () => {
+    ({ resolveMcpHttpHeartbeatInterval } = await import(
+      '../../src/ops/McpServerOps.ts'
+    ));
+  });
+
+  test('option wins over env; invalid env falls back to the 15-minute default', () => {
+    const FIFTEEN_MIN = 15 * 60 * 1000;
+    expect(resolveMcpHttpHeartbeatInterval(undefined, undefined)).toBe(FIFTEEN_MIN);
+    // The injectable option is NOT clamped: tests drive the real-timer
+    // lifecycle cells with sub-second periods (the 1s floor applies to the
+    // env value only — an operator-visible knob, not a test hook).
+    expect(resolveMcpHttpHeartbeatInterval(40, undefined)).toBe(40);
+    expect(resolveMcpHttpHeartbeatInterval(5000, '123')).toBe(5000); // option wins
+    expect(resolveMcpHttpHeartbeatInterval(undefined, '5000')).toBe(5000);
+    expect(resolveMcpHttpHeartbeatInterval(undefined, '50')).toBe(1000); // clamped
+    expect(resolveMcpHttpHeartbeatInterval(undefined, '0')).toBe(FIFTEEN_MIN);
+    expect(resolveMcpHttpHeartbeatInterval(undefined, 'abc')).toBe(FIFTEEN_MIN);
+    expect(resolveMcpHttpHeartbeatInterval(undefined, '')).toBe(FIFTEEN_MIN);
+  });
+});

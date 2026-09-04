@@ -25,6 +25,7 @@ import {
   request as httpRequest,
   type ServerResponse,
 } from 'node:http';
+import type { AddressInfo } from 'node:net';
 import { isIP } from 'node:net';
 
 import {
@@ -52,6 +53,13 @@ import { z } from 'zod';
 
 import { printMessage } from '../utils/Console.js';
 import { McpLogger, type McpProtocolLogLevel } from './McpLogger.js';
+import {
+  getMcpHttpLockfilePath,
+  isPidAlive,
+  readMcpHttpLockfile,
+  removeMcpHttpLockfile,
+  writeMcpHttpLockfile,
+} from './McpServerLockfile.js';
 import {
   MCP_SERVER_DISCOVERY_INSTRUCTIONS,
   MCP_SERVER_NAME,
@@ -267,6 +275,117 @@ export type McpServerStartupInfo = {
 // heartbeat is the "still alive" counter-evidence. unref()ed so it never
 // blocks process exit, and cleared on shutdown.
 const MCP_HTTP_HEARTBEAT_INTERVAL_MS = 15 * 60 * 1000;
+
+// The smallest heartbeat period an operator can configure. A sub-second
+// heartbeat is never what an operator wants — at that rate the log is noise,
+// and a mistaken value (seconds-vs-milliseconds confusion) would flood
+// whatever ships these logs.
+const MIN_HEARTBEAT_INTERVAL_MS = 1000;
+
+/**
+ * The effective liveness heartbeat interval: the injectable option wins
+ * (tests drive real-timer lifecycle cells with sub-second periods), then the
+ * `FRODO_MCP_HEARTBEAT_INTERVAL_MS` environment override (the
+ * operator-verifiability use case — an env var shows up in the
+ * container/service definition, no CLI flag), which is clamped to at least
+ * {@linkcode MIN_HEARTBEAT_INTERVAL_MS}; invalid or non-positive values fall
+ * back to the 15-minute default. Exported for direct unit coverage of the
+ * precedence and clamping rules.
+ */
+export function resolveMcpHttpHeartbeatInterval(
+  optionValueMs?: number,
+  envValue?: string
+): number {
+  if (optionValueMs !== undefined && Number.isFinite(optionValueMs)) {
+    return optionValueMs;
+  }
+  if (envValue !== undefined && envValue !== '') {
+    const parsed = Number(envValue);
+    if (Number.isFinite(parsed) && parsed > 0) {
+      return Math.max(parsed, MIN_HEARTBEAT_INTERVAL_MS);
+    }
+  }
+  return MCP_HTTP_HEARTBEAT_INTERVAL_MS;
+}
+
+// Frodo transport policy, not an SDK-parity cell: the largest single request
+// body accepted on POST /mcp. Unbounded reads let one malformed or hostile
+// client pin server memory (the SDK's own Node adapter relies on the host
+// framework for exactly this bound). The default is deliberately generous —
+// the largest payloads observed in QA gateway crawls were ~400 KB, so 1 MiB
+// is ~2.5x headroom — and raisable per deployment via --max-body-size /
+// FRODO_MCP_MAX_BODY_SIZE.
+export const DEFAULT_MCP_HTTP_MAX_BODY_SIZE_BYTES = 1024 * 1024;
+
+// Frodo transport policy, not an SDK-parity cell: the maximum number of
+// request handler executions in flight at once. Over-limit requests get an
+// immediate 429 (queue-less reject — the gateway's retry policy is the queue),
+// so a burst cannot pile unbounded work onto one process. The default is far
+// above any observed gateway load; raisable via --max-concurrent-requests /
+// FRODO_MCP_MAX_CONCURRENT_REQUESTS.
+export const DEFAULT_MCP_HTTP_MAX_CONCURRENT_REQUESTS = 64;
+
+// The JSON-RPC error code for frodo's own transport-policy rejections (body
+// size, concurrency). Outside the JSON-RPC reserved range (-32768..-32000 is
+// "Reserved for implementation-defined server-errors"), which is exactly what
+// a transport-level policy rejection is.
+const TRANSPORT_LIMIT_ERROR_CODE = -32000 as const;
+
+/**
+ * A POST /mcp body that exceeded the configured size limit, either at the
+ * `Content-Length` pre-check (nothing was read) or mid-stream (accumulation
+ * stopped at the limit). Carrying the observed byte count keeps the 413
+ * response concrete without ever echoing body contents.
+ */
+class McpHttpBodyTooLargeError extends Error {
+  /** Bytes seen (mid-stream) or declared (Content-Length), when known. */
+  readonly receivedBytes: number | undefined;
+
+  constructor(message: string, receivedBytes?: number) {
+    super(message);
+    this.name = 'McpHttpBodyTooLargeError';
+    this.receivedBytes = receivedBytes;
+  }
+}
+
+/**
+ * Queue-less concurrency limiter for POST /mcp handler executions.
+ *
+ * `tryAcquire` is synchronous on purpose: the bound is a hard ceiling with an
+ * immediate `429` for whoever does not fit (documented transport policy — the
+ * client's/gateway's retry policy is the queue, and `Retry-After: 1` tells it
+ * when), not a queue that would let a burst pile invisible work onto the
+ * process. A slot is held from just before the request body is read until the
+ * handler's response is fully written (for a tool call, that includes the SSE
+ * stream staying open while the tool executes) — so the cap counts in-flight
+ * handler *executions*, not merely held sockets, and a slow stream keeps its
+ * slot until its handler resolves.
+ */
+class McpHttpConcurrencyLimiter {
+  private inFlight = 0;
+
+  constructor(readonly max: number) {}
+
+  /**
+   * Takes a slot when one is free, returns false when the caller must be
+   * rejected with `429`.
+   */
+  tryAcquire(): boolean {
+    if (this.inFlight >= this.max) {
+      return false;
+    }
+    this.inFlight += 1;
+    return true;
+  }
+
+  release(): void {
+    this.inFlight = Math.max(0, this.inFlight - 1);
+  }
+
+  get load(): number {
+    return this.inFlight;
+  }
+}
 
 /**
  * Renders one crash-log line: a timestamp, the event kind, the error's name
@@ -588,6 +707,24 @@ export type McpHttpTransportOptions = {
    * without waiting a quarter hour.
    */
   heartbeatIntervalMs?: number;
+  /**
+   * Maximum accepted request body size in bytes on POST /mcp. Defaults to
+   * {@linkcode DEFAULT_MCP_HTTP_MAX_BODY_SIZE_BYTES} (1 MiB). Enforced both
+   * as a `Content-Length` pre-check (reject before reading a byte) and as an
+   * accumulation cap inside the body reader (reject mid-stream on overflow).
+   * Over-limit requests are answered `413` with a JSON-RPC error naming the
+   * limit and the option that raises it.
+   */
+  maxBodySizeBytes?: number;
+  /**
+   * Maximum concurrent POST /mcp handler executions before new requests are
+   * rejected with `429` + `Retry-After: 1` (queue-less reject — the client's
+   * retry policy is the queue). Defaults to
+   * {@linkcode DEFAULT_MCP_HTTP_MAX_CONCURRENT_REQUESTS} (64). Counts handler
+   * executions, not held sockets: a slow SSE stream mid-write still occupies a
+   * slot until its handler resolves.
+   */
+  maxConcurrentRequests?: number;
 };
 
 /**
@@ -701,11 +838,19 @@ export function verifyMcpBearerAuthorization(
  * through the global unhandledRejection handler), and rejects on other
  * server errors.
  *
+ * After a successful `listen()` a PID lockfile
+ * (`<config dir>/mcp-http-<resolved port>.pid`, see
+ * {@linkcode writeMcpHttpLockfile}) records `{pid, port, bindHost, startedAt}`
+ * so `frodo mcp server stop` can find and stop this server; it is removed on
+ * every shutdown signal and best-effort on the crash path.
+ *
  * @param service Fully composed MCP service.
  * @param bindHost Host interface to bind (e.g. `"127.0.0.1"`).
- * @param port TCP port to listen on.
+ * @param port TCP port to listen on (0 binds an OS-assigned port — the
+ *   resolved port is printed and used for the lockfile).
  * @param startupInfo Startup logger context.
- * @param options Transport configuration (Host allow-list, bearer token).
+ * @param options Transport configuration (Host allow-list, bearer token,
+ *   body/concurrency limits).
  */
 export async function startHttpTransport(
   service: McpService,
@@ -714,6 +859,12 @@ export async function startHttpTransport(
   startupInfo?: McpServerStartupInfo,
   options?: McpHttpTransportOptions
 ): Promise<void> {
+  // The port actually bound: the OS assigns it when `port` is 0, and the
+  // listen callback records it (AddressInfo.port). Every user-visible
+  // mention — listening line, heartbeat, lockfile name, shutdown removal —
+  // uses the resolved value; the requested value is only what listen() was
+  // asked for.
+  let resolvedPort = port;
   const mcpServer = buildMcpServer(service, startupInfo);
   const transport = new NodeStreamableHTTPServerTransport({
     sessionIdGenerator: undefined,
@@ -723,6 +874,9 @@ export async function startHttpTransport(
     computeHttpAllowedHosts(bindHost, options?.allowedHosts)
   );
   const validateOrigin = localhostOriginValidation();
+  const limiter = new McpHttpConcurrencyLimiter(
+    options?.maxConcurrentRequests ?? DEFAULT_MCP_HTTP_MAX_CONCURRENT_REQUESTS
+  );
 
   const httpServer = createServer(
     async (req: IncomingMessage, res: ServerResponse) => {
@@ -744,9 +898,53 @@ export async function startHttpTransport(
           validateHost,
           validateOrigin,
           options?.authToken,
+          options?.maxBodySizeBytes ?? DEFAULT_MCP_HTTP_MAX_BODY_SIZE_BYTES,
+          limiter,
           debugLog
         );
       } catch (err) {
+        // The body-limit rejection travels this same path by design (a throw
+        // from the reader): answer 413 with the JSON-RPC error shape and
+        // destroy the socket so the unread remainder of the body is dropped
+        // instead of sitting in a keep-alive connection. Everything else
+        // stays the generic 500.
+        if (err instanceof McpHttpBodyTooLargeError) {
+          debugLog?.(
+            `rejected: body too large (${err.receivedBytes ?? 'unknown'} bytes, limit ${
+              options?.maxBodySizeBytes ?? DEFAULT_MCP_HTTP_MAX_BODY_SIZE_BYTES
+            })`
+          );
+          writeJsonRpcErrorResponse(
+            res,
+            413,
+            {
+              jsonrpc: '2.0',
+              id: null,
+              error: {
+                code: TRANSPORT_LIMIT_ERROR_CODE,
+                message:
+                  `Payload Too Large: the request body exceeds the configured limit ` +
+                  `of ${
+                    options?.maxBodySizeBytes ??
+                    DEFAULT_MCP_HTTP_MAX_BODY_SIZE_BYTES
+                  } bytes` +
+                  (err.receivedBytes !== undefined
+                    ? ` (received ${err.receivedBytes} bytes)`
+                    : '') +
+                  `. Raise it with --max-body-size <bytes> or FRODO_MCP_MAX_BODY_SIZE.`,
+                data: {
+                  limitBytes:
+                    options?.maxBodySizeBytes ??
+                    DEFAULT_MCP_HTTP_MAX_BODY_SIZE_BYTES,
+                  receivedBytes: err.receivedBytes,
+                },
+              },
+            },
+            { Connection: 'close' }
+          );
+          res.on('finish', () => req.socket.destroy());
+          return;
+        }
         printMessage(
           `MCP HTTP handler error: ${err instanceof Error ? err.message : String(err)}`,
           'error'
@@ -764,6 +962,13 @@ export async function startHttpTransport(
   // cleanly.
   const disposeCrashHandlers = registerServerCrashHandlers(startupInfo, {
     beforeExit: () => {
+      // Best-effort lockfile removal on the crash path: an uncaughtException
+      // exit leaves no shutdown signal to run the graceful cleanup, so the
+      // crash path does it — a supervisor restart must not find a lockfile
+      // naming the dead PID and read it as a live incumbent. (The PID
+      // liveness check would eventually classify it stale, but only after a
+      // misleading EADDRINUSE message.)
+      removeMcpHttpLockfile(resolvedPort);
       httpServer.closeIdleConnections?.();
       httpServer.close();
     },
@@ -773,22 +978,64 @@ export async function startHttpTransport(
   // remote operator can tell a hung server from a healthy one. unref()ed —
   // the timer must never be the thing keeping the process alive — and
   // cleared on shutdown.
-  const heartbeat = setInterval(() => {
-    const line = `MCP HTTP server still listening on http://${bindHost}:${port}/mcp (pid ${process.pid})`;
-    if (startupInfo) {
-      startupInfo.logger.info('heartbeat', line);
-    } else {
-      printMessage(line, 'info');
-    }
-  }, options?.heartbeatIntervalMs ?? MCP_HTTP_HEARTBEAT_INTERVAL_MS);
+  const heartbeat = setInterval(
+    () => {
+      const line = `MCP HTTP server still listening on http://${bindHost}:${resolvedPort}/mcp (pid ${process.pid})`;
+      if (startupInfo) {
+        startupInfo.logger.info('heartbeat', line);
+      } else {
+        printMessage(line, 'info');
+      }
+    },
+    resolveMcpHttpHeartbeatInterval(
+      options?.heartbeatIntervalMs,
+      process.env.FRODO_MCP_HEARTBEAT_INTERVAL_MS
+    )
+  );
+
   heartbeat.unref();
 
   return new Promise<void>((resolve, reject) => {
     httpServer.listen(port, bindHost, () => {
-      printMessage(
-        `MCP HTTP server (pid ${process.pid}) listening on http://${bindHost}:${port}/mcp`,
-        'info'
-      );
+      // The resolved port, not the requested one: with `--port auto` (or a
+      // literal 0) the OS assigns the port, and the printed URL is what an
+      // operator points a client at — printing the requested 0 (or 'auto')
+      // is the long-standing wrong-print this fixes.
+      resolvedPort = (httpServer.address() as AddressInfo).port;
+      const listeningLine = `MCP HTTP server (pid ${process.pid}) listening on http://${bindHost}:${resolvedPort}/mcp`;
+      printMessage(listeningLine, 'info');
+      // One cheap staleness note before the lockfile is overwritten: a
+      // previous run that died without cleanup (crash without the best-effort
+      // removal, kill -9, reboot) leaves a lockfile naming a dead PID, and the
+      // operator who later wonders why `stop` says "stale lockfile" deserves
+      // the matching line at start. Read-fail-tolerant by construction (the
+      // reader returns null for missing/unreadable/malformed), and
+      // race-tolerant: a concurrent writer's record is only consulted for
+      // liveness, never modified here — the write below is the overwrite.
+      const staleLockfile = readMcpHttpLockfile(resolvedPort);
+      if (staleLockfile && !isPidAlive(staleLockfile.pid)) {
+        printMessage(
+          `MCP HTTP server: overwriting stale lockfile for port ${resolvedPort} (recorded pid ${staleLockfile.pid} is not running).`,
+          'warn'
+        );
+      }
+      // The PID lockfile is written only once the listener is actually up:
+      // a record naming this process must not outlive a start that never
+      // bound the port. Best-effort — a read-only config dir must not fail
+      // the start (the lockfile is an operational aid, not a gate).
+      if (
+        !writeMcpHttpLockfile({
+          pid: process.pid,
+          port: resolvedPort,
+          bindHost,
+          startedAt: new Date().toISOString(),
+        })
+      ) {
+        printMessage(
+          `MCP HTTP server: could not write the PID lockfile at ${getMcpHttpLockfilePath(resolvedPort)}; 'frodo mcp server stop' will not find this server by it.`,
+          'warn'
+        );
+      }
       // Test/debug-only crash hook: when FRODO_MCP_CRASH_TEST=1, throw an
       // uncaught exception shortly after the listener is up so the
       // uncaughtException crash path (crash line, best-effort port release,
@@ -815,12 +1062,26 @@ export async function startHttpTransport(
         // heartbeat timer or process-level handlers registered.
         clearInterval(heartbeat);
         disposeCrashHandlers();
+        // No lockfile removal here: this process never wrote one (the
+        // write happens only after a successful listen), and the
+        // incumbent's lockfile is the incumbent's to manage.
         const incumbent = await probeHttpServerHealth(port);
+        // When a lockfile for this port names a live PID, that PID is the
+        // incumbent — name it directly so `frodo mcp server stop` (or a
+        // manual kill) needs no lsof round trip. The health-probe wording
+        // stays as the fallback for a squatter with no lockfile.
+        const incumbentLockfile = readMcpHttpLockfile(port);
+        const incumbentPid =
+          incumbentLockfile && isPidAlive(incumbentLockfile.pid)
+            ? incumbentLockfile.pid
+            : undefined;
         printMessage(
           `MCP HTTP server: port ${port} on ${bindHost} is already in use — ` +
-            (incumbent
-              ? `another MCP server is answering on this port (a health probe succeeded). `
-              : `another frodo mcp server (or other process) is likely listening. `) +
+            (incumbentPid !== undefined
+              ? `a process is already listening (pid ${incumbentPid}, from the lockfile). Stop it: frodo mcp server stop --port ${port}. `
+              : incumbent
+                ? `another MCP server is answering on this port (a health probe succeeded). `
+                : `another frodo mcp server (or other process) is likely listening. `) +
             `Find it: lsof -iTCP:${port} -sTCP:LISTEN. ` +
             `Use --port <other> or stop the incumbent.`,
           'error'
@@ -845,6 +1106,10 @@ export async function startHttpTransport(
       }
       clearInterval(heartbeat);
       disposeCrashHandlers();
+      // The lockfile must go before the promise resolves: a supervisor that
+      // restarts the server immediately must not read a stale record naming
+      // a PID about to exit.
+      removeMcpHttpLockfile(resolvedPort);
       // Stop accepting connections immediately, then force-close any
       // keep-alive sockets so the port is released deterministically even
       // when a client (or gateway) holds an idle persistent connection —
@@ -919,6 +1184,12 @@ async function probeHttpServerHealth(
  * (`info`) level stays quiet; never logged: Authorization header values or
  * any token material (header PRESENCE is fine, contents never are), request
  * bodies (only the body's JSON-RPC method name, which carries no secrets).
+ *
+ * Frodo transport-policy limits run alongside the protocol gates: the
+ * `Content-Length` pre-check rejects an over-limit body before a byte is
+ * read, and POST handler executions acquire a concurrency slot (see
+ * {@linkcode McpHttpConcurrencyLimiter}) — over-limit requests get `429` +
+ * `Retry-After: 1` without being queued.
  */
 async function handleHttpRequest(
   req: IncomingMessage,
@@ -926,8 +1197,10 @@ async function handleHttpRequest(
   transport: NodeStreamableHTTPServerTransport,
   validateHost: (req: IncomingMessage, res: ServerResponse) => boolean,
   validateOrigin: (req: IncomingMessage, res: ServerResponse) => boolean,
-  authToken?: string,
-  debug?: (message: string) => void
+  authToken: string | undefined,
+  maxBodySizeBytes: number,
+  limiter: McpHttpConcurrencyLimiter,
+  debug: ((message: string) => void) | undefined
 ): Promise<void> {
   // Arrival line: even 404s and health probes are visible at debug level.
   // The path only, never the query string: the URL is logged before any
@@ -1010,140 +1283,286 @@ async function handleHttpRequest(
     }
   }
 
-  // Parse body for POST
-  let body: unknown;
+  // Concurrency gate (frodo transport policy, queue-less): taken AFTER auth
+  // so an unauthenticated flood cannot occupy slots just by being rejected
+  // for the token, but BEFORE any body read so an over-cap request never
+  // buffers its payload at all. Non-POST requests (health probes, 404/405
+  // paths) never take a slot — they answer from the wire alone.
+  if (req.method === 'POST' && !limiter.tryAcquire()) {
+    debug?.(
+      `rejected: 429 server busy (${limiter.load} in-flight, cap ${limiter.max})`
+    );
+    writeJsonRpcErrorResponse(
+      res,
+      429,
+      {
+        jsonrpc: '2.0',
+        id: null,
+        error: {
+          code: TRANSPORT_LIMIT_ERROR_CODE,
+          message:
+            `Server busy: the MCP server already has ${limiter.max} requests in flight ` +
+            `(server max concurrent requests is ${limiter.max}). ` +
+            'Retry after a short delay (queue-less reject — gateways retry).',
+          data: {
+            maxConcurrentRequests: limiter.max,
+            inFlight: limiter.load,
+          },
+        },
+      },
+      { 'Retry-After': '1' }
+    );
+    return;
+  }
+
+  // Content-Length pre-check: reject an over-limit declared body BEFORE any
+  // byte is buffered. (Requests without Content-Length — chunked uploads —
+  // are covered by the accumulation cap inside readJsonBody.) A lying
+  // Content-Length smaller than the truth still gets caught mid-stream by
+  // that cap.
+  //
+  // From the slot acquisition to the response's last byte — including the
+  // Content-Length rejection, the body parse (success, invalid-JSON 400, AND
+  // the mid-stream 413 rethrow), every protocol-gate rejection, and the
+  // transport call — the slot is held; the single finally below releases it
+  // on every exit path. (The invalid-JSON return must release too: a
+  // malformed-JSON flood would otherwise hold slots forever, shrinking the
+  // effective cap to zero one bad request at a time.)
   try {
-    body = await readJsonBody(req);
-  } catch {
-    debug?.('rejected: invalid JSON body');
-    res.writeHead(400).end('Invalid JSON body');
-    return;
-  }
+    if (req.method === 'POST') {
+      const contentLengthHeader = getSingleHeaderValue(req, 'content-length');
+      if (contentLengthHeader !== undefined) {
+        const declared = Number(contentLengthHeader);
+        if (Number.isFinite(declared) && declared > maxBodySizeBytes) {
+          debug?.(
+            `rejected: 413 Content-Length ${declared} exceeds limit ${maxBodySizeBytes}`
+          );
+          writeJsonRpcErrorResponse(
+            res,
+            413,
+            {
+              jsonrpc: '2.0',
+              id: null,
+              error: {
+                code: TRANSPORT_LIMIT_ERROR_CODE,
+                message:
+                  `Payload Too Large: Content-Length ${contentLengthHeader} exceeds the ` +
+                  `configured limit of ${maxBodySizeBytes} bytes. Raise it with ` +
+                  `--max-body-size <bytes> or FRODO_MCP_MAX_BODY_SIZE.`,
+                data: {
+                  limitBytes: maxBodySizeBytes,
+                  receivedBytes: declared,
+                },
+              },
+            },
+            { Connection: 'close' }
+          );
+          res.on('finish', () => req.socket.destroy());
+          return;
+        }
+      }
+    }
 
-  // Empty JSON-RPC batch (SDK `classifyBatch` parity): the hand-wired
-  // transport would silently answer 202 for an array with no elements, so
-  // reject it here the way the SDK's own classifier does.
-  if (Array.isArray(body) && body.length === 0) {
-    debug?.('rejected: empty JSON-RPC batch');
-    const rejection = buildMetadataValidationError(
-      null,
-      INVALID_REQUEST_ERROR_CODE,
-      EMPTY_BATCH_ERROR_MESSAGE
-    );
-    writeJsonRpcErrorResponse(res, rejection.statusCode, {
-      jsonrpc: '2.0',
-      id: rejection.requestId,
-      error: {
-        code: rejection.error.code,
-        message: rejection.error.message,
-        data: rejection.error.data,
-      },
-    });
-    return;
-  }
+    // Parse body for POST
+    let body: unknown;
+    try {
+      body = await readJsonBody(req, maxBodySizeBytes);
+    } catch (err) {
+      // The over-limit rejection is rethrown for the caller's 413 path (it
+      // needs socket teardown this function should not own); anything else is
+      // the pre-existing 400.
+      if (err instanceof McpHttpBodyTooLargeError) {
+        throw err;
+      }
+      debug?.('rejected: invalid JSON body');
+      res.writeHead(400).end('Invalid JSON body');
+      return;
+    }
 
-  // Batch carrying a modern envelope claim on any element (SDK
-  // `classifyBatch` `batch-with-modern-element` parity): the per-request
-  // envelope mechanism has no batch semantics in the 2026 era, so the SDK
-  // rejects a batch containing ANY claimed element — presence-only check,
-  // the claim's validity (or era) is never consulted. The check precedes
-  // metadata validation on purpose: element-level classification never
-  // happens for a forwarded batch, so the claim would otherwise be silently
-  // ignored.
-  if (Array.isArray(body) && body.some(hasEnvelopeClaim)) {
-    debug?.('rejected: batch carries a per-request envelope claim');
-    const rejection = buildMetadataValidationError(
-      null,
-      INVALID_REQUEST_ERROR_CODE,
-      BATCH_WITH_MODERN_ELEMENT_ERROR_MESSAGE
-    );
-    writeJsonRpcErrorResponse(res, rejection.statusCode, {
-      jsonrpc: '2.0',
-      id: rejection.requestId,
-      error: {
-        code: rejection.error.code,
-        message: rejection.error.message,
-        data: rejection.error.data,
-      },
-    });
-    return;
-  }
-
-  // Enforce dual Accept header (MCP spec requirement)
-  const accept = (req.headers['accept'] ?? '').toLowerCase();
-  if (
-    !accept.includes('application/json') ||
-    !accept.includes('text/event-stream')
-  ) {
-    debug?.(`rejected: 406 Accept header ${req.headers.accept ?? '(none)'}`);
-    res
-      .writeHead(406)
-      .end(
-        'Not Acceptable: Client must accept both application/json and text/event-stream'
+    // Empty JSON-RPC batch (SDK `classifyBatch` parity): the hand-wired
+    // transport would silently answer 202 for an array with no elements, so
+    // reject it here the way the SDK's own classifier does.
+    if (Array.isArray(body) && body.length === 0) {
+      debug?.('rejected: empty JSON-RPC batch');
+      const rejection = buildMetadataValidationError(
+        null,
+        INVALID_REQUEST_ERROR_CODE,
+        EMPTY_BATCH_ERROR_MESSAGE
       );
-    return;
-  }
+      writeJsonRpcErrorResponse(res, rejection.statusCode, {
+        jsonrpc: '2.0',
+        id: rejection.requestId,
+        error: {
+          code: rejection.error.code,
+          message: rejection.error.message,
+          data: rejection.error.data,
+        },
+      });
+      return;
+    }
 
-  const metadataValidationError = validateHttpRequestMetadata(req, body);
-  if (metadataValidationError) {
+    // Batch carrying a modern envelope claim on any element (SDK
+    // `classifyBatch` `batch-with-modern-element` parity): the per-request
+    // envelope mechanism has no batch semantics in the 2026 era, so the SDK
+    // rejects a batch containing ANY claimed element — presence-only check,
+    // the claim's validity (or era) is never consulted. The check precedes
+    // metadata validation on purpose: element-level classification never
+    // happens for a forwarded batch, so the claim would otherwise be silently
+    // ignored.
+    if (Array.isArray(body) && body.some(hasEnvelopeClaim)) {
+      debug?.('rejected: batch carries a per-request envelope claim');
+      const rejection = buildMetadataValidationError(
+        null,
+        INVALID_REQUEST_ERROR_CODE,
+        BATCH_WITH_MODERN_ELEMENT_ERROR_MESSAGE
+      );
+      writeJsonRpcErrorResponse(res, rejection.statusCode, {
+        jsonrpc: '2.0',
+        id: rejection.requestId,
+        error: {
+          code: rejection.error.code,
+          message: rejection.error.message,
+          data: rejection.error.data,
+        },
+      });
+      return;
+    }
+
+    // Enforce dual Accept header (MCP spec requirement)
+    const accept = (req.headers['accept'] ?? '').toLowerCase();
+    if (
+      !accept.includes('application/json') ||
+      !accept.includes('text/event-stream')
+    ) {
+      debug?.(`rejected: 406 Accept header ${req.headers.accept ?? '(none)'}`);
+      res
+        .writeHead(406)
+        .end(
+          'Not Acceptable: Client must accept both application/json and text/event-stream'
+        );
+      return;
+    }
+
+    const metadataValidationError = validateHttpRequestMetadata(req, body);
+    if (metadataValidationError) {
+      debug?.(
+        `rejected: metadata gate ${metadataValidationError.error.code} (${metadataValidationError.error.message})`
+      );
+      writeJsonRpcErrorResponse(res, metadataValidationError.statusCode, {
+        jsonrpc: '2.0',
+        id: metadataValidationError.requestId,
+        error: {
+          code: metadataValidationError.error.code,
+          message: metadataValidationError.error.message,
+          data: metadataValidationError.error.data,
+        },
+      });
+      return;
+    }
+
+    const protocolVersionError = getUnsupportedProtocolVersionError(req, body);
+    if (protocolVersionError) {
+      const errorData = protocolVersionError.error.data as
+        { requested?: string } | undefined;
+      debug?.(
+        `rejected: unsupported protocol version ${errorData?.requested ?? '(unnamed)'}`
+      );
+      writeJsonRpcErrorResponse(res, protocolVersionError.statusCode, {
+        jsonrpc: '2.0',
+        id: protocolVersionError.requestId,
+        error: {
+          code: protocolVersionError.error.code,
+          message: protocolVersionError.error.message,
+          data: protocolVersionError.error.data,
+        },
+      });
+      return;
+    }
+
+    // All gates passed — the one acceptance line, with the body's JSON-RPC
+    // method (not the body itself; method names carry no secrets and make the
+    // accepted traffic pattern readable).
     debug?.(
-      `rejected: metadata gate ${metadataValidationError.error.code} (${metadataValidationError.error.message})`
+      `POST /mcp accepted from ${req.socket?.remoteAddress ?? 'unknown'}${extractBodyMethod(body) ? ` (${extractBodyMethod(body)})` : ''}`
     );
-    writeJsonRpcErrorResponse(res, metadataValidationError.statusCode, {
-      jsonrpc: '2.0',
-      id: metadataValidationError.requestId,
-      error: {
-        code: metadataValidationError.error.code,
-        message: metadataValidationError.error.message,
-        data: metadataValidationError.error.data,
-      },
-    });
-    return;
+    await transport.handleRequest(req, res, body);
+  } finally {
+    limiter.release();
   }
-
-  const protocolVersionError = getUnsupportedProtocolVersionError(req, body);
-  if (protocolVersionError) {
-    const errorData = protocolVersionError.error.data as
-      { requested?: string } | undefined;
-    debug?.(
-      `rejected: unsupported protocol version ${errorData?.requested ?? '(unnamed)'}`
-    );
-    writeJsonRpcErrorResponse(res, protocolVersionError.statusCode, {
-      jsonrpc: '2.0',
-      id: protocolVersionError.requestId,
-      error: {
-        code: protocolVersionError.error.code,
-        message: protocolVersionError.error.message,
-        data: protocolVersionError.error.data,
-      },
-    });
-    return;
-  }
-
-  // All gates passed — the one acceptance line, with the body's JSON-RPC
-  // method (not the body itself; method names carry no secrets and make the
-  // accepted traffic pattern readable).
-  debug?.(
-    `POST /mcp accepted from ${req.socket?.remoteAddress ?? 'unknown'}${extractBodyMethod(body) ? ` (${extractBodyMethod(body)})` : ''}`
-  );
-  await transport.handleRequest(req, res, body);
 }
 
 /**
- * Reads and parses the JSON body from an incoming HTTP request.
+ * Reads and parses the JSON body from an incoming HTTP request, refusing to
+ * buffer past `maxBytes`.
+ *
+ * The accumulation cap is what makes the read bounded: chunks past the limit
+ * stop being buffered immediately and the promise rejects mid-stream, so a
+ * Content-Length-less chunked upload cannot grow the buffer without bound
+ * either (the Content-Length pre-check in handleHttpRequest only covers
+ * requests that declare a length). The reported `receivedBytes` is the byte
+ * count actually observed up to and including the chunk that tripped the cap
+ * (never more — the stream is not read past that point — and only equal to
+ * the limit in the single-chunk-overshoot corner).
  */
-function readJsonBody(req: IncomingMessage): Promise<unknown> {
+function readJsonBody(
+  req: IncomingMessage,
+  maxBytes: number
+): Promise<unknown> {
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = [];
-    req.on('data', (chunk: Buffer) => chunks.push(chunk));
+    let totalBytes = 0;
+    let settled = false;
+    const rejectTooLarge = (receivedBytes: number): void => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      // Stop buffering; the remaining stream data is discarded (the caller
+      // destroys the socket after answering 413 — there is nothing useful
+      // left to read).
+      req.pause();
+      reject(
+        new McpHttpBodyTooLargeError(
+          `Request body exceeded the ${maxBytes}-byte limit`,
+          receivedBytes
+        )
+      );
+    };
+    req.on('data', (chunk: Buffer) => {
+      if (settled) {
+        return;
+      }
+      totalBytes += chunk.length;
+      if (totalBytes > maxBytes) {
+        // Report what was actually OBSERVED, not the cap: at this point
+        // totalBytes is the first total that crossed the limit (the chunk
+        // that tripped it included), which is honest and — for the common
+        // small-overshoot case — close to the body's true size. (The old
+        // behavior reported `maxBytes` here, which named the limit twice —
+        // once as `receivedBytes`, once as `limitBytes`.)
+        rejectTooLarge(totalBytes);
+        return;
+      }
+      chunks.push(chunk);
+    });
     req.on('end', () => {
+      if (settled) {
+        return;
+      }
+      settled = true;
       try {
         resolve(JSON.parse(Buffer.concat(chunks).toString('utf8')));
       } catch (err) {
         reject(err);
       }
     });
-    req.on('error', reject);
+    req.on('error', (err) => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      reject(err);
+    });
   });
 }
 
