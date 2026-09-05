@@ -47,6 +47,7 @@ Commands:
   restart                [Experimental] Restart the environment.
   secret-mappings        [Experimental] Import secret mappings.
   secrets                [Experimental] Import secrets.
+  telemetry              [Experimental] Import telemetry exporters.
   variables              [Experimental] Import variables.
 "
 `;
