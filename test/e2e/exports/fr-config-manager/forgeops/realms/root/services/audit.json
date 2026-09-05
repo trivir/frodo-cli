@@ -1,0 +1,12 @@
+{
+  "_id": "",
+  "_rev": "-1113197065",
+  "_type": {
+    "_id": "audit",
+    "collection": false,
+    "name": "Audit Logging"
+  },
+  "auditEnabled": true,
+  "blacklistFieldFilters": [],
+  "whitelistFieldFilters": []
+}

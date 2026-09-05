@@ -25,7 +25,10 @@ import RemoteServers from './config-manager-push-remote-servers';
 import Restart from './config-manager-push-restart';
 import Schedules from './config-manager-push-schedules';
 import SecretMappings from './config-manager-push-secret-mappings';
+import Secrets from './config-manager-push-secrets';
 import ServiceObjects from './config-manager-push-service-objects';
+import Services from './config-manager-push-services';
+import Telemetry from './config-manager-push-telemetry';
 import TermsAndConditions from './config-manager-push-terms-and-conditions';
 import Themes from './config-manager-push-themes';
 import UiConfig from './config-manager-push-ui-config';
@@ -53,6 +56,7 @@ export default function setup() {
   program.addCommand(Audit().name('audit'));
   program.addCommand(CookieDomains().name('cookie-domains'));
   program.addCommand(ServiceObjects().name('service-objects'));
+  program.addCommand(Telemetry().name('telemetry'));
   program.addCommand(UiConfig().name('ui-config'));
   program.addCommand(Authentication().name('authentication'));
   program.addCommand(ConnectorDefinitions().name('connector-definitions'));
@@ -66,6 +70,8 @@ export default function setup() {
   program.addCommand(Journeys().name('journeys'));
   program.addCommand(Variables().name('variables'));
   program.addCommand(Raw().name('raw'));
+  program.addCommand(Secrets().name('secrets'));
+  program.addCommand(Services().name('services'));
 
   return program;
 }

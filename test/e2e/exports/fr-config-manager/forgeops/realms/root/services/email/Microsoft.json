@@ -1,0 +1,13 @@
+{
+  "_id": "Microsoft",
+  "_type": {
+    "_id": "microsoftRestTransports",
+    "collection": true,
+    "name": "Microsoft Graph API"
+  },
+  "clientId": "clientId",
+  "emailEndpoint": "https://graph.microsoft.com/v1.0/users/<user_id>/sendMail",
+  "emailImplClassName": "org.forgerock.openam.services.email.rest.MicrosoftRestMailServer",
+  "scope": "https://graph.microsoft.com/.default",
+  "tokenEndpoint": "https://login.microsoftonline.com/<tennant_id>/oauth2/v2.0/token"
+}

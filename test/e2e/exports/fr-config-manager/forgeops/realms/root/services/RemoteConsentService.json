@@ -1,0 +1,12 @@
+{
+  "_id": "",
+  "_rev": "-1039295581",
+  "_type": {
+    "_id": "RemoteConsentService",
+    "collection": false,
+    "name": "Remote Consent Service"
+  },
+  "consentResponseTimeLimit": 2,
+  "jwkStoreCacheMissCacheTime": 1,
+  "jwkStoreCacheTimeout": 5
+}

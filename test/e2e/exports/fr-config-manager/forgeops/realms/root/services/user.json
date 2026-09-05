@@ -1,0 +1,13 @@
+{
+  "_id": "",
+  "_rev": "1838033871",
+  "_type": {
+    "_id": "user",
+    "collection": false,
+    "name": "User"
+  },
+  "dynamic": {
+    "defaultUserStatus": "Active",
+    "preferredTimezone": ""
+  }
+}
