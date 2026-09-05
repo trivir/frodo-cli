@@ -478,35 +478,45 @@ export function getRecordingEnv(profileName = 'default', mockConnection = undefi
  * @param {{env: Record<string, string>}} env The environment variables
  * @param {number | undefined} runningTimeout Optional timeout that, when specified, will expect a command to run for the specified amount of milliseconds before terminating early.
  *                                            This is used when we need to verify a command is running as intended, but we don't want to wait for it to fully finish.
+ * @param {string | undefined} stdin Optional standard input to provide to the command if applicable
  * @returns {Promise<void>}
  */
 export async function testSuccess(
   command,
   env,
-  runningTimeout
+  runningTimeout,
+  stdin
 ) {
   let stdout = '';
   let stderr = '';
-  const proc = runningTimeout ? cp.exec(command, env) : await exec(command, env);
-  if (runningTimeout) {
-    let finished = false;
+  const useProcess = runningTimeout || stdin;
+  const proc = useProcess  ? cp.exec(command, env) : await exec(command, env);
+  if (useProcess) {
     proc.stdout?.on('data', chunk => {
         stdout += chunk;
     });
     proc.stderr?.on('data', chunk => {
         stderr += chunk;
     });
-    proc.on('exit', () => {
-        finished = true;
-    });
-    // Wait for timeout
-    await new Promise(resolve => setTimeout(resolve, runningTimeout));
-    // Assert that command is still running
-    expect(finished).toBe(false);
-    // Kill running command
-    proc.kill();
-    proc.stdout?.destroy();
-    proc.stderr?.destroy();
+    if (stdin) {
+      proc.stdin?.write(stdin);
+      proc.stdin?.end();
+    }
+    if (runningTimeout) {
+      let finished = false;
+      proc.on('exit', () => {
+          finished = true;
+      });
+      // Wait for timeout
+      await new Promise(resolve => setTimeout(resolve, runningTimeout));
+      // Assert that command is still running
+      expect(finished).toBe(false);
+      // Kill running command
+      proc.kill();
+      proc.stdout?.destroy();
+      proc.stderr?.destroy();
+    }
+    // Wait for command to finish
     await new Promise(resolve => proc.once('close', resolve));
   } else {
     stdout = proc.stdout;

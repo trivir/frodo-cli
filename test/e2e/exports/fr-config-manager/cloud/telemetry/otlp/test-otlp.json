@@ -1,0 +1,14 @@
+{
+  "encoding": "JSON",
+  "endpoint": "https://example-siem.com:4317",
+  "headers": {
+    "api-key": "${TELEMETRY_HEADER_OTLP_TEST_OTLP_API_KEY}",
+    "api-secret": "${TELEMETRY_HEADER_OTLP_TEST_OTLP_API_SECRET}"
+  },
+  "id": "test-otlp",
+  "sources": [
+    "am-activity",
+    "idm-activity"
+  ],
+  "type": "HTTP"
+}

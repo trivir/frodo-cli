@@ -32728,6 +32728,25 @@
         }
       ]
     },
+    "telemetry": {
+      "otlp": [
+        {
+          "encoding": "JSON",
+          "endpoint": "https://example-siem.com:4317",
+          "headers": {
+            "api-key": "",
+            "api-secret": ""
+          },
+          "id": "test-otlp",
+          "sources": [
+            "am-activity",
+            "idm-activity"
+          ],
+          "type": "HTTP"
+        }
+      ],
+      "splunk": []
+    },
     "variable": {
       "esv-blue-piller": {
         "_id": "esv-blue-piller",
