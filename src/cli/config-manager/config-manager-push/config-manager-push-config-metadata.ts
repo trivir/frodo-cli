@@ -12,18 +12,18 @@ const deploymentTypes = [CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY
 
 export default function setup() {
   const program = new FrodoCommand(
-    'frodo config-manager push metadata',
+    'frodo config-manager push config-metadata',
     [],
     deploymentTypes
   );
 
   program
     .addOption(
-          new Option(
-            '-M, --metadata <metadata>',
-            'Configuration metadata; imports the specified object.'
-          )
+        new Option(
+          '-M, --metadata <metadata>',
+          'Configuration metadata; imports the specified object.'
         )
+      ).makeOptionManditory()
     .description('Import metadata.')
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(

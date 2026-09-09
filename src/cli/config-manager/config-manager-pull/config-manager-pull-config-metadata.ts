@@ -11,13 +11,13 @@ const deploymentTypes = [CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY
 
 export default function setup() {
   const program = new FrodoCommand(
-    'frodo config-manager pull metadata',
+    'frodo config-manager pull config-metadata',
     [],
     deploymentTypes
   );
 
   program
-    .description('Export metadata.')
+    .description('Show metadata.')
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -34,7 +34,7 @@ export default function setup() {
         deploymentTypes
       );
       if (!getTokensIsSuccessful) process.exit(1);
-      verboseMessage('Exporting metadata.');
+      verboseMessage('Showing metadata.');
       const outcome = await configManagerExportMetadata();
       if (!outcome) process.exitCode = 1;
     });

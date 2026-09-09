@@ -57,9 +57,19 @@ import { forgeops_connection as fc } from './utils/TestConfig';
 process.env['FRODO_MOCK'] = '1';
 const forgeopsEnv = getEnv(fc);
 
-describe('frodo config-manager push metadata', () => {
-    test(`"frodo config-manager push metadata -M '{ "_id": "custom/config.metadata", "lastPush": "2026-09-08T00:00:00Z", "pushedBy": "frodo-test-1", "version": "1.0.1" }' -m forgeops": should import config-metadata into forgeops"`, async () => {
-        const CMD = `frodo config-manager push metadata -M '{ "_id": "custom/config.metadata", "lastPush": "2026-09-08T00:00:00Z", "pushedBy": "frodo-test-1", "version": "1.0.1" }' -m forgeops `;
+const metadata = JSON.stringify({
+    _id: "custom/config.metadata",
+    pushedAt: "2023-09-10T10:21:46Z",
+    versionInfo: {
+        version: "1.0",
+        stable: true,
+        rev: "0675342640420f7ff6635d6a63d2c9c81b6feca7"
+    }
+});
+
+describe('frodo config-manager push config-metadata', () => {
+    test(`"frodo config-manager push config-metadata -M '${metadata}' -m forgeops": should import config-metadata into forgeops"`, async () => {
+        const CMD = `frodo config-manager push config-metadata -M '${metadata}' -m forgeops `;
         await testSuccess(CMD, forgeopsEnv);
     });
 });

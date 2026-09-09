@@ -1,10 +1,10 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
-import { printError } from '../utils/Console';
+import { printError, printMessage } from '../utils/Console';
 
 const { readConfigEntity, importConfigEntities } = frodo.idm.config;
-const { getFilePath, saveJsonToFile } = frodo.utils;
+
 
 /**
  * Export metadata configuration in fr-config-manager format.
@@ -13,7 +13,7 @@ const { getFilePath, saveJsonToFile } = frodo.utils;
 export async function configManagerExportMetadata(): Promise<boolean> {
   try {
     const exportData = await readConfigEntity('custom-config.metadata');
-    console.log(JSON.stringify(exportData, null, 2))
+    printMessage(exportData, 'data');
     return true;
   } catch (error) {
     printError(error, `Error exporting config-metadata`);
@@ -34,7 +34,7 @@ export async function configManagerImportMetadata(
     await importConfigEntities(importData);
     return true;
   } catch (error) {
-    printError(error);
+    printError(error, 'Error importing config-metadata.');
   }
   return false;
 }

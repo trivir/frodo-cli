@@ -5,6 +5,6 @@ const exec = promisify(cp.exec);
 const CMD = 'frodo config-manager push metadata --help';
 const { stdout } = await exec(CMD);
 
-test("CLI help interface for 'config-manager push metadata' should be expected english", async () => {
+test("CLI help interface for 'config-manager push config-metadata' should be expected english", async () => {
     expect(stdout).toMatchSnapshot();
 });
