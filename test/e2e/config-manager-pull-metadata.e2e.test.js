@@ -46,22 +46,22 @@
  *    the recordings must be committed to the frodo-lib project.
  */
 
-/*
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull metadata -D metaDataTest1
+/* 
+//forgeops
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager pull metadata -m forgeops
 */
 
-import { getEnv, testExport } from './utils/TestUtils';
-import { connection as c } from './utils/TestConfig';
+import { getEnv, testSuccess } from './utils/TestUtils';
+import { forgeops_connection as fc } from './utils/TestConfig';
 
 process.env['FRODO_MOCK'] = '1';
 process.env['FRODO_CONNECTION_PROFILES_PATH'] =
   './test/e2e/env/Connections.json';
-const env = getEnv(c);
+const env = getEnv(fc);
 
 describe('frodo config-manager pull metadata', () => {
-  test('"frodo config-manager pull metadata -D metaDataTest1": should export the config-metadata in fr-config-manager style"', async () => {
-    const dirName = 'metaDataTest1';
-    const CMD = `frodo config-manager pull metadata -D ${dirName}`;
-    await testExport(CMD, env, undefined, undefined, dirName, false);
+  test('"frodo config-manager pull metadata -m forgeops ": should export the config-metadata in fr-config-manager style"', async () => {
+    const CMD = `frodo config-manager pull metadata -m forgeops`;
+    await testSuccess(CMD, env);
   });
 });

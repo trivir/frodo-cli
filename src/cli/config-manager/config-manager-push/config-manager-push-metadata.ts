@@ -4,10 +4,11 @@ import { configManagerImportMetadata } from '../../../configManagerOps/FrConfigM
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
+import { Option } from 'commander';
 
-const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
+const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
-const deploymentTypes = [CLOUD_DEPLOYMENT_TYPE_KEY];
+const deploymentTypes = [CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY];
 
 export default function setup() {
   const program = new FrodoCommand(
@@ -17,6 +18,12 @@ export default function setup() {
   );
 
   program
+    .addOption(
+          new Option(
+            '-M, --metadata <metadata>',
+            'Configuration metadata; imports the specified object.'
+          )
+        )
     .description('Import metadata.')
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
@@ -35,7 +42,7 @@ export default function setup() {
       );
       if (!getTokensIsSuccessful) process.exit(1);
       verboseMessage('Importing metadata.');
-      const outcome = await configManagerImportMetadata();
+      const outcome = await configManagerImportMetadata(options.metadata);
       if (!outcome) process.exitCode = 1;
     });
 

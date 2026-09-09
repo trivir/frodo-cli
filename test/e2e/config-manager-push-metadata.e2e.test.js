@@ -47,21 +47,19 @@
  */
 
 /*
-// Cloud
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager push metadata -D test/e2e/exports/fr-config-manager/cloud/
+// Forgeops
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push metadata -M '{ "_id": "custom/config.metadata", "lastPush": "2026-09-08T00:00:00Z", "pushedBy": "frodo-test-1", "version": "1.0.1" }' -m forgeops
 */
 
 import { getEnv, testSuccess } from './utils/TestUtils';
-import { connection as c } from './utils/TestConfig';
+import { forgeops_connection as fc } from './utils/TestConfig';
 
 process.env['FRODO_MOCK'] = '1';
-const forgeopsEnv = getEnv(c);
-
-const allDirectory = "test/e2e/exports/fr-config-manager/cloud/";
+const forgeopsEnv = getEnv(fc);
 
 describe('frodo config-manager push metadata', () => {
-    test(`"frodo config-manager push metadata -D ${allDirectory}": should import config-metadata into cloud"`, async () => {
-        const CMD = `frodo config-manager push metadata -D ${allDirectory} `;
+    test(`"frodo config-manager push metadata -M '{ "_id": "custom/config.metadata", "lastPush": "2026-09-08T00:00:00Z", "pushedBy": "frodo-test-1", "version": "1.0.1" }' -m forgeops": should import config-metadata into forgeops"`, async () => {
+        const CMD = `frodo config-manager push metadata -M '{ "_id": "custom/config.metadata", "lastPush": "2026-09-08T00:00:00Z", "pushedBy": "frodo-test-1", "version": "1.0.1" }' -m forgeops `;
         await testSuccess(CMD, forgeopsEnv);
     });
 });
