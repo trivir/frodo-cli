@@ -1,29 +1,63 @@
 import { frodo } from '@rockcarver/frodo-lib';
+import { InvalidArgumentError, Option } from 'commander';
 
 import { configManagerImportMetadata } from '../../../configManagerOps/FrConfigMetadataOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { verboseMessage } from '../../../utils/Console';
-import { FrodoCommand } from '../../FrodoCommand';
-import { Option } from 'commander';
+import { FrodoCommand, ObjectOption } from '../../FrodoCommand';
 
-const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
+const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
+  frodo.utils.constants;
 
-const deploymentTypes = [CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY];
+const deploymentTypes = [
+  CLOUD_DEPLOYMENT_TYPE_KEY,
+  FORGEOPS_DEPLOYMENT_TYPE_KEY,
+];
 
-export default function setup() {
+export default function setup(argv: string[] = process.argv.slice(2)) {
   const program = new FrodoCommand(
     'frodo config-manager push config-metadata',
     [],
     deploymentTypes
   );
 
+  const metadataOption = new ObjectOption(
+    '--metadata <metadata>',
+    'Configuration metadata fields using dot notation.'
+  )
+    .argParser(() => {
+      throw new InvalidArgumentError(
+        'Use dot notation, for example --metadata.versionInfo.version 1.0'
+      );
+    })
+    .makeOptionMandatory();
+
+  program.addOption(metadataOption);
+  const registeredFlags = new Set<string>();
+
+  for (const argument of argv) {
+    if (argument === '---') break;
+    const flag = argument.split('=', 1)[0];
+    if (!metadataOption.matches(flag) || registeredFlags.has(flag)) {
+      continue;
+    }
+    registeredFlags.add(flag);
+
+    program.addOption(
+      new Option(`${flag} <value>`).hideHelp().argParser((value: string) => {
+        const metadata = program.getOptionValue('metadata') ?? {};
+
+        try {
+          metadataOption.setValue(metadata, flag, value);
+        } catch (error) {
+          throw new InvalidArgumentError((error as Error).message);
+        }
+        program.setOptionValueWithSource('metadata', metadata, 'cli');
+        return value;
+      })
+    );
+  }
   program
-    .addOption(
-        new Option(
-          '-M, --metadata <metadata>',
-          'Configuration metadata; imports the specified object.'
-        )
-      ).makeOptionManditory()
     .description('Import metadata.')
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(

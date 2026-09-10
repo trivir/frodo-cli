@@ -48,7 +48,7 @@
 
 /*
 // Forgeops
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push metadata -M '{ "_id": "custom/config.metadata", "lastPush": "2026-09-08T00:00:00Z", "pushedBy": "frodo-test-1", "version": "1.0.1" }' -m forgeops
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push config-metadata --metadata.pushedAt 2023-09-10T10:21:46Z --metadata.versionInfo.version 1.0 --metadata.versionInfo.stable true --metadata.versionInfo.rev 0675342640420f7ff6635d6a63d2c9c81b6feca7 -m forgeops
 */
 
 import { getEnv, testSuccess } from './utils/TestUtils';
@@ -57,19 +57,16 @@ import { forgeops_connection as fc } from './utils/TestConfig';
 process.env['FRODO_MOCK'] = '1';
 const forgeopsEnv = getEnv(fc);
 
-const metadata = JSON.stringify({
-    _id: "custom/config.metadata",
-    pushedAt: "2023-09-10T10:21:46Z",
-    versionInfo: {
-        version: "1.0",
-        stable: true,
-        rev: "0675342640420f7ff6635d6a63d2c9c81b6feca7"
-    }
-});
+const metadataArgs = [
+  '--metadata.pushedAt 2023-09-10T10:21:46Z',
+  '--metadata.versionInfo.version 1.0',
+  '--metadata.versionInfo.stable true',
+  '--metadata.versionInfo.rev 0675342640420f7ff6635d6a63d2c9c81b6feca7',
+].join(' ');
 
 describe('frodo config-manager push config-metadata', () => {
-    test(`"frodo config-manager push config-metadata -M '${metadata}' -m forgeops": should import config-metadata into forgeops"`, async () => {
-        const CMD = `frodo config-manager push config-metadata -M '${metadata}' -m forgeops `;
+    test(`"frodo config-manager push config-metadata ${metadataArgs} -m forgeops": should import config-metadata into forgeops"`, async () => {
+        const CMD = `frodo config-manager push config-metadata ${metadataArgs} -m forgeops `;
         await testSuccess(CMD, forgeopsEnv);
     });
 });

@@ -496,6 +496,51 @@ export class ListOption extends Option {
   }
 }
 
+export class ObjectOption extends Option {
+  matches(argument: string): boolean {
+    return [this.long, this.short].some(
+      (flag) => flag && argument.startsWith(`${flag}.`)
+    );
+  }
+  setValue(
+    target: Record<string, unknown>,
+    argument: string,
+    value: string
+  ): Record<string, unknown> {
+    const keys = argument.slice(argument.indexOf('.') + 1).split('.');
+
+    if (
+      !this.matches(argument) ||
+      keys.some(
+        (key) => !key || ['__proto__', 'constructor', 'prototype'].includes(key)
+      )
+    ) {
+      throw new Error(`Invalid object option: ${argument}`);
+    }
+
+    let current = target;
+
+    for (const key of keys.slice(0, -1)) {
+      const existing = current[key];
+
+      if (
+        typeof existing !== 'object' ||
+        existing === null ||
+        Array.isArray(existing)
+      ) {
+        current[key] = {};
+      }
+
+      current = current[key] as Record<string, unknown>;
+    }
+
+    current[keys[keys.length - 1]] =
+      value === 'true' ? true : value === 'false' ? false : value;
+
+    return target;
+  }
+}
+
 export const hostArgument = new Argument(
   '[host]',
   'AM base URL, e.g.: https://cdk.iam.example.com/am. To use a connection profile, just specify a unique substring or alias.'
@@ -611,7 +656,7 @@ const forceLoginAsUserOption = withOptionStability(
   withHelpGroup(
     new Option(
       '--force-login-as-user',
-      "Force a plain username/password login even if the resolved connection profile also has a service account or Amster credential configured. Deprecated: use --credential user instead."
+      'Force a plain username/password login even if the resolved connection profile also has a service account or Amster credential configured. Deprecated: use --credential user instead.'
     ),
     AUTHENTICATION_OPTIONS_HEADING,
     OptionCategory.Authentication
