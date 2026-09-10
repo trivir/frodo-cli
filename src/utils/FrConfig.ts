@@ -62,3 +62,11 @@ export function clearOperationalAttributes(obj) {
   delete obj.lastModifiedBy;
   delete obj.lastModifiedDate;
 }
+
+/**
+ * Sleeps for a specified length of time
+ * @param {number} ms number milliseconds to sleep
+ */
+export function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
