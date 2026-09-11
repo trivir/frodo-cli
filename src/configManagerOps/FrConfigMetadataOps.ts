@@ -1,7 +1,12 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { ConfigEntityExportInterface } from '@rockcarver/frodo-lib/types/ops/IdmConfigOps';
 
-import { printError, printMessage } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  printMessage,
+  stopProgressIndicator,
+} from '../utils/Console';
 
 const { readConfigEntity, importConfigEntities } = frodo.idm.config;
 
@@ -30,6 +35,11 @@ export async function configManagerExportMetadata(): Promise<boolean> {
 export async function configManagerImportMetadata(
   metadata: object
 ): Promise<boolean> {
+  const indicatorId = createProgressIndicator(
+    'indeterminate',
+    0,
+    'Importing raw config...'
+  );
   try {
     const importData: ConfigEntityExportInterface = {
       idm: {
@@ -40,8 +50,18 @@ export async function configManagerImportMetadata(
       },
     };
     await importConfigEntities(importData);
+    stopProgressIndicator(
+      indicatorId,
+      'Metadata config import completed.',
+      'success'
+    );
     return true;
   } catch (error) {
+    stopProgressIndicator(
+      indicatorId,
+      'Metadata config import failed.',
+      'fail'
+    );
     printError(error, 'Error importing config-metadata.');
   }
   return false;

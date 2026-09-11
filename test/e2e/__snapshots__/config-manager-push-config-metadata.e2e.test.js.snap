@@ -6,3 +6,10 @@ exports[`frodo config-manager push config-metadata "frodo config-manager push co
 "Experimental feature in use: 'frodo config-manager push config-metadata'. This feature may change without notice.
 "
 `;
+
+exports[`frodo config-manager push config-metadata "frodo config-manager push config-metadata -M.two 2 -M.true true -M.true2 -M.true3 -M.true3 three -M.obj.one 1 -M.obj.two -M.obj2.obj3.msg hello -m forgeops": should correctly parse dot-notation options (string values, boolean defaults, duplicate-path arrays, and nested objects) and import config-metadata into forgeops" 1`] = `""`;
+
+exports[`frodo config-manager push config-metadata "frodo config-manager push config-metadata -M.two 2 -M.true true -M.true2 -M.true3 -M.true3 three -M.obj.one 1 -M.obj.two -M.obj2.obj3.msg hello -m forgeops": should correctly parse dot-notation options (string values, boolean defaults, duplicate-path arrays, and nested objects) and import config-metadata into forgeops" 2`] = `
+"Experimental feature in use: 'frodo config-manager push config-metadata'. This feature may change without notice.
+"
+`;
