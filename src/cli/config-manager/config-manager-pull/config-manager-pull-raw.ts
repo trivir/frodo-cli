@@ -29,6 +29,24 @@ export default function setup() {
         'The file path of the service object config file. '
       )
     )
+    .addOption(
+      new Option(
+        '-o, --stdout',
+        'Write exported configuration to standard output.'
+      )
+    )
+    .addOption(
+      new Option(
+        '-x, --push-api-version',
+        'Will include any push API versions. '
+      )
+    )
+    .addOption(
+      new Option(
+        '-p, --path <path>',
+        'Tenant API path to export. Will override --config-file.'
+      )
+    )
     .addHelpText(
       'after',
       'HELP MESSAGE:\n' +
@@ -62,7 +80,10 @@ export default function setup() {
 
       if (await getTokens(false, true, deploymentTypes)) {
         const outcome: boolean = await configManagerExportRaw(
-          options.configFile
+          options.configFile,
+          options.stdout,
+          options.pushApiVersion,
+          options.path
         );
 
         if (!outcome) {
