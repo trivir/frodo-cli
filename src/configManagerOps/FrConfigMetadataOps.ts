@@ -1,10 +1,11 @@
 import { frodo } from '@rockcarver/frodo-lib';
-import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 import { ConfigEntityExportInterface } from '@rockcarver/frodo-lib/types/ops/IdmConfigOps';
 
 import { printError, printMessage } from '../utils/Console';
 
 const { readConfigEntity, importConfigEntities } = frodo.idm.config;
+
+const METADATA_ID = 'custom-config.metadata';
 
 /**
  * Export metadata configuration in fr-config-manager format.
@@ -12,7 +13,7 @@ const { readConfigEntity, importConfigEntities } = frodo.idm.config;
  */
 export async function configManagerExportMetadata(): Promise<boolean> {
   try {
-    const exportData = await readConfigEntity('custom-config.metadata');
+    const exportData = await readConfigEntity(METADATA_ID);
     printMessage(JSON.stringify(exportData, null, 2), 'data');
     return true;
   } catch (error) {
@@ -23,15 +24,20 @@ export async function configManagerExportMetadata(): Promise<boolean> {
 
 /**
  * Import metadata configuration in fr-config-manager format.
- * @param {IdObjectSkeletonInterface} metadata a JSON string containing the metadata object to import
+ * @param {object} metadata an object containing the metadata to import
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function configManagerImportMetadata(
-  metadata: IdObjectSkeletonInterface
+  metadata: object
 ): Promise<boolean> {
   try {
     const importData: ConfigEntityExportInterface = {
-      idm: { 'custom-config.metadata': metadata },
+      idm: {
+        [METADATA_ID]: {
+          _id: METADATA_ID,
+          ...metadata,
+        },
+      },
     };
     await importConfigEntities(importData);
     return true;
