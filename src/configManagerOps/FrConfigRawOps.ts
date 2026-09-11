@@ -6,10 +6,12 @@ import { readFile } from 'fs/promises';
 import {
   createProgressIndicator,
   printError,
+  printMessage,
   stopProgressIndicator,
   verboseMessage,
 } from '../utils/Console';
 import { clearOperationalAttributes } from '../utils/FrConfig';
+import { Protocol } from '@modelcontextprotocol/server';
 
 const { getFilePath, saveJsonToFile, readJsonFile, getWorkingDirectory } =
   frodo.utils;
@@ -17,22 +19,59 @@ const { exportRawConfig, importRawConfig } = frodo.rawConfig;
 
 /**
  * Export every item from the list in the provided json file
+ * @param {string} file the config file to pull from
+ * @param {boolean} stdout if true will display stdout in cli
+ * @param {string} apiVersion  will pull config including the api version
+ * @param {string} path the api path to pull config
  * @returns True if each file was successfully exported
  */
-export async function configManagerExportRaw(file: string): Promise<boolean> {
+export async function configManagerExportRaw(
+  file: string,
+  stdout = false,
+  apiVersion?: { protocol?: string; resouce?: string },
+  path?: string
+): Promise<boolean> {
   try {
-    const jsonData = JSON.parse(await readFile(file, { encoding: 'utf8' }));
+    let rawConfig;
+
+    if (path) {
+      rawConfig = [
+        { path, 
+          ...(apiVersion ? { pushApiVersion: apiVersion} : {})
+        },
+      ];
+    } else if (file) {
+      rawConfig = JSON.parse(await readFile(file, { encoding: 'utf8' }));
+    } else {
+      printMessage(
+        'Specify --path or --config-file to export raw configuration.',
+        'error'
+      );
+      return false;
+    }
 
     // Create export json file for every item in the provided json file
-    for (const config of jsonData) {
+    for (const config of rawConfig) {
+      config.path = config.path.startsWith('/')
+        ? config.path
+        : `/${config.path}`;
+
       const response: IdObjectSkeletonInterface = await exportRawConfig(config);
-      verboseMessage(`Saving ${response._id} at ${config.path}.json.`);
-      saveJsonToFile(
-        response,
-        getFilePath(`raw/${config.path}.json`, true),
-        false,
-        true
-      );
+
+      if (config.pushApiVersion) {
+        response._pushApiVersion = config.pushApiVersion;
+      }
+      if (stdout) {
+        printMessage(response, 'data');
+      } else {
+        verboseMessage(`Saving ${response._id} at ${config.path}.json.`);
+        saveJsonToFile(
+          response,
+          getFilePath(`raw/${config.path}.json`, true),
+          false,
+          true
+        );
+      }
     }
 
     return true;
@@ -60,7 +99,9 @@ export async function configManagerImportRaw(
   try {
     if (stdin) {
       const data = readJsonFile(process.stdin.fd) as IdObjectSkeletonInterface;
+      const apiVersion = data._pushApiVersion 
       clearOperationalAttributes(data);
+      data._pushApiVersion = apiVersion
       await importRawConfig({ path }, data);
       stopProgressIndicator(
         indicatorId,
@@ -82,8 +123,9 @@ export async function configManagerImportRaw(
       }
 
       const data = readJsonFile(filePath) as IdObjectSkeletonInterface;
-
+      const apiVersion = data._pushApiVersion 
       clearOperationalAttributes(data);
+      data._pushApiVersion  = apiVersion
       await importRawConfig({ path: rawPath }, data);
     }
     stopProgressIndicator(
