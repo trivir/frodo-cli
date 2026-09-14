@@ -1,70 +1,49 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
+import { ApiVersion } from '@rockcarver/frodo-lib/types/api/RawConfigApi';
+import { RawExportOptions } from '@rockcarver/frodo-lib/types/ops/RawConfigOps';
 import fs from 'fs';
-import { readFile } from 'fs/promises';
 
 import {
   createProgressIndicator,
   printError,
   printMessage,
   stopProgressIndicator,
-  verboseMessage,
 } from '../utils/Console';
 import { clearOperationalAttributes } from '../utils/FrConfig';
-import { Protocol } from '@modelcontextprotocol/server';
 
 const { getFilePath, saveJsonToFile, readJsonFile, getWorkingDirectory } =
   frodo.utils;
 const { exportRawConfig, importRawConfig } = frodo.rawConfig;
 
 /**
- * Export every item from the list in the provided json file
- * @param {string} file the config file to pull from
+ * Export raw configuration
+ * @param {string} apiVersion will pull config including the API version
+ * @param {string} path the optional API path to pull config
+ * @param {string} file the optional config file to pull from
  * @param {boolean} stdout if true will display stdout in cli
- * @param {string} apiVersion  will pull config including the api version
- * @param {string} path the api path to pull config
- * @returns True if each file was successfully exported
+ * @returns {boolean} True if each file was successfully exported, false otherwise
  */
 export async function configManagerExportRaw(
-  file: string,
-  stdout = false,
-  apiVersion?: { protocol?: string; resouce?: string },
-  path?: string
+  apiVersion: ApiVersion,
+  path?: string,
+  file?: string,
+  stdout = false
 ): Promise<boolean> {
   try {
-    let rawConfig;
-
-    if (path) {
-      rawConfig = [
-        { path, 
-          ...(apiVersion ? { pushApiVersion: apiVersion} : {})
-        },
-      ];
-    } else if (file) {
-      rawConfig = JSON.parse(await readFile(file, { encoding: 'utf8' }));
-    } else {
-      printMessage(
-        'Specify --path or --config-file to export raw configuration.',
-        'error'
-      );
-      return false;
-    }
-
-    // Create export json file for every item in the provided json file
+    const rawConfig = path
+      ? [{ path, pushApiVersion: apiVersion }]
+      : (readJsonFile(file, false) as RawExportOptions[]);
     for (const config of rawConfig) {
       config.path = config.path.startsWith('/')
-        ? config.path
-        : `/${config.path}`;
+        ? config.path.substring(1)
+        : config.path;
 
       const response: IdObjectSkeletonInterface = await exportRawConfig(config);
 
-      if (config.pushApiVersion) {
-        response._pushApiVersion = config.pushApiVersion;
-      }
       if (stdout) {
         printMessage(response, 'data');
       } else {
-        verboseMessage(`Saving ${response._id} at ${config.path}.json.`);
         saveJsonToFile(
           response,
           getFilePath(`raw/${config.path}.json`, true),
@@ -73,7 +52,6 @@ export async function configManagerExportRaw(
         );
       }
     }
-
     return true;
   } catch (error) {
     printError(error);
@@ -99,9 +77,9 @@ export async function configManagerImportRaw(
   try {
     if (stdin) {
       const data = readJsonFile(process.stdin.fd) as IdObjectSkeletonInterface;
-      const apiVersion = data._pushApiVersion 
+      const apiVersion = data._pushApiVersion;
       clearOperationalAttributes(data);
-      data._pushApiVersion = apiVersion
+      data._pushApiVersion = apiVersion;
       await importRawConfig({ path }, data);
       stopProgressIndicator(
         indicatorId,
@@ -123,9 +101,9 @@ export async function configManagerImportRaw(
       }
 
       const data = readJsonFile(filePath) as IdObjectSkeletonInterface;
-      const apiVersion = data._pushApiVersion 
+      const apiVersion = data._pushApiVersion;
       clearOperationalAttributes(data);
-      data._pushApiVersion  = apiVersion
+      data._pushApiVersion = apiVersion;
       await importRawConfig({ path: rawPath }, data);
     }
     stopProgressIndicator(
