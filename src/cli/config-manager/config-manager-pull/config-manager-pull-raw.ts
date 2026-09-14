@@ -1,31 +1,18 @@
-import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 import { configManagerExportRaw } from '../../../configManagerOps/FrConfigRawOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
-import { printMessage } from '../../../utils/Console';
+import { printMessage, verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
-const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
-  frodo.utils.constants;
-
-const deploymentTypes = [
-  CLOUD_DEPLOYMENT_TYPE_KEY,
-  FORGEOPS_DEPLOYMENT_TYPE_KEY,
-];
-
 export default function setup() {
-  const program = new FrodoCommand(
-    'frodo config-manager pull raw',
-    [],
-    deploymentTypes
-  );
+  const program = new FrodoCommand('frodo config-manager pull raw');
 
   program
-    .description('Export raw configurations from the tenant.')
+    .description('Export raw configurations.')
     .addOption(
       new Option(
         '-f, --config-file <file>',
-        'The file path of the service object config file. '
+        'The file path of the raw config export file. '
       )
     )
     .addOption(
@@ -52,7 +39,7 @@ export default function setup() {
         'Make sure to create an export config file: raw.json to run this command.\n' +
         'Example command: frodo config-manager pull raw -f raw.json -D ../testDir frodo-dev\n\n' +
         `Config file example:\n` +
-        '------------  Example Oauth2 agents export config for oauth2-agents.json file -----------\n' +
+        '------------  Example raw export config file raw.json -----------\n' +
         '[\n' +
         '  { "path": "/openidm/config/authentication" },\n' +
         '  {\n' +
@@ -77,7 +64,7 @@ export default function setup() {
         command
       );
 
-      if (await getTokens(false, true, deploymentTypes)) {
+      if (await getTokens(false, true)) {
         const outcome: boolean = await configManagerExportRaw(
           options.configFile,
           options.stdout,
@@ -94,8 +81,36 @@ export default function setup() {
       } else {
         // getTokens() failed (any option combination is valid here).
         process.exitCode = 1;
+      if (!options.path && !options.configFile) {
+        printMessage(
+          'Specify --path or --config-file to export raw configuration.',
+          'error'
+        );
+        process.exit(1);
       }
-    });
+
+      if (
+        !options.pushApiVersion.protocol ||
+        !options.pushApiVersion.resource
+      ) {
+        printMessage(
+          '--push-api-version requires resource and protocol versions.',
+          'error'
+        );
+        process.exit(1);
+      }
+
+      const getTokensIsSuccessful = await getTokens();
+      if (!getTokensIsSuccessful) process.exit(1);
+      verboseMessage('Exporting raw configuration.');
+      const outcome = await configManagerExportRaw(
+        options.pushApiVersion,
+        options.path,
+        options.configFile,
+        options.stdout
+      );
+      if (!outcome) process.exitCode = 1;
+    }});
 
   return program;
 }
