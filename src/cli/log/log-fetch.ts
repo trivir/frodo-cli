@@ -9,7 +9,11 @@ import { FrodoCommand } from '../FrodoCommand';
 import { sourcesOptionM } from './log';
 
 const { resolveLevel } = frodo.cloud.log;
-const { getConnectionProfile, saveConnectionProfile } = frodo.conn;
+const {
+  getConnectionProfile,
+  getApiKeyProfileByHost,
+  saveConnectionProfile,
+} = frodo.conn;
 
 const SECONDS_IN_30_DAYS = 2592000;
 const SECONDS_IN_1_HOUR = 3600;
@@ -81,7 +85,12 @@ export default function setup() {
 
       let foundCredentials = false;
 
-      const conn = await getConnectionProfile();
+      let conn = null;
+      try {
+        conn = await getConnectionProfile();
+      } catch {
+        // ignore — may still resolve apiKeys independently
+      }
       if (conn) state.setHost(conn.tenant);
 
       // log api creds have been supplied as username and password arguments
@@ -91,39 +100,61 @@ export default function setup() {
         state.setLogApiSecret(state.getPassword());
         foundCredentials = true;
       }
-      // log api creds from connection profile
-      else if (conn && conn.logApiKey != null && conn.logApiSecret != null) {
-        verboseMessage(`Using log api credentials from connection profile.`);
-        state.setLogApiKey(conn.logApiKey);
-        state.setLogApiSecret(conn.logApiSecret);
-        foundCredentials = true;
-      }
-      // log api creds have been supplied via env variables
-      else if (state.getLogApiKey() && state.getLogApiSecret()) {
-        verboseMessage(`Using log api credentials from environment variables.`);
-        foundCredentials = true;
-      }
-      // no log api creds but got username and password, so can try to create them
-      else if (conn && conn.username && conn.password) {
-        printMessage(
-          `Found admin credentials in connection profile, attempting to create log api credentials...`
-        );
-        state.setUsername(conn.username);
-        state.setPassword(conn.password);
-        if (await getTokens(true, true, deploymentTypes)) {
-          const creds = await provisionCreds();
-          state.setLogApiKey(creds.api_key_id as string);
-          state.setLogApiSecret(creds.api_key_secret as string);
-          try {
-            await saveConnectionProfile(state.getName(), state.getHost());
-          } catch (error) {
-            printError(error);
+      // log api creds from apiKeys bucket
+      else {
+        let apiKeyProfile = null;
+        try {
+          apiKeyProfile = await getApiKeyProfileByHost(
+            state.getHost() || conn?.tenant
+          );
+        } catch {
+          if (conn?.tenant && conn.tenant !== state.getHost()) {
+            try {
+              apiKeyProfile = await getApiKeyProfileByHost(conn.tenant);
+            } catch {
+              // no matching api key
+            }
           }
+        }
+        if (
+          apiKeyProfile &&
+          apiKeyProfile.logApiKey != null &&
+          apiKeyProfile.logApiSecret != null
+        ) {
+          verboseMessage(`Using log api credentials from connection profile.`);
+          state.setLogApiKey(apiKeyProfile.logApiKey);
+          state.setLogApiSecret(apiKeyProfile.logApiSecret);
           foundCredentials = true;
         }
-        // unable to create credentials
-        else {
-          printMessage(`Unable to create log api credentials.`);
+        // log api creds have been supplied via env variables
+        else if (state.getLogApiKey() && state.getLogApiSecret()) {
+          verboseMessage(
+            `Using log api credentials from environment variables.`
+          );
+          foundCredentials = true;
+        }
+        // no log api creds but got username and password, so can try to create them
+        else if (conn && conn.username && conn.password) {
+          printMessage(
+            `Found admin credentials in connection profile, attempting to create log api credentials...`
+          );
+          state.setUsername(conn.username);
+          state.setPassword(conn.password);
+          if (await getTokens(true, true, deploymentTypes)) {
+            const creds = await provisionCreds();
+            state.setLogApiKey(creds.api_key_id as string);
+            state.setLogApiSecret(creds.api_key_secret as string);
+            try {
+              await saveConnectionProfile(state.getName(), state.getHost());
+            } catch (error) {
+              printError(error);
+            }
+            foundCredentials = true;
+          }
+          // unable to create credentials
+          else {
+            printMessage(`Unable to create log api credentials.`);
+          }
         }
       }
 

@@ -13,7 +13,11 @@ import {
 } from '../utils/Console';
 
 const { validateServiceAccount } = frodo.cloud.serviceAccount;
-const { getConnectionProfilesPath, getConnectionProfileByHost } = frodo.conn;
+const {
+  getConnectionProfilesPath,
+  getConnectionProfileByHost,
+  getApiKeyProfileByHost,
+} = frodo.conn;
 
 /**
  * List connection profiles
@@ -25,13 +29,16 @@ export function listConnectionProfiles(long: boolean = false): void {
   try {
     const data = fs.readFileSync(filename, 'utf8');
     const connectionsData = JSON.parse(data);
-    const connections = connectionsData.connections || {};
-    const connectionNames = Object.keys(connections);
-    if (connectionNames.length < 1) {
+    const logins = connectionsData.logins || {};
+    const apiKeys = connectionsData.apiKeys || {};
+    const loginNames = Object.keys(logins);
+    const apiKeyNames = Object.keys(apiKeys);
+    if (loginNames.length < 1 && apiKeyNames.length < 1) {
       printMessage(`No connection profiles in ${filename}`, 'info');
     } else {
       if (long) {
         const table = createTable([
+          'Type',
           'Name',
           'Host',
           'Service Account',
@@ -39,22 +46,36 @@ export function listConnectionProfiles(long: boolean = false): void {
           'Log API Key',
           'Authentication Service',
         ]);
-        connectionNames.forEach((c) => {
+        loginNames.forEach((c) => {
           table.push([
+            'login',
             c,
-            connections[c].tenant,
-            connections[c].svcacctName || connections[c].svcacctId,
-            connections[c].username,
-            connections[c].logApiKey,
-            connections[c].authenticationService,
+            logins[c].tenant,
+            logins[c].svcacctName || logins[c].svcacctId,
+            logins[c].username,
+            '',
+            logins[c].authenticationService,
+          ]);
+        });
+        apiKeyNames.forEach((c) => {
+          table.push([
+            'apiKey',
+            c,
+            apiKeys[c].tenant,
+            '',
+            '',
+            apiKeys[c].logApiKey,
+            '',
           ]);
         });
         printMessage(table.toString(), 'data');
       } else {
-        connectionNames.forEach((c) => {
+        loginNames.forEach((c) => {
           printMessage(`${c}`, 'data');
         });
-        // getUniqueNames(5, Object.keys(connectionsData));
+        apiKeyNames.forEach((c) => {
+          printMessage(`apiKey: ${c}`, 'data');
+        });
       }
       printMessage(
         'Any connection profile name can be used as the value for host parameter in all commands',
@@ -80,6 +101,18 @@ export async function describeConnectionProfile(
   const profile = await getConnectionProfileByHost(host);
   if (profile) {
     debugMessage(profile);
+    // attach matching api key credentials when present for this tenant
+    try {
+      const apiKeyProfile = await getApiKeyProfileByHost(
+        profile.tenant || host
+      );
+      if (apiKeyProfile?.logApiKey) {
+        profile.logApiKey = apiKeyProfile.logApiKey;
+        profile.logApiSecret = apiKeyProfile.logApiSecret;
+      }
+    } catch {
+      // no matching api key profile
+    }
     const present = '[present]';
     const jwk = profile.svcacctJwk;
     const privateKey = profile.amsterPrivateKey;

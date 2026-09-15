@@ -53,8 +53,8 @@ classic:  "openid"'
     )
     .addOption(
       new Option(
-        '--alias [name]',
-        'Alias name for the saved connection profile. Ignored without --save. Lets later commands address this session by an alias.'
+        '--name <name>',
+        'Name for the saved connection profile. Ignored without --save. Defaults to the host URL when omitted.'
       )
     )
     .addOption(
@@ -82,10 +82,10 @@ classic:  "openid"'
         c.command(
           `  $ frodo login --device --save --type cloud ${s.amBaseUrl}\n`
         ) +
-        `  Login to two different hosts under different aliases, so later commands can address each one by its alias:\n` +
+        `  Login to two different hosts under different profile names, so later commands can address each one by name:\n` +
         c.command(
-          `  $ frodo login --browser --save --alias simulation --login-client-id ${s.loginClientId} --type forgeops ${s.amBaseUrl}\n` +
-            `  $ frodo login --browser --save --alias reality --login-client-id ${s.loginClientId} --type forgeops ${s.amBaseUrl2}\n`
+          `  $ frodo login --browser --save --name simulation --login-client-id ${s.loginClientId} --type forgeops ${s.amBaseUrl}\n` +
+            `  $ frodo login --browser --save --name reality --login-client-id ${s.loginClientId} --type forgeops ${s.amBaseUrl2}\n`
         )
     )
     .action(async (host, user, password, options, command) => {
@@ -117,9 +117,6 @@ classic:  "openid"'
 
       if (options.save) {
         try {
-          if (options.alias) {
-            state.setAlias(options.alias);
-          }
           // Set only after this invocation's own login already completed
           // above (via its normal priority order, or --credential if also
           // passed) — this preference is purely for future invocations, so
@@ -128,8 +125,12 @@ classic:  "openid"'
           if (options.defaultCredential) {
             state.setDefaultCredential(options.defaultCredential);
           }
-          await saveConnectionProfile(host);
-          printMessage(`Saved connection profile ${state.getHost()}`);
+          const profileHost = state.getHost();
+          const profileName = options.name || profileHost;
+          await saveConnectionProfile(profileName, profileHost);
+          printMessage(
+            `Saved connection profile '${profileName}' (${profileHost})`
+          );
         } catch (error) {
           printMessage(
             `Error saving connection profile: ${error.message}`,
