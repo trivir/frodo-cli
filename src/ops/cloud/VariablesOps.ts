@@ -21,6 +21,7 @@ import {
   stopProgressIndicator,
   succeedSpinner,
   updateProgressIndicator,
+  warnSpinner,
 } from '../../utils/Console';
 import wordwrap from '../utils/Wordwrap';
 
@@ -610,8 +611,14 @@ export async function importVariableFromFile(
   try {
     const data = fs.readFileSync(getFilePath(file), 'utf8');
     const importData = JSON.parse(data);
-    await importVariable(variableId, importData);
-    succeedSpinner(`Imported ${variableId ? variableId : 'first variable'}.`);
+    const variable = await importVariable(variableId, importData);
+    if (variable) {
+      succeedSpinner(`Imported ${variableId ? variableId : 'first variable'}.`);
+    } else {
+      warnSpinner(
+        `Did not import ${variableId ? variableId : 'first variable'} since no changes were made.`
+      );
+    }
     debugMessage(`cli.VariablesOps.importVariableFromFile: end`);
     return true;
   } catch (error) {
@@ -635,8 +642,10 @@ export async function importVariablesFromFile(file: string): Promise<boolean> {
   try {
     const data = fs.readFileSync(filePath, 'utf8');
     const fileData = JSON.parse(data);
-    await importVariables(fileData);
-    succeedSpinner(`Imported ${filePath}.`);
+    const variables = await importVariables(fileData);
+    (variables.length ? succeedSpinner : warnSpinner)(
+      `Imported ${variables.length} variable(s) from ${filePath}.`
+    );
     debugMessage(`cli.VariablesOps.importVariablesFromFile: end`);
     return true;
   } catch (error) {
@@ -669,12 +678,11 @@ export async function importVariablesFromFiles(): Promise<boolean> {
       try {
         const data = fs.readFileSync(file, 'utf8');
         const fileData: VariablesExportInterface = JSON.parse(data);
-        const count = Object.keys(fileData.variable).length;
-        total += count;
-        await importVariables(fileData);
+        const variables = await importVariables(fileData);
+        total += variables.length;
         updateProgressIndicator(
           indicatorId,
-          `Imported ${count} variables from ${file}`
+          `Imported ${variables.length} variables from ${file}`
         );
       } catch (error) {
         errors.push(error);
@@ -685,12 +693,13 @@ export async function importVariablesFromFiles(): Promise<boolean> {
     }
     stopProgressIndicator(
       indicatorId,
-      `Finished importing ${total} variables from ${files.length} files.`
+      `Finished importing ${total} variables from ${files.length} files.`,
+      total ? 'success' : 'warn'
     );
     debugMessage(`cli.VariablesOps.importVariablesFromFiles: end`);
     return true;
   } catch (error) {
-    stopProgressIndicator(indicatorId, `Error importing variables`);
+    stopProgressIndicator(indicatorId, `Error importing variables`, 'fail');
     printError(error);
   }
   return false;

@@ -694,6 +694,15 @@ const envFileOption = withHelpGroup(
   OptionCategory.Runtime
 );
 
+const forceUpdateOption = withHelpGroup(
+  new Option(
+    '-F, --force-update',
+    'When used, will force imports/updates to occur even if there are no changes made (note this will speed up imports as comparison reads will no longer occur). Supported commands: authz, esv, script, config for configurations of previous commands, and the config-manager equivalents of previous commands.'
+  ).default(false),
+  RUNTIME_OPTIONS_HEADING,
+  OptionCategory.Runtime
+);
+
 const insecureOption = withHelpGroup(
   new Option(
     '-k, --insecure',
@@ -827,6 +836,7 @@ const defaultOpts = [
   useRealmPrefixOnManagedObjects,
   envOption,
   envFileOption,
+  forceUpdateOption,
 ];
 
 /**
@@ -953,6 +963,8 @@ const stateMap = {
       );
     }
   },
+  [forceUpdateOption.attributeName()]: (forceUpdate: boolean) =>
+    state.setForceUpdate(forceUpdate),
 };
 
 /**

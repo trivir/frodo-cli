@@ -21,6 +21,7 @@ import {
   stopProgressIndicator,
   succeedSpinner,
   updateProgressIndicator,
+  warnSpinner,
 } from '../../utils/Console';
 import wordwrap from '../utils/Wordwrap';
 
@@ -633,8 +634,19 @@ export async function importSecretFromFile(
   try {
     const data = fs.readFileSync(getFilePath(file), 'utf8');
     const fileData = JSON.parse(data);
-    await importSecret(secretId, fileData, includeActiveValue, source);
-    succeedSpinner(`Imported ${secretId ? secretId : 'first secret'}.`);
+    const secret = await importSecret(
+      secretId,
+      fileData,
+      includeActiveValue,
+      source
+    );
+    if (secret) {
+      succeedSpinner(`Imported ${secretId ? secretId : 'first secret'}.`);
+    } else {
+      warnSpinner(
+        `Did not import ${secretId ? secretId : 'first secret'} since no changes were made.`
+      );
+    }
     debugMessage(`cli.SecretsOps.importSecretFromFile: end`);
     return true;
   } catch (error) {
@@ -662,8 +674,10 @@ export async function importSecretsFromFile(
   try {
     const data = fs.readFileSync(filePath, 'utf8');
     const fileData = JSON.parse(data);
-    await importSecrets(fileData, includeActiveValues, source);
-    succeedSpinner(`Imported ${filePath}.`);
+    const secrets = await importSecrets(fileData, includeActiveValues, source);
+    (secrets.length ? succeedSpinner : warnSpinner)(
+      `Imported ${secrets.length} secrets from ${filePath}.`
+    );
     debugMessage(`cli.SecretsOps.importSecretsFromFile: end`);
     return true;
   } catch (error) {
@@ -701,12 +715,15 @@ export async function importSecretsFromFiles(
       try {
         const data = fs.readFileSync(file, 'utf8');
         const fileData = JSON.parse(data);
-        const count = Object.keys(fileData.secret).length;
-        total += count;
-        await importSecrets(fileData, includeActiveValues, source);
+        const secrets = await importSecrets(
+          fileData,
+          includeActiveValues,
+          source
+        );
+        total += secrets.length;
         updateProgressIndicator(
           indicatorId,
-          `Imported ${count} secrets from ${file}`
+          `Imported ${secrets.length} secrets from ${file}`
         );
       } catch (error) {
         errors.push(error);
@@ -717,12 +734,13 @@ export async function importSecretsFromFiles(
     }
     stopProgressIndicator(
       indicatorId,
-      `Finished importing ${total} secrets from ${files.length} files.`
+      `Finished importing ${total} secrets from ${files.length} files.`,
+      total ? 'success' : 'warn'
     );
     debugMessage(`cli.SecretsOps.importSecretsFromFiles: end`);
     return true;
   } catch (error) {
-    stopProgressIndicator(indicatorId, `Error importing secrets`);
+    stopProgressIndicator(indicatorId, `Error importing secrets`, 'fail');
     printError(error);
   }
   return false;
