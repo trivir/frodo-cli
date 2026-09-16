@@ -47,31 +47,24 @@
  */
 
 /*
-// Cloud
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull oauth2-agents -D configManagerExportOauth2AgentsDir0 -f test/e2e/fr-config-manager-pull-config/oauth2-agents.json
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull oauth2-agents --directory configManagerExportOauth2AgentsDir2 -f test/e2e/fr-config-manager-pull-config/oauth2-agents.json
+// ForgeOps
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push oauth2-agents -D test/e2e/exports/fr-config-manager/forgeops -m forgeops
 
 */
 
-import { getEnv, testExport } from './utils/TestUtils';
-import { connection as c } from './utils/TestConfig';
+
+import { getEnv, testSuccess } from './utils/TestUtils';
+import { forgeops_connection as fc } from './utils/TestConfig';
+
 
 process.env['FRODO_MOCK'] = '1';
-process.env['FRODO_CONNECTION_PROFILES_PATH'] =
-    './test/e2e/env/Connections.json';
-const env = getEnv(c);
-const configFile = 'test/e2e/fr-config-manager-pull-config/oauth2-agents.json';
+const forgeopsEnv = getEnv(fc);
 
+const allDirectory = "test/e2e/exports/fr-config-manager/forgeops";
 
-describe('frodo config-manager pull oauth2-agents', () => {
-    test(`"frodo config-manager pull oauth2-agents -D configManagerExportOauth2AgentsDir0 -f ${configFile}": should export all agents from all realms in fr-config manager style.`, async () => {
-        const dirName = 'configManagerExportOauth2AgentsDir0';
-        const CMD = `frodo config-manager pull oauth2-agents -D ${dirName} -f ${configFile}`;
-        await testExport(CMD, env, undefined, undefined, dirName, false);
-    });
-    test(`"frodo config-manager pull oauth2-agents --directory configManagerExportOauth2AgentsDir1 -f ${configFile}": should export all agents from all realms in fr-config manager style.`, async () => {
-        const dirName = 'configManagerExportOauth2AgentsDir1';
-        const CMD = `frodo config-manager pull oauth2-agents --directory ${dirName} -f ${configFile}`;
-        await testExport(CMD, env, undefined, undefined, dirName, false);
+describe('frodo config-manager push oauth2-agents', () => {
+    test(`"frodo config-manager push oauth2-agents -D ${allDirectory} -m forgeops": should import all oauth2-agents into forgeops"`, async () => {
+        const CMD = `frodo config-manager push oauth2-agents -D ${allDirectory} -m forgeops`;
+        await testSuccess(CMD, forgeopsEnv);
     });
 });

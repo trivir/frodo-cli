@@ -57,12 +57,8 @@ import {
 } from './utils/ThemeConfig';
 import { getVersions } from './utils/Version';
 
-import dotenv from "dotenv";
-
 const { initConnectionProfiles } = frodo.conn;
 const { initTokenCache } = frodo.cache;
-
-dotenv.config({ quiet: true, override: true });
 
 // Temporary mitigation: silence runtime deprecation warnings from transitive deps.
 process.noDeprecation = true;
