@@ -1,126 +1,21 @@
 import { frodo, state } from '@rockcarver/frodo-lib';
-import { AgentSkeleton } from '@rockcarver/frodo-lib/types/api/AgentApi';
-import { readFile } from 'fs/promises';
-import fs from 'fs'
-import path from 'path'
-import dotenv from 'dotenv'
+import { AgentType } from '@rockcarver/frodo-lib/types/api/AgentApi';
+import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
+import fs from 'fs';
+import path from 'path';
 
 import { printError, verboseMessage } from '../utils/Console';
+import {
+  clearOperationalAttributes,
+  escapePlaceholders,
+} from '../utils/FrConfig';
 
-
-const { getFilePath, saveJsonToFile, escapePlaceholders, readJsonFile } = frodo.utils;
-const { readRealms } = frodo.realm;
-const { readAgents, readAgent, importAgent } = frodo.agent;
-
-type idAndOverrids = { id: string; overrides: object };
-
-/**
- * Used to check that the agent name given by the -n/--agent-name is actually in the provided file.
- * Only runs if -f/--file flag and -n/--agent-name flags are used.
- * Also returns any overrides to be added to the exported file
- * difference between this and getAgents() is that this stops prematurely when the agentId is found
- * Runs in O^3 time haha
- * @param jsonObject Usually comes straight from JSON.parse(raw text from file)
- * @param agentId Agent id/name to check for in the provided json object
- * @returns True if the id/name exists in the file, extra overrides values to add to the
- * end, or null if the id/name is not specified in the config file
- */
-function getOverrides(jsonObject, agentId: string): unknown {
-  for (const realm of Object.values(jsonObject)) {
-    for (const agentType of Object.values(realm)) {
-      for (const agent of Object.values(agentType)) {
-        const jo = agent as object;
-        if ('id' in jo && jo.id === agentId) {
-          if ('overrides' in jo) {
-            return jo.overrides as object;
-          }
-          return true;
-        }
-      }
-    }
-  }
-  return null;
-}
-
-/**
- * Gets all agent ids and overrides objects from provided config file json object in the specified realm
- * @param jsonObject Usually output of JSON.parse(raw text file)
- * @returns List of agent ids and overrides objects
- */
-function getAgents(jsonObject, realmName: string): idAndOverrids[] {
-  const agents: idAndOverrids[] = [];
-  for (const [realm, realmData] of Object.entries(jsonObject)) {
-    if (realm !== realmName) {
-      continue;
-    }
-    for (const agentType of Object.values(realmData)) {
-      for (const agent of Object.values(agentType)) {
-        const jo = agent as object;
-        if ('id' in jo) {
-          agents.push({
-            id: jo.id as string,
-            overrides: 'overrides' in jo ? (jo.overrides as object) : null,
-          });
-        }
-      }
-    }
-  }
-  return agents;
-}
-
-/**
- * Export agent using its name/id in fr-config manager format
- * @param agentName Name/id of agent to be exported
- * @returns True if export was successful
- */
-export async function configManagerExportAgent(
-  agentName: string,
-  configFile: string = null,
-  overrides = null
-): Promise<boolean> {
-  try {
-    // global option isn't availble for deployment type cloud so set to false
-    const a: AgentSkeleton = await readAgent(agentName, false);
-
-    // make sure agentName is in the config file if one is passed
-    if (configFile) {
-      verboseMessage(`  Reading the config file "${configFile}"`);
-      const configFileData = JSON.parse(
-        await readFile(configFile, { encoding: 'utf8' })
-      );
-      overrides = getOverrides(configFileData, agentName);
-      if (!overrides) {
-        throw new Error(
-          `The agent "${agentName}" of type "${a._type._id}" is not defined for the ${state.getRealm()} realm in the config file "${configFile}".`
-        );
-      }
-      verboseMessage(
-        `    The agent "${agentName}" was found in the ${state.getRealm()} realm block of the config file, moving forward.`
-      );
-    }
-    verboseMessage(`  Exporting ${a._id} agent`);
-
-    const escaped = escapePlaceholders(a);
-    saveJsonToFile(
-      overrides ? { ...escaped, ...overrides } : escaped,
-      getFilePath(
-        `realms/${state.getRealm()}/realm-config/agents/${a._type._id}/${a._id}.json`,
-        true
-      ),
-      false,
-      true
-    );
-
-    return true;
-  } catch (error) {
-    printError(error);
-    return false;
-  }
-}
+const { getFilePath, saveJsonToFile, getWorkingDirectory, readJsonFile } =
+  frodo.utils;
+const { readAgentByTypeAndId, importAgent } = frodo.agent;
 
 /**
  * Export all agents based on values in provided config file.
- * Has to be supported, this is what fr-config-pull oauth2-agents does
  * @param configFile The path to the file
  * @returns True if all specified agents were exported successfully
  */
@@ -130,23 +25,25 @@ export async function configManagerExportConfigAgents(
   try {
     verboseMessage(`Reading the config file "${configFile}"`);
     const configFileData = JSON.parse(
-      await readFile(configFile, { encoding: 'utf8' })
+      fs.readFileSync(configFile, { encoding: 'utf8' })
     );
     for (const realm of Object.keys(configFileData)) {
       state.setRealm(realm);
-      const agents: idAndOverrids[] = getAgents(configFileData, realm);
-      if (agents.length !== 0) {
-        for (const agent of agents) {
-          if (
-            !(await configManagerExportAgent(agent.id, null, agent.overrides))
-          ) {
-            return false;
-          }
+      for (const agentType of Object.keys(configFileData[realm])) {
+        for (const agent of configFileData[realm][agentType]) {
+          const targetDir = `realms/${state.getRealm()}/realm-config/agents/${agentType}`;
+          const agentResponse = await readAgentByTypeAndId(
+            agentType as AgentType,
+            agent.id
+          );
+          const config = escapePlaceholders(agentResponse);
+          const mergedConfig = { ...config, ...agent.overrides };
+          saveJsonToFile(
+            mergedConfig,
+            getFilePath(`${targetDir}/${agent.id}.json`, true),
+            false
+          );
         }
-      } else {
-        verboseMessage(
-          `\nNo agents defined for the ${realm} realm in the config file.`
-        );
       }
     }
     return true;
@@ -157,92 +54,42 @@ export async function configManagerExportConfigAgents(
 }
 
 /**
- * Export all agents in the current realm in fr-config manager format
- * @returns True if export waws successful
+ * Import all agent configurations.
+ * @returns {Promise<boolean>} True if all specified agents were exported successfully
  */
-export async function configManagerExportAgentsRealm(): Promise<boolean> {
+export async function configManagerImportAgents(): Promise<boolean> {
   try {
-    // global option isn't availble for deployment type cloud so set to false.
-    // Can't use any of the agent skeletons from readAgents() to make json.
-    // for some reason, all the agent skeletons in the allAgents list are missing data.
-    // have to pass only the agent id to readAgent(id/agentName), SINGULAR, which returns a skeleton with all the needed data
-    const allAgents: AgentSkeleton[] = await readAgents(false);
-    if (allAgents.length !== 0) {
-      verboseMessage(`\n${state.getRealm()} realm:`);
-      for (const a of allAgents) {
-        if (!(await configManagerExportAgent(a._id))) {
-          return false;
-        }
-      }
-    } else {
-      verboseMessage(
-        `  There are no agents in the realm "${state.getRealm()}"`
-      );
-    }
-  } catch (error) {
-    printError(error);
-    return false;
-  }
-  return true;
-}
+    const realmsDir = `${getWorkingDirectory()}/realms`;
+    const realms: string[] = fs
+      .readdirSync(realmsDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name);
 
-/**
- * Export all Agents from all realms
- * @returns True if export was successful
- */
-export async function configManagerExportAgentsAll(): Promise<boolean> {
-  try {
-    for (const realm of await readRealms()) {
-      // set realm of state because readAgents() uses state to check realm
-      state.setRealm(realm.name);
-      if (!(await configManagerExportAgentsRealm())) {
-        return false;
-      }
-    }
-    return true;
-  } catch (error) {
-    printError(error);
-    return false;
-  }
-}
-
-export async function configManagerImportAgents(
-  agentName?: string,
-  overrideValue?:string
-): Promise<boolean> {
-  try {
-
-    const envPath = getFilePath('.env')
-    const envFileValues = fs.existsSync(envPath)
-      ? dotenv.parse(fs.readFileSync(envPath))
-      : {};
-
-    for (const realm of fs.readdirSync(getFilePath('realms'))) {
+    for (const realmDir of realms) {
+      const realm = realmDir === 'root' ? '/' : realmDir;
 
       state.setRealm(realm);
-      const agentDir = getFilePath(`realms/${realm}/realm-config/agents`);
-      
+      const agentDir = getFilePath(`realms/${realmDir}/realm-config/agents`);
+
       if (!fs.existsSync(agentDir)) continue;
-      
-      for (const agentType of fs.readdirSync(agentDir)) {
+
+      const agentTypes = fs.readdirSync(agentDir);
+
+      for (const agentType of agentTypes) {
         const agentTypeDir = path.join(agentDir, agentType);
-        
+
         for (const file of fs
           .readdirSync(agentTypeDir)
           .filter((f) => path.extname(f) === '.json')) {
-        
-          if (agentName && path.basename(file, '.json') !== agentName) continue;
-        
-          const agent = readJsonFile(path.join(agentTypeDir, file), {
-            overrideValue,
-            envFileValues,
-          });
-        
-          delete agent._rev;
-        
-          verboseMessage(`  Importing ${agent._id} agent`);
-        
-          await importAgent(agent._id, { agent: { [agent._id]: agent } }, false);
+          const agent = readJsonFile(
+            path.join(agentTypeDir, file)
+          ) as IdObjectSkeletonInterface;
+          const agentId = agent._id;
+          clearOperationalAttributes(agent);
+
+          verboseMessage(`Importing ${agent._id} agent`);
+
+          await importAgent(agentId, { agent: { [agentId]: agent } }, false);
         }
       }
     }
