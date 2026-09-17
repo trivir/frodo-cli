@@ -64,7 +64,7 @@ process.env['FRODO_CONNECTION_PROFILES_PATH'] =
 const env = getEnv(c);
 const forgeopsEnv = getEnv(fc);
 
-describe('frodo config-manager pulls', () => {
+describe('frodo config-manager pull all', () => {
    test('"frodo config-manager pull all -F test/e2e/fr-config-manager-pull-config -D allDir1": should export all config in alpha realm in fr-config-manager style"', async () => {
      const dirName = 'allDir1';
      const CMD = `frodo config-manager pull all -F test/e2e/fr-config-manager-pull-config -D ${dirName}`;
