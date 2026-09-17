@@ -5,14 +5,16 @@ import fs from 'fs';
 import path from 'path';
 
 import { printError, verboseMessage } from '../utils/Console';
-import {
-  clearOperationalAttributes,
-  escapePlaceholders,
-} from '../utils/FrConfig';
+import { clearOperationalAttributes } from '../utils/FrConfig';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
-const { getFilePath, saveJsonToFile, getWorkingDirectory, readJsonFile } =
-  frodo.utils;
+const {
+  getFilePath,
+  saveJsonToFile,
+  getWorkingDirectory,
+  readJsonFile,
+  escapePlaceholders,
+} = frodo.utils;
 const { mergeDeep } = frodo.utils.json;
 const { readAgentByTypeAndId, importAgent } = frodo.agent;
 

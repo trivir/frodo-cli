@@ -14,7 +14,7 @@ export default function setup() {
       new Option(
         '-f, --file <file>',
         'The OAUTH2_AGENTS_CONFIG json file. ex: "/home/trivir/Documents/oauth2-agents.json", or "oauth2-agents.json"'
-      )
+      ).makeOptionMandatory()
     )
     .addHelpText(
       'after',
