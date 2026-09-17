@@ -10,8 +10,10 @@ import {
   escapePlaceholders,
 } from '../utils/FrConfig';
 
+const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 const { getFilePath, saveJsonToFile, getWorkingDirectory, readJsonFile } =
   frodo.utils;
+const { mergeDeep } = frodo.utils.json;
 const { readAgentByTypeAndId, importAgent } = frodo.agent;
 
 /**
@@ -19,36 +21,42 @@ const { readAgentByTypeAndId, importAgent } = frodo.agent;
  * @param configFile The path to the file
  * @returns True if all specified agents were exported successfully
  */
-export async function configManagerExportConfigAgents(
+export async function configManagerExportOAuth2Agents(
   configFile: string
 ): Promise<boolean> {
   try {
-    verboseMessage(`Reading the config file "${configFile}"`);
-    const configFileData = JSON.parse(
-      fs.readFileSync(configFile, { encoding: 'utf8' })
-    );
+    const configFileData = readJsonFile(configFile, false);
     for (const realm of Object.keys(configFileData)) {
+      if (
+        realm === '/' &&
+        state.getDeploymentType() === CLOUD_DEPLOYMENT_TYPE_KEY
+      )
+        continue;
       state.setRealm(realm);
       for (const agentType of Object.keys(configFileData[realm])) {
         for (const agent of configFileData[realm][agentType]) {
-          const targetDir = `realms/${state.getRealm()}/realm-config/agents/${agentType}`;
           const agentResponse = await readAgentByTypeAndId(
             agentType as AgentType,
             agent.id
           );
-          const config = escapePlaceholders(agentResponse);
-          const mergedConfig = { ...config, ...agent.overrides };
+          let config = escapePlaceholders(agentResponse);
+          if (agent.overrides) config = mergeDeep(config, agent.overrides);
           saveJsonToFile(
-            mergedConfig,
-            getFilePath(`${targetDir}/${agent.id}.json`, true),
-            false
+            config,
+            getFilePath(
+              `realms/${realm === '/' ? 'root' : realm}/realm-config/agents/${agentType}/${agent.id}.json`,
+              true
+            ),
+            false,
+            true,
+            true
           );
         }
       }
     }
     return true;
   } catch (error) {
-    printError(error);
+    printError(error, 'Error exporting OAuth2 agents');
     return false;
   }
 }
