@@ -1,24 +1,12 @@
-import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
-import { configManagerExportConfigAgents } from '../../../configManagerOps/FrConfigOauth2AgentOps';
+import { configManagerExportOAuth2Agents } from '../../../configManagerOps/FrConfigOauth2AgentOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
-import { printMessage } from '../../../utils/Console';
+import { verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
-const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
-  frodo.utils.constants;
-
-const deploymentTypes = [
-  CLOUD_DEPLOYMENT_TYPE_KEY,
-  FORGEOPS_DEPLOYMENT_TYPE_KEY,
-];
-
 export default function setup() {
-  const program = new FrodoCommand(
-    'frodo config-manager pull oauth2-agents',
-    deploymentTypes
-  );
+  const program = new FrodoCommand('frodo config-manager pull oauth2-agents');
 
   program
     .description('Export OAuth2 Agents')
@@ -36,31 +24,58 @@ export default function setup() {
         `Config file example:\n` +
         '------------  Example Oauth2 agents export config for oauth2-agents.json file -----------\n' +
         '{\n' +
-        ' "alpha": {\n' +
-        '   "2.2_Agent": [\n' +
-        '     {"id": "my-policy-agent"}\n' +
-        '    ],\n' +
-        '   "RemoteConsentAgent": [\n' +
-        '     {"id": "test", "overrides":{"testestest": "hotdog"}}\n' +
-        '   ],\n' +
-        '   "SoftwarePublisher": [\n' +
-        '     {"id": "test software publisher"}\n' +
-        '   ],\n' +
+        '  "/": {},\n' +
+        '  "alpha": {\n' +
         '    "IdentityGatewayAgent": [\n' +
-        '     {"id": "cdsso-ig-agent"},\n' +
-        '     {"id": "frodo-test-ig-agent"},\n' +
-        '     {"id": "frodo-test-ig-agent2"},\n' +
-        '     {"id": "ig-agent", "overrides": {"yes": "no, not yes", "taco":"sandwich"}}\n' +
-        '   ],\n' +
-        '   "J2EEAgent": [\n' +
-        '     {"id": "frodo-test-java-agent"},\n' +
-        '     {"id": "frodo-test-java-agent2"}\n' +
-        '   ],\n' +
-        '   "WebAgent": [\n' +
-        '     {"id": "frodo-test-web-agent"},\n' +
-        '      {"id": "frodo-test-web-agent2"}\n' +
-        '   ]\n' +
-        ' }\n' +
+        '      {\n' +
+        '        "id": "my-ig-agent",\n' +
+        '        "overrides": {\n' +
+        '          "userpassword": "\\${IG_AGENT_PASSWORD}"\n' +
+        '        }\n' +
+        '      }\n' +
+        '    ],\n' +
+        '    "OAuth2Client": [\n' +
+        '      {\n' +
+        '        "id": "my-policy-client",\n' +
+        '        "overrides": {\n' +
+        '          "userpassword": "\\${MY_CLIENT_SECRET}"\n' +
+        '        }\n' +
+        '      }\n' +
+        '    ],\n' +
+        '    "RemoteConsentAgent": [\n' +
+        '      {\n' +
+        '        "id": "my-rcs"\n' +
+        '      }\n' +
+        '    ],\n' +
+        '    "SoftwarePublisher": [\n' +
+        '      {\n' +
+        '        "id": "My Publisher",\n' +
+        '        "overrides": {\n' +
+        '          "jwksUri": {\n' +
+        '            "inherited": false,\n' +
+        '            "value": "\\${MY_PUBLISHER_JWKS_URI}"\n' +
+        '          }\n' +
+        '        }\n' +
+        '      }\n' +
+        '    ],\n' +
+        '    "J2EEAgent": [\n' +
+        '      {\n' +
+        '        "id": "my-java-agent",\n' +
+        '        "overrides": {\n' +
+        '          "userpassword": "\\${MY_JAVA_AGENT_PASSWORD}"\n' +
+        '        }\n' +
+        '      }\n' +
+        '    ],\n' +
+        '    "WebAgent": [\n' +
+        '      {\n' +
+        '        "id": "my-web-agent",\n' +
+        '        "overrides": {\n' +
+        '          "userpassword": "\\${MY_WEB_AGENT_PASSWORD}"\n' +
+        '        }\n' +
+        '      }\n' +
+        '    ]\n' +
+        '  },\n' +
+        '  "bravo": {}\n' +
         '}\n' +
         '* -------------------------------------------------------------------------------------------- \n'
     )
@@ -74,23 +89,11 @@ export default function setup() {
         command
       );
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        printMessage(
-          `Exporting all the agents defined in the provided config file.`
-        );
-        const outcome = await configManagerExportConfigAgents(options.file);
-        if (!outcome) process.exit(1);
-      }
-
-      // unrecognized combination of options or no options
-      else {
-        printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
-        );
-        program.help();
-        process.exitCode = 1;
-      }
+      const getTokensIsSuccessful = await getTokens();
+      if (!getTokensIsSuccessful) process.exit(1);
+      verboseMessage('Exporting OAuth2 agents.');
+      const outcome = await configManagerExportOAuth2Agents(options.file);
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;
