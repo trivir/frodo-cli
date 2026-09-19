@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CLI help interface for 'config-manager push config-metadata' should be expected english 1`] = `
+"Usage: frodo config-manager push [options] [command]
+
+[Experimental] Import configuration optimized for CI/CD pipelines (format
+compatible with fr-config-manager).
+
+Options:
+  -h, --help             Help
+  -hh, --help-more       Help with all options.
+  -hhh, --help-all       Help with all options, environment variables, and usage
+                         examples.
+
+Commands:
+  access-config          [Experimental] Import access configuration.
+  audit                  [Experimental] Import audit configuration.
+  authentication         [Experimental] Import authentication objects.
+  authz-policies         [Experimental] Import authorization policies.
+  config-metadata        [Experimental] Import metadata.
+  connector-definitions  [Experimental] Import connector definitions.
+  connector-mappings     [Experimental] Import connector mappings.
+  cookie-domains         [Experimental] Import cookie domains.
+  cors                   [Experimental] Import CORS configuration.
+  custom-nodes           [Experimental] Import custom nodes.
+  email-provider         [Experimental] Import email provider configuration.
+  email-templates        [Experimental] Import email template objects.
+  endpoints              [Experimental] Import custom endpoints objects.
+  help                   display help for command
+  idm-authentication     [Experimental] Import idm authentication.
+  internal-roles         [Experimental] Import internal roles.
+  journeys               [Experimental] Import journeys.
+  kba                    [Experimental] Import kba configuration.
+  locales                [Experimental] Import custom locales objects.
+  managed-objects        [Experimental] Import managed objects.
+  org-privileges         [Experimental] Import organization privileges config.
+  password-policy        [Experimental] Import password-policy objects.
+  raw                    [Experimental] Import raw configurations.
+  remote-servers         [Experimental] Import RCS config.
+  saml                   [Experimental] Import saml configuration.
+  schedules              [Experimental] Import schedules.
+  scripts                [Experimental] Import scripts.
+  service-objects        [Experimental] Import service objects.
+  services               [Experimental] Import AM authentication services.
+  terms-and-conditions   [Experimental] Import terms and conditions.
+  test                   [Experimental] Test connection and authentication.
+  themes                 [Experimental] Import themes.
+  ui-config              [Experimental] Import UI configuration.
+
+  (Cloud-only):
+  csp                    [Experimental] Import content security policy.
+  direct-control-abort   [Experimental] Aborts the current direct configuration
+                         session.
+  direct-control-apply   [Experimental] Apply changes made during a direct
+                         configuration session.
+  direct-control-init    [Experimental] Initialize a new direct configuration
+                         session.
+  direct-control-state   [Experimental] Read the current direct configuration
+                         session state.
+  iga-workflows          [Experimental] Import iga-workflows.
+  restart                [Experimental] Restart the environment.
+  secret-mappings        [Experimental] Import secret mappings.
+  secrets                [Experimental] Import secrets.
+  telemetry              [Experimental] Import telemetry exporters.
+  variables              [Experimental] Import variables.
+"
+`;

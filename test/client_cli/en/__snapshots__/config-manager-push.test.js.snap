@@ -17,6 +17,7 @@ Commands:
   audit                  [Experimental] Import audit configuration.
   authentication         [Experimental] Import authentication objects.
   authz-policies         [Experimental] Import authorization policies.
+  config-metadata        [Experimental] Import metadata.
   connector-definitions  [Experimental] Import connector definitions.
   connector-mappings     [Experimental] Import connector mappings.
   cookie-domains         [Experimental] Import cookie domains.
@@ -36,7 +37,9 @@ Commands:
   password-policy        [Experimental] Import password-policy objects.
   raw                    [Experimental] Import raw configurations.
   remote-servers         [Experimental] Import RCS config.
+  saml                   [Experimental] Import saml configuration.
   schedules              [Experimental] Import schedules.
+  scripts                [Experimental] Import scripts.
   service-objects        [Experimental] Import service objects.
   services               [Experimental] Import AM authentication services.
   terms-and-conditions   [Experimental] Import terms and conditions.
@@ -46,6 +49,14 @@ Commands:
 
   (Cloud-only):
   csp                    [Experimental] Import content security policy.
+  direct-control-abort   [Experimental] Aborts the current direct configuration
+                         session.
+  direct-control-apply   [Experimental] Apply changes made during a direct
+                         configuration session.
+  direct-control-init    [Experimental] Initialize a new direct configuration
+                         session.
+  direct-control-state   [Experimental] Read the current direct configuration
+                         session state.
   iga-workflows          [Experimental] Import iga-workflows.
   restart                [Experimental] Restart the environment.
   secret-mappings        [Experimental] Import secret mappings.

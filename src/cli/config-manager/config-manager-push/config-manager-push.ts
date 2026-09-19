@@ -4,12 +4,17 @@ import AccessConfig from './config-manager-push-access-config';
 import Audit from './config-manager-push-audit';
 import Authentication from './config-manager-push-authentication';
 import AuthzPolicies from './config-manager-push-authz-policies';
+import Metadata from './config-manager-push-config-metadata';
 import ConnectorDefinitions from './config-manager-push-connector-definitions';
 import ConnectorMappings from './config-manager-push-connector-mappings';
 import CookieDomains from './config-manager-push-cookie-domain';
 import Cors from './config-manager-push-cors';
 import CSP from './config-manager-push-csp';
 import CustomNodes from './config-manager-push-custom-nodes';
+import DirectControlAbort from './config-manager-push-direct-control-abort';
+import DirectControlApply from './config-manager-push-direct-control-apply';
+import DirectControlInit from './config-manager-push-direct-control-init';
+import DirectControlState from './config-manager-push-direct-control-state';
 import EmailProvider from './config-manager-push-email-provider';
 import EmailTemplates from './config-manager-push-email-templates';
 import Endpoints from './config-manager-push-endpoints';
@@ -25,7 +30,9 @@ import PasswordPolicy from './config-manager-push-password-policy';
 import Raw from './config-manager-push-raw';
 import RemoteServers from './config-manager-push-remote-servers';
 import Restart from './config-manager-push-restart';
+import Saml from './config-manager-push-saml';
 import Schedules from './config-manager-push-schedules';
+import Scripts from './config-manager-push-scripts';
 import SecretMappings from './config-manager-push-secret-mappings';
 import Secrets from './config-manager-push-secrets';
 import ServiceObjects from './config-manager-push-service-objects';
@@ -56,6 +63,7 @@ export default function setup() {
   program.addCommand(ManagedObjects().name('managed-objects'));
   program.addCommand(AccessConfig().name('access-config'));
   program.addCommand(Audit().name('audit'));
+  program.addCommand(Metadata().name('config-metadata'));
   program.addCommand(CookieDomains().name('cookie-domains'));
   program.addCommand(ServiceObjects().name('service-objects'));
   program.addCommand(Telemetry().name('telemetry'));
@@ -64,6 +72,10 @@ export default function setup() {
   program.addCommand(ConnectorDefinitions().name('connector-definitions'));
   program.addCommand(ConnectorMappings().name('connector-mappings'));
   program.addCommand(Cors().name('cors'));
+  program.addCommand(DirectControlAbort().name('direct-control-abort'));
+  program.addCommand(DirectControlApply().name('direct-control-apply'));
+  program.addCommand(DirectControlInit().name('direct-control-init'));
+  program.addCommand(DirectControlState().name('direct-control-state'));
   program.addCommand(RemoteServers().name('remote-servers'));
   program.addCommand(SecretMappings().name('secret-mappings'));
   program.addCommand(CustomNodes().name('custom-nodes'));
@@ -76,6 +88,8 @@ export default function setup() {
   program.addCommand(Secrets().name('secrets'));
   program.addCommand(Services().name('services'));
   program.addCommand(AuthzPolicies().name('authz-policies'));
+  program.addCommand(Saml().name('saml'));
+  program.addCommand(Scripts().name('scripts'));
 
   return program;
 }
