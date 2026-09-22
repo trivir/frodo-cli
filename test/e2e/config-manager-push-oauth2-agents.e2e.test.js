@@ -48,7 +48,7 @@
 
 /*
 // ForgeOps
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push oauth2-agents -D test/e2e/exports/fr-config-manager/forgeops -m forgeops
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager push oauth2-agents --env-file test/e2e/env/configManager1.env -D test/e2e/exports/fr-config-manager/forgeops -m forgeops
 */
 
 import { getEnv, testSuccess } from './utils/TestUtils';
@@ -60,8 +60,8 @@ const forgeopsEnv = getEnv(fc);
 const allDirectory = "test/e2e/exports/fr-config-manager/forgeops";
 
 describe('frodo config-manager push oauth2-agents', () => {
-    test(`"frodo config-manager push oauth2-agents -D ${allDirectory} -m forgeops": should import all oauth2-agents into forgeops"`, async () => {
-        const CMD = `frodo config-manager push oauth2-agents -D ${allDirectory} -m forgeops`;
+    test(`"frodo config-manager push oauth2-agents --env-file test/e2e/env/configManager1.env -D ${allDirectory} -m forgeops": should import all oauth2-agents into forgeops"`, async () => {
+        const CMD = `frodo config-manager push oauth2-agents --env-file test/e2e/env/configManager1.env -D ${allDirectory} -m forgeops`;
         await testSuccess(CMD, forgeopsEnv);
     });
 });

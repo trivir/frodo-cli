@@ -7,7 +7,7 @@ export default function setup() {
   const program = new FrodoCommand('frodo config-manager push oauth2-agents');
 
   program
-    .description('Import Oauth agents.')
+    .description('Import Oauth2 agents.')
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,

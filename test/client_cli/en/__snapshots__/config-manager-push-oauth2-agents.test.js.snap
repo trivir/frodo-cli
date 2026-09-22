@@ -3,7 +3,7 @@
 exports[`CLI help interface for 'frodo config-manager push oauth2-agents' should be expected english 1`] = `
 "Usage: frodo config-manager push oauth2-agents [options] [host] [realm] [username] [password]
 
-[Experimental] Import Oauth agents.
+[Experimental] Import Oauth2 agents.
 
 Arguments:
   host              AM base URL, e.g.: https://cdk.iam.example.com/am. To use a

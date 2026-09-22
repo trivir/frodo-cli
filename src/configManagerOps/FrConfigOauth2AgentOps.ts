@@ -4,7 +4,11 @@ import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTy
 import fs from 'fs';
 import path from 'path';
 
-import { printError, verboseMessage } from '../utils/Console';
+import {
+  createProgressIndicator,
+  printError,
+  stopProgressIndicator,
+} from '../utils/Console';
 import { clearOperationalAttributes } from '../utils/FrConfig';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
@@ -17,7 +21,6 @@ const {
 } = frodo.utils;
 const { mergeDeep } = frodo.utils.json;
 const { readAgentByTypeAndId, importAgent } = frodo.agent;
-
 /**
  * Export all agents based on values in provided config file.
  * @param configFile The path to the file
@@ -62,12 +65,16 @@ export async function configManagerExportOAuth2Agents(
     return false;
   }
 }
-
 /**
  * Import all agent configurations.
- * @returns {Promise<boolean>} True if all specified agents were exported successfully
+ * @returns {Promise<boolean>} True if all specified agents were imported successfully
  */
 export async function configManagerImportAgents(): Promise<boolean> {
+  const indicatorId = createProgressIndicator(
+    'indeterminate',
+    0,
+    'Importing scripts...'
+  );
   try {
     const realmsDir = `${getWorkingDirectory()}/realms`;
     const realms: string[] = fs
@@ -76,6 +83,12 @@ export async function configManagerImportAgents(): Promise<boolean> {
       .map((entry) => entry.name);
 
     for (const realmDir of realms) {
+      if (
+        realmDir === '/' &&
+        state.getDeploymentType() === CLOUD_DEPLOYMENT_TYPE_KEY
+      )
+        continue;
+
       const realm = realmDir === 'root' ? '/' : realmDir;
 
       state.setRealm(realm);
@@ -97,15 +110,20 @@ export async function configManagerImportAgents(): Promise<boolean> {
           const agentId = agent._id;
           clearOperationalAttributes(agent);
 
-          verboseMessage(`Importing ${agent._id} agent`);
-
           await importAgent(agentId, { agent: { [agentId]: agent } }, false);
         }
       }
     }
+    stopProgressIndicator(
+      indicatorId,
+      'Oauth2 Agents import completed.',
+      'success'
+    );
     return true;
   } catch (error) {
-    printError(error);
+    stopProgressIndicator(indicatorId, 'Oauth2 Agents import failed.', 'fail');
+
+    printError(error, 'Oauth2 agent import failed');
     return false;
   }
 }
