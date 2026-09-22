@@ -14,11 +14,10 @@ import { escapePlaceholders, esvToEnv } from '../utils/FrConfig';
 const { getFilePath, saveJsonToFile, readJsonFile } = frodo.utils;
 const { readVariables, importVariables } = frodo.cloud.variable;
 
-/**
- * Export all variables to seperate files
- * @returns {Promise<boolean>} true if successful, false otherwise
- */
-export async function configManagerExportVariables(): Promise<boolean> {
+
+export async function configManagerExportVariables(
+  report = false
+): Promise<boolean> {
   let spinnerId: string;
   let indicatorId: string;
   let variableList: VariableSkeleton[] = [];
@@ -39,6 +38,26 @@ export async function configManagerExportVariables(): Promise<boolean> {
     printError(error);
     return false;
   }
+
+  if(report){
+    printMessage('Name, Description, Type, Value, Last Changed');
+
+    for (const variable of variableList){
+      printMessage(
+        [
+          variable._id,
+          variable.description,
+          variable.expressionType,
+          variable.value,
+          variable.lastChangeDate,
+        ].join(',')
+      );
+    }
+
+    return true ;
+  }
+
+
   try {
     const indicatorId = createProgressIndicator(
       'determinate',
