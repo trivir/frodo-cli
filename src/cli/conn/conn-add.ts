@@ -33,10 +33,7 @@ export default function setup() {
       )
     )
     .addOption(
-      new Option(
-        '--no-log-api',
-        'Do not create and add log API key and secret.'
-      )
+      new Option('--log-api', 'Generate and add log API key and secret.')
     )
     .addOption(new Option('--no-validate', 'Do not validate connection.'))
     .addOption(
@@ -59,9 +56,9 @@ export default function setup() {
     )
     .addOption(
       new Option(
-        '--name <name>',
-        'Name for this connection profile. Must be unique.'
-      ).makeOptionMandatory()
+        '--name [name]',
+        'Specialized name for this connection profile. Must be unique.'
+      )
     )
     .addOption(
       new Option(
@@ -74,23 +71,23 @@ export default function setup() {
       `Usage Examples:\n` +
         `  Create a connection profile with a new log API key and secret and a new service account:\n` +
         c.command(
-          `  $ frodo conn add --name ${s.name} ${s.amBaseUrl} ${s.username} '${s.password}'\n`
+          `  $ frodo conn add ${s.amBaseUrl} ${s.username} '${s.password} --log-api'\n`
         ) +
         `  Create a connection profile using Amster private key credentials (PingAM classic deployments only):\n` +
         c.command(
-          `  $ frodo conn add --name ${s.name} --private-key ${s.amsterPrivateKey} ${s.amClassicBaseUrl}\n`
+          `  $ frodo conn add ${s.amClassicBaseUrl} --private-key ${s.amsterPrivateKey}\n`
         ) +
         `  Save a new connection profile using an existing service account:\n` +
         c.command(
-          `  $ frodo conn add --name ${s.name} --sa-id ${s.saId} --sa-jwk-file ${s.saJwkFile} ${s.amBaseUrl}\n`
+          `  $ frodo conn add ${s.amBaseUrl} --sa-id ${s.saId} --sa-jwk-file ${s.saJwkFile}\n`
         ) +
         `  Save a connection profile for a Proxy Connect-protected PingOne Advanced Identity Cloud environment:\n` +
         c.command(
-          `  $ frodo conn add --name ${s.name} --authentication-header-overrides '{"MY-SECRET-HEADER": "proxyconnect secret header value"}' ${s.amBaseUrl} ${s.username} '${s.password}'\n`
+          `  $ frodo conn add ${s.amBaseUrl} --authentication-header-overrides '{"MY-SECRET-HEADER": "proxyconnect secret header value"}' ${s.username} '${s.password}'\n`
         ) +
         `  Save a connection profile for a mutable PingOne Advanced Identity Cloud environment:\n` +
         c.command(
-          `  $ frodo conn add --name ${s.name} --configuration-header-overrides '{"X-Configuration-Type": "mutable"}' ${s.amBaseUrl} ${s.username} '${s.password}'\n`
+          `  $ frodo conn add ${s.amBaseUrl} --configuration-header-overrides '{"X-Configuration-Type": "mutable"}' ${s.username} '${s.password}'\n`
         ) +
         `\nTo update an existing connection profile, use ${c.command('frodo conn edit')} instead.\n`
     )
@@ -111,7 +108,8 @@ export default function setup() {
           state.setHost(host);
         }
 
-        state.setName(options.name);
+        if (!options.name) state.setName(state.getHost());
+        else state.setName(options.name);
         state.setLogApiKey(options.logApiKey);
         state.setLogApiSecret(options.logApiSecret);
         if (options.authenticationService) {
@@ -133,10 +131,7 @@ export default function setup() {
           !state.getServiceAccountId() &&
           !state.getServiceAccountJwk();
         const needLogApiKey =
-          options.logApi &&
-          !state.getLogApiKey() &&
-          !state.getLogApiSecret() &&
-          needSa;
+          options.logApi && !state.getLogApiKey() && !state.getLogApiSecret();
         const forceLoginAsUser = !needAmsterLogin && (needSa || needLogApiKey);
         if (
           (options.validate && (await getTokens(forceLoginAsUser))) ||

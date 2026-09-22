@@ -47,7 +47,9 @@ import { type McpPolicyPreset, resolvePolicySelection } from './server-policy';
  * sync with the registry again — a real bug fixed here: `.choices()` used to
  * hardcode a stale list that was missing `'self-service'` after it shipped.
  */
-const CLI_SELECTABLE_PROFILES = listMcpProfiles().map((profile) => profile.name);
+const CLI_SELECTABLE_PROFILES = listMcpProfiles().map(
+  (profile) => profile.name
+);
 type McpStartProfileName = (typeof CLI_SELECTABLE_PROFILES)[number];
 
 /** Parsed options for `frodo mcp server start`. */

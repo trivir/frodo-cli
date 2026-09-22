@@ -611,7 +611,7 @@ const forceLoginAsUserOption = withOptionStability(
   withHelpGroup(
     new Option(
       '--force-login-as-user',
-      "Force a plain username/password login even if the resolved connection profile also has a service account or Amster credential configured. Deprecated: use --credential user instead."
+      'Force a plain username/password login even if the resolved connection profile also has a service account or Amster credential configured. Deprecated: use --credential user instead.'
     ),
     AUTHENTICATION_OPTIONS_HEADING,
     OptionCategory.Authentication

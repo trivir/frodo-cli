@@ -9,11 +9,8 @@ import { FrodoCommand } from '../FrodoCommand';
 import { sourcesOptionM } from './log';
 
 const { resolveLevel } = frodo.cloud.log;
-const {
-  getConnectionProfile,
-  getApiKeyProfileByHost,
-  saveConnectionProfile,
-} = frodo.conn;
+const { getConnectionProfile, getApiKeyProfileByHost, saveConnectionProfile } =
+  frodo.conn;
 
 const SECONDS_IN_30_DAYS = 2592000;
 const SECONDS_IN_1_HOUR = 3600;
@@ -86,22 +83,16 @@ export default function setup() {
       let foundCredentials = false;
 
       let conn = null;
-      try {
-        conn = await getConnectionProfile();
-      } catch {
-        // ignore — may still resolve apiKeys independently
-      }
+      conn = await getConnectionProfile();
+
       if (conn) state.setHost(conn.tenant);
 
-      // log api creds have been supplied as username and password arguments
       if (state.getUsername() && state.getPassword()) {
         verboseMessage(`Using log api credentials from command line.`);
         state.setLogApiKey(state.getUsername());
         state.setLogApiSecret(state.getPassword());
         foundCredentials = true;
-      }
-      // log api creds from apiKeys bucket
-      else {
+      } else {
         let apiKeyProfile = null;
         try {
           apiKeyProfile = await getApiKeyProfileByHost(
@@ -109,11 +100,7 @@ export default function setup() {
           );
         } catch {
           if (conn?.tenant && conn.tenant !== state.getHost()) {
-            try {
-              apiKeyProfile = await getApiKeyProfileByHost(conn.tenant);
-            } catch {
-              // no matching api key
-            }
+            apiKeyProfile = await getApiKeyProfileByHost(conn.tenant);
           }
         }
         if (

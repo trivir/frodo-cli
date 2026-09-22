@@ -9,11 +9,8 @@ import { FrodoCommand } from '../FrodoCommand';
 import { sourcesOptionM } from './log';
 
 const { resolveLevel } = frodo.cloud.log;
-const {
-  getConnectionProfile,
-  getApiKeyProfileByHost,
-  saveConnectionProfile,
-} = frodo.conn;
+const { getConnectionProfile, getApiKeyProfileByHost, saveConnectionProfile } =
+  frodo.conn;
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
