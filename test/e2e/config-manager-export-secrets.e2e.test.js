@@ -49,7 +49,7 @@
 /*
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull secrets -D secretTestDir1
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull secrets -aD secretTestDir2
-
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull secrets -rD secretTestDir3
 */
 
 
@@ -72,4 +72,10 @@ describe('frodo config-manager pulls', () => {
     const CMD = `frodo config-manager pull secrets -aD ${dirName}`;
     await testExport(CMD, env, undefined, undefined, dirName, false);
   });
+  test('"frodo config-manager pull secrets -rD secretTestDir3": should export all secrets from a fr-config pull formatting as csv report in fr-config-manager style"', async () => {
+    const dirName = 'secretTestDir3';
+    const CMD = `frodo config-manager pull secrets -rD ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
+
 });

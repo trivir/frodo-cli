@@ -14,9 +14,13 @@ import { escapePlaceholders, esvToEnv, friendlyTimestamp, csvEscape } from '../u
 const { getFilePath, saveJsonToFile, readJsonFile } = frodo.utils;
 const { readVariables, importVariables } = frodo.cloud.variable;
 
-
+/**
+ * Export all variables to individual files in fr-config-manager format
+ * @param {boolean} report true to report in csv format 
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
 export async function configManagerExportVariables(
-  report = false
+  report?: boolean
 ): Promise<boolean> {
   let spinnerId: string;
   let indicatorId: string;
@@ -39,11 +43,18 @@ export async function configManagerExportVariables(
     return false;
   }
 
-    // this is the report flag backend 
-    if(report){
-      printMessage('Name, Description, Type, Value, Last Changed');
-  
-      for (const variable of variableList){
+  if (report) {
+    printMessage('Name, Description, Type, Value, Last Changed', "data");
+  }
+
+  try {
+    const indicatorId = createProgressIndicator(
+      'determinate',
+      variableList.length,
+      'Exporting variables'
+    );
+    for (const variable of variableList) {
+      if (report){
         printMessage(
           [
             variable._id,
@@ -53,18 +64,7 @@ export async function configManagerExportVariables(
             friendlyTimestamp(variable.lastChangeDate),
           ].join(',')
         );
-      }
-  
-      return true ;
-    }
-
-  try {
-    const indicatorId = createProgressIndicator(
-      'determinate',
-      variableList.length,
-      'Exporting variables'
-    );
-    for (const variable of variableList) {
+      };
       const envVariable = esvToEnv(variable._id);
 
       const variableObject = {
