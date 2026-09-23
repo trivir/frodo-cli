@@ -9,7 +9,7 @@ import {
   stopProgressIndicator,
   updateProgressIndicator,
 } from '../utils/Console';
-import { escapePlaceholders, esvToEnv } from '../utils/FrConfig';
+import { escapePlaceholders, esvToEnv, friendlyTimestamp, csvEscape } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile, readJsonFile } = frodo.utils;
 const { readVariables, importVariables } = frodo.cloud.variable;
@@ -39,24 +39,24 @@ export async function configManagerExportVariables(
     return false;
   }
 
-  if(report){
-    printMessage('Name, Description, Type, Value, Last Changed');
-
-    for (const variable of variableList){
-      printMessage(
-        [
-          variable._id,
-          variable.description,
-          variable.expressionType,
-          variable.value,
-          variable.lastChangeDate,
-        ].join(',')
-      );
+    // this is the report flag backend 
+    if(report){
+      printMessage('Name, Description, Type, Value, Last Changed');
+  
+      for (const variable of variableList){
+        printMessage(
+          [
+            variable._id,
+            csvEscape(variable.description),
+            variable.expressionType,
+            csvEscape(variable.value),
+            friendlyTimestamp(variable.lastChangeDate),
+          ].join(',')
+        );
+      }
+  
+      return true ;
     }
-
-    return true ;
-  }
-
 
   try {
     const indicatorId = createProgressIndicator(
@@ -91,6 +91,8 @@ export async function configManagerExportVariables(
     printError(error);
   }
   return false;
+
+  
 }
 
 /**

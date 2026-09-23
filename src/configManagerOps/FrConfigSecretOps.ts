@@ -13,7 +13,7 @@ import {
   stopProgressIndicator,
   updateProgressIndicator,
 } from '../utils/Console';
-import { esvToEnv } from '../utils/FrConfig';
+import { esvToEnv, friendlyTimestamp, csvEscape} from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile, readJsonFile } = frodo.utils;
 const {
@@ -35,14 +35,15 @@ type FrConfigSecret = SecretSkeleton & {
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function configManagerExportSecrets(
-  activeOnly?: boolean
+  activeOnly?: boolean,
+  report = false
 ): Promise<boolean> {
   let secrets: FrConfigSecret[] = [];
   const spinnerId = createProgressIndicator(
     'indeterminate',
     0,
     `Reading secrets...`
-  );
+  );  
   try {
     secrets = (await readSecrets()) as FrConfigSecret[];
     secrets.sort((a, b) => a._id.localeCompare(b._id));
@@ -51,6 +52,28 @@ export async function configManagerExportSecrets(
       `Successfully read ${secrets.length} secrets.`,
       'success'
     );
+
+    // this is the report flag backend 
+    if (report) {
+      printMessage(
+        'Name, Description, Encoding, Use in Placeholders, Last Changed'
+      );
+    
+      for (const secret of secrets) {
+        const fields = [
+          secret._id,
+          csvEscape(secret.description),
+          secret.encoding,
+          secret.useInPlaceholders,
+          friendlyTimestamp(secret.lastChangeDate),
+        ];
+    
+        printMessage(fields.join(','));
+      }
+    
+      return true;
+    }
+
     const indicatorId = createProgressIndicator(
       'determinate',
       secrets.length,
