@@ -98,7 +98,6 @@ export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-
 // this is for the csv escape and the timestamp formatting change. Move to individual frConfigVariableOps.ts and frConfigSecretOps.ts???
 export function csvEscape(value: string): string {
   if (value.includes(',') || value.includes('"') || value.includes('\n')) {
@@ -107,8 +106,6 @@ export function csvEscape(value: string): string {
 
   return value;
 }
-export function friendlyTimestamp(timestamp: string): string{
-  return timestamp
-  .replace('T', ' ')
-  .replace(/\.\d+Z$/, '');
+export function friendlyTimestamp(timestamp: string): string {
+  return timestamp.replace('T', ' ').replace(/\.\d+Z$/, '');
 }

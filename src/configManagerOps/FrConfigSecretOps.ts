@@ -13,7 +13,7 @@ import {
   stopProgressIndicator,
   updateProgressIndicator,
 } from '../utils/Console';
-import { esvToEnv, friendlyTimestamp, csvEscape} from '../utils/FrConfig';
+import { csvEscape, esvToEnv, friendlyTimestamp } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile, readJsonFile } = frodo.utils;
 const {
@@ -32,7 +32,7 @@ type FrConfigSecret = SecretSkeleton & {
 /**
  * Export all secrets to individual files in fr-config-manager format
  * @param {boolean} activeOnly true to export only active secret versions, false to export all secrets versions
- * @param {boolean} report true to report in csv format 
+ * @param {boolean} report true to report in csv format
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function configManagerExportSecrets(
@@ -44,7 +44,7 @@ export async function configManagerExportSecrets(
     'indeterminate',
     0,
     `Reading secrets...`
-  );  
+  );
   try {
     secrets = (await readSecrets()) as FrConfigSecret[];
     secrets.sort((a, b) => a._id.localeCompare(b._id));
@@ -60,9 +60,11 @@ export async function configManagerExportSecrets(
       'Exporting secrets'
     );
 
-    if (report){
+    if (report) {
       printMessage(
-        'Name, Description, Encoding, Use in Placeholders, Last Changed', 'data');
+        'Name, Description, Encoding, Use in Placeholders, Last Changed',
+        'data'
+      );
     }
 
     for (const secret of secrets) {
@@ -71,13 +73,15 @@ export async function configManagerExportSecrets(
         false
       );
       if (report) {
-        printMessage( [
-          secret._id,
-          csvEscape(secret.description),
-          secret.encoding,
-          secret.useInPlaceholders,
-          friendlyTimestamp(secret.lastChangeDate),
-        ].join(','));
+        printMessage(
+          [
+            secret._id,
+            csvEscape(secret.description),
+            secret.encoding,
+            secret.useInPlaceholders,
+            friendlyTimestamp(secret.lastChangeDate),
+          ].join(',')
+        );
       }
 
       const [secretKey] = Object.keys(exportData.secret);

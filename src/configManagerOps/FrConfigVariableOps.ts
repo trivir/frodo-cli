@@ -9,14 +9,19 @@ import {
   stopProgressIndicator,
   updateProgressIndicator,
 } from '../utils/Console';
-import { escapePlaceholders, esvToEnv, friendlyTimestamp, csvEscape } from '../utils/FrConfig';
+import {
+  csvEscape,
+  escapePlaceholders,
+  esvToEnv,
+  friendlyTimestamp,
+} from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile, readJsonFile } = frodo.utils;
 const { readVariables, importVariables } = frodo.cloud.variable;
 
 /**
  * Export all variables to individual files in fr-config-manager format
- * @param {boolean} report true to report in csv format 
+ * @param {boolean} report true to report in csv format
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function configManagerExportVariables(
@@ -44,7 +49,7 @@ export async function configManagerExportVariables(
   }
 
   if (report) {
-    printMessage('Name, Description, Type, Value, Last Changed', "data");
+    printMessage('Name, Description, Type, Value, Last Changed', 'data');
   }
 
   try {
@@ -54,7 +59,7 @@ export async function configManagerExportVariables(
       'Exporting variables'
     );
     for (const variable of variableList) {
-      if (report){
+      if (report) {
         printMessage(
           [
             variable._id,
@@ -64,7 +69,7 @@ export async function configManagerExportVariables(
             friendlyTimestamp(variable.lastChangeDate),
           ].join(',')
         );
-      };
+      }
       const envVariable = esvToEnv(variable._id);
 
       const variableObject = {
@@ -91,8 +96,6 @@ export async function configManagerExportVariables(
     printError(error);
   }
   return false;
-
-  
 }
 
 /**
