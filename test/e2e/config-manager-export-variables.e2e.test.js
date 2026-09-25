@@ -2,6 +2,8 @@
 
 /*
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull variables -D variableTestDir
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull variables -rD variableTestDir2
+
 
 */
 
@@ -20,4 +22,11 @@ describe('frodo config-manager pulls', () => {
     const CMD = `frodo config-manager pull variables -D ${dirName}`;
     await testExport(CMD, env, undefined, undefined, dirName, false);
   });
+
+    test('"frodo config-manager pull variables -rD variableTestDir2": should export all variables as csv report in fr-config-manager style"', async () => {
+      const dirName = 'variableTestDir2';
+      const CMD = `frodo config-manager pull variables -rD ${dirName}`;
+      await testExport(CMD, env, undefined, undefined, dirName, false);
+    });
+
 });

@@ -13,7 +13,7 @@ import {
   stopProgressIndicator,
   updateProgressIndicator,
 } from '../utils/Console';
-import { esvToEnv } from '../utils/FrConfig';
+import { csvEscape, esvToEnv, friendlyTimestamp } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile, readJsonFile } = frodo.utils;
 const {
@@ -32,10 +32,12 @@ type FrConfigSecret = SecretSkeleton & {
 /**
  * Export all secrets to individual files in fr-config-manager format
  * @param {boolean} activeOnly true to export only active secret versions, false to export all secrets versions
+ * @param {boolean} report true to report in csv format
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function configManagerExportSecrets(
-  activeOnly?: boolean
+  activeOnly?: boolean,
+  report?: boolean
 ): Promise<boolean> {
   let secrets: FrConfigSecret[] = [];
   const spinnerId = createProgressIndicator(
@@ -51,16 +53,37 @@ export async function configManagerExportSecrets(
       `Successfully read ${secrets.length} secrets.`,
       'success'
     );
+
     const indicatorId = createProgressIndicator(
       'determinate',
       secrets.length,
       'Exporting secrets'
     );
+
+    if (report) {
+      printMessage(
+        'Name, Description, Encoding, Use in Placeholders, Last Changed',
+        'data'
+      );
+    }
+
     for (const secret of secrets) {
       const exportData: SecretsExportInterface = await exportSecret(
         secret._id,
         false
       );
+      if (report) {
+        printMessage(
+          [
+            secret._id,
+            csvEscape(secret.description),
+            secret.encoding,
+            secret.useInPlaceholders,
+            friendlyTimestamp(secret.lastChangeDate),
+          ].join(',')
+        );
+      }
+
       const [secretKey] = Object.keys(exportData.secret);
       const fullSecret = exportData.secret[secretKey] as FrConfigSecret;
       const cleanSecret: Partial<SecretSkeleton> = {
