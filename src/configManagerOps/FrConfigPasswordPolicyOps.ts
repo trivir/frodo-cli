@@ -1,4 +1,4 @@
-import { frodo } from '@rockcarver/frodo-lib';
+import { frodo, state } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
 import { printError } from '../utils/Console';
@@ -9,6 +9,7 @@ const { readConfigEntity, importConfigEntities } = frodo.idm.config;
 
 /**
  * Export IDM password policy configuration object in the fr-config-manager format.
+ * @param {string} realm Defines a specific realm to pull password-policy config from
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function configManagerExportPasswordPolicy(

@@ -24,15 +24,12 @@ Arguments:
   password                       Password.
 
 Options:
-  -f, --file <file>              The OAUTH2_AGENTS_CONFIG json file. ex:
-                                 "/home/trivir/Documents/oauth2-agents.json", or
-                                 "oauth2-agents.json"
-  -n, --agent-name <agent name>  Export specific agent using agentId/agentName.
-  -r, --realm <realm>            Specifies the realm to export from. Only the
-                                 agents from this realm will be exported.
-  -h, --help                     Help
-  -hh, --help-more               Help with all options.
-  -hhh, --help-all               Help with all options, environment variables,
-                                 and usage examples.
+  -f, --file <file>  The OAUTH2_AGENTS_CONFIG json file. ex:
+                     "/home/trivir/Documents/oauth2-agents.json", or
+                     "oauth2-agents.json"
+  -h, --help         Help
+  -hh, --help-more   Help with all options.
+  -hhh, --help-all   Help with all options, environment variables, and usage
+                     examples.
 "
 `;

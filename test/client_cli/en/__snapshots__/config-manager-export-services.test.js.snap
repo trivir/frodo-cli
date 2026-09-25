@@ -22,11 +22,10 @@ Arguments:
   password             Password.
 
 Options:
-  -n, --name <name>    Service name, It only export the service with the name.
-  -r, --realm <realm>  Specific realm to get service from
-  -h, --help           Help
-  -hh, --help-more     Help with all options.
-  -hhh, --help-all     Help with all options, environment variables, and usage
-                       examples.
+  -n, --name <name>  Service name, It only export the service with the name.
+  -h, --help         Help
+  -hh, --help-more   Help with all options.
+  -hhh, --help-all   Help with all options, environment variables, and usage
+                     examples.
 "
 `;
