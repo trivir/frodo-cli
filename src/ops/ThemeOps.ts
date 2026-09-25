@@ -7,6 +7,7 @@ import * as fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 
 import c from '../utils/ColorTheme';
+import { extractDataToFile } from '../utils/Config';
 import {
   createProgressIndicator,
   createTable,
@@ -122,15 +123,11 @@ export async function listThemes(long: boolean = false): Promise<boolean> {
 export async function exportThemeByName(
   name: string,
   file: string,
-  includeMeta: boolean = true
+  includeMeta: boolean = true,
+  extract: boolean = true
 ): Promise<boolean> {
   let indicatorId: string;
   try {
-    let fileName = getTypedFilename(name, 'theme');
-    if (file) {
-      fileName = file;
-    }
-    const filePath = getFilePath(fileName, true);
     indicatorId = createProgressIndicator(
       'determinate',
       1,
@@ -138,7 +135,15 @@ export async function exportThemeByName(
     );
     const themeData = await readThemeByName(name);
     if (!themeData._id) themeData._id = uuidv4();
-    updateProgressIndicator(indicatorId, `Writing file to ${filePath}`);
+    let fileName = getTypedFilename(themeData.name, 'theme');
+    if (extract) {
+      extractThemeHTMLToFiles({ theme: { [themeData._id]: themeData } }, themeData._id,themeData.name);
+      fileName = `${themeData.name}/${fileName}`
+    } else if (file) {
+      fileName = file;
+    }
+    const filePath = getFilePath(fileName, true);
+    updateProgressIndicator(indicatorId, `Writing JSON file to ${filePath}`);
     saveToFile('theme', [themeData], '_id', filePath, includeMeta);
     stopProgressIndicator(indicatorId, `Successfully exported theme ${name}.`);
     return true;
@@ -159,17 +164,32 @@ export async function exportThemeByName(
 export async function exportThemeById(
   id: string,
   file: string,
-  includeMeta: boolean = true
+  includeMeta: boolean = true,
+  extract: boolean = true
 ): Promise<boolean> {
   let indicatorId: string;
   try {
-    let fileName = getTypedFilename(id, 'theme');
+    indicatorId = createProgressIndicator('determinate', 1, `Exporting ${id}`);
+
+    const themeData = await readTheme(id);
+
+    let fileName = getTypedFilename(themeData.name, 'theme');
+
     if (file) {
       fileName = file;
     }
+
+    if (extract) {
+      extractThemeHTMLToFiles(
+        { theme: { [themeData._id]: themeData } },
+        themeData._id,
+        themeData.name
+      );
+      fileName = `${themeData.name}/${fileName}`;
+    }
+
     const filePath = getFilePath(fileName, true);
-    indicatorId = createProgressIndicator('determinate', 1, `Exporting ${id}`);
-    const themeData = await readTheme(id);
+
     updateProgressIndicator(indicatorId, `Writing file to ${filePath}`);
     saveToFile('theme', [themeData], '_id', filePath, includeMeta);
     stopProgressIndicator(indicatorId, `Successfully exported theme ${id}.`);
@@ -209,9 +229,13 @@ export async function exportThemesToFile(
 /**
  * Export all themes to separate files
  * @param {boolean} includeMeta true to include metadata, false otherwise. Default: true
+ * @param {boolean} includeMeta 
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
-export async function exportThemesToFiles(includeMeta = true) {
+export async function exportThemesToFiles(
+  includeMeta: boolean = true,
+  extract: boolean = true
+) {
   let barId: string;
   try {
     const themes = await readThemes();
@@ -220,19 +244,37 @@ export async function exportThemesToFiles(includeMeta = true) {
       themes.length,
       'Exporting themes'
     );
+
     for (const theme of themes) {
       if (!theme._id) theme._id = uuidv4();
+
       const fileBarId = createProgressIndicator(
         'determinate',
         1,
         `Exporting theme ${theme.name}...`
       );
+
       updateProgressIndicator(barId, `Exporting theme ${theme.name}`);
-      const file = getFilePath(getTypedFilename(theme.name, 'theme'), true);
+
+      let fileName = getTypedFilename(theme.name, 'theme');
+
+      if (extract) {
+        extractThemeHTMLToFiles(
+          { theme: { [theme._id]: theme } },
+          theme._id,
+          theme.name
+        );
+        fileName = `${theme.name}/${fileName}`;
+      }
+
+      const file = getFilePath(fileName, true);
+
       saveToFile('theme', theme, '_id', file, includeMeta);
+
       updateProgressIndicator(fileBarId, `${theme.name} saved to ${file}`);
       stopProgressIndicator(fileBarId, `${theme.name} saved to ${file}.`);
     }
+
     return true;
   } catch (error) {
     stopProgressIndicator(barId, `Error exporting themes`, 'fail');
@@ -498,6 +540,60 @@ export async function deleteThemes(): Promise<boolean> {
     return true;
   } catch (error) {
     stopProgressIndicator(indicatorId, `Error: ${error.message}`, 'fail');
+  }
+  return false;
+}
+
+
+function extractHTMLToFile(theme, property, directory) {
+
+  // If the theme property doesn't exist or is empty, return nothing
+  if (!theme[property]) return;
+
+  // If the theme property is an object (likely meaning multiple languages)
+  if (typeof theme[property] === 'object') {
+    for (const [language, html] of Object.entries(theme[property])) {
+      theme[property][language] = extractDataToFile(
+        html,
+        `${property}/${getTypedFilename(language, 'theme', 'html')}`,
+        `${directory}`
+      );
+    }
+  }
+  // Otherwise, the theme property is a string
+  else {
+    theme[property] = extractDataToFile(
+      theme[property],
+      getTypedFilename(
+        property,
+        'theme',
+        'html'
+      ),
+      directory
+    );
+  }
+}
+
+export function extractThemeHTMLToFiles(
+  exportData: ThemeExportInterface,
+  themeId?: string,
+  directory?: string
+): boolean {
+  try {
+    const themes = themeId
+      ? [exportData.theme[themeId]]
+      : Object.values(exportData.theme);
+    for (const theme of themes) {
+      extractHTMLToFile(theme, 'accountFooter', directory);
+      extractHTMLToFile(theme, 'journeyFooter', directory);
+      extractHTMLToFile(theme, 'journeyHeader', directory);
+      extractHTMLToFile(theme, 'journeyJustifiedContent', directory);
+      extractHTMLToFile(theme, 'accountFooterScriptTag', directory);
+      extractHTMLToFile(theme, 'journeyFooterScriptTag', directory);
+    }
+    return true;
+  } catch (error) {
+    printError(error);
   }
   return false;
 }
