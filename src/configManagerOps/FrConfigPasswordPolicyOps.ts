@@ -1,4 +1,4 @@
-import { frodo, state } from '@rockcarver/frodo-lib';
+import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 
 import { printError } from '../utils/Console';

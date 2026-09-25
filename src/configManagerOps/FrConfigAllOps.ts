@@ -14,6 +14,7 @@ import { configManagerExportCustomNodes } from './FrConfigCustomNodesOps';
 import { configManagerExportEmailProviderConfiguration } from './FrConfigEmailProviderOps';
 import { configManagerExportEmailTemplates } from './FrConfigEmailTemplatesOps';
 import { configManagerExportEndpoints } from './FrConfigEndpointsOps';
+import { configManagerExportIdmAuthentication } from './FrConfigIdmAuthenticationOpts';
 import { configManagerExportInternalRoles } from './FrConfigInternalRolesOps';
 import { configManagerExportJourneys } from './FrConfigJourneysOps';
 import { configManagerExportKbaConfig } from './FrConfigKbaOps';
@@ -90,7 +91,6 @@ const deploymentMapAll = {
     (options) =>
       configManagerExportAuthzPolicySets(
         `${options.configFolder}/authz-policies.json`
-
       ),
     (options) =>
       configManagerExportConfigAgents(
@@ -99,7 +99,8 @@ const deploymentMapAll = {
     () => configManagerExportConnectorDefinitionsAll(),
     () => configManagerExportCookieDomains(),
     () => configManagerExportCors(),
-    (options) => configManagerExportCsp(`${options.configFolder}/csp-overrides.json`),
+    (options) =>
+      configManagerExportCsp(`${options.configFolder}/csp-overrides.json`),
     () => configManagerExportCustomNodes(),
     () => configManagerExportEmailProviderConfiguration(),
     () => configManagerExportEmailTemplates(),
@@ -151,25 +152,17 @@ const deploymentMapAll = {
 };
 
 const deploymentMapAllStatic = {
-    [FORGEOPS_DEPLOYMENT_TYPE_KEY]: [
+  [FORGEOPS_DEPLOYMENT_TYPE_KEY]: [
     () => configManagerExportAccessConfig(),
     () => configManagerExportAudit(),
     (options) => configManagerExportAuthentication(options.realm),
-    (options) =>
-      configManagerExportAuthzPolicySets(
-        `${options.configFolder}/authz-policies.json`
-      ),
-    (options) =>
-      configManagerExportConfigAgents(
-        `${options.configFolder}/oauth2-agents.json`
-      ),
     () => configManagerExportConnectorDefinitionsAll(),
     () => configManagerExportCors(),
     () => configManagerExportCustomNodes(),
     () => configManagerExportEmailProviderConfiguration(),
     () => configManagerExportEmailTemplates(),
     () => configManagerExportEndpoints(),
-    () => configManagerExportInternalRoles(),
+    () => configManagerExportIdmAuthentication(),
     (options) => configManagerExportJourneys(undefined, options.realm),
     () => configManagerExportKbaConfig(),
     () => configManagerExportLocales(),
@@ -177,15 +170,9 @@ const deploymentMapAllStatic = {
     () => configManagerExportMappings(),
     () => configManagerExportOrgPrivileges(),
     (options) => configManagerExportPasswordPolicy(options.realm),
-    (options) => configManagerExportRaw(`${options.configFolder}/raw.json`),
     () => configManagerExportRemoteServers(),
-    (options) => configManagerExportSaml(`${options.configFolder}/saml.json`),
     () => configManagerExportSchedules(),
     (options) => configManagerExportScripts(undefined, options.realm),
-    (options) =>
-      configManagerExportServiceObjectsFromFile(
-        `${options.configFolder}/service-objects.json`
-      ),
     (options) => configManagerExportServices(options.realm),
     () => configManagerExportTermsAndConditions(),
     (options) => configManagerExportThemes(options.realm),
@@ -195,24 +182,12 @@ const deploymentMapAllStatic = {
     () => configManagerExportAccessConfig(),
     () => configManagerExportAudit(),
     (options) => configManagerExportAuthentication(options.realm),
-    (options) =>
-      configManagerExportAuthzPolicySets(
-        `${options.configFolder}/authz-policies.json`
-
-      ),
-    (options) =>
-      configManagerExportConfigAgents(
-        `${options.configFolder}/oauth2-agents.json`
-      ),
     () => configManagerExportConnectorDefinitionsAll(),
-    () => configManagerExportCookieDomains(),
     () => configManagerExportCors(),
-    (options) => configManagerExportCsp(`${options.configFolder}/csp-overrides.json`),
     () => configManagerExportCustomNodes(),
     () => configManagerExportEmailProviderConfiguration(),
     () => configManagerExportEmailTemplates(),
     () => configManagerExportEndpoints(),
-    () => configManagerExportInternalRoles(),
     (options) => configManagerExportJourneys(undefined, options.realm),
     () => configManagerExportKbaConfig(),
     () => configManagerExportLocales(),
@@ -220,39 +195,20 @@ const deploymentMapAllStatic = {
     () => configManagerExportMappings(),
     () => configManagerExportOrgPrivileges(),
     (options) => configManagerExportPasswordPolicy(options.realm),
-    (options) => configManagerExportRaw(`${options.configFolder}/raw.json`),
     () => configManagerExportRemoteServers(),
-    (options) => configManagerExportSaml(`${options.configFolder}/saml.json`),
     () => configManagerExportSchedules(),
     (options) => configManagerExportScripts(undefined, options.realm),
-    () => configManagerExportSecrets(),
     (options) => configManagerExportSecretMappings(undefined, options.realm),
-    (options) =>
-      configManagerExportServiceObjectsFromFile(
-        `${options.configFolder}/service-objects.json`
-      ),
-    () => configManagerExportServices(),
-    //() => configManagerExportTelemetry(),
+    (options) => configManagerExportServices(options.realm),
     () => configManagerExportTermsAndConditions(),
     (options) => configManagerExportThemes(options.realm),
     () => configManagerExportUiConfig(),
-    () => configManagerExportVariables(),
   ],
   [CLASSIC_DEPLOYMENT_TYPE_KEY]: [
     (options) => configManagerExportAuthentication(options.realm),
-    (options) =>
-      configManagerExportAuthzPolicySets(
-        `${options.configFolder}/authz-policies.json`
-      ),
-    (options) =>
-      configManagerExportConfigAgents(
-        `${options.configFolder}/oauth2-agents.json`
-      ),
     () => configManagerExportCors(),
     () => configManagerExportCustomNodes(),
     (options) => configManagerExportJourneys(undefined, options.realm),
-    (options) => configManagerExportRaw(`${options.configFolder}/raw.json`),
-    (options) => configManagerExportSaml(`${options.configFolder}/saml.json`),
     (options) => configManagerExportScripts(undefined, options.realm),
     (options) => configManagerExportServices(options.realm),
   ],
@@ -273,8 +229,8 @@ export async function configManagerExportAllWithConfigFolder(
     }
     return true;
   } catch (error) {
-      printError(error, 'Error exporting all in fr-config-manager format');
-      return false;
+    printError(error, 'Error exporting all in fr-config-manager format');
+    return false;
   }
 }
 

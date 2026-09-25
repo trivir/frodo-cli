@@ -74,10 +74,10 @@ describe('frodo config-manager pulls', () => {
     });
     test('"frodo config-manager pull services --directory serviceTestDir1 -m forgeops": should export the services in alpha realm in fr-config-manager style"', async () => {
       const dirName = 'serviceTestDir1';
-      const CMD = `frodo config-manager pull services -D ${dirName} -m forgeops`;
+      const CMD = `frodo config-manager pull services --directory ${dirName} -m forgeops`;
       await testExport(CMD, { env: {...forgeopsEnv.env, FRODO_REALM: 'alpha' } }, undefined, undefined, dirName, false);
     });
-    test('"frodo config-manager pull services -D serviceTestDir2 -n SocialIdentityProviders -m forgeops": should export the services with name: SocialIdentityProviders in fr-config-manager style"', async () => {
+    test('"frodo config-manager pull services -D serviceTestDir2 -n SocialIdentityProviders -m forgeops": should export the services with name: SocialIdentityProviders from alpha realm in fr-config-manager style"', async () => {
       const dirName = 'serviceTestDir2';
       const CMD = `frodo config-manager pull services -D ${dirName} -n SocialIdentityProviders -m forgeops`;
       await testExport(CMD, { env: {...forgeopsEnv.env, FRODO_REALM: 'alpha' } }, undefined, undefined, dirName, false);

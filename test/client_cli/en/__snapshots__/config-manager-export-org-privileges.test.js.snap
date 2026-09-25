@@ -22,9 +22,11 @@ Arguments:
   password             Password.
 
 Options:
-  -h, --help        Help
-  -hh, --help-more  Help with all options.
-  -hhh, --help-all  Help with all options, environment variables, and usage
-                    examples.
+  -r, --realm <realm>  Specifies the realm to export from. Only the entity
+                       object from this realm will be exported.
+  -h, --help           Help
+  -hh, --help-more     Help with all options.
+  -hhh, --help-all     Help with all options, environment variables, and usage
+                       examples.
 "
 `;

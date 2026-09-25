@@ -45,7 +45,6 @@ Commands:
   saml                   [Experimental] Export saml.
   schedules              [Experimental] Export schedules.
   scripts                [Experimental] Export AM scripts.
-  secret-mappings        [Experimental] Export secret mappings.
   secrets                [Experimental] Export secrets.
   service-objects        [Experimental] Export service objects.
   services               [Experimental] Export authentication services.
@@ -57,6 +56,7 @@ Commands:
 
   (Cloud-only):
   iga-workflows          [Experimental] Export iga-workflows.
+  secret-mappings        [Experimental] Export secret mappings.
   telemetry              [Experimental] Export telemetry exporters.
 "
 `;
