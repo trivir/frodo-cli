@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga request-form describe "frodo iga request-form describe --file test/e2e/exports/all/allRequestForms.requestForm.json": should describe first request form from file test/e2e/exports/all/allRequestForms.requestForm.json 1`] = `
+"Request Form
+Id          │05b1bc14-6406-49a7-933a-97868f9e567c
+Name        │test                                
+Type        │request                             
+Description │                                    
+Operation   │create                              
+Request Type│47b0e373-a9df-477d-986f-4aa64317ebed
+
+Request Types (6):
+- [0ece99b4-5039-4bd6-b31c-de14bcf45f11] phhType
+- [35daadd6-bc63-47b5-a0e5-7756dfbdf229] pgh-generate-rap
+- [8d0055b3-155f-4885-a415-4f1c536098e8] phh-create-user
+- [af4a6f84-f9a9-4f8d-82ae-649639debabc] test_workflow_request_type_5
+- [e58d2089-3e92-4a0b-b0fa-3ac6d4251877] jh-ne-create-test-2
+- [fdf9e9a1-b5cf-496a-821b-e7b3d5841252] phh-delegate-user-disable-type
+"
+`;
+
+exports[`frodo iga request-form describe "frodo iga request-form describe --request-form-name test": should describe request form 'test' 1`] = `
+"Usage: frodo iga request-form describe [options] [host] [realm] [username] [password]
+
+Describe request forms.
+
+Arguments:
+  host                            AM base URL, e.g.:
+                                  https://cdk.iam.example.com/am. To use a
+                                  connection profile, just specify a unique
+                                  substring or alias.
+  realm                           Realm. Specify realm as '/' for the root realm
+                                  or 'realm' or '/parent/child' otherwise.
+                                  (default: "alpha" for Identity Cloud tenants,
+                                  "/" otherwise.)
+  username                        Username to login with. Must be an admin user
+                                  with appropriate rights to manage
+                                  authentication journeys/trees.
+  password                        Password.
+
+Options:
+  -f, --file <file>               Request form file. If not specified, will
+                                  describe the first request form in the
+                                  provided export file.
+  -n, --request-form-name <name>  Request form name. If not specified, will
+                                  describe the first request form in the
+                                  provided export file.
+  -h, --help                      Help
+  -hh, --help-more                Help with all options.
+  -hhh, --help-all                Help with all options, environment variables,
+                                  and usage examples.
+"
+`;
+
+exports[`frodo iga request-form describe "frodo iga request-form describe -n test -f test/e2e/exports/all/allRequestForms.requestForm.json": should describe request form 'test' from file test/e2e/exports/all/allRequestForms.requestForm.json 1`] = `
+"Request Form
+Id          │05b1bc14-6406-49a7-933a-97868f9e567c
+Name        │test                                
+Type        │request                             
+Description │                                    
+Operation   │create                              
+Request Type│47b0e373-a9df-477d-986f-4aa64317ebed
+
+Request Types (6):
+- [0ece99b4-5039-4bd6-b31c-de14bcf45f11] phhType
+- [35daadd6-bc63-47b5-a0e5-7756dfbdf229] pgh-generate-rap
+- [8d0055b3-155f-4885-a415-4f1c536098e8] phh-create-user
+- [af4a6f84-f9a9-4f8d-82ae-649639debabc] test_workflow_request_type_5
+- [e58d2089-3e92-4a0b-b0fa-3ac6d4251877] jh-ne-create-test-2
+- [fdf9e9a1-b5cf-496a-821b-e7b3d5841252] phh-delegate-user-disable-type
+"
+`;
