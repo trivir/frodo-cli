@@ -1,5 +1,6 @@
 dist
 testResults.json
+jest-test-setup.js
 
 *.cer
 *.p12
