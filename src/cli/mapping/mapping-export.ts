@@ -43,12 +43,6 @@ export default function setup() {
     )
     .addOption(
       new Option(
-        '-f, --file <file>',
-        'Export file. Cannot be used with -A.'
-      ).conflicts(['allSeparate'])
-    )
-    .addOption(
-      new Option(
         '-a, --all',
         'Export all mappings. Cannot be used with -i and -A.'
       ).conflicts(['mappingId', 'allSeparate'])
@@ -59,7 +53,6 @@ export default function setup() {
         'Export file if -x or -a is provided. Cannot be used with -A.'
       ).conflicts(['allSeparate'])
     )
-    .addOption(new Option('-a, --all', 'Export all mappings. Cannot be used with -i.').conflicts(['mappingId']))
     .addOption(
       new Option(
         '-A, --all-separate',
