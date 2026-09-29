@@ -18,13 +18,21 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --policy-id <policy-id>',
-        'Policy id. If specified, only one policy is imported and the options -a and -A cannot be used.'
-      ).conflicts(['all', 'allSeparate'])
+        'Policy id. Cannot be used with --set-id, -a or -A.'
+      ).conflicts(['setId', 'all', 'allSeparate'])
     )
     .addOption(
-      new Option('--set-id <set-id>', 'Import policies into this policy set.')
+      new Option(
+        '--set-id <set-id>',
+        'Import policies into this policy set. Cannot be used with -i.'
+      ).conflicts(['policyId'])
     )
-    .addOption(new Option('-f, --file <file>', 'Name of the file to import.'))
+    .addOption(
+      new Option(
+        '-f, --file <file>',
+        'Name of the file to import. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(
       new Option(
         '-a, --all',
@@ -34,8 +42,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all policies from separate files (*.policy.authz.json or *.policy.json) in the current directory. Cannot be used with -i or -a.'
-      ).conflicts(['policyId', 'all'])
+        'Import all policies from separate files (*.policy.authz.json or *.policy.json) in the current directory. Cannot be used with -i, -f or -a.'
+      ).conflicts(['policyId', 'file', 'all'])
     )
     .addOption(
       new Option(

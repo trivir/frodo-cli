@@ -20,13 +20,13 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --role-id <role-id>',
-        'Role id. If specified, only one role is deleted and the options -n, -a and -A cannot be used.'
+        'Role id. If specified, only one role is deleted and the options -n, -a or -A cannot be used.'
       ).conflicts(['roleName', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-n, --role-name <role-name>',
-        'Role name. If specified, only one role is deleted and the options -i, -a and -A cannot be used.'
+        'Role name. If specified, only one role is deleted and the options -i, -a or -A cannot be used.'
       ).conflicts(['roleId', 'all', 'allSeparate'])
     )
     .addOption(

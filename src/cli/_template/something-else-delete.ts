@@ -22,7 +22,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --else-id <else-id>',
-        '[Else] id. If specified, -a cannot be used.'
+        '[Else] id. Cannot be used with -a.'
       ).conflicts(['all'])
     )
     .addOption(

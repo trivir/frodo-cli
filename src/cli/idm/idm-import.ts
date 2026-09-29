@@ -42,7 +42,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --entity-id <id>',
-        'Config entity id/name. E.g. "managed", "sync", "provisioner-<connector-name>", etc. If specified, -a and -A cannot be used.'
+        'Config entity id/name. E.g. "managed", "sync", "provisioner-<connector-name>", etc. If specified, -a or -A cannot be used.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(

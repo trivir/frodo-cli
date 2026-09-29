@@ -24,10 +24,15 @@ export default function setup() {
     .addOption(
       new Option(
         '-n, --realm-name <realm-name>',
-        'Realm name. If specified, -i, -a and -A cannot be used.'
+        'Realm name. If specified, -i, -a or -A cannot be used.'
       ).conflicts(['realmId', 'all', 'allSeparate'])
     )
-    .addOption(new Option('-f, --file <file>', 'Name of the export file.'))
+    .addOption(
+      new Option(
+        '-f, --file <file>',
+        'Name of the export file. Cannot be used with -A'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(
       new Option(
         '-a, --all',

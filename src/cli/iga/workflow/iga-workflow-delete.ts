@@ -40,7 +40,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-a, --all',
-        'Delete all workflows. By default, deletes both draft and published unless -d or -p are used exclusively. Ignored with -i.'
+        'Delete all workflows. By default, deletes both draft and published unless -d or -p are used exclusively. Cannot be used with -i.'
       )
     )
     .addOption(

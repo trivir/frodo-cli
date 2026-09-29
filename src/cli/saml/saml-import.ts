@@ -19,7 +19,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --entity-id <entity-id>',
-        'Entity id. If specified, only one provider is imported and the options -a and -A cannot be used.'
+        'Entity id. If specified, only one provider is imported and the options -a or -A cannot be used.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(

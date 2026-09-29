@@ -27,7 +27,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --mapping-id <mapping-id>',
-        'Mapping id. If specified, only one mapping is imported and the options -a and -A cannot be used.'
+        'Mapping id. If specified, only one mapping is imported and the options -a or -A cannot be used.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(new Option('-f, --file <file>', 'Name of the file to import'))

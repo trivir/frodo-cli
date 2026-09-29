@@ -27,13 +27,13 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --server-id <server-id>',
-        'Server id. If specified, only one server is imported and the options -u, -a and -A cannot be used.'
+        'Server id. If specified, only one server is imported and the options -u, -a or -A cannot be used.'
       ).conflicts(['serverUrl', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-u, --server-url <server-url>',
-        'Server url. Can be a unique substring of the full url (if not unique, it will error out). If specified, only one server is imported and the options -a and -A cannot be used.'
+        'Server url. Can be a unique substring of the full url (if not unique, it will error out). If specified, only one server is imported and the options -a or -A cannot be used.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(new Option('-f, --file <file>', 'Name of the file to import.'))

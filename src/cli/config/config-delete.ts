@@ -11,8 +11,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --config-id <config-id>',
-        'Configuration id. If specified, -a and -A cannot be used.'
-      ).conflicts(['all', 'allSeparate'])
+        'Configuration id. Cannot be used with -a.'
+      ).conflicts(['all'])
     )
     .addOption(
       new Option(

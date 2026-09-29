@@ -19,8 +19,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --policy-id <policy-id>',
-        'Policy id. If specified, -a and -A cannot be used.'
-      ).conflicts(['all', 'allSeparate'])
+        'Policy id. Cannot be used with --set-id, -a or -A.'
+      ).conflicts(['setId', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
@@ -28,7 +28,12 @@ export default function setup() {
         'Export policies in policy set only. Cannot be used with -i.'
       ).conflicts(['policyId'])
     )
-    .addOption(new Option('-f, --file <file>', 'Name of the export file.'))
+    .addOption(
+      new Option(
+        '-f, --file <file>',
+        'Name of the export file. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(
       new Option(
         '-a, --all',
@@ -38,8 +43,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export policies to separate files (*.policy.authz.json) in the current directory. Cannot be used with -i or -a.'
-      ).conflicts(['policyId', 'all'])
+        'Export policies to separate files (*.policy.authz.json) in the current directory. Cannot be used with -i, -f or -a.'
+      ).conflicts(['policyId', 'file', 'all'])
     )
     .addOption(
       new Option(

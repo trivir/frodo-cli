@@ -22,10 +22,15 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --other-id <other-id>',
-        '[Other] id. If specified, -a and -A cannot be used.'
+        '[Other] id. Cannot be used with -a or -A.'
       ).conflicts(['all', 'allSeparate'])
     )
-    .addOption(new Option('-f, --file <file>', 'Name of the export file.'))
+    .addOption(
+      new Option(
+        '-f, --file <file>',
+        'Name of the export file. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(
       new Option(
         '-a, --all',
@@ -35,8 +40,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all [others] to separate files (*.[other].json) in the current directory. Cannot be used with -i or -a.'
-      ).conflicts(['otherId', 'all'])
+        'Export all [others] to separate files (*.[other].json) in the current directory. Cannot be used with -i, -f or -a.'
+      ).conflicts(['otherId', 'file', 'all'])
     )
     .addOption(
       new Option(

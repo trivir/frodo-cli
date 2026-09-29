@@ -26,7 +26,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --idp-id <idp-id>',
-        'Id/name of a provider. If specified, -a and -A cannot be used.'
+        'Id/name of a provider. Cannot be used with -a or -A.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
@@ -44,8 +44,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all the providers as separate files <provider name>.admin.federation.json. Cannot be used with -i or -a.'
-      ).conflicts(['idpId', 'all'])
+        'Export all the providers as separate files <provider name>.admin.federation.json. Cannot be used with -i, -f or -a.'
+      ).conflicts(['idpId', 'file', 'all'])
     )
     .addOption(
       new Option(

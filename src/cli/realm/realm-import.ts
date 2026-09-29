@@ -31,7 +31,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-n, --realm-name <realm-name>',
-        'Realm name. If specified, only one realm is imported and the options -i, -a and -A cannot be used.'
+        'Realm name. If specified, only one realm is imported and the options -i, -a or -A cannot be used.'
       ).conflicts(['realmId', 'all', 'allSeparate'])
     )
     .addOption(new Option('-f, --file <file>', 'Name of the file to import.'))

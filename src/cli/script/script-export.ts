@@ -18,16 +18,21 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --script-id <uuid>',
-        'Uuid of the script. If specified, -n, -a and -A cannot be used.'
+        'Uuid of the script. If specified, -n, -a or -A cannot be used.'
       ).conflicts(['scriptName', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-n, --script-name <name>',
-        'Name of the script. If specified, -i, -a and -A cannot be used.'
+        'Name of the script. If specified, -i, -a or -A cannot be used.'
       ).conflicts(['scriptId', 'all', 'allSeparate'])
     )
-    .addOption(new Option('-f, --file <file>', 'Name of the export file.'))
+    .addOption(
+      new Option(
+        '-f, --file <file>',
+        'Name of the export file. Cannot be used with -A'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(
       new Option(
         '-a, --all',
@@ -74,7 +79,7 @@ export default function setup() {
     .addOption(
       new Option(
         '--no-deps',
-        'Do not include script dependencies (i.e. library scripts). Cannot be used with -a and -A.'
+        'Do not include script dependencies (i.e. library scripts). Cannot be used with -a or -A.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(

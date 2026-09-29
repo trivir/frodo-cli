@@ -20,7 +20,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --key-id <key-id>',
-        'Key id. If specified, -a and -A cannot be used.'
+        'Key id. If specified, -a or -A cannot be used.'
       ).conflicts(['all', 'allSeparate'])
     )
     .action(

@@ -26,25 +26,25 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --workflow-id <workflow-id>',
-        'Workflow id. If specified, -a and -A are ignored.'
+        'Workflow id. If specified, -a or -A are ignored.'
       )
     )
     .addOption(
       new Option(
         '-f, --file [file]',
-        'Name of the export file. Ignored with -A. Defaults to <workflow-id>.workflow.json.'
+        'Name of the export file. Cannot be used with -A. Defaults to <workflow-id>.workflow.json.'
       )
     )
     .addOption(
       new Option(
         '-a, --all',
-        'Export all workflows to a single file. Ignored with -i.'
+        'Export all workflows to a single file. Cannot be used with -i.'
       )
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all workflows as separate files <workflow-id>.workflow.json. Ignored with -i, and -a.'
+        'Export all workflows as separate files <workflow-id>.workflow.json. Cannot be used with -i, and -a.'
       )
     )
     .addOption(
@@ -62,7 +62,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-x, --no-extract',
-        'Do not extract the scripts from the exported file and save them to separate files. Ignored with -a.'
+        'Do not extract the scripts from the exported file and save them to separate files. Cannot be used with -a.'
       ).default(true, 'true')
     )
     .addOption(

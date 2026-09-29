@@ -20,9 +20,10 @@ export default function setup() {
     .alias('add')
     .description('Save connection profiles.')
     .addOption(
-      new Option('--no-sa', 'Do not create and add service account.').conflicts(
-        ['saId', 'saJwkFile']
-      )
+      new Option(
+        '--no-sa',
+        'Do not create and add service account. Cannot be used with --sa-id or --sa-jwk-file.'
+      ).conflicts(['saId', 'saJwkFile'])
     )
     .addOption(
       new Option(

@@ -27,7 +27,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --entity-id <id>',
-        'Config entity id/name. E.g. "managed", "sync", "provisioner-<connector-name>", etc. If specified, -a and -A cannot be used.'
+        'Config entity id/name. E.g. "managed", "sync", "provisioner-<connector-name>", etc. If specified, -a or -A cannot be used.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
@@ -63,7 +63,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-x, --no-extract',
-        'Do not extract and save idm scripts and save to separate files. Ignored with -a.'
+        'Do not extract and save idm scripts and save to separate files. Cannot be used with -a.'
       ).default(true, 'true')
     )
     .action(

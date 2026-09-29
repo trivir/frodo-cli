@@ -34,7 +34,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --secretstore-id <secretstore-id>',
-        'Secret store id. If specified, -a and -A cannot be used.'
+        'Secret store id. If specified, -a or -A cannot be used.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
@@ -43,7 +43,12 @@ export default function setup() {
         'Secret store type id of the secret store. Only necessary if there are multiple secret stores with the same secret store id. Ignored if -i is not specified.'
       )
     )
-    .addOption(new Option('-f, --file <file>', 'Name of the export file.'))
+    .addOption(
+      new Option(
+        '-f, --file <file>',
+        'Name of the export file. Cannot be used with -A'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(
       new Option(
         '-g, --global',

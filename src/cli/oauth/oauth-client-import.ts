@@ -18,7 +18,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --app-id <id>',
-        'Client id. If specified, only one client is imported and the options -a and -A cannot be used.'
+        'Client id. If specified, only one client is imported and the options -a or -A cannot be used.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(new Option('-f, --file <file>', 'Name of the file to import.'))

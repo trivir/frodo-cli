@@ -20,7 +20,12 @@ export default function setup() {
         `By default, it only exports importable config (i.e. config that is not read-only) for the current deployment (e.g. if exporting from cloud, realm config would NOT be exported since it can't be imported back into cloud even though it can be imported into classic deployments). There is a flag to export all config including read only config.\n` +
         `Additionally, there is a flag to export config for only the specified realm, a flag to export only global config, and many other flags to customize the export. Use the -h or --help to see them all and to also see usage examples.`
     )
-    .addOption(new Option('-f, --file <file>', 'Name of the export file.'))
+    .addOption(
+      new Option(
+        '-f, --file <file>',
+        'Name of the export file. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(
       new Option(
         '-a, --all',
@@ -30,8 +35,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export everything to separate files in the -D directory. Cannot be used with -a.'
-      ).conflicts(['all'])
+        'Export everything to separate files in the -D directory. Cannot be used with -f or -a.'
+      ).conflicts(['file', 'all'])
     )
     .addOption(
       new Option(

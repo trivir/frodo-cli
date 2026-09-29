@@ -19,7 +19,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --idp-id <id>',
-        'Provider id. If specified, -a and -A cannot be used.'
+        'Provider id. If specified, -a or -A cannot be used.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
