@@ -27,13 +27,13 @@ export default function setup() {
     .addOption(
       new Option(
         '-n, --theme-name <name>',
-        'Name of the theme. If specified, -i, -a and -A cannot be used.'
+        'Name of the theme. If specified, -i, -a or -A cannot be used.'
       ).conflicts(['themeId', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-i, --theme-id <uuid>',
-        'Uuid of the theme. If specified, -n, -a and -A cannot be used.'
+        'Uuid of the theme. If specified, -n, -a or -A cannot be used.'
       ).conflicts(['themeName', 'all', 'allSeparate'])
     )
     .addOption(

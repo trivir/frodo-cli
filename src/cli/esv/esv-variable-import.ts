@@ -25,7 +25,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --variable-id <variable-id>',
-        'Variable id. If specified, only one variable is imported and the options -a and -A cannot be used.'
+        'Variable id. If specified, only one variable is imported and the options -a or -A cannot be used.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(new Option('-f, --file <file>', 'Name of the file to import.'))

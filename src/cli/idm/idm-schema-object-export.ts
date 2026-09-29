@@ -58,7 +58,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-x, --no-extract',
-        'Do not extract and save idm scripts to separate files. Ignored with -a and -A.'
+        'Do not extract and save idm scripts to separate files. Cannot be used with -a or -A.'
       ).default(true, 'true')
     )
     .addHelpText(

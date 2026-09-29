@@ -18,7 +18,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --cot-id <cot-id>',
-        'Circle of trust id. If specified, only one circle of trust is imported and the options -a and -A cannot be used.'
+        'Circle of trust id. If specified, only one circle of trust is imported and the options -a or -A cannot be used.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(

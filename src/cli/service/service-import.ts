@@ -33,7 +33,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --service-id <service-id>',
-        'Service id. If specified, -a and -A cannot be used.'
+        'Service id. If specified, -a or -A cannot be used.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(

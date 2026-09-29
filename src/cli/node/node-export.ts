@@ -16,16 +16,21 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --node-id <node-id>',
-        'Custom node id or service name. If specified, only one custom node is exported and the options -n, -a and -A cannot be used.'
+        'Custom node id or service name. If specified, only one custom node is exported and the options -n, -a or -A cannot be used.'
       ).conflicts(['nodeName', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-n, --node-name <node-name>',
-        'Custom node display name. If specified, only one custom node is exported and the options -i, -a and -A cannot be used.'
+        'Custom node display name. If specified, only one custom node is exported and the options -i, -a or -A cannot be used.'
       ).conflicts(['nodeId', 'all', 'allSeparate'])
     )
-    .addOption(new Option('-f, --file <file>', 'Name of the export file.'))
+    .addOption(
+      new Option(
+        '-f, --file <file>',
+        'Name of the export file. Cannot be used with -A'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(
       new Option(
         '-a, --all',

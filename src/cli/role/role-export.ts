@@ -25,16 +25,21 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --role-id <role-id>',
-        'Internal role id. If specified, only one internal role is exported and the options -n, -a and -A cannot be used.'
+        'Internal role id. If specified, only one internal role is exported and the options -n, -a or -A cannot be used.'
       ).conflicts(['roleName', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-n, --role-name <role-name>',
-        'Internal role name. If specified, only one internal role is exported and the options -i, -a and -A cannot be used.'
+        'Internal role name. If specified, only one internal role is exported and the options -i, -a or -A cannot be used.'
       ).conflicts(['roleId', 'all', 'allSeparate'])
     )
-    .addOption(new Option('-f, --file <file>', 'Name of the export file.'))
+    .addOption(
+      new Option(
+        '-f, --file <file>',
+        'Name of the export file. Cannot be used with -A'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(
       new Option(
         '-a, --all',

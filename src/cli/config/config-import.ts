@@ -32,7 +32,7 @@ export default function setup() {
       new Option(
         '-A, --all-separate',
         'Import all configuration from separate (.json) files in the (working) directory -D. Cannot be used with -f or -a.'
-      ).conflicts(['all', 'file'])
+      ).conflicts(['file', 'all'])
     )
     .addOption(
       new Option('-C, --clean', 'Remove existing service(s) before importing.')
@@ -82,7 +82,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-g, --global',
-        'Import global entity. Cannot be used with -a and -A.'
+        'Import global entity. Cannot be used with -a or -A.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addHelpText(

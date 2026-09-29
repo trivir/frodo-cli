@@ -16,10 +16,15 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --agent-id <agent-id>',
-        'Agent id. If specified, -a and -A cannot be used.'
+        'Agent id. Cannot be used with -a or -A.'
       ).conflicts(['all', 'allSeparate'])
     )
-    .addOption(new Option('-f, --file <file>', 'Name of the export file.'))
+    .addOption(
+      new Option(
+        '-f, --file <file>',
+        'Name of the export file. Cannot be used with -A'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(
       new Option(
         '-a, --all',
@@ -29,8 +34,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all java agents to separate files (*.javaagent.json) in the current directory. Cannot be used with -i or -a.'
-      ).conflicts(['agentId', 'all'])
+        'Export all java agents to separate files (*.javaagent.json) in the current directory. Cannot be used with -i, -f or -a.'
+      ).conflicts(['agentId', 'file', 'all'])
     )
     .addOption(
       new Option(

@@ -16,7 +16,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --agent-id <agent-id>',
-        'Agent id. If specified, -a cannot be used.'
+        'Agent id. Cannot be used with -a.'
       ).conflicts(['all'])
     )
     .addOption(

@@ -16,10 +16,15 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --app-id <app-id>',
-        'App id. If specified, -a and -A cannot be used.'
+        'App id. If specified, -a or -A cannot be used.'
       ).conflicts(['all', 'allSeparate'])
     )
-    .addOption(new Option('-f, --file <file>', 'Name of the export file.'))
+    .addOption(
+      new Option(
+        '-f, --file <file>',
+        'Name of the export file. Cannot be used with -A'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(
       new Option(
         '-a, --all',

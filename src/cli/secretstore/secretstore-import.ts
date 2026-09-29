@@ -34,7 +34,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --secretstore-id <secretstore-id>',
-        'Secret store id. If specified, only one secret store is imported and the options -a and -A cannot be used.'
+        'Secret store id. If specified, only one secret store is imported and the options -a or -A cannot be used.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(

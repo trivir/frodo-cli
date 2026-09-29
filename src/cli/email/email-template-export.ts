@@ -29,7 +29,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --template-id <template-id>',
-        'Email template id/name. If specified, -a and -A cannot be used.'
+        'Email template id/name. If specified, -a or -A cannot be used.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
@@ -47,8 +47,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all email templates as separate files <template-id>.template.email.json. Cannot be used with -i, and -a.'
-      ).conflicts(['templateId', 'all'])
+        'Export all email templates as separate files <template-id>.template.email.json. Cannot be used with -i, -f and -a.'
+      ).conflicts(['templateId', 'all', 'file'])
     )
     .addOption(
       new Option(

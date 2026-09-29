@@ -12,7 +12,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --set-id <set-id>',
-        'Policy set id/name. Cannot be used with -a'
+        'Policy set id/name. Cannot be used with -a.'
       ).conflicts(['all'])
     )
     .addOption(

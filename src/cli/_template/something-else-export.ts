@@ -21,10 +21,15 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --else-id <else-id>',
-        '[Else] id. If specified, -a and -A cannot be used.'
+        '[Else] id. Cannot be used with -a or -A.'
       ).conflicts(['all', 'allSeparate'])
     )
-    .addOption(new Option('-f, --file <file>', 'Name of the export file.'))
+    .addOption(
+      new Option(
+        '-f, --file <file>',
+        'Name of the export file. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(
       new Option(
         '-a, --all',
@@ -34,8 +39,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all [else] to separate files (*.[else].json) in the current directory. Cannot be used with -i or -a.'
-      ).conflicts(['elseId', 'all'])
+        'Export all [else] to separate files (*.[else].json) in the current directory. Cannot be used with -i, -f or -a.'
+      ).conflicts(['elseId', 'file', 'all'])
     )
     .addOption(
       new Option(

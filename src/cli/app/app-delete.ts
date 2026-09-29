@@ -26,14 +26,14 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --app-id <id>',
-        'Application id. If specified, -n and -a cannot be used.'
+        'Application id. Cannot be used with -a or -n.'
       ).conflicts(['appName', 'all'])
     )
     .addOption(
       new Option(
         '-n, --app-name <name>',
-        'Application name. If specified, -a cannot be used.'
-      ).conflicts(['all'])
+        'Application name. Cannot be used with -i or -a.'
+      ).conflicts(['appId', 'all'])
     )
     .addOption(
       new Option(
