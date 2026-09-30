@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga policy import "frodo iga policy import --policy-name test --file test/e2e/exports/all/allPolicies.policy.json  ": should import test test from the file "test/e2e/exports/all/allPolicies.policy.json " 1`] = `""`;
+
+exports[`frodo iga policy import "frodo iga policy import --policy-name test --file test/e2e/exports/all/allPolicies.policy.json  ": should import test test from the file "test/e2e/exports/all/allPolicies.policy.json " 2`] = `
+"✔ Successfully imported policy contains-test.
+"
+`;
+
+exports[`frodo iga policy import "frodo iga policy import -AD test/e2e/exports/all-separate/cloud/global/sod-policy": should import all policies from the directory "test/e2e/exports/all-separate/cloud/global/sod-policy" with dependencies 1`] = `""`;
+
+exports[`frodo iga policy import "frodo iga policy import -AD test/e2e/exports/all-separate/cloud/global/sod-policy": should import all policies from the directory "test/e2e/exports/all-separate/cloud/global/sod-policy" with dependencies 2`] = `
+"✔ Successfully imported policies.
+"
+`;
+
+exports[`frodo iga policy import "frodo iga policy import -af test/e2e/exports/all/allPolicies.policy.json ": should import all policies from the file "test/e2e/exports/all/allPolicies.policy.json " with dependencies 1`] = `""`;
+
+exports[`frodo iga policy import "frodo iga policy import -af test/e2e/exports/all/allPolicies.policy.json ": should import all policies from the file "test/e2e/exports/all/allPolicies.policy.json " with dependencies 2`] = `
+"✔ Successfully imported policies.
+"
+`;
+
+exports[`frodo iga policy import "frodo iga policy import -f test/e2e/exports/all/allPolicies.policy.json  ": should import first policy from the file "test/e2e/exports/all/allPolicies.policy.json " 1`] = `""`;
+
+exports[`frodo iga policy import "frodo iga policy import -f test/e2e/exports/all/allPolicies.policy.json  ": should import first policy from the file "test/e2e/exports/all/allPolicies.policy.json " 2`] = `
+"✔ Imported policy from test/e2e/exports/all/allPolicies.policy.json
+"
+`;
+
+exports[`frodo iga policy import "frodo iga policy import -n test -f test/e2e/exports/all/allPolicies.policy.json ": should import test policy from the file "test/e2e/exports/all/allPolicies.policy.json " with dependencies 1`] = `""`;
+
+exports[`frodo iga policy import "frodo iga policy import -n test -f test/e2e/exports/all/allPolicies.policy.json ": should import test policy from the file "test/e2e/exports/all/allPolicies.policy.json " with dependencies 2`] = `
+"✔ Successfully imported policy test.
+"
+`;

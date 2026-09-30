@@ -1,0 +1,76 @@
+{
+  "meta": {
+    "exportDate": "2026-06-04T15:39:57.368Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  },
+  "policy": {
+    "39e53582-d85d-4f4d-91a8-54def507b993": {
+      "active": true,
+      "description": "test",
+      "id": "39e53582-d85d-4f4d-91a8-54def507b993",
+      "metadata": {},
+      "name": "test",
+      "policyOwner": {
+        "givenName": "csv",
+        "id": "managed/user/9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+        "mail": "1csv@example.com",
+        "sn": "one",
+        "userName": "1csv"
+      },
+      "policyRuleIds": [
+        "0434dcaa-7950-4f7a-b869-7a3d33c82396",
+        "df95d487-a251-458d-8299-14f2b131264c"
+      ],
+      "policyRuleNames": [
+        "Test Policy",
+        "test rule"
+      ],
+      "schedule": null
+    },
+    "df18c346-68bb-48ce-8840-ead1688f2a60": {
+      "active": true,
+      "description": "",
+      "id": "df18c346-68bb-48ce-8840-ead1688f2a60",
+      "metadata": {},
+      "name": "testing",
+      "policyOwner": {
+        "givenName": "Dallin",
+        "id": "managed/user/5068da35-7971-4f11-becf-ba716b6aadb9",
+        "mail": "test@mail.com",
+        "sn": "sevy",
+        "userName": "Dallin"
+      },
+      "policyRuleIds": [
+        "df95d487-a251-458d-8299-14f2b131264c"
+      ],
+      "policyRuleNames": [
+        "test rule"
+      ]
+    },
+    "e5b6a80d-a1ae-455f-830d-dc1bcc61b7cf": {
+      "active": true,
+      "description": "this is a test policy",
+      "id": "e5b6a80d-a1ae-455f-830d-dc1bcc61b7cf",
+      "metadata": {},
+      "name": "test policy",
+      "policyOwner": {
+        "givenName": "Dallin",
+        "id": "managed/user/5068da35-7971-4f11-becf-ba716b6aadb9",
+        "mail": "test@mail.com",
+        "sn": "sevy",
+        "userName": "Dallin"
+      },
+      "policyRuleIds": [
+        "df95d487-a251-458d-8299-14f2b131264c"
+      ],
+      "policyRuleNames": [
+        "test rule"
+      ],
+      "scheduleId": "policySchedulee5b6a80da1ae455f830ddc1bcc61b7cf"
+    }
+  }
+}
