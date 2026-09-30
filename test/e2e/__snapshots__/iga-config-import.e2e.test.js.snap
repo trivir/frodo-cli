@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga config import "frodo iga config import --all --file test/e2e/exports/all/allConfig.config.json ": should import all iga config from the file "test/e2e/exports/all/allConfig.config.json" 1`] = `""`;
+
+exports[`frodo iga config import "frodo iga config import --all --file test/e2e/exports/all/allConfig.config.json ": should import all iga config from the file "test/e2e/exports/all/allConfig.config.json" 2`] = `
+"✔ Successfully imported iga config.
+"
+`;
+
+exports[`frodo iga config import "frodo iga config import --config-key iga_autoid_integration --file test/e2e/exports/all/allConfig.config.json ": should import iga_autoid_integration from the file "test/e2e/exports/all/allConfig.config.json" 1`] = `""`;
+
+exports[`frodo iga config import "frodo iga config import --config-key iga_autoid_integration --file test/e2e/exports/all/allConfig.config.json ": should import iga_autoid_integration from the file "test/e2e/exports/all/allConfig.config.json" 2`] = `
+"✔ Successfully imported iga_autoid_integration.
+"
+`;
+
+exports[`frodo iga config import "frodo iga config import -AD test/e2e/exports/all-separate/cloud/global/config": should import all iga config from the directory "test/e2e/exports/all-separate/cloud/global/config" 1`] = `""`;
+
+exports[`frodo iga config import "frodo iga config import -AD test/e2e/exports/all-separate/cloud/global/config": should import all iga config from the directory "test/e2e/exports/all-separate/cloud/global/config" 2`] = `
+"✔ Successfully imported iga config.
+✔ Successfully imported iga config.
+✔ Successfully imported iga config.
+✔ Successfully imported iga config.
+✔ Successfully imported iga config.
+✔ Successfully imported iga config.
+✔ Successfully imported iga config.
+✔ Successfully imported iga config.
+"
+`;
+
+exports[`frodo iga config import "frodo iga config import -af test/e2e/exports/all/allConfig.config.json": should import all iga config from the file "test/e2e/exports/all/allConfig.config.json" 1`] = `""`;
+
+exports[`frodo iga config import "frodo iga config import -af test/e2e/exports/all/allConfig.config.json": should import all iga config from the file "test/e2e/exports/all/allConfig.config.json" 2`] = `
+"✔ Successfully imported iga config.
+"
+`;
+
+exports[`frodo iga config import "frodo iga config import -f test/e2e/exports/all/allConfig.config.json ": should import first iga config from the file "test/e2e/exports/all/allConfig.config.json" 1`] = `""`;
+
+exports[`frodo iga config import "frodo iga config import -f test/e2e/exports/all/allConfig.config.json ": should import first iga config from the file "test/e2e/exports/all/allConfig.config.json" 2`] = `
+"✔ Imported iga config from test/e2e/exports/all/allConfig.config.json
+"
+`;
+
+exports[`frodo iga config import "frodo iga config import -n iga_autoid_integration -f test/e2e/exports/all/allConfig.config.json": should import iga_autoid_integration from the file "test/e2e/exports/all/allConfig.config.json" 1`] = `""`;
+
+exports[`frodo iga config import "frodo iga config import -n iga_autoid_integration -f test/e2e/exports/all/allConfig.config.json": should import iga_autoid_integration from the file "test/e2e/exports/all/allConfig.config.json" 2`] = `
+"✔ Successfully imported iga_autoid_integration.
+"
+`;

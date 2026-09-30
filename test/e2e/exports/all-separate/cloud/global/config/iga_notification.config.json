@@ -1,0 +1,30 @@
+{
+  "config": {
+    "undefined": {
+      "config": {
+        "iga_notification": {
+          "notificationMaxRetries": 3,
+          "notificationPollingBatchSize": 50,
+          "notificationRetryDelay": 60000,
+          "notificationSendDelay": 1000
+        }
+      },
+      "meta": {
+        "exportDate": "2026-05-22T18:26:21.179Z",
+        "exportTool": "frodo",
+        "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+        "exportedBy": "dsevy@trivir.com",
+        "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+        "originAmVersion": "9.0.0"
+      }
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-22T18:26:21.179Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}
