@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga policy describe "frodo iga policy describe --file test/e2e/exports/all/allPolicies.policy.json": should describe first policy from file test/e2e/exports/all/allPolicies.policy.json 1`] = `
+"Id              │39e53582-d85d-4f4d-91a8-54def507b993
+Name            │test                                
+Description     │test                                
+Status          │active                              
+Policy Owner    │1csv                                
+Policy Rules (2)│Test Policy                         
+                │test rule                           
+
+"
+`;
+
+exports[`frodo iga policy describe "frodo iga policy describe --policy-name test ": should describe policy 'test' 1`] = `
+"Id              │39e53582-d85d-4f4d-91a8-54def507b993
+Name            │test                                
+Description     │test                                
+Status          │active                              
+Policy Owner    │1csv                                
+Policy Rules (2)│Test Policy                         
+                │test rule                           
+
+"
+`;
+
+exports[`frodo iga policy describe "frodo iga policy describe -n test -f test/e2e/exports/all/allPolicies.policy.json": should describe policy 'contains-test' from file test/e2e/exports/all/allPolicies.policy.json 1`] = `
+"Id              │39e53582-d85d-4f4d-91a8-54def507b993
+Name            │test                                
+Description     │test                                
+Status          │active                              
+Policy Owner    │1csv                                
+Policy Rules (2)│Test Policy                         
+                │test rule                           
+
+"
+`;

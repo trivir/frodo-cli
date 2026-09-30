@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga policy-rule import "frodo iga policy-rule import --rule-name describe-test --file test/e2e/exports/all/allPolicyRules.rules.json ": should import describe-test from the file "test/e2e/exports/all/allPolicyRules.rules.json" 1`] = `""`;
+
+exports[`frodo iga policy-rule import "frodo iga policy-rule import --rule-name describe-test --file test/e2e/exports/all/allPolicyRules.rules.json ": should import describe-test from the file "test/e2e/exports/all/allPolicyRules.rules.json" 2`] = `
+"✔ Successfully imported policy rule describe-test.
+"
+`;
+
+exports[`frodo iga policy-rule import "frodo iga policy-rule import -AD test/e2e/exports/all-separate/cloud/global/sod-policy-rules": should import all policy rules from the directory "test/e2e/exports/all-separate/cloud/global/sod-policy-rules" with dependencies 1`] = `""`;
+
+exports[`frodo iga policy-rule import "frodo iga policy-rule import -AD test/e2e/exports/all-separate/cloud/global/sod-policy-rules": should import all policy rules from the directory "test/e2e/exports/all-separate/cloud/global/sod-policy-rules" with dependencies 2`] = `
+"✔ Successfully imported policy rules.
+"
+`;
+
+exports[`frodo iga policy-rule import "frodo iga policy-rule import -af test/e2e/exports/all/allPolicyRules.rules.json": should import all policy rules from the file "test/e2e/exports/all/allPolicyRules.rules.json" with dependencies 1`] = `""`;
+
+exports[`frodo iga policy-rule import "frodo iga policy-rule import -af test/e2e/exports/all/allPolicyRules.rules.json": should import all policy rules from the file "test/e2e/exports/all/allPolicyRules.rules.json" with dependencies 2`] = `
+"✔ Successfully imported policy rules.
+"
+`;
+
+exports[`frodo iga policy-rule import "frodo iga policy-rule import -f test/e2e/exports/all/allPolicyRules.rules.json ": should import first policy rule from the file "test/e2e/exports/all/allPolicyRules.rules.json" 1`] = `""`;
+
+exports[`frodo iga policy-rule import "frodo iga policy-rule import -f test/e2e/exports/all/allPolicyRules.rules.json ": should import first policy rule from the file "test/e2e/exports/all/allPolicyRules.rules.json" 2`] = `
+"✔ Imported policy rule from test/e2e/exports/all/allPolicyRules.rules.json
+"
+`;
+
+exports[`frodo iga policy-rule import "frodo iga policy-rule import -n describe-test -f test/e2e/exports/all/allPolicyRules.rules.json": should import describe-test from the file "test/e2e/exports/all/allPolicyRules.rules.json" with dependencies 1`] = `""`;
+
+exports[`frodo iga policy-rule import "frodo iga policy-rule import -n describe-test -f test/e2e/exports/all/allPolicyRules.rules.json": should import describe-test from the file "test/e2e/exports/all/allPolicyRules.rules.json" with dependencies 2`] = `
+"✔ Successfully imported policy rule describe-test.
+"
+`;

@@ -1,0 +1,320 @@
+{
+  "meta": {
+    "exportDate": "2026-06-04T18:03:27.952Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  },
+  "policyRule": {
+    "0434dcaa-7950-4f7a-b869-7a3d33c82396": {
+      "active": true,
+      "correctionAdvice": "Correct violations",
+      "decisionOptions": {
+        "allow": true,
+        "exception": true,
+        "remediate": true
+      },
+      "description": "Test policy (delete me)",
+      "documentationUrl": "google.com",
+      "id": "0434dcaa-7950-4f7a-b869-7a3d33c82396",
+      "maxExceptionDuration": 90,
+      "metadata": {},
+      "mitigatingControl": "Mitigate Control",
+      "name": "Test Policy",
+      "policyRuleOwner": {
+        "givenName": "Preston",
+        "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+        "mail": "test@test.com",
+        "sn": "Test",
+        "userName": "PrestonIGATestUser"
+      },
+      "remediation": {
+        "schemas": [
+          "grantRemoval"
+        ]
+      },
+      "riskScore": 5,
+      "ruleDefinition": [
+        {
+          "operand": [
+            {
+              "operand": {
+                "targetName": "entitlement.displayName",
+                "targetValue": "aicGroup1"
+              },
+              "operator": "CONTAINS"
+            }
+          ],
+          "operator": "AND",
+          "type": [
+            "entitlementGrant"
+          ]
+        },
+        {
+          "operand": [
+            {
+              "operand": {
+                "targetName": "entitlement.displayName",
+                "targetValue": "aicGroup2"
+              },
+              "operator": "CONTAINS"
+            }
+          ],
+          "operator": "OR",
+          "type": [
+            "entitlementGrant"
+          ]
+        }
+      ],
+      "ruleDefinitionTags": [
+        "targetName=entitlement.displayName&targetValue=aicGroup1",
+        "targetValue=aicGroup1&targetName=entitlement.displayName",
+        "targetName=entitlement.displayName&targetValue=aicGroup2",
+        "targetValue=aicGroup2&targetName=entitlement.displayName",
+        "targetName=id&targetValue=0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+        "targetValue=0f325c99-6965-4f45-b1e4-f9db1fa4dcf6&targetName=id"
+      ],
+      "scanTypes": {
+        "detective": true,
+        "preventative": true
+      },
+      "userFilter": {
+        "operand": [
+          {
+            "operand": {
+              "targetName": "id",
+              "targetValue": "0f325c99-6965-4f45-b1e4-f9db1fa4dcf6"
+            },
+            "operator": "EQUALS"
+          }
+        ],
+        "operator": "AND"
+      },
+      "violationLifecycle": {
+        "exception": {
+          "justificationCheck": true
+        },
+        "expiration": {
+          "action": "do_nothing",
+          "duration": 7,
+          "expires": true
+        },
+        "workflow": {
+          "action": "launch_workflow"
+        }
+      },
+      "violationOwner": {
+        "givenName": "Preston",
+        "id": "managed/user/0f325c99-6965-4f45-b1e4-f9db1fa4dcf6",
+        "mail": "test@test.com",
+        "sn": "Test",
+        "userName": "PrestonIGATestUser"
+      },
+      "violationOwnerType": "user",
+      "workflow": {
+        "id": "ModifyUser",
+        "type": "bpmn"
+      }
+    },
+    "2e4bc849-67b5-4c8a-9894-341cf2fa1192": {
+      "active": true,
+      "correctionAdvice": "",
+      "decisionOptions": {
+        "allow": true,
+        "exception": true,
+        "remediate": true
+      },
+      "description": "this is a description test",
+      "documentationUrl": "",
+      "id": "2e4bc849-67b5-4c8a-9894-341cf2fa1192",
+      "maxExceptionDuration": 90,
+      "metadata": {},
+      "mitigatingControl": "test",
+      "name": "describe-test",
+      "policyRuleOwner": {
+        "givenName": "Colton",
+        "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+        "mail": "cparry@trivir.com",
+        "sn": "Parry",
+        "userName": "ColtonIGATestUser"
+      },
+      "remediation": {
+        "schemas": [
+          "grantRemoval"
+        ]
+      },
+      "riskScore": 100,
+      "ruleDefinition": [
+        {
+          "operand": [
+            {
+              "operand": {
+                "targetName": "entitlement.glossary.description",
+                "targetValue": "empty"
+              },
+              "operator": "EQUALS"
+            }
+          ],
+          "operator": "OR",
+          "type": [
+            "entitlementGrant"
+          ]
+        },
+        {
+          "operand": [
+            {
+              "operand": {
+                "targetName": "entitlement.glossary.CP-DummyEntitlement",
+                "targetValue": "empty"
+              },
+              "operator": "EQUALS"
+            }
+          ],
+          "operator": "OR",
+          "type": [
+            "entitlementGrant"
+          ]
+        }
+      ],
+      "ruleDefinitionTags": [
+        "targetName=entitlement.glossary.description&targetValue=empty",
+        "targetValue=empty&targetName=entitlement.glossary.description",
+        "targetName=entitlement.glossary.CP-DummyEntitlement&targetValue=empty",
+        "targetValue=empty&targetName=entitlement.glossary.CP-DummyEntitlement",
+        "targetName=id&targetValue=5068da35-7971-4f11-becf-ba716b6aadb9",
+        "targetValue=5068da35-7971-4f11-becf-ba716b6aadb9&targetName=id"
+      ],
+      "scanTypes": {
+        "detective": true,
+        "preventative": true
+      },
+      "userFilter": {
+        "operand": [
+          {
+            "operand": {
+              "targetName": "id",
+              "targetValue": "5068da35-7971-4f11-becf-ba716b6aadb9"
+            },
+            "operator": "EQUALS"
+          }
+        ],
+        "operator": "AND"
+      },
+      "violationLifecycle": {
+        "exception": {
+          "justificationCheck": true
+        },
+        "expiration": {
+          "expires": false
+        },
+        "workflow": {
+          "action": "do_nothing"
+        }
+      },
+      "violationOwner": {
+        "givenName": "Colton",
+        "id": "managed/user/645363b3-7cbb-47a3-bf93-d96c59c387d9",
+        "mail": "cparry@trivir.com",
+        "sn": "Parry",
+        "userName": "ColtonIGATestUser"
+      },
+      "violationOwnerType": "user"
+    },
+    "df95d487-a251-458d-8299-14f2b131264c": {
+      "active": true,
+      "correctionAdvice": "",
+      "decisionOptions": {
+        "allow": true,
+        "exception": true,
+        "remediate": true
+      },
+      "description": "this is a test rule",
+      "documentationUrl": "",
+      "id": "df95d487-a251-458d-8299-14f2b131264c",
+      "maxExceptionDuration": 90,
+      "metadata": {},
+      "mitigatingControl": "",
+      "name": "test rule",
+      "policyRuleOwner": {
+        "givenName": "Dallin",
+        "id": "managed/user/5068da35-7971-4f11-becf-ba716b6aadb9",
+        "mail": "test@mail.com",
+        "sn": "sevy",
+        "userName": "Dallin"
+      },
+      "remediation": {
+        "schemas": [
+          "grantRemoval"
+        ]
+      },
+      "riskScore": 0,
+      "ruleDefinition": [
+        {
+          "operand": [
+            {
+              "operand": {
+                "targetName": "entitlement.displayName",
+                "targetValue": "aicGroup1"
+              },
+              "operator": "EQUALS"
+            }
+          ],
+          "operator": "OR",
+          "type": [
+            "entitlementGrant"
+          ]
+        },
+        {
+          "operand": [
+            {
+              "operand": {
+                "targetName": "entitlement.displayName",
+                "targetValue": "aicGroup2"
+              },
+              "operator": "EQUALS"
+            }
+          ],
+          "operator": "AND",
+          "type": [
+            "entitlementGrant"
+          ]
+        }
+      ],
+      "ruleDefinitionTags": [
+        "targetName=entitlement.displayName&targetValue=aicGroup1",
+        "targetValue=aicGroup1&targetName=entitlement.displayName",
+        "targetName=entitlement.displayName&targetValue=aicGroup2",
+        "targetValue=aicGroup2&targetName=entitlement.displayName"
+      ],
+      "scanTypes": {
+        "detective": true,
+        "preventative": true
+      },
+      "userFilter": {
+        "operand": [],
+        "operator": "ALL"
+      },
+      "violationLifecycle": {
+        "exception": {
+          "justificationCheck": true
+        },
+        "expiration": {
+          "expires": false
+        },
+        "workflow": {
+          "action": "do_nothing"
+        }
+      },
+      "violationOwner": {
+        "givenName": "Dallin",
+        "id": "managed/user/5068da35-7971-4f11-becf-ba716b6aadb9",
+        "mail": "test@mail.com",
+        "sn": "sevy",
+        "userName": "Dallin"
+      },
+      "violationOwnerType": "user"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "exportDate": "2026-06-04T15:39:51.406Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  },
+  "policy": {
+    "test": {
+      "active": true,
+      "description": "test",
+      "id": "39e53582-d85d-4f4d-91a8-54def507b993",
+      "metadata": {},
+      "name": "test",
+      "policyOwner": {
+        "givenName": "csv",
+        "id": "managed/user/9de92b26-e91e-44b7-ac81-7ae1c6adf9ad",
+        "mail": "1csv@example.com",
+        "sn": "one",
+        "userName": "1csv"
+      },
+      "policyRuleIds": [
+        "0434dcaa-7950-4f7a-b869-7a3d33c82396",
+        "df95d487-a251-458d-8299-14f2b131264c"
+      ],
+      "policyRuleNames": [
+        "Test Policy",
+        "test rule"
+      ],
+      "schedule": null
+    }
+  }
+}
