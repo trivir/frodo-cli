@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga config list "frodo iga config list": should list the ids of the iga config 1`] = `
+"Key                   │Settings                                                                 
+iga_access_request    │{                                                                        
+                      │  "requireRequestJustification": false,                                  
+                      │  "requireRejectJustification": false,                                   
+                      │  "requireApproveJustification": false,                                  
+                      │  "preventRequestWithViolation": false,                                  
+                      │  "requireRequestJustificationWithViolation": false,                     
+                      │  "defaultApprover": "managed/role/8b470ae7-d40a-4f6a-87cd-b39c2f144fe7",
+                      │  "allowSelfApproval": true,                                             
+                      │  "maxManualRoleMembers": 1000                                           
+                      │}                                                                        
+iga_autoid_integration│{                                                                        
+                      │  "enableAutoId": false,                                                 
+                      │  "highScorePercentThreshold": 80,                                       
+                      │  "mediumScorePercentThreshold": 50,                                     
+                      │  "lowScorePercentThreshold": 30,                                        
+                      │  "training_features_filter": [                                          
+                      │    "user.managerId"                                                     
+                      │  ],                                                                     
+                      │  "roleMiningConfidenceThreshold": 0.75,                                 
+                      │  "roleMiningMembershipThreshold": 30,                                   
+                      │  "roleMiningEntitlementThreshold": 1,                                   
+                      │  "enableFeatureRecommendation": true,                                   
+                      │  "maxRecommendedFeatures": 10,                                          
+                      │  "featuresToSkipDuringRecommendation": [                                
+                      │    "_eventMetadata",                                                    
+                      │    "_rev",                                                              
+                      │    "accountStatus",                                                     
+                      │    "assignedDashboard",                                                 
+                      │    "cn",                                                                
+                      │    "entityType",                                                        
+                      │    "fr",                                                                
+                      │    "givenName",                                                         
+                      │    "id",                                                                
+                      │    "mail",                                                              
+                      │    "manager",                                                           
+                      │    "metadata",                                                          
+                      │    "sn",                                                                
+                      │    "userId",                                                            
+                      │    "userName",                                                          
+                      │    "passwordLastChangedTime",                                           
+                      │    "passwordExpirationTime",                                            
+                      │    "scopes",                                                            
+                      │    "adminOfOrg",                                                        
+                      │    "memberOfOrg",                                                       
+                      │    "ownerOfApp",                                                        
+                      │    "ownerOfOrg",                                                        
+                      │    "roles",                                                             
+                      │    "authzRoles",                                                        
+                      │    "applications",                                                      
+                      │    "assignments",                                                       
+                      │    "groups",                                                            
+                      │    "reports"                                                            
+                      │  ]                                                                      
+                      │}                                                                        
+iga_ui_config         │{                                                                        
+                      │  "lcmSettings": {                                                       
+                      │    "entitlement": {                                                     
+                      │      "enabled": false                                                   
+                      │    },                                                                   
+                      │    "organization": {                                                    
+                      │      "enabled": false                                                   
+                      │    },                                                                   
+                      │    "role": {                                                            
+                      │      "enabled": false                                                   
+                      │    },                                                                   
+                      │    "user": {                                                            
+                      │      "enabled": true                                                    
+                      │    }                                                                    
+                      │  }                                                                      
+                      │}                                                                        
+iga_global            │{                                                                        
+                      │  "enableScoping": false                                                 
+                      │}                                                                        
+iga_notification      │{                                                                        
+                      │  "notificationPollingBatchSize": 50,                                    
+                      │  "notificationSendDelay": 1000,                                         
+                      │  "notificationRetryDelay": 60000,                                       
+                      │  "notificationMaxRetries": 3                                            
+                      │}                                                                        
+iga-file              │{}                                                                       
+feature_recommendation│{}                                                                       
+"
+`;
