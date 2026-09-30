@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "exportDate": "2026-05-08T16:47:23.274Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  },
+  "requestForm": {
+    "9e3fc668-4e96-4b03-9605-38b830bea26c": {
+      "assignments": [
+        {
+          "formId": "9e3fc668-4e96-4b03-9605-38b830bea26c",
+          "metadata": {},
+          "objectId": "workflow/testWorkflow1/node/fulfillmentTask-7fce35a32915"
+        },
+        {
+          "formId": "9e3fc668-4e96-4b03-9605-38b830bea26c",
+          "metadata": {},
+          "objectId": "requestType/af4a6f84-f9a9-4f8d-82ae-649639debabc"
+        }
+      ],
+      "categories": {
+        "applicationType": null,
+        "objectType": null,
+        "operation": "create"
+      },
+      "description": "This is a test request form",
+      "form": {},
+      "id": "9e3fc668-4e96-4b03-9605-38b830bea26c",
+      "metadata": {},
+      "name": "test_workflow_request_form_2",
+      "type": "request"
+    }
+  }
+}

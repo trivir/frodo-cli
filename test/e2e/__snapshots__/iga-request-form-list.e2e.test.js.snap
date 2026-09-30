@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga request form list "frodo iga request form list --long": should list the ids, names, mutability, and statuses of the scopes. 1`] = `
+"ID                                  │Name                           │Type              │Description                                       │Operation
+9c10b680-a790-4f73-95ed-81b345f0f3e9│phh-delegated-user-disable-form│request           │Form for disabling users with delegation authority│create   
+69c4d900-ff3c-400f-8d18-037693ade1fc│pgh-generate-rap               │request           │Form for generating an RAP code for a user        │create   
+d5299084-b2b2-4d66-ad94-f412f8bac3f5│phh-select-target-ne           │request           │Select Non-Employee to disable                    │create   
+2108a1e1-6be6-41e2-b356-b929114d98f5│phhCustomRequestForm           │request           │                                                  │create   
+9e3fc668-4e96-4b03-9605-38b830bea26c│test_workflow_request_form_2   │request           │This is a test request form                       │create   
+82db6f64-5aa7-4b13-b1ce-e87e988b5199│jh-ne-create-test-2            │request           │                                                  │create   
+628f6156-80c9-4d4c-a1a3-be60c35ecebf│pholderness-new-user-approval  │request           │                                                  │create   
+05b1bc14-6406-49a7-933a-97868f9e567c│test                           │request           │                                                  │create   
+542b62fb-d44d-45ac-a546-645036dc44bc│phh-disable-ne-skeleton        │request           │                                                  │create   
+2e0208bb-1ccc-4f02-917f-98a63296f08e│phh-pattern-test               │request           │                                                  │create   
+c385b530-b912-4dcd-98c8-931673add9b7│phh-new-user                   │request           │Request new user                                  │create   
+ddd56024-02ef-4c14-8bce-7b8bf4649b99│phhForm                        │request           │                                                  │create   
+fa1a5e72-d803-4879-bc2a-07a5da3d8ee9│test_workflow_request_form_1   │applicationRequest│This is a test application request form           │create   
+"
+`;
+
+exports[`frodo iga request form list "frodo iga request-form list -l": should list the ids, names, mutability, and statuses of the request form. 1`] = `
+"ID                                  │Name                           │Type              │Description                                       │Operation
+9c10b680-a790-4f73-95ed-81b345f0f3e9│phh-delegated-user-disable-form│request           │Form for disabling users with delegation authority│create   
+69c4d900-ff3c-400f-8d18-037693ade1fc│pgh-generate-rap               │request           │Form for generating an RAP code for a user        │create   
+d5299084-b2b2-4d66-ad94-f412f8bac3f5│phh-select-target-ne           │request           │Select Non-Employee to disable                    │create   
+2108a1e1-6be6-41e2-b356-b929114d98f5│phhCustomRequestForm           │request           │                                                  │create   
+9e3fc668-4e96-4b03-9605-38b830bea26c│test_workflow_request_form_2   │request           │This is a test request form                       │create   
+82db6f64-5aa7-4b13-b1ce-e87e988b5199│jh-ne-create-test-2            │request           │                                                  │create   
+628f6156-80c9-4d4c-a1a3-be60c35ecebf│pholderness-new-user-approval  │request           │                                                  │create   
+05b1bc14-6406-49a7-933a-97868f9e567c│test                           │request           │                                                  │create   
+542b62fb-d44d-45ac-a546-645036dc44bc│phh-disable-ne-skeleton        │request           │                                                  │create   
+2e0208bb-1ccc-4f02-917f-98a63296f08e│phh-pattern-test               │request           │                                                  │create   
+c385b530-b912-4dcd-98c8-931673add9b7│phh-new-user                   │request           │Request new user                                  │create   
+ddd56024-02ef-4c14-8bce-7b8bf4649b99│phhForm                        │request           │                                                  │create   
+fa1a5e72-d803-4879-bc2a-07a5da3d8ee9│test_workflow_request_form_1   │applicationRequest│This is a test application request form           │create   
+"
+`;
+
+exports[`frodo iga request form list "frodo iga request-form list": should list the ids of the request forms 1`] = `
+"phh-delegated-user-disable-form
+pgh-generate-rap
+phh-select-target-ne
+phhCustomRequestForm
+test_workflow_request_form_2
+jh-ne-create-test-2
+pholderness-new-user-approval
+test
+phh-disable-ne-skeleton
+phh-pattern-test
+phh-new-user
+phhForm
+test_workflow_request_form_1
+"
+`;
