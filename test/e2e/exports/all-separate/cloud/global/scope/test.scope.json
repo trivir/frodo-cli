@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "exportDate": "2026-05-15T18:53:54.982Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  },
+  "scope": {
+    "test": {
+      "description": "",
+      "id": "8e08b64c-2333-49d5-a31f-43fd2fc6ba6d",
+      "metadata": {},
+      "name": "test",
+      "permissions": {
+        "createEntitlement": true,
+        "createRole": true,
+        "createUser": true,
+        "deleteRole": true,
+        "deleteUser": true,
+        "modifyEntitlement": true,
+        "modifyRole": true,
+        "modifyUser": true,
+        "publishRole": true,
+        "viewGrants": true,
+        "viewUserAccess": true
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "and": [
+              {
+                "not_contains": {
+                  "in_string": "user.stateProvince",
+                  "search_string": {
+                    "literal": "Utah"
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {},
+          "version": "v2"
+        },
+        "entitlement": {
+          "filter": {},
+          "version": "v2"
+        },
+        "role": {
+          "filter": {},
+          "version": "v2"
+        },
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "ends_with": {
+                  "suffix": {
+                    "literal": "s"
+                  },
+                  "value": "user.accountStatus"
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga scope describe "frodo iga scope describe --file test/e2e/exports/all/allScopes.scope.json": should describe first scope from file test/e2e/exports/all/allScopes.scope.json 1`] = `
+"Id               │34153ec1-adde-472b-a1b3-65f9b0119df6
+Name             │equals-test                         
+Description      │                                    
+Status           │active                              
+Source Conditions│user                                
+Target Conditions│application, entitlement, role, user
+Permissions (11) │createEntitlement                   
+                 │createRole                          
+                 │createUser                          
+                 │deleteRole                          
+                 │deleteUser                          
+                 │modifyEntitlement                   
+                 │modifyRole                          
+                 │modifyUser                          
+                 │publishRole                         
+                 │viewGrants                          
+                 │viewUserAccess                      
+
+"
+`;
+
+exports[`frodo iga scope describe "frodo iga scope describe --name contains-test ": should describe scope 'contains-test' 1`] = `
+"Id               │c39062f0-ac60-4f72-ad8a-ef87bb8889b1
+Name             │contains-test                       
+Description      │test scope for contains filter      
+Status           │active                              
+Source Conditions│user                                
+Target Conditions│-                                   
+Permissions      │-                                   
+
+"
+`;
+
+exports[`frodo iga scope describe "frodo iga scope describe -n contains-test -f test/e2e/exports/all/allScopes.scope.json": should describe scope 'contains-test' from file test/e2e/exports/all/allScopes.scope.json 1`] = `
+"Id               │9ea91a47-1be1-4a70-8925-d25898a3c8d5
+Name             │contains-test                       
+Description      │test scope for contains filter      
+Status           │active                              
+Source Conditions│user                                
+Target Conditions│-                                   
+Permissions      │-                                   
+
+"
+`;

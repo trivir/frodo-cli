@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "exportDate": "2026-05-15T18:53:54.983Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  },
+  "scope": {
+    "is-not-test": {
+      "description": "test scope for is no filter\n",
+      "id": "ad0c0ba2-9283-43e8-8d61-0a6bb2546141",
+      "metadata": {},
+      "name": "is-not-test",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "not_equals": {
+                  "left": "user.city",
+                  "right": {
+                    "literal": "Utah"
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      },
+      "status": "active",
+      "targetCondition": {}
+    }
+  }
+}

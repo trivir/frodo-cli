@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "exportDate": "2026-05-15T18:53:54.982Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  },
+  "scope": {
+    "contains-test": {
+      "description": "test scope for contains filter",
+      "id": "9ea91a47-1be1-4a70-8925-d25898a3c8d5",
+      "metadata": {},
+      "name": "contains-test",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "contains": {
+                  "in_string": "user._id",
+                  "search_string": {
+                    "literal": ""
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      },
+      "status": "active",
+      "targetCondition": {}
+    }
+  }
+}

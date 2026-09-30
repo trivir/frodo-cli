@@ -1,0 +1,62 @@
+{
+  "meta": {
+    "exportDate": "2026-05-15T18:53:54.982Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  },
+  "scope": {
+    "random-scope": {
+      "description": "this is a test",
+      "id": "57441e24-6310-49d7-984c-3692ba87bbab",
+      "metadata": {},
+      "name": "random-scope",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "not_contains": {
+                  "in_string_array": "user.adminOfOrg",
+                  "search_string": {
+                    "literal": "e74ffe7b-77be-4d6a-9564-3f9d8c4304e0"
+                  }
+                }
+              },
+              {
+                "equals": {
+                  "left": "user.city",
+                  "right": {
+                    "literal": "Salt Lake City"
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {},
+          "version": "v2"
+        },
+        "entitlement": {
+          "filter": {},
+          "version": "v2"
+        },
+        "role": {
+          "filter": {},
+          "version": "v2"
+        },
+        "user": {
+          "filter": {},
+          "version": "v2"
+        }
+      }
+    }
+  }
+}
