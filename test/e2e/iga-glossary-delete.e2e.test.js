@@ -54,12 +54,8 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary delete -n sensitive -t entitlement
 */
 
-import cp from 'child_process';
-import { promisify } from 'util';
-import { getEnv, removeAnsiEscapeCodes } from './utils/TestUtils';
+import { getEnv, testSuccess } from './utils/TestUtils';
 import { iga_connection as ic } from './utils/TestConfig';
-
-const exec = promisify(cp.exec);
 
 process.env['FRODO_MOCK'] = '1';
 const igaEnv = getEnv(ic);
@@ -67,36 +63,26 @@ const igaEnv = getEnv(ic);
 describe(`frodo iga glossary delete`, () => {
   test(`"frodo iga glossary delete -i c735842a-f695-493a-addc-8500d3babc57": should delete the glossary with id "c735842a-f695-493a-addc-8500d3babc57"`, async () => {
     const CMD = `frodo iga glossary delete -i c735842a-f695-493a-addc-8500d3babc57`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga glossary delete -n testOrg": should delete the glossary with name testOrg`, async () => {
     const CMD = `frodo iga glossary delete -n testOrg`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga glossary delete -a": Should delete all glossaries`, async () => {
     const CMD = `frodo iga glossary delete -a`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga glossary delete -at role": should delete all glossaries of the type role`, async () => {
     const CMD = `frodo iga glossary delete -at role`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga glossary delete -n sensitive -t entitlement": should delete the glossary name sensitive from type entitlement`, async () => {
     const CMD = `frodo iga glossary delete -n sensitive -t entitlement`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 });

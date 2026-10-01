@@ -55,12 +55,9 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary import -AD test/e2e/exports/all-separate/cloud/iga/
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary import --all-separate -IN --directory test/e2e/exports/all-separate/cloud/iga/
  */
-import cp from 'child_process';
-import { promisify } from 'util';
-import { getEnv, removeAnsiEscapeCodes } from './utils/TestUtils';
-import { iga_connection as ic } from './utils/TestConfig';
 
-const exec = promisify(cp.exec);
+import { getEnv, testSuccess } from './utils/TestUtils';
+import { iga_connection as ic } from './utils/TestConfig';
 
 process.env['FRODO_MOCK'] = '1';
 const igaEnv = getEnv(ic);
@@ -73,50 +70,36 @@ const allSeparateGlossariesDirectory = `test/e2e/exports/all-separate/cloud/iga`
 describe(`frodo iga glossary import`, () => {
   test(`"frodo iga glossary import -i b0955a58-1955-40a7-9d9d-29947fe5f8f7 -f ${allGlossariesExport}": should import glossary with id "b0955a58-1955-40a7-9d9d-29947fe5f8f7" from the file "${allGlossariesExport}"`, async () => {
     const CMD = `frodo iga glossary import -i b0955a58-1955-40a7-9d9d-29947fe5f8f7 -f ${allGlossariesExport}`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga glossary import -n testUser -f ${allGlossariesExport}": should import the glossary with name testUser from the file "${allGlossariesExport}"`, async () => {
     const CMD = `frodo iga glossary import -n testUser -f ${allGlossariesExport} `;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga glossary import -f ${allGlossariesExport}": should import the first glossary from the file "${allGlossariesExport}" `, async () => {
     const CMD = `frodo iga glossary import -f ${allGlossariesExport}`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga glossary import -at role -f ${allGlossariesExport}": should import all glossaries from the file "${allGlossariesExport} with type role"`, async () => {
     const CMD = `frodo iga glossary import -at role -f ${allGlossariesExport} `;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga glossary import --all --file ${allGlossariesExport}": should import all glossaries from the file "${allGlossariesExport} with type role"`, async () => {
     const CMD = `frodo iga glossary import --all --file ${allGlossariesExport} `;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga glossary import -AD ${allSeparateGlossariesDirectory}": should import all glossaries from the directory "${allSeparateGlossariesDirectory}" `, async () => {
     const CMD = `frodo iga glossary import -AD ${allSeparateGlossariesDirectory}`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga glossary import --all-separate -IN --directory ${allSeparateGlossariesDirectory}": should import all glossaries from the directory "${allSeparateGlossariesDirectory} including internals and no metadata"`, async () => {
     const CMD = `frodo iga glossary import --all-separate -IN --directory ${allSeparateGlossariesDirectory}`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 });

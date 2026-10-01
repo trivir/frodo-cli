@@ -10,6 +10,7 @@ import {
 } from '@rockcarver/frodo-lib/types/ops/cloud/iga/IgaGlossaryOps';
 import fs from 'fs';
 
+import c from '../../../utils/ColorTheme';
 import {
   createKeyValueTable,
   createProgressIndicator,
@@ -74,7 +75,7 @@ export async function listGlossary(
         glossaryItem.displayName,
         glossaryItem.objectType,
         glossaryItem.type,
-        glossaryItem.isInternal ? 'true'['brightGreen'] : 'false'['brightRed'],
+        glossaryItem.isInternal ? c.positive('true') : c.negative('false'),
       ]);
     }
     printMessage(table.toString(), 'data');
@@ -165,39 +166,39 @@ export async function describeGlossary(
 
     const table = createKeyValueTable();
 
-    table.push(['Id'['brightCyan'], glossary.id]);
+    table.push([c.heading('Id'), glossary.id]);
 
-    table.push(['Name'['brightCyan'], glossary.name]);
+    table.push([c.heading('Name'), glossary.name]);
 
-    table.push(['Display Name'['brightCyan'], glossary.displayName]);
+    table.push([c.heading('Display Name'), glossary.displayName]);
 
-    table.push(['Description'['brightCyan'], glossary.description]);
+    table.push([c.heading('Description'), glossary.description]);
 
-    table.push(['Type'['brightCyan'], glossary.type]);
+    table.push([c.heading('Type'), glossary.type]);
 
-    table.push(['Object Type'['brightCyan'], glossary.objectType]);
+    table.push([c.heading('Object Type'), glossary.objectType]);
 
     if (glossary.managedObjectType) {
       table.push([
-        'Managed Object Type'['brightCyan'],
+        c.heading('Managed Object Type'),
         glossary.managedObjectType,
       ]);
     }
 
     table.push([
-      'Multi Value'['brightCyan'],
-      glossary.isMultiValue ? 'true'['brightGreen'] : 'false'['brightRed'],
+      c.heading('Multi Value'),
+      glossary.isMultiValue ? c.positive('true') : c.negative('false'),
     ]);
 
     table.push([
-      'Searchable'['brightCyan'],
-      glossary.searchable ? 'true'['brightGreen'] : 'false'['brightRed'],
+      c.heading('Searchable'),
+      glossary.searchable ? c.positive('true') : c.negative('false'),
     ]);
 
     if (glossary.isInternal) {
       table.push([
-        'Internal'['brightCyan'],
-        glossary.isInternal ? 'true'['brightGreen'] : 'false'['brightRed'],
+        c.heading('Internal'),
+        glossary.isInternal ? c.positive('true') : c.negative('false'),
       ]);
     }
 

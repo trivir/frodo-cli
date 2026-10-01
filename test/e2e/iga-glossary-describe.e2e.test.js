@@ -56,7 +56,7 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga glossary describe --glossary-name sensitive --glossary-type entitlement --file test/e2e/exports/all/allGlossaries.glossary.json
  */
 
-import { getEnv, testSuccess, testFail } from './utils/TestUtils';
+import { getEnv, testSuccess } from './utils/TestUtils';
 import { iga_connection as ic } from './utils/TestConfig';
 
 process.env['FRODO_MOCK'] = '1';
