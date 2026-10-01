@@ -16,6 +16,7 @@ import Secrets from './config-manager-delete-secrets';
 import Telemetry from './config-manager-delete-telemetry';
 import TermsConditions from './config-manager-delete-terms-and-conditions';
 import Variables from './config-manager-delete-variables';
+import ConnectorDefininitions from '../config-manager-delete/config-manager-delete-connector-definitions';
 
 export default function setup() {
   const program = new FrodoStubCommand('delete').description(
@@ -40,5 +41,6 @@ export default function setup() {
   program.addCommand(Schedules().name('schedules'));
   program.addCommand(SecretMappings().name('secret-mappings'));
   program.addCommand(Telemetry().name('telemetry'));
+  program.addCommand(ConnectorDefininitions().name('connector-definitions'));
   return program;
 }
