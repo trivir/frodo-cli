@@ -10,6 +10,7 @@ import Scripts from './config-manager-delete-scripts';
 import Secrets from './config-manager-delete-secrets';
 import TermsConditions from './config-manager-delete-terms-and-conditions';
 import Variables from './config-manager-delete-variables';
+import ConnectorDefininitions from '../config-manager-delete/config-manager-delete-connector-definitions';
 
 export default function setup() {
   const program = new FrodoStubCommand('delete').description(
@@ -26,5 +27,6 @@ export default function setup() {
   program.addCommand(TermsConditions().name('terms-and-conditions'));
   program.addCommand(Variables().name('variables'));
   program.addCommand(Locales().name('locales'));
+  program.addCommand(ConnectorDefininitions().name('connector-definitions'));
   return program;
 }

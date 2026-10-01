@@ -83,6 +83,24 @@ export async function configManagerExportConnectorDefinitions(
 }
 
 /**
+ * Export all the connector definitions in the tenant each in their own file in fr-config manager format
+ * @returns
+ */
+export async function configManagerExportConnectorDefinitionsAll(): Promise<boolean> {
+  try {
+    const cs: ConnectorSkeleton[] = await connector.readConnectors();
+    for (const c of cs) {
+      if (c._id.includes('provisioner.openicf/')) {
+        configManagerExportConnectorDefinition({ c: c });
+      }
+    }
+    return true;
+  } catch (error) {
+    printError(error);
+  }
+}
+
+/**
  * Import all connectors in fr-config-manager format
  * Every file is read on its own: a file that cannot be read is printed and named in the one
  * summary, and the connectors of the other files are still imported. The connectors that the
@@ -183,4 +201,53 @@ export async function configManagerImportConnectors(
     if (run.hasFailures) run.finish();
   }
   return false;
+}
+
+/**
+ * Delete connector definition in fr-config manager format
+ * @param criteria
+ * @returns
+ */
+export async function configManagerDeleteConnectorDefinition(
+  criteria: ByName | BySkeleton
+): Promise<boolean> {
+  try {
+    const c: ConnectorSkeleton =
+      'c' in criteria
+        ? criteria.c
+        : await connector.readConnector(criteria.connectorName);
+
+    verboseMessage(`  Deleting connector: "${c._id}"`);
+
+    await deleteConfigEntity(c._id);
+
+    return true;
+  } catch (error) {
+    printError(
+      error,
+      'connectorName' in criteria
+        ? `Does the connector: "${criteria.connectorName}" actually exist in the specified host?`
+        : ''
+    );
+    return false;
+  }
+}
+
+/**
+ * Delete all the connector definitions in the tenant each in their own file in fr-config manager format
+ * @returns
+ */
+export async function configManagerDeleteConnectorDefinitionsAll(): Promise<boolean> {
+  try {
+    const cs: ConnectorSkeleton[] = await connector.readConnectors();
+    for (const c of cs) {
+      if (c._id.includes('provisioner.openicf/')) {
+        await configManagerDeleteConnectorDefinition({ c: c });
+      }
+    }
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
 }

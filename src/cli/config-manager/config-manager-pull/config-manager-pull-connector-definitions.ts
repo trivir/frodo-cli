@@ -23,6 +23,7 @@ export default function setup() {
 
   program
     .description('Export connector definitions.')
+    .description('Export connector definitions.')
     .addOption(
       new Option(
         '-n, --name <connector-name>',
