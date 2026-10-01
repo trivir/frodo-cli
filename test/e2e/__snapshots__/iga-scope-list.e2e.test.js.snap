@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga scope list "frodo iga scope list --long": should list the ids, names, mutability, and statuses of the scopes. 1`] = `
+"ID                                  │Name                   │Description                                                             │Status  │Entity│Source Conditions│Target Conditions                   │Permissions
+2a61f823-aa13-414a-9724-ad95e9004dd7│does-not-contain-test  │test scope for does not contain filter                                  │active  │-     │user             │-                                   │-          
+3f63240d-2027-46fc-b8ee-96745be373a8│test                   │                                                                        │active  │-     │user             │application, entitlement, role, user│11 / 11    
+5b7f96f0-7b6d-4c0f-8703-b6a0030e0c81│equals-test            │                                                                        │active  │-     │user             │application, entitlement, role, user│11 / 11    
+75e1b352-b037-46f1-ba75-47dd388f89c2│ends-with-scope        │A test scope for ends with filter                                       │active  │-     │user             │-                                   │-          
+7c584440-83da-474b-9473-8a5d7a433947│random-scope           │this is a test                                                          │active  │-     │user             │application, entitlement, role, user│-          
+8d252337-f031-4960-992a-3d773601d85f│New Scope              │Description of the put scope request                                    │active  │-     │user             │application                         │-          
+8d8add50-011e-45a3-a268-958597d252ca│starts-with-test       │                                                                        │active  │-     │user             │application, entitlement, role, user│8 / 8      
+98c735ce-6fdc-4a62-800f-6659388e441c│User LCM Test          │                                                                        │active  │-     │user             │user                                │1 / 1      
+c39062f0-ac60-4f72-ad8a-ef87bb8889b1│contains-test          │test scope for contains filter                                          │active  │-     │user             │-                                   │-          
+c5f6e550-29fb-48ed-87f1-d35c8c9067cd│is-not-test            │test scope for is no filter                                             │active  │-     │user             │-                                   │-          
+                                    │                       │                                                                        │        │      │                 │                                    │           
+c62906d9-7d67-4519-b119-13031bb25896│phh-delegate-visibility│Allows employees (frIndexedInteger1 eq 0) to view other employee objects│inactive│-     │user             │user                                │-          
+"
+`;
+
+exports[`frodo iga scope list "frodo iga scope list -l": should list the ids, names, mutability, and statuses of the scopes. 1`] = `
+"ID                                  │Name                   │Description                                                             │Status  │Entity│Source Conditions│Target Conditions                   │Permissions
+2a61f823-aa13-414a-9724-ad95e9004dd7│does-not-contain-test  │test scope for does not contain filter                                  │active  │-     │user             │-                                   │-          
+3f63240d-2027-46fc-b8ee-96745be373a8│test                   │                                                                        │active  │-     │user             │application, entitlement, role, user│11 / 11    
+5b7f96f0-7b6d-4c0f-8703-b6a0030e0c81│equals-test            │                                                                        │active  │-     │user             │application, entitlement, role, user│11 / 11    
+75e1b352-b037-46f1-ba75-47dd388f89c2│ends-with-scope        │A test scope for ends with filter                                       │active  │-     │user             │-                                   │-          
+7c584440-83da-474b-9473-8a5d7a433947│random-scope           │this is a test                                                          │active  │-     │user             │application, entitlement, role, user│-          
+8d252337-f031-4960-992a-3d773601d85f│New Scope              │Description of the put scope request                                    │active  │-     │user             │application                         │-          
+8d8add50-011e-45a3-a268-958597d252ca│starts-with-test       │                                                                        │active  │-     │user             │application, entitlement, role, user│8 / 8      
+98c735ce-6fdc-4a62-800f-6659388e441c│User LCM Test          │                                                                        │active  │-     │user             │user                                │1 / 1      
+c39062f0-ac60-4f72-ad8a-ef87bb8889b1│contains-test          │test scope for contains filter                                          │active  │-     │user             │-                                   │-          
+c5f6e550-29fb-48ed-87f1-d35c8c9067cd│is-not-test            │test scope for is no filter                                             │active  │-     │user             │-                                   │-          
+                                    │                       │                                                                        │        │      │                 │                                    │           
+c62906d9-7d67-4519-b119-13031bb25896│phh-delegate-visibility│Allows employees (frIndexedInteger1 eq 0) to view other employee objects│inactive│-     │user             │user                                │-          
+"
+`;
+
+exports[`frodo iga scope list "frodo iga scope list": should list the ids of the scopes 1`] = `
+"does-not-contain-test
+test
+equals-test
+ends-with-scope
+random-scope
+New Scope
+starts-with-test
+User LCM Test
+contains-test
+is-not-test
+phh-delegate-visibility
+"
+`;

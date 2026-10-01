@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga scope delete "frodo iga scope delete --all": should delete all scope 1`] = `""`;
+
+exports[`frodo iga scope delete "frodo iga scope delete --all": should delete all scope 2`] = `
+"✔ Deleted scopes.
+"
+`;
+
+exports[`frodo iga scope delete "frodo iga scope delete -n equals-test": Should delete scope equals-test by name 1`] = `""`;
+
+exports[`frodo iga scope delete "frodo iga scope delete -n equals-test": Should delete scope equals-test by name 2`] = `
+"✔ Deleted scope equals-test.
+"
+`;
