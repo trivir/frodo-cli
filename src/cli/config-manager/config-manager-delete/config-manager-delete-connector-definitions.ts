@@ -2,8 +2,8 @@ import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
 import {
-  configManagerExportConnectorDefinition,
-  configManagerExportConnectorDefinitionsAll,
+  configManagerDeleteConnectorDefinition,
+  configManagerDeleteConnectorDefinitionsAll,
 } from '../../../configManagerOps/FrConfigConnectorDefinitionsOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage } from '../../../utils/Console';
@@ -19,13 +19,13 @@ const deploymentTypes = [
 
 export default function setup() {
   const program = new FrodoCommand(
-    'frodo config-manager pull connector-definitions',
+    'frodo config-manager delete connector-definitions',
     [],
     deploymentTypes
   );
 
   program
-    .description('Export connector definitions.')
+    .description('Delete connector definitions.')
     .addOption(
       new Option(
         '-n, --name <connector-name>',
@@ -46,14 +46,14 @@ export default function setup() {
         let outcome: boolean;
         if (options.name) {
           printMessage(
-            `Exporting connector definition for connector: "${options.name}"`
+            `Deleting connector definition for connector: "${options.name}"`
           );
-          outcome = await configManagerExportConnectorDefinition({
+          outcome = await configManagerDeleteConnectorDefinition({
             connectorName: options.name,
           });
         } else {
-          printMessage('Exporting all connector definitions.');
-          outcome = await configManagerExportConnectorDefinitionsAll();
+          printMessage('Deleting all connector definitions.');
+          outcome = await configManagerDeleteConnectorDefinitionsAll();
         }
         if (!outcome) process.exitCode = 1;
       }
