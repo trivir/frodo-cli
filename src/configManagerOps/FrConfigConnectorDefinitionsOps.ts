@@ -6,7 +6,7 @@ import { printError, verboseMessage } from '../utils/Console';
 
 const { connector } = frodo.idm;
 const { getFilePath, saveJsonToFile } = frodo.utils;
-const { importConfigEntities } = frodo.idm.config;
+const { importConfigEntities, deleteConfigEntity } = frodo.idm.config;
 type ByName = { connectorName: string };
 type BySkeleton = { c: ConnectorSkeleton };
 
@@ -74,6 +74,55 @@ export async function configManagerExportConnectorDefinitionsAll(): Promise<bool
     return true;
   } catch (error) {
     printError(error);
+  }
+}
+
+/**
+ * Delete connector definition in fr-config manager format
+ * @param criteria
+ * @returns
+ */
+export async function configManagerDeleteConnectorDefinition(
+  criteria: ByName | BySkeleton
+): Promise<boolean> {
+  try {
+    const c: ConnectorSkeleton =
+      'c' in criteria
+        ? criteria.c
+        : await connector.readConnector(criteria.connectorName);
+
+    verboseMessage(`  Deleting connector: "${c._id}"`);
+
+    await deleteConfigEntity(c._id);
+
+    return true;
+  } catch (error) {
+    printError(
+      error,
+      'connectorName' in criteria
+        ? `Does the connector: "${criteria.connectorName}" actually exist in the specified host?`
+        : ''
+    );
+    return false;
+  }
+}
+
+/**
+ * Delete all the connector definitions in the tenant each in their own file in fr-config manager format
+ * @returns
+ */
+export async function configManagerDeleteConnectorDefinitionsAll(): Promise<boolean> {
+  try {
+    const cs: ConnectorSkeleton[] = await connector.readConnectors();
+    for (const c of cs) {
+      if (c._id.includes('provisioner.openicf/')) {
+        await  configManagerDeleteConnectorDefinition({ c: c });
+      }
+    }
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
   }
 }
 
