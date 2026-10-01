@@ -5,7 +5,13 @@ import { printError } from '../utils/Console';
 import { fileFilter } from '../utils/FrConfig';
 
 const { saveJsonToFile, getFilePath, saveTextToFile } = frodo.utils;
-const { readCustomNode, readCustomNodes, importCustomNodes } = frodo.authn.node;
+const {
+  readCustomNode,
+  readCustomNodes,
+  importCustomNodes,
+  deleteCustomNode,
+  deleteCustomNodes,
+} = frodo.authn.node;
 
 /**
  * Export all custom nodes to 'custom-nodes/nodes' directory.
@@ -94,4 +100,49 @@ export async function configManagerImportCustomNodes(
     printError(error, `Error importing custom nodes`);
   }
   return false;
+}
+
+/**
+ * Delete custom nodes from the configured tenant.
+ * @param name Optional display name. If omitted, all custom nodes are deleted.
+ * @param dryRun Show matching nodes without deleting them.
+ * @param id Optional ID of custom node. If omitted, all custom nodes are deleted.
+ * @returns True if all requested deletions were successful.
+ */
+export async function configManagerDeleteCustomNodes(
+  name?: string,
+  dryRun: boolean = false,
+  id?: string
+): Promise<boolean> {
+  try {
+    if (name && id) {
+      printError(new FrodoError('Specify either --name or --id.'));
+      return false;
+    }
+    const nodes =
+      id || name ? [await readCustomNode(id, name)] : await readCustomNodes();
+    let successful = true;
+    for (const node of nodes) {
+      if (dryRun) {
+        console.log(
+          `Dry run: Deleting node with displayName ${node.displayName}`
+        );
+        continue;
+      }
+      try {
+        await deleteCustomNode(node._id);
+        console.log(`Deleting node with displayName: ${node.displayName}`);
+      } catch (error) {
+        printError(
+          error,
+          `Failed to delete node with displayName ${node.displayName}`
+        );
+        successful = false;
+      }
+    }
+    return successful;
+  } catch (error) {
+    printError(error, 'Error deleting custom nodes');
+    return false;
+  }
 }
