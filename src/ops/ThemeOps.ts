@@ -457,8 +457,7 @@ export async function importThemesFromFiles(): Promise<boolean> {
 export async function importFirstThemeFromFile(file: string): Promise<boolean> {
   let indicatorId: string;
   try {
-    const data = fs.readFileSync(getFilePath(file), 'utf8');
-    const themeExport = JSON.parse(data);
+    const themeExport = getThemeExportFromFile(getFilePath(file));
     indicatorId = createProgressIndicator(
       'determinate',
       1,
