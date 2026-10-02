@@ -28,7 +28,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --secret-id <secret-id>',
-        'Secret id. If specified, -a or -A cannot be used.'
+        'Secret id. Cannot be used with -a or -A.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
@@ -47,7 +47,7 @@ export default function setup() {
       new Option(
         '-A, --all-separate',
         'Export all sub1s to separate files (*.secret.json) in the current directory. Cannot be used with -i, -f or -a.'
-      ).conflicts(['secretId', 'all', 'file'])
+      ).conflicts(['secretId', 'file', 'all'])
     )
     .addOption(
       new Option(

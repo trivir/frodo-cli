@@ -32,17 +32,20 @@ export default function setup() {
     .addOption(
       new Option(
         '-a, --all',
-        'Export all IDM configuration managed objects into a single file in directory -D. Cannot be used with -A.'
-      ).conflicts(['allSeparate'])
+        'Export all IDM configuration managed objects into a single file in directory -D. Cannot be used with -o or -A.'
+      ).conflicts(['managedObject', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all managed object schema definitions into separate JSON files in directory -D. Cannot be used with -a.'
-      ).conflicts(['all'])
+        'Export all managed object schema definitions into separate JSON files in directory -D. Cannot be used with -o, -f or -a.'
+      ).conflicts(['managedObject', 'file', 'all'])
     )
     .addOption(
-      new Option('-o, --managed-object <type>', 'Managed object type.')
+      new Option(
+        '-o, --managed-object <type>',
+        'Managed object type. Cannot be used with -a or A.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
       new Option(

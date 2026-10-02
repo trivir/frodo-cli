@@ -25,8 +25,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --workflow-id <workflow-id>',
-        'Workflow id. If specified, -a is ignored. By default, deletes both draft and published unless -d or -p are used exclusively.'
-      )
+        'Workflow id. By default, deletes both draft and published unless -d or -p are used exclusively. Cannot be used with -a.'
+      ).conflicts(['all'])
     )
     .addOption(
       new Option('-d, --draft-only', 'Delete only the draft workflow(s).')
@@ -41,7 +41,7 @@ export default function setup() {
       new Option(
         '-a, --all',
         'Delete all workflows. By default, deletes both draft and published unless -d or -p are used exclusively. Cannot be used with -i.'
-      )
+      ).conflicts(['workflowId'])
     )
     .addOption(
       new Option(

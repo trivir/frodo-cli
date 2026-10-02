@@ -25,7 +25,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --variable-id <variable-id>',
-        'Variable id. If specified, -a cannot be used.'
+        'Variable id. Cannot be used with -a.'
       ).conflicts(['all'])
     )
     .addOption(

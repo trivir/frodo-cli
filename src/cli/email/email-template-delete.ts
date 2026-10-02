@@ -16,7 +16,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --template-id <template-id>',
-        'Email template id/name. If specified, -a cannot be used.'
+        'Email template id/name. Cannot be used with -a'
       ).conflicts(['all'])
     )
     .addOption(

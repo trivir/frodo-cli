@@ -23,16 +23,13 @@ export default function setup() {
       'If -h is supplied, describe the journey/tree indicated by -i, or all journeys/trees in the realm if no -i is supplied, otherwise describe the journey/tree export file indicated by -f.'
     )
     .addOption(
-      new Option(
-        '-i, --journey-id <journey>',
-        'Name of a journey/tree. If specified, -a or -A cannot be used.'
-      ).conflicts(['all', 'allSeparate'])
+      new Option('-i, --journey-id <journey>', 'Name of a journey/tree.')
     )
     .addOption(
       new Option(
         '-f, --file <file>',
-        'Name of the journey export file to describe. Cannot be used with -A.'
-      ).conflicts(['allSeparate'])
+        'Name of the journey export file to describe.'
+      )
     )
     .addOption(
       new Option(

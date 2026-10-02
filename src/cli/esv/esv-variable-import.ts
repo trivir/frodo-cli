@@ -26,10 +26,15 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --variable-id <variable-id>',
-        'Variable id. If specified, only one variable is imported and the options -a or -A cannot be used.'
+        'Variable id. Cannot be used with -a or -A.'
       ).conflicts(['all', 'allSeparate'])
     )
-    .addOption(new Option('-f, --file <file>', 'Name of the file to import.'))
+    .addOption(
+      new Option(
+        '-f, --file <file>',
+        'Name of the file to import. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(
       new Option(
         '-a, --all',
@@ -39,8 +44,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all variables from separate files (*.variable.json) in the current directory. Cannot be used with -i or -a.'
-      ).conflicts(['variableId', 'all'])
+        'Import all variables from separate files (*.variable.json) in the current directory. Cannot be used with -i, -f or -a.'
+      ).conflicts(['variableId', 'file', 'all'])
     )
     .action(
       // implement command logic inside action handler

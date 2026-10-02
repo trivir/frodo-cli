@@ -17,7 +17,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --journey-id <journey>',
-        'Name of a journey/tree. If specified, -a or -A cannot be used.'
+        'Name of a journey/tree. Cannot be used with -a or -A.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
@@ -35,8 +35,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all the journeys/trees in a realm as separate files <journey/tree name>.json. Cannot be used with -i or -a.'
-      ).conflicts(['journeyId', 'all'])
+        'Export all the journeys/trees in a realm as separate files <journey/tree name>.json. Cannot be used with -i, -f or -a.'
+      ).conflicts(['journeyId', 'file', 'all'])
     )
     .addOption(
       new Option(

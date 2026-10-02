@@ -27,10 +27,15 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --mapping-id <mapping-id>',
-        'Mapping id. If specified, only one mapping is imported and the options -a or -A cannot be used.'
+        'Mapping id. Cannot be used with -a or -A.'
       ).conflicts(['all', 'allSeparate'])
     )
-    .addOption(new Option('-f, --file <file>', 'Name of the file to import'))
+    .addOption(
+      new Option(
+        '-f, --file <file>',
+        'Name of the file to import. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(
       new Option(
         '-a, --all',
@@ -40,8 +45,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all mappings from separate files (*.sync.json or *.mapping.json) in the current directory. Cannot be used with -i and -a.'
-      ).conflicts(['mappingId', 'all'])
+        'Import all mappings from separate files (*.sync.json or *.mapping.json) in the current directory. Cannot be used with -i, -f or -a.'
+      ).conflicts(['mappingId', 'file', 'all'])
     )
     .addOption(new Option('--no-deps', 'Do not include any dependencies.'))
     .action(

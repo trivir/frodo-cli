@@ -22,8 +22,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --mapping-id <mapping-id>',
-        'Mapping id. If specified, -a cannot be used.'
-      ).conflicts(['all'])
+        'Mapping id. Cannot be used with -a.'
+      ).conflicts(['connectorId', 'managedObjectType', 'all'])
     )
     .addOption(
       new Option(
