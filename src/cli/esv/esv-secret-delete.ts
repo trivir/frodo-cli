@@ -21,7 +21,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --secret-id <secret-id>',
-        'Secret id. If specified, -a cannot be used.'
+        'Secret id. Cannot be used with -a.'
       ).conflicts(['all'])
     )
     .addOption(

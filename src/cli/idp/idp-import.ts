@@ -18,26 +18,26 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --idp-id <id>',
-        'Provider id. If specified, -a or -A cannot be used.'
+        'Provider id. Cannot be used with -a or -A.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-f, --file <file>',
-        'Name of the file to import the provider(s) from.'
-      )
+        'Name of the file to import the provider(s) from. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
     )
     .addOption(
       new Option(
         '-a, --all',
-        'Import all the providers from single file. Cannot be used with -i and -A.'
+        'Import all the providers from single file. Cannot be used with -i or -A.'
       ).conflicts(['idpId', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all the providers from separate files (*.json) in the current directory. Cannot be used with -i or -a.'
-      ).conflicts(['idpId', 'all'])
+        'Import all the providers from separate files (*.json) in the current directory. Cannot be used with -i, -f or -a.'
+      ).conflicts(['idpId', 'file', 'all'])
     )
     .addOption(
       new Option('--no-deps', 'Do not include any dependencies (scripts).')

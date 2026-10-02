@@ -12,14 +12,14 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --node-id <node-id>',
-        'Custom node id or service name. If specified, only one custom node is deleted and the options -n, -a or -A cannot be used.'
-      ).conflicts(['nodeName', 'all', 'allSeparate'])
+        'Custom node id or service name. Cannot be used with -n or -a.'
+      ).conflicts(['nodeName', 'all'])
     )
     .addOption(
       new Option(
         '-n, --node-name <node-name>',
-        'Custom node display name. If specified, only one custom node is deleted and the options -i, -a or -A cannot be used.'
-      ).conflicts(['nodeId', 'all', 'allSeparate'])
+        'Custom node display name. Cannot be used with -i or -a.'
+      ).conflicts(['nodeId', 'all'])
     )
     .addOption(
       new Option(

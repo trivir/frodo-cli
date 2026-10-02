@@ -16,27 +16,32 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --node-id <node-id>',
-        'Custom node id or service name. If specified, only one custom node is imported and the options -n, -a or -A cannot be used.'
+        'Custom node id or service name. Cannot be used with -n, -a or -A.'
       ).conflicts(['nodeName', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-n, --node-name <node-name>',
-        'Custom node display name. If specified, only one custom node is imported and the options -i, -a or -A cannot be used.'
+        'Custom node display name. Cannot be used with -i, -a or -A.'
       ).conflicts(['nodeId', 'all', 'allSeparate'])
     )
-    .addOption(new Option('-f, --file <file>', 'Name of the file to import.'))
+    .addOption(
+      new Option(
+        '-f, --file <file>',
+        'Name of the file to import. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(
       new Option(
         '-a, --all',
-        'Import all custom nodes from single file. Cannot be used with -i or -n.'
+        'Import all custom nodes from single file. Cannot be used with -i, -n or -A.'
       ).conflicts(['nodeId', 'nodeName', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all custom nodes from separate files (*.nodeTypes.json) in the current directory. Cannot be used with -i, -n, or -a.'
-      ).conflicts(['nodeId', 'nodeName', 'all'])
+        'Import all custom nodes from separate files (*.nodeTypes.json) in the current directory. Cannot be used with -i, -n, -f or -a.'
+      ).conflicts(['nodeId', 'nodeName', 'file', 'all'])
     )
     .addOption(
       new Option(

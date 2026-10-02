@@ -25,8 +25,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --mapping-id <mapping-id>',
-        'Mapping id. If specified, -a or -A cannot be used.'
-      ).conflicts(['all', 'allSeparate'])
+        'Mapping id. Cannot be used with -c, -t, -a or -A.'
+      ).conflicts(['connectorId', 'managedObjectType', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
@@ -55,8 +55,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all mappings into separate JSON files in directory -D. Cannot be used with -i and -a.'
-      ).conflicts(['mappingId', 'all'])
+        'Export all mappings into separate JSON files in directory -D. Cannot be used with -i, -f or -a.'
+      ).conflicts(['mappingId', 'file', 'all'])
     )
     .addOption(
       new Option(

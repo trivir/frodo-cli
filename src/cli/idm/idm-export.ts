@@ -26,8 +26,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --entity-id <id>',
-        'Config entity id/name. E.g. "managed", "sync", "provisioner-<connector-name>", etc. If specified, -a or -A cannot be used.'
-      ).conflicts(['all', 'allSeparate'])
+        'Config entity id/name. E.g. "managed", "sync", "provisioner-<connector-name>", etc. Cannot be used with -e, -a or -A.'
+      ).conflicts(['entitiesFile', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
@@ -50,7 +50,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all IDM configuration objects into separate JSON files in directory -D. Cannot be used with -i, and -a.'
+        'Export all IDM configuration objects into separate JSON files in directory -D. Cannot be used with -i or -a.'
       ).conflicts(['entityId', 'all'])
     )
     .addOption(

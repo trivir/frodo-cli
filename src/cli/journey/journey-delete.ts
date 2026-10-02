@@ -13,7 +13,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --journey-id <journey>',
-        'Name of a journey/tree. If specified, -a cannot be used.'
+        'Name of a journey/tree. Cannot be used with -a.'
       ).conflicts(['all'])
     )
     .addOption(

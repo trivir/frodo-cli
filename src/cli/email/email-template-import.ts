@@ -30,13 +30,14 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --template-id <template-id>',
-        'Email template id/name. If specified, -a or -A cannot be used.'
+        'Email template id/name. Cannot be used with -a or -A.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
-      new Option('-f, --file <file>', 'Name of the import file.').conflicts([
-        'allSeparate'
-      ])
+      new Option(
+        '-f, --file <file>',
+        'Name of the import file. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
     )
     .addOption(
       new Option(
@@ -48,7 +49,7 @@ export default function setup() {
       new Option(
         '-A, --all-separate',
         'Import all email templates from separate files (*.template.email.json) in the current directory. Cannot be used with -i, -f or -a.'
-      ).conflicts(['templateId', 'all', 'file'])
+      ).conflicts(['templateId', 'file', 'all'])
     )
     .addOption(
       new Option(
