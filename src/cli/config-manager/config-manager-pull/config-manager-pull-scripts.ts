@@ -20,8 +20,8 @@ export default function setup() {
     .addOption(
       new ListOption(
         '-p, --prefix <prefix>',
-        'Export all scripts that start with a certain prefix. Repetition of this flag is allowed. Ignored with -n'
-      )
+        'Export all scripts that start with a certain prefix. Repetition of this flag is allowed. Cannot be used with -n'
+      ).conflicts(['scriptName'])
     )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
