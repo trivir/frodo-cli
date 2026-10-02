@@ -5,7 +5,8 @@ import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError } from '../utils/Console';
 import { fileFilter } from '../utils/FrConfig';
 
-const { readConfigEntitiesByType, importConfigEntities } = frodo.idm.config;
+const { readConfigEntitiesByType, importConfigEntities, deleteConfigEntity } =
+  frodo.idm.config;
 const { saveJsonToFile, getFilePath } = frodo.utils;
 
 /**
@@ -104,6 +105,64 @@ export async function configManagerImportEndpoints(
     return true;
   } catch (error) {
     printError(error, `Error importing config entity endpoints`);
+  }
+  return false;
+}
+
+/**
+ * Delete endpoints in fr-config-manager format.
+ * @param {string} endpointName Optional name of the endpoint to delete. If not provided, deletes all eligible endpoints.
+ * @return {Promise<boolean>} A promise that resolves to true if successful, false otherwise.
+ */
+export async function configManagerDeleteEndpoints(
+  endpointName?: string
+): Promise<boolean> {
+  try {
+    const endpoints = await readConfigEntitiesByType('endpoint');
+    const filteredEndpoints = endpoints.filter(
+      (endpoint) =>
+        !endpoint.file &&
+        typeof endpoint._id === 'string' &&
+        endpoint._id.startsWith('endpoint') &&
+        (!endpoint.context ||
+          (typeof endpoint.context === 'string' &&
+            !endpoint.context.startsWith('util'))) &&
+        endpoint._id !== 'endpoint/linkedView'
+    );
+    if (filteredEndpoints.length === 0) {
+      if (endpointName) {
+        console.log(`Warning: endpoint '${endpointName}' not found.`);
+        return false;
+      }
+      console.log('No endpoints found to delete.');
+      return true;
+    }
+    let matchFound = false;
+    let success = true;
+    for (const endpoint of filteredEndpoints) {
+      if (typeof endpoint._id !== 'string') {
+        continue;
+      }
+      const name = endpoint._id.split('/')[1];
+      if (endpointName && endpointName !== name) {
+        continue;
+      }
+      matchFound = true;
+      try {
+        await deleteConfigEntity(endpoint._id);
+        console.log(`Deleting endpoint: ${endpoint._id}`);
+      } catch (error) {
+        printError(error, `Failed to delete endpoint ${endpoint._id}`);
+        success = false;
+      }
+    }
+    if (endpointName && !matchFound) {
+      console.log(`Warning: endpoint '${endpointName}' not found.`);
+      return false;
+    }
+    return success;
+  } catch (error) {
+    printError(error, 'Error deleting config entity endpoints');
   }
   return false;
 }
