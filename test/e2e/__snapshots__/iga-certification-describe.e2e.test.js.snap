@@ -1,0 +1,95 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga certification describe "frodo iga certification describe --certification-id 97863303-dea3-48bf-af77-cacfaf9328a3": should describe certification '97863303-dea3-48bf-af77-cacfaf9328a3' 1`] = `
+"Certification Template
+Id               │97863303-dea3-48bf-af77-cacfaf9328a3    
+Name             │phh-entitlement-assignment-certification
+Status           │active                                  
+CertificationType│entitlement                             
+StagingEnabled   │true                                    
+isEventBased     │false                                   
+Description      │Entitlements Review - All Applications  
+
+
+Email Templates (2):
+- [certificationAssigned]  - ATTENTION: Certification Task Assigned
+- [certificationReassigned]  - ATTENTION: Certification Task Reassigned
+"
+`;
+
+exports[`frodo iga certification describe "frodo iga certification describe --certification-id 97863303-dea3-48bf-af77-cacfaf9328a3": should describe certification '97863303-dea3-48bf-af77-cacfaf9328a3' 2`] = `""`;
+
+exports[`frodo iga certification describe "frodo iga certification describe --certification-name phh-entitlement-assignment-certification": should describe certification named 'phh-entitlement-assignment-certification' from file test/e2e/exports/all/allCertifications.certification.json 1`] = `
+"Certification Template
+Id               │97863303-dea3-48bf-af77-cacfaf9328a3    
+Name             │phh-entitlement-assignment-certification
+Status           │active                                  
+CertificationType│entitlement                             
+StagingEnabled   │true                                    
+isEventBased     │false                                   
+Description      │Entitlements Review - All Applications  
+
+
+Email Templates (2):
+- [certificationAssigned]  - ATTENTION: Certification Task Assigned
+- [certificationReassigned]  - ATTENTION: Certification Task Reassigned
+"
+`;
+
+exports[`frodo iga certification describe "frodo iga certification describe --certification-name phh-entitlement-assignment-certification": should describe certification named 'phh-entitlement-assignment-certification' from file test/e2e/exports/all/allCertifications.certification.json 2`] = `""`;
+
+exports[`frodo iga certification describe "frodo iga certification describe -f test/e2e/exports/all/allCertifications.certification.json": should describe first certification from file test/e2e/exports/all/allCertifications.certification.json 1`] = `
+"Certification Template
+Id               │055dfbc9-367e-441e-8b12-199b9dd5ce19                                         
+Name             │Sunset date change {{YYYY-MM-DD}} for {{IGA_PARAM_userDisplayName_IGA_PARAM}}
+Status           │active                                                                       
+CertificationType│identity                                                                     
+StagingEnabled   │false                                                                        
+isEventBased     │false                                                                        
+Description      │The user's sunset date has changed. Certify access.                          
+
+
+Email Templates (2):
+- [certificationAssigned]  - ATTENTION: Certification Task Assigned
+- [certificationReassigned]  - ATTENTION: Certification Task Reassigned
+"
+`;
+
+exports[`frodo iga certification describe "frodo iga certification describe -f test/e2e/exports/all/allCertifications.certification.json": should describe first certification from file test/e2e/exports/all/allCertifications.certification.json 2`] = `""`;
+
+exports[`frodo iga certification describe "frodo iga certification describe -i 97863303-dea3-48bf-af77-cacfaf9328a3 -f test/e2e/exports/all/allCertifications.certification.json": should describe certification '97863303-dea3-48bf-af77-cacfaf9328a3' from file test/e2e/exports/all/allCertifications.certification.json 1`] = `
+"Certification Template
+Id               │97863303-dea3-48bf-af77-cacfaf9328a3    
+Name             │phh-entitlement-assignment-certification
+Status           │active                                  
+CertificationType│entitlement                             
+StagingEnabled   │true                                    
+isEventBased     │false                                   
+Description      │Entitlements Review - All Applications  
+
+
+Email Templates (2):
+- [certificationAssigned]  - ATTENTION: Certification Task Assigned
+- [certificationReassigned]  - ATTENTION: Certification Task Reassigned
+"
+`;
+
+exports[`frodo iga certification describe "frodo iga certification describe -i 97863303-dea3-48bf-af77-cacfaf9328a3 -f test/e2e/exports/all/allCertifications.certification.json": should describe certification '97863303-dea3-48bf-af77-cacfaf9328a3' from file test/e2e/exports/all/allCertifications.certification.json 2`] = `""`;
+
+exports[`frodo iga certification describe "frodo iga certification describe -n Sample\\ Access\\ Review": should describe certification named 'Sample Access Review' 1`] = `
+"Certification Template
+Id               │f2284c72-ca2d-4eab-988e-93acf552b7eb                                             
+Name             │Sample Access Review                                                             
+Status           │active                                                                           
+CertificationType│entitlement                                                                      
+StagingEnabled   │true                                                                             
+isEventBased     │false                                                                            
+Description      │Jim's test to see if a resulting artifact of the review decisions can be created.
+
+
+Email Templates (0)
+
+"
+`;
+
+exports[`frodo iga certification describe "frodo iga certification describe -n Sample\\ Access\\ Review": should describe certification named 'Sample Access Review' 2`] = `""`;

@@ -24,7 +24,7 @@ export default function setup() {
     )
     .addOption(
       new Option(
-        '-E, --include-events',
+        '-e, --include-events',
         'Includes certification templates used in IGA events'
       ).default(false, 'false')
     )

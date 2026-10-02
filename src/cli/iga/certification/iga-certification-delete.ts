@@ -21,19 +21,19 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --certification-id <certification-id>',
-        'Certification id. If specified, -n or -a cannot be used.'
+        'Certification id. Cannot be used with -n or -a.'
       ).conflicts(['certificationName', 'all'])
     )
     .addOption(
       new Option(
         '-n, --certification-name <certification-name>',
-        'Certification name. Cannot be used with -i, or -a.'
+        'Certification name. Cannot be used with -i or -a.'
       ).conflicts(['certificationId', 'all'])
     )
     .addOption(
       new Option(
         '-a, --all',
-        'Delete all certifications. Cannot be used with -i or -n'
+        'Delete all certifications. Cannot be used with -i or -n.'
       ).conflicts(['certificationId', 'certificationName'])
     )
     .action(

@@ -49,12 +49,13 @@
 /*
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga certification export -Ni ae1381d5-cfad-4374-b3dc-075605b1036d -f testAllCerts.certifications.json
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga certification export --certification-id f2284c72-ca2d-4eab-988e-93acf552b7eb --no-deps -Mf testCertsExportFile1.json
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga certification export --no-metadata -a --directory testCertsExportDir2
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga certification export -a --no-metadata --directory testCertsExportDir2
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga certification export --all --no-deps -MN --file testCertsExportFile2.json 
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga certification export -NAD testCertsExportDir3
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga certification export --all-separate --no-deps -D testCertsExportDir4
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga certification export -Mn phh-entitlement-assignment-certification -f testCertsExportFile3.json
  */
+
 import { getEnv, testExport } from './utils/TestUtils';
 import { iga_connection as ic } from './utils/TestConfig';
 
@@ -76,9 +77,9 @@ describe(`frodo iga certification export`, () => {
     await testExport(CMD, igaEnv, type, exportFile, undefined, true, true);
   });
 
-  test(`"frodo iga certification export --no-metadata -a --directory testCertsExportDir2": should export all certifications with no metadata to a directory`, async () => {
+  test(`"frodo iga certification export -a --no-metadata --directory testCertsExportDir2": should export all certifications with no metadata to a directory`, async () => {
     const exportDirectory = "testCertsExportDir2";
-    const CMD = `frodo iga certification export --no-metadata -a --directory ${exportDirectory}`;
+    const CMD = `frodo iga certification export -a --no-metadata --directory ${exportDirectory}`;
     await testExport(CMD, igaEnv, type, undefined, exportDirectory, false, true);
   });
 

@@ -8,6 +8,7 @@ import {
 } from '@rockcarver/frodo-lib/types/ops/cloud/iga/IgaCertificationTemplateOps';
 import fs from 'fs';
 
+import c from '../../../utils/ColorTheme';
 import {
   createKeyValueTable,
   createProgressIndicator,
@@ -74,15 +75,11 @@ export async function listCertifications(
         certification.id,
         wordwrap(certification.name, 40),
         certification.status === 'active'
-          ? 'active'['brightGreen']
-          : 'pending'['brightRed'],
-        certification.stagingEnabled
-          ? 'true'['brightGreen']
-          : 'false'['brightRed'],
+          ? c.positive('active')
+          : c.negative('pending'),
+        certification.stagingEnabled ? c.positive('true') : c.negative('false'),
         certification.certificationType,
-        certification.isEventBased
-          ? 'true'['brightGreen']
-          : 'false'['brightRed'],
+        certification.isEventBased ? c.positive('true') : c.negative('false'),
         wordwrap(certification.description, 30),
       ]);
     }
@@ -173,29 +170,27 @@ export async function describeCertification(
     const certification = certData.certificationTemplate[certificationId];
     printMessage('Certification Template', 'data');
     const table = createKeyValueTable();
-    table.push(['Id'['brightCyan'], certification.id]);
-    table.push(['Name'['brightCyan'], certification.name]);
+    table.push([c.heading('Id'), certification.id]);
+    table.push([c.heading('Name'), certification.name]);
     table.push([
-      'Status'['brightCyan'],
+      c.heading('Status'),
       certification.status === 'active'
-        ? 'active'['brightGreen']
-        : 'pending'['brightRed'],
+        ? c.positive('active')
+        : c.negative('pending'),
     ]);
     table.push([
-      'CertificationType'['brightCyan'],
+      c.heading('CertificationType'),
       certification.certificationType,
     ]);
     table.push([
-      'StagingEnabled'['brightCyan'],
-      certification.stagingEnabled
-        ? 'true'['brightGreen']
-        : 'false'['brightRed'],
+      c.heading('StagingEnabled'),
+      certification.stagingEnabled ? c.positive('true') : c.negative('false'),
     ]);
     table.push([
-      'isEventBased'['brightCyan'],
-      certification.isEventBased ? 'true'['brightGreen'] : 'false'['brightRed'],
+      c.heading('isEventBased'),
+      certification.isEventBased ? c.positive('true') : c.negative('false'),
     ]);
-    table.push(['Description'['brightCyan'], certification.description]);
+    table.push([c.heading('Description'), certification.description]);
 
     printMessage(table.toString() + '\n', 'data');
 

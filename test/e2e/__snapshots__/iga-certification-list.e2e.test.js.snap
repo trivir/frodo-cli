@@ -44,24 +44,24 @@ ae1381d5-cfad-4374-b3dc-075605b1036d│phh-entitlement-assignment-certification�
 
 exports[`frodo iga certification list "frodo iga certification list -l": should list the ids, names, statuses, isStagingEnabled, certificationTypes, isEventBased and descriptions of the certifications. 2`] = `""`;
 
-exports[`frodo iga certification list "frodo iga certification list -lE": should list the ids, names, statuses, isStagingEnabled, certificationTypes, isEventBased and descriptions of the certifications, including Event Templates. 1`] = `
-"ID                                  │Name                                    │Status │StagingEnabled│CertificationType│isEventBased│Description               
-055dfbc9-367e-441e-8b12-199b9dd5ce19│Sunset date change {{YYYY-MM-DD}} for   │active │false         │identity         │false       │The user's sunset date has
-                                    │{{IGA_PARAM_userDisplayName_IGA_PARAM}} │       │              │                 │            │changed. Certify access.  
-a855a858-3139-4470-b9f0-1eeb25a1bfae│Sample Access Review (copy)             │pending│true          │entitlement      │false       │Jim's test to see if a    
-                                    │                                        │       │              │                 │            │resulting artifact of the 
-                                    │                                        │       │              │                 │            │review decisions can be   
-                                    │                                        │       │              │                 │            │created.                  
-ae1381d5-cfad-4374-b3dc-075605b1036d│phh-entitlement-assignment-certification│active │true          │entitlement      │false       │Entitlements Review - All 
-                                    │                                        │       │              │                 │            │Applications              
-f2284c72-ca2d-4eab-988e-93acf552b7eb│Sample Access Review                    │active │true          │entitlement      │false       │Jim's test to see if a    
-                                    │                                        │       │              │                 │            │resulting artifact of the 
-                                    │                                        │       │              │                 │            │review decisions can be   
-                                    │                                        │       │              │                 │            │created.                  
+exports[`frodo iga certification list "frodo iga certification list -le": should list the ids, names, statuses, isStagingEnabled, certificationTypes, isEventBased and descriptions of the certifications, including Event Templates. 1`] = `
+"ID                                  │Name                                    │Status │StagingEnabled│CertificationType     │isEventBased│Description               
+055dfbc9-367e-441e-8b12-199b9dd5ce19│Sunset date change {{YYYY-MM-DD}} for   │active │false         │identity              │false       │The user's sunset date has
+                                    │{{IGA_PARAM_userDisplayName_IGA_PARAM}} │       │              │                      │            │changed. Certify access.  
+076391b9-7d1d-43b7-aeb1-bdcd20be1d66│Preston Hales                           │pending│true          │entitlementComposition│false       │asdf                      
+460d7691-fbba-41da-84ad-34bf8c31e11a│asdfasdf2                               │pending│false         │roleMembership        │false       │                          
+4dfaf230-d5ed-4ea9-bf5e-a9a56e808509│asdffdsa                                │pending│false         │identity              │false       │                          
+90224e2b-3166-4eb2-88ae-108a12443671│Sample Access Review                    │active │true          │entitlement           │false       │Jim's test to see if a    
+                                    │                                        │       │              │                      │            │resulting artifact of the 
+                                    │                                        │       │              │                      │            │review decisions can be   
+                                    │                                        │       │              │                      │            │created.                  
+965c4548-1f53-4947-ba06-dfa821da42a6│phh-entitlement-assignment-certification│active │true          │entitlement           │false       │Entitlements Review - All 
+                                    │                                        │       │              │                      │            │Applications              
+bec35cfa-70de-4b19-88b6-2286ec1479a4│asdfasdf                                │pending│false         │entitlement           │false       │                          
 "
 `;
 
-exports[`frodo iga certification list "frodo iga certification list -lE": should list the ids, names, statuses, isStagingEnabled, certificationTypes, isEventBased and descriptions of the certifications, including Event Templates. 2`] = `""`;
+exports[`frodo iga certification list "frodo iga certification list -le": should list the ids, names, statuses, isStagingEnabled, certificationTypes, isEventBased and descriptions of the certifications, including Event Templates. 2`] = `""`;
 
 exports[`frodo iga certification list "frodo iga certification list": should list the names of the certifications 1`] = `
 "Sample Access Review

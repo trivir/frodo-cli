@@ -50,7 +50,7 @@
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga certification list
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga certification list -l
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga certification list --long
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga certification list -lE
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga certification list -le
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga certification list --include-events
  */
 
@@ -76,8 +76,8 @@ describe('frodo iga certification list', () => {
     await testSuccess(CMD, igaEnv);
   });
 
-  test('"frodo iga certification list -lE": should list the ids, names, statuses, isStagingEnabled, certificationTypes, isEventBased and descriptions of the certifications, including Event Templates.', async () => {
-    const CMD = `frodo iga certification list -lE`;
+  test('"frodo iga certification list -le": should list the ids, names, statuses, isStagingEnabled, certificationTypes, isEventBased and descriptions of the certifications, including Event Templates.', async () => {
+    const CMD = `frodo iga certification list -le`;
     await testSuccess(CMD, igaEnv);
   });
 

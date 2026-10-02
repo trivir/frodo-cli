@@ -52,12 +52,9 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga certification delete --all
  */
 
-import cp from 'child_process';
-import { promisify } from 'util';
-import { getEnv, removeAnsiEscapeCodes } from './utils/TestUtils';
+import { getEnv, testSuccess } from './utils/TestUtils';
 import { iga_connection as ic } from './utils/TestConfig';
 
-const exec = promisify(cp.exec);
 
 process.env['FRODO_MOCK'] = '1';
 const igaEnv = getEnv(ic);
@@ -65,22 +62,16 @@ const igaEnv = getEnv(ic);
 describe(`frodo iga certification delete`, () => {
   test(`"frodo iga certification delete -i 96fb89d5-970e-47aa-94f2-8a4be03e1d33": should delete certification "96fb89d5-970e-47aa-94f2-8a4be03e1d33"`, async () => {
     const CMD = `frodo iga certification delete -i 96fb89d5-970e-47aa-94f2-8a4be03e1d33`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga certification delete --certification-name phh-entitlement-assignment-certification": should delete certification named "phh-entitlement-assignment-certification"`, async () => {
     const CMD = `frodo iga certification delete --certification-name phh-entitlement-assignment-certification`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga certification delete --all": Should delete all certifications`, async () => {
     const CMD = `frodo iga certification delete --all`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 });

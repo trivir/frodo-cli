@@ -53,6 +53,7 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga certification describe --certification-name phh-entitlement-assignment-certification --file test/e2e/exports/all/allCertifications.certification.json
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga certification describe -f test/e2e/exports/all/allCertifications.certification.json
  */
+
 import { getEnv, testSuccess } from './utils/TestUtils';
 import { iga_connection as ic } from './utils/TestConfig';
 
@@ -65,26 +66,26 @@ const allCertificationsFile = "test/e2e/exports/all/allCertifications.certificat
 describe(`frodo iga certification describe`, () => {
   test(`"frodo iga certification describe -i 97863303-dea3-48bf-af77-cacfaf9328a3 -f ${allCertificationsFile}": should describe certification '97863303-dea3-48bf-af77-cacfaf9328a3' from file ${allCertificationsFile}`, async () => {
     const CMD = `frodo iga certification describe -i 97863303-dea3-48bf-af77-cacfaf9328a3 -f ${allCertificationsFile}`;
-    testSuccess(CMD, igaEnv);
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga certification describe --certification-id 97863303-dea3-48bf-af77-cacfaf9328a3": should describe certification '97863303-dea3-48bf-af77-cacfaf9328a3'`, async () => {
     const CMD = `frodo iga certification describe --certification-id 97863303-dea3-48bf-af77-cacfaf9328a3`;
-    testSuccess(CMD, igaEnv);
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga certification describe -n Sample\\ Access\\ Review": should describe certification named 'Sample Access Review'`, async () => {
     const CMD = `frodo iga certification describe -n Sample\\ Access\\ Review`;
-    testSuccess(CMD, igaEnv);
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga certification describe --certification-name phh-entitlement-assignment-certification": should describe certification named 'phh-entitlement-assignment-certification' from file ${allCertificationsFile}`, async () => {
     const CMD = `frodo iga certification describe --certification-name phh-entitlement-assignment-certification --file ${allCertificationsFile}`;
-    testSuccess(CMD, igaEnv);
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga certification describe -f ${allCertificationsFile}": should describe first certification from file ${allCertificationsFile}`, async () => {
     const CMD = `frodo iga certification describe -f ${allCertificationsFile}`;
-    testSuccess(CMD, igaEnv);
+    await testSuccess(CMD, igaEnv);
   });
 });

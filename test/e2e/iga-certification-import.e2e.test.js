@@ -57,12 +57,10 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga certification import -AD test/e2e/exports/all-separate/cloud/iga/certifications
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo iga certification import --all-separate --directory test/e2e/exports/all-separate/cloud/iga/certifications --no-deps
  */
-import cp from 'child_process';
-import { promisify } from 'util';
-import { getEnv, removeAnsiEscapeCodes } from './utils/TestUtils';
+
+import { getEnv, testSuccess } from './utils/TestUtils';
 import { iga_connection as ic } from './utils/TestConfig';
 
-const exec = promisify(cp.exec);
 
 process.env['FRODO_MOCK'] = '1';
 const igaEnv = getEnv(ic);
@@ -75,64 +73,46 @@ const allSeparateCertificationsDirectory = `test/e2e/exports/all-separate/cloud/
 describe(`frodo iga certification import`, () => {
   test(`"frodo iga certification import -i 855918e4-06c4-4393-b1da-61a20e23e29a -f ${allCertificationsExport}": should import 855918e4-06c4-4393-b1da-61a20e23e29a from the file "${allCertificationsExport}" with dependencies`, async () => {
     const CMD = `frodo iga certification import -i 855918e4-06c4-4393-b1da-61a20e23e29a -f ${allCertificationsExport}`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga certification import --certification-id 855918e4-06c4-4393-b1da-61a20e23e29a --file ${allCertificationsExport} --no-deps": should import 855918e4-06c4-4393-b1da-61a20e23e29a from the file "${allCertificationsExport}"`, async () => {
     const CMD = `frodo iga certification import --certification-id 855918e4-06c4-4393-b1da-61a20e23e29a --file ${allCertificationsExport} --no-deps`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga certification import -n Sample\\ Access\\ Review -f ${allCertificationsExport}": should import Sample Access Review from the file "${allCertificationsExport}" with dependencies`, async () => {
     const CMD = `frodo iga certification import -n Sample\\ Access\\ Review -f ${allCertificationsExport}`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga certification import --certification-name phh-entitlement-assignment-certification --file ${allCertificationsExport} --no-deps": should import certification named "phh-entitlement-assignment-certification" from the file "${allCertificationsExport}"`, async () => {
     const CMD = `frodo iga certification import --certification-name phh-entitlement-assignment-certification --file ${allCertificationsExport} --no-deps`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga certification import -f ${allCertificationsExport} --no-deps": should import first certification from the file "${allCertificationsExport}"`, async () => {
     const CMD = `frodo iga certification import -f ${allCertificationsExport} --no-deps`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga certification import -af ${allCertificationsExport}": should import all certifications from the file "${allCertificationsExport}" with dependencies`, async () => {
     const CMD = `frodo iga certification import -af ${allCertificationsExport}`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga certification import --all --file ${allCertificationsExport}": should import all certifications from the file "${allCertificationsExport} with dependencies"`, async () => {
     const CMD = `frodo iga certification import --all --file ${allCertificationsExport}`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga certification import -AD ${allSeparateCertificationsDirectory}": should import all certifications from the directory "${allSeparateCertificationsDirectory}" with dependencies`, async () => {
     const CMD = `frodo iga certification import -AD ${allSeparateCertificationsDirectory}`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 
   test(`"frodo iga certification import --all-separate --directory ${allSeparateCertificationsDirectory} --no-deps": should import all certifications from the directory "${allSeparateCertificationsDirectory}"`, async () => {
     const CMD = `frodo iga certification import --all-separate --directory ${allSeparateCertificationsDirectory} --no-deps`;
-    const { stdout, stderr } = await exec(CMD, igaEnv);
-    expect(removeAnsiEscapeCodes(stdout)).toMatchSnapshot();
-    expect(removeAnsiEscapeCodes(stderr)).toMatchSnapshot();
+    await testSuccess(CMD, igaEnv);
   });
 });
