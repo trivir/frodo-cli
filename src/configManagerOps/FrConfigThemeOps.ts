@@ -3,11 +3,12 @@ import { ThemeSkeleton } from '@rockcarver/frodo-lib/types/ops/ThemeOps';
 import fs from 'fs';
 
 import { printError, printMessage } from '../utils/Console';
-import { decodeOrNot } from '../utils/FrConfig';
+import { decodeOrNot, realmList } from '../utils/FrConfig';
 
 const { saveJsonToFile, getFilePath } = frodo.utils;
 const { readRealms } = frodo.realm;
-const { readThemes, importThemes } = frodo.theme;
+const { readThemes, importThemes, deleteTheme } = frodo.theme;
+const { DEFAULT_REALM_KEY } = frodo.utils.constants;
 
 const THEME_HTML_FIELDS = [
   { name: 'accountFooter', encoded: false },
@@ -124,6 +125,73 @@ export async function configManagerImportThemes(): Promise<boolean> {
       await importThemes({ theme: themeMap });
     }
     return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+/**
+ * Delete themes in the specified realm, or all listed realms if omitted.
+ * Optionally filters themes by exact name.
+ * Continues processing remaining themes and realms if a deletion fails.
+ * @param name Optional name of the theme to delete.
+ * @param realm Optional realm to process.
+ * @returns False if a named theme is missing in a processed realm
+ * or an error occurs; otherwise true.
+ */
+export async function configManagerDeleteThemes(
+  name?: string,
+  realm?: string
+): Promise<boolean> {
+  let success = true;
+  try {
+    const hasExplicitRealm = !!realm && realm !== DEFAULT_REALM_KEY;
+    const realms = hasExplicitRealm ? [realm] : await realmList();
+    if (realms.length === 0) {
+      printMessage('No realms found.', 'warn');
+      return false;
+    }
+    for (const currentRealm of realms) {
+      if (!hasExplicitRealm && currentRealm === '/') continue;
+      try {
+        state.setRealm(currentRealm);
+
+        const themes = await readThemes();
+        const selectedThemes = name
+          ? themes.filter((theme) => theme.name === name)
+          : themes;
+        if (selectedThemes.length === 0) {
+          if (name) {
+            printMessage(
+              `Theme '${name}' not found in realm '${currentRealm}'.`,
+              'warn'
+            );
+            success = false;
+          } else {
+            printMessage(
+              `No themes found to delete in realm '${currentRealm}'.`
+            );
+          }
+          continue;
+        }
+        for (const theme of selectedThemes) {
+          try {
+            await deleteTheme(theme._id);
+            printMessage(
+              `Deleted theme: ${theme.name} in realm '${currentRealm}'`
+            );
+          } catch (error) {
+            printError(error);
+            success = false;
+          }
+        }
+      } catch (error) {
+        printError(error);
+        success = false;
+      }
+    }
+    return success;
   } catch (error) {
     printError(error);
     return false;

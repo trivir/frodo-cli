@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`frodo config-manager delete themes should delete a specific theme by name in alpha 1`] = `""`;
+
+exports[`frodo config-manager delete themes should delete a specific theme by name in alpha 2`] = `
+"Experimental feature in use: 'frodo config-manager delete themes'. This feature may change without notice.
+Deleted theme: Test in realm 'alpha'
+"
+`;
+
+exports[`frodo config-manager delete themes should delete themes across non-root realms 1`] = `""`;
+
+exports[`frodo config-manager delete themes should delete themes across non-root realms 2`] = `
+"Experimental feature in use: 'frodo config-manager delete themes'. This feature may change without notice.
+Deleted theme: Contrast in realm 'alpha'
+Deleted theme: ForgeRock Theme in realm 'alpha'
+Deleted theme: Highlander in realm 'alpha'
+Deleted theme: Robroy in realm 'alpha'
+Deleted theme: Test in realm 'alpha'
+Deleted theme: Test No HTML in realm 'alpha'
+Deleted theme: Test Single HTML in realm 'alpha'
+Deleted theme: Zardoz in realm 'alpha'
+Deleted theme: Contrast in realm 'bravo'
+Deleted theme: ForgeRock Theme in realm 'bravo'
+Deleted theme: Highlander in realm 'bravo'
+Deleted theme: Robroy in realm 'bravo'
+Deleted theme: Test No HTML in realm 'bravo'
+Deleted theme: Test Single HTML in realm 'bravo'
+Deleted theme: Zardoz in realm 'bravo'
+Deleted theme: Test in realm 'bravo'
+"
+`;
