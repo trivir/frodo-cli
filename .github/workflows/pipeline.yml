@@ -19,18 +19,30 @@ on:
   workflow_dispatch:
     inputs:
       release-type:
-        description: 'Release kind: prerelease | patch | minor | major'
+        description: 'Release kind: prerelease | premajor | patch | minor | major'
         type: choice
         options:
           - prerelease
+          - premajor
           - patch
           - minor
           - major
         default: 'prerelease'
         required: true
 
+# Cancel superseded runs: each new push to a PR (including Dependabot
+# rebases) cancels the previous run for the same ref instead of piling up
+# full test cycles. Release dispatches get their own group so a release is
+# never cancelled by a push.
+concurrency:
+  group: pipeline-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 env:
   NODE_VERSION: 24
+  # Native SEA builds embed the runtime binary, which must be Node >= 25.5
+  # (--build-sea). Binary jobs install this version explicitly.
+  SEA_NODE_VERSION: 26
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 permissions:
@@ -53,7 +65,7 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -108,11 +120,16 @@ jobs:
         run: npm run check:mcp-sdk-track
 
       - name: Build frodo-cli
+        # build:only = the npm bundle (dist/) + typecheck. NOT `npm run
+        # build`: that now means the full build including the SEA binary,
+        # which needs Node 26 - and this job (and the artifact it uploads)
+        # intentionally runs on Node 24; the binary jobs bundle the SEA from
+        # source themselves.
         run: |
-          npm run build
+          npm run build:only
 
       - name: Lint
-        run: npm run lint:fix
+        run: npm run check
 
       - name: Type Check
         run: npx tsc
@@ -120,12 +137,20 @@ jobs:
       - name: Security Audit
         run: npm audit fix --audit-level critical
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: build
+          # Binary jobs run `npm run build:binary` themselves (SEA bundles
+          # from source), so they need the sources and build configs too.
           path: |
             package.json
             package-lock.json
+            src
+            scripts
+            tsconfig.json
+            tsdown.config.ts
+            tsdown.sea.config.mts
+            sea-config.json
             dist
 
     outputs:
@@ -142,7 +167,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [26, 24, 22]
+        # The CLI's supported runtime is the SEA binary, which is built on
+        # Node 26 - so 26 is the only version the tests need. (frodo-lib,
+        # which the CLI embeds, keeps its own wider matrix in its repo.)
+        node-version: [26]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -156,37 +184,51 @@ jobs:
           fetch-tags: true
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
       - name: Use Python 3.11
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: '3.11'
 
       - name: Verify Python runtime for PTY shell tests
         run: python3 --version
 
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: build
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Install frodo-cli globally
-        run: npm i -g
+      # The e2e suites shell out to `frodo` and the test helpers pin that to
+      # this checkout's SEA binary (dist-sea/, built on demand). Building the
+      # binary here - not `npm i -g` - means the tests exercise exactly the
+      # artifact the release jobs ship. `--build-sea` needs Node >= 25.5,
+      # which the matrix now guarantees (26).
+      - name: Build SEA binary
+        run: npm run build:binary
 
       - name: CLI Tests
         env:
           FRODO_MASTER_KEY: ${{ secrets.FRODO_MASTER_KEY }}
-        run: npm run test:serial
+        # Sea mode: jest's default parallel scheduling (one worker per suite)
+        # against the SEA binary - exactly the artifact the release jobs
+        # ship. The e2e suites are replay-only (FRODO_MOCK=1) with per-suite
+        # connections profiles and per-suite export directories, so suites
+        # are isolated; --runInBand was retired after the file-lifecycle
+        # races it guarded against were fixed (per-suite export dir names,
+        # mkdtemp PTY homes). Developers default to dev mode (`npm test`,
+        # node dist/launch.cjs - no SEA build needed); FRODO_TEST_BINARY=sea
+        # selects the binary here.
+        run: npm run test:binary
 
       - name: Version Test
-        run: frodo -v
+        run: ./dist-sea/frodo -v
 
   # Single stable-named gate over the versioned test matrix. Required status
   # checks on main point at THIS job, so changing the matrix's Node versions
@@ -234,12 +276,12 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: build
 
@@ -290,33 +332,39 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
+          # Push the release commit with the org-wide FRODO_CI_PAT instead of
+          # GITHUB_TOKEN: the main-branch ruleset's required status checks
+          # reject github-actions[bot] pushes (the Actions app cannot be a
+          # bypass actor), while PAT-attributed pushes from a repository
+          # admin are covered by the ruleset's bypass. See docs/PIPELINE.md.
+          token: ${{ secrets.FRODO_CI_PAT }}
 
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: build
 
       - name: Download MacOS Intel Binary Release
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: macos-intel-binary-release
 
       - name: Download MacOS ARM64 Binary Release
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: macos-arm64-binary-release
 
       - name: Download Linux X64 Binary Release
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: linux-x64-binary-release
 
       - name: Download Linux ARM64 Binary Release
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: linux-arm64-binary-release
 
       - name: Download Windows X64 Binary Release
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: windows-x64-binary-release
 
@@ -342,7 +390,16 @@ jobs:
 
       - name: Commit updated changelog and version
         id: commit-changelog
+        env:
+          FRODO_CI_PAT: ${{ secrets.FRODO_CI_PAT }}
         run: |
+          set -euo pipefail
+          # Refuse to run on an unauthenticated PAT (e.g. fork runs) instead
+          # of silently pushing with GITHUB_TOKEN and tripping the ruleset.
+          if [ -z "${FRODO_CI_PAT}" ]; then
+            echo "::error::FRODO_CI_PAT secret is not set; cannot push the release commit"
+            exit 1
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add CHANGELOG.md package.json package-lock.json
@@ -389,12 +446,12 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: build
 
@@ -454,38 +511,62 @@ jobs:
 
   homebrew-formula-update:
     if: github.event_name == 'workflow_dispatch'
-    name: Bump Homebrew formula
+    name: Update Homebrew formulas (prebuilt zips)
     needs: [release, build, npm-release]
     runs-on: ubuntu-latest
     steps:
-      - uses: mislav/bump-homebrew-formula-action@v3
-        if: ${{ ! fromJSON(needs.build.outputs.preRelease) }}
+      - uses: actions/checkout@v6
         with:
-          formula-name: frodo-cli
-          formula-path: Formula/frodo-cli.rb
-          homebrew-tap: rockcarver/homebrew-frodo-cli
-          push-to: rockcarver/homebrew-frodo-cli
-          tag-name: ${{ needs.build.outputs.newTag }}
-          download-url: https://github.com/rockcarver/frodo-cli.git
-        env:
-          COMMITTER_TOKEN: ${{ secrets.PAT_HOMEBREW_FORMULA_REPO }}
-      - uses: mislav/bump-homebrew-formula-action@v3
-        # if: ${{ fromJSON(needs.build.outputs.preRelease) }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
         with:
-          formula-name: frodo-cli-next
-          formula-path: Formula/frodo-cli-next.rb
-          homebrew-tap: rockcarver/homebrew-frodo-cli
-          push-to: rockcarver/homebrew-frodo-cli
-          tag-name: ${{ needs.build.outputs.newTag }}
-          download-url: https://github.com/rockcarver/frodo-cli.git
+          node-version: 26
+      # Generates both formulas from the per-arch release zips the pipeline
+      # built, tested, signed and notarized. Homebrew then installs the exact
+      # tested artifact instead of building a second, untested binary from
+      # source on the user's machine (which also required node@24).
+      - name: Generate formulas
         env:
-          COMMITTER_TOKEN: ${{ secrets.PAT_HOMEBREW_FORMULA_REPO }}
+          GH_TOKEN: ${{ secrets.FRODO_CI_PAT }}
+        run: |
+          node tools/update-homebrew-formula.mjs \
+            ${{ needs.build.outputs.newVersion }} \
+            ${{ needs.build.outputs.newTag }} \
+            "$RUNNER_TEMP/frodo-formulas"
+      - name: Push formula updates to the tap
+        env:
+          GH_TOKEN: ${{ secrets.FRODO_CI_PAT }}
+          NEEDS_VERSION: ${{ needs.build.outputs.newVersion }}
+        run: |
+          gh repo clone rockcarver/homebrew-frodo-cli tap
+          cd tap
+          git config user.name "rockcarver-pipeline"
+          git config user.email "actions@github.com"
+          # The generator only writes frodo-cli.rb for stable releases; a
+          # prerelease (e.g. 5.0.0-1) must not touch the stable formula, so
+          # copy whichever formulas it produced.
+          shopt -s nullglob
+          for f in "$RUNNER_TEMP"/frodo-formulas/*.rb; do
+            cp "$f" "Formula/$(basename "$f")"
+            git add "Formula/$(basename "$f")"
+          done
+          if git diff --cached --quiet; then
+            echo "Formulas already up to date for ${{ needs.build.outputs.newTag }}"
+          else
+            git commit -m "frodo-cli ${NEEDS_VERSION} (prebuilt binary zips)"
+            git push origin main
+          fi
 
   macos-intel-binary-release:
+    # Cross-builds the x64 binary on the arm64 runner via the SEA
+    # `executable` field (the macos-15-intel runner retires Aug 2027, and
+    # nodejs/node#65479 makes --build-sea unusable on x64 *hosts* - the
+    # arm64-host/x64-target path is unaffected). Smoke-tested under
+    # Rosetta below.
     # don't run on PRs, since secrets are not available
     if: github.event_name == 'workflow_dispatch'
     needs: [build, test]
-    runs-on: macos-15-intel
+    runs-on: macos-15
     timeout-minutes: 15
     steps:
       - name: Install the Apple certificate
@@ -514,47 +595,80 @@ jobs:
           #security import $INTERMEDIATE_CERTIFICATE_PATH -P "$DEVELOPMENT_CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: build
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          # node --build-sea needs >= 25.5; 26 is current. The build itself
+          # runs on arm64; the x64 runtime binary is fetched separately.
+          node-version: ${{ env.SEA_NODE_VERSION }}
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run dist-pkg
+      - name: Build SEA bundle
+        run: npm run build:sea-bundle
 
+      # Cross-build: point the SEA config's `executable` at the official
+      # darwin-x64 Node binary (same Node version as the blob producer).
+      # useCodeCache must be off for cross-architecture builds: the cache
+      # is generated by the HOST architecture's Node and is useless (and
+      # possibly fatal) on the x64 target.
+      - name: Download darwin-x64 Node runtime
+        run: |
+          NODE_SEA_VERSION=$(node -p process.versions.node)
+          curl -sSfL -o /tmp/node-darwin-x64.tar.gz \
+            "https://nodejs.org/dist/v${NODE_SEA_VERSION}/node-v${NODE_SEA_VERSION}-darwin-x64.tar.gz"
+          mkdir -p build-sea-runtime
+          tar xf /tmp/node-darwin-x64.tar.gz -C build-sea-runtime --strip-components=2 \
+            "node-v${NODE_SEA_VERSION}-darwin-x64/bin/node"
+
+      - name: Build SEA binary (darwin-x64 target)
+        run: |
+          node -e "
+            const cfg = require('./sea-config.json');
+            cfg.executable = 'build-sea-runtime/node';
+            cfg.output = 'dist-sea/frodo';
+            cfg.useCodeCache = false;
+            require('fs').writeFileSync('sea-config.build.json', JSON.stringify(cfg, null, 2));
+          "
+          node --build-sea sea-config.build.json
+
+      # --build-sea output is UNSIGNED (the injector strips the base Node
+      # signature and does not re-sign). Sign with Developer ID before the
+      # Rosetta smoke test; sign strictly LAST: any byte change after this
+      # invalidates the signature.
       - name: Sign distribution binary
         run: |
           cat > entitlements.plist <<DELIM
           <dict>
-            <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+            <key>com.apple.security.cs.allow-jit</key>
             <true/>
           </dict>
           DELIM
-          codesign -f -s 'Developer ID Application' --options runtime --entitlements entitlements.plist --timestamp --deep frodo
+          codesign --force --sign 'Developer ID Application' --options runtime --entitlements entitlements.plist --timestamp dist-sea/frodo
+          codesign --verify --strict --verbose=2 dist-sea/frodo
 
       #
-      # Fail early on failing tests.
+      # Fail early on failing tests. The x64 binary runs under Rosetta 2
+      # on this arm64 runner (preinstalled on GitHub macOS images).
       #
-      - name: 'Test'
+      - name: 'Test (under Rosetta)'
         run: |
-          ./frodo -v
-          ./frodo journey -h
-          ./frodo journey export -h
+          ./dist-sea/frodo -v
+          ./dist-sea/frodo journey -h
+          ./dist-sea/frodo journey export -h
 
       - name: Create zip file
-        run: ditto -c -k frodo frodo-macos-intel-${{ needs.build.outputs.newVersion }}.zip
+        run: ditto -c -k dist-sea/frodo frodo-macos-intel-${{ needs.build.outputs.newVersion }}.zip
 
       - name: Notorize
         run: xcrun notarytool submit --apple-id ${{ secrets.AC_USERNAME }} --password ${{ secrets.AC_PASSWORD }} --team-id ${{ secrets.AC_TEAM_ID }} --wait frodo-macos-intel-${{ needs.build.outputs.newVersion }}.zip
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: macos-intel-binary-release
           path: frodo-macos-intel-${{ needs.build.outputs.newVersion }}.zip
@@ -592,47 +706,53 @@ jobs:
           #security import $INTERMEDIATE_CERTIFICATE_PATH -P "$DEVELOPMENT_CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: build
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          # node --build-sea needs >= 25.5; 26 is current.
+          node-version: ${{ env.SEA_NODE_VERSION }}
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run dist-pkg
+      - name: Build SEA binary
+        run: npm run build:binary
 
+      # --build-sea output is UNSIGNED (the injector strips the base Node
+      # signature and does not re-sign). Unsigned arm64 binaries are killed
+      # by the kernel (SIGKILL), so sign immediately. Sign strictly LAST:
+      # any byte change after this invalidates the signature.
       - name: Sign distribution binary
         run: |
           cat > entitlements.plist <<DELIM
           <dict>
-            <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+            <key>com.apple.security.cs.allow-jit</key>
             <true/>
           </dict>
           DELIM
-          codesign -f -s 'Developer ID Application' --options runtime --entitlements entitlements.plist --timestamp --deep frodo
+          codesign --force --sign 'Developer ID Application' --options runtime --entitlements entitlements.plist --timestamp dist-sea/frodo
+          codesign --verify --strict --verbose=2 dist-sea/frodo
 
       #
       # Fail early on failing tests.
       #
       - name: 'Test'
         run: |
-          ./frodo -v
-          ./frodo journey -h
-          ./frodo journey export -h
+          ./dist-sea/frodo -v
+          ./dist-sea/frodo journey -h
+          ./dist-sea/frodo journey export -h
 
       - name: Create zip file
-        run: ditto -c -k frodo frodo-macos-arm64-${{ needs.build.outputs.newVersion }}.zip
+        run: ditto -c -k dist-sea/frodo frodo-macos-arm64-${{ needs.build.outputs.newVersion }}.zip
 
       - name: Notorize
         run: xcrun notarytool submit --apple-id ${{ secrets.AC_USERNAME }} --password ${{ secrets.AC_PASSWORD }} --team-id ${{ secrets.AC_TEAM_ID }} --wait frodo-macos-arm64-${{ needs.build.outputs.newVersion }}.zip
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: macos-arm64-binary-release
           path: frodo-macos-arm64-${{ needs.build.outputs.newVersion }}.zip
@@ -642,72 +762,76 @@ jobs:
     needs: [build, test]
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: build
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          # node --build-sea needs >= 25.5; 26 is current.
+          node-version: ${{ env.SEA_NODE_VERSION }}
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run dist-pkg
+      - name: Build SEA binary
+        run: npm run build:binary
 
       #
       # Fail early on failing tests.
       #
       - name: 'Test'
         run: |
-          ./frodo -v
-          ./frodo journey -h
-          ./frodo journey export -h
+          ./dist-sea/frodo -v
+          ./dist-sea/frodo journey -h
+          ./dist-sea/frodo journey export -h
 
       - name: Archive distribution binary
-        run: zip -Z bzip2 frodo-linux-x64-${{ needs.build.outputs.newVersion }}.zip frodo
+        run: zip -Z bzip2 frodo-linux-x64-${{ needs.build.outputs.newVersion }}.zip dist-sea/frodo
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: linux-x64-binary-release
           path: frodo-linux-x64-${{ needs.build.outputs.newVersion }}.zip
 
   linux-arm64-binary-release:
+    # Native arm64 runner (not a container) - SEA binaries need a full
+    # glibc userland; alpine is not a supported SEA platform.
     # don't run on PRs to speed up the checks
     if: github.event_name == 'workflow_dispatch'
     needs: [build, test]
     runs-on: ubuntu-24.04-arm
     steps:
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: build
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          # node --build-sea needs >= 25.5; 26 is current.
+          node-version: ${{ env.SEA_NODE_VERSION }}
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run dist-pkg
+      - name: Build SEA binary
+        run: npm run build:binary
 
       #
       # Fail early on failing tests.
       #
       - name: 'Test'
         run: |
-          ./frodo -v
-          ./frodo journey -h
-          ./frodo journey export -h
+          ./dist-sea/frodo -v
+          ./dist-sea/frodo journey -h
+          ./dist-sea/frodo journey export -h
 
       - name: Archive distribution binary
-        run: zip -Z bzip2 frodo-linux-arm64-${{ needs.build.outputs.newVersion }}.zip frodo
+        run: zip -Z bzip2 frodo-linux-arm64-${{ needs.build.outputs.newVersion }}.zip dist-sea/frodo
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: linux-arm64-binary-release
           path: frodo-linux-arm64-${{ needs.build.outputs.newVersion }}.zip
@@ -718,34 +842,45 @@ jobs:
     needs: [build, test]
     runs-on: windows-2022
     steps:
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: build
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          # node --build-sea needs >= 25.5; 26 is current.
+          node-version: ${{ env.SEA_NODE_VERSION }}
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run dist-pkg
+      - name: Build SEA binary
+        shell: pwsh
+        run: |
+          # build:binary = bundle (tsdown.sea.config.mts -> dist-sea/app.cjs,
+          # the file sea-config.json's main points at) + node --build-sea.
+          # build:only alone produces dist/ only, so --build-sea fails with
+          # "Cannot read main script dist-sea/app.cjs".
+          npm run build:binary
+          # sea-config.json writes dist-sea/frodo; the Windows artifact is
+          # dist-sea/frodo.exe
+          # (Version.ts binary detection keys on the executable's basename).
+          Copy-Item dist-sea/frodo dist-sea/frodo.exe
 
       #
       # Fail early on failing tests.
       #
       - name: 'Test'
         run: |
-          ./frodo.exe -v
-          ./frodo.exe journey -h
-          ./frodo.exe journey export -h
+          ./dist-sea/frodo.exe -v
+          ./dist-sea/frodo.exe journey -h
+          ./dist-sea/frodo.exe journey export -h
 
       - name: Archive distribution binary
-        run: 7z a -tzip frodo-windows-x64-${{ needs.build.outputs.newVersion }}.zip frodo.exe
+        run: 7z a -tzip frodo-windows-x64-${{ needs.build.outputs.newVersion }}.zip dist-sea/frodo.exe
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: windows-x64-binary-release
           path: frodo-windows-x64-${{ needs.build.outputs.newVersion }}.zip

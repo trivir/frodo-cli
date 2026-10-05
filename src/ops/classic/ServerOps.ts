@@ -1,12 +1,11 @@
-import { frodo } from '@rockcarver/frodo-lib';
-import {
-  ServerExportInterface,
-  ServerExportOptions,
-  ServerExportSkeleton,
-  ServerImportOptions,
-} from '@rockcarver/frodo-lib/types/ops/classic/ServerOps';
 import fs from 'fs';
-
+import {
+  frodo,
+  type ServerExportInterface,
+  type ServerExportOptions,
+  type ServerExportSkeleton,
+  type ServerImportOptions,
+} from '@rockcarver/frodo-lib';
 import { extractDataToFile, getExtractedJsonData } from '../../utils/Config';
 import {
   createProgressIndicator,

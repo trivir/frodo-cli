@@ -1,7 +1,5 @@
-import { frodo, state } from '@rockcarver/frodo-lib';
-import { ThemeSkeleton } from '@rockcarver/frodo-lib/types/ops/ThemeOps';
 import fs from 'fs';
-
+import { frodo, state, type ThemeSkeleton } from '@rockcarver/frodo-lib';
 import { printError, printMessage } from '../utils/Console';
 import { decodeOrNot } from '../utils/FrConfig';
 

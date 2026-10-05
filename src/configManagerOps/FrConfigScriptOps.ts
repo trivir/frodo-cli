@@ -1,6 +1,5 @@
-import { frodo, state } from '@rockcarver/frodo-lib';
 import fs from 'fs';
-
+import { frodo, state } from '@rockcarver/frodo-lib';
 import {
   createProgressIndicator,
   printError,
@@ -18,7 +17,7 @@ const {
   getWorkingDirectory,
 } = frodo.utils;
 const { DEFAULT_REALM_KEY, CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
-const { readScripts, readScriptByName, updateScript } = frodo.script;
+const { readScripts, readScriptByName, updateScript, deleteScript } = frodo.script;
 
 /**
  * Export scripts in config-manager format
@@ -213,6 +212,106 @@ export async function configManagerImportScripts(
   } catch (error) {
     stopProgressIndicator(indicatorId, 'Error importing scripts', 'fail');
     printError(error, 'Error importing scripts.');
+    return false;
+  }
+}
+
+/**
+ * Delete scripts using config-manager selection rules.
+ * @param prefixes Optional name prefixes. Ignored when name or ID is provided.
+ * @param realm Specific realm to delete from.
+ * @param name Exact name of a script to delete.
+ * @param id Exact ID of a script to delete.
+ * @returns True if deletion was successful.
+ */
+export async function configManagerDeleteScripts(
+  prefixes: string[] = [],
+  realm?: string,
+  name?: string,
+  id?: string
+): Promise<boolean> {
+  const indicatorId = createProgressIndicator(
+    'indeterminate',
+    0,
+    'Deleting scripts...'
+  );
+  try {
+    if (name && id) {
+      stopProgressIndicator(
+        indicatorId,
+        'Specify either a script name or ID, not both.',
+        'fail'
+      );
+      return false;
+    }
+    const realms =
+      realm && realm !== DEFAULT_REALM_KEY ? [realm] : await realmList();
+    if (realms.length === 0) {
+      stopProgressIndicator(indicatorId, 'No realms found.', 'fail');
+      return false;
+    }
+    if ((name || id) && realms.length !== 1) {
+      stopProgressIndicator(
+        indicatorId,
+        'For a script name or ID, specify a single realm.',
+        'fail'
+      );
+      return false;
+    }
+    for (const realm of realms) {
+      if (
+        realm === '/' &&
+        state.getDeploymentType() === CLOUD_DEPLOYMENT_TYPE_KEY
+      )
+        continue;
+      state.setRealm(realm);
+      const scripts = await readScripts();
+      if (name || id) {
+        const matches = scripts.filter((s) =>
+          id ? s._id === id : s.name === name
+        );
+        const selection = id ? `ID: ${id}` : `name: ${name}`;
+        if (matches.length !== 1) {
+          stopProgressIndicator(
+            indicatorId,
+            matches.length === 0
+              ? `No script found with ${selection}`
+              : `Multiple scripts found with ${selection}`,
+            'fail'
+          );
+          return false;
+        }
+        const script = matches[0];
+        await deleteScript(script._id);
+        printMessage(
+          `Successfully deleted script ${script.name} (${script._id})`
+        );
+        continue;
+      }
+      const eligibleScripts = scripts
+        .filter(
+          (s) =>
+            s.language === 'JAVASCRIPT' &&
+            (prefixes.length === 0 ||
+              prefixes.some((p) => s.name.startsWith(p)))
+        )
+        .sort((a, b) => a.context.localeCompare(b.context));
+      for (const script of eligibleScripts) {
+        await deleteScript(script._id);
+        printMessage(
+          `Successfully deleted script ${script.name} (${script._id})`
+        );
+      }
+    }
+    stopProgressIndicator(
+      indicatorId,
+      'Finished deleting scripts.',
+      'success'
+    );
+    return true;
+  } catch (error) {
+    stopProgressIndicator(indicatorId, 'Error deleting scripts.', 'fail');
+    printError(error, 'Error deleting scripts.');
     return false;
   }
 }

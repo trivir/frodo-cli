@@ -1,9 +1,11 @@
-import { frodo, state } from '@rockcarver/frodo-lib';
-import { AgentType } from '@rockcarver/frodo-lib/types/api/AgentApi';
-import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 import fs from 'fs';
 import path from 'path';
-
+import {
+  frodo,
+  state,
+  type AgentType,
+  type IdObjectSkeletonInterface,
+} from '@rockcarver/frodo-lib';
 import {
   createProgressIndicator,
   printError,

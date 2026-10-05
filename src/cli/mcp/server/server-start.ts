@@ -3,13 +3,12 @@ import {
   frodo,
   hydrateMcpDiscoveryContext,
   listMcpProfiles,
-  type McpDiscoveryHydrationEvent,
   resolveRequestScopedFrodo,
   state,
+  type McpDiscoveryHydrationEvent,
+  type McpProfileName,
 } from '@rockcarver/frodo-lib';
-import type { McpProfileName } from '@rockcarver/frodo-lib/types/mcp/ProfileRegistry';
 import { Option } from 'commander';
-
 import * as s from '../../../help/SampleData';
 import {
   cliBrowserLoginPromptHandler,
@@ -29,11 +28,11 @@ import {
   computeHttpAllowedHosts,
   fetchExternalIdpMetadata,
   isLoopbackBindHost,
-  type McpOAuthResourceServerOptions,
   McpServerStartupInfo,
   resolveFrodoForMcpRequest,
   startHttpTransport,
   startStdioTransport,
+  type McpOAuthResourceServerOptions,
 } from '../../../ops/McpServerOps.js';
 import c from '../../../utils/ColorTheme';
 import { printMessage } from '../../../utils/Console';
@@ -44,7 +43,7 @@ import {
   resolveMcpHttpMaxBodySize,
   resolveMcpHttpMaxConcurrentRequests,
 } from './server-limits';
-import { type McpPolicyPreset, resolvePolicySelection } from './server-policy';
+import { resolvePolicySelection, type McpPolicyPreset } from './server-policy';
 
 /**
  * `--profile`'s selectable values: the same "user-facing" set frodo-lib's

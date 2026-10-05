@@ -1,6 +1,5 @@
+import confirm from '@inquirer/confirm';
 import { frodo } from '@rockcarver/frodo-lib';
-import yesno from 'yesno';
-
 import c from '../utils/ColorTheme';
 import { createTable, printError, printMessage } from '../utils/Console';
 
@@ -35,7 +34,7 @@ async function confirmChange(
     );
     return false;
   }
-  return yesno({ question });
+  return confirm({ message: question, default: false });
 }
 
 /**

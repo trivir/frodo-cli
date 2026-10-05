@@ -1,10 +1,9 @@
-import { frodo } from '@rockcarver/frodo-lib';
-import {
-  SecretSkeleton,
-  VersionOfSecretSkeleton,
-} from '@rockcarver/frodo-lib/types/api/cloud/SecretsApi';
 import fs from 'fs';
-
+import {
+  frodo,
+  type SecretSkeleton,
+  type VersionOfSecretSkeleton,
+} from '@rockcarver/frodo-lib';
 import {
   createProgressIndicator,
   printError,
@@ -37,7 +36,7 @@ export async function configManagerExportSecrets(
   activeOnly?: boolean,
   report?: boolean
 ): Promise<boolean> {
-  let secrets: FrConfigSecret[] = [];
+  let secrets: FrConfigSecret[];
   const spinnerId = createProgressIndicator(
     'indeterminate',
     0,

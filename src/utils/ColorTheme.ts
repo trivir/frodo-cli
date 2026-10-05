@@ -1,8 +1,8 @@
 import {
-  type Intent as LibIntent,
+  theme as libTheme,
   resolveThemeMode,
   state,
-  theme as libTheme,
+  type Intent as LibIntent,
 } from '@rockcarver/frodo-lib';
 import c from 'tinyrainbow';
 

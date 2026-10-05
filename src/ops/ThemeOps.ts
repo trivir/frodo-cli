@@ -1,11 +1,11 @@
-import { frodo, FrodoError } from '@rockcarver/frodo-lib';
-import {
-  ThemeExportInterface,
-  type ThemeSkeleton,
-} from '@rockcarver/frodo-lib/types/ops/ThemeOps';
 import * as fs from 'fs';
+import {
+  frodo,
+  FrodoError,
+  type ThemeExportInterface,
+  type ThemeSkeleton,
+} from '@rockcarver/frodo-lib';
 import { v4 as uuidv4 } from 'uuid';
-
 import c from '../utils/ColorTheme';
 import {
   createProgressIndicator,

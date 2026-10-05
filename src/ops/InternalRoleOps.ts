@@ -1,7 +1,9 @@
-import { frodo, FrodoError } from '@rockcarver/frodo-lib';
-import { InternalRoleExportInterface } from '@rockcarver/frodo-lib/types/ops/InternalRoleOps';
 import fs from 'fs';
-
+import {
+  frodo,
+  FrodoError,
+  type InternalRoleExportInterface,
+} from '@rockcarver/frodo-lib';
 import {
   createProgressIndicator,
   createTable,

@@ -1,0 +1,11 @@
+{
+  "main": "dist-sea/app.cjs",
+  "output": "dist-sea/frodo",
+  "disableExperimentalSEAWarning": true,
+  "useCodeCache": true,
+  "useSnapshot": false,
+  "execArgvExtension": "none",
+  "execArgv": [
+    "--no-warnings"
+  ]
+}

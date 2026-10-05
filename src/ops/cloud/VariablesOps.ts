@@ -1,12 +1,13 @@
-import { frodo, FrodoError, state } from '@rockcarver/frodo-lib';
-import {
-  VariableExpressionType,
-  VariableSkeleton,
-} from '@rockcarver/frodo-lib/types/api/cloud/VariablesApi';
-import { VariablesExportInterface } from '@rockcarver/frodo-lib/types/ops/cloud/VariablesOps';
-import { ResolvedIdentity } from '@rockcarver/frodo-lib/types/ops/ManagedObjectOps';
 import fs from 'fs';
-
+import {
+  frodo,
+  FrodoError,
+  state,
+  type ResolvedIdentity,
+  type VariableExpressionType,
+  type VariablesExportInterface,
+  type VariableSkeleton,
+} from '@rockcarver/frodo-lib';
 import c from '../../utils/ColorTheme';
 import { getFullExportConfig, getIdLocations } from '../../utils/Config';
 import {
@@ -78,7 +79,7 @@ export async function listVariables(
   file: string | null = null
 ): Promise<boolean> {
   let spinnerId: string;
-  let variables: VariableSkeleton[] = [];
+  let variables: VariableSkeleton[];
   try {
     spinnerId = createProgressIndicator(
       'indeterminate',
@@ -518,7 +519,7 @@ export async function exportVariablesToFiles(
 ): Promise<boolean> {
   let spinnerId: string;
   let indicatorId: string;
-  let variableList: VariableSkeleton[] = [];
+  let variableList: VariableSkeleton[];
   try {
     spinnerId = createProgressIndicator(
       'indeterminate',
@@ -537,7 +538,7 @@ export async function exportVariablesToFiles(
     return false;
   }
   try {
-    const indicatorId = createProgressIndicator(
+    indicatorId = createProgressIndicator(
       'determinate',
       variableList.length,
       'Exporting variables'

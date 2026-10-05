@@ -1,8 +1,6 @@
-import { frodo } from '@rockcarver/frodo-lib';
-import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 import fs from 'fs';
 import path from 'path';
-
+import { frodo, type IdObjectSkeletonInterface } from '@rockcarver/frodo-lib';
 import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError } from '../utils/Console';
 

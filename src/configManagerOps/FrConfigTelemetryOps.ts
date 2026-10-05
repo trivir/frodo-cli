@@ -1,11 +1,10 @@
-import { frodo } from '@rockcarver/frodo-lib';
-import {
-  LogExporterSkeleton,
-  TelemetryExporterCategory,
-} from '@rockcarver/frodo-lib/types/api/cloud/TelemetryApi';
-import { TelemetryExportInterface } from '@rockcarver/frodo-lib/types/ops/cloud/TelemetryOps';
 import fs from 'fs';
-
+import {
+  frodo,
+  type LogExporterSkeleton,
+  type TelemetryExporterCategory,
+  type TelemetryExportInterface,
+} from '@rockcarver/frodo-lib';
 import {
   createProgressIndicator,
   printError,

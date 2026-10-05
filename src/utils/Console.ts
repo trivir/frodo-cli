@@ -1,15 +1,15 @@
 /* eslint-disable no-console */
 import { inspect } from 'node:util';
-
-import { frodo, FrodoError, state } from '@rockcarver/frodo-lib';
 import {
-  ProgressIndicatorStatusType,
-  ProgressIndicatorType,
-} from '@rockcarver/frodo-lib/types/utils/Console';
+  frodo,
+  FrodoError,
+  state,
+  type ProgressIndicatorStatusType,
+  type ProgressIndicatorType,
+} from '@rockcarver/frodo-lib';
 import Table, { Table as TableType } from 'cli-table3';
 import { stderr as logUpdateStderr } from 'log-update';
 import { v4 as uuidv4 } from 'uuid';
-
 import c from './ColorTheme';
 
 const arcSpinner = {
@@ -490,7 +490,7 @@ export function stopProgressIndicator(
 
   if (message || status !== 'none') {
     logUpdateStderr.clear();
-    let statusIcon = '';
+    let statusIcon: string;
     let colorFn = (s: string) => s;
 
     switch (status) {
@@ -669,7 +669,7 @@ function addRows(object, depth, level, table, keyMap) {
           '',
         ]);
       }
-      // eslint-disable-next-line no-param-reassign
+
       table = addRows(object[key], depth, level + 1, table, keyMap);
     }
   }
@@ -683,11 +683,10 @@ function addRows(object, depth, level, table, keyMap) {
  * @returns {any} a table that can be printed to the console
  */
 export function createObjectTable(object, keyMap = {}) {
-  // eslint-disable-next-line no-param-reassign
   const depth = getObjectDepth(object);
-  // eslint-disable-next-line no-param-reassign
+
   const level = 0;
-  // eslint-disable-next-line no-param-reassign
+
   const table = new Table({
     chars: {
       top: '',

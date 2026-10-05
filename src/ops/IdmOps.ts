@@ -1,32 +1,29 @@
+import fs from 'fs';
+import path from 'path';
+import confirm from '@inquirer/confirm';
 import {
-  buildManagedObjectSchemaPropertyPayload as buildSchemaPropertyPayload,
   buildManagedObjectSchemaRelationshipPropertyPayload as buildRelationshipPropertyPayload,
-  extractManagedObjectSchemaPropertyFields as extractSchemaPropertyFields,
+  buildManagedObjectSchemaPropertyPayload as buildSchemaPropertyPayload,
   extractManagedObjectSchemaRelationshipPropertyFields as extractRelationshipFields,
+  extractManagedObjectSchemaPropertyFields as extractSchemaPropertyFields,
   frodo,
   FrodoError,
   inferManagedObjectSchemaRelationshipReverseIdentity as inferReverseIdentity,
-  type ManagedObjectSchemaPropertyFields as SchemaPropertyFields,
-  type ManagedObjectSchemaRelationshipPropertyFields as RelationshipPropertyFields,
-  type ManagedObjectSchemaRelationshipReverseFields as RelationshipReverseCreateFields,
   navigatePropertyPath,
   navigateToPropertyContainer,
   parseSubPropertyPath,
-  type PropertyContainer,
   setSchemaProperty,
   toManagedObjectSchemaRelationshipReverseFields as toReverseDescriptorFields,
+  type ConfigEntityExportInterface,
+  type IdObjectSkeletonInterface,
+  type ManagedObjectSchema,
+  type MappingSkeleton,
+  type PropertyContainer,
+  type ManagedObjectSchemaRelationshipPropertyFields as RelationshipPropertyFields,
+  type ManagedObjectSchemaRelationshipReverseFields as RelationshipReverseCreateFields,
+  type ManagedObjectSchemaPropertyFields as SchemaPropertyFields,
+  type SyncSkeleton,
 } from '@rockcarver/frodo-lib';
-import { type IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
-import { type ManagedObjectSchema } from '@rockcarver/frodo-lib/types/api/ManagedObjectApi';
-import { type ConfigEntityExportInterface } from '@rockcarver/frodo-lib/types/ops/IdmConfigOps';
-import {
-  MappingSkeleton,
-  SyncSkeleton,
-} from '@rockcarver/frodo-lib/types/ops/MappingOps';
-import fs from 'fs';
-import path from 'path';
-import yesno from 'yesno';
-
 import c from '../utils/ColorTheme';
 import {
   extractDataToFile,
@@ -646,7 +643,7 @@ async function confirmChange(
     );
     return false;
   }
-  return yesno({ question });
+  return confirm({ message: question, default: false });
 }
 
 /** One row of a property table: `path` is the property's dot-path (just its own name, when not nested under --recursive). */

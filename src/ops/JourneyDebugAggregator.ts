@@ -80,15 +80,13 @@
  * runtime event stream itself (a real test journey using the node produced
  * an `AM-NODE-LOGIN-COMPLETED` event with no timeout data at all).
  */
-import { frodo, state } from '@rockcarver/frodo-lib';
-import type { LogEventSkeleton } from '@rockcarver/frodo-lib/types/api/cloud/LogApi';
-
+import { frodo, state, type LogEventSkeleton } from '@rockcarver/frodo-lib';
 import {
   compactFailureReason,
-  type DebugLogPayload,
   decodeHtmlEntities,
   getAuditPayload,
   getDebugLogPayload,
+  type DebugLogPayload,
 } from './DebugLogOps';
 
 const { createLogTailStream } = frodo.cloud.log;

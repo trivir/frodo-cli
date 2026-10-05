@@ -1,8 +1,9 @@
-import { frodo } from '@rockcarver/frodo-lib';
-import { DirectConfigurationSessionState } from '@rockcarver/frodo-lib/types/api/cloud/EnvDirectConfigurationSessionApi';
-
+import {
+  frodo,
+  type DirectConfigurationSessionState,
+} from '@rockcarver/frodo-lib';
 import { printError, printMessage } from '../utils/Console';
-import { sleep } from '../utils/FrConfig'
+import { sleep } from '../utils/FrConfig';
 
 const {
   readDirectConfigurationSessionState,
@@ -60,17 +61,20 @@ export async function configManagerApplyDirectConfigurationSession(
 
     if (wait) {
       const pollIntervalSeconds = 10;
-      while(response.status !== 'SESSION_APPLIED') {
+      while (response.status !== 'SESSION_APPLIED') {
         await sleep(pollIntervalSeconds * 1000);
         response = await readDirectConfigurationSessionState();
 
         printMessage(`Status: ${response.status}`);
 
         if (response.status === 'ERROR') {
-          printMessage('Direct Configuration session encountered an error.', 'error');
+          printMessage(
+            'Direct Configuration session encountered an error.',
+            'error'
+          );
           return false;
         }
-      } 
+      }
     }
 
     return true;

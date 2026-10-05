@@ -1,20 +1,16 @@
-import { frodo, state } from '@rockcarver/frodo-lib';
-import type {
-  BrowserLoginOptions,
-  Tokens,
-} from '@rockcarver/frodo-lib/types/ops/AuthenticateOps';
-import type {
-  BrowserLoginPrompt,
-  BrowserLoginPromptHandler,
-} from '@rockcarver/frodo-lib/types/ops/BrowserAuthenticateOps';
 import {
-  Callback,
-  CallbackHandler,
-} from '@rockcarver/frodo-lib/types/ops/CallbackOps';
+  frodo,
+  state,
+  type BrowserLoginOptions,
+  type BrowserLoginPrompt,
+  type BrowserLoginPromptHandler,
+  type Callback,
+  type CallbackHandler,
+  type Tokens,
+} from '@rockcarver/frodo-lib';
 import open from 'open';
-import readlineSync from 'readline-sync';
-
 import { printError, printMessage, verboseMessage } from '../utils/Console';
+import { question } from '../utils/Prompt';
 
 const { getTokens: _getTokens, getTokensInteractive: _getTokensInteractive } =
   frodo.login;
@@ -26,9 +22,7 @@ const otpCallbackHandler: CallbackHandler = (callback: Callback) => {
   printMessage(
     `Multi-factor authentication is enabled and required for this user.`
   );
-  callback.input[0].value = readlineSync.question(
-    `${callback.output[0].value}: `
-  );
+  callback.input[0].value = question(`${callback.output[0].value}: `);
   return callback;
 };
 
