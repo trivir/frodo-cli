@@ -42,30 +42,26 @@ export default function setup() {
         command
       );
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        let outcome: boolean;
-        if (options.name) {
-          printMessage(
-            `Deleting connector definition for connector: "${options.name}"`
-          );
-          outcome = await configManagerDeleteConnectorDefinition({
-            connectorName: options.name,
-          });
-        } else {
-          printMessage('Deleting all connector definitions.');
-          outcome = await configManagerDeleteConnectorDefinitionsAll();
-        }
-        if (!outcome) process.exitCode = 1;
-      }
-      // unrecognized combination of options or no options
-      else {
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+
+      let outcome: boolean;
+      if (options.name) {
         printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
+          `Deleting connector definition for connector: "${options.name}"`
         );
-        process.exitCode = 1;
-        program.help();
+        outcome = await configManagerDeleteConnectorDefinition({
+          connectorName: options.name,
+        });
+      } else {
+        printMessage('Deleting all connector definitions.');
+        outcome = await configManagerDeleteConnectorDefinitionsAll();
       }
+      if (!outcome) process.exitCode = 1;
     });
 
   return program;
