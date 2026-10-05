@@ -22,6 +22,12 @@ export default function setup() {
         'Delete all eligible scripts that start with a prefix. Repetition of this flag is allowed. Ignored with -n'
       )
     )
+    .addOption(
+      new Option(
+        '-i, --id <script id>',
+        'Delete a specific script by ID.'
+      ).conflicts('scriptName')
+    )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -43,7 +49,8 @@ export default function setup() {
       const outcome = await configManagerDeleteScripts(
         options.prefix,
         realm,
-        options.scriptName
+        options.scriptName,
+        options.id
       );
 
       if (!outcome) process.exitCode = 1;

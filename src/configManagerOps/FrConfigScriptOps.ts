@@ -218,15 +218,17 @@ export async function configManagerImportScripts(
 
 /**
  * Delete scripts using config-manager selection rules.
- * @param prefixes Optional script name prefixes. Ignored when name is provided.
+ * @param prefixes Optional name prefixes. Ignored when name or ID is provided.
  * @param realm Specific realm to delete from.
  * @param name Exact name of a script to delete.
+ * @param id Exact ID of a script to delete.
  * @returns True if deletion was successful.
  */
 export async function configManagerDeleteScripts(
   prefixes: string[] = [],
   realm?: string,
-  name?: string
+  name?: string,
+  id?: string
 ): Promise<boolean> {
   const indicatorId = createProgressIndicator(
     'indeterminate',
@@ -234,16 +236,24 @@ export async function configManagerDeleteScripts(
     'Deleting scripts...'
   );
   try {
+    if (name && id) {
+      stopProgressIndicator(
+        indicatorId,
+        'Specify either a script name or ID, not both.',
+        'fail'
+      );
+      return false;
+    }
     const realms =
       realm && realm !== DEFAULT_REALM_KEY ? [realm] : await realmList();
     if (realms.length === 0) {
       stopProgressIndicator(indicatorId, 'No realms found.', 'fail');
       return false;
     }
-    if (name && realms.length !== 1) {
+    if ((name || id) && realms.length !== 1) {
       stopProgressIndicator(
         indicatorId,
-        'Error: for a named script, specify a single realm',
+        'For a script name or ID, specify a single realm.',
         'fail'
       );
       return false;
@@ -256,14 +266,17 @@ export async function configManagerDeleteScripts(
         continue;
       state.setRealm(realm);
       const scripts = await readScripts();
-      if (name) {
-        const matches = scripts.filter((s) => s.name === name);
+      if (name || id) {
+        const matches = scripts.filter((s) =>
+          id ? s._id === id : s.name === name
+        );
+        const selection = id ? `ID: ${id}` : `name: ${name}`;
         if (matches.length !== 1) {
           stopProgressIndicator(
             indicatorId,
             matches.length === 0
-              ? `No script found with the name: ${name}`
-              : `Multiple scripts found with the name: ${name}`,
+              ? `No script found with ${selection}`
+              : `Multiple scripts found with ${selection}`,
             'fail'
           );
           return false;
