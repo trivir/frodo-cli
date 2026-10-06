@@ -1,10 +1,11 @@
 import fs from 'fs';
 import { frodo } from '@rockcarver/frodo-lib';
 import { extractFrConfigDataToFile } from '../utils/Config';
-import { printError } from '../utils/Console';
+import { printError, printMessage } from '../utils/Console';
 import { fileFilter } from '../utils/FrConfig';
 
-const { readConfigEntitiesByType, importConfigEntities } = frodo.idm.config;
+const { readConfigEntitiesByType, importConfigEntities, deleteConfigEntity } =
+  frodo.idm.config;
 const { getFilePath, saveJsonToFile } = frodo.utils;
 /**
  * Export schedules in fr-config-manager format.
@@ -137,4 +138,56 @@ export async function configManagerImportSchedules(
     printError(error, `Error importing internal schedules`);
   }
   return false;
+}
+
+/**
+ * Delete schedules using fr-config-manager selection rules.
+ * @param {string} name Optional exact schedule name. If omitted, targets all schedules.
+ * @param {boolean} dryRun Show matching schedules without deleting them.
+ * @returns {Promise<boolean>} False if reading or any deletion fails,
+ * or if a named schedule is not found; otherwise true.
+ */
+export async function configManagerDeleteSchedules(
+  name?: string,
+  dryRun: boolean = false
+): Promise<boolean> {
+  try {
+    const schedules = (await readConfigEntitiesByType('schedule')).filter(
+      ({ _id }) =>
+        typeof _id === 'string' &&
+        _id.startsWith('schedule/') &&
+        _id.slice('schedule/'.length).trim().length > 0
+    );
+    const selectedSchedules = name
+      ? schedules.filter((schedule) => schedule._id === `schedule/${name}`)
+      : schedules;
+    if (selectedSchedules.length === 0) {
+      if (name) {
+        printMessage(`Warning: schedule '${name}' not found.`);
+        return false;
+      }
+      printMessage('No schedules found to delete.');
+      return true;
+    }
+    let success = true;
+    for (const schedule of selectedSchedules) {
+      const scheduleName = schedule._id.slice('schedule/'.length);
+
+      if (dryRun) {
+        printMessage(`Dry run: Deleting schedule: ${scheduleName}`);
+        continue;
+      }
+      try {
+        await deleteConfigEntity(schedule._id);
+        printMessage(`Deleting schedule: ${scheduleName}`);
+      } catch (error) {
+        printError(error, `Error deleting schedule ${scheduleName}`);
+        success = false;
+      }
+    }
+    return success;
+  } catch (error) {
+    printError(error, 'Error deleting schedules');
+    return false;
+  }
 }
