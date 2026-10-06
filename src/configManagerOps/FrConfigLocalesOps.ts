@@ -3,7 +3,8 @@ import fs from 'fs';
 
 import { printError } from '../utils/Console';
 
-const { readConfigEntitiesByType, importConfigEntities } = frodo.idm.config;
+const { readConfigEntitiesByType, importConfigEntities, deleteConfigEntity } =
+  frodo.idm.config;
 const { saveJsonToFile, getFilePath } = frodo.utils;
 
 /**
@@ -66,6 +67,57 @@ export async function configManagerImportLocales(
     return true;
   } catch (error) {
     printError(error, `Error importing config entity locales`);
+    return false;
+  }
+}
+
+/**
+ * Delete IDM locales using fr-config-manager selection rules.
+ * @param localeName Optional locale name. If omitted, deletes all locales.
+ * @param dryRun Log matching locales without deleting them.
+ * @returns true if successful, false if reading or deletion fails,
+ * or a requested locale is not found.
+ */
+export async function configManagerDeleteLocales(
+  localeName?: string,
+  dryRun = false
+): Promise<boolean> {
+  try {
+    const locales = (await readConfigEntitiesByType('uilocale')).filter(
+      (locale) =>
+        typeof locale._id === 'string' && locale._id.startsWith('uilocale/')
+    );
+    if (locales.length === 0) {
+      console.log('No uilocale found to delete.');
+      return !localeName;
+    }
+    let matchFound = false;
+    let success = true;
+    for (const locale of locales) {
+      const name = locale._id.split('/')[1];
+      if (localeName && localeName !== name) {
+        continue;
+      }
+      matchFound = true;
+      if (dryRun) {
+        console.log(`Dry run: Deleting uilocale: ${name}`);
+        continue;
+      }
+      try {
+        await deleteConfigEntity(locale._id);
+        console.log(`Deleting uilocale: ${name}`);
+      } catch (error) {
+        printError(error, `Error deleting uilocale ${name}`);
+        success = false;
+      }
+    }
+    if (localeName && !matchFound) {
+      console.log(`Warning: service '${localeName}' not found.`);
+      return false;
+    }
+    return success;
+  } catch (error) {
+    printError(error, 'Error deleting config entity locales');
     return false;
   }
 }

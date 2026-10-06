@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`frodo config-manager delete locales "frodo config-manager delete locales -m forgeops": should delete all locales in forgeops" 1`] = `
+"Deleting uilocale: fr
+Deleting uilocale: ko
+"
+`;
+
+exports[`frodo config-manager delete locales "frodo config-manager delete locales -m forgeops": should delete all locales in forgeops" 2`] = `
+"Experimental feature in use: 'frodo config-manager delete locales'. This feature may change without notice.
+"
+`;
+
+exports[`frodo config-manager delete locales "frodo config-manager delete locales -n fr -m forgeops": should delete a specific locale by name in forgeops" 1`] = `
+"Deleting uilocale: fr
+"
+`;
+
+exports[`frodo config-manager delete locales "frodo config-manager delete locales -n fr -m forgeops": should delete a specific locale by name in forgeops" 2`] = `
+"Experimental feature in use: 'frodo config-manager delete locales'. This feature may change without notice.
+"
+`;
