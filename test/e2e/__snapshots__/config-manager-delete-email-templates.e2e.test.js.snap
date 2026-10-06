@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`frodo config-manager delete email-templates "frodo config-manager delete email-templates -m forgeops": should delete the email-templates in forgeops" 1`] = `
+"Deleting emailTemplate: forgottenUsername
+Deleting emailTemplate: frodoNameTest
+Deleting emailTemplate: registration
+Deleting emailTemplate: resetPassword
+Deleting emailTemplate: test
+Deleting emailTemplate: updatePassword
+Deleting emailTemplate: welcome
+"
+`;
+
+exports[`frodo config-manager delete email-templates "frodo config-manager delete email-templates -m forgeops": should delete the email-templates in forgeops" 2`] = `
+"Experimental feature in use: 'frodo config-manager delete email-templates'. This feature may change without notice.
+"
+`;
+
+exports[`frodo config-manager delete email-templates "frodo config-manager delete email-templates -n frodoNameTest -m forgeops": should delete a specific email-template by name in forgeops" 1`] = `
+"Deleting emailTemplate: frodoNameTest
+"
+`;
+
+exports[`frodo config-manager delete email-templates "frodo config-manager delete email-templates -n frodoNameTest -m forgeops": should delete a specific email-template by name in forgeops" 2`] = `
+"Experimental feature in use: 'frodo config-manager delete email-templates'. This feature may change without notice.
+"
+`;
