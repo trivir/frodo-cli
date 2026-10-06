@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`frodo config-manager delete connector-definitions "frodo config-manager delete connector-definitions -m forgeops": should delete all the connector definitions in fr-config-manager format" 1`] = `""`;
+
+exports[`frodo config-manager delete connector-definitions "frodo config-manager delete connector-definitions -m forgeops": should delete all the connector definitions in fr-config-manager format" 2`] = `
+"Experimental feature in use: 'frodo config-manager delete connector-definitions'. This feature may change without notice.
+Deleting all connector definitions.
+"
+`;
+
+exports[`frodo config-manager delete connector-definitions "frodo config-manager delete connector-definitions -n Azure -m forgeops": should delete the Azure connector definition in fr-config-manager format" 1`] = `""`;
+
+exports[`frodo config-manager delete connector-definitions "frodo config-manager delete connector-definitions -n Azure -m forgeops": should delete the Azure connector definition in fr-config-manager format" 2`] = `
+"Experimental feature in use: 'frodo config-manager delete connector-definitions'. This feature may change without notice.
+Deleting connector definition for connector: "Azure"
+"
+`;
