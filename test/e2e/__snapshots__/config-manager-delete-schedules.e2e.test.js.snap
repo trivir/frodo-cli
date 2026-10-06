@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`frodo config-manager delete schedules "frodo config-manager delete schedules -m forgeops": should delete schedules from forgeops" 1`] = `
+"Deleting schedule: Groovy
+Deleting schedule: Javascript
+Deleting schedule: taskscan_activate
+Deleting schedule: taskscan_expire
+"
+`;
+
+exports[`frodo config-manager delete schedules "frodo config-manager delete schedules -m forgeops": should delete schedules from forgeops" 2`] = `
+"Experimental feature in use: 'frodo config-manager delete schedules'. This feature may change without notice.
+"
+`;
+
+exports[`frodo config-manager delete schedules "frodo config-manager delete schedules -n taskscan_activate -m forgeops": should delete a specific schedule by name from forgeops" 1`] = `
+"Deleting schedule: taskscan_activate
+"
+`;
+
+exports[`frodo config-manager delete schedules "frodo config-manager delete schedules -n taskscan_activate -m forgeops": should delete a specific schedule by name from forgeops" 2`] = `
+"Experimental feature in use: 'frodo config-manager delete schedules'. This feature may change without notice.
+"
+`;

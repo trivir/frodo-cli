@@ -5,7 +5,8 @@ import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError } from '../utils/Console';
 import { fileFilter } from '../utils/FrConfig';
 
-const { readConfigEntitiesByType, importConfigEntities } = frodo.idm.config;
+const { readConfigEntitiesByType, importConfigEntities, deleteConfigEntity } =
+  frodo.idm.config;
 const { getFilePath, saveJsonToFile } = frodo.utils;
 /**
  * Export schedules in fr-config-manager format.
@@ -138,4 +139,55 @@ export async function configManagerImportSchedules(
     printError(error, `Error importing internal schedules`);
   }
   return false;
+}
+
+/**
+ * Delete schedules using fr-config-manager selection rules.
+ * @param name Optional schedule name. If omitted, deletes all schedules.
+ * @param dryRun Log matching schedules without deleting them.
+ * @returns true if successful, false if reading or deletion fails,
+ * or a requested schedule is not found.
+ */
+export async function configManagerDeleteSchedules(
+  name?: string,
+  dryRun = false
+): Promise<boolean> {
+  try {
+    const schedules = (await readConfigEntitiesByType('schedule')).filter(
+      (schedule) =>
+        typeof schedule._id === 'string' && schedule._id.startsWith('schedule/')
+    );
+    if (schedules.length === 0) {
+      console.log('No schedule found to delete.');
+      return !name;
+    }
+    let matchFound = false;
+    let success = true;
+    for (const schedule of schedules) {
+      const scheduleName = schedule._id.split('/')[1];
+      if (name && name !== scheduleName) {
+        continue;
+      }
+      matchFound = true;
+      if (dryRun) {
+        console.log(`Dry run: Deleting schedule: ${scheduleName}`);
+        continue;
+      }
+      try {
+        await deleteConfigEntity(schedule._id);
+        console.log(`Deleting schedule: ${scheduleName}`);
+      } catch (error) {
+        printError(error, `Error deleting schedule ${scheduleName}`);
+        success = false;
+      }
+    }
+    if (name && !matchFound) {
+      console.log(`Warning: service '${name}' not found.`);
+      return false;
+    }
+    return success;
+  } catch (error) {
+    printError(error, 'Error deleting schedules');
+    return false;
+  }
 }
