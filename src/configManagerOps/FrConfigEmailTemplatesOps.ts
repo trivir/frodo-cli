@@ -5,8 +5,12 @@ import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError } from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
-const { readEmailTemplates, readEmailTemplate, importEmailTemplates } =
-  frodo.email.template;
+const {
+  readEmailTemplates,
+  readEmailTemplate,
+  importEmailTemplates,
+  deleteEmailTemplate,
+} = frodo.email.template;
 /**
  * Export an internal roles in fr-config-manager format.
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
@@ -120,4 +124,54 @@ export async function configManagerImportEmailTemplates(
     printError(error, `Error importing email templates to files`);
   }
   return false;
+}
+
+/**
+ * Delete email templates using fr-config-manager selection rules.
+ * @param name Optional template name. If omitted, deletes all matching templates.
+ * @param dryRun Log matching templates without deleting them.
+ * @returns true if successful, false if reading or any deletion fails,
+ * or a requested template is not found.
+ */
+export async function configManagerDeleteEmailTemplates(
+  name?: string,
+  dryRun = false
+): Promise<boolean> {
+  try {
+    const templates = (await readEmailTemplates()).filter((template) =>
+      template._id.startsWith('emailTemplate/')
+    );
+    if (templates.length === 0) {
+      console.log('No emailTemplate found to delete.');
+      return !name;
+    }
+    let matchFound = false;
+    let success = true;
+    for (const template of templates) {
+      const templateName = template._id.split('/')[1];
+      if (name && name !== templateName) {
+        continue;
+      }
+      matchFound = true;
+      if (dryRun) {
+        console.log(`Dry run: Deleting emailTemplate: ${templateName}`);
+        continue;
+      }
+      try {
+        await deleteEmailTemplate(templateName);
+        console.log(`Deleting emailTemplate: ${templateName}`);
+      } catch (error) {
+        printError(error, `Error deleting emailTemplate ${templateName}`);
+        success = false;
+      }
+    }
+    if (name && !matchFound) {
+      console.log(`Warning: service '${name}' not found.`);
+      return false;
+    }
+    return success;
+  } catch (error) {
+    printError(error, 'Error deleting email templates');
+    return false;
+  }
 }
