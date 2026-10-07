@@ -21,6 +21,7 @@ const {
   createVersionOfSecret,
   readVersionsOfSecret,
   pruneVersionsOfSecret,
+  deleteSecret,
 } = frodo.cloud.secret;
 
 type FrConfigSecret = SecretSkeleton & {
@@ -257,4 +258,50 @@ export async function configManagerImportSecrets(
     printError(error, `Error importing secrets.`);
     return false;
   }
+}
+
+/**
+ * Delete secrets from the tenant.
+ * @param name exact secret ID to delete; omit to delete all secrets
+ * @param dryRun log selected secrets without deleting them
+ * @returns true if successful, false otherwise
+ */
+
+export async function configManagerDeleteSecrets(
+  name?: string,
+  dryRun = false
+): Promise<boolean> {
+  let secrets: SecretSkeleton[];
+  try {
+    secrets = await readSecrets();
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+  const selectedSecrets = secrets.filter(
+    (secret) => !name || secret._id === name
+  );
+  if (selectedSecrets.length === 0) {
+    if (name) {
+      printMessage(`Warning: Secret '${name}' not found.`, 'warn');
+      return false;
+    }
+    printMessage('No secrets found to delete.');
+    return true;
+  }
+  let success = true;
+  for (const secret of selectedSecrets) {
+    if (dryRun) {
+      printMessage(`Dry run: Deleting secret: ${secret._id}`);
+      continue;
+    }
+    try {
+      await deleteSecret(secret._id);
+      printMessage(`Deleted secret: ${secret._id}`);
+    } catch (error) {
+      printError(error);
+      success = false;
+    }
+  }
+  return success;
 }
