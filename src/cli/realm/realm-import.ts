@@ -24,16 +24,21 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --realm-id <realm-id>',
-        'Realm id. If specified, only one realm is imported and the options -n, -a, and -A cannot be used.'
+        'Realm id. Cannot be used with -n, -a or A.'
       ).conflicts(['realmName', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-n, --realm-name <realm-name>',
-        'Realm name. If specified, only one realm is imported and the options -i, -a or -A cannot be used.'
+        'Realm name. Cannot be used with -i, -a or -A.'
       ).conflicts(['realmId', 'all', 'allSeparate'])
     )
-    .addOption(new Option('-f, --file <file>', 'Name of the file to import.'))
+    .addOption(
+      new Option(
+        '-f, --file <file>',
+        'Name of the file to import. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(
       new Option(
         '-a, --all',
@@ -43,7 +48,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all realms from separate files (*.realm.json) in the current directory. Cannot be used with -i, -n, or -a.'
+        'Import all realms from separate files (*.realm.json) in the current directory. Cannot be used with -i, -n or -a.'
       ).conflicts(['realmId', 'realmName', 'all'])
     )
     .action(

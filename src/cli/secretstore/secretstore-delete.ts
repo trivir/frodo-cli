@@ -28,21 +28,21 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --secretstore-id <secretstore-id>',
-        'Secret store id. If specified, -a cannot be used.'
-      ).conflicts(['all'])
+        'Secret store id. Cannot be used with -a or -t.'
+      ).conflicts(['secretstoreType', 'all'])
     )
     .addOption(
       new Option(
         '-t, --secretstore-type <secretstore-type>',
-        'Secret store type id of the secret store. Only necessary if there are multiple secret stores with the same secret store id. Ignored if -i is not specified.'
-      )
+        'Secret store type id of the secret store. Only necessary if there are multiple secret stores with the same secret store id. Cannot be used with -i or -a.'
+      ).conflicts(['secretstoreId', 'all'])
     )
     .addOption(new Option('-g, --global', 'Delete global secret stores.'))
     .addOption(
       new Option(
         '-a, --all',
-        'Delete all secret stores. Cannot be used with -i.'
-      ).conflicts(['secretstoreId'])
+        'Delete all secret stores. Cannot be used with -i or -t.'
+      ).conflicts(['secretstoreId', 'secretstoreType'])
     )
     .action(
       // implement command logic inside action handler

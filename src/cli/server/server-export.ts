@@ -25,19 +25,19 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --server-id <server-id>',
-        'Server id. If specified, only one server is exported and the options -u, -a or -A cannot be used.'
+        'Server id. Cannot be used with -u, -a or -A.'
       ).conflicts(['serverUrl', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-u, --server-url <server-url>',
-        'Server url. Can be a unique substring of the full url (if not unique, it will error out). If specified, only one server is exported and the options -a or -A cannot be used.'
-      ).conflicts(['all', 'allSeparate'])
+        'Server url. Can be a unique substring of the full url (if not unique, it will error out). Cannot be used with -i, -a or -A.'
+      ).conflicts(['serverId', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-f, --file <file>',
-        'Name of the export file. Cannot be used with -A'
+        'Name of the export file. Cannot be used with -A.'
       ).conflicts(['allSeparate'])
     )
     .addOption(
@@ -49,8 +49,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all servers to separate files (*.server.json) in the current directory. Cannot be used with -i, -u or -a.'
-      ).conflicts(['serverId', 'serverUrl', 'all'])
+        'Export all servers to separate files (*.server.json) in the current directory. Cannot be used with -i, -u, -f or -a.'
+      ).conflicts(['serverId', 'serverUrl', 'file', 'all'])
     )
     .addOption(
       new Option(

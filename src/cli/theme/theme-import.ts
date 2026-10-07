@@ -26,33 +26,33 @@ export default function setup() {
     .description('Import themes.')
     .addOption(
       new Option(
-        '-n, --theme-name <name>',
-        'Name of the theme. If specified, -i, -a or -A cannot be used.'
-      ).conflicts(['themeId', 'all', 'allSeparate'])
-    )
-    .addOption(
-      new Option(
         '-i, --theme-id <uuid>',
-        'Uuid of the theme. If specified, -n, -a or -A cannot be used.'
+        'Uuid of the theme. Cannot be used with -n, -a or A.'
       ).conflicts(['themeName', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
+        '-n, --theme-name <name>',
+        'Name of the theme. Cannot be used with -i, -a or -A.'
+      ).conflicts(['themeId', 'all', 'allSeparate'])
+    )
+    .addOption(
+      new Option(
         '-f, --file <file>',
-        'Name of the file to import the theme(s) from.'
-      )
+        'Name of the file to import the theme(s) from. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
     )
     .addOption(
       new Option(
         '-a, --all',
-        'Import all the themes from single file. Cannot be used with -n, -i or -A.'
+        'Import all the themes from single file. Cannot be used with -i, -n or -A.'
       ).conflicts(['themeId', 'themeName', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all the themes from separate files (*.json) in the current directory. Cannot be used with -n, -i or -a.'
-      ).conflicts(['themeId', 'themeName', 'all'])
+        'Import all the themes from separate files (*.json) in the current directory. Cannot be used with -i, -n, -f or -a.'
+      ).conflicts(['themeId', 'themeName', 'file', 'all'])
     )
     .action(
       // implement command logic inside action handler

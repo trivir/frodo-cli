@@ -29,13 +29,13 @@ export default function setup() {
     .addOption(
       new Option(
         '-a, --all',
-        'Export all the providers in a realm to a single file. Cannot be used with -i and -A.'
+        'Export all the providers in a realm to a single file. Cannot be used with -i or -A.'
       ).conflicts(['entityId', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all the providers in a realm as separate files <provider name>.saml.json. Cannot be used with -i, and -a.'
+        'Export all the providers in a realm as separate files <provider name>.saml.json. Cannot be used with -i or -a.'
       ).conflicts(['entityId', 'all'])
     )
     .addOption(

@@ -33,7 +33,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --service-id <service-id>',
-        'Service id. If specified, -a or -A cannot be used.'
+        'Service id. Cannot be used with -a or -A.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
@@ -45,7 +45,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-a, --all',
-        'Import all services from a single file. Cannot be used with -i, or -A.'
+        'Import all services from a single file. Cannot be used with -i or -A.'
       ).conflicts(['serviceId', 'allSeparate'])
     )
     .addOption(
@@ -54,8 +54,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all services from separate files <id>.service.json. Cannot be used with -i, or -a.'
-      ).conflicts(['serviceId', 'all'])
+        'Import all services from separate files <id>.service.json. Cannot be used with -i, -f or -a.'
+      ).conflicts(['serviceId', 'file', 'all'])
     )
     .addOption(
       new Option(

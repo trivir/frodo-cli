@@ -37,13 +37,13 @@ export default function setup() {
     .addOption(
       new Option(
         '-f, --file <file>',
-        'Name of the export file. Cannot be used with -A'
+        'Name of the export file. Cannot be used with -A.'
       ).conflicts(['allSeparate'])
     )
     .addOption(
       new Option(
         '-a, --all',
-        'Export all internal roles to a single file. Cannot be used with -i, -n, or -A.'
+        'Export all internal roles to a single file. Cannot be used with -i, -n or -A.'
       ).conflicts(['roleId', 'roleName', 'allSeparate'])
     )
     .addOption(

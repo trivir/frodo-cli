@@ -45,7 +45,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-a, --all',
-        'Export all applications to a single file. Cannot be used with -i, -n, or -A.'
+        'Export all applications to a single file. Cannot be used with -i, -n or -A.'
       ).conflicts(['appId', 'appName', 'allSeparate'])
     )
     .addOption(

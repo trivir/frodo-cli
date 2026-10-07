@@ -38,7 +38,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-a, --all',
-        'Import all mappings from single file. Cannot be used with -i and -A.'
+        'Import all mappings from single file. Cannot be used with -i or -A.'
       ).conflicts(['mappingId', 'allSeparate'])
     )
     .addOption(

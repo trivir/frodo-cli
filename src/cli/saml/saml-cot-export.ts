@@ -29,13 +29,13 @@ export default function setup() {
     .addOption(
       new Option(
         '-a, --all',
-        'Export all the circles of trust in a realm to a single file. Cannot be used with -i and -A.'
+        'Export all the circles of trust in a realm to a single file. Cannot be used with -i or -A.'
       ).conflicts(['cotId', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all the circles of trust in a realm as separate files <cot-id>.cot.saml.json. Cannot be used with -i, and -a.'
+        'Export all the circles of trust in a realm as separate files <cot-id>.cot.saml.json. Cannot be used with -i or -a.'
       ).conflicts(['cotId', 'all'])
     )
     .addOption(

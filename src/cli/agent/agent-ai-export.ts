@@ -22,7 +22,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-f, --file <file>',
-        'Name of the export file. Cannot be used with -A'
+        'Name of the export file. Cannot be used with -A.'
       ).conflicts(['allSeparate'])
     )
     .addOption(

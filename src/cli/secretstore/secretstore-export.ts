@@ -33,19 +33,19 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --secretstore-id <secretstore-id>',
-        'Secret store id. If specified, -a or -A cannot be used.'
-      ).conflicts(['all', 'allSeparate'])
+        'Secret store id. Cannot be used with -t, -a or -A.'
+      ).conflicts(['secretstoreType', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-t, --secretstore-type <secretstore-type>',
-        'Secret store type id of the secret store. Only necessary if there are multiple secret stores with the same secret store id. Ignored if -i is not specified.'
-      )
+        'Secret store type id of the secret store. Only necessary if there are multiple secret stores with the same secret store id. Cannot be used with -i, -a or -A.'
+      ).conflicts(['secretstoreId', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-f, --file <file>',
-        'Name of the export file. Cannot be used with -A'
+        'Name of the export file. Cannot be used with -A.'
       ).conflicts(['allSeparate'])
     )
     .addOption(
@@ -57,14 +57,14 @@ export default function setup() {
     .addOption(
       new Option(
         '-a, --all',
-        'Export all secret stores to a single file. Cannot be used with -i or -A.'
-      ).conflicts(['secretstoreId', 'allSeparate'])
+        'Export all secret stores to a single file. Cannot be used with -i, -t or -A.'
+      ).conflicts(['secretstoreId', 'secretstoreType', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all secret stores to separate files (*.secretstore.json) in the current directory. Cannot be used with -i or -a.'
-      ).conflicts(['secretstoreId', 'all'])
+        'Export all secret stores to separate files (*.secretstore.json) in the current directory. Cannot be used with -i, -t, -f or -a.'
+      ).conflicts(['secretstoreId', 'secretstoreType', 'file', 'all'])
     )
     .addOption(
       new Option(

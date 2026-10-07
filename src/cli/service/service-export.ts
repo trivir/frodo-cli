@@ -30,13 +30,13 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --service-id <service-id>',
-        'Service id. If specified, -a or -A cannot be used.'
+        'Service id. Cannot be used with -a or -A.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-f, --file <file>',
-        'Name of the export file. Cannot be used with -A'
+        'Name of the export file. Cannot be used with -A.'
       ).conflicts(['allSeparate'])
     )
     .addOption(
@@ -48,8 +48,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all services to separate files (*.service.json) in the current directory. Cannot be used with -i, or -a.'
-      ).conflicts(['serviceId', 'all'])
+        'Export all services to separate files (*.service.json) in the current directory. Cannot be used with -i, -f or -a.'
+      ).conflicts(['serviceId', 'file', 'all'])
     )
     .addOption(
       new Option(

@@ -29,19 +29,19 @@ export default function setup() {
     .addOption(
       new Option(
         '-f, --file <file>',
-        'Name of the export file. Cannot be used with -A'
+        'Name of the export file. Cannot be used with -A.'
       ).conflicts(['allSeparate'])
     )
     .addOption(
       new Option(
         '-a, --all',
-        'Export all realms to a single file. Cannot be used with -i, -n, -A.'
+        'Export all realms to a single file. Cannot be used with -i, -n or -A.'
       ).conflicts(['realmId', 'realmName', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Export all realms to separate files (*.realm.json) in the current directory. Cannot be used with -i, -n, or -a.'
+        'Export all realms to separate files (*.realm.json) in the current directory. Cannot be used with -i, -n or -a.'
       ).conflicts(['realmId', 'realmName', 'all'])
     )
     .addOption(

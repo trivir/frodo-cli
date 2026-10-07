@@ -26,16 +26,21 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --server-id <server-id>',
-        'Server id. If specified, only one server is imported and the options -u, -a or -A cannot be used.'
+        'Server id. Cannot be used with -u, -a or -A.'
       ).conflicts(['serverUrl', 'all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-u, --server-url <server-url>',
-        'Server url. Can be a unique substring of the full url (if not unique, it will error out). If specified, only one server is imported and the options -a or -A cannot be used.'
-      ).conflicts(['all', 'allSeparate'])
+        'Server url. Can be a unique substring of the full url (if not unique, it will error out). Cannot be used with -i, -a or -A.'
+      ).conflicts(['serverId', 'all', 'allSeparate'])
     )
-    .addOption(new Option('-f, --file <file>', 'Name of the file to import.'))
+    .addOption(
+      new Option(
+        '-f, --file <file>',
+        'Name of the file to import. Cannot be used with -A.'
+      ).conflicts(['allSeparate'])
+    )
     .addOption(
       new Option(
         '-a, --all',
@@ -45,8 +50,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all servers from separate files (*.server.json) in the current directory. Cannot be used with -i, -u or -a.'
-      ).conflicts(['serverId', 'serverUrl', 'all'])
+        'Import all servers from separate files (*.server.json) in the current directory. Cannot be used with -i, -u, -f or -a.'
+      ).conflicts(['serverId', 'serverUrl', 'file', 'all'])
     )
     .addOption(
       new Option(

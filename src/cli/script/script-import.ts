@@ -42,7 +42,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-A, --all-separate',
-        'Import all scripts from separate files (*.script.json) in the current directory. Cannot be used with -i, -n.'
+        'Import all scripts from separate files (*.script.json) in the current directory. Cannot be used with -i or -n.'
       ).conflicts(['scriptId', 'scriptName'])
     )
     .addOption(

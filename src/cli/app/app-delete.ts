@@ -26,7 +26,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --app-id <id>',
-        'Application id. Cannot be used with -a or -n.'
+        'Application id. Cannot be used with -n or -a.'
       ).conflicts(['appName', 'all'])
     )
     .addOption(

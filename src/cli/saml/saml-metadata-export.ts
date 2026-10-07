@@ -25,7 +25,7 @@ export default function setup() {
     // .addOption(
     //   new Option(
     //     '-A, --all-separate',
-    //     'Export all the providers in a realm as separate files <provider name>.saml.json. Cannot be used with -i, and -a.'
+    //     'Export all the providers in a realm as separate files <provider name>.saml.json. Cannot be used with -i or -a.'
     //   ).conflicts(['entityId', 'all])
     // )
     .action(

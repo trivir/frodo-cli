@@ -43,7 +43,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-a, --all',
-        'Export all mappings. Cannot be used with -i and -A.'
+        'Export all mappings. Cannot be used with -i or -A.'
       ).conflicts(['mappingId', 'allSeparate'])
     )
     .addOption(

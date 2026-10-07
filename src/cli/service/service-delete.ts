@@ -22,7 +22,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --id <id>',
-        'Id of Service to be deleted. Cannot be used with -a'
+        'Id of Service to be deleted. Cannot be used with -a.'
       ).conflicts(['all'])
     )
     .addOption(

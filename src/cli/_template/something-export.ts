@@ -21,7 +21,7 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --something-id <something-id>',
-        '[Something] id. Cannot be used with -a or -A'
+        '[Something] id. Cannot be used with -a or -A.'
       ).conflicts(['all', 'allSeparate'])
     )
     .addOption(

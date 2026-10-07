@@ -46,8 +46,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-s, --secret-id <secret-id>',
-        'Secret label of the mapping being deleted.'
-      )
+        'Secret label of the mapping being deleted. Cannot be used with -a.'
+      ).conflicts(['all'])
     )
     .addOption(
       new Option(
