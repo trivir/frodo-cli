@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Should delete variables from cloud "frodo config-manager delete variables --dry-run -n esv-josh-delete-test": should print a dryrun message deleting by name from cloud." 1`] = `""`;
+
+exports[`Should delete variables from cloud "frodo config-manager delete variables --dry-run -n esv-josh-delete-test": should print a dryrun message deleting by name from cloud." 2`] = `
+"Experimental feature in use: 'frodo config-manager delete variables'. This feature may change without notice.
+Dry run: Deleting variable: esv-josh-delete-test
+"
+`;
+
+exports[`Should delete variables from cloud "frodo config-manager delete variables -n esv-josh-delete-test": should delete a specific variable by name from cloud." 1`] = `""`;
+
+exports[`Should delete variables from cloud "frodo config-manager delete variables -n esv-josh-delete-test": should delete a specific variable by name from cloud." 2`] = `
+"Experimental feature in use: 'frodo config-manager delete variables'. This feature may change without notice.
+Deleted variable: esv-josh-delete-test
+"
+`;
