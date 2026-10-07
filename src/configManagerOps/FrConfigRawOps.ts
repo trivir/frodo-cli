@@ -12,7 +12,6 @@ import {
   printError,
   printMessage,
   stopProgressIndicator,
-  verboseMessage,
 } from '../utils/Console';
 import { causeOf } from '../utils/ErrorCause';
 import { clearOperationalAttributes } from '../utils/FrConfig';
@@ -120,7 +119,7 @@ export async function configManagerImportRaw(
     if (stdin) {
       const data = readRawConfigFromStdin();
       clearOperationalAttributes(data);
-      await importRawConfig({ path }, data);
+      await importRawConfig(path, data);
       stopProgressIndicator(
         indicatorId,
         'Raw config import completed.',
