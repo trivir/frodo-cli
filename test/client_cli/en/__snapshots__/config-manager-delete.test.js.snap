@@ -7,13 +7,15 @@ exports[`CLI help interface for 'config-manager delete' should be expected engli
 compatible with fr-config-manager).
 
 Options:
-  -h, --help        Help
-  -hh, --help-more  Help with all options.
-  -hhh, --help-all  Help with all options, environment variables, and usage
-                    examples.
+  -h, --help             Help
+  -hh, --help-more       Help with all options.
+  -hhh, --help-all       Help with all options, environment variables, and usage
+                         examples.
 
 Commands:
-  help              display help for command
-  test              [Experimental] Test connection and authentication.
+  connector-definitions  [Experimental] Delete connector definitions.
+  cors                   [Experimental] Delete CORS configuration.
+  help                   display help for command
+  test                   [Experimental] Test connection and authentication.
 "
 `;

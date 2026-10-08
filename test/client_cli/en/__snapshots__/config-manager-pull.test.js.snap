@@ -20,7 +20,7 @@ Commands:
   authentication         [Experimental] Export authentication objects.
   authz-policies         [Experimental] Export authorization policies.
   config-metadata        [Experimental] Show metadata.
-  connector-definitions  [Experimental] Export aconnector definitions.
+  connector-definitions  [Experimental] Export connector definitions.
   connector-mappings     [Experimental] Export connector mappings.
   cookie-domains         [Experimental] Export cookie-domains objects.
   cors                   [Experimental] Export CORS configuration.
