@@ -14,6 +14,7 @@ Options:
 
 Commands:
   connector-definitions  [Experimental] Delete connector definitions.
+  cors                   [Experimental] Delete CORS configuration.
   help                   display help for command
   test                   [Experimental] Test connection and authentication.
 "
