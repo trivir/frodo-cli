@@ -8,7 +8,7 @@ import { printError } from '../utils/Console';
 const { config } = frodo.idm;
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { importConfigEntities } = frodo.idm.config;
-const { importServices } = frodo.service;
+const { importServices, deleteFullService } = frodo.service;
 const { CLASSIC_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
 type CorsObject = { idmCorsConfig; corsServices; corsServiceGlobal };
@@ -77,6 +77,33 @@ export async function configManagerImportCors(): Promise<boolean> {
       clean: false,
       realm: false,
     });
+
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+/**
+ * Delete the global CORS configuration json in fr-config manager format
+ * @param {string} name name of secondary configuration to only be deleted
+ * @returns True if file was successfully deleted
+ */
+export async function configManagerDeleteCors(
+  name?: string
+): Promise<boolean> {
+  try {
+    const services: FullService[] =
+      await frodo.service.getFullServices(true);
+
+    const corsServiceGlobal = services.find(
+      (fullService) => fullService._type._id === 'CorsService'
+    );
+    // console.log("SERVICE GLOBAL", corsServiceGlobal)
+    //const nameEnter = name ? console.log("NAME ENTERED", name) : null;
+
+    await deleteFullService(corsServiceGlobal._type._id, true, false, name)
 
     return true;
   } catch (error) {
