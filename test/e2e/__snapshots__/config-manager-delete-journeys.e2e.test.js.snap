@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`frodo config-manager delete journeys "frodo config-manager delete journeys --dry-run -n test": should print a dry-run message deleting a specific journey by name in a specific realm" 1`] = `""`;
+
+exports[`frodo config-manager delete journeys "frodo config-manager delete journeys --dry-run -n test": should print a dry-run message deleting a specific journey by name in a specific realm" 2`] = `
+"Experimental feature in use: 'frodo config-manager delete journeys'. This feature may change without notice.
+Dry run: Deleting journey alpha/test
+"
+`;
+
+exports[`frodo config-manager delete journeys "frodo config-manager delete journeys --dry-run": should print a dry-run message deleting all journeys in a specific realm" 1`] = `""`;
+
+exports[`frodo config-manager delete journeys "frodo config-manager delete journeys --dry-run": should print a dry-run message deleting all journeys in a specific realm" 2`] = `
+"Experimental feature in use: 'frodo config-manager delete journeys'. This feature may change without notice.
+Dry run: Deleting journey alpha/Agent
+Dry run: Deleting journey alpha/ConfigManagerPushInnerTest
+Dry run: Deleting journey alpha/ConfigManagerPushTest
+Dry run: Deleting journey alpha/DynamicConfiguration
+Dry run: Deleting journey alpha/ForgottenUsername
+Dry run: Deleting journey alpha/FrodoTest
+Dry run: Deleting journey alpha/FrodoTestJourney13
+Dry run: Deleting journey alpha/iExistingSession
+Dry run: Deleting journey alpha/InnerTest
+Dry run: Deleting journey alpha/j00
+Dry run: Deleting journey alpha/j01
+Dry run: Deleting journey alpha/j02
+Dry run: Deleting journey alpha/j03
+Dry run: Deleting journey alpha/j04
+Dry run: Deleting journey alpha/j05
+Dry run: Deleting journey alpha/j06
+Dry run: Deleting journey alpha/j07
+Dry run: Deleting journey alpha/j08
+Dry run: Deleting journey alpha/j09
+Dry run: Deleting journey alpha/j10
+Dry run: Deleting journey alpha/JoshTest
+Dry run: Deleting journey alpha/Login
+Dry run: Deleting journey alpha/OrphanedTest
+Dry run: Deleting journey alpha/P1P-Test
+Dry run: Deleting journey alpha/PrestonTest
+Dry run: Deleting journey alpha/ProgressiveProfile
+Dry run: Deleting journey alpha/RadioChoice
+Dry run: Deleting journey alpha/RecognizeBackChannel
+Dry run: Deleting journey alpha/RecognizeBackChannelSuccess
+Dry run: Deleting journey alpha/RecognizeFrontChannel
+Dry run: Deleting journey alpha/Registration
+Dry run: Deleting journey alpha/ResetPassword
+Dry run: Deleting journey alpha/SocialProviderHandler
+Dry run: Deleting journey alpha/test
+Dry run: Deleting journey alpha/UpdatePassword
+"
+`;
+
+exports[`frodo config-manager delete journeys "frodo config-manager delete journeys -n test": should delete a specific journey by name in a specific realm" 1`] = `""`;
+
+exports[`frodo config-manager delete journeys "frodo config-manager delete journeys -n test": should delete a specific journey by name in a specific realm" 2`] = `
+"Experimental feature in use: 'frodo config-manager delete journeys'. This feature may change without notice.
+Deleted journey alpha/test
+"
+`;

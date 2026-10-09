@@ -10,8 +10,14 @@ import { existScript, realmList, safeFileName } from '../utils/FrConfig';
 
 const { saveJsonToFile, getFilePath } = frodo.utils;
 const { exportScript } = frodo.script;
-const { exportJourneys, importJourneys, createSingleTreeExportTemplate } =
-  frodo.authn.journey;
+const {
+  exportJourneys,
+  importJourneys,
+  createSingleTreeExportTemplate,
+  readJourneys,
+  deleteJourney,
+} = frodo.authn.journey;
+const { readNode } = frodo.authn.node;
 const { DEFAULT_REALM_KEY } = frodo.utils.constants;
 
 /**
@@ -400,4 +406,78 @@ export async function configManagerImportJourneys(
     printError(error, `Error importing journeys`);
   }
   return false;
+}
+
+/**
+ * Delete journeys in the active realm.
+ * @param name delete only the journey whose ID exactly matches this name
+ * @param dryRun show selected journeys without deleting them
+ * @returns false if a requested journey is missing or deletion fails
+ */
+export async function configManagerDeleteJourneys(
+  name?: string,
+  dryRun = false
+): Promise<boolean> {
+  try {
+    const realm = state.getRealm();
+    if (
+      realm === '/' &&
+      state.getDeploymentType() ===
+        frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY
+    ) {
+      return true;
+    }
+    const journeys = await readJourneys();
+    const selectedJourneys = name
+      ? journeys.filter((journey) => journey._id === name)
+      : journeys;
+    if (name && selectedJourneys.length === 0) {
+      printMessage(
+        `Warning: Journey with name '${name}' in realm '${realm}' not found.`,
+        'warn'
+      );
+      return false;
+    }
+    const realmPath = realm === '/' ? '' : realm.replace(/\/$/, '');
+    let success = true;
+    for (const journey of selectedJourneys) {
+      const journeyPath = `${realmPath}/${journey._id}`;
+      if (dryRun) {
+        printMessage(`Dry run: Deleting journey ${journeyPath}`);
+        continue;
+      }
+      try {
+        const result = await deleteJourney(journey._id, {
+          deep: false,
+          verbose: false,
+          progress: false,
+        });
+        const status = result as unknown as {
+          status: string;
+          error?: unknown;
+        };
+        if (status.status !== 'success') {
+          success = false;
+          printError(
+            status.error instanceof Error
+              ? status.error
+              : new Error(
+                  status.error !== undefined
+                    ? String(status.error)
+                    : `Failed to delete journey ${journeyPath}`
+                )
+          );
+          continue;
+        }
+        printMessage(`Deleted journey ${journeyPath}`);
+      } catch (error) {
+        printError(error);
+        success = false;
+      }
+    }
+    return success;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
 }
