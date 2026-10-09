@@ -12,12 +12,8 @@ export default function setup() {
     .addOption(
       new Option('-i, --journey-id <journey>', 'Name of a journey/tree.')
     )
-    // .addOption(
-    //   new Option(
-    //     '-a, --all',
-    //     'Disable all the journeys/trees in a realm. Ignored with -i.'
-    //   )
-    // )
+    // TODO implement -a, --all option
+
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {

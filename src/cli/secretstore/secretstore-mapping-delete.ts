@@ -46,8 +46,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-s, --secret-id <secret-id>',
-        'Secret label of the mapping being deleted.'
-      )
+        'Secret label of the mapping being deleted. Cannot be used with -a.'
+      ).conflicts(['all'])
     )
     .addOption(
       new Option(
@@ -55,7 +55,12 @@ export default function setup() {
         'Delete mappings from global secret stores. For classic deployments only.'
       )
     )
-    .addOption(new Option('-a, --all', 'Delete all mappings. Ignored with -s.'))
+    .addOption(
+      new Option(
+        '-a, --all',
+        'Delete all mappings. Cannot be used with -s.'
+      ).conflicts(['secretId'])
+    )
     .action(
       // implement command logic inside action handler
       async (host, realm, user, password, options, command) => {
