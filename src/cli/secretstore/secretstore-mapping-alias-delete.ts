@@ -46,8 +46,8 @@ export default function setup() {
     .addOption(
       new Option(
         '-s, --secret-id <secret-id>',
-        'Secret label of the mapping. Cannot be used with --all.'
-      ).conflicts(['all'])
+        'Secret label of the mapping.'
+      )
     )
     .addOption(
       new Option(

@@ -32,8 +32,7 @@ Options:
   -f, --file <file>            Name of the file to import the entity provider(s)
                                from.
   -i, --entity-id <entity-id>  Entity id. If specified, only one provider is
-                               imported and the options -a and -A cannot be
-                               used.
+                               imported and the options -a or -A cannot be used.
   --no-deps                    Do not include any dependencies (scripts).
   -h, --help                   Help
   -hh, --help-more             Help with all options.

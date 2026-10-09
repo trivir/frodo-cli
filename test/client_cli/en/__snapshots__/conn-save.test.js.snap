@@ -19,7 +19,7 @@ Options:
   --log-api-secret [secret]                    Log API secret. If specified, must also include --log-api-key. Cannot be used with --no-log-api.
   --no-log-api                                 Do not create and add log API key and secret.
   --no-preferred-device-flow                   Explicitly persist a preference against device flow (loopback-redirect instead). Omit both flags to leave any existing preference untouched.
-  --no-sa                                      Do not create and add service account.
+  --no-sa                                      Do not create and add service account. Cannot be used with --sa-id or --sa-jwk-file.
   --no-validate                                Do not validate connection.
   --preferred-device-flow                      Only meaningful with --preferred-credential browser: persist a preference for the OAuth2 Device Authorization Grant over the default loopback-redirect flow, so later implicit commands against this host use it without repeating --device.
   -h, --help                                   Help
@@ -47,7 +47,7 @@ Options:
   --log-api-secret [secret]                    Log API secret. If specified, must also include --log-api-key. Cannot be used with --no-log-api.
   --no-log-api                                 Do not create and add log API key and secret.
   --no-preferred-device-flow                   Explicitly persist a preference against device flow (loopback-redirect instead). Omit both flags to leave any existing preference untouched.
-  --no-sa                                      Do not create and add service account.
+  --no-sa                                      Do not create and add service account. Cannot be used with --sa-id or --sa-jwk-file.
   --no-validate                                Do not validate connection.
   --preferred-device-flow                      Only meaningful with --preferred-credential browser: persist a preference for the OAuth2 Device Authorization Grant over the default loopback-redirect flow, so later implicit commands against this host use it without repeating --device.
   -h, --help                                   Help
@@ -75,7 +75,7 @@ Options:
   --log-api-secret [secret]                    Log API secret. If specified, must also include --log-api-key. Cannot be used with --no-log-api.
   --no-log-api                                 Do not create and add log API key and secret.
   --no-preferred-device-flow                   Explicitly persist a preference against device flow (loopback-redirect instead). Omit both flags to leave any existing preference untouched.
-  --no-sa                                      Do not create and add service account.
+  --no-sa                                      Do not create and add service account. Cannot be used with --sa-id or --sa-jwk-file.
   --no-validate                                Do not validate connection.
   --preferred-device-flow                      Only meaningful with --preferred-credential browser: persist a preference for the OAuth2 Device Authorization Grant over the default loopback-redirect flow, so later implicit commands against this host use it without repeating --device.
   -h, --help                                   Help
@@ -103,7 +103,7 @@ Options:
   --log-api-secret [secret]                    Log API secret. If specified, must also include --log-api-key. Cannot be used with --no-log-api.
   --no-log-api                                 Do not create and add log API key and secret.
   --no-preferred-device-flow                   Explicitly persist a preference against device flow (loopback-redirect instead). Omit both flags to leave any existing preference untouched.
-  --no-sa                                      Do not create and add service account.
+  --no-sa                                      Do not create and add service account. Cannot be used with --sa-id or --sa-jwk-file.
   --no-validate                                Do not validate connection.
   --preferred-device-flow                      Only meaningful with --preferred-credential browser: persist a preference for the OAuth2 Device Authorization Grant over the default loopback-redirect flow, so later implicit commands against this host use it without repeating --device.
   -h, --help                                   Help

@@ -27,16 +27,13 @@ export default function setup() {
   program
     .description('Describe secret stores.')
     .addOption(
-      new Option(
-        '-i, --secretstore-id <secretstore-id>',
-        'Secret store id. Cannot be used with -t.'
-      ).conflicts(['secretstoreType'])
+      new Option('-i, --secretstore-id <secretstore-id>', 'Secret store id.')
     )
     .addOption(
       new Option(
         '-t, --secretstore-type <secretstore-type>',
-        'Secret store type id of the secret store. Only necessary if there are multiple secret stores with the same secret store id. Cannot be used with -i.'
-      ).conflicts(['secretstoreId'])
+        'Secret store type id of the secret store. Only necessary if there are multiple secret stores with the same secret store id.'
+      )
     )
     .addOption(
       new Option(

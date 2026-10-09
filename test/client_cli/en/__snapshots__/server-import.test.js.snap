@@ -28,17 +28,15 @@ Options:
                                  used with -i, -u or -A.
   -A, --all-separate             Import all servers from separate files
                                  (*.server.json) in the current directory.
-                                 Cannot be used with -i, -u or -a.
+                                 Cannot be used with -i, -u, -f or -a.
   -d, --default                  Import server(s) along with the default server
                                  properties.
-  -f, --file <file>              Name of the file to import.
-  -i, --server-id <server-id>    Server id. If specified, only one server is
-                                 imported and the options -u, -a and -A cannot
-                                 be used.
+  -f, --file <file>              Name of the file to import. Cannot be used with
+                                 -A.
+  -i, --server-id <server-id>    Server id. Cannot be used with -u, -a or -A.
   -u, --server-url <server-url>  Server url. Can be a unique substring of the
-                                 full url (if not unique, it will error out). If
-                                 specified, only one server is imported and the
-                                 options -a and -A cannot be used.
+                                 full url (if not unique, it will error out).
+                                 Cannot be used with -i, -a or -A.
   -h, --help                     Help
   -hh, --help-more               Help with all options.
   -hhh, --help-all               Help with all options, environment variables,

@@ -20,7 +20,7 @@ export default function setup() {
       new Option(
         '-a, --all',
         'Delete all AI agents. Cannot be used with -i.'
-      ).conflicts(['all'])
+      ).conflicts(['agentId'])
     )
     .action(
       // implement command logic inside action handler

@@ -34,7 +34,7 @@ Options:
   -f, --file <file>        Name of the file to import. Cannot be used with -A.
                            If included without -a, it will import the single
                            entity within the file.
-  -g, --global             Import global entity. Cannot be used with -a and -A.
+  -g, --global             Import global entity. Cannot be used with -a or -A.
   --include-active-values  Import any secret values contained in the import
                            file. By default, secret values are encrypted
                            server-side in the environment they are exported

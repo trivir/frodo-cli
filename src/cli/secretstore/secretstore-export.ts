@@ -33,14 +33,14 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --secretstore-id <secretstore-id>',
-        'Secret store id. Cannot be used with -t, -a or -A.'
-      ).conflicts(['secretstoreType', 'all', 'allSeparate'])
+        'Secret store id. Cannot be used with -a or -A.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
       new Option(
         '-t, --secretstore-type <secretstore-type>',
-        'Secret store type id of the secret store. Only necessary if there are multiple secret stores with the same secret store id. Cannot be used with -i, -a or -A.'
-      ).conflicts(['secretstoreId', 'all', 'allSeparate'])
+        'Secret store type id of the secret store. Only necessary if there are multiple secret stores with the same secret store id. Cannot be used with -a or -A.'
+      ).conflicts(['all', 'allSeparate'])
     )
     .addOption(
       new Option(

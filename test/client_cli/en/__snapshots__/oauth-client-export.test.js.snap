@@ -27,8 +27,8 @@ Options:
   -A, --all-separate     Export all OAuth2 apps to separate files
                          (*.oauth2.app.json) in the current directory. Cannot be
                          used with -i or -a.
-  -f, --file <file>      Name of the export file.
-  -i, --app-id <app-id>  App id. If specified, -a and -A cannot be used.
+  -f, --file <file>      Name of the export file. Cannot be used with -A.
+  -i, --app-id <app-id>  App id. If specified, -a or -A cannot be used.
   -N, --no-metadata      Does not include metadata in the export file.
   --no-deps              Do not include any dependencies (scripts).
   -h, --help             Help

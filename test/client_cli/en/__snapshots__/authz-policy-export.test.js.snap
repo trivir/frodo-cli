@@ -28,10 +28,10 @@ Options:
                                with -i or -A.
   -A, --all-separate           Export policies to separate files
                                (*.policy.authz.json) in the current directory.
-                               Cannot be used with -i or -a.
-  -f, --file <file>            Name of the export file.
-  -i, --policy-id <policy-id>  Policy id. If specified, -a and -A cannot be
-                               used.
+                               Cannot be used with -i, -f or -a.
+  -f, --file <file>            Name of the export file. Cannot be used with -A.
+  -i, --policy-id <policy-id>  Policy id. Cannot be used with --set-id, -a or
+                               -A.
   -M, --modified-properties    Include modified properties in export (e.g.
                                lastModifiedDate, lastModifiedBy, createdBy,
                                creationDate, etc.) (default: false)

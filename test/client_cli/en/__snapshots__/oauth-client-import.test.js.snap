@@ -28,7 +28,7 @@ Options:
                       current directory. Cannot be used with -i or -a.
   -f, --file <file>   Name of the file to import.
   -i, --app-id <id>   Client id. If specified, only one client is imported and
-                      the options -a and -A cannot be used.
+                      the options -a or -A cannot be used.
   --no-deps           Do not include any dependencies (scripts).
   -h, --help          Help
   -hh, --help-more    Help with all options.

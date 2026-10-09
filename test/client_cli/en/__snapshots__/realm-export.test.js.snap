@@ -25,14 +25,15 @@ Arguments:
 
 Options:
   -a, --all                      Export all realms to a single file. Cannot be
-                                 used with -i, -n, -A.
+                                 used with -i, -n or -A.
   -A, --all-separate             Export all realms to separate files
                                  (*.realm.json) in the current directory. Cannot
-                                 be used with -i, -n, or -a.
-  -f, --file <file>              Name of the export file.
+                                 be used with -i, -n or -a.
+  -f, --file <file>              Name of the export file. Cannot be used with
+                                 -A.
   -i, --realm-id <realm-id>      Realm id. If specified, -n, -a, and -A cannot
                                  be used.
-  -n, --realm-name <realm-name>  Realm name. If specified, -i, -a and -A cannot
+  -n, --realm-name <realm-name>  Realm name. If specified, -i, -a or -A cannot
                                  be used.
   -N, --no-metadata              Does not include metadata in the export file.
   -h, --help                     Help

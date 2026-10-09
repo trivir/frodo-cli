@@ -26,7 +26,8 @@ Arguments:
 Options:
   -a, --all                    Delete all policies in a realm. Cannot be used
                                with -i.
-  -i, --policy-id <policy-id>  Policy id/name. If specified, -a cannot be used.
+  -i, --policy-id <policy-id>  Policy id/name. Cannot be used with --set-id or
+                               -a.
   --set-id <set-id>            Policy set id/name. Cannot be used with -i.
   -h, --help                   Help
   -hh, --help-more             Help with all options.

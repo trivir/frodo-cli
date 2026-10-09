@@ -23,11 +23,9 @@ Arguments:
 
 Options:
   -a, --all                Delete all the themes in the realm. Cannot be used
-                           with -n and -i.
-  -i, --theme-id <uuid>    Uuid of the theme. If specified, -n and -a cannot be
-                           used.
-  -n, --theme-name <name>  Name of the theme. If specified, -i and -a cannot be
-                           used.
+                           with -i or -n.
+  -i, --theme-id <uuid>    Uuid of the theme. Cannot be used with -n or -a.
+  -n, --theme-name <name>  Name of the theme. Cannot be used with -i or -a.
   -h, --help               Help
   -hh, --help-more         Help with all options.
   -hhh, --help-all         Help with all options, environment variables, and

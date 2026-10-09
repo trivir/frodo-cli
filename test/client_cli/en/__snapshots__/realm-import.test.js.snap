@@ -28,14 +28,11 @@ Options:
                                  used with -i, -n or -A.
   -A, --all-separate             Import all realms from separate files
                                  (*.realm.json) in the current directory. Cannot
-                                 be used with -i, -n, or -a.
-  -f, --file <file>              Name of the file to import.
-  -i, --realm-id <realm-id>      Realm id. If specified, only one realm is
-                                 imported and the options -n, -a, and -A cannot
-                                 be used.
-  -n, --realm-name <realm-name>  Realm name. If specified, only one realm is
-                                 imported and the options -i, -a and -A cannot
-                                 be used.
+                                 be used with -i, -n or -a.
+  -f, --file <file>              Name of the file to import. Cannot be used with
+                                 -A.
+  -i, --realm-id <realm-id>      Realm id. Cannot be used with -n, -a or A.
+  -n, --realm-name <realm-name>  Realm name. Cannot be used with -i, -a or -A.
   -h, --help                     Help
   -hh, --help-more               Help with all options.
   -hhh, --help-all               Help with all options, environment variables,

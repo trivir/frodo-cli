@@ -28,14 +28,14 @@ export default function setup() {
     .addOption(
       new Option(
         '-i, --secretstore-id <secretstore-id>',
-        'Secret store id. Cannot be used with -a or -t.'
-      ).conflicts(['secretstoreType', 'all'])
+        'Secret store id. Cannot be used with -a.'
+      ).conflicts(['all'])
     )
     .addOption(
       new Option(
         '-t, --secretstore-type <secretstore-type>',
-        'Secret store type id of the secret store. Only necessary if there are multiple secret stores with the same secret store id. Cannot be used with -i or -a.'
-      ).conflicts(['secretstoreId', 'all'])
+        'Secret store type id of the secret store. Only necessary if there are multiple secret stores with the same secret store id. Cannot be used with -a.'
+      ).conflicts(['all'])
     )
     .addOption(new Option('-g, --global', 'Delete global secret stores.'))
     .addOption(
