@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga request-type describe "frodo iga request-type describe --file test/e2e/exports/all/allRequestTypes.requestType.json": should describe first request type from file test/e2e/exports/all/allRequestTypes.requestType.json 1`] = `
+"Request Form
+Id         │0ece99b4-5039-4bd6-b31c-de14bcf45f11
+Name       │phhType                             
+Type       │                                    
+Description│                                    
+Operation  │                                    
+
+Request Type: phhType [0ece99b4-5039-4bd6-b31c-de14bcf45f11]
+  Custom: true
+  requestType: phhFlow (n/a)
+  common schemas (1):
+    - [system] commonRequest (11 prop(s))
+        - blob
+        - Context
+        - End date
+        - Request expiration date
+        - External Request ID
+        - isDraft
+        - Justification
+        - Priority
+        - Request ID prefix
+        - Start date
+        - BPMN workflow ID
+  custom schemas (1):
+    - [system] system (1 prop(s))
+        - phhText *
+"
+`;
+
+exports[`frodo iga request-type describe "frodo iga request-type describe --request-type-name test_workflow_request_type_2": should describe request type 'test_workflow_request_type_2' 1`] = `
+"Request Form
+Id         │e77b5ad2-50c8-4f8f-9aea-e565d667d058
+Name       │test_workflow_request_type_2        
+Type       │                                    
+Description│                                    
+Operation  │                                    
+Revision   │12                                  
+Created    │2026-04-27T19:49:20.851067814Z      
+Modified   │2026-05-12T19:03:15.287Z            
+
+Request Type: test_workflow_request_type_2 [e77b5ad2-50c8-4f8f-9aea-e565d667d058]
+  Custom: false
+  requestType: testWorkflow2 (n/a)
+  common schemas (1):
+    - [system] commonRequest (11 prop(s))
+        - Justification
+        - External Request ID
+        - Request ID prefix
+        - isDraft
+        - Priority
+        - Request expiration date
+        - Context
+        - BPMN workflow ID
+        - Start date
+        - End date
+        - blob
+"
+`;
+
+exports[`frodo iga request-type describe "frodo iga request-type describe -n test_request_type_1 -f test/e2e/exports/all/allRequestTypes.requestType.json": should describe request type 'test_request_type_1' from file test/e2e/exports/all/allRequestTypes.requestType.json 1`] = `
+"Request Form
+Id         │5f80166a-d551-47f2-8110-8bc0e093d2cc
+Name       │test_request_type_1                 
+Type       │                                    
+Description│                                    
+Operation  │                                    
+
+Request Type: test_request_type_1 [5f80166a-d551-47f2-8110-8bc0e093d2cc]
+  Custom: false
+  common schemas (1):
+    - [system] commonRequest (11 prop(s))
+        - blob
+        - Context
+        - End date
+        - Request expiration date
+        - External Request ID
+        - isDraft
+        - Justification
+        - Priority
+        - Request ID prefix
+        - Start date
+        - BPMN workflow ID
+"
+`;
