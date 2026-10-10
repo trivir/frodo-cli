@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "exportDate": "2026-05-15T18:53:54.983Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  },
+  "scope": {
+    "New Scope": {
+      "description": "Description of the put scope request",
+      "id": "edca1abc-7381-46c4-87a8-948790737c68",
+      "metadata": {},
+      "name": "New Scope",
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "and": []
+          },
+          "version": "v2"
+        }
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {
+            "and": []
+          },
+          "version": "v2"
+        }
+      }
+    }
+  }
+}

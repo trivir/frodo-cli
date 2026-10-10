@@ -1,0 +1,111 @@
+{
+  "meta": {
+    "exportDate": "2026-05-15T18:53:54.981Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "dsevy@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  },
+  "scope": {
+    "equals-test": {
+      "description": "",
+      "id": "34153ec1-adde-472b-a1b3-65f9b0119df6",
+      "metadata": {},
+      "name": "equals-test",
+      "permissions": {
+        "createEntitlement": true,
+        "createRole": true,
+        "createUser": true,
+        "deleteRole": true,
+        "deleteUser": true,
+        "modifyEntitlement": true,
+        "modifyRole": true,
+        "modifyUser": true,
+        "publishRole": true,
+        "viewGrants": true,
+        "viewUserAccess": true
+      },
+      "sourceCondition": {
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "user.city",
+                  "right": {
+                    "literal": "Utah"
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      },
+      "status": "active",
+      "targetCondition": {
+        "application": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "catalog.application.name",
+                  "right": {
+                    "literal": "temp"
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        },
+        "entitlement": {
+          "filter": {
+            "and": [
+              {
+                "equals": {
+                  "left": "catalog.entitlement.descriptor.displayName",
+                  "right": {
+                    "literal": "temp"
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        },
+        "role": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "catalog.role.description",
+                  "right": {
+                    "literal": "temp"
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        },
+        "user": {
+          "filter": {
+            "or": [
+              {
+                "equals": {
+                  "left": "user._id",
+                  "right": {
+                    "literal": "temp"
+                  }
+                }
+              }
+            ]
+          },
+          "version": "v2"
+        }
+      }
+    }
+  }
+}

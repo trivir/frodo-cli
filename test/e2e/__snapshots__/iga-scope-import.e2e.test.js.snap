@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga scope import "frodo iga scope import --scope-name contains-test --file test/e2e/exports/all/allScopes.scope.json ": should import contains-test from the file "test/e2e/exports/all/allScopes.scope.json" 1`] = `""`;
+
+exports[`frodo iga scope import "frodo iga scope import --scope-name contains-test --file test/e2e/exports/all/allScopes.scope.json ": should import contains-test from the file "test/e2e/exports/all/allScopes.scope.json" 2`] = `
+"✔ Successfully imported scope contains-test.
+"
+`;
+
+exports[`frodo iga scope import "frodo iga scope import -AD test/e2e/exports/all-separate/cloud/global/scope": should import all scopes from the directory "test/e2e/exports/all-separate/cloud/global/scope" with dependencies 1`] = `""`;
+
+exports[`frodo iga scope import "frodo iga scope import -AD test/e2e/exports/all-separate/cloud/global/scope": should import all scopes from the directory "test/e2e/exports/all-separate/cloud/global/scope" with dependencies 2`] = `
+"✔ Successfully imported scopes.
+"
+`;
+
+exports[`frodo iga scope import "frodo iga scope import -af test/e2e/exports/all/allScopes.scope.json": should import all scopes from the file "test/e2e/exports/all/allScopes.scope.json" with dependencies 1`] = `""`;
+
+exports[`frodo iga scope import "frodo iga scope import -af test/e2e/exports/all/allScopes.scope.json": should import all scopes from the file "test/e2e/exports/all/allScopes.scope.json" with dependencies 2`] = `
+"✔ Successfully imported scopes.
+"
+`;
+
+exports[`frodo iga scope import "frodo iga scope import -f test/e2e/exports/all/allScopes.scope.json ": should import first scope from the file "test/e2e/exports/all/allScopes.scope.json" 1`] = `""`;
+
+exports[`frodo iga scope import "frodo iga scope import -f test/e2e/exports/all/allScopes.scope.json ": should import first scope from the file "test/e2e/exports/all/allScopes.scope.json" 2`] = `
+"✔ Imported scope from test/e2e/exports/all/allScopes.scope.json
+"
+`;
+
+exports[`frodo iga scope import "frodo iga scope import -n contains-test -f test/e2e/exports/all/allScopes.scope.json": should import contains-test from the file "test/e2e/exports/all/allScopes.scope.json" with dependencies 1`] = `""`;
+
+exports[`frodo iga scope import "frodo iga scope import -n contains-test -f test/e2e/exports/all/allScopes.scope.json": should import contains-test from the file "test/e2e/exports/all/allScopes.scope.json" with dependencies 2`] = `
+"✔ Successfully imported scope contains-test.
+"
+`;
