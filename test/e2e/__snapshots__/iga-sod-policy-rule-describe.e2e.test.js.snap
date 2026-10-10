@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo iga policy-rule describe "frodo iga policy-rule describe --file test/e2e/exports/all/allPolicyRules.rules.json": should describe first policy-rule from file test/e2e/exports/all/allPolicyRules.rules.json 1`] = `
+"Id                    │0434dcaa-7950-4f7a-b869-7a3d33c82396
+Name                  │Test Policy                         
+Description           │Test policy (delete me)             
+Active                │active                              
+Rule Owner            │PrestonIGATestUser                  
+Violation Owner       │PrestonIGATestUser                  
+Risk Score            │5                                   
+Max Exception Duration│90                                  
+Scan Types            │detective, preventative             
+Decision Options      │allow, exception, remediate         
+Workflow              │ModifyUser (bpmn)                   
+
+"
+`;
+
+exports[`frodo iga policy-rule describe "frodo iga policy-rule describe --rule-name describe-test ": should describe policy-rule 'describe-test' 1`] = `
+"Id                    │2e4bc849-67b5-4c8a-9894-341cf2fa1192
+Name                  │describe-test                       
+Description           │this is a description test          
+Active                │active                              
+Rule Owner            │ColtonIGATestUser                   
+Violation Owner       │ColtonIGATestUser                   
+Risk Score            │100                                 
+Max Exception Duration│90                                  
+Scan Types            │preventative, detective             
+Decision Options      │exception, allow, remediate         
+Workflow              │-                                   
+
+"
+`;
+
+exports[`frodo iga policy-rule describe "frodo iga policy-rule describe -n describe-test -f test/e2e/exports/all/allPolicyRules.rules.json": should describe policy-rule 'describe-test' from file test/e2e/exports/all/allPolicyRules.rules.json 1`] = `
+"Id                    │2e4bc849-67b5-4c8a-9894-341cf2fa1192
+Name                  │describe-test                       
+Description           │this is a description test          
+Active                │active                              
+Rule Owner            │ColtonIGATestUser                   
+Violation Owner       │ColtonIGATestUser                   
+Risk Score            │100                                 
+Max Exception Duration│90                                  
+Scan Types            │detective, preventative             
+Decision Options      │allow, exception, remediate         
+Workflow              │-                                   
+
+"
+`;
