@@ -5,8 +5,6 @@ exports[`CLI help interface for 'iga' should be expected english 1`] = `
 
 Manage IGA configuration.
 
-Deployment: Cloud-only
-
 Options:
   -h, --help        Help
   -hh, --help-more  Help with all options.
@@ -14,6 +12,7 @@ Options:
                     examples.
 
 Commands:
+  glossary          Manage glossaries.
   help              display help for command
 
   (Cloud-only):

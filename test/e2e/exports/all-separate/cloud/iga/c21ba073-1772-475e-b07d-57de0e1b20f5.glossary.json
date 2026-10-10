@@ -1,0 +1,40 @@
+{
+  "glossarySchema": {
+    "c21ba073-1772-475e-b07d-57de0e1b20f5": {
+      "allowedValues": [
+        "yes",
+        "no"
+      ],
+      "description": "",
+      "displayName": "Is Sensitive",
+      "enumeratedValues": [
+        {
+          "text": "Yes",
+          "value": "yes"
+        },
+        {
+          "text": "No",
+          "value": "no"
+        }
+      ],
+      "id": "c21ba073-1772-475e-b07d-57de0e1b20f5",
+      "isMultiValue": false,
+      "metadata": {
+        "createdDate": "2026-05-22T16:22:06.789418362Z",
+        "modifiedDate": "2026-05-22T16:22:06.789420096Z"
+      },
+      "name": "sensitive",
+      "objectType": "/openidm/managed/application",
+      "searchable": true,
+      "type": "string"
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-22T16:25:58.246Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "bwirick@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}

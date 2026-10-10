@@ -1,0 +1,30 @@
+{
+  "glossarySchema": {
+    "5c5751e7-d0e3-4338-a198-ecfe33175ed6": {
+      "allowedValues": [],
+      "description": "Can the entitlement be requested",
+      "displayName": "Requestable",
+      "id": "5c5751e7-d0e3-4338-a198-ecfe33175ed6",
+      "isIndexed": true,
+      "isInternal": true,
+      "isMultiValue": false,
+      "managedObjectType": null,
+      "metadata": {
+        "createdDate": "2025-10-27T18:26:02.398398257Z",
+        "modifiedDate": "2026-05-15T21:59:49.091Z"
+      },
+      "name": "requestable",
+      "objectType": "/openidm/managed/assignment",
+      "searchable": true,
+      "type": "boolean"
+    }
+  },
+  "meta": {
+    "exportDate": "2026-05-22T16:25:58.244Z",
+    "exportTool": "frodo",
+    "exportToolVersion": "v4.0.0-39 [v24.13.0]",
+    "exportedBy": "bwirick@trivir.com",
+    "origin": "https://openam-trivir-fairfax.forgeblocks.com/am",
+    "originAmVersion": "9.0.0"
+  }
+}
