@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { frodo } from '@rockcarver/frodo-lib';
+import { frodo, type SyncSkeleton } from '@rockcarver/frodo-lib';
 import {
   objectNameInFile,
   ownedObjectMessage,
@@ -240,4 +240,68 @@ export function readMappingFromDirectory(
   return getConnectorMappingImportData(
     getFilePath(`${mappingPath}/${name}.json`)
   );
+}
+
+/**
+ * Delete mapping(s)
+ * @param {string} name optional mapping name to delete
+ * @param {boolean} dryRun preview deletions without deleting connector mappings
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
+export async function configManagerDeleteMappings(
+  name?: string,
+  dryRun: boolean = false
+): Promise<boolean> {
+  try {
+    const syncDoc = (await readConfigEntity('sync')) as SyncSkeleton;
+
+    if (!syncDoc.mappings || syncDoc.mappings.length === 0) {
+      printMessage(`No mappings found to delete.`);
+      return false;
+    }
+    if (name) {
+      const mapping = syncDoc.mappings.find(
+        (mapping) => mapping.name === name
+      );
+    
+      if (!mapping) {
+        printMessage(`Mapping '${name}' does not exist.`);
+        return false;
+      }
+    
+      if (dryRun) {
+        printMessage(`Would delete connector mapping '${name}'.`);
+        printMessage(
+          'Connector mapping deletion dry run completed. No mappings were deleted.'
+        );
+        return true;
+      }
+    
+      await frodo.idm.mapping.deleteMapping(mapping._id);      
+      return true;
+    }
+    
+    if (dryRun) {
+      syncDoc.mappings.forEach((mapping) => {
+        printMessage(`Would delete connector mapping '${mapping.name}'.`);
+      });
+      printMessage(
+        'Connector mapping deletion dry run completed. No mappings were deleted.'
+      );
+      return true;
+    }
+    
+    syncDoc.mappings = [];
+
+    await importConfigEntities({
+      idm: {
+        sync: syncDoc,
+      },
+    });
+
+    return true;
+  } catch (error) {
+    printError(error, `Error deleting mappings`);
+    return false;
+  }
 }

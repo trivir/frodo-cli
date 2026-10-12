@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`frodo config-manager delete connector mappings "frodo config-manager delete connector-mappings -d": should show the connector mappings that are able to be deleted in fr-config manager style. 1`] = `""`;
+
+exports[`frodo config-manager delete connector mappings "frodo config-manager delete connector-mappings -d": should show the connector mappings that are able to be deleted in fr-config manager style. 2`] = `
+"Experimental feature in use: 'frodo config-manager delete connector-mappings'. This feature may change without notice.
+Would delete connector mapping 'AlphaUser2GoogleApps'.
+Would delete connector mapping 'managedAlpha_application_managedBravo_application'.
+Would delete connector mapping 'managedAlpha_assignment_managedBravo_assignment'.
+Would delete connector mapping 'managedAlpha_user_managedBravo_user'.
+Would delete connector mapping 'managedAlpha_user_systemAzureUser'.
+Would delete connector mapping 'managedBravo_group_managedBravo_group'.
+Would delete connector mapping 'managedBravo_user_managedAlpha_user'.
+Would delete connector mapping 'managedBravo_user_managedBravo_user'.
+Would delete connector mapping 'managedBravo_user_managedBravo_user0'.
+Would delete connector mapping 'mapping12'.
+Would delete connector mapping 'systemAzureDirectoryrole_managedAlpha_assignment'.
+Would delete connector mapping 'systemAzureServiceplan_managedAlpha_assignment'.
+Would delete connector mapping 'systemAzureUser_managedAlpha_user'.
+Would delete connector mapping 'systemAzure__group___managedAlpha_assignment'.
+Would delete connector mapping 'test_mapping'.
+Connector mapping deletion dry run completed. No mappings were deleted.
+"
+`;
+
+exports[`frodo config-manager delete connector mappings "frodo config-manager delete connector-mappings -n test_mapping": should delete the named connector mapping in fr-config manager style. 1`] = `""`;
+
+exports[`frodo config-manager delete connector mappings "frodo config-manager delete connector-mappings -n test_mapping": should delete the named connector mapping in fr-config manager style. 2`] = `
+"Experimental feature in use: 'frodo config-manager delete connector-mappings'. This feature may change without notice.
+"
+`;
+
+exports[`frodo config-manager delete connector mappings "frodo config-manager delete connector-mappings": should delete all connector mappings in fr-config manager style. 1`] = `""`;
+
+exports[`frodo config-manager delete connector mappings "frodo config-manager delete connector-mappings": should delete all connector mappings in fr-config manager style. 2`] = `
+"Experimental feature in use: 'frodo config-manager delete connector-mappings'. This feature may change without notice.
+"
+`;
