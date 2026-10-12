@@ -8,11 +8,13 @@ import {
 import {
   createProgressIndicator,
   printError,
+  printMessage,
   stopProgressIndicator,
 } from '../utils/Console';
 
 const { saveJsonToFile, getFilePath, readJsonFile } = frodo.utils;
-const { exportTelemetry, importTelemetry } = frodo.cloud.telemetry;
+const { exportTelemetry, importTelemetry, readTelemetry, deleteTelemetry } =
+  frodo.cloud.telemetry;
 
 /**
  * Exports telemetry configuration in config manager format
@@ -145,6 +147,67 @@ export async function configManagerImportTelemetry(
   } catch (error) {
     stopProgressIndicator(indicatorId, `Failed to import Telemetry.`, 'fail');
     printError(error, 'Error importing telemetry configuration');
+    return false;
+  }
+}
+
+/**
+ * Deletes telemetry exporters in config manager format
+ * @param {TelemetryExporterCategory} category optional exporter category
+ * @param {string} name optional exporter name
+ * @param {boolean} dryRun whether to simulate deletion
+ * @returns {Promise<boolean>} true if deletion succeeded
+ */
+export async function configManagerDeleteTelemetry(
+  category?: TelemetryExporterCategory,
+  name?: string,
+  dryRun = false
+): Promise<boolean> {
+  try {
+    if (name && !category) {
+      printMessage(
+        'Named telemetry config requires a category (e.g. --category otlp).',
+        'error'
+      );
+      return false;
+    }
+    const telemetry = await readTelemetry();
+    const matches: { category: TelemetryExporterCategory; id: string }[] = [];
+    for (const [cat, providers] of Object.entries(telemetry)) {
+      if (category && cat !== category) {
+        continue;
+      }
+      for (const provider of providers) {
+        if (name && provider.id !== name) {
+          continue;
+        }
+        matches.push({
+          category: cat as TelemetryExporterCategory,
+          id: provider.id,
+        });
+        if (dryRun) {
+          printMessage(
+            `Dry run: Deleting telemetry config: ${cat}/${provider.id}`
+          );
+        }
+      }
+    }
+    if (matches.length === 0) {
+      printMessage('Warning: telemetry config not found', 'warn');
+      return true;
+    }
+    if (dryRun) {
+      return true;
+    }
+    await deleteTelemetry(name, category);
+    for (const match of matches) {
+      printMessage(
+        `Successfully deleted telemetry config: ${match.category}/${match.id}`
+      );
+    }
+    return true;
+  } catch (error) {
+    printError(error);
     return false;
   }
 }
