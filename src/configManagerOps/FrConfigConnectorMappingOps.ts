@@ -1,9 +1,10 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import fs from 'fs';
 import path from 'path';
+import { boolean } from 'zod';
 
 import { extractFrConfigDataToFile } from '../utils/Config';
-import { printError } from '../utils/Console';
+import { printError, printMessage } from '../utils/Console';
 
 const { getFilePath, saveJsonToFile } = frodo.utils;
 const { readConfigEntity, importConfigEntities, importSubConfigEntity } =
@@ -137,4 +138,61 @@ export async function configManagerImportMappings(
     printError(error, `Error importing mappings from files`);
   }
   return false;
+}
+
+type SyncMapping = {
+  name: string;
+  [key: string]: any;
+};
+
+type SyncDoc = {
+  _id: string;
+  mappings: SyncMapping[];
+  [key: string]: any;
+};
+
+/**
+ * Delete mapping(s)
+ * @param {string} name optional mapping name to delete
+ * @returns {Promise<boolean>} true if successful, false otherwise
+ */
+export async function configManagerDeleteMappings(
+  name?: string
+): Promise<boolean> {
+  try {
+    const syncDoc = (await readConfigEntity('sync')) as SyncDoc;
+
+    if (!syncDoc.mappings || syncDoc.mappings.length === 0) {
+      printMessage(`No mappings found to delete.`);
+      return false;
+    }
+
+    if (name) {
+      const mappingExists = syncDoc.mappings.some(
+        (mapping) => mapping.name === name
+      );
+
+      if (!mappingExists) {
+        printMessage(`Mapping '${name}' does not exist.`);
+        return false;
+      }
+
+      syncDoc.mappings = syncDoc.mappings.filter(
+        (mapping) => mapping.name !== name
+      );
+    } else {
+      syncDoc.mappings = [];
+    }
+
+    await importConfigEntities({
+      idm: {
+        sync: syncDoc,
+      },
+    });
+
+    return true;
+  } catch (error) {
+    printError(error, `Error deleting mappings`);
+    return false;
+  }
 }
