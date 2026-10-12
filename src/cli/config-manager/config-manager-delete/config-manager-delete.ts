@@ -1,6 +1,7 @@
 import Test from '../../conn/conn-test';
 import { FrodoStubCommand } from '../../FrodoCommand';
 import Applications from '../config-manager-delete/config-manager-delete-applications';
+import ConnectorMappings from '../config-manager-delete/config-manager-delete-connector-mappings';
 import EmailTemplates from '../config-manager-delete/config-manager-delete-email-templates';
 import Endpoints from '../config-manager-delete/config-manager-delete-endpoints';
 import Locales from '../config-manager-delete/config-manager-delete-locales';
@@ -40,5 +41,6 @@ export default function setup() {
   program.addCommand(Schedules().name('schedules'));
   program.addCommand(SecretMappings().name('secret-mappings'));
   program.addCommand(Telemetry().name('telemetry'));
+  program.addCommand(ConnectorMappings().name('connector-mappings'));
   return program;
 }
