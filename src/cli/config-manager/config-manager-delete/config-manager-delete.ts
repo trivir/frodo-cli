@@ -13,6 +13,7 @@ import Scripts from './config-manager-delete-scripts';
 import Secrets from './config-manager-delete-secrets';
 import TermsConditions from './config-manager-delete-terms-and-conditions';
 import Variables from './config-manager-delete-variables';
+import Services from '../config-manager-delete/config-manager-delete-services';
 
 export default function setup() {
   const program = new FrodoStubCommand('delete').description(
@@ -32,5 +33,6 @@ export default function setup() {
   program.addCommand(OauthCimdProfiles().name('oauth-cimd-profiles'));
   program.addCommand(OauthIssuers().name('oauth-issuers'));
   program.addCommand(Schedules().name('schedules'));
+  program.addCommand(Services().name('services'));
   return program;
 }
