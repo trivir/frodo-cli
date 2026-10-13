@@ -1,0 +1,60 @@
+import { frodo } from '@rockcarver/frodo-lib';
+import { Option } from 'commander';
+import { configManagerDeleteServices } from '../../../configManagerOps/FrConfigServiceOps';
+import { getTokens } from '../../../ops/AuthenticateOps';
+import { verboseMessage } from '../../../utils/Console';
+import { FrodoCommand } from '../../FrodoCommand';
+
+const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
+  frodo.utils.constants;
+
+const deploymentTypes = [
+  CLOUD_DEPLOYMENT_TYPE_KEY,
+  FORGEOPS_DEPLOYMENT_TYPE_KEY,
+];
+
+export default function setup() {
+  const program = new FrodoCommand(
+    'frodo config-manager pull services',
+    [],
+    deploymentTypes
+  );
+
+  program
+    .description('Delete authentication services.')
+    .addOption(
+      new Option(
+        '-n, --name <name>',
+        'Service name. If specified, only the given service is deleted.'
+      )
+    )
+    .addOption(
+      new Option('-r, --realm <realm>', 'Specific realm to delete service from')
+    )
+
+    .action(async (host, realm, user, password, options, command) => {
+      command.handleDefaultArgsAndOpts(
+        host,
+        realm,
+        user,
+        password,
+        options,
+        command
+      );
+
+      if (options.realm) {
+        realm = options.realm;
+      }
+
+      if (await getTokens(false, true, deploymentTypes)) {
+        verboseMessage('Deleting services');
+        const outcome = await configManagerDeleteServices(options.name, realm);
+        if (!outcome) process.exitCode = 1;
+      } else {
+        // getTokens() failed (any option combination is valid here).
+        process.exitCode = 1;
+      }
+    });
+
+  return program;
+}
