@@ -24,6 +24,8 @@ Commands:
                            is specified.
   check-promotion-status   [Experimental] [Cloud-only] Check the current
                            promotion status.
+  lock-tenants            [Experimental] [Cloud-only] Lock tenants and wait
+                          until they are locked.
 
 Utilities:
   help                     display help for command
