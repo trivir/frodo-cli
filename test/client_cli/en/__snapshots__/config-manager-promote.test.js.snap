@@ -26,6 +26,8 @@ Commands:
                            promotion status.
   lock-tenants            [Experimental] [Cloud-only] Lock tenants and wait
                           until they are locked.
+  rollback                [Experimental] [Cloud-only] Roll back the previous
+                          promotion.
 
 Utilities:
   help                     display help for command
