@@ -21,6 +21,8 @@ Runtime Options:
 Commands:
   check-promotion-status  [Experimental] [Cloud-only] Check the current
                           promotion status.
+  rollback                [Experimental] [Cloud-only] Roll back the previous
+                          promotion.
 
 Utilities:
   help                    display help for command
