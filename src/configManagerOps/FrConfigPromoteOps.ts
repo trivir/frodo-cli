@@ -10,7 +10,8 @@ const {
   readLastPromotionReport,
   lockEnvironment,
   unlockEnvironment,
-  rollbackPromotion
+  rollbackPromotion,
+  promoteConfiguration 
 } = frodo.cloud.env.promotion;
 
 /**
@@ -129,6 +130,41 @@ export async function configManagerUnlockTenants(
       },
       'data'
     );
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+/**
+ * Run a configuration promotion or dry-run promotion.
+ * @param {boolean} dryRun Whether to simulate the promotion.
+ * @param {boolean} ignoreEncryptedSecrets Whether to ignore encrypted secrets.
+ * @param {boolean} unlockAfter Whether to unlock environments after promotion.
+ * @param {string} promoter Optional name of the person performing the promotion.
+ * @param {string} description Optional description of the promotion.
+ * @param {string} ticketReference Optional zendesk ticket reference.
+ * @returns true if successful, false otherwise.
+ */
+export async function configManagerRunPromotion(
+  dryRun: boolean,
+  ignoreEncryptedSecrets: boolean = false,
+  unlockAfter: boolean = false,
+  promoter?: string,
+  description?: string,
+  ticketReference?: string
+): Promise<boolean> {
+  try {
+    const response = await promoteConfiguration({
+      dryRun,
+      ignoreEncryptedSecrets,
+      unlockEnvironmentsAfterPromotion: unlockAfter,
+      promoter: promoter ?? undefined,
+      promotionDescription: description ?? undefined,
+      zendeskTicketReference: ticketReference ?? undefined,
+    });
+    printMessage(response, 'data');
     return true;
   } catch (error) {
     printError(error);
