@@ -8,13 +8,14 @@ import {
 import {
   createProgressIndicator,
   printError,
+  printMessage,
   stopProgressIndicator,
 } from '../utils/Console';
 import { realmList } from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile, getWorkingDirectory, readJsonFile } =
   frodo.utils;
-const { getFullServices, importServices } = frodo.service;
+const { deleteFullService, getFullServices, importServices } = frodo.service;
 const { DEFAULT_REALM_KEY } = frodo.utils.constants;
 
 /**
@@ -187,4 +188,85 @@ export async function configManagerImportServices(
     printError(error, 'Error importing services');
   }
   return false;
+}
+/**
+ * Delete all services in fr-config-manager format. Iterates every realm
+ * directory under realms/, mapping the 'root' directory to the '/' realm, and skips
+ * the root realm on cloud deployments.
+ * @param {string} name optional service name to delete, deletes all services if omitted
+ * @param {string} realm option realm to delete services from
+ * @returns {Promise<boolean>} true if all services were deleted, false otherwise
+ */
+export async function configManagerDeleteServices(
+  name?: string,
+  realm?: string
+): Promise<boolean> {
+  const indicatorId = createProgressIndicator(
+    'indeterminate',
+    0,
+    'Deleting services...'
+  );
+
+  try {
+    let matchFound = false;
+
+    const realmsToProcess =
+      realm && realm !== DEFAULT_REALM_KEY ? [realm] : await realmList();
+
+    for (const currentRealm of realmsToProcess) {
+      if (
+        currentRealm === '/' &&
+        state.getDeploymentType() ===
+          frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY
+      ) {
+        continue;
+      }
+
+      state.setRealm(currentRealm);
+
+      const services = await getFullServices(false);
+
+      const servicesToDelete = services.filter(
+        (service) =>
+          service._type._id !== 'DataStoreService' &&
+          (!name || service._type._id === name)
+      );
+
+      if (servicesToDelete.length === 0) {
+        continue;
+      }
+
+      matchFound = true;
+
+      for (const service of servicesToDelete) {
+        await deleteFullService(service._type._id, false);
+
+        printMessage(
+          `Deleted service '${service._type._id}' from realm '${currentRealm}'.`
+        );
+      }
+    }
+
+    if (name && !matchFound) {
+      stopProgressIndicator(
+        indicatorId,
+        `Service '${name}' does not exist.`,
+        'fail'
+      );
+      return false;
+    }
+
+    stopProgressIndicator(
+      indicatorId,
+      'Service deletion completed.',
+      'success'
+    );
+
+    return true;
+  } catch (error) {
+    stopProgressIndicator(indicatorId, 'Service deletion failed.', 'fail');
+
+    printError(error, 'Error deleting services');
+    return false;
+  }
 }
