@@ -11,7 +11,8 @@ const {
   lockEnvironment,
   unlockEnvironment,
   rollbackPromotion,
-  promoteConfiguration 
+  promoteConfiguration,
+  readLockStatus
 } = frodo.cloud.env.promotion;
 
 /**
@@ -164,6 +165,24 @@ export async function configManagerRunPromotion(
       promotionDescription: description ?? undefined,
       zendeskTicketReference: ticketReference ?? undefined,
     });
+    printMessage(response, 'data');
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+/**
+ * Check the lock status of tenants.
+ * @param {boolean} [localLockOnly=false] Whether to show only the requested environment's lock status.
+ * @returns {Promise<boolean>} True if successful, false otherwise.
+ */
+export async function configManagerCheckLockedStatus(
+  localLockOnly: boolean = false
+): Promise<boolean> {
+  try {
+    const response = await readLockStatus(localLockOnly);
     printMessage(response, 'data');
     return true;
   } catch (error) {

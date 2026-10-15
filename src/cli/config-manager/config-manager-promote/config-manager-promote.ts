@@ -1,5 +1,6 @@
 import { FrodoStubCommand } from '../../FrodoCommand';
 import CheckPromotionReports from './config-manager-promote-check-promotion-reports';
+import CheckLockedStatus from './config-manager-promote-check-locked-status';
 import CheckPromotionStatus from './config-manager-promote-check-promotion-status';
 import LockTenants from './config-manager-promote-lock-tenants';
 import UnlockTenants from './config-manager-promote-unlock-tenants';
@@ -18,5 +19,6 @@ export default function setup() {
   program.addCommand(Rollback().name('rollback'));
   program.addCommand(RunDryrunPromotion().name('run-dryrun-promotion'));
   program.addCommand(RunPromotion().name('run-promotion'));
+  program.addCommand(CheckLockedStatus().name('check-locked-status'));
   return program;
 }
