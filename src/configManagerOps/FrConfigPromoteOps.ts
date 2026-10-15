@@ -1,7 +1,7 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { printError, printMessage } from '../utils/Console';
 
-const { readPromotionStatus } = frodo.cloud.env.promotion;
+const { readPromotionStatus, readLockStatus } = frodo.cloud.env.promotion;
 
 /**
  * Check promotion status.
@@ -13,6 +13,21 @@ export async function configManagerCheckPromotionStatus(): Promise<boolean> {
     printMessage({
       message: JSON.stringify(response, null, 4),
     });
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+/**
+ * Check the current lock status of the tenants.
+ * @returns true if successful, false otherwise.
+ */
+export async function configManagerCheckLockedStatus(): Promise<boolean> {
+  try {
+    const response = await readLockStatus();
+    printMessage(JSON.stringify(response, null, 4));
     return true;
   } catch (error) {
     printError(error);
