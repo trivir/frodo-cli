@@ -1,16 +1,18 @@
+import fs from 'fs';
 import { frodo } from '@rockcarver/frodo-lib';
 import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
 import { ApiVersion } from '@rockcarver/frodo-lib/types/api/RawConfigApi';
-import { RawExportOptions } from '@rockcarver/frodo-lib/types/ops/RawConfigOps';
-import fs from 'fs';
-
+import merge from 'deepmerge';
 import {
   createProgressIndicator,
   printError,
   printMessage,
   stopProgressIndicator,
 } from '../utils/Console';
-import { clearOperationalAttributes } from '../utils/FrConfig';
+import {
+  clearOperationalAttributes,
+  escapePlaceholders,
+} from '../utils/FrConfig';
 
 const { getFilePath, saveJsonToFile, readJsonFile, getWorkingDirectory } =
   frodo.utils;
@@ -25,7 +27,7 @@ const { exportRawConfig, importRawConfig } = frodo.rawConfig;
  * @returns {boolean} True if each file was successfully exported, false otherwise
  */
 export async function configManagerExportRaw(
-  apiVersion: ApiVersion,
+  apiVersion: Partial<ApiVersion>,
   path?: string,
   file?: string,
   stdout = false
@@ -33,19 +35,36 @@ export async function configManagerExportRaw(
   try {
     const rawConfig = path
       ? [{ path, pushApiVersion: apiVersion }]
-      : (readJsonFile(file, false) as RawExportOptions[]);
+      : (readJsonFile(file, false) as any[]);
+
     for (const config of rawConfig) {
       config.path = config.path.startsWith('/')
         ? config.path.substring(1)
         : config.path;
 
-      const response: IdObjectSkeletonInterface = await exportRawConfig(config);
+      const response = await exportRawConfig(config.path);
+
+      let data = escapePlaceholders(response) as IdObjectSkeletonInterface;
+      clearOperationalAttributes(data);
+
+      if (config.overrides) {
+        data = merge(data, config.overrides, {
+          arrayMerge: (_destination, source) => source,
+        });
+      }
+
+      if (
+        config.pushApiVersion &&
+        Object.keys(config.pushApiVersion).length > 0
+      ) {
+        data._pushApiVersion = config.pushApiVersion;
+      }
 
       if (stdout) {
-        printMessage(response, 'data');
+        printMessage(data, 'data');
       } else {
         saveJsonToFile(
-          response,
+          data,
           getFilePath(`raw/${config.path}.json`, true),
           false,
           true
@@ -77,10 +96,11 @@ export async function configManagerImportRaw(
   try {
     if (stdin) {
       const data = readJsonFile(process.stdin.fd) as IdObjectSkeletonInterface;
-      const apiVersion = data._pushApiVersion;
+      if (!path) {
+        throw new Error('Path is required when importing from stdin.');
+      }
       clearOperationalAttributes(data);
-      data._pushApiVersion = apiVersion;
-      await importRawConfig({ path }, data);
+      await importRawConfig(path, data);
       stopProgressIndicator(
         indicatorId,
         'Raw config import completed.',
@@ -101,10 +121,8 @@ export async function configManagerImportRaw(
       }
 
       const data = readJsonFile(filePath) as IdObjectSkeletonInterface;
-      const apiVersion = data._pushApiVersion;
       clearOperationalAttributes(data);
-      data._pushApiVersion = apiVersion;
-      await importRawConfig({ path: rawPath }, data);
+      await importRawConfig(rawPath, data);
     }
     stopProgressIndicator(
       indicatorId,

@@ -2,7 +2,7 @@ import { Option } from 'commander';
 import { configManagerExportRaw } from '../../../configManagerOps/FrConfigRawOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage, verboseMessage } from '../../../utils/Console';
-import { FrodoCommand } from '../../FrodoCommand';
+import { FrodoCommand, ObjectOption } from '../../FrodoCommand';
 
 export default function setup() {
   const program = new FrodoCommand('frodo config-manager pull raw');
@@ -22,10 +22,10 @@ export default function setup() {
       )
     )
     .addOption(
-      new Option(
-        '-x, --push-api-version',
-        'Will include any push API versions. '
-      )
+      new ObjectOption(
+        '-x, --push-api-version <value>',
+        'Push API versions; set properties using dot notation, for example: -x.myApi 1.0 --push-api-version.otherApi 2.0'
+      ).default({})
     )
     .addOption(
       new Option(
@@ -64,53 +64,50 @@ export default function setup() {
         command
       );
 
-      if (await getTokens(false, true)) {
-        const outcome: boolean = await configManagerExportRaw(
-          options.configFile,
-          options.stdout,
-          options.pushApiVersion,
-          options.path
-        );
-
-        if (!outcome) {
-          printMessage(
-            `Failed to export one or more config files. ${options.verbose ? '' : 'Check --verbose for me details.'}`
-          );
-          process.exitCode = 1;
-        }
-      } else {
-        // getTokens() failed (any option combination is valid here).
-        process.exitCode = 1;
       if (!options.path && !options.configFile) {
         printMessage(
           'Specify --path or --config-file to export raw configuration.',
           'error'
         );
-        process.exit(1);
+        process.exitCode = 1;
+        return;
       }
+      const apiVersion = options.pushApiVersion ?? {};
 
       if (
-        !options.pushApiVersion.protocol ||
-        !options.pushApiVersion.resource
+        Object.keys(apiVersion).length > 0 &&
+        (!apiVersion.protocol || !apiVersion.resource)
       ) {
         printMessage(
           '--push-api-version requires resource and protocol versions.',
           'error'
         );
-        process.exit(1);
+        process.exitCode = 1;
+        return;
       }
 
-      const getTokensIsSuccessful = await getTokens();
-      if (!getTokensIsSuccessful) process.exit(1);
-      verboseMessage('Exporting raw configuration.');
-      const outcome = await configManagerExportRaw(
-        options.pushApiVersion,
-        options.path,
-        options.configFile,
-        options.stdout
-      );
-      if (!outcome) process.exitCode = 1;
-    }});
+      if (await getTokens(false, true)) {
+        verboseMessage('Exporting raw configuration.');
+
+        const outcome = await configManagerExportRaw(
+          apiVersion,
+          options.path,
+          options.configFile,
+          options.stdout
+        );
+
+        if (!outcome) {
+          printMessage(
+            `Failed to export one or more config files. ${
+              options.verbose ? '' : 'Check --verbose for more details.'
+            }`
+          );
+          process.exitCode = 1;
+        }
+      } else {
+        process.exitCode = 1;
+      }
+    });
 
   return program;
 }
