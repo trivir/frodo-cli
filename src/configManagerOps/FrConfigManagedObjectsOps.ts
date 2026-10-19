@@ -6,6 +6,7 @@ import { printError } from '../utils/Console';
 
 const { readConfigEntity, importConfigEntities, importSubConfigEntity } =
   frodo.idm.config;
+const { readManagedObjectSchemaProperty } = frodo.idm.managed.schema;
 const { getFilePath, saveTextToFile } = frodo.utils;
 const { stringify } = frodo.utils.json;
 
@@ -17,6 +18,25 @@ export type ManagedSkeleton = IdObjectSkeletonInterface & {
   objects: ObjectSkeleton[];
 };
 const SCRIPT_HOOKS = ['onStore', 'onRetrieve', 'onValidate'];
+function getCustomRelationships(managedObject, repoMapping) {
+  const objectMapping =
+    repoMapping.resourceMapping?.genericMapping[
+      `managed/${managedObject.name}`
+    ];
+
+  if (!objectMapping) {
+    return [];
+  }
+
+  return Object.keys(managedObject.schema.properties).filter((propertyName) => {
+    const mapping = objectMapping.properties?.[propertyName];
+
+    return (
+      mapping?.type === 'reference' &&
+      mapping?.ldapAttribute?.startsWith('fr-idm-reference-')
+    );
+  });
+}
 
 /**
  * Export an IDM configuration object in the fr-config-manager format.
@@ -24,11 +44,21 @@ const SCRIPT_HOOKS = ['onStore', 'onRetrieve', 'onValidate'];
  * @return {Promise<boolean>} a promise that resolves to true if successful, false otherwise
  */
 export async function configManagerExportManagedObjects(
-  objectName?: string
+  objectName?: string,
+  pullCustomRelationships = false
 ): Promise<boolean> {
   try {
     const exportData = (await readConfigEntity('managed')) as ManagedSkeleton;
-    processManagedObjects(exportData.objects, 'managed-objects', objectName);
+    const repoMapping = pullCustomRelationships
+      ? await readConfigEntity('repo.ds')
+      : undefined;
+    await processManagedObjects(
+      exportData.objects,
+      'managed-objects',
+      objectName,
+      pullCustomRelationships,
+      repoMapping
+    );
     return true;
   } catch (error) {
     printError(error, `Error exporting config entity endpoints`);
@@ -36,11 +66,17 @@ export async function configManagerExportManagedObjects(
   return false;
 }
 
-function processManagedObjects(managedObjects, targetDir, name) {
+async function processManagedObjects(
+  managedObjects,
+  targetDir,
+  name,
+  pullCustomRelationships = false,
+  repoMapping?
+) {
   try {
-    managedObjects.forEach((managedObject) => {
+    for (const managedObject of managedObjects) {
       if (name && name !== managedObject.name) {
-        return;
+        continue;
       }
 
       const objectPath = `${targetDir}/${managedObject.name}`;
@@ -103,12 +139,34 @@ function processManagedObjects(managedObjects, targetDir, name) {
         }
       );
 
+      if (pullCustomRelationships && repoMapping) {
+        const customRelationships = getCustomRelationships(
+          managedObject,
+          repoMapping
+        );
+
+        for (const customRelationship of customRelationships) {
+          const schemaData = await readManagedObjectSchemaProperty(
+            managedObject.name,
+            customRelationship
+          );
+
+          const schemaFileName = `${objectPath}/schema/${managedObject.name}.schema.${customRelationship}.json`;
+
+          saveTextToFile(
+            stringify(schemaData),
+            getFilePath(schemaFileName, true)
+          );
+        }
+      }
+
       const fileName = `${objectPath}/${managedObject.name}.json`;
 
       saveTextToFile(stringify(managedObject), getFilePath(fileName, true));
-    });
+    }
   } catch (err) {
     printError(err);
+    throw err;
   }
 }
 
