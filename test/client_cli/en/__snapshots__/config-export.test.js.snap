@@ -36,6 +36,7 @@ Options:
   -c, --only-custom          Only export custom request types (IGA cloud
                              deployments only).
   -d, --default              Export all scripts including the default scripts.
+  --dynamic                  Export only dynamic configuration.
   -f, --file <file>          Name of the export file.
   -g, --global-only          Export only the global config. If -r, --realm-only
                              is also active, then the corresponding active realm
@@ -59,6 +60,7 @@ Options:
   -R, --read-only            Export read-only config (with the exception of
                              default scripts) in addition to the importable
                              config.
+  --static                   Export only static configuration.
   --target <host url>        Host URL of the environment to perform secret value
                              encryption. The URL must resolve to an existing
                              connection profile. Use this option to generate an
