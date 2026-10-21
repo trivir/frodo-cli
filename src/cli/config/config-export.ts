@@ -105,6 +105,8 @@ export default function setup() {
         'Only export custom request types (IGA cloud deployments only).'
       )
     )
+    .addOption(new Option('--static', 'Export only static configuration.'))
+    .addOption(new Option('--dynamic', 'Export only dynamic configuration.'))
     .addHelpText(
       'after',
       c.positive(`How Frodo handles secrets:\n`) +
@@ -169,6 +171,8 @@ export default function setup() {
               onlyRealm: options.realmOnly,
               onlyGlobal: options.globalOnly,
               onlyCustom: options.onlyCustom,
+              includeStatic: options.static || !options.dynamic,
+              includeDynamic: options.dynamic || !options.static,
             }
           );
           if (!outcome) process.exitCode = 1;
@@ -200,6 +204,8 @@ export default function setup() {
               onlyRealm: options.realmOnly,
               onlyGlobal: options.globalOnly,
               onlyCustom: options.onlyCustom,
+              includeStatic: options.static || !options.dynamic,
+              includeDynamic: options.dynamic || !options.static,
             }
           );
           if (!outcome) process.exitCode = 1;

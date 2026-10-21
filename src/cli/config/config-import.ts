@@ -85,6 +85,8 @@ export default function setup() {
         'Import global entity. Ignored with -a and -A.'
       )
     )
+    .addOption(new Option('--static', 'Import only static configuration.'))
+    .addOption(new Option('--dynamic', 'Import only dynamic configuration.'))
     .addHelpText(
       'after',
       c.positive(`How Frodo handles secrets:\n`) +
@@ -140,6 +142,8 @@ export default function setup() {
             includeActiveValues: options.includeActiveValues,
             source: options.source,
             onlyCustom: options.onlyCustom,
+            includeStatic: options.static || !options.dynamic,
+            includeDynamic: options.dynamic || !options.static,
           });
           if (!outcome) process.exitCode = 1;
         }
@@ -164,6 +168,8 @@ export default function setup() {
             includeActiveValues: options.includeActiveValues,
             source: options.source,
             onlyCustom: options.onlyCustom,
+            includeStatic: options.static || !options.dynamic,
+            includeDynamic: options.dynamic || !options.static,
           });
           if (!outcome) process.exitCode = 1;
         }
