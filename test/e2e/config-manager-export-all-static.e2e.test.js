@@ -22,11 +22,11 @@ describe('frodo config-manager pulls', () => {
    test('"frodo config-manager pull all-static -D allStaticDir1": should export the all-static in fr-config-manager style"', async () => {
      const dirName = 'allStaticDir1';
      const CMD = `frodo config-manager pull all-static -D ${dirName}`;
-     await testExport(CMD, env, undefined, undefined, dirName, false);
+     await testExport(CMD, { env: {...env.env, FRODO_REALM: 'alpha' } }, undefined, undefined, dirName, false);
    });
    test('"frodo config-manager pull all-static -D allStaticDir2 -m forgeops": should export the all-static in fr-config-manager style"', async () => {
     const dirName = 'allStaticDir2';
     const CMD = `frodo config-manager pull all-static -D ${dirName} -m forgeops`;
-    await testExport(CMD, { env: {...forgeopsEnv.env, FRODO_REALM: 'alpha' } }, undefined, undefined, dirName, false);
+    await testExport(CMD, forgeopsEnv, undefined, undefined, dirName, false);
   });
 });
