@@ -61,8 +61,12 @@ Error updating alpha realm script
     Code: ERR_BAD_REQUEST
     Reason: Forbidden
     Message: This operation is not available in PingOne Advanced Identity Cloud.
-✔ Resolved all alpha realm dependencies.
-• Finished importing alpha realm journeys
+2 warnings in journey DynamicConfiguration
+1 warning in journey FrodoTest
+2 warnings in journey RecognizeFrontChannel
+Error Importing Journeys
+  Error importing alpha realm journey 'test':
+  - [MISSING_ENTRY_NODE] test: Entry node 'd26176be-ea6f-4f2a-81cd-3d41dd6cee4d' does not resolve to a graph node
 Error Importing Services
   Error importing services
     Error putting alpha realm full service configs
@@ -88,6 +92,7 @@ Error updating bravo realm script
     Code: ERR_BAD_REQUEST
     Reason: Forbidden
     Message: This operation is not available in PingOne Advanced Identity Cloud.
+2 warnings in journey IntervieweeFullVerification
 ✔ Resolved all bravo realm dependencies.
 Error importing the bravo realm journey undefined
   Error importing bravo realm journey 'IntervieweeFullVerification'
@@ -150,8 +155,12 @@ Error updating alpha realm script
     Code: ERR_BAD_REQUEST
     Reason: Forbidden
     Message: This operation is not available in PingOne Advanced Identity Cloud.
-✔ Resolved all alpha realm dependencies.
-• Finished importing alpha realm journeys
+2 warnings in journey DynamicConfiguration
+1 warning in journey FrodoTest
+2 warnings in journey RecognizeFrontChannel
+Error Importing Journeys
+  Error importing alpha realm journey 'test':
+  - [MISSING_ENTRY_NODE] test: Entry node 'd26176be-ea6f-4f2a-81cd-3d41dd6cee4d' does not resolve to a graph node
 ✔ Finished Importing Everything to root-alpha realm!
 Error updating bravo realm script
   Network error:
