@@ -1,5 +1,4 @@
 import { Option } from 'commander';
-
 import { configManagerDeleteCustomNodes } from '../../../configManagerOps/FrConfigCustomNodesOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { verboseMessage } from '../../../utils/Console';
@@ -12,19 +11,13 @@ export default function setup() {
     .addOption(
       new Option(
         '-n, --name <name>',
-        'Custom node display name. If neither name nor ID is specified, all custom nodes are deleted.'
+        'Custom node display name. If name is not specified, all custom nodes are deleted.'
       )
     )
     .addOption(
       new Option(
-        '--dry-run',
+        '-d, --dry-run',
         'Show which custom nodes would be deleted without deleting them.'
-      )
-    )
-    .addOption(
-      new Option(
-        '-i, --id <id>',
-        'Custom node ID. If specified, only this custom node is deleted.'
       )
     )
     .action(async (host, realm, user, password, options, command) => {
@@ -45,8 +38,7 @@ export default function setup() {
       );
       const outcome = await configManagerDeleteCustomNodes(
         options.name,
-        options.dryRun,
-        options.id
+        options.dryRun
       );
       if (!outcome) process.exitCode = 1;
     });

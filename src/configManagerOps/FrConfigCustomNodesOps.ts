@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { frodo, FrodoError } from '@rockcarver/frodo-lib';
-import { printError } from '../utils/Console';
+import { printError, printMessage } from '../utils/Console';
 import { fileFilter } from '../utils/FrConfig';
 
 const { saveJsonToFile, getFilePath, saveTextToFile } = frodo.utils;
@@ -103,41 +103,36 @@ export async function configManagerImportCustomNodes(
 
 /**
  * Delete custom nodes from the configured tenant.
- * @param name Optional display name. If omitted, all custom nodes are deleted.
- * @param dryRun Show matching nodes without deleting them.
- * @param id Optional ID of custom node. If omitted, all custom nodes are deleted.
- * @returns True if all requested deletions were successful.
+ * @param {string} name Optional display name. If omitted, all custom nodes are targeted.
+ * @param {boolean} dryRun Show matching nodes without deleting them.
+ * @returns {Promise<boolean>} True if no errors were reported.
  */
 export async function configManagerDeleteCustomNodes(
   name?: string,
-  dryRun: boolean = false,
-  id?: string
+  dryRun: boolean = false
 ): Promise<boolean> {
   try {
-    if (name && id) {
-      printError(new FrodoError('Specify either --name or --id.'));
-      return false;
-    }
-    const nodes =
-      id || name ? [await readCustomNode(id, name)] : await readCustomNodes();
     let successful = true;
-    for (const node of nodes) {
-      if (dryRun) {
-        console.log(
+    if (dryRun) {
+      const nodes = name
+        ? [await readCustomNode(undefined, name)]
+        : await readCustomNodes();
+      for (const node of nodes) {
+        printMessage(
           `Dry run: Deleting node with displayName ${node.displayName}`
         );
-        continue;
       }
-      try {
-        await deleteCustomNode(node._id);
-        console.log(`Deleting node with displayName: ${node.displayName}`);
-      } catch (error) {
-        printError(
-          error,
-          `Failed to delete node with displayName ${node.displayName}`
-        );
-        successful = false;
-      }
+    } else if (name) {
+      await deleteCustomNode(undefined, name);
+      printMessage(`Deleting node with displayName: ${name}`);
+    } else {
+      const deletedNodes = await deleteCustomNodes((error) => {
+        if (error) {
+          printError(error);
+          successful = false;
+        }
+      });
+      printMessage(`Deleted ${deletedNodes.length} custom nodes.`);
     }
     return successful;
   } catch (error) {
