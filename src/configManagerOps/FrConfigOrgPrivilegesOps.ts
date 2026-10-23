@@ -5,9 +5,10 @@ import {
   type IdObjectSkeletonInterface,
 } from '@rockcarver/frodo-lib';
 import { printError } from '../utils/Console';
+import path from 'path';
 
 const { config } = frodo.idm;
-const { getFilePath, saveJsonToFile } = frodo.utils;
+const { getFilePath, saveJsonToFile, getWorkingDirectory } = frodo.utils;
 const { importConfigEntities } = frodo.idm.config;
 const { readRealms } = frodo.realm;
 
@@ -73,38 +74,6 @@ export async function configManagerExportOrgPrivileges(
 }
 
 /**
- * Import organization privileges from a file
- * @param filePath The path to the organization privileges file to import
- * @returns True if the file was successfully imported
- */
-async function importOrgPrivilegesFromFile(filePath: string): Promise<boolean> {
-  try {
-    const mainFile = fs.readFileSync(filePath, 'utf-8');
-    let importData = JSON.parse(mainFile);
-    const id = importData._id;
-    importData = { idm: { [id]: importData } };
-    await importConfigEntities(importData);
-    return true;
-  } catch (error) {
-    printError(error);
-    return false;
-  }
-}
-
-/**
- * Import organization privileges for a specific realm in fr-config manager format
- * @param realm The name of the realm to import organization privileges for
- * @returns True if organization privileges were successfully imported
- */
-export async function configManagerImportOrgPrivilegesRealm(
-  realm: string
-): Promise<boolean> {
-  return importOrgPrivilegesFromFile(
-    getFilePath(`org-privileges/${realm}OrgPrivileges.json`)
-  );
-}
-
-/**
  * Import organization privileges by name in fr-config manager format
  * @param name The name of the organization privileges file to import
  * @returns True if organization privileges were successfully imported
@@ -131,17 +100,67 @@ export async function configManagerImportOrgPrivilegeAssignments(): Promise<bool
  * Import privilege assignments and all per-realm organization privileges configurations in fr-config manager format
  * @returns True if all configurations were successfully imported
  */
-export async function configManagerImportOrgPrivilegesAllRealms(): Promise<boolean> {
+// export async function configManagerImportOrgPrivilegesAllRealms(): Promise<boolean> {
+//   try {
+//     await configManagerImportOrgPrivilegeAssignments();
+//     for (const realm of await readRealms()) {
+//       // fr-config-manager doesn't support root org privileges
+//       if (realm.name === '/') continue;
+//       state.setRealm(realm.name);
+//       if (!(await configManagerImportOrgPrivilegesRealm(realm.name))) {
+//         return false;
+//       }
+//     }
+//     return true;
+//   } catch (error) {
+//     printError(error);
+//     return false;
+//   }
+// }
+
+export async function configManagerImportOrgPrivileges(name: string): Promise<boolean> {
   try {
-    await configManagerImportOrgPrivilegeAssignments();
-    for (const realm of await readRealms()) {
-      // fr-config-manager doesn't support root org privileges
-      if (realm.name === '/') continue;
-      state.setRealm(realm.name);
-      if (!(await configManagerImportOrgPrivilegesRealm(realm.name))) {
-        return false;
-      }
+    // console.log(name);
+    // let fileNames = fs.readdirSync(`${getWorkingDirectory()}/org-privileges`);
+    // console.log("\nCurrent directory filenames:\n")
+    // fileNames.forEach(file => {
+    //   console.log(file);
+    // })
+
+    const dir = `${getWorkingDirectory()}/org-privileges`;
+    const orgConfigs = fs
+      .readdirSync(`${dir}`)
+      .filter((name) => path.extname(name) === ".json")
+      .map((filename) =>
+          JSON.parse(fs.readFileSync(path.join(dir, filename), 'utf-8'))
+        );
+    
+    console.log("\n\n", orgConfigs);
+    for (const orgConfig of orgConfigs) {
+      if (name && name !== orgConfig._id) continue;
+      console.log(`\n\nSingle orgConfig: ${JSON.stringify(orgConfig, null, 2)}`)
+      const importData = { idm: { [orgConfig._id]: orgConfig } };
+      await importConfigEntities(importData);
     }
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+/**
+ * Import organization privileges from a file
+ * @param filePath The path to the organization privileges file to import
+ * @returns True if the file was successfully imported
+ */
+async function importOrgPrivilegesFromFile(filePath: string): Promise<boolean> {
+  try {
+    const mainFile = fs.readFileSync(filePath, 'utf-8');
+    let importData = JSON.parse(mainFile);
+    const id = importData._id;
+    importData = { idm: { [id]: importData } };
+    await importConfigEntities(importData);
     return true;
   } catch (error) {
     printError(error);

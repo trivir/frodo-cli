@@ -1,8 +1,7 @@
 import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 import {
-  configManagerImportOrgPrivilegesAllRealms,
-  configManagerImportOrgPrivilegesByName,
+  configManagerImportOrgPrivileges
 } from '../../../configManagerOps/FrConfigOrgPrivilegesOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { printMessage } from '../../../utils/Console';
@@ -41,27 +40,19 @@ export default function setup() {
         command
       );
 
-      if (await getTokens(false, true, deploymentTypes)) {
-        let outcome: boolean;
-        if (options.name) {
-          printMessage(
-            `Importing organization privileges config for "${options.name}"`
-          );
-          outcome = await configManagerImportOrgPrivilegesByName(options.name);
-        } else {
-          printMessage(
-            'Importing organization privileges config to all realms'
-          );
-          outcome = await configManagerImportOrgPrivilegesAllRealms();
-        }
-        if (!outcome) process.exitCode = 1;
-      }
-      // Any option combination is valid (no -n imports all realms); the
-      // only way this branch runs is getTokens() failing.
-      else {
-        process.exitCode = 1;
-      }
-    });
+      const getTokensIsSuccessful = await getTokens(
+        false,
+        true,
+        deploymentTypes
+      );
+      if (!getTokensIsSuccessful) process.exit(1);
+
+      printMessage(
+        `Importing organization privileges config for ${options.name || 'all realms'}`
+      );
+      const outcome = await configManagerImportOrgPrivileges(options.name);
+      if (!outcome) process.exitCode = 1;
+  });
 
   return program;
 }
