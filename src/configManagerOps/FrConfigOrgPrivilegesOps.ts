@@ -12,57 +12,28 @@ const { importConfigEntities } = frodo.idm.config;
 const { readRealms } = frodo.realm;
 
 /**
- *
- * @param realm The name of the realm to retrieve organization privileges from.
- * @returns True if realm exists and organization privileges configuration file was successfully saved
- */
-export async function configManagerExportOrgPrivilegesRealm(
-  realm: string
-): Promise<boolean> {
-  try {
-    const realmPrivileges: IdObjectSkeletonInterface =
-      await config.readConfigEntity(`${realm}OrgPrivileges`);
-    saveJsonToFile(
-      realmPrivileges,
-      getFilePath(`org-privileges/${realm}OrgPrivileges.json`, true),
-      false,
-      true
-    );
-    return true;
-  } catch (error) {
-    printError(error);
-    return false;
-  }
-}
-
-/**
  * Export the privileges assignments configuration in fr-config manager format
+ * @param {string} name The name of the organization privilege to export
  * @returns True if privilegeAssignments was successfully saved
  */
-export async function configManagerExportOrgPrivileges(): Promise<boolean> {
+export async function configManagerExportOrgPrivileges(
+  name?: string
+): Promise<boolean> {
   try {
-    const orgPrivileges: IdObjectSkeletonInterface =
+    if (name) {
+      const entity = await config.readConfigEntity(name);
+      saveJsonToFile(entity, getFilePath(`org-privileges/${name}.json`, true));
+      return true;
+    }
+    const assignments: IdObjectSkeletonInterface =
       await config.readConfigEntity('privilegeAssignments');
     saveJsonToFile(
-      orgPrivileges,
+      assignments,
       getFilePath('org-privileges/privilegeAssignments.json', true),
       false,
       false
     );
-    return true;
-  } catch (error) {
-    printError(error);
-    return false;
-  }
-}
 
-/**
- * Export all organization privileges configurations from all realms in fr-config manager format
- * @returns True if configuration files were successfully saved
- */
-export async function configManagerExportOrgPrivilegesAllRealms(): Promise<boolean> {
-  try {
-    configManagerExportOrgPrivileges();
     for (const realm of await readRealms()) {
       if (
         realm.name === '/' &&
@@ -70,11 +41,29 @@ export async function configManagerExportOrgPrivilegesAllRealms(): Promise<boole
           frodo.utils.constants.CLOUD_DEPLOYMENT_TYPE_KEY
       )
         continue;
-
-      state.setRealm(realm.name);
-      if (!(await configManagerExportOrgPrivilegesRealm(realm.name))) {
-        return false;
+      if (
+        realm.name === '/' &&
+        state.getDeploymentType() ===
+          frodo.utils.constants.FORGEOPS_DEPLOYMENT_TYPE_KEY
+      ) {
+        saveJsonToFile(
+          await config.readConfigEntity('privileges'),
+          getFilePath('org-privileges/privileges.json', true),
+          false,
+          false
+        );
+        continue;
       }
+      state.setRealm(realm.name);
+      const realmPrivileges = await config.readConfigEntity(
+        `${realm.name}OrgPrivileges`
+      );
+      saveJsonToFile(
+        realmPrivileges,
+        getFilePath(`org-privileges/${realm.name}OrgPrivileges.json`, true),
+        false,
+        false
+      );
     }
     return true;
   } catch (error) {
