@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [v5.0.0-12] - 2026-10-23
+
+### Added
+- Added `frodo journey validate`, which checks journey references in tenant journeys (`-i` or `-a`) or in export files (`-f`, or `-A -D` for a directory of separate files). Every finding is reported. The command fails when there are errors; `--strict` makes warnings fail it too (#871).
+- Journey imports now validate journey references first. Errors stop the import; warnings are printed and do not. This applies to `frodo journey import`, `frodo config import`, `frodo config-manager push journeys` and `frodo promote`. Pass `--no-validate` to any of them to skip validation and restore the previous behavior; see [MIGRATION.md](https://github.com/rockcarver/frodo-cli/blob/v5.0.0-12/MIGRATION.md). Journey exports print a per-journey warning summary and are never blocked by validation findings (#871).
+
+### Changed
+- Updated `frodo-lib` to version 5.0.0-12, which removes all function and constant exports from the package root, retaining only `frodo`, `state`, and `FrodoError`. This change requires CLI adaptations to use the `frodo` facade for library APIs. (#877)
+- Transitioned MCP, terminal-theme, and managed-schema operations to use the `frodo` facade, ensuring compatibility with the updated `frodo-lib`. (#870)
+
 ## [v5.0.0-11] - 2026-10-21
 
 ### Added
@@ -3065,6 +3075,7 @@ Frodo CLI 2.x automatically refreshes session and access tokens before they expi
 - Fixed problem with adding connection profiles
 - Miscellaneous bug fixes
 
+[v5.0.0-12]: https://github.com/rockcarver/frodo-cli/compare/v5.0.0-11...v5.0.0-12
 [v5.0.0-11]: https://github.com/rockcarver/frodo-cli/compare/v5.0.0-10...v5.0.0-11
 [v5.0.0-10]: https://github.com/rockcarver/frodo-cli/compare/v5.0.0-9...v5.0.0-10
 [v5.0.0-9]: https://github.com/rockcarver/frodo-cli/compare/v5.0.0-8...v5.0.0-9
