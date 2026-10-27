@@ -9,7 +9,8 @@ const {
   readPromotionReports,
   readLastPromotionReport,
   lockEnvironment,
-  unlockEnvironment
+  unlockEnvironment,
+  rollbackPromotion
 } = frodo.cloud.env.promotion;
 
 /**
@@ -60,6 +61,35 @@ export async function configManagerCheckPromotionReports(
     printError(error);
     return false;
   }
+}
+
+/**
+* Roll back the previous promotion.
+* @param {boolean} [unlockAfter=false] Whether to unlock environments after rollback.
+* @param {string} [promoter] Optional name of the person performing the rollback.
+* @param {string} [description] Optional description of the rollback.
+* @param {string} [ticketReference] Optional Zendesk ticket reference.
+* @returns {Promise<boolean>} True if the rollback request succeeds, false otherwise.
+ */
+export async function configManagerRollback(
+ unlockAfter: boolean = false,
+ promoter?: string,
+ description?: string,
+ ticketReference?: string
+): Promise<boolean> {
+ try {
+   const response = await rollbackPromotion({
+     unlockEnvironmentsAfterPromotion: unlockAfter,
+     promoter: promoter ?? undefined,
+     promotionDescription: description ?? undefined,
+     zendeskTicketReference: ticketReference ?? undefined,
+   });
+   printMessage(response, 'data');
+   return true;
+ } catch (error) {
+   printError(error);
+   return false;
+ }
 }
 
 /**
