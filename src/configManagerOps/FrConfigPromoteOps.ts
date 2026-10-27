@@ -8,6 +8,7 @@ const {
   readPromotionReport,
   readPromotionReports,
   readLastPromotionReport,
+  lockEnvironment,
 } = frodo.cloud.env.promotion;
 
 /**
@@ -53,6 +54,27 @@ export async function configManagerCheckPromotionReports(
       response = await readLastPromotionReport();
     }
     printMessage(response, 'data');
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+/**
+ * Lock tenants and wait until they are locked.
+ * @returns {Promise<boolean>} True if tenants were successfully locked, false otherwise.
+ */
+export async function configManagerLockTenants(): Promise<boolean> {
+  try {
+    const lockStatus = await lockEnvironment(true, 60000);
+    printMessage(
+      {
+        status: lockStatus.result,
+        Promotionid: lockStatus.promotionId,
+      },
+      'data'
+    );
     return true;
   } catch (error) {
     printError(error);

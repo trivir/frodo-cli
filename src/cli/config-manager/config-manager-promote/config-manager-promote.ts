@@ -1,6 +1,7 @@
 import { FrodoStubCommand } from '../../FrodoCommand';
-import CheckPromotionStatus from './config-manager-promote-check-promotion-status';
 import CheckPromotionReports from './config-manager-promote-check-promotion-reports';
+import CheckPromotionStatus from './config-manager-promote-check-promotion-status';
+import LockTenants from './config-manager-promote-lock-tenants';
 
 export default function setup() {
   const program = new FrodoStubCommand('promote').description(
@@ -8,5 +9,6 @@ export default function setup() {
   );
   program.addCommand(CheckPromotionStatus().name('check-promotion-status'));
   program.addCommand(CheckPromotionReports().name('check-promotion-reports'));
+  program.addCommand(LockTenants().name('lock-tenants'));
   return program;
 }
