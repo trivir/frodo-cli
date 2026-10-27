@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frodo config-manager delete endpoints "frodo config-manager delete endpoints -m forgeops": should delete all endpoints in config-manager format 1`] = `
+"Deleting endpoint: endpoint/groovy
+Deleting endpoint: endpoint/Groovy
+Deleting endpoint: endpoint/Javascript
+Deleting endpoint: endpoint/joshTest
+Deleting endpoint: endpoint/joshTestCustomNodes
+Deleting endpoint: endpoint/joshTestEndpoints
+Deleting endpoint: endpoint/joshTestSchedules
+"
+`;
+
+exports[`frodo config-manager delete endpoints "frodo config-manager delete endpoints -m forgeops": should delete all endpoints in config-manager format 2`] = `
+"Experimental feature in use: 'frodo config-manager delete endpoints'. This feature may change without notice.
+"
+`;
+
+exports[`frodo config-manager delete endpoints "frodo config-manager delete endpoints -n Javascript -m forgeops": should delete a specific endpoint by name in config-manager format 1`] = `
+"Deleting endpoint: endpoint/Javascript
+"
+`;
+
+exports[`frodo config-manager delete endpoints "frodo config-manager delete endpoints -n Javascript -m forgeops": should delete a specific endpoint by name in config-manager format 2`] = `
+"Experimental feature in use: 'frodo config-manager delete endpoints'. This feature may change without notice.
+"
+`;
