@@ -9,6 +9,7 @@ const {
   readPromotionReports,
   readLastPromotionReport,
   lockEnvironment,
+  unlockEnvironment
 } = frodo.cloud.env.promotion;
 
 /**
@@ -72,6 +73,29 @@ export async function configManagerLockTenants(): Promise<boolean> {
       {
         status: lockStatus.result,
         Promotionid: lockStatus.promotionId,
+      },
+      'data'
+    );
+    return true;
+  } catch (error) {
+    printError(error);
+    return false;
+  }
+}
+
+/**
+ * Unlock tenants and wait until they are unlocked.
+ * @param {string} promotionId Promotion ID associated with the lock.
+ * @returns {Promise<boolean>}  True if tenants were successfully unlocked, false otherwise.
+ */
+export async function configManagerUnlockTenants(
+  promotionId: string
+): Promise<boolean> {
+  try {
+    const lockStatus = await unlockEnvironment(promotionId, true, 60000);
+    printMessage(
+      {
+        status: lockStatus.result,
       },
       'data'
     );
