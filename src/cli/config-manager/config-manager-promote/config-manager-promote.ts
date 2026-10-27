@@ -4,6 +4,8 @@ import CheckPromotionStatus from './config-manager-promote-check-promotion-statu
 import LockTenants from './config-manager-promote-lock-tenants';
 import UnlockTenants from './config-manager-promote-unlock-tenants';
 import Rollback from './config-manager-promote-rollback';
+import RunDryrunPromotion from './config-manager-promote-run-dryrun-promotion';
+import RunPromotion from './config-manager-promote-run-promotion';
 
 export default function setup() {
   const program = new FrodoStubCommand('promote').description(
@@ -14,5 +16,7 @@ export default function setup() {
   program.addCommand(LockTenants().name('lock-tenants'));
   program.addCommand(UnlockTenants().name('unlock-tenants'));
   program.addCommand(Rollback().name('rollback'));
+  program.addCommand(RunDryrunPromotion().name('run-dryrun-promotion'));
+  program.addCommand(RunPromotion().name('run-promotion'));
   return program;
 }
