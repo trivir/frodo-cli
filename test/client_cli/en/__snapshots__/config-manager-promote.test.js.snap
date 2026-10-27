@@ -9,21 +9,24 @@ exports[`CLI help interface for 'config-manager promote' should be expected engl
 Deployment: Cloud-only
 
 Options:
-  -h, --help              Help
-  -hh, --help-more        Help with all options.
-  -hhh, --help-all        Help with all options, environment variables, and
-                          usage examples.
+  -h, --help               Help
+  -hh, --help-more         Help with all options.
+  -hhh, --help-all         Help with all options, environment variables, and
+                           usage examples.
 
 Runtime Options:
-  --no-prompt             Never prompt interactively (same as setting
-                          FRODO_NO_PROMPT).
+  --no-prompt              Never prompt interactively (same as setting
+                           FRODO_NO_PROMPT).
 
 Commands:
-  check-promotion-status  [Experimental] [Cloud-only] Check the current
-                          promotion status.
+  check-promotion-reports  [Experimental] [Cloud-only] Retrieve promotion
+                           reports. Defaults to the latest report if no option
+                           is specified.
+  check-promotion-status   [Experimental] [Cloud-only] Check the current
+                           promotion status.
 
 Utilities:
-  help                    display help for command
+  help                     display help for command
 
 
 Run without a sub-command to enter interactive mode."
