@@ -15,7 +15,7 @@ process.env['FRODO_CONNECTION_PROFILES_PATH'] =
   './test/e2e/env/Connections.json';
 const env = getEnv(c);
 
-describe('frodo config-manager pulls', () => {
+describe('frodo config-manager pull variables', () => {
   test('"frodo config-manager pull variables -D variableTestDir": should export the secrets in fr-config-manager style"', async () => {
     const dirName = 'variableTestDir';
     const CMD = `frodo config-manager pull variables -D ${dirName}`;

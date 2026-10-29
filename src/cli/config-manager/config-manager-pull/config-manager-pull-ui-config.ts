@@ -1,5 +1,5 @@
 import { frodo } from '@rockcarver/frodo-lib';
-import { configManagerImportCookieDomains } from '../../../configManagerOps/FrConfigCookieDomainsOps';
+import { configManagerExportUiConfig } from '../../../configManagerOps/FrConfigUiConfigOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
@@ -14,13 +14,13 @@ const deploymentTypes = [
 
 export default function setup() {
   const program = new FrodoCommand(
-    'frodo config-manager push cookie-domains',
+    'frodo config-manager pull ui-config',
     [],
     deploymentTypes
   );
 
   program
-    .description('Import cookie domains.')
+    .description('Export IDM UI configuration objects.')
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -32,8 +32,8 @@ export default function setup() {
       );
 
       if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Importing cookie domains...');
-        const outcome = await configManagerImportCookieDomains();
+        verboseMessage('Exporting IDM UI configuration...');
+        const outcome = await configManagerExportUiConfig();
         if (!outcome) process.exitCode = 1;
       } else {
         // getTokens() failed (any option combination is valid here).

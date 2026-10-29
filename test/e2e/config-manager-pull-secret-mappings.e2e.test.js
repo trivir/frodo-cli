@@ -4,9 +4,7 @@
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull secret-mappings -D secretMappingTestDir1
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_REALM=alpha FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull secret-mappings --directory secretMappingTestDir2
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_REALM=alpha FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull secret-mappings -n esv-ping-one-worker-secret -D secretMappingTestDir3
-
 */
-
 
 import { getEnv, testExport } from './utils/TestUtils';
 import { connection as c } from './utils/TestConfig';
@@ -16,7 +14,7 @@ process.env['FRODO_CONNECTION_PROFILES_PATH'] =
   './test/e2e/env/Connections.json';
 const env = getEnv(c);
 
-describe('frodo config-manager pulls', () => {
+describe('frodo config-manager pull secret-mappings', () => {
   test('"frodo config-manager pull secret-mappings -D secretMappingTestDir1": should export the secret-mappings in fr-config-manager style"', async () => {
     const dirName = 'secretMappingTestDir1';
     const CMD = `frodo config-manager pull  secret-mappings -D ${dirName}`;

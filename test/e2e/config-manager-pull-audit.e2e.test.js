@@ -14,11 +14,10 @@ process.env['FRODO_CONNECTION_PROFILES_PATH'] =
   './test/e2e/env/Connections.json';
 const env = getEnv(c);
 
-describe('frodo config-manager pulls', () => {
-   test('"frodo config-manager pull audit -D cmAuditExportDir1": should export the audit in fr-config-manager style"', async () => {
-     const dirName = 'cmAuditExportDir1';
-     const CMD = `frodo config-manager pull audit -D ${dirName}`;
-     await testExport(CMD, env, undefined, undefined, dirName, false);
-   });
- 
+describe('frodo config-manager pull audit', () => {
+  test('"frodo config-manager pull audit -D cmAuditExportDir1": should export the audit in fr-config-manager style"', async () => {
+    const dirName = 'cmAuditExportDir1';
+    const CMD = `frodo config-manager pull audit -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false);
+  });
 });

@@ -5,12 +5,13 @@ import {
   type NodeSkeleton,
   type ScriptSkeleton,
   type SingleTreeExportInterface,
+  type TreeSkeleton,
 } from '@rockcarver/frodo-lib';
 import { extractFrConfigDataToFile } from '../utils/Config';
 import { printError, printMessage } from '../utils/Console';
 import { existScript, realmList, safeFileName } from '../utils/FrConfig';
 
-const { saveJsonToFile, getFilePath } = frodo.utils;
+const { saveJsonToFile, getFilePath, readJsonFile } = frodo.utils;
 const { exportScript } = frodo.script;
 const { exportJourneys, importJourneys, createSingleTreeExportTemplate } =
   frodo.authn.journey;
@@ -215,7 +216,7 @@ function readNodeScript(
     return;
   }
 
-  const script = JSON.parse(fs.readFileSync(scriptConfigFile, 'utf8'));
+  const script = readJsonFile(scriptConfigFile) as any;
 
   if (script.script?.file) {
     const contentFile = `${baseDir}/${script.script.file}`;
@@ -251,10 +252,9 @@ function processJourneyImport(
   }
   processedJourneys.add(journeyName);
 
-  const treeJsonPath = `${journeysBaseDir}/${journeyName}/${journeyName}.json`;
-
-  const treeData = fs.readFileSync(treeJsonPath, 'utf8');
-  const tree = JSON.parse(treeData);
+  const tree = readJsonFile(
+    `${journeysBaseDir}/${journeyName}/${journeyName}.json`
+  ) as TreeSkeleton;
 
   const journeyData = createSingleTreeExportTemplate();
   journeyData.tree = tree;
@@ -267,9 +267,7 @@ function processJourneyImport(
 
     for (const entry of entries) {
       if (entry.isFile() && entry.name.endsWith('.json')) {
-        const node = JSON.parse(
-          fs.readFileSync(`${nodesDir}/${entry.name}`, 'utf8')
-        );
+        const node = readJsonFile(`${nodesDir}/${entry.name}`) as NodeSkeleton;
         journeyData.nodes[node._id] = node;
 
         if (pushInnerJourneys && node._type?._id === 'InnerTreeEvaluatorNode') {
@@ -284,11 +282,9 @@ function processJourneyImport(
         const innerFiles = fs.readdirSync(pageNodeDir);
         for (const innerFile of innerFiles) {
           if (!innerFile.endsWith('.json')) continue;
-          const innerData = fs.readFileSync(
-            `${pageNodeDir}/${innerFile}`,
-            'utf8'
-          );
-          const innerNode = JSON.parse(innerData);
+          const innerNode = readJsonFile(
+            `${pageNodeDir}/${innerFile}`
+          ) as NodeSkeleton;
           journeyData.innerNodes[innerNode._id] = innerNode;
           readNodeScript(innerNode, pushScripts, journeyData.scripts, realmDir);
         }

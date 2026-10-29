@@ -14,7 +14,7 @@ process.env['FRODO_CONNECTION_PROFILES_PATH'] =
   './test/e2e/env/Connections.json';
 const env = getEnv(c);
 
-describe('frodo config-manager pulls', () => {
+describe('frodo config-manager pull email-templates', () => {
   test('"frodo config-manager pull email-templates -D cmEmailTemplatesExportDir": should export the email-templates in fr-config-manager style"', async () => {
     const dirName = 'cmEmailTemplatesExportDir';
     const CMD = `frodo config-manager pull email-templates -D ${dirName}`;

@@ -6,9 +6,7 @@ FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgebloc
 
 // Forgeops
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_REALM=alpha FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager pull password-policy -D testDir20 -m forgeops
-
 */
-
 
 import { getEnv, testExport } from './utils/TestUtils';
 import { connection as c, forgeops_connection as fc } from './utils/TestConfig';
@@ -19,7 +17,7 @@ process.env['FRODO_CONNECTION_PROFILES_PATH'] =
 const env = getEnv(c);
 const forgeopsEnv = getEnv(fc);
 
-describe('frodo config-manager pulls', () => {
+describe('frodo config-manager pull password-policy', () => {
   test('"frodo config-manager pull password-policy -D testDir19": should export the password-policy in fr-config-manager style"', async () => {
     const dirName = 'testDir19';
     const CMD = `frodo config-manager pull password-policy -D ${dirName}`;

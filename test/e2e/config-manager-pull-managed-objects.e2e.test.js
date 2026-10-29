@@ -16,7 +16,7 @@ process.env['FRODO_CONNECTION_PROFILES_PATH'] =
   './test/e2e/env/Connections.json';
 const env = getEnv(c);
 
-describe('frodo config-manager pulls', () => {
+describe('frodo config-manager pull managed-objects', () => {
   test('"frodo config-manager pull managed-objects -D testDir17": should export the managed-objects in fr-config-manager style"', async () => {
     const dirName = 'testDir17';
     const CMD = `frodo config-manager pull managed-objects -D ${dirName}`;

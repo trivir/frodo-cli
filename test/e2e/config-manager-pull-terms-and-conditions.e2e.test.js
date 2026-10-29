@@ -2,7 +2,6 @@
 
 /*
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull terms-and-conditions -D termTestDir
-
 */
 
 import { getEnv, testExport } from './utils/TestUtils';
@@ -13,10 +12,10 @@ process.env['FRODO_CONNECTION_PROFILES_PATH'] =
   './test/e2e/env/Connections.json';
 const env = getEnv(c);
 
-describe('frodo config-manager pulls', () => {
+describe('frodo config-manager pull terms-and-conditions', () => {
   test('"frodo config-manager pull terms-and-conditions -D termTestDir": should receive access tokens"', async () => {
     const dirName = 'cmTncThemeExportDir';
     const CMD = `frodo config-manager pull terms-and-conditions -D ${dirName}`;
     await testExport(CMD, env, undefined, undefined, dirName, false);
-    });
+  });
 });

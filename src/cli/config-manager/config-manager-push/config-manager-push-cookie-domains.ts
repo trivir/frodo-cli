@@ -1,26 +1,22 @@
 import { frodo } from '@rockcarver/frodo-lib';
-import { configManagerExportUiConfig } from '../../../configManagerOps/FrConfigUiConfigOps';
+import { configManagerImportCookieDomains } from '../../../configManagerOps/FrConfigCookieDomainsOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
 import { verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
-const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
-  frodo.utils.constants;
+const { CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
-const deploymentTypes = [
-  CLOUD_DEPLOYMENT_TYPE_KEY,
-  FORGEOPS_DEPLOYMENT_TYPE_KEY,
-];
+const deploymentTypes = [CLOUD_DEPLOYMENT_TYPE_KEY];
 
 export default function setup() {
   const program = new FrodoCommand(
-    'frodo config-manager pull ui-config',
+    'frodo config-manager push cookie-domains',
     [],
     deploymentTypes
   );
 
   program
-    .description('Export ui-configuration objects.')
+    .description('Import cookie domains.')
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -32,8 +28,8 @@ export default function setup() {
       );
 
       if (await getTokens(false, true, deploymentTypes)) {
-        verboseMessage('Exporting config entity ui-configuration');
-        const outcome = await configManagerExportUiConfig();
+        verboseMessage('Importing cookie domains...');
+        const outcome = await configManagerImportCookieDomains();
         if (!outcome) process.exitCode = 1;
       } else {
         // getTokens() failed (any option combination is valid here).

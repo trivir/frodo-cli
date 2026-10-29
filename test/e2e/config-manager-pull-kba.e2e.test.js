@@ -14,7 +14,7 @@ process.env['FRODO_CONNECTION_PROFILES_PATH'] =
   './test/e2e/env/Connections.json';
 const env = getEnv(c);
 
-describe('frodo config-manager pulls', () => {
+describe('frodo config-manager pull kba', () => {
   test('"frodo config-manager pull kba -D testDir14": should export the kba in fr-config-manager style"', async () => {
     const dirName = 'testDir14';
     const CMD = `frodo config-manager pull kba -D ${dirName}`;

@@ -22,12 +22,12 @@ import { iga_connection as ic } from './utils/TestConfig';
 process.env['FRODO_MOCK'] ||= '1';
 const env = getEnv(ic);
 
-describe('frodo config-manager pull ', () => {
+describe('frodo config-manager pull iga-workflows', () => {
   test('"frodo config-manager pull iga-workflows -D igaTestDir01": should export the iga workflows in fr-config-manager style"', async () => {
-      const dirName = 'igaTestDir01';
-      const CMD = `frodo config-manager pull iga-workflows -D ${dirName}`;
-      await testExport(CMD, env, undefined, undefined, dirName, false, true);
-    });
+    const dirName = 'igaTestDir01';
+    const CMD = `frodo config-manager pull iga-workflows -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false, true);
+  });
 
   // TODO(iga-ccb-ai-recording): test_workflow_4 is a custom workflow that
   // must be imported before this can run, and freshly-imported custom
@@ -35,23 +35,23 @@ describe('frodo config-manager pull ', () => {
   // iga-workflow-describe.e2e.test.js's TODO for the full investigation).
   // Revisit once a more stable IGA recording target is available.
   test.skip('"frodo config-manager pull iga-workflows -n test_workflow_4  -D igaTestDir02": should export a single iga workflow by name: test_workflow_4 in fr-config-manager style"', async () => {
-      const dirName = 'igaTestDir02';
-      const CMD = `frodo config-manager pull iga-workflows -n test_workflow_4 -D ${dirName}`;
-      await testExport(CMD, env, undefined, undefined, dirName, false, true);
+    const dirName = 'igaTestDir02';
+    const CMD = `frodo config-manager pull iga-workflows -n test_workflow_4 -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false, true);
   });
   test('"frodo config-manager pull iga-workflows -i -D igaTestDir03": should export all worfklows including immutable ones in fr-config-manager style"', async () => {
-      const dirName = 'igaTestDir03';
-      const CMD = `frodo config-manager pull iga-workflows -i -D ${dirName}`;
-      await testExport(CMD, env, undefined, undefined, dirName, false, true);
+    const dirName = 'igaTestDir03';
+    const CMD = `frodo config-manager pull iga-workflows -i -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false, true);
   });
   test('"frodo config-manager pull iga-workflows -i -n BasicApplicationGrant -D igaTestDir04": should export a non-mutable workflow when -i is set"', async () => {
-      const dirName = 'igaTestDir04';
-      const CMD = `frodo config-manager pull iga-workflows -i -n BasicApplicationGrant -D ${dirName}`;
-      await testExport(CMD, env, undefined, undefined, dirName, false, true);
+    const dirName = 'igaTestDir04';
+    const CMD = `frodo config-manager pull iga-workflows -i -n BasicApplicationGrant -D ${dirName}`;
+    await testExport(CMD, env, undefined, undefined, dirName, false, true);
   });
   test('"frodo config-manager pull iga-workflows --name BasicApplicationGrant -D igaTestDir05": should fail because the non-mutable workflow is not found without -i"', async () => {
-      const dirName = 'igaTestDir05';
-      const CMD = `frodo config-manager pull iga-workflows --name BasicApplicationGrant -D ${dirName}`;
-      await testFail(CMD, env, undefined, undefined, dirName, false, true);
+    const dirName = 'igaTestDir05';
+    const CMD = `frodo config-manager pull iga-workflows --name BasicApplicationGrant -D ${dirName}`;
+    await testFail(CMD, env, undefined, undefined, dirName, false, true);
   });
 });

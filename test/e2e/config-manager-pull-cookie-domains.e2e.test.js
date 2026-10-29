@@ -14,7 +14,7 @@ process.env['FRODO_CONNECTION_PROFILES_PATH'] =
   './test/e2e/env/Connections.json';
 const env = getEnv(c);
 
-describe('frodo config-manager pulls', () => {
+describe('frodo config-manager pull cookie-domains', () => {
   test('"frodo config-manager pull cookie-domains -D cmCookieDomainsExportDir": should export the cookie-domains in fr-config-manager style"', async () => {
     const dirName = 'cmCookieDomainsExportDir';
     const CMD = `frodo config-manager pull cookie-domains -D ${dirName}`;

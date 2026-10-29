@@ -2,8 +2,8 @@
 
 /*
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull themes -D cmThemesExportDir
-
 */
+
 import { getEnv, testExport } from './utils/TestUtils';
 import { connection as c } from './utils/TestConfig';
 
@@ -12,10 +12,10 @@ process.env['FRODO_CONNECTION_PROFILES_PATH'] =
   './test/e2e/env/Connections.json';
 const env = getEnv(c);
 
-describe('frodo config-manager pull themes -D cmThemesExportDir', () => {
-  test('"frodo config-manager pull test": should receive access tokens"', async () => {
+describe('frodo config-manager pull themes', () => {
+  test('"frodo config-manager pull themes -D cmThemesExportDir": should pull themes"', async () => {
     const dirName = 'cmThemesExportDir';
     const CMD = `frodo config-manager pull themes -D ${dirName}`;
     await testExport(CMD, env, undefined, undefined, dirName, false);
-    });
+  });
 });
