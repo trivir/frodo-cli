@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`frodo config-manager delete "frodo config-manager delete services -r alpha": should delete the services in alpha realm" 1`] = `""`;
+
+exports[`frodo config-manager delete "frodo config-manager delete services -r alpha": should delete the services in alpha realm" 2`] = `
+"Experimental feature in use: 'frodo config-manager delete services'. This feature may change without notice.
+Deleted service 'email' from realm 'alpha'.
+Deleted service 'pingOneWorkerService' from realm 'alpha'.
+Deleted service 'SocialIdentityProviders' from realm 'alpha'.
+Deleted service 'baseurl' from realm 'alpha'.
+Deleted service 'dashboard' from realm 'alpha'.
+Deleted service 'policyconfiguration' from realm 'alpha'.
+Deleted service 'session' from realm 'alpha'.
+Deleted service 'selfServiceTrees' from realm 'alpha'.
+Deleted service 'validation' from realm 'alpha'.
+✔ Service deletion completed.
+"
+`;
+
+exports[`frodo config-manager delete "frodo config-manager delete services": should delete the named service" 1`] = `""`;
+
+exports[`frodo config-manager delete "frodo config-manager delete services": should delete the named service" 2`] = `
+"Experimental feature in use: 'frodo config-manager delete services'. This feature may change without notice.
+Deleted service 'email' from realm 'alpha'.
+✔ Service deletion completed.
+"
+`;

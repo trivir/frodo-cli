@@ -17,6 +17,7 @@ Runtime Options:
                     FRODO_NO_PROMPT).
 
 Commands:
+  services          [Experimental] Delete authentication services.
   test              [Experimental] Test connection and authentication.
 
 Utilities:
