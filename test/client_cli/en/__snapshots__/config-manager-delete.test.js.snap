@@ -7,20 +7,22 @@ exports[`CLI help interface for 'config-manager delete' should be expected engli
 compatible with fr-config-manager).
 
 Options:
-  -h, --help        Help
-  -hh, --help-more  Help with all options.
-  -hhh, --help-all  Help with all options, environment variables, and usage
-                    examples.
+  -h, --help             Help
+  -hh, --help-more       Help with all options.
+  -hhh, --help-all       Help with all options, environment variables, and usage
+                         examples.
 
 Runtime Options:
-  --no-prompt       Never prompt interactively (same as setting
-                    FRODO_NO_PROMPT).
+  --no-prompt            Never prompt interactively (same as setting
+                         FRODO_NO_PROMPT).
 
 Commands:
-  test              [Experimental] Test connection and authentication.
+  connector-definitions  [Experimental] Delete connector definitions.
+  cors                   [Experimental] Delete CORS configuration.
+  test                   [Experimental] Test connection and authentication.
 
 Utilities:
-  help              display help for command
+  help                   display help for command
 
 
 Run without a sub-command to enter interactive mode."

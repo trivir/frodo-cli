@@ -24,7 +24,7 @@ export default function setup() {
   );
 
   program
-    .description('Export aconnector definitions.')
+    .description('Export connector definitions.')
     .addOption(
       new Option(
         '-n, --name <connector-name>',
@@ -51,7 +51,7 @@ export default function setup() {
             connectorName: options.name,
           });
         } else {
-          printMessage('Exporting all connector defitions.');
+          printMessage('Exporting all connector definitions.');
           outcome = await configManagerExportConnectorDefinitionsAll();
         }
         if (!outcome) process.exitCode = 1;
