@@ -198,7 +198,60 @@ function getManagedObjectImportData(file: string): object {
   getExtractedFiles(importData, managedObjectDirectory);
   return importData;
 }
+async function importManagedObjectSchemaProperties(
+  managedObjectsPath: string,
+  objectName?: string
+): Promise<void> {
+  const managedObjectFiles = fs.readdirSync(managedObjectsPath);
 
+  for (const managedObjectName of managedObjectFiles) {
+    if (objectName && objectName !== managedObjectName) {
+      continue;
+    }
+
+    const objectPath = path.join(managedObjectsPath, managedObjectName);
+    const schemaPath = path.join(objectPath, 'schema');
+
+    if (!fs.existsSync(schemaPath)) {
+      continue;
+    }
+
+    const schemaFiles = fs.readdirSync(schemaPath).filter((schemaFile) => {
+      const parts = schemaFile.split('.schema.');
+
+      return (
+        parts.length === 2 &&
+        parts[0] === managedObjectName &&
+        parts[1].endsWith('.json')
+      );
+    });
+
+    if (schemaFiles.length === 0) {
+      continue;
+    }
+
+    const managedObjectFile = path.join(
+      objectPath,
+      `${managedObjectName}.json`
+    );
+
+    const managedObjectData = getManagedObjectImportData(
+      managedObjectFile
+    ) as any;
+
+    for (const schemaFile of schemaFiles) {
+      const propertyName = schemaFile.split('.schema.')[1].slice(0, -5);
+
+      const schemaData = JSON.parse(
+        fs.readFileSync(path.join(schemaPath, schemaFile), 'utf-8')
+      );
+
+      managedObjectData.schema.properties[propertyName] = schemaData;
+    }
+
+    await importSubConfigEntity('managed', managedObjectData);
+  }
+}
 /**
  * Import an IDM managed object in the fr-config-manager format.
  * @param {string} objectName Optional managed object name. If not specified, imports all the managed objects.
@@ -229,9 +282,13 @@ export async function configManagerImportManagedObjects(
       }
       await importConfigEntities(importManagedObjectData);
     }
+    await importManagedObjectSchemaProperties(
+      getFilePath('managed-objects'),
+      objectName
+    );
     return true;
   } catch (error) {
-    printError(error, `Error exporting config entity endpoints`);
+    printError(error, `Error importing config entity endpoints`);
   }
   return false;
 }
