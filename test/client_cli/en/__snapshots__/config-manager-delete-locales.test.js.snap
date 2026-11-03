@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`CLI help interface for 'config-manager delete locales' should be expected english 1`] = `
+"Usage: frodo config-manager [options] [command]
+
+[Experimental] Manage configuration optimized for CI/CD pipelines (format
+compatible with fr-config-manager).
+
+Options:
+  -h, --help        Help
+  -hh, --help-more  Help with all options.
+  -hhh, --help-all  Help with all options, environment variables, and usage
+                    examples.
+
+Runtime Options:
+  --no-prompt       Never prompt interactively (same as setting
+                    FRODO_NO_PROMPT).
+
+Commands:
+  delete            [Experimental] Delete configuration optimized for CI/CD
+                    pipelines (format compatible with fr-config-manager).
+  promote           [Experimental] [Cloud-only] Promote configuration optimized
+                    for CI/CD pipelines (format compatible with
+                    fr-config-manager).
+  pull              [Experimental] Export configuration optimized for CI/CD
+                    pipelines (format compatible with fr-config-manager).
+  push              [Experimental] Import configuration optimized for CI/CD
+                    pipelines (format compatible with fr-config-manager).
+
+Utilities:
+  help              display help for command
+
+
+Run without a sub-command to enter interactive mode."
+`;
