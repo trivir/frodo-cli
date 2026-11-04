@@ -21,7 +21,7 @@ import { configManagerExportKbaConfig } from './FrConfigKbaOps';
 import { configManagerExportLocales } from './FrConfigLocalesOps';
 import { configManagerExportManagedObjects } from './FrConfigManagedObjectsOps';
 import { configManagerExportOAuth2Agents } from './FrConfigOauth2AgentOps';
-import { configManagerExportOrgPrivilegesAllRealms } from './FrConfigOrgPrivilegesOps';
+import { configManagerExportOrgPrivileges } from './FrConfigOrgPrivilegesOps';
 import { configManagerExportPasswordPolicy } from './FrConfigPasswordPolicyOps';
 import { configManagerExportRaw } from './FrConfigRawOps';
 import { configManagerExportRemoteServers } from './FrConfigRemoteServersOps';
@@ -70,7 +70,7 @@ const deploymentMapAll = {
     () => configManagerExportLocales(),
     () => configManagerExportManagedObjects(),
     () => configManagerExportMappings(),
-    (options) => configManagerExportOrgPrivilegesAllRealms(options.realm),
+    () => configManagerExportOrgPrivileges(),
     (options) => configManagerExportPasswordPolicy(options.realm),
     configFileStep('raw config', 'raw.json', configManagerExportRaw, {
       optional: true,
@@ -120,7 +120,7 @@ const deploymentMapAll = {
     () => configManagerExportLocales(),
     () => configManagerExportManagedObjects(undefined, true),
     () => configManagerExportMappings(),
-    (options) => configManagerExportOrgPrivilegesAllRealms(options.realm),
+    () => configManagerExportOrgPrivileges(),
     (options) => configManagerExportPasswordPolicy(options.realm),
     configFileStep('raw config', 'raw.json', configManagerExportRaw, {
       optional: true,
@@ -183,7 +183,7 @@ const deploymentMapAllStatic = {
     () => configManagerExportLocales(),
     () => configManagerExportManagedObjects(),
     () => configManagerExportMappings(),
-    (options) => configManagerExportOrgPrivilegesAllRealms(options.realm),
+    () => configManagerExportOrgPrivileges(),
     (options) => configManagerExportPasswordPolicy(options.realm),
     () => configManagerExportRemoteServers(),
     () => configManagerExportSchedules(),
@@ -210,7 +210,7 @@ const deploymentMapAllStatic = {
     () => configManagerExportLocales(),
     () => configManagerExportManagedObjects(undefined, true),
     () => configManagerExportMappings(),
-    (options) => configManagerExportOrgPrivilegesAllRealms(options.realm),
+    () => configManagerExportOrgPrivileges(),
     (options) => configManagerExportPasswordPolicy(options.realm),
     () => configManagerExportRemoteServers(),
     () => configManagerExportSchedules(),
