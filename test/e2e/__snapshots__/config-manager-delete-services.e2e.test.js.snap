@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`frodo config-manager delete "frodo config-manager delete services --dry-run": should show a dry run of which services would be deleted in alpha realm" 1`] = `""`;
+
+exports[`frodo config-manager delete "frodo config-manager delete services --dry-run": should show a dry run of which services would be deleted in alpha realm" 2`] = `
+"Experimental feature in use: 'frodo config-manager delete services'. This feature may change without notice.
+Dry run: Would delete service 'email' from realm '/alpha'.
+Dry run: Would delete service 'oauth-oidc' from realm '/alpha'.
+Dry run: Would delete service 'SocialIdentityProviders' from realm '/alpha'.
+Dry run: Would delete service 'baseurl' from realm '/alpha'.
+Dry run: Would delete service 'dashboard' from realm '/alpha'.
+Dry run: Would delete service 'policyconfiguration' from realm '/alpha'.
+Dry run: Would delete service 'session' from realm '/alpha'.
+Dry run: Would delete service 'selfServiceTrees' from realm '/alpha'.
+Dry run: Would delete service 'id-repositories' from realm '/alpha'.
+Dry run: Would delete service 'validation' from realm '/alpha'.
+✔ Service deletion dry run completed. No services were deleted.
+"
+`;
+
+exports[`frodo config-manager delete "frodo config-manager delete services -n email": should delete the named service in alpha realm" 1`] = `""`;
+
+exports[`frodo config-manager delete "frodo config-manager delete services -n email": should delete the named service in alpha realm" 2`] = `
+"Experimental feature in use: 'frodo config-manager delete services'. This feature may change without notice.
+Deleted service 'email' from realm '/alpha'.
+✔ Service deletion completed.
+"
+`;
+
+exports[`frodo config-manager delete "frodo config-manager delete services": should delete all the allowed services in the alpha realm" 1`] = `
+"Experimental feature in use: 'frodo config-manager delete services'. This feature may change without notice.
+Deleted service 'email' from realm '/alpha'.
+Deleted service 'oauth-oidc' from realm '/alpha'.
+Deleted service 'SocialIdentityProviders' from realm '/alpha'.
+Deleted service 'baseurl' from realm '/alpha'.
+Deleted service 'dashboard' from realm '/alpha'.
+Deleted service 'policyconfiguration' from realm '/alpha'.
+Deleted service 'session' from realm '/alpha'.
+Deleted service 'selfServiceTrees' from realm '/alpha'.
+✖ Service deletion failed.
+Error deleting services
+Error deleting alpha realm full service config id-repositories
+  Network error:
+    URL: https://openam-frodo-dev.forgeblocks.com/am/json/realms/root/realms/alpha/realm-config/services/id-repositories?_action=nextdescendents
+    Status: 403
+    Code: ERR_BAD_REQUEST
+    Reason: Forbidden
+    Message: This operation is not available in PingOne Advanced Identity Cloud.
+"
+`;
+
+exports[`frodo config-manager delete "frodo config-manager delete services": should delete all the allowed services in the alpha realm" 2`] = `1`;
