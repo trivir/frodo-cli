@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { frodo } from '@rockcarver/frodo-lib';
+import { frodo, type SyncSkeleton } from '@rockcarver/frodo-lib';
 import {
   objectNameInFile,
   ownedObjectMessage,
@@ -241,49 +241,57 @@ export function readMappingFromDirectory(
     getFilePath(`${mappingPath}/${name}.json`)
   );
 }
-type SyncMapping = {
-  name: string;
-  [key: string]: any;
-};
-
-type SyncDoc = {
-  _id: string;
-  mappings: SyncMapping[];
-  [key: string]: any;
-};
 
 /**
  * Delete mapping(s)
  * @param {string} name optional mapping name to delete
+ * @param {boolean} dryRun preview deletions without deleting connector mappings
  * @returns {Promise<boolean>} true if successful, false otherwise
  */
 export async function configManagerDeleteMappings(
-  name?: string
+  name?: string,
+  dryRun: boolean = false
 ): Promise<boolean> {
   try {
-    const syncDoc = (await readConfigEntity('sync')) as SyncDoc;
+    const syncDoc = (await readConfigEntity('sync')) as SyncSkeleton;
 
     if (!syncDoc.mappings || syncDoc.mappings.length === 0) {
       printMessage(`No mappings found to delete.`);
       return false;
     }
-
     if (name) {
-      const mappingExists = syncDoc.mappings.some(
+      const mapping = syncDoc.mappings.find(
         (mapping) => mapping.name === name
       );
-
-      if (!mappingExists) {
+    
+      if (!mapping) {
         printMessage(`Mapping '${name}' does not exist.`);
         return false;
       }
-
-      syncDoc.mappings = syncDoc.mappings.filter(
-        (mapping) => mapping.name !== name
-      );
-    } else {
-      syncDoc.mappings = [];
+    
+      if (dryRun) {
+        printMessage(`Would delete connector mapping '${name}'.`);
+        printMessage(
+          'Connector mapping deletion dry run completed. No mappings were deleted.'
+        );
+        return true;
+      }
+    
+      await frodo.idm.mapping.deleteMapping(mapping._id);      
+      return true;
     }
+    
+    if (dryRun) {
+      syncDoc.mappings.forEach((mapping) => {
+        printMessage(`Would delete connector mapping '${mapping.name}'.`);
+      });
+      printMessage(
+        'Connector mapping deletion dry run completed. No mappings were deleted.'
+      );
+      return true;
+    }
+    
+    syncDoc.mappings = [];
 
     await importConfigEntities({
       idm: {

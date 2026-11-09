@@ -29,6 +29,12 @@ export default function setup() {
         'Specifies the name to delete from the connector mapping.'
       )
     )
+    .addOption(
+      new Option(
+        '-d, --dry-run',
+        'Show which connector mappings to delete first.'
+      )
+    )
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -41,17 +47,8 @@ export default function setup() {
 
       if (await getTokens(false, true, deploymentTypes)) {
         verboseMessage('Deleting connector mappings');
-        const outcome = await configManagerDeleteMappings(options.name);
+        const outcome = await configManagerDeleteMappings(options.name, options.dryRun);
         if (!outcome) process.exitCode = 1;
-      }
-      // unrecognized combination of options or no options
-      else {
-        printMessage(
-          'Unrecognized combination of options or no options...',
-          'error'
-        );
-        process.exitCode = 1;
-        program.help();
       }
     });
 
