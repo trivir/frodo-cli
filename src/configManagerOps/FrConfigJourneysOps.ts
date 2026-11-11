@@ -25,9 +25,17 @@ import { OperationRun } from '../utils/OperationRun';
 
 const { saveJsonToFile, getFilePath, readJsonFile } = frodo.utils;
 const { exportScript } = frodo.script;
-const { exportJourneys, importJourneys, createSingleTreeExportTemplate } =
-  frodo.authn.journey;
-const { DEFAULT_REALM_KEY } = frodo.utils.constants;
+const {
+  exportJourneys,
+  importJourneys,
+  createSingleTreeExportTemplate,
+  readJourneys,
+  deleteJourney,
+  readJourney,
+  deleteJourneys,
+} = frodo.authn.journey;
+const { findOrphanedNodes, removeOrphanedNodes } = frodo.authn.node;
+const { DEFAULT_REALM_KEY, CLOUD_DEPLOYMENT_TYPE_KEY } = frodo.utils.constants;
 
 /**
  * Export journeys in fr-config-manager format
@@ -475,4 +483,151 @@ export async function configManagerImportJourneys(
     if (run.hasFailures) run.finish();
   }
   return false;
+}
+
+/**
+ * Delete journeys in the specified realm, or across eligible realms if omitted.
+ * Skips the root realm on Cloud deployments.
+ * @param {string} name Exact journey ID. Named operations require a single realm.
+ * @param {string} realm Realm to process. Omit to use the eligible realms.
+ * @param {boolean} dryRun Preview the selected journeys without deleting them.
+ * @param {boolean} allowFailures Report realm failures without failing the run.
+ * @returns {Promise<boolean>} False on validation or setup errors, or on realm failures unless allowFailures is true.
+ */
+export async function configManagerDeleteJourneys(
+  name?: string,
+  realm?: string,
+  dryRun = false,
+  allowFailures = false
+): Promise<boolean> {
+  try {
+    if (name === '') {
+      printMessage('The journey name (-n) must not be empty.', 'error');
+      return false;
+    }
+
+    const realms =
+      realm && realm !== DEFAULT_REALM_KEY ? [realm] : await realmList();
+
+    if (name !== undefined && realms.length !== 1) {
+      printMessage('For a journey name, specify a single realm.', 'error');
+      return false;
+    }
+
+    const run = new OperationRun({ unit: 'realm', allowFailures });
+    let journeyCount = 0;
+    let currentOrphanCount = 0;
+    let removedOrphanCount = 0;
+
+    for (const currentRealm of realms) {
+      if (
+        currentRealm === '/' &&
+        state.getDeploymentType() === CLOUD_DEPLOYMENT_TYPE_KEY
+      ) {
+        continue;
+      }
+
+      try {
+        state.setRealm(currentRealm);
+
+        if (dryRun) {
+          const journeys =
+            name === undefined
+              ? await readJourneys()
+              : [await readJourney(name)];
+          const realmPath =
+            currentRealm === '/' ? '' : currentRealm.replace(/\/$/, '');
+
+          if (name === undefined) {
+            const orphanedNodes = await findOrphanedNodes();
+            currentOrphanCount += new Set(orphanedNodes.map((node) => node._id))
+              .size;
+          }
+
+          for (const journey of journeys) {
+            printMessage(
+              `Dry run: Deleting journey ${realmPath}/${journey._id}`
+            );
+          }
+
+          journeyCount += journeys.length;
+          run.recordSuccess();
+          continue;
+        }
+
+        const deleteOptions = { deep: false, verbose: false };
+
+        if (name !== undefined) {
+          const result = await deleteJourney(name, deleteOptions);
+
+          if (result.status !== 'success') {
+            run.recordFailure(
+              currentRealm,
+              `Failed to delete journey '${name}'.`
+            );
+            continue;
+          }
+
+          printMessage(`Deleted journey '${name}' in realm '${currentRealm}'.`);
+          run.recordSuccess();
+          continue;
+        }
+
+        const failures: string[] = [];
+        const results = await deleteJourneys(deleteOptions);
+
+        for (const [journeyId, result] of Object.entries(results)) {
+          if (result.status === 'success') {
+            printMessage(
+              `Deleted journey '${journeyId}' in realm '${currentRealm}'.`
+            );
+          } else {
+            failures.push(`Failed to delete journey '${journeyId}'.`);
+          }
+        }
+
+        try {
+          const orphanedNodes = await findOrphanedNodes();
+
+          if (orphanedNodes.length > 0) {
+            const failedNodes = await removeOrphanedNodes(
+              orphanedNodes,
+              (error) => {
+                if (error) failures.push(causeOf(error));
+              }
+            );
+            const uniqueNodeCount = new Set(
+              orphanedNodes.map((node) => node._id)
+            ).size;
+            removedOrphanCount += uniqueNodeCount - failedNodes.length;
+          }
+        } catch (error) {
+          failures.push(`Orphan cleanup failed: ${causeOf(error)}`);
+        }
+
+        if (failures.length > 0) {
+          run.recordFailure(currentRealm, failures.join('; '));
+        } else {
+          run.recordSuccess();
+        }
+      } catch (error) {
+        run.recordFailure(currentRealm, causeOf(error));
+      }
+    }
+
+    if (name === undefined) {
+      if (dryRun) {
+        printMessage('--- Journey Deletion Preview ---');
+        printMessage(`Journeys that would be deleted: ${journeyCount}`);
+        printMessage(`Currently orphaned nodes: ${currentOrphanCount}`);
+      } else if (removedOrphanCount > 0) {
+        printMessage(`Total orphaned nodes removed: ${removedOrphanCount}`);
+      }
+    }
+
+    return run.finish();
+  } catch (error) {
+    printError(error);
+    return false;
+  }
 }

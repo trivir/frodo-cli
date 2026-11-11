@@ -49,6 +49,10 @@ jest.unstable_mockModule('@rockcarver/frodo-lib', () => ({
         validateJourneys,
         importJourneys: jest.fn(),
       },
+      node : {
+        findOrphanedNodes: jest.fn(),
+        removeOrphanedNodes: jest.fn(),
+      },
     },
     script: { exportScript: jest.fn() },
     utils: {
