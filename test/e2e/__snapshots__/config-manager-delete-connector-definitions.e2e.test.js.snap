@@ -4,7 +4,6 @@ exports[`frodo config-manager delete connector-definitions "frodo config-manager
 
 exports[`frodo config-manager delete connector-definitions "frodo config-manager delete connector-definitions -m forgeops": should delete all the connector definitions in fr-config-manager format" 2`] = `
 "Experimental feature in use: 'frodo config-manager delete connector-definitions'. This feature may change without notice.
-Deleting all connector definitions.
 "
 `;
 
@@ -12,6 +11,5 @@ exports[`frodo config-manager delete connector-definitions "frodo config-manager
 
 exports[`frodo config-manager delete connector-definitions "frodo config-manager delete connector-definitions -n Azure -m forgeops": should delete the Azure connector definition in fr-config-manager format" 2`] = `
 "Experimental feature in use: 'frodo config-manager delete connector-definitions'. This feature may change without notice.
-Deleting connector definition for connector: "Azure"
 "
 `;

@@ -1,12 +1,10 @@
+
 import { frodo } from '@rockcarver/frodo-lib';
 import { Option } from 'commander';
 
-import {
-  configManagerDeleteConnectorDefinition,
-  configManagerDeleteConnectorDefinitionsAll,
-} from '../../../configManagerOps/FrConfigConnectorDefinitionsOps';
+import { configManagerDeleteConnectorDefinitions } from '../../../configManagerOps/FrConfigConnectorDefinitionsOps';
 import { getTokens } from '../../../ops/AuthenticateOps';
-import { printMessage } from '../../../utils/Console';
+import { verboseMessage } from '../../../utils/Console';
 import { FrodoCommand } from '../../FrodoCommand';
 
 const { CLOUD_DEPLOYMENT_TYPE_KEY, FORGEOPS_DEPLOYMENT_TYPE_KEY } =
@@ -29,9 +27,16 @@ export default function setup() {
     .addOption(
       new Option(
         '-n, --name <connector-name>',
-        'Get connector-definition from specified name/id, without the type prefix.'
+        'Delete connector-definition from specified name/id, without the type prefix.'
       )
     )
+    .addOption(
+      new Option(
+        '-d, --dry-run',
+        'Show which connector definitions would be deleted without deleting them.'
+      )
+    )
+    .multiOp()
     .action(async (host, realm, user, password, options, command) => {
       command.handleDefaultArgsAndOpts(
         host,
@@ -50,17 +55,21 @@ export default function setup() {
       if (!getTokensIsSuccessful) process.exit(1);
 
       let outcome: boolean;
+
       if (options.name) {
-        printMessage(
+        verboseMessage(
           `Deleting connector definition for connector: "${options.name}"`
         );
-        outcome = await configManagerDeleteConnectorDefinition({
-          connectorName: options.name,
-        });
       } else {
-        printMessage('Deleting all connector definitions.');
-        outcome = await configManagerDeleteConnectorDefinitionsAll();
+        verboseMessage('Deleting all connector definitions.');
       }
+
+      outcome = await configManagerDeleteConnectorDefinitions(
+        options.name,
+        options.dryRun,
+        options.allowFailures
+      );
+
       if (!outcome) process.exitCode = 1;
     });
 

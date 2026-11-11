@@ -6,7 +6,10 @@ import {
   OwnedObjects,
   skipsOwnedObjects,
 } from '../ops/ApplicationOwnedObjects';
-import { printError, printMessage } from '../utils/Console';
+import {
+  printError,
+  printMessage
+} from '../utils/Console';
 import { causeOf } from '../utils/ErrorCause';
 import { countItems, importItemsOfFile } from '../utils/ImportItems';
 import { OperationRun } from '../utils/OperationRun';
@@ -14,8 +17,14 @@ import type { ApplicationLayoutDecision } from '../utils/TreeLayout';
 
 const { getFilePath, readJsonFile, saveJsonToFile, getWorkingDirectory } =
   frodo.utils;
-const { readConnector, readConnectors, importConnectors } = frodo.idm.connector;
 
+const {
+  readConnector,
+  readConnectors,
+  importConnectors,
+  deleteConnector
+} = frodo.idm.connector;
+  
 /**
  * Export connector in fr-config manager format
  * Every connector is one operation of an {@link OperationRun}: a connector whose file cannot be
@@ -79,24 +88,6 @@ export async function configManagerExportConnectorDefinitions(
     printError(error, `Error pulling connector${name ? ` ${name}` : 's'}`);
     if (run.hasFailures) run.finish();
     return false;
-  }
-}
-
-/**
- * Export all the connector definitions in the tenant each in their own file in fr-config manager format
- * @returns
- */
-export async function configManagerExportConnectorDefinitionsAll(): Promise<boolean> {
-  try {
-    const cs: ConnectorSkeleton[] = await connector.readConnectors();
-    for (const c of cs) {
-      if (c._id.includes('provisioner.openicf/')) {
-        configManagerExportConnectorDefinition({ c: c });
-      }
-    }
-    return true;
-  } catch (error) {
-    printError(error);
   }
 }
 
@@ -203,51 +194,57 @@ export async function configManagerImportConnectors(
   return false;
 }
 
+
+
 /**
- * Delete connector definition in fr-config manager format
- * @param criteria
- * @returns
+ * Delete connector definitions.
+ * If name is provided, delete only that connector. Otherwise, delete all
+ * OpenICF connector definitions.
+ * @param name optional name of connector definition to delete
+ * @param dryRun show what would be deleted without deleting it
+ * @param allowFailures true to report connectors that could not be deleted but still succeed. Default: false
+ * @returns true if successful, false otherwise
  */
-export async function configManagerDeleteConnectorDefinition(
-  criteria: ByName | BySkeleton
+export async function configManagerDeleteConnectorDefinitions(
+  name?: string,
+  dryRun: boolean = false,
+  allowFailures: boolean = false
 ): Promise<boolean> {
+  const run = new OperationRun({ unit: 'connector', allowFailures });
+
   try {
-    const c: ConnectorSkeleton =
-      'c' in criteria
-        ? criteria.c
-        : await connector.readConnector(criteria.connectorName);
+    const connectors: ConnectorSkeleton[] = name
+      ? [await readConnector(name)]
+      : await readConnectors();
 
-    verboseMessage(`  Deleting connector: "${c._id}"`);
-
-    await deleteConfigEntity(c._id);
-
-    return true;
-  } catch (error) {
-    printError(
-      error,
-      'connectorName' in criteria
-        ? `Does the connector: "${criteria.connectorName}" actually exist in the specified host?`
-        : ''
-    );
-    return false;
-  }
-}
-
-/**
- * Delete all the connector definitions in the tenant each in their own file in fr-config manager format
- * @returns
- */
-export async function configManagerDeleteConnectorDefinitionsAll(): Promise<boolean> {
-  try {
-    const cs: ConnectorSkeleton[] = await connector.readConnectors();
-    for (const c of cs) {
-      if (c._id.includes('provisioner.openicf/')) {
-        await configManagerDeleteConnectorDefinition({ c: c });
+      if (connectors.length === 0) {
+        printMessage('No connector definitions found to delete.');
+        return true;
       }
+
+    for (const c of connectors) {
+      if (!name && !c._id.includes('provisioner.openicf/')) {
+        continue;
+      }
+
+      const connectorName = c._id.split('/')[1] || c._id;
+
+      if (dryRun) {
+        printMessage(`Would delete connector: "${c._id.split('/')[1] || c._id}"`, 'info');
+        continue;
+      }
+
+      await run.run(connectorName, async () => {
+        printMessage(`  Deleting connector: "${c._id}"`);
+        await deleteConnector(connectorName);
+      });
     }
-    return true;
+
+
+    return dryRun ? true : run.finish();
   } catch (error) {
-    printError(error);
-    return false;
+  printError(error, `Error deleting connector${name ? ` ${name}` : 's'}`);
+  if (run.hasFailures) run.finish();
+  return false;
   }
 }

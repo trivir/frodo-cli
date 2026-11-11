@@ -4,6 +4,7 @@
 // ForgeOps
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager delete connector-definitions -m forgeops 
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager delete connector-definitions -n Azure -m forgeops
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://nightly.gcp.forgeops.com/am frodo config-manager delete connector-definitions -d
 */
 
 import { getEnv, testSuccess} from './utils/TestUtils';
@@ -19,6 +20,10 @@ describe('frodo config-manager delete connector-definitions', () => {
     });
     test(`"frodo config-manager delete connector-definitions -n Azure -m forgeops": should delete the Azure connector definition in fr-config-manager format"`, async () => {
         const CMD = `frodo config-manager delete connector-definitions -n Azure -m forgeops`;
+        await testSuccess(CMD, forgeopsEnv);
+    });
+    test(`"frodo config-manager delete connector-definitions -d": should show what would be deleted in fr-config-manager format as a preview"`, async () => {
+        const CMD = `frodo config-manager delete connector-definitions -d`;
         await testSuccess(CMD, forgeopsEnv);
     });
 });
