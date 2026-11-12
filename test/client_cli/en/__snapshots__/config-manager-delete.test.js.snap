@@ -34,6 +34,9 @@ Commands:
   themes                [Experimental] Delete themes by name or delete all
                         themes in the selected realms.
   variables             [Experimental] [Cloud-only] Delete variables.
+  custom-nodes      [Experimental] Delete custom nodes.
+  services          [Experimental] Delete authentication services.
+  test              [Experimental] Test connection and authentication.
 
 Utilities:
   help                  display help for command
