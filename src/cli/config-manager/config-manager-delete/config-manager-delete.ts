@@ -8,6 +8,7 @@ import OauthCimdProfiles from '../config-manager-delete/config-manager-delete-oa
 import Themes from '../config-manager-delete/config-manager-delete-themes';
 import CustomNodes from './config-manager-delete-custom-nodes';
 import OauthIssuers from './config-manager-delete-oauth-issuers';
+import RemoteServers from './config-manager-delete-remote-servers';
 import Schedules from './config-manager-delete-schedules';
 import Scripts from './config-manager-delete-scripts';
 import SecretMappings from './config-manager-delete-secret-mappings';
@@ -34,5 +35,6 @@ export default function setup() {
   program.addCommand(OauthIssuers().name('oauth-issuers'));
   program.addCommand(Schedules().name('schedules'));
   program.addCommand(SecretMappings().name('secret-mappings'));
+  program.addCommand(RemoteServers().name('remote-servers'));
   return program;
 }
