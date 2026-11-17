@@ -2,11 +2,11 @@
 
 /*
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull raw -D configManagerExportRawDir0 -f test/e2e/fr-config-manager-pull-config/raw.json
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull raw -D configManagerExportRawDir1 -p /environment/release
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull raw  -f test/e2e/fr-config-manager-pull-config/raw.json -p /environment/release -D configManagerExportRawDir1
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull raw -of test/e2e/fr-config-manager-pull-config/raw.json
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull raw -D configManagerExportRawDir2 -f test/e2e/fr-config-manager-pull-config/raw.json -x.protocol 2.0 -x.resource 1.0
 FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull raw -of test/e2e/fr-config-manager-pull-config/raw.json -x.protocol 2.0 -x.resource 1.0
-FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull raw -op /environment/release -x.protocol 2.0 -x.resource 1.0
+FRODO_MOCK=record FRODO_NO_CACHE=1 FRODO_HOST=https://openam-frodo-dev.forgeblocks.com/am frodo config-manager pull raw -f test/e2e/fr-config-manager-pull-config/raw.json -op /environment/release -x.protocol 2.0 -x.resource 1.0
 */
 import { getEnv, testExport, testSuccess } from './utils/TestUtils';
 import { connection as c } from './utils/TestConfig';
@@ -24,9 +24,9 @@ describe('frodo config-manager pull raw', () => {
         const CMD = `frodo config-manager pull raw -D ${dirName} -f ${configFile}`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
     });
-    test('"frodo config-manager pull raw -D configManagerExportRawDir1 -p /environment/release": should export the configuration at the specified API path in fr-config-manager format.', async () => {
+    test('"frodo config-manager pull raw  -f test/e2e/fr-config-manager-pull-config/raw.json -p /environment/release -D configManagerExportRawDir1": should export the configuration at the specified API path in fr-config-manager format.', async () => {
         const dirName = 'configManagerExportRawDir1';
-        const CMD = `frodo config-manager pull raw -D ${dirName} -p /environment/release `;
+        const CMD = `frodo config-manager pull raw -f test/e2e/fr-config-manager-pull-config/raw.json -p /environment/release -D ${dirName}`;
         await testExport(CMD, env, undefined, undefined, dirName, false);
     });
     test('"frodo config-manager pull raw -of test/e2e/fr-config-manager-pull-config/raw.json": should output the configurations listed in the JSON file to stdout in fr-config-manager format.', async () => {
@@ -42,8 +42,8 @@ describe('frodo config-manager pull raw', () => {
         const CMD = `frodo config-manager pull raw -of ${configFile} -x.protocol 2.0 -x.resource 1.0`;
         await testSuccess(CMD, env);
     });
-    test('"frodo config-manager pull raw -op /environment/release -x.protocol 2.0 -x.resource 1.0": should output the configuration at the specified API path to stdout in fr-config-manager format.', async () => {
-        const CMD = `frodo config-manager pull raw -op /environment/release -x.protocol 2.0 -x.resource 1.0`;
+    test('"frodo config-manager pull raw -f test/e2e/fr-config-manager-pull-config/raw.json -op /environment/release -x.protocol 2.0 -x.resource 1.0": should output the configuration at the specified API path to stdout in fr-config-manager format.', async () => {
+        const CMD = `frodo config-manager pull raw -f test/e2e/fr-config-manager-pull-config/raw.json -op /environment/release -x.protocol 2.0 -x.resource 1.0`;
         await testSuccess(CMD, env);
     });
 });

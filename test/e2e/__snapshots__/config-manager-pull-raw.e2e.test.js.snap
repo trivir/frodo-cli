@@ -1,5 +1,16 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`frodo config-manager pull raw "frodo config-manager pull raw  -f test/e2e/fr-config-manager-pull-config/raw.json -p /environment/release -D configManagerExportRawDir1": should export the configuration at the specified API path in fr-config-manager format. 1`] = `0`;
+
+exports[`frodo config-manager pull raw "frodo config-manager pull raw  -f test/e2e/fr-config-manager-pull-config/raw.json -p /environment/release -D configManagerExportRawDir1": should export the configuration at the specified API path in fr-config-manager format. 2`] = `""`;
+
+exports[`frodo config-manager pull raw "frodo config-manager pull raw  -f test/e2e/fr-config-manager-pull-config/raw.json -p /environment/release -D configManagerExportRawDir1": should export the configuration at the specified API path in fr-config-manager format.: configManagerExportRawDir1/raw/environment/release.json 1`] = `
+{
+  "channel": "rapid",
+  "currentVersion": "24777.0",
+}
+`;
+
 exports[`frodo config-manager pull raw "frodo config-manager pull raw -D configManagerExportRawDir0 -f test/e2e/fr-config-manager-pull-config/raw.json": should export all the configs in the provided json file in fr-config manager style. 1`] = `0`;
 
 exports[`frodo config-manager pull raw "frodo config-manager pull raw -D configManagerExportRawDir0 -f test/e2e/fr-config-manager-pull-config/raw.json": should export all the configs in the provided json file in fr-config manager style. 2`] = `""`;
@@ -68,17 +79,6 @@ exports[`frodo config-manager pull raw "frodo config-manager pull raw -D configM
       },
     ],
   },
-}
-`;
-
-exports[`frodo config-manager pull raw "frodo config-manager pull raw -D configManagerExportRawDir1 -p /environment/release": should export the configuration at the specified API path in fr-config-manager format. 1`] = `0`;
-
-exports[`frodo config-manager pull raw "frodo config-manager pull raw -D configManagerExportRawDir1 -p /environment/release": should export the configuration at the specified API path in fr-config-manager format. 2`] = `""`;
-
-exports[`frodo config-manager pull raw "frodo config-manager pull raw -D configManagerExportRawDir1 -p /environment/release": should export the configuration at the specified API path in fr-config-manager format.: configManagerExportRawDir1/raw/environment/release.json 1`] = `
-{
-  "channel": "rapid",
-  "currentVersion": "23453.0",
 }
 `;
 
@@ -151,6 +151,20 @@ exports[`frodo config-manager pull raw "frodo config-manager pull raw -D configM
     ],
   },
 }
+`;
+
+exports[`frodo config-manager pull raw "frodo config-manager pull raw -f test/e2e/fr-config-manager-pull-config/raw.json -op /environment/release -x.protocol 2.0 -x.resource 1.0": should output the configuration at the specified API path to stdout in fr-config-manager format. 1`] = `
+"{
+  channel: 'rapid',
+  currentVersion: '24777.0',
+  _pushApiVersion: { protocol: '2.0', resource: '1.0' }
+}
+"
+`;
+
+exports[`frodo config-manager pull raw "frodo config-manager pull raw -f test/e2e/fr-config-manager-pull-config/raw.json -op /environment/release -x.protocol 2.0 -x.resource 1.0": should output the configuration at the specified API path to stdout in fr-config-manager format. 2`] = `
+"Experimental feature in use: 'frodo config-manager pull raw'. This feature may change without notice.
+"
 `;
 
 exports[`frodo config-manager pull raw "frodo config-manager pull raw -of test/e2e/fr-config-manager-pull-config/raw.json -x.protocol 2.0 -x.resource 1.0": should output all configurations listed in the JSON file to stdout in fr-config-manager format, preserving any push API versions. 1`] = `
@@ -227,20 +241,6 @@ exports[`frodo config-manager pull raw "frodo config-manager pull raw -of test/e
 `;
 
 exports[`frodo config-manager pull raw "frodo config-manager pull raw -of test/e2e/fr-config-manager-pull-config/raw.json": should output the configurations listed in the JSON file to stdout in fr-config-manager format. 2`] = `
-"Experimental feature in use: 'frodo config-manager pull raw'. This feature may change without notice.
-"
-`;
-
-exports[`frodo config-manager pull raw "frodo config-manager pull raw -op /environment/release -x.protocol 2.0 -x.resource 1.0": should output the configuration at the specified API path to stdout in fr-config-manager format. 1`] = `
-"{
-  channel: 'rapid',
-  currentVersion: '23968.0',
-  _pushApiVersion: { protocol: '2.0', resource: '1.0' }
-}
-"
-`;
-
-exports[`frodo config-manager pull raw "frodo config-manager pull raw -op /environment/release -x.protocol 2.0 -x.resource 1.0": should output the configuration at the specified API path to stdout in fr-config-manager format. 2`] = `
 "Experimental feature in use: 'frodo config-manager pull raw'. This feature may change without notice.
 "
 `;
