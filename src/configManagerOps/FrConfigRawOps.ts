@@ -2,11 +2,13 @@ import fs from 'fs';
 import { readFile } from 'fs/promises';
 import os from 'os';
 import path from 'path';
+import merge from 'deepmerge';
 import {
   frodo,
-  FrodoError,
-  type IdObjectSkeletonInterface,
+  FrodoError
 } from '@rockcarver/frodo-lib';
+import { IdObjectSkeletonInterface } from '@rockcarver/frodo-lib/types/api/ApiTypes';
+import { ApiVersion } from '@rockcarver/frodo-lib/types/api/BaseApi';
 import {
   createProgressIndicator,
   printError,
@@ -15,7 +17,7 @@ import {
   verboseMessage,
 } from '../utils/Console';
 import { causeOf } from '../utils/ErrorCause';
-import { clearOperationalAttributes } from '../utils/FrConfig';
+import { clearOperationalAttributes, escapePlaceholders } from '../utils/FrConfig';
 import { OperationRun } from '../utils/OperationRun';
 import { readStdinToEndSync } from '../utils/StdinSync';
 
@@ -27,19 +29,26 @@ const { exportRawConfig, importRawConfig } = frodo.rawConfig;
  * Export every item from the list in the provided json file
  * @param {string} file the json file that lists what to export
  * @param {boolean} allowFailures True to succeed although some items could not be exported (the failures are still summarised)
+ * @param {string} apiVersion will pull config including the API version
+ * @param {string} path the optional API path to pull config
+ * @param {boolean} stdout if true will display stdout in cli
  * @returns {boolean} True if each file was successfully exported. An item that cannot be exported does not stop the others; the result is false if any failed, unless failures are allowed. A list that does not exist, cannot be parsed or is not a list is a failure.
  */
 export async function configManagerExportRaw(
   file: string,
-  allowFailures: boolean = false
+  allowFailures: boolean = false,
+  apiVersion?: ApiVersion,
+  path?: string,
+  stdout = false 
 ): Promise<boolean> {
   try {
     if (!fs.existsSync(file)) {
       printMessage(`The raw config file '${file}' does not exist.`, 'error');
       return false;
     }
-    const jsonData = JSON.parse(await readFile(file, { encoding: 'utf8' }));
-    if (!Array.isArray(jsonData)) {
+    let rawConfig = path
+      ? [{ path, pushApiVersion: apiVersion }]
+      : (readJsonFile(file, false) as any[]);    if (!Array.isArray(rawConfig)) {
       printMessage(
         `The raw config file '${file}' must contain a list of items to export, each with a "path".`,
         'error'
@@ -49,19 +58,38 @@ export async function configManagerExportRaw(
 
     // Create export json file for every item in the provided json file
     const run = new OperationRun({ unit: 'raw config', allowFailures });
-    for (const config of jsonData) {
+    for (const config of rawConfig) {
       const name = String(config?.path ?? JSON.stringify(config));
       try {
-        const response: IdObjectSkeletonInterface =
-          await exportRawConfig(config);
-        verboseMessage(`Saving ${response._id} at ${config.path}.json.`);
-        saveJsonToFile(
-          response,
+        const response = await exportRawConfig(config.path);
+
+        let data = escapePlaceholders(response) as IdObjectSkeletonInterface;
+        clearOperationalAttributes(data)
+
+        if (config.overrides) {
+          data = merge(data, config.overrides, {
+            arrayMerge: (_destination, source) => source,
+          });
+        }
+
+        if (
+          config.pushApiVersion &&
+          Object.keys(config.pushApiVersion).length > 0
+        ) {
+          data._pushApiVersion = config.pushApiVersion
+        }
+
+        if (stdout) {
+          printMessage(data, 'data')
+        } else {
+          saveJsonToFile(
+          data,
           getFilePath(`raw/${config.path}.json`, true),
           false,
           true
         );
         run.recordSuccess();
+        }
       } catch (error) {
         printError(error, `Error exporting raw config '${name}'`);
         run.recordFailure(name, causeOf(error));
@@ -120,7 +148,7 @@ export async function configManagerImportRaw(
     if (stdin) {
       const data = readRawConfigFromStdin();
       clearOperationalAttributes(data);
-      await importRawConfig({ path }, data);
+      await importRawConfig(path, data);
       stopProgressIndicator(
         indicatorId,
         'Raw config import completed.',
@@ -155,7 +183,7 @@ export async function configManagerImportRaw(
         const data = readJsonFile(filePath) as IdObjectSkeletonInterface;
 
         clearOperationalAttributes(data);
-        await importRawConfig({ path: rawPath }, data);
+        await importRawConfig(rawPath , data);
         run.recordSuccess();
       } catch (error) {
         printError(error, `Raw import of '${rawPath}' failed`);

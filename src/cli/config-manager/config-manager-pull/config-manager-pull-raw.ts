@@ -2,18 +2,37 @@ import { Option } from 'commander';
 import { configManagerExportRaw } from '../../../configManagerOps/FrConfigRawOps';
 import * as s from '../../../help/SampleData';
 import { getTokens } from '../../../ops/AuthenticateOps';
-import { FrodoCommand } from '../../FrodoCommand';
+import { FrodoCommand, ObjectOption } from '../../FrodoCommand';
+import { printMessage } from '../../../utils/Console';
 
 export default function setup() {
   const program = new FrodoCommand('frodo config-manager pull raw');
 
   program
-    .description('Export raw configurations from the tenant.')
+    .description('Export raw configurations.')
     .addOption(
       new Option(
         '-f, --config-file <file>',
         'The file path of the service object config file. '
       ).makeOptionMandatory()
+    )
+    .addOption(
+      new Option(
+        '-o, --stdout',
+        'Write exported configuration to standard output.'
+      )
+    )
+    .addOption(
+      new ObjectOption(
+        '-x, --push-api-version <value>',
+        'Push API versions; set properties using dot notation, for example: -x.myApi 1.0 --push-api-version.otherApi 2.0'
+      ).default({})
+    )
+    .addOption(
+      new Option(
+        '-p, --path <path>',
+        'Tenant API path to export. Will override --config-file.'
+      )
     )
     .addHelpText(
       'after',
@@ -21,7 +40,7 @@ export default function setup() {
         'Make sure to create an export config file: raw.json to run this command.\n' +
         `Example command: frodo config-manager pull raw -f raw.json -D ../testDir ${s.connId}\n\n` +
         `Config file example:\n` +
-        '------------  Example Oauth2 agents export config for oauth2-agents.json file -----------\n' +
+        '------------  Example raw export config file raw.json -----------\n' +
         '[\n' +
         '  { "path": "/openidm/config/authentication" },\n' +
         '  {\n' +
@@ -46,15 +65,39 @@ export default function setup() {
         options,
         command
       );
+      
+      if (!options.path && !options.configFile) {
+        printMessage(
+          'Specify --path or --config-file to export raw configuration.',
+          'error'
+        );
+        process.exitCode = 1;
+        return;
+      }
+      const apiVersion = options.pushApiVersion ?? {};
 
+      if (
+        Object.keys(apiVersion).length > 0 &&
+        (!apiVersion.protocol || !apiVersion.resource)
+      ) {
+        printMessage(
+          '--push-api-version requires resource and protocol versions.',
+          'error'
+        );
+        process.exitCode = 1;
+        return;
+      }
+      
       if (await getTokens()) {
         const outcome: boolean = await configManagerExportRaw(
           options.configFile,
-          options.allowFailures
+          options.allowFailures,
+          apiVersion,
+          options.path,
+          options.stdout
         );
         if (!outcome) process.exitCode = 1;
       } else {
-        // getTokens() failed (any option combination is valid here).
         process.exitCode = 1;
       }
     });
