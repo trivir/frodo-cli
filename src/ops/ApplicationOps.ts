@@ -515,6 +515,7 @@ export async function importApplicationFromFile(
     );
     const data = fs.readFileSync(getFilePath(file), 'utf8');
     const fileData = JSON.parse(data);
+    if (!fileData.application) options.deps = false;
     if (applicationId) {
       await _importApplication(applicationId, fileData, options);
     } else {
